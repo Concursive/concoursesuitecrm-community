@@ -17,6 +17,8 @@ package org.aspcfs.modules.documents.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.admin.base.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -459,7 +461,7 @@ public class DocumentStoreTeamMemberList extends ArrayList {
       tableName = "document_store_role_member";
     }
     if (memberType.equals(DocumentStoreTeamMemberList.DEPARTMENT)) {
-      tableName = "document_store_department_member";
+      tableName = DatabaseUtils.getTableName(db, "document_store_department_member");
     }
     if ("".equals(tableName)) {
       throw new SQLException("table not specified");
@@ -773,25 +775,27 @@ public class DocumentStoreTeamMemberList extends ArrayList {
         StringTokenizer items = new StringTokenizer(insertMembers, "|");
         while (items.hasMoreTokens()) {
           int itemId = -1;
+          int siteId = -1;
           String itemIdValue = items.nextToken();
           int indexValue = -1;
           String tableName = "";
           if (itemIdValue.indexOf("-D") > -1) {
             indexValue = itemIdValue.indexOf("-D");
-            tableName = "document_store_department_member";
+            tableName = DatabaseUtils.getTableName(db, "document_store_department_member");
           } else {
             indexValue = itemIdValue.indexOf("-R");
             tableName = "document_store_role_member";
           }
           itemId = Integer.parseInt(itemIdValue.substring(0, indexValue));
+          siteId = Integer.parseInt(itemIdValue.substring(indexValue+2, itemIdValue.length()).trim());
           if (itemId != -1) {
             // See if ID is already on the team
-            if (!isGroupOnTeam(db, documentStoreId, itemId, tableName)) {
+            if (!isGroupOnTeam(db, documentStoreId, itemId, tableName, siteId)) {
               // Insert the member
               PreparedStatement pst = db.prepareStatement(
                   "INSERT INTO " + tableName +
-                  " (document_store_id, item_id, userlevel, enteredby, modifiedby, status) " +
-                  " VALUES (?, ?, ?, ?, ?, ?) ");
+                  " (document_store_id, item_id, userlevel, enteredby, modifiedby, status, site_id) " +
+                  " VALUES (?, ?, ?, ?, ?, ?, ?) ");
               int i = 0;
               pst.setInt(++i, documentStoreId);
               pst.setInt(++i, itemId);
@@ -799,6 +803,7 @@ public class DocumentStoreTeamMemberList extends ArrayList {
               pst.setInt(++i, enteredBy);
               pst.setInt(++i, modifiedBy);
               pst.setInt(++i, DocumentStoreTeamMember.STATUS_ADDED);
+              DatabaseUtils.setInt(pst, ++i, siteId);
               pst.execute();
               pst.close();
             }
@@ -819,19 +824,24 @@ public class DocumentStoreTeamMemberList extends ArrayList {
           String tableName = "";
           if (itemIdValue.indexOf("-D") > -1) {
             indexValue = itemIdValue.indexOf("-D");
-            tableName = "document_store_department_member";
+            tableName = DatabaseUtils.getTableName(db, "document_store_department_member");
           } else {
             indexValue = itemIdValue.indexOf("-R");
             tableName = "document_store_role_member";
           }
           int itemId = Integer.parseInt(itemIdValue.substring(0, indexValue));
+          int siteId = Integer.parseInt(itemIdValue.substring(indexValue+2, itemIdValue.length()).trim());
 
           PreparedStatement pst = db.prepareStatement(
               " DELETE FROM " + tableName +
               " WHERE document_store_id = ? " +
-              " AND item_id = ?");
+              " AND item_id = ? " +
+              " AND "+(siteId == -1?" site_id IS NULL ":" site_id = ? "));
           pst.setInt(1, documentStoreId);
           pst.setInt(2, itemId);
+          if (siteId > -1) {
+            pst.setInt(3, siteId);
+          }
           pst.execute();
           pst.close();
         }
@@ -857,15 +867,19 @@ public class DocumentStoreTeamMemberList extends ArrayList {
    * @return The groupOnTeam value
    * @throws SQLException Description of the Exception
    */
-  public static boolean isGroupOnTeam(Connection db, int documentStoreId, int roleId, String tableName) throws SQLException {
+  public static boolean isGroupOnTeam(Connection db, int documentStoreId, int roleId, String tableName, int tmpSiteId) throws SQLException {
     boolean exists = false;
     PreparedStatement pst = db.prepareStatement(
         " SELECT userlevel " +
         " FROM " + tableName +
         " WHERE document_store_id = ? " +
-        " AND item_id = ? ");
+        " AND item_id = ? " +
+        " AND "+ (tmpSiteId == -1?"site_id IS NULL ":"site_id = ? "));
     pst.setInt(1, documentStoreId);
     pst.setInt(2, roleId);
+    if (tmpSiteId > -1) {
+      pst.setInt(3, tmpSiteId);
+    }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       exists = true;
@@ -924,6 +938,18 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     pst.execute();
     pst.close();
   }
-
+  
+  public void setSiteIdForMembers(SystemStatus systemStatus) throws SQLException {
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      DocumentStoreTeamMember member = (DocumentStoreTeamMember) iter.next();
+      if (member.getItemId() != -1) {
+        User user = systemStatus.getUser(member.getItemId());
+        if (user != null) {
+          member.setSiteId(user.getSiteId());
+        }
+      }
+    }
+  }
 }
 

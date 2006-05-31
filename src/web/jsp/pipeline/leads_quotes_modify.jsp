@@ -95,6 +95,7 @@ function reopenOpportunity(id) {
       String titleLabel = "quotes.modifyQuote";
       String quoteParams = "quoteId="+quoteBean.getGroupId()+"|version="+quoteBean.getVersion();
       boolean changeAccount = false;
+      boolean changeContact = (opportunityHeader.getContactLink() == -1);
       boolean changeOpportunity = false;
       String opportunityName = opportunityHeader.getDescription();
       String opportunityNameLabel = "quotes.opportunitySelected";

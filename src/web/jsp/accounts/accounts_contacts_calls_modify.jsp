@@ -71,22 +71,22 @@
     }
     
     if(form.hasFollowup != null && form.hasFollowup.checked){
-    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
-      message += label("specify.alert.date", "- Please specify an alert date\r\n");
-      formTest = false;
-    }
-    if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
-      message += label("specify.alert.description", "- Please specify an alert description\r\n");
-      formTest = false;
-    }
-    if (checkNullString(form.alertText.value)) { 
-      message += label("specify.alert.description", "- Please specify an alert description\r\n");
-      formTest = false;
-    }
-    if (form.alertCallTypeId.value == "0") { 
-      message += label("specify.alert.type", "- Please specify an alert type\r\n");
-      formTest = false;
-    }
+      if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+        message += label("specify.alert.date", "- Please specify an alert date\r\n");
+        formTest = false;
+      }
+      if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
+        message += label("specify.alert.description", "- Please specify an alert description\r\n");
+        formTest = false;
+      }
+      if (checkNullString(form.alertText.value)) { 
+        message += label("specify.alert.description", "- Please specify an alert description\r\n");
+        formTest = false;
+      }
+      if (form.alertCallTypeId.value == "0") { 
+        message += label("specify.alert.type", "- Please specify an alert type\r\n");
+        formTest = false;
+      }
      } 
 <% } %>
   if (formTest == false) {

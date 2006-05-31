@@ -47,6 +47,7 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+	<parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT t.task_id as task_id, 
 t.description as descri, 
 t.duedate as duedate,
@@ -71,7 +72,7 @@ WHERE t.task_id > -1
 AND t.trashed_date IS NULL
 AND t.owner IN ($P!{userid_range})
 $P!{boolean_completed_where}
-ORDER BY t.duedate, priority]]></queryString>
+ORDER BY t.duedate, t.priority]]></queryString>
 	<field name="task_id" class="java.lang.Integer"/>
 	<field name="descri" class="java.lang.String"/>
 	<field name="duedate" class="java.sql.Timestamp"/>
@@ -447,7 +448,7 @@ ORDER BY t.duedate, priority]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{descri}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="360"
@@ -467,7 +468,7 @@ ORDER BY t.duedate, priority]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ccompany} != null ? $F{ccompany}: $F{clname} != null ? new String($F{cfname} +" "+ $F{clname}) : " -- "]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameFirstLastOrCompany($F{cfname}, $F{clname}, $F{ccompany})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

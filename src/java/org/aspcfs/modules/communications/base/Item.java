@@ -172,12 +172,15 @@ public class Item {
    * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int qid) throws SQLException {
+    boolean doCommit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (doCommit) {
+        db.setAutoCommit(false);
+      }
       id = DatabaseUtils.getNextSeq(db, "survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO survey_items " +
-          "(" + (id > -1 ? "item_id, " : "") + "question_id, type, description ) " +
+          "(" + (id > -1 ? "item_id, " : "") + "question_id, \"type\", description ) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
       int i = 0;
       if (id > -1) {
@@ -189,12 +192,18 @@ public class Item {
       pst.execute();
       pst.close();
       setId(DatabaseUtils.getCurrVal(db, "survey_items_item_id_seq", id));
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 
@@ -209,8 +218,11 @@ public class Item {
    */
   public int update(Connection db, int qId) throws SQLException {
     int count = 0;
+    boolean doCommit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (doCommit) {
+        db.setAutoCommit(false);
+      }
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_items " +
           "SET description = ? " +
@@ -220,12 +232,18 @@ public class Item {
       pst.setInt(++i, qId);
       count = pst.executeUpdate();
       pst.close();
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return count;
   }

@@ -50,6 +50,7 @@ insert into lookup_call_reminder (level, description, default_item, base_value) 
 insert into lookup_call_reminder (level, description, default_item, base_value) VALUES (4, 'Week(s)', 0, 604800);
 insert into lookup_call_reminder (level, description, default_item, base_value) VALUES (5, 'Month(s)', 0, 18144000);
 
+SET IDENTITY_INSERT lookup_call_result ON;
 INSERT INTO lookup_call_result (result_id, description, "level", enabled, next_required, next_days, next_call_type_id, canceled_type) VALUES (1, 'Yes - Business progressing', 10, 1, 1, 0, NULL, 0);
 INSERT INTO lookup_call_result (result_id, description, "level", enabled, next_required, next_days, next_call_type_id, canceled_type) VALUES (2, 'No - No business at this time', 20, 1, 0, 0, NULL, 0);
 INSERT INTO lookup_call_result (result_id, description, "level", enabled, next_required, next_days, next_call_type_id, canceled_type) VALUES (3, 'Unsure - Unsure or no contact made', 30, 1, 1, 0, NULL, 0);
@@ -63,6 +64,7 @@ INSERT INTO lookup_call_result (result_id, description, "level", enabled, next_r
 
 ALTER TABLE call_log ADD alert_tmp VARCHAR(255);
 UPDATE call_log SET alert_tmp = alert;
+ALTER TABLE call_log DROP CONSTRAINT DF__call_log__alert__084B3915;
 ALTER TABLE call_log DROP COLUMN alert;
 ALTER TABLE call_log ADD alert VARCHAR(255);
 UPDATE call_log SET alert = alert_tmp;
@@ -72,17 +74,12 @@ ALTER TABLE call_log ADD alert_call_type_id INT REFERENCES lookup_call_types(cod
 ALTER TABLE call_log ADD parent_id INT NULL REFERENCES call_log(call_id);
 ALTER TABLE call_log ADD owner INT NULL REFERENCES access(user_id);
 ALTER TABLE call_log ADD assignedby INT REFERENCES access(user_id);
-ALTER TABLE call_log ADD assign_date DATETIME;
-ALTER TABLE call_log ALTER assign_date SET DEFAULT CURRENT_TIMESTAMP;
-UPDATE call_log SET assign_date = CURRENT_TIMESTAMP;
+ALTER TABLE call_log ADD assign_date DATETIME NULL CONSTRAINT DF__call_log__assign__0EF836A4 DEFAULT CURRENT_TIMESTAMP WITH VALUES;
 ALTER TABLE call_log ADD completedby INT REFERENCES access(user_id);
 ALTER TABLE call_log ADD complete_date DATETIME NULL;
 ALTER TABLE call_log ADD result_id INT REFERENCES lookup_call_result(result_id);
 ALTER TABLE call_log ADD priority_id INT REFERENCES lookup_call_priority(code);
-ALTER TABLE call_log ADD status_id INT;
-UPDATE call_log SET status_id = 1;
-ALTER TABLE call_log ADD CONSTRAINT call_status_not_null_CHECK(status_id NOT NULL);
-ALTER TABLE call_log ALTER status_id SET DEFAULT 1;
+ALTER TABLE call_log ADD status_id INT CONSTRAINT DF__call_log__status__12C8C788 DEFAULT (1);
 ALTER TABLE call_log ADD reminder_value INT NULL;
 ALTER TABLE call_log ADD reminder_type_id INT NULL REFERENCES lookup_call_reminder(code);
 UPDATE call_log SET result_id = 1;
@@ -98,11 +95,12 @@ CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
 ALTER TABLE contact_phone ADD primary_number BIT DEFAULT 0;
 UPDATE contact_phone set primary_number = 0;
 
-ALTER table contact_address ADD COLUMN primary_address BIT default 0;
+ALTER table contact_address ADD primary_address BIT default 0;
 update contact_address set primary_address = 0;
 
 /* Ticket Performance */
-CREATE INDEX "ticket_problem_idx" ON "ticket" (problem);
-CREATE INDEX "ticket_comment_idx" ON "ticket" (comment);
-CREATE INDEX "ticket_solution_idx" ON "ticket" (solution);
+/* cannot create indexes for test in sql server*/
+--CREATE INDEX "ticket_problem_idx" ON "ticket" (problem);
+--CREATE INDEX "ticket_comment_idx" ON "ticket" (comment);
+--CREATE INDEX "ticket_solution_idx" ON "ticket" (solution);
 

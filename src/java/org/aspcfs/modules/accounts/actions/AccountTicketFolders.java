@@ -57,6 +57,10 @@ public final class AccountTicketFolders extends CFSModule {
       db = this.getConnection(context);
       //Load the ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
       //Load the organization
       Organization thisOrganization = new Organization(
@@ -167,6 +171,10 @@ public final class AccountTicketFolders extends CFSModule {
       db = this.getConnection(context);
       //Load the ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       //Load the organization
       Organization thisOrganization = new Organization(
@@ -212,6 +220,10 @@ public final class AccountTicketFolders extends CFSModule {
       db = this.getConnection(context);
       //Load the ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
       //Load the organization
       Organization thisOrganization = new Organization(
@@ -265,6 +277,10 @@ public final class AccountTicketFolders extends CFSModule {
       db = this.getConnection(context);
       //Load the ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
       //Load the organization
       Organization thisOrganization = new Organization(
@@ -319,6 +335,10 @@ public final class AccountTicketFolders extends CFSModule {
       db = this.getConnection(context);
       //Load the ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
       //Load the organization
       Organization thisOrganization = new Organization(
@@ -424,6 +444,10 @@ public final class AccountTicketFolders extends CFSModule {
       db = this.getConnection(context);
       //Load the ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
       //Load the organization
       Organization thisOrganization = new Organization(
@@ -518,6 +542,12 @@ public final class AccountTicketFolders extends CFSModule {
       String recordId = context.getRequest().getParameter("recId");
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
+      //Load the ticket
+      Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       CustomFieldCategory thisCategory = new CustomFieldCategory(
           db,
           Integer.parseInt(selectedCatId));

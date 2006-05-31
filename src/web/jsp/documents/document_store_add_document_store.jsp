@@ -123,12 +123,13 @@
   String documentStoreApprovedCheck = "";
   String documentStoreClosedCheck = "";
 %>
+  <tr>
     <td nowrap class="formLabel">
       <dhv:label name="documents.details.status">Status</dhv:label>
     </td>
     <td>
       <input type="checkbox" name="approved" value="ON"<%= documentStoreApprovedCheck %>>
-      Approved <zeroio:tz timestamp="<%= documentStore.getApprovalDate() %>"/><br />
+      <dhv:label name="documents.details.approved">Approved</dhv:label> <zeroio:tz timestamp="<%= documentStore.getApprovalDate() %>"/><br />
     </td>
   </tr>
 </table>
@@ -137,7 +138,7 @@
 <input type="hidden" name="showDetails" value="true" />
 <input type="hidden" name="showTeam" value="true" />
 <input type="hidden" name="showDocuments" value="true" />
-<input type="submit" value="<dhv:label name="documents.add.Save">Save</dhv:label>" />
-<input type="button" value="<dhv:label name="documents.add.Cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='DocumentManagement.do?'" />
+<input type="submit" value="<dhv:label name="documents.add.save">Save</dhv:label>" />
+<input type="button" value="<dhv:label name="documents.add.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='DocumentManagement.do?'" />
 </form>
 </body>

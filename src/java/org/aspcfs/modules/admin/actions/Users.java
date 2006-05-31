@@ -16,6 +16,7 @@
 package org.aspcfs.modules.admin.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.hooks.CustomHook;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
@@ -28,15 +29,17 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.Template;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.BatchInfo;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Methods for managing users
+ *  Methods for managing users
  *
  * @author mrajkowski
  * @version $Id$
@@ -44,7 +47,7 @@ import java.util.HashMap;
  */
 public final class Users extends CFSModule {
   /**
-   * Description of the Method
+   *  Description of the Method
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -55,7 +58,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Lists the users in the system that have a corresponding contact record
+   *  Lists the users in the system that have a corresponding contact record
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -68,9 +71,14 @@ public final class Users extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     UserList list = new UserList();
+    RoleList roleList = new RoleList();
     //Configure the pagedList
     PagedListInfo listInfo = getPagedListInfo(context, "UserListInfo");
     listInfo.setLink("Users.do?command=ListUsers");
+    //Configure batch feature
+    BatchInfo batchInfo = new BatchInfo("batchUsers");
+    batchInfo.setAction("Users.do?command=ProcessBatch");
+    
     try {
       db = getConnection(context);
       if ("disabled".equals(listInfo.getListView())) {
@@ -88,7 +96,26 @@ public final class Users extends CFSModule {
       list.setBuildContactDetails(false);
       list.setBuildHierarchy(false);
       list.setRoleType(Constants.ROLETYPE_REGULAR); //fetch only regular users
+      list.setRoleId(listInfo.getFilterKey("listFilter1"));
+      list.setSiteId(this.getUserSiteId(context));
       list.buildList(db);
+
+      //build a list of roles
+      roleList.setBuildUsers(false);
+      roleList.setRoleType(Constants.ROLETYPE_REGULAR);
+      roleList.setEnabledState(Constants.TRUE);
+      roleList.setEmptyHtmlSelectRecord(this.getSystemStatus(context).getLabel("accounts.any"));
+      roleList.setJsEvent("onChange=\"javascript:document.userForm.submit();\"");
+      roleList.buildList(db);
+      context.getRequest().setAttribute(
+          "roleList", roleList);
+          
+      batchInfo.setSize(list.size());
+      context.getRequest().setAttribute(
+          "userListBatchInfo", batchInfo);
+      
+      context.getRequest().setAttribute(
+          "systemStatus", this.getSystemStatus(context));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -106,7 +133,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
    * @param context Description of the Parameter
    * @return Description of the Return Value
@@ -122,7 +149,7 @@ public final class Users extends CFSModule {
     PagedListInfo listInfo = getPagedListInfo(context, "AccessLogInfo");
     listInfo.setLink(
         "Users.do?command=ViewLog&id=" + context.getRequest().getParameter(
-            "id"));
+        "id"));
 
     Connection db = null;
     AccessLogList list = new AccessLogList();
@@ -161,7 +188,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action that loads a user for display
+   *  Action that loads a user for display
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -215,7 +242,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action that generates the form data for inserting a new user
+   *  Action that generates the form data for inserting a new user
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -229,39 +256,16 @@ public final class Users extends CFSModule {
     addModuleBean(context, "Add User", "Add New User");
     try {
       db = this.getConnection(context);
-      // BEGIN DHV CODE ONLY
-      //Load the license and see how many users can be added
-      java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
-          getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-      org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
-          org.aspcfs.utils.PrivateString.decrypt(
-              key, org.aspcfs.utils.StringUtils.loadText(
-                  getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-      String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
-          xml.getFirstChild("text2"));
-      //Check the license
-      PreparedStatement pst = db.prepareStatement(
-          "SELECT count(*) AS user_count " +
-          "FROM access a, \"role\" r " +
-          "WHERE a.user_id > 0 " +
-          "AND a.role_id > 0 " +
-          "AND a.role_id = r.role_id " +
-          "AND r.role_type = ? " +
-          "AND a.enabled = ? ");
-      pst.setInt(1, Constants.ROLETYPE_REGULAR);
-      pst.setBoolean(2, true);
-      ResultSet rs = pst.executeQuery();
-      int current = 0;
-      if (rs.next()) {
-        current = rs.getInt("user_count");
+      String value = CustomHook.populateUser(db, getPref(context, "FILELIBRARY"));
+      if (value != null) {
+        return value;
       }
-      if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(
-          lpd.substring(7))) {
-        return ("LicenseError");
+      // Set some defaults if first time showing form
+      User user = (User) context.getFormBean();
+      if (user.getUsername() == null) {
+        user.setHasHttpApiAccess(true);
+        user.setHasWebdavAccess(true);
       }
-      rs.close();
-      pst.close();
-      // END DHV CODE ONLY
       //Prepare the role drop-down
       RoleList roleList = new RoleList();
       roleList.setBuildUsers(false);
@@ -280,8 +284,17 @@ public final class Users extends CFSModule {
       userList.setExcludeExpiredIfUnselected(true);
       userList.setBuildContactDetails(false);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
+      //fetch users who have access to all sites.
+      //A user assigned to a site may report to
+      //another user who has access to the same site or to one
+      //who has accesss to all sites
+      userList.setSiteId(this.getUserSiteId(context));
+      userList.setIncludeUsersWithAccessToAllSites(true);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
+      LookupList siteid = new LookupList(db, "lookup_site_id");
+      siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteid);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -293,7 +306,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action that adds a user to the database based on submitted html form
+   *  Action that adds a user to the database based on submitted html form
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -311,56 +324,27 @@ public final class Users extends CFSModule {
     try {
       synchronized (this) {
         db = this.getConnection(context);
-        // BEGIN DHV CODE ONLY
-        //Load the license and see how many users can be added
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
-            getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
-            org.aspcfs.utils.PrivateString.decrypt(
-                key, org.aspcfs.utils.StringUtils.loadText(
-                    getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
-            xml.getFirstChild("text2"));
-        //Check the license
-        PreparedStatement pst = db.prepareStatement(
-            "SELECT count(*) AS user_count " +
-            "FROM access a, \"role\" r " +
-            "WHERE a.user_id > 0 " +
-            "AND a.role_id > 0 " +
-            "AND a.role_id = r.role_id " +
-            "AND r.role_type = ? " +
-            "AND a.enabled = ? ");
-        pst.setInt(1, Constants.ROLETYPE_REGULAR);
-        pst.setBoolean(2, true);
-        ResultSet rs = pst.executeQuery();
-        int current = 0;
-        if (rs.next()) {
-          current = rs.getInt("user_count");
+        String value = CustomHook.populateUser(db, getPref(context, "FILELIBRARY"));
+        if (value != null) {
+          return value;
         }
-        if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(
-            lpd.substring(7))) {
-          return ("LicenseError");
-        }
-        rs.close();
-        pst.close();
-        // END DHV CODE ONLY
         //Process the user request form
         User thisUser = (User) context.getFormBean();
         if (context.getRequest().getParameter("typeId") != null) {
           ((Contact) thisUser.getContact()).addType(
               context.getRequest().getParameter("typeId"));
         }
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        HashMap errors = new HashMap();
         if (thisUser.getManagerId() != -1) {
           User manager = this.getUser(context, thisUser.getManagerId());
           if (!manager.getEnabled()) {
-            HashMap errors = new HashMap();
-            SystemStatus systemStatus = this.getSystemStatus(context);
             errors.put(
                 "actionError", systemStatus.getLabel(
-                    "object.validation.genericActionError"));
+                "object.validation.genericActionError"));
             errors.put(
                 "managerIdError", systemStatus.getLabel(
-                    "admin.disabledManager.text"));
+                "admin.disabledManager.text"));
             errors.putAll(thisUser.getErrors());
             if (thisUser.getContactId() != -1) {
               thisUser.setContact(new Contact(db, thisUser.getContactId()));
@@ -368,14 +352,49 @@ public final class Users extends CFSModule {
             context.getRequest().setAttribute("UserRecord", thisUser);
             processErrors(context, errors);
             return (executeCommandInsertUserForm(context));
+          } else if (manager.getSiteId() != -1) {
+            /*
+             *  Check compatibility between the site id of the new user
+             *  record and the manager record
+             */
+            if ((manager.getSiteId() != thisUser.getSiteId()) ||
+                (thisUser.getSiteId() == -1)) {
+              errors.put(
+                  "actionError", systemStatus.getLabel(
+                  "admin.notTheSameSiteAsManager.text"));
+              errors.putAll(thisUser.getErrors());
+              if (thisUser.getContactId() != -1) {
+                thisUser.setContact(new Contact(db, thisUser.getContactId()));
+              }
+              context.getRequest().setAttribute("UserRecord", thisUser);
+              processErrors(context, errors);
+              return (executeCommandInsertUserForm(context));
+            }
           }
         }
+        /*
+         *  Check compatibility between the site id of the contact record
+         *  and the user record
+         */
+        Contact contactForUser = new Contact(db, thisUser.getContactId());
+        if (contactForUser.getSiteId() != thisUser.getSiteId()) {
+          errors.put(
+              "actionError", systemStatus.getLabel(
+              "admin.notTheSameSiteAsContact.text"));
+          errors.putAll(thisUser.getErrors());
+          processErrors(context, errors);
+          if (thisUser.getContactId() != -1) {
+            thisUser.setContact(contactForUser);
+          }
+          context.getRequest().setAttribute("UserRecord", thisUser);
+          return (executeCommandInsertUserForm(context));
+        }
+
         thisUser.setEnteredBy(getUserId(context));
         thisUser.setModifiedBy(getUserId(context));
         thisUser.setTimeZone(prefs.get("SYSTEM.TIMEZONE"));
         thisUser.setCurrency(prefs.get("SYSTEM.CURRENCY"));
-        thisUser.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
-
+        thisUser.setLanguage(systemStatus.getLanguage());
         recordInserted = thisUser.insert(db, context);
         if (recordInserted) {
           insertedUser = new User();
@@ -407,8 +426,8 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action that deletes a user from the database. No longer used because
-   * referential integrity is kept.
+   *  Action that deletes a user from the database. No longer used because
+   *  referential integrity is kept.
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -439,7 +458,7 @@ public final class Users extends CFSModule {
     } else {
       thisUser.getErrors().put(
           "actionError", systemStatus.getLabel(
-              "object.validation.actionError.userDeletion"));
+          "object.validation.actionError.userDeletion"));
       processErrors(context, thisUser.getErrors());
       return (executeCommandListUsers(context));
     }
@@ -447,7 +466,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action to disable a user that is currently enabled.
+   *  Action to disable a user that is currently enabled.
    *
    * @param context Description of the Parameter
    * @return Description of the Return Value
@@ -501,7 +520,7 @@ public final class Users extends CFSModule {
       } else {
         thisUser.getErrors().put(
             "actionError", systemStatus.getLabel(
-                "object.validation.actionError.userNotDisabled"));
+            "object.validation.actionError.userNotDisabled"));
         processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
@@ -522,7 +541,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action to enable a user that is currently disabled.
+   *  Action to enable a user that is currently disabled.
    *
    * @param context Description of the Parameter
    * @return Description of the Return Value
@@ -538,39 +557,10 @@ public final class Users extends CFSModule {
     try {
       synchronized (this) {
         db = this.getConnection(context);
-        // BEGIN DHV CODE ONLY
-        //Load the license and see how many users can be added
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
-            getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
-            org.aspcfs.utils.PrivateString.decrypt(
-                key, org.aspcfs.utils.StringUtils.loadText(
-                    getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
-            xml.getFirstChild("text2"));
-        //Check the license
-        PreparedStatement pst = db.prepareStatement(
-            "SELECT count(*) AS user_count " +
-            "FROM access a, \"role\" r " +
-            "WHERE a.user_id > 0 " +
-            "AND a.role_id > 0 " +
-            "AND a.role_id = r.role_id " +
-            "AND r.role_type = ? " +
-            "AND a.enabled = ? ");
-        pst.setInt(1, Constants.ROLETYPE_REGULAR);
-        pst.setBoolean(2, true);
-        ResultSet rs = pst.executeQuery();
-        int current = 0;
-        if (rs.next()) {
-          current = rs.getInt("user_count");
+        String value = CustomHook.populateUser(db, getPref(context, "FILELIBRARY"));
+        if (value != null) {
+          return value;
         }
-        if (!"-1".equals(lpd.substring(7)) && current >= Integer.parseInt(
-            lpd.substring(7))) {
-          return ("LicenseError");
-        }
-        rs.close();
-        pst.close();
-        // END DHV CODE ONLY
         //Activate the user
         thisUser = new User(db, context.getRequest().getParameter("id"));
         //Reactivate the contact if it was previously de-activated
@@ -585,7 +575,7 @@ public final class Users extends CFSModule {
         } else {
           thisUser.getErrors().put(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.userNotEnabled"));
+              "object.validation.actionError.userNotEnabled"));
           processErrors(context, thisUser.getErrors());
         }
       }
@@ -604,7 +594,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
    * @param context Description of the Parameter
    * @return Description of the Return Value
@@ -642,7 +632,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action to generate the form for modifying a user
+   *  Action to generate the form for modifying a user
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -673,6 +663,13 @@ public final class Users extends CFSModule {
       userList.setExcludeDisabledIfUnselected(true);
       userList.setExcludeExpiredIfUnselected(true);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
+
+      //fetch users from the specified site id and users who have
+      //access to all sites. A user assigned to as site may report to
+      //another user who has access to the same site or to one
+      //who has accesss to all sites
+      userList.setSiteId(newUser.getSiteId());
+      userList.setIncludeUsersWithAccessToAllSites(true);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
       //Prepare the role list
@@ -684,6 +681,11 @@ public final class Users extends CFSModule {
       roleList.setRoleType(Constants.ROLETYPE_REGULAR);
       roleList.buildList(db);
       context.getRequest().setAttribute("RoleList", roleList);
+
+      LookupList siteid = new LookupList(db, "lookup_site_id");
+      siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteid);
+
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -696,7 +698,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   * Action that updates the user record based on the submitted form
+   *  Action that updates the user record based on the submitted form
    *
    * @param context Description of Parameter
    * @return Description of the Returned Value
@@ -707,38 +709,134 @@ public final class Users extends CFSModule {
       return ("PermissionError");
     }
     User newUser = (User) context.getFormBean();
+    User manager = null;
     Connection db = null;
-    int resultCount = 0;
-    boolean isValid = false;
+    int resultCount = -1;
+    boolean isValid = true;
+    boolean siteChangeAllowed = false;
     try {
       db = this.getConnection(context);
       newUser.setModifiedBy(getUserId(context));
 
+      SystemStatus systemStatus = this.getSystemStatus(context);
       if (newUser.getManagerId() != -1) {
-        User manager = this.getUser(context, newUser.getManagerId());
+        manager = this.getUser(context, newUser.getManagerId());
         if (!manager.getEnabled()) {
-          HashMap errors = new HashMap();
-          SystemStatus systemStatus = this.getSystemStatus(context);
-          errors.put(
+          newUser.getErrors().put(
               "actionError", systemStatus.getLabel(
-                  "object.validation.genericActionError"));
-          errors.put(
+              "object.validation.genericActionError"));
+          newUser.getErrors().put(
               "managerIdError", systemStatus.getLabel(
-                  "admin.disabledManager.text"));
-          errors.putAll(newUser.getErrors());
-          context.getRequest().setAttribute("UserRecord", newUser);
-          processErrors(context, errors);
+              "admin.disabledManager.text"));
           isValid = false;
         } else {
-          isValid = true;
+          if (manager.getSiteId() != -1) {
+            // check to ensure that the manager is 'null site' or
+            // belongs to the same site as the new user
+            if ((manager.getSiteId() != newUser.getSiteId()) ||
+                (newUser.getSiteId() == -1)) {
+              newUser.getErrors().put(
+                  "actionError", systemStatus.getLabel(
+                  "admin.notTheSameSiteAsManager.text"));
+              if (newUser.getContactId() != -1) {
+                newUser.setContact(new Contact(db, newUser.getContactId()));
+              }
+              isValid = false;
+            }
+          }
         }
-      } else {
-        isValid = true;
       }
+
+      User thisUser = this.getUser(context, this.getUserId(context));
+      User oldUser = this.getUser(context, newUser.getId());
+
+      // Has the site information been changed
+      if ((newUser.getSiteId() != oldUser.getSiteId()) && isValid) {
+        // The currently logged in user should be from "null site" to be
+        // able to modify the site information of another user.
+        if (thisUser.getSiteId() == -1) {
+          //By pass dependency additional dependency checks if the site is
+          //being changed to null site.
+          Contact contactForUser = new Contact(db, newUser.getContactId());
+          if (newUser.getSiteId() != -1) {
+            // Is user is changing his own site from 'null site' to a specific site
+            if (thisUser.getId() == oldUser.getId()) {
+              //find out if other null users exist
+              UserList nullSiteUserList = new UserList();
+              nullSiteUserList.setIncludeUsersWithAccessToAllSites(true);
+              nullSiteUserList.buildList(db);
+              //Change is diassallowed if other null site users do not exist
+              //as this change has the potential to lock out an administrator
+              //from a lot of site related data.
+              if (nullSiteUserList.size() == 0) {
+                isValid = false;
+                newUser.getErrors().put(
+                    "siteIdError", systemStatus.getLabel(
+                    "object.validation.noOtherUserWithAccessToAllSitesExist.text"));
+              }
+            }
+            // Find whether the user has associations (account ownership,
+            // contact ownership, tickets, etc)
+            if (!contactForUser.getEmployee() || contactForUser.getOrgId() > 0) {
+              isValid = false;
+              newUser.getErrors().put("siteIdError", systemStatus.getLabel("object.validation.siteChangeNotAllowed"));
+            }
+            isValid = this.validateObject(context, db, newUser) && isValid;
+            if (isValid) {
+              siteChangeAllowed = true;
+            }
+          } else {
+            isValid = true;
+            siteChangeAllowed = true;
+            if (!contactForUser.getEmployee()) {
+              isValid = false;
+              newUser.getErrors().put("siteIdError", systemStatus.getLabel("object.validation.siteChangeNotAllowed"));
+              isValid = this.validateObject(context, db, newUser) && isValid;
+            }
+          }
+        } else {
+          //throw error -- this is not allowed
+          isValid = false;
+          newUser.getErrors().put(
+              "actionError", systemStatus.getLabel(
+              "object.validation.siteChangeNotAllowed"));
+        }
+      }
+
+      // checking whether all users reporting to the 'new user'
+      // belong to the same site as the new user
+
+      // The following lines of code have been commented as this check is
+      // performed in the object validator. Also, once site change is allowed
+      // the user can change to the new site and to start with, the user
+      // would not have any other users reporting to him in the new site
+      /*
+      if ((newUser.getSiteId() != -1) && isValid){
+        UserList reportingUserList = new UserList();
+        reportingUserList.setManagerId(newUser.getId());
+        reportingUserList.buildList(db);
+        Iterator userItr = reportingUserList.iterator();
+        while (userItr.hasNext()) {
+          User subUser = (User) userItr.next();
+          if ((subUser.getSiteId() == -1) ||
+              (subUser.getSiteId() != newUser.getSiteId())) {
+            newUser.getErrors().put(
+                "actionError", systemStatus.getLabel(
+                "object.validation.genericActionError"));
+            newUser.getErrors().put(
+                "siteIdError", systemStatus.getLabel(
+                "admin.subUserNotTheSameSite.text"));
+            isValid = false;
+            break;
+          }
+        }
+      }
+       */
       if (isValid) {
         resultCount = newUser.update(db, context);
       }
       if (resultCount == -1) {
+        processErrors(context, newUser.getErrors());
         //Prepare the form again
         newUser.setBuildContact(true);
         newUser.buildResources(db);
@@ -752,6 +850,12 @@ public final class Users extends CFSModule {
         userList.setExcludeDisabledIfUnselected(true);
         userList.setExcludeExpiredIfUnselected(true);
         userList.setRoleType(Constants.ROLETYPE_REGULAR);
+        //fetch users from the specified site id and users who have
+        //access to all sites. A user assigned to as site may report to
+        //another user who has access to the same site or to one
+        //who has accesss to all sites
+        userList.setSiteId(newUser.getSiteId());
+        userList.setIncludeUsersWithAccessToAllSites(true);
         userList.buildList(db);
         context.getRequest().setAttribute("UserList", userList);
         //Prepare the role list
@@ -763,9 +867,20 @@ public final class Users extends CFSModule {
         roleList.setRoleType(Constants.ROLETYPE_REGULAR);
         roleList.buildList(db);
         context.getRequest().setAttribute("RoleList", roleList);
+
+        LookupList siteid = new LookupList(db, "lookup_site_id");
+        siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+        context.getRequest().setAttribute("SiteIdList", siteid);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("generatePass") != null) {
           resultCount = newUser.generateRandomPassword(db, context);
+        }
+        // Change site information of the contact record of site information
+        // of the user was changed.
+        if (siteChangeAllowed) {
+          Contact linkContact = new Contact(db, newUser.getContactId());
+          linkContact.setSiteId(newUser.getSiteId());
+          linkContact.update(db);
         }
         updateSystemHierarchyCheck(db, context);
         //NOTE: I believe this is no longer required since permissions are
@@ -797,5 +912,119 @@ public final class Users extends CFSModule {
       return ("UserError");
     }
   }
-}
 
+
+  /**
+   *  fetches the user list based on site id
+   *
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.12
+   */
+  public String executeCommandReportsToJSList(ActionContext context) {
+
+    String siteIdString = context.getRequest().getParameter("siteId");
+    int siteId = -1;
+    if ((siteIdString != null) || !"".equals(siteIdString)) {
+      siteId = Integer.parseInt(siteIdString);
+    }
+    if (!isSiteAccessPermitted(context, String.valueOf(siteId))) {
+      return ("PermissionError");
+    }
+/*
+    User user = this.getUser(context, this.getUserId(context));
+    if (user.getSiteId() != -1 && user.getSiteId() != siteId) {
+      return ("PermissionError");
+    }
+*/
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+
+      UserList userList = new UserList();
+      userList.setEmptyHtmlSelectRecord(
+          this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      userList.setBuildContact(false);
+      userList.setBuildContactDetails(false);
+      userList.setExcludeDisabledIfUnselected(true);
+      userList.setExcludeExpiredIfUnselected(true);
+      userList.setRoleType(Constants.ROLETYPE_REGULAR);
+
+      //fetch users from the specified site id and users who have
+      //access to all sites. A user assigned to as site may report to
+      //another user who has access to the same site or to one
+      //who has accesss to all sites
+      userList.setSiteId(siteId);
+      userList.setIncludeUsersWithAccessToAllSites(true);
+      userList.buildList(db);
+      HtmlSelect userListSelect = userList.getHtmlSelectObj("userId", getUserId(context));
+      context.getRequest().setAttribute("UserListSelect", userListSelect);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("SiteJSUserListOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandProcessBatch(ActionContext context) {
+    if (!hasPermission(context, "admin-users-edit")) {
+      return ("PermissionError");
+    }
+    
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      String batchName = context.getRequest().getParameter("batchId");
+      String batchSize = context.getRequest().getParameter("batchSize");
+      String action = context.getRequest().getParameter("action");
+      String status = context.getRequest().getParameter("status");
+
+      ArrayList selection = new ArrayList();
+
+      for (int rowCount = 1; rowCount <= Integer.parseInt(batchSize); ++rowCount) {
+        if (context.getRequest().getParameter(batchName + rowCount) != null) {
+          String id = context.getRequest().
+              getParameter(batchName + rowCount);
+
+          if (!selection.contains(String.valueOf(id))) {
+            selection.add(String.valueOf(id));
+          }
+          //Additional hidden parameters can be passed using the batch input handler
+          //Process them based on requirement.
+        }
+      }
+
+      for (int i = 0; i < selection.size(); i++) {
+        int id = Integer.parseInt(
+              (String) selection.get(i));
+        User thisUser = new User(db, id);
+        if (action != null && status != null) {
+          if ("webdav".equals(action.toLowerCase())) {
+            thisUser.updateWebdavAccess(
+                db, "enable".equals(status.toLowerCase()));
+          } else if ("httpapi".equals(action.toLowerCase())) {
+            thisUser.updateHttpApiAccess(
+                db, "enable".equals(status.toLowerCase()));
+          } else if ("userlogin".equals(action.toLowerCase())) {
+            //TODO: Implement
+          }
+        }
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return (executeCommandListUsers(context));
+  }
+}

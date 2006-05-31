@@ -274,9 +274,7 @@ CREATE SEQUENCE order_payment_payment_id_seq;
 CREATE TABLE order_payment (
 	payment_id INT  PRIMARY KEY,
 	order_id INT REFERENCES order_entry(order_id) NOT NULL,
-  order_item_id INT REFERENCES order_product(item_id),
-  history_id INT REFERENCES customer_product_history(history_id),
-	payment_method_id INT REFERENCES lookup_payment_methods(code) NOT NULL ,
+  payment_method_id INT REFERENCES lookup_payment_methods(code) NOT NULL ,
 	payment_amount FLOAT,
   authorization_ref_number VARCHAR(30),
   authorization_code VARCHAR(30),
@@ -285,7 +283,9 @@ CREATE TABLE order_payment (
 	enteredby INT REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   modifiedby INT REFERENCES access(user_id) NOT NULL ,
-  date_to_process TIMESTAMP,
+  order_item_id INT REFERENCES order_product(item_id),
+  history_id INT REFERENCES customer_product_history(history_id),
+	date_to_process TIMESTAMP,
   creditcard_id INTEGER REFERENCES payment_creditcard(creditcard_id),
   bank_id INTEGER REFERENCES payment_eft(bank_id),
   status_id INTEGER REFERENCES lookup_payment_status(code)

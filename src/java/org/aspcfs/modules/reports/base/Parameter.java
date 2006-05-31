@@ -20,6 +20,7 @@ import net.sf.jasperreports.engine.JRParameter;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.RoleList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
@@ -34,15 +35,15 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
- * Represents a configurable report parameter as specified in a Jasper Report.
- * A parameter is part of a report's Criteria.
+ *  Represents a configurable report parameter as specified in a Jasper Report.
+ *  A parameter is part of a report's Criteria.
  *
- * @author matt rajkowski
+ * @author     matt rajkowski
  * @version $Id$
- * @created September 15, 2003
+ * @created    September 15, 2003
  */
 public class Parameter
-    extends GenericBean {
+     extends GenericBean {
 
   private int id = -1;
   private int criteriaId = -1;
@@ -57,250 +58,250 @@ public class Parameter
   private boolean isSystemDefined = false;
 
   /**
-   * Constructor for the Parameter object
+   *  Constructor for the Parameter object
    */
   public Parameter() {
   }
 
   /**
-   * Constructor for the Parameter object
+   *  Constructor for the Parameter object
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @throws  SQLException     Description of the Exception
    */
   public Parameter(ResultSet rs) throws SQLException {
     build(rs);
   }
 
   /**
-   * Sets the id attribute of the Parameter object
+   *  Sets the id attribute of the Parameter object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
   }
 
   /**
-   * Sets the id attribute of the Parameter object
+   *  Sets the id attribute of the Parameter object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
 
   /**
-   * Sets the criteriaId attribute of the Parameter object
+   *  Sets the criteriaId attribute of the Parameter object
    *
-   * @param tmp The new criteriaId value
+   * @param  tmp  The new criteriaId value
    */
   public void setCriteriaId(int tmp) {
     this.criteriaId = tmp;
   }
 
   /**
-   * Sets the criteriaId attribute of the Parameter object
+   *  Sets the criteriaId attribute of the Parameter object
    *
-   * @param tmp The new criteriaId value
+   * @param  tmp  The new criteriaId value
    */
   public void setCriteriaId(String tmp) {
     this.criteriaId = Integer.parseInt(tmp);
   }
 
   /**
-   * Sets the type attribute of the Parameter object
+   *  Sets the type attribute of the Parameter object
    *
-   * @param tmp The new type value
+   * @param  tmp  The new type value
    */
   public void setType(int tmp) {
     this.type = tmp;
   }
 
   /**
-   * Sets the type attribute of the Parameter object
+   *  Sets the type attribute of the Parameter object
    *
-   * @param tmp The new type value
+   * @param  tmp  The new type value
    */
   public void setType(String tmp) {
     this.type = Integer.parseInt(tmp);
   }
 
   /**
-   * Sets the name attribute of the Parameter object
+   *  Sets the name attribute of the Parameter object
    *
-   * @param tmp The new name value
+   * @param  tmp  The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
   }
 
   /**
-   * Sets the value attribute of the Parameter object
+   *  Sets the value attribute of the Parameter object
    *
-   * @param tmp The new value value
+   * @param  tmp  The new value value
    */
   public void setValue(String tmp) {
     this.value = tmp;
   }
 
   /**
-   * Sets the displayValue attribute of the Parameter object
+   *  Sets the displayValue attribute of the Parameter object
    *
-   * @param tmp The new displayValue value
+   * @param  tmp  The new displayValue value
    */
   public void setDisplayValue(String tmp) {
     this.displayValue = tmp;
   }
 
   /**
-   * Sets the valueClass attribute of the Parameter object
+   *  Sets the valueClass attribute of the Parameter object
    *
-   * @param tmp The new valueClass value
+   * @param  tmp  The new valueClass value
    */
   public void setValueClass(java.lang.Class tmp) {
     this.valueClass = tmp;
   }
 
   /**
-   * Sets the description attribute of the Parameter object
+   *  Sets the description attribute of the Parameter object
    *
-   * @param tmp The new description value
+   * @param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
   }
 
   /**
-   * Sets the required attribute of the Parameter object
+   *  Sets the required attribute of the Parameter object
    *
-   * @param tmp The new required value
+   * @param  tmp  The new required value
    */
   public void setRequired(boolean tmp) {
     this.required = tmp;
   }
 
   /**
-   * Sets the required attribute of the Parameter object
+   *  Sets the required attribute of the Parameter object
    *
-   * @param tmp The new required value
+   * @param  tmp  The new required value
    */
   public void setRequired(String tmp) {
     this.required = DatabaseUtils.parseBoolean(tmp);
   }
 
   /**
-   * Sets the isForPrompting attribute of the Parameter object
+   *  Sets the isForPrompting attribute of the Parameter object
    *
-   * @param tmp The new isForPrompting value
+   * @param  tmp  The new isForPrompting value
    */
   public void setIsForPrompting(boolean tmp) {
     this.isForPrompting = tmp;
   }
 
   /**
-   * Sets the isForPrompting attribute of the Parameter object
+   *  Sets the isForPrompting attribute of the Parameter object
    *
-   * @param tmp The new isForPrompting value
+   * @param  tmp  The new isForPrompting value
    */
   public void setIsForPrompting(String tmp) {
     this.isForPrompting = DatabaseUtils.parseBoolean(tmp);
   }
 
   /**
-   * Sets the isSystemDefined attribute of the Parameter object
+   *  Sets the isSystemDefined attribute of the Parameter object
    *
-   * @param tmp The new isSystemDefined value
+   * @param  tmp  The new isSystemDefined value
    */
   public void setIsSystemDefined(boolean tmp) {
     this.isSystemDefined = tmp;
   }
 
   /**
-   * Sets the isSystemDefined attribute of the Parameter object
+   *  Sets the isSystemDefined attribute of the Parameter object
    *
-   * @param tmp The new isSystemDefined value
+   * @param  tmp  The new isSystemDefined value
    */
   public void setIsSystemDefined(String tmp) {
     this.isSystemDefined = DatabaseUtils.parseBoolean(tmp);
   }
 
   /**
-   * Gets the id attribute of the Parameter object
+   *  Gets the id attribute of the Parameter object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
   }
 
   /**
-   * Gets the criteriaId attribute of the Parameter object
+   *  Gets the criteriaId attribute of the Parameter object
    *
-   * @return The criteriaId value
+   * @return    The criteriaId value
    */
   public int getCriteriaId() {
     return criteriaId;
   }
 
   /**
-   * Gets the type attribute of the Parameter object
+   *  Gets the type attribute of the Parameter object
    *
-   * @return The type value
+   * @return    The type value
    */
   public int getType() {
     return type;
   }
 
   /**
-   * Gets the name attribute of the Parameter object
+   *  Gets the name attribute of the Parameter object
    *
-   * @return The name value
+   * @return    The name value
    */
   public String getName() {
     return name;
   }
 
   /**
-   * Gets the value attribute of the Parameter object
+   *  Gets the value attribute of the Parameter object
    *
-   * @return The value value
+   * @return    The value value
    */
   public String getValue() {
     return value;
   }
 
   /**
-   * Gets the displayValue attribute of the Parameter object
+   *  Gets the displayValue attribute of the Parameter object
    *
-   * @return The displayValue value
+   * @return    The displayValue value
    */
   public String getDisplayValue() {
     return displayValue;
   }
 
   /**
-   * Gets the valueClass attribute of the Parameter object
+   *  Gets the valueClass attribute of the Parameter object
    *
-   * @return The valueClass value
+   * @return    The valueClass value
    */
   public java.lang.Class getValueClass() {
     return valueClass;
   }
 
   /**
-   * Gets the description attribute of the Parameter object
+   *  Gets the description attribute of the Parameter object
    *
-   * @return The description value
+   * @return    The description value
    */
   public String getDescription() {
     return description;
   }
 
   /**
-   * Gets the displayName attribute of the Parameter object
+   *  Gets the displayName attribute of the Parameter object
    *
-   * @return The displayName value
+   * @return    The displayName value
    */
   public String getDisplayName() {
     if (description != null && !"".equals(description)) {
@@ -311,9 +312,11 @@ public class Parameter
   }
 
   /**
-   * Translates the description based on user locale and displays the parameter display label
+   *  Translates the description based on user locale and displays the parameter
+   *  display label
    *
-   * @return The displayName value
+   * @param  thisSystem  Description of the Parameter
+   * @return             The displayName value
    */
   public String getDisplayName(SystemStatus thisSystem) {
     if (description != null && !"".equals(description)) {
@@ -324,36 +327,36 @@ public class Parameter
   }
 
   /**
-   * Gets the required attribute of the Parameter object
+   *  Gets the required attribute of the Parameter object
    *
-   * @return The required value
+   * @return    The required value
    */
   public boolean getRequired() {
     return required;
   }
 
   /**
-   * Gets the isForPrompting attribute of the Parameter object
+   *  Gets the isForPrompting attribute of the Parameter object
    *
-   * @return The isForPrompting value
+   * @return    The isForPrompting value
    */
   public boolean getIsForPrompting() {
     return isForPrompting;
   }
 
   /**
-   * Gets the isSystemDefined attribute of the Parameter object
+   *  Gets the isSystemDefined attribute of the Parameter object
    *
-   * @return The isSystemDefined value
+   * @return    The isSystemDefined value
    */
   public boolean getIsSystemDefined() {
     return isSystemDefined;
   }
 
   /**
-   * Sets the param attribute of the Parameter object
+   *  Sets the param attribute of the Parameter object
    *
-   * @param param The new param value
+   * @param  param  The new param value
    */
   public void setParam(JRParameter param) {
     name = param.getName();
@@ -366,10 +369,10 @@ public class Parameter
   }
 
   /**
-   * Populates this parameter from a database record
+   *  Populates this parameter from a database record
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void build(ResultSet rs) throws SQLException {
     id = rs.getInt("parameter_id");
@@ -379,9 +382,9 @@ public class Parameter
   }
 
   /**
-   * Gets the valid attribute of the Parameter object
+   *  Gets the valid attribute of the Parameter object
    *
-   * @return The valid value
+   * @return    The valid value
    */
   public boolean isValid() {
     if (criteriaId == -1) {
@@ -391,12 +394,12 @@ public class Parameter
   }
 
   /**
-   * Insert this parameter into the report_criteria_parameter table so the
-   * report can execute based on this parameter data
+   *  Insert this parameter into the report_criteria_parameter table so the
+   *  report can execute based on this parameter data
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (!isValid()) {
@@ -409,7 +412,7 @@ public class Parameter
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO report_criteria_parameter " +
-        "(" + (id > -1 ? "parameter_id, " : "") + "criteria_id, \"parameter\", value) ");
+        "(" + (id > -1 ? "parameter_id, " : "") + "criteria_id, \"parameter\", \"value\") ");
     sql.append("VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     if (id > -1) {
@@ -428,12 +431,12 @@ public class Parameter
   }
 
   /**
-   * If this parameter requires additional data from the user, then the form
-   * element is generated here, but only if the isPromptable is set.
+   *  If this parameter requires additional data from the user, then the form
+   *  element is generated here, but only if the isPromptable is set.
    *
-   * @param request Description of the Parameter
-   * @param db      Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  request        Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void prepareContext(HttpServletRequest request, Connection db) throws
       SQLException {
@@ -455,10 +458,21 @@ public class Parameter
         "_where")) {
       //TODO: Add call result object here
 
+    } else if (name.startsWith("lookup_role") && !name.endsWith("_where")) {
+      RoleList roles = new RoleList();
+      roles.buildList(db);
+      LookupList select = roles.getLookupList();
+      select.addItem(-1, "Any");
+      request.setAttribute(name, select);
     } else if (name.startsWith("lookup_") && !name.endsWith("_where")) {
       //Perform this one last, just in case other names start with lookup_
       LookupList select = new LookupList(db, name);
       select.addItem(-1, "Any");
+      request.setAttribute(name, select);
+    } else if (name.startsWith("textlookup_") && !name.endsWith("_where")) {
+      //Perform this one last, just in case other names start with lookup_
+      LookupList select = new LookupList(db, name.substring(4));
+      //select.addItem(-1, "Any");
       request.setAttribute(name, select);
     } else if (name.startsWith("boolean_") && !name.endsWith("_where")) {
       HtmlSelect select = new HtmlSelect();
@@ -475,32 +489,62 @@ public class Parameter
         displayValue = "All";
         value = "-1";
       }
+    } else if (name.startsWith("siteid")) {
+      //proceed only if user does not belong to just one specific site
+      if (UserUtils.getUserSiteId(request) <= -1) {
+        try {
+          int id = Integer.parseInt(value);
+          LookupList sites = new LookupList(db, "lookup_site_id");
+          displayValue = sites.getValueFromId(id);
+          if ("".equals(displayValue.trim())) {
+            displayValue = "All";
+          }
+        } catch (Exception e) {
+          displayValue = "All";
+          value = "-1";
+        }
+      } else {
+        //user belongs to a specific site, then override the siteid parameter
+        value = String.valueOf(UserUtils.getUserSiteId(request));
+        isForPrompting = false;
+      }
     } else if (name.startsWith("date_")) {
       try {
         Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(
             null,
             DateFormat.SHORT, DateFormat.LONG, value, Locale.getDefault());
-        SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.
-            getDateInstance(
-                DateFormat.SHORT, UserUtils.getUserLocale(request));
+        SimpleDateFormat formatter = (SimpleDateFormat)
+            SimpleDateFormat.getDateInstance(
+            DateFormat.SHORT, UserUtils.getUserLocale(request));
         formatter.applyPattern(
             DateUtils.get4DigitYearDateFormat(
-                formatter.
-            toPattern()));
+
+        formatter.toPattern()));
         value = formatter.format(tmpTimestamp);
       } catch (Exception e) {
       }
+    } else if (name.startsWith("range_date")) {
+      HtmlSelect select = new HtmlSelect();
+      select.addItem("-1", "All");
+      select.addItem("7", "Last 7 days");
+      select.addItem("14", "Last 14 days");
+      select.addItem("30", "Last 30 days");
+      request.setAttribute(name, select);
+    } else if (name.startsWith("hidden_")) {
+      //Nothing, this object is static, but behaviour could change in the future
     }
   }
 
   /**
-   * If this parameter requires additional data from the user, then the custom
-   * HTML input field is returned
+   *  If this parameter requires additional data from the user, then the custom
+   *  HTML input field is returned
    *
-   * @param request Description of the Parameter
-   * @return The html value
+   * @param  request     Description of the Parameter
+   * @param  thisSystem  Description of the Parameter
+   * @param  params      Description of the Parameter
+   * @return             The html value
    */
-  public String getHtml(SystemStatus thisSystem, HttpServletRequest request) {
+  public String getHtml(SystemStatus thisSystem, HttpServletRequest request, ParameterList params) {
     if (name.equals("userid_range_source")) {
       //User Id combo box
       return HtmlSelectRecordSource.getSelect(name, value).getHtml();
@@ -518,8 +562,10 @@ public class Parameter
           "<img src=\"images/icons/stock_form-date-field-16.gif\" " +
           "border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a>";
     } else if (name.startsWith("lookup_state")) {
+      User user = ((UserBean) request.getSession().getAttribute("User")).getUserRecord();
+      String country = user.getLocale().getCountry();
       //State/Province drop-down
-      return (new StateSelect(thisSystem)).getHtml(name);
+      return (new StateSelect(thisSystem, country)).getHtmlSelect(name,country);
     } else if (name.startsWith("lookup_") && !name.endsWith("_where")) {
       //Lookup Lists
       LookupList select = (LookupList) request.getAttribute(name);
@@ -527,6 +573,34 @@ public class Parameter
         return select.getHtmlSelect(name, Integer.parseInt(value));
       } else {
         return select.getHtmlSelect(name, -1);
+      }
+    } else if (name.startsWith("textlookup_") && !name.endsWith("_where")) {
+      //Text Field
+      int defaultSize = 30;
+      int maxLength = -1;
+      if (name.indexOf(":") > -1) {
+        maxLength = Integer.parseInt(name.substring(name.indexOf(":") + 1));
+        if (maxLength > 40) {
+          defaultSize = 40;
+        } else {
+          defaultSize = maxLength;
+        }
+      }
+      String textBox = "<input type=\"text\" size=\"" + defaultSize + "\" " +
+          (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") +
+          "name=\"" + name + "\" " +
+          "value=\"" + HTTPUtils.toHtmlValue(value) + "\"/>";
+      //Lookup Lists
+      LookupList select = (LookupList) request.getAttribute(name);
+      if (select == null) {
+        return textBox;
+      } else {
+        select.setJsEvent("onClick=\"javascript:document.forms['paramForm'].elements['" + name + "'].value=this.options[this.selectedIndex].text\"");
+        if (value != null) {
+          return textBox + " " + select.getHtmlSelect(name + System.currentTimeMillis(), Integer.parseInt(value));
+        } else {
+          return textBox + " " + select.getHtmlSelect(name + System.currentTimeMillis(), -1);
+        }
       }
     } else if (name.startsWith("boolean_") && !name.endsWith("_where")) {
       //Html Selects
@@ -577,12 +651,40 @@ public class Parameter
           displayValue + "</div>" +
           "<input type=\"hidden\" name=\"" + name + "\" id=\"" + name +
           "\" value=\"" + value + "\">" +
-          "&nbsp; [<a href=\"javascript:popAccountsListSingle('" + name +
-          "','change" + name +
+          "&nbsp; [<a href=\"javascript:popSiteAccountsListSingle('" + name +
+          "','change" + name + "','siteid" +
           "', 'showMyCompany=true&filters=all|my|disabled');\">Select</a>]" +
           "&nbsp; [<a href=\"javascript:changeDivContent('change" + name +
           "','All');javascript:resetNumericFieldValue('" + name +
           "');\">Clear</a>]";
+    } else if (name.startsWith("siteid")) {
+      String resetOrg = "";
+      Parameter orgParam = params.getParameter("orgid");
+      if (orgParam != null) {
+        resetOrg += "javascript:changeDivContent('change" + orgParam.getName() + "', 'All');";
+        resetOrg += "javascript:resetNumericFieldValue('" + orgParam.getName() + "');";
+      }
+      return "<div id=\"change" + name + "\" style=\"display:inline\">" +
+          displayValue + "</div>" +
+          "<input type=\"hidden\" name=\"" + name + "\" id=\"" + name +
+          "\" value=\"" + value + "\">" +
+          "&nbsp; [<a href=\"javascript:popLookupSelector('" + name +
+          "','change" + name +
+          "', 'lookup_site_id', '&listType=single');" + (orgParam != null ? resetOrg : "") + "\">Select</a>]" +
+          "&nbsp; [<a href=\"javascript:changeDivContent('change" + name +
+          "','All');javascript:resetNumericFieldValue('" + name +
+          "');" + (orgParam != null ? resetOrg : "") + "\">Clear</a>]";
+    } else if (name.startsWith("range_date")) {
+      //Html Selects
+      HtmlSelect select = (HtmlSelect) request.getAttribute(name);
+      if (value != null) {
+        return select.getHtml(name, Integer.parseInt(value));
+      } else {
+        return select.getHtml(name, -1);
+      }
+    } else if (name.startsWith("hidden_")) {
+      return "<input type=\"hidden\" name=\"" + name + "\" " +
+          "value=\"" + HTTPUtils.toHtmlValue(value) + "\"/>";
     }
     return "Parameter type not supported";
   }

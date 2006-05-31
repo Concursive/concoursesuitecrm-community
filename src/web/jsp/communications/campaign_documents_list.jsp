@@ -47,7 +47,7 @@
 <%-- End Trails --%>
 <dhv:container name="communications" selected="documents" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
 <dhv:permission name="campaign-campaigns-edit"><a href="CampaignDocuments.do?command=Add&id=<%= Campaign.getId() %>&folderId=<%= FileItemList.getFolderId() %>"><dhv:label name="campaign.addADocument">Add a Document</dhv:label></a> |
-<a href="CampaignManager.do?command=ExportReport&id=<%= Campaign.getId() %>"><dhv:label name="campaign.exportCampaignToExcelFile">Export Campaign to Excel file</dhv:label></a><br></dhv:permission>
+<a href="CampaignManager.do?command=ExportReport&id=<%= Campaign.getId() %>"><dhv:label name="campaign.exportCampaignToExcelFile">Export Campaign to Excel file</dhv:label></a><br/><br/></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="CampaignDocListInfo"/></center></dhv:include>
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDocListInfo"/>

@@ -59,7 +59,13 @@ public final class TroubleTicketsDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
 
       //Build the folder list
       FileFolderList folders = new FileFolderList();
@@ -121,7 +127,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
 
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       String folderId = context.getRequest().getParameter("folderId");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
@@ -181,7 +194,13 @@ public final class TroubleTicketsDocuments extends CFSModule {
       if (subject != null) {
         context.getRequest().setAttribute("subject", subject);
       }
-      int ticketId = addTicket(context, db, id);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db, id);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
 
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
 
@@ -257,7 +276,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       FileItem thisFile = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       context.getRequest().setAttribute("FileItem", thisFile);
@@ -313,7 +339,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
         context.getRequest().setAttribute("subject", subject);
       }
       db = getConnection(context);
-      int ticketId = addTicket(context, db, id);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db, id);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
@@ -379,7 +412,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
     }
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
@@ -423,10 +463,16 @@ public final class TroubleTicketsDocuments extends CFSModule {
     String stream = (String) context.getRequest().getParameter("stream");
     SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
-    int ticketId = -1;
     try {
       db = getConnection(context);
-      ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       thisItem = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       if (version != null) {
@@ -536,7 +582,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
@@ -581,10 +634,16 @@ public final class TroubleTicketsDocuments extends CFSModule {
     String filename = (String) context.getRequest().getParameter(
         "clientFilename");
     Connection db = null;
-    int ticketId = -1;
     try {
       db = getConnection(context);
-      ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.setClientFilename(filename);
@@ -629,7 +688,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       recordDeleted = thisItem.delete(db, this.getPath(context, "tickets"));
@@ -661,7 +727,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int addTicket(ActionContext context, Connection db) throws SQLException {
+  private Ticket addTicket(ActionContext context, Connection db) throws SQLException {
     String ticketId = (String) context.getRequest().getParameter("tId");
     if (ticketId == null) {
       ticketId = (String) context.getRequest().getAttribute("tId");
@@ -680,11 +746,11 @@ public final class TroubleTicketsDocuments extends CFSModule {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
+  private Ticket addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
     context.getRequest().setAttribute("tId", ticketId);
     Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
     context.getRequest().setAttribute("TicketDetails", thisTicket);
-    return thisTicket.getId();
+    return thisTicket;
   }
 
 
@@ -703,7 +769,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
     String itemId = (String) context.getRequest().getParameter("fid");
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       //Load the file
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
@@ -742,7 +815,14 @@ public final class TroubleTicketsDocuments extends CFSModule {
     String itemId = (String) context.getRequest().getParameter("fid");
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+
       //Load the file
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);

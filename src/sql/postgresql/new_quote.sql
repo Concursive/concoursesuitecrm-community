@@ -51,18 +51,15 @@ CREATE TABLE quote_entry (
   contact_id INT REFERENCES contact(contact_id),
   source_id INTEGER REFERENCES lookup_quote_source(code),
   grand_total FLOAT,
-  -- quote status
-	status_id INTEGER REFERENCES lookup_quote_status(code),
+  status_id INTEGER REFERENCES lookup_quote_status(code),
   status_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   expiration_date TIMESTAMP(3) DEFAULT NULL,
-  -- quote terms and type
-	quote_terms_id INTEGER REFERENCES lookup_quote_terms(code),
+  quote_terms_id INTEGER REFERENCES lookup_quote_terms(code),
   quote_type_id INTEGER REFERENCES lookup_quote_type(code),
   issued TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   short_description TEXT,
   notes TEXT NULL,
   ticketid INTEGER REFERENCES ticket(ticketid),
-	-- record status
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
 	modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -75,8 +72,7 @@ CREATE TABLE quote_product (
   item_id SERIAL PRIMARY KEY,
   quote_id INTEGER NOT NULL REFERENCES quote_entry(quote_id),
   product_id INTEGER NOT NULL REFERENCES product_catalog(product_id),
-  -- pricing and quantity of the base quote product
-	quantity INTEGER NOT NULL DEFAULT 0,
+  quantity INTEGER NOT NULL DEFAULT 0,
 	price_currency INTEGER REFERENCES lookup_currency(code),
   price_amount FLOAT NOT NULL DEFAULT 0,
   recurring_currency INTEGER REFERENCES lookup_currency(code),
@@ -85,8 +81,7 @@ CREATE TABLE quote_product (
 	extended_price FLOAT NOT NULL DEFAULT 0,
   total_price FLOAT NOT NULL DEFAULT 0,
   estimated_delivery_date TIMESTAMP(3),
-  -- quote status
-	status_id INTEGER REFERENCES lookup_quote_status(code),
+  status_id INTEGER REFERENCES lookup_quote_status(code),
   status_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   estimated_delivery TEXT,
   comment VARCHAR(300)

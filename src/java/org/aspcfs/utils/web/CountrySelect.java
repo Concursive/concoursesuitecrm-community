@@ -18,28 +18,29 @@ package org.aspcfs.utils.web;
 import org.aspcfs.controller.SystemStatus;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author matt rajkowski
- * @version $Id$
- * @created September 16, 2004
+ * @author     matt rajkowski
+ * @created    September 16, 2004
+ * @version    $Id: CountrySelect.java 13207 2005-11-03 14:51:59 -0500 (Thu, 03
+ *      Nov 2005) mrajkowski $
  */
 public class CountrySelect extends HtmlSelect {
 
   /**
-   * Constructor for the CountrySelect object
+   *  Constructor for the CountrySelect object
    */
   public CountrySelect() {
-    this.addItem(-1, "--None--");
+    this.addItem(-1, "-- None --");
     this.setDefaultValue("UNITED STATES");
     addCountries();
   }
 
 
   /**
-   * Constructor for the CountrySelect object
+   *  Constructor for the CountrySelect object
    *
-   * @param thisSystem Description of the Parameter
+   * @param  thisSystem  Description of the Parameter
    */
   public CountrySelect(SystemStatus thisSystem) {
     this.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
@@ -49,9 +50,9 @@ public class CountrySelect extends HtmlSelect {
 
 
   /**
-   * Constructor for the CountrySelect object
+   *  Constructor for the CountrySelect object
    *
-   * @param emptyItem Description of the Parameter
+   * @param  emptyItem  Description of the Parameter
    */
   public CountrySelect(String emptyItem) {
     this.addItem(-1, emptyItem);
@@ -61,7 +62,7 @@ public class CountrySelect extends HtmlSelect {
 
 
   /**
-   * Adds a feature to the Countries attribute of the CountrySelect object
+   *  Adds a feature to the Countries attribute of the CountrySelect object
    */
   private void addCountries() {
     this.addItem("AFGHANISTAN", "AFGHANISTAN");
@@ -284,5 +285,19 @@ public class CountrySelect extends HtmlSelect {
     this.addItem("ZIMBABWE", "ZIMBABWE");
   }
 
+
+  /**
+   *  Gets the countryByAbbreviation attribute of the CountrySelect object
+   *
+   * @param  country  Description of the Parameter
+   * @return          The countryByAbbreviation value
+   */
+  public static String getCountryByAbbreviation(String country) {
+    String result = country;
+    if (country != null && (country.trim().toUpperCase().equals("USA") || country.trim().toUpperCase().equals("US"))) {
+      result = new String("UNITED STATES");
+    }
+    return result;
+  }
 }
 

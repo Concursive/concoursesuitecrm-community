@@ -25,10 +25,10 @@
 <jsp:useBean id="ShortChildList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="SalesDashboardListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session" />
 <jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request" />
-<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
 <jsp:useBean id="myLeads" class="java.lang.String" scope="session" />
 <jsp:useBean id="listForm" class="java.lang.String" scope="request" />
 <jsp:useBean id="GraphFileName" class="java.lang.String" scope="request" />
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application" />
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -187,15 +187,20 @@
 %>
 				<tr class="row<%= rowid %>">
          <td valign="top">
-            <a href="javascript:displayMenu('select-arrow<%= menuCount %>','menuContact','<%= thisLead.getId() %>','dashboard','<%= thisLead.getIsLead() %>');" 
+            <a href="javascript:displayMenu('select-arrow<%= menuCount %>','menuContact','<%= thisLead.getId() %>','dashboard','<%= thisLead.getIsLead() %>', '<%= thisLead.getOrgId() %>', '<%= thisLead.getOwner() != -1 %>',<%= thisLead.getSiteId() %>,'<%= thisLead.getLeadStatus() %>');" 
             onMouseOver="over(0, <%= menuCount %>);" 
             onmouseout="out(0, <%= menuCount %>);hideMenu('menuContact');"><img
             src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
           </td>
           <td valign="top" width="100%">
-            <%= toHtml(thisLead.getNameLastFirst()) %>
+            <dhv:evaluate if="<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) %>">
+              <%= toHtml(thisLead.getNameLastFirst()) %>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) && thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>">
+              <br />
+            </dhv:evaluate>
             <dhv:evaluate if="<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>">
-              <br /><%= toHtml(thisLead.getCompany()) %>
+              <%= toHtml(thisLead.getCompany()) %>
             </dhv:evaluate>
           </td>
           <td valign="top">
@@ -203,14 +208,14 @@
               <dhv:label name="sales.working">Working</dhv:label>
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisLead.getIsLead() %>">
-              <dhv:label name="sales.<%= thisLead.getLeadStatusString() %>"><%= toHtml(thisLead.getLeadStatusString()) %></dhv:label>
+              <dhv:label name="<%= "sales." + thisLead.getLeadStatusString() %>"><%= toHtml(thisLead.getLeadStatusString()) %></dhv:label>
             </dhv:evaluate>
           </td>
           <td valign="top">
               <dhv:username id="<%= thisLead.getOwner() %>" />
           </td>
           <td valign="top">
-            <dhv:tz timestamp="<%= thisLead.getEntered() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+            <zeroio:tz timestamp="<%= thisLead.getEntered() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
           </td>
         </tr>
 <%
@@ -218,7 +223,7 @@
 	  } else {
 %>
         <tr>
-          <td valign="center" colspan="5"><dhv:label name="sales.noLeadsFound">No leads found.</dhv:label></td>
+          <td valign="center" colspan="<%= User.getUserRecord().getSiteId() == -1?"6":"5" %>"><dhv:label name="sales.noLeadsFound">No leads found.</dhv:label></td>
         </tr>
 <%}%>
       </table>
@@ -235,4 +240,3 @@
 <input type="hidden" name="reset" value="false">
 </form>
 <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-

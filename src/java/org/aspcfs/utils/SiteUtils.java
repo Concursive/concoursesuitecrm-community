@@ -17,8 +17,8 @@ package org.aspcfs.utils;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
-import org.aspcfs.apps.common.ReportConstants;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
 
@@ -45,6 +45,10 @@ public class SiteUtils {
     return SiteUtils.getSiteList(prefs.getPrefs(), cp);
   }
 
+  public static SiteList getSiteList(ApplicationPrefs prefs, ConnectionPool cp, String vhost) {
+    return SiteUtils.getSiteList(prefs.getPrefs(), cp, vhost);
+  }
+
   /**
    * Generates a list of sites depending on the configuration parameters
    * specified, generally a build.properties file config
@@ -57,6 +61,10 @@ public class SiteUtils {
   }
 
   public static SiteList getSiteList(Map config, ConnectionPool cp) {
+    return getSiteList(config, cp, (String) null);
+  }
+
+  public static SiteList getSiteList(Map config, ConnectionPool cp, String vhost) {
     Connection dbSites = null;
     SiteList siteList = new SiteList();
     String appCode = (String) config.get("GATEKEEPER.APPCODE");
@@ -77,9 +85,12 @@ public class SiteUtils {
           dbSites = DriverManager.getConnection(baseName, dbUser, dbPass);
         }
         siteList.setSiteCode(appCode);
-        siteList.setEnabled(ReportConstants.TRUE);
+        siteList.setEnabled(Constants.TRUE);
+        siteList.setVirtualHost(vhost);
         siteList.buildList(dbSites);
-        dbSites.close();
+        if (cp == null) {
+          dbSites.close();
+        }
       } else {
         //This setup only allows one site so process it
         Site thisSite = new Site();
@@ -103,5 +114,62 @@ public class SiteUtils {
     }
     return siteList;
   }
-}
 
+
+  public static SiteList getSiteList(ApplicationPrefs prefs, ConnectionPool cp, ConnectionElement ce) {
+    return SiteUtils.getSiteList(prefs.getPrefs(), cp, ce);
+  }
+
+
+  public static SiteList getSiteList(Map config, ConnectionPool cp, ConnectionElement ceToCompare) {
+    Connection dbSites = null;
+    SiteList siteList = new SiteList();
+    String appCode = (String) config.get("GATEKEEPER.APPCODE");
+    String baseName = (String) config.get("GATEKEEPER.URL");
+    String dbUser = (String) config.get("GATEKEEPER.USER");
+    String dbPass = (String) config.get("GATEKEEPER.PASSWORD");
+    String driver = (String) config.get("GATEKEEPER.DRIVER");
+    try {
+      if ("true".equals((String) config.get("WEBSERVER.ASPMODE"))) {
+        if (cp != null) {
+          ConnectionElement ce = new ConnectionElement(
+              baseName, dbUser, dbPass);
+          ce.setDriver(driver);
+          dbSites = cp.getConnection(ce);
+        } else {
+          //Build list of sites to process
+          Class.forName(driver);
+          dbSites = DriverManager.getConnection(baseName, dbUser, dbPass);
+        }
+        siteList.setSiteCode(appCode);
+        siteList.setDbHost(ceToCompare.getUrl());
+        siteList.setEnabled(Constants.TRUE);
+        siteList.buildList(dbSites);
+        if (cp == null) {
+          dbSites.close();
+        }
+      } else {
+        //This setup only allows one site so process it
+        Site thisSite = new Site();
+        thisSite.setDatabaseDriver((String) config.get("GATEKEEPER.DRIVER"));
+        thisSite.setDatabaseUrl((String) config.get("GATEKEEPER.URL"));
+        thisSite.setDatabaseName((String) config.get("GATEKEEPER.DATABASE"));
+        thisSite.setDatabaseUsername((String) config.get("GATEKEEPER.USER"));
+        thisSite.setDatabasePassword(
+            (String) config.get("GATEKEEPER.PASSWORD"));
+        thisSite.setSiteCode((String) config.get("GATEKEEPER.APPCODE"));
+        thisSite.setVirtualHost((String) config.get("WEBSERVER.URL"));
+        thisSite.setLanguage((String) config.get("SYSTEM.LANGUAGE"));
+        siteList.add(thisSite);
+      }
+    } catch (Exception e) {
+      return null;
+    } finally {
+      if (cp != null) {
+        cp.free(dbSites);
+      }
+    }
+    return siteList;
+  }
+
+}

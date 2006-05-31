@@ -53,6 +53,8 @@
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 <form method="post" name="inputForm" action="CampaignDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="id" value="<%= Campaign.getId() %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -99,8 +101,6 @@
   </p>
   <input type="submit" value=" <dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload">
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>';">
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="id" value="<%= Campaign.getId() %>">
 </dhv:container>
 </form>
 </body>

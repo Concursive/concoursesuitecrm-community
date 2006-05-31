@@ -21,7 +21,7 @@
 <%@ page import="java.util.*, java.sql.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <%@ page import="com.zeroio.iteam.base.*" %>
-<%@ page import="org.aspcfs.modules.admin.base.User" %>
+<%@ page import="org.aspcfs.modules.admin.base.User, org.aspcfs.modules.actionplans.base.*" %>
 <jsp:useBean id="ShortChildList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="Viewpoints" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
@@ -31,7 +31,10 @@
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Read in the image map for the graph --%>
-<% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map";%>          
+<% 
+  String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map";
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>          
 <jsp:include page="<%= includePage %>" flush="true"/>
 <script type="text/javascript">
 function reopenOpportunity(id) {
@@ -127,13 +130,13 @@ function reopenOpportunity(id) {
           <td valign="center" nowrap>
             <a href="Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) == 0.0 %>">
-              (0K)
+              (<zeroio:currency value="<%= 0 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) > 0 && thisRec.getGrossPipeline(1000) < 1 %>">
-              (&lt; 1K)
+              (&lt; <zeroio:currency value="<%= 1 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) >= 1 %>">
-              (<zeroio:currency value="<%= thisRec.getGrossPipeline(1000) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
+              (<zeroio:currency value="<%= thisRec.getGrossPipeline(1000) %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
             </dhv:evaluate>
             <dhv:evaluate if="<%=!thisRec.getEnabled() || (thisRec.getExpires() != null && thisRec.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis())))%>"><font color="red">*</font></dhv:evaluate>
           </td>
@@ -176,6 +179,24 @@ function reopenOpportunity(id) {
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisHeader.hasFiles() %>">
               <%= thisFile.getImageTag("-23") %>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= thisHeader.getPlanWorkList().size() > 0 %>">
+              <table class="empty">
+                <%
+                  Iterator plans = thisHeader.getPlanWorkList().iterator();
+                  while (plans.hasNext()) {
+                    ActionPlanWork thisPlan = (ActionPlanWork) plans.next();
+                %>
+                  <tr>
+                    <td><img border="0" src="images/arrowright.gif" align="absmiddle" /></td>
+                    <dhv:evaluate if="<%= thisHeader.getAccountLink() != -1 %>">
+                      <td><a href="AccountActionPlans.do?command=Details&actionPlanId=<%= thisPlan.getId() %>&orgId=<%= thisHeader.getAccountLink() %>"><%= toHtml(thisPlan.getPlanName()) %></a></td>
+                    </dhv:evaluate>
+                  </tr>
+                <%
+                  }
+                %>
+              </table>
             </dhv:evaluate>
           </td>
           <td width="55" nowrap align="right">

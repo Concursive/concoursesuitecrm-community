@@ -1,0 +1,1057 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+- we assume enabled=true
+
+- we assume level = the order listed
+
+- we assume default_item=false, unless...
+
+- if a default, then specify the default_item as an attribute
+
+- use CDATA for each XML record
+
+- Some lookup table records have custom attributes/data columns that need
+  if attributes other than 'enabled' and 'default_item', specify its datatype in the attribute element.
+  For e.g., if an attribute link_id exists of type integer, specify its datatype
+  as follows 
+  <attribute name="link_id" type="integer"/>
+  if the attribute is not defined its data type is assumed to be a string
+
+- In certain lookup tables, a column value may refer to another column value in another lookup table
+   (i.e., a foreign key constraint on the column of a lookup table)
+   Consider the following example
+
+    <lookup table="lookup_l1">
+      <record LUID="2005022510"><![CDATA[1a-1]]></record>
+      <record LUID="2005022511"><![CDATA[1b-1]]></record>
+      <record LUID="2005022512"><![CDATA[1c-1]]></record>
+      <record LUID="2005022513"><![CDATA[1d-1]]></record>
+      <record LUID="2005022514"><![CDATA[1e-1]]></record>
+    </lookup>                              
+    <lookup table="lookup_l11">
+      <attribute name="link_id" type="look_upl1.LUID"/>
+      <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record>
+      <record link_id="lookup_l1.2005022511"><![CDATA[11b-1]]></record>
+      <record link_id="lookup_l1.2005022512"><![CDATA[11c-1]]></record>
+      <record link_id="lookup_l1.2005022513"><![CDATA[11d-1]]></record>
+    </lookup>
+
+  The values of attribute 'link_id' (lookup_l1.NUM) of table 'lookup_l11' refers to the value
+  of the attribute 'LUID' (Locally Unique Identifier) attribute of 'lookup_l1'. 
+  
+  In the element <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record> the 
+  attribute value "lookup_l1.2005022510" refers to  value "2005022510" of attribute "LUID" in
+  lookup table 'lookup_l1'
+
+  Note that the datatype of 'link_id' is defined as 'look_upl1.LUID', more generically it is 
+  '<referring tablename>.LUID' 
+
+- The primary key of lookup tables is assumed to be 'code'. If the primary key differs specify the 
+   primary key as an attribute 'key' in the 'lookup' element and the value of the attribute as the name 
+   of the primary key. For example if the primary key of a table is 'type_id' specify as follows 
+    <lookup table="lookup_l1" key="type_id">
+      <record><![CDATA[A]]></record>
+      <record><![CDATA[B]]></record>
+      <record><![CDATA[C]]></record>
+    </lookup>
+     
+- To be specified and added to the insert query, lookup_lists_xx_XX.xml will reside in the system directory.
+
+- Most tables have a single description column, which is represented as a CDATA for each 'record' element, however
+  if more than one field exists that are similar to description, the following method can be used to specify the 
+  values of those columns
+
+ <lookup table="lookup_l4">
+  <record>
+    <item1><![CDATA[4a-1-1]]></item1>
+    <item2><![CDATA[4a-2-1]]></item2>
+  </record>
+  <record>
+    <item1><![CDATA[4b-1-1]]></item1>
+    <item2><![CDATA[4b-2-1]]></item2>
+  </record>             
+  <record>
+    <item1><![CDATA[4c-1-1]]></item1>
+    <item2><![CDATA[4c-2-1]]></item2>
+  </record>             
+ </lookup>
+
+  In this example it is assumed that the table lookup_l4 has two columns 'item1' and 'item2' which 
+  are equivalent to description (and hence required translation)
+
+- As and when other variations are required for a lookup table , they may be included, 
+  but a custom handler needs to be implemented for this lookup list
+  
+- Some lookup lists may be preceded by an explanation or comment. They should be read and
+  understood before their values are changed                               
+-->
+<lookupLists>
+    <lookup table="asset_category_draft" key="id">
+      <attribute name="parent_cat_code" type="asset_category_draft.LUID"/>
+      <attribute name="cat_level" type="integer"/>
+      <record LUID="2005022711"><![CDATA[Software]]></record>
+      <record LUID="2005022712"><![CDATA[Hardware]]></record>
+      <record LUID="2005022714" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[Besturingssystemen]]></record>
+      <record LUID="2005022715" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[Applicatiesoftware]]></record>
+      <record LUID="2005022717" cat_level="1" parent_cat_code="asset_category_draft.2005022712"><![CDATA[Desktops]]></record>
+      <record LUID="2005022718" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[Mailserver]]></record>
+      <record LUID="2005022719" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[CRM]]></record>
+      <record LUID="2005022720" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Linux]]></record>
+      <record LUID="2005022721" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Unix]]></record>
+      <record LUID="2005022722" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Windows 2003]]></record>
+    </lookup>            
+    <!-- 
+      The CDATA for the operator element SHOULD NOT be changed
+      The CDATA for the display_text may be changed for the chosen language
+    -->
+    <lookup table="field_types" key="id">
+      <attribute name="data_typeid" type="integer" />
+      <attribute name="data_type" type="string" />
+      <record data_typeid="0" data_type="string">
+        <operator><![CDATA[=]]></operator>
+        <display_text><![CDATA[is gelijk aan]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string">
+        <operator><![CDATA[!=]]></operator>
+        <display_text><![CDATA[is ongelijk aan]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[= | or field_name is null]]></operator>
+        <display_text><![CDATA[is leeg]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[!= | and field_name is not null]]></operator>
+        <display_text><![CDATA[is niet leeg]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[like %search_value%]]></operator>
+        <display_text><![CDATA[bevat]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[not like %search_value%]]></operator>
+        <display_text><![CDATA[bevat geen]]></display_text>
+      </record>
+
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[<]]></operator>
+        <display_text><![CDATA[is kleiner dan]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[>]]></operator>
+        <display_text><![CDATA[is groter dan]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date" enabled="false">
+        <operator><![CDATA[between]]></operator>
+        <display_text><![CDATA[tussen]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[<=]]></operator>
+        <display_text><![CDATA[is kleiner of gelijk aan]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[>=]]></operator>
+        <display_text><![CDATA[is groter of gelijk aan]]></display_text>
+      </record>
+
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[>]]></operator>
+        <display_text><![CDATA[groter dan]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[<]]></operator>
+        <display_text><![CDATA[kleiner dan]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[=]]></operator>
+        <display_text><![CDATA[is gelijk aan]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[>=]]></operator>
+        <display_text><![CDATA[groter of gelijk aan]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[<=]]></operator>
+        <display_text><![CDATA[kleiner of gelijk aan]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[is not null]]></operator>
+        <display_text><![CDATA[bestaat]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[is null]]></operator>
+        <display_text><![CDATA[bestaat niet]]></display_text>
+      </record>
+    </lookup>
+    <lookup table="lookup_access_types">
+      <attribute name="link_module_id" type="integer" />
+      <attribute name="rule_id" type="integer" />
+      <record link_module_id="626030330" default_item="true" rule_id="626030335">Gecontroleerde hiërarchie</record>
+      <record link_module_id="626030330" rule_id="626030334">Openbaar</record>
+      <record link_module_id="626030330" rule_id="626030333">Persoonlijk</record>
+      <record link_module_id="626030331" default_item="true" rule_id="626030334">Openbaar</record>
+      <record link_module_id="626030332" default_item="true" rule_id="626030334">Openbaar</record>
+      <record link_module_id="707031028" default_item="true" rule_id="626030335">Gecontroleerde hiërarchie</record>
+      <record link_module_id="707031028" rule_id="626030334">Openbaar</record>
+      <record link_module_id="707031028" rule_id="626030333">Persoonlijk</record>
+    </lookup>
+    <lookup table="lookup_account_types">
+      <record><![CDATA[Klein]]></record>
+      <record><![CDATA[Gemiddeld]]></record>
+      <record><![CDATA[Groot]]></record>
+      <record><![CDATA[Contract]]></record>
+      <record><![CDATA[Non-contract]]></record>
+      <record><![CDATA[Gebied 1: Noordoost]]></record>
+      <record><![CDATA[Gebied 2: Zuidoost]]></record>
+      <record><![CDATA[Gebied 3: Midden]]></record>
+      <record><![CDATA[Gebied 4: Noordwest]]></record>
+      <record><![CDATA[Gebied 5: Zuidwest]]></record>
+    </lookup>
+    <lookup table="lookup_asset_status">
+      <record default_item="true"><![CDATA[In gebruik]]></record>
+      <record><![CDATA[Niet in gebruik]]></record>
+      <record><![CDATA[Benodigd onderhoud]]></record>
+      <record><![CDATA[Afgeschreven]]></record>
+    </lookup>
+    <lookup table="lookup_call_priority">
+      <attribute name="weight" type="integer" />
+      <record default_item="true" weight="10"><![CDATA[Laag]]></record>
+      <record weight="20"><![CDATA[Gemiddeld]]></record>
+      <record weight="30"><![CDATA[Hoog]]></record>
+    </lookup>
+    <!-- 
+      The value for the attribute base_value of the record element 
+      denotes seconds equivalent of whatever is specified in the CDATA
+      for the record element. For e.g., A 'Minute' has 60 seconds, hence the attribute
+      value is "60"
+    -->
+    <lookup table="lookup_call_reminder">
+      <attribute name="base_value" type="integer" />
+      <record base_value="60" default_item="true"><![CDATA[Minu(u)t(en)]]></record>
+      <record base_value="3600"><![CDATA[U(u)r(en)]]></record>
+      <record base_value="86400"><![CDATA[Dag(en)]]></record>
+      <record base_value="604800"><![CDATA[We(e)k(en)]]></record>
+      <record base_value="18144000"><![CDATA[Maand(en)]]></record>
+    </lookup>
+    <lookup table="lookup_call_result" key="result_id">
+        <attribute name="next_required" type="boolean"/>
+        <attribute name="next_days" type="integer"/>
+        <attribute name="canceled_type" type="boolean"/>
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[Ja - werk voorhanden]]></record>
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[Nee - geen werk op dit moment]]></record>
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[Onduidelijk - Onduidelijk of geen contact gemaakt]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Aan concurrentie verloren]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Geen verdere interesse]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Gebeurtenis uitgesteld/geannuleerd]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Een aanhangige actie]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Nogmaals contact zoeken]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Contactpersoon werkt niet langer bij het bedrijf]]></record>
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[Onderhouden]]></record>
+    </lookup>
+    <lookup table="lookup_call_types">
+      <record default_item="true"><![CDATA[Binnengekomen telefoongesprek]]></record>
+      <record><![CDATA[Uitgaand telefoongesprek]]></record>
+      <record><![CDATA[Proactief telefoongesprek]]></record>
+      <record><![CDATA[Afspraak op de zaak]]></record>
+      <record><![CDATA[Afspraak buiten de zaak]]></record>
+      <record><![CDATA[Proactieve afspraak]]></record>
+      <record><![CDATA[Emailonderhoud]]></record>
+      <record><![CDATA[Proactieve email]]></record>
+      <record><![CDATA[Faxonderhoud]]></record>
+      <record><![CDATA[Proactieve fax]]></record>
+    </lookup>
+    <lookup table="lookup_contactaddress_types">
+      <record><![CDATA[Zakelijk]]></record>
+      <record><![CDATA[Privé]]></record>
+      <record><![CDATA[Anders]]></record>
+    </lookup>
+    <lookup table="lookup_contactemail_types">
+      <record><![CDATA[Zakelijk]]></record>
+      <record><![CDATA[Privé]]></record>
+      <record><![CDATA[Anders]]></record>
+    </lookup>
+    <lookup table="lookup_contactphone_types">
+      <record><![CDATA[Zakelijk]]></record>
+      <record><![CDATA[Zakelijk2]]></record>
+      <record><![CDATA[Zakelijke fax]]></record>
+      <record><![CDATA[Privé]]></record>
+      <record><![CDATA[Privé2]]></record>
+      <record><![CDATA[Privé fax]]></record>
+      <record><![CDATA[Mobiel]]></record>
+      <record><![CDATA[Bieper]]></record>
+      <record><![CDATA[Anders]]></record>
+    </lookup>
+  <lookup table="lookup_contact_types">
+      <attribute name="category" type="integer"/>
+      <record category="0"><![CDATA[Kennis]]></record>
+      <record category="0"><![CDATA[Concurrent]]></record>
+      <record category="0"><![CDATA[Klant]]></record>
+      <record category="0"><![CDATA[Vriend]]></record>
+      <record category="0"><![CDATA[Prospect]]></record>
+      <record category="0"><![CDATA[Aandeelhouder]]></record>
+      <record category="0"><![CDATA[Verkoop]]></record>
+      <record category="1"><![CDATA[Boekhouding]]></record>
+      <record category="1"><![CDATA[Administratief]]></record>
+      <record category="1"><![CDATA[Bedrijfs-ontwikkeling]]></record>
+      <record category="1"><![CDATA[Klanten service]]></record>
+      <record category="1"><![CDATA[Engineering]]></record>
+      <record category="1"><![CDATA[Management]]></record>
+      <record category="1"><![CDATA[Financiën]]></record>
+      <record category="1"><![CDATA[Marketing]]></record>
+      <record category="1"><![CDATA[Logistiek]]></record>
+      <record category="1"><![CDATA[Werving en selectie]]></record>
+      <record category="1"><![CDATA[Verkoop]]></record>
+      <record category="1"><![CDATA[Verzending/ontvanging]]></record>
+      <record category="1"><![CDATA[Technologie]]></record>
+    </lookup>
+    <lookup table="lookup_contact_source">
+      <record><![CDATA[Advertentie]]></record>
+      <record><![CDATA[Medewerker]]></record>
+      <record><![CDATA[Extern]]></record>
+      <record><![CDATA[Partner]]></record>
+      <record><![CDATA[Public Relations]]></record>
+      <record><![CDATA[Beurs]]></record>
+      <record><![CDATA[Web]]></record>
+      <record><![CDATA[Mondeling]]></record>
+      <record><![CDATA[Anders]]></record>
+    </lookup>
+  <lookup table="lookup_creditcard_types">
+      <record><![CDATA[Visa]]></record>
+      <record><![CDATA[MasterCard]]></record>
+      <record><![CDATA[American Express]]></record>
+      <record><![CDATA[Discover]]></record>
+    </lookup>
+    <lookup table="lookup_currency">
+    </lookup>
+    <lookup table="lookup_delivery_options">
+      <record><![CDATA[Enkel email]]></record>
+      <record><![CDATA[Enkel fax]]></record>
+      <record><![CDATA[Enkel brief]]></record>
+      <record><![CDATA[Email daarna fax]]></record>
+      <record><![CDATA[Email daarna brief]]></record>
+      <record><![CDATA[Email,fax daarna brief]]></record>
+      <record><![CDATA[Verzending]]></record>
+      <record enabled="false"><![CDATA[Messenger]]></record>
+      <record enabled="false"><![CDATA[Beveiligde socket]]></record>
+    </lookup>
+    <lookup table="lookup_department">
+      <record><![CDATA[Boekhouding]]></record>
+      <record><![CDATA[Administratie]]></record>
+      <record><![CDATA[Facturatie]]></record>
+      <record><![CDATA[Klantenservice]]></record>
+      <record><![CDATA[Engineering]]></record>
+      <record><![CDATA[Financiën]]></record>
+      <record><![CDATA[Human Resources]]></record>
+      <record><![CDATA[Juridisch]]></record>
+      <record><![CDATA[Marketing]]></record>
+      <record><![CDATA[Uitvoering]]></record>
+      <record><![CDATA[Inkoop]]></record>
+      <record><![CDATA[Verkoop]]></record>
+      <record><![CDATA[Logistiek]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_permission_category">
+      <record LUID="2251509"><![CDATA[Documentopslagdetails]]></record>
+      <record LUID="2251510"><![CDATA[Teamleden]]></record>
+      <record LUID="2251511"><![CDATA[Documentenbibliotheek]]></record>
+      <record LUID="2251512"><![CDATA[Setup]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_role">
+      <attribute name="group_id" type="integer" />
+      <record group_id="1" level="1" LUID="2251509"><![CDATA[Beheerder]]></record>
+      <record group_id="1" level="2" LUID="2251510"><![CDATA[Medewerker niveau 3]]></record>
+      <record group_id="1" level="3" LUID="2251511"><![CDATA[Medewerker niveau 2]]></record>
+      <record group_id="1" level="4" LUID="2251512"><![CDATA[Medewerker niveau 1]]></record>
+      <record group_id="1" level="5" LUID="2251513"><![CDATA[Gast]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_permission">
+      <attribute name="group_id" type="integer" />
+      <attribute name="category_id" type="lookup_document_store_permission_category.LUID" />
+      <attribute name="default_role" type="lookup_document_store_role.LUID" />
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251513" permission="documentcenter-details-view"><![CDATA[Bekijken documentopslagdetails]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-edit"><![CDATA[Wijzigen documentopslagdetails]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-delete"><![CDATA[Verwijderen documentenopslag]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251513" permission="documentcenter-team-view"><![CDATA[Bekijken teamleden]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251512" permission="documentcenter-team-view-email"><![CDATA[Bekijken emailadressen teamleden]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit"><![CDATA[Wijzigen team]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit-role"><![CDATA[Wijzigen rol teamlid]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-view"><![CDATA[Bekijken documenten]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-add"><![CDATA[Aanmaken mappen]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-folders-edit"><![CDATA[Wijzigen mappen]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-delete"><![CDATA[Verwijderen mappen]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251512" permission="documentcenter-documents-files-upload"><![CDATA[Uploaden bestanden]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-files-download"><![CDATA[Downloaden bestanden]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-files-rename"><![CDATA[Hernoemen bestanden]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-files-delete"><![CDATA[Bekijken documentenopslagdetails]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251512" default_role="lookup_document_store_role.2251509" permission="documentcenter-setup-permissions"><![CDATA[Instellen bevoegdheden documentenopslag]]></record>
+    </lookup>
+    <lookup table="lookup_email_model">
+      <record><![CDATA[Geen emailondersteuing]]></record>
+      <record><![CDATA[2 uren]]></record>
+      <record><![CDATA[4 uren]]></record>
+      <record><![CDATA[Zelfde dag]]></record>
+      <record><![CDATA[Volgende werkdag]]></record>
+    </lookup>
+    <lookup table="lookup_employment_types">
+    </lookup>
+    <lookup table="lookup_help_features">
+    </lookup>
+    <lookup table="lookup_hours_reason">
+      <record><![CDATA[Aankoop]]></record>
+      <record><![CDATA[Vernieuwing]]></record>
+      <record><![CDATA[Verbetering]]></record>
+    </lookup>
+    <lookup table="lookup_im_types">
+      <record><![CDATA[Zakelijk]]></record>
+      <record><![CDATA[Persoonlijk]]></record>
+      <record><![CDATA[Anders]]></record>
+    </lookup>
+    <lookup table="lookup_im_services">
+      <record><![CDATA[AIM]]></record>
+      <record><![CDATA[Jabber]]></record>
+      <record><![CDATA[MSN]]></record>
+      <record><![CDATA[ICQ]]></record>
+      <record><![CDATA[Yahoo]]></record>
+    </lookup>
+    <lookup table="lookup_industry">
+      <record><![CDATA[Automobiel]]></record>
+      <record><![CDATA[Biotechnologie]]></record>
+      <record><![CDATA[TV en radio]]></record>
+      <record><![CDATA[Computer]]></record>
+      <record><![CDATA[Consultancy]]></record>
+      <record><![CDATA[Defensie]]></record>
+      <record><![CDATA[NUTS]]></record>
+      <record><![CDATA[Educatie]]></record>
+      <record><![CDATA[Financiële diensten]]></record>
+      <record><![CDATA[Voeding]]></record>
+      <record><![CDATA[Gezondheidszorg]]></record>
+      <record><![CDATA[Verzekeringen]]></record>
+      <record><![CDATA[Internet]]></record>
+      <record><![CDATA[Juridische bedrijven]]></record>
+      <record><![CDATA[Media]]></record>
+      <record><![CDATA[Geneesmiddelen]]></record>
+      <record><![CDATA[Makelaar]]></record>
+      <record><![CDATA[Retail]]></record>
+      <record><![CDATA[Telecommunicatie]]></record>
+      <record><![CDATA[Transport]]></record>
+	  <record><![CDATA[Overheid]]></record>
+    </lookup>
+    <lookup table="lookup_locale">
+    </lookup>
+    <lookup table="lookup_onsite_model">
+      <record><![CDATA[Geen service op locatie]]></record>
+      <record><![CDATA[Ma-Vr 7AM-4PM]]></record>
+      <record><![CDATA[Ma-Vr 8AM-5PM]]></record>
+      <record><![CDATA[Ma-Fr 8AM-8PM]]></record>
+      <record><![CDATA[24x7]]></record>
+    </lookup>
+    <lookup table="lookup_opportunity_types">
+      <attribute name="order_id" type="integer" />
+      <record><![CDATA[Verhuur]]></record>
+      <record><![CDATA[Consultatie]]></record>
+      <record><![CDATA[Ontwikkeling]]></record>
+      <record><![CDATA[Onderhoud]]></record>
+      <record><![CDATA[Verkoop producten]]></record>
+      <record><![CDATA[Diensten]]></record>
+    </lookup>
+    <lookup table="lookup_orderaddress_types">
+      <record><![CDATA[Factuuradres]]></record>
+      <record><![CDATA[Verzendadres]]></record>
+    </lookup>
+    <lookup table="lookup_order_source">
+    </lookup>
+    <lookup table="lookup_order_status">
+      <record><![CDATA[Aanhangig]]></record>
+      <record><![CDATA[In uitvoering]]></record>
+      <record><![CDATA[Geannuleerd]]></record>
+      <record><![CDATA[Geweigerd]]></record>
+      <record><![CDATA[Afgerond]]></record>
+      <record><![CDATA[Afgesloten]]></record>
+    </lookup>
+    <lookup table="lookup_order_terms">
+    </lookup>
+    <lookup table="lookup_order_type">
+      <record><![CDATA[Nieuw]]></record>
+      <record><![CDATA[Verander]]></record>
+      <record><![CDATA[Upgrade]]></record>
+      <record><![CDATA[Downgrade]]></record>
+      <record><![CDATA[Afbreken]]></record>
+      <record><![CDATA[Verplaats]]></record>
+      <record><![CDATA[Stuur terug]]></record>
+      <record><![CDATA[Opschorten]]></record>
+      <record><![CDATA[De-opschorten]]></record>
+    </lookup>
+    <lookup table="lookup_orgaddress_types">
+      <record><![CDATA[Primair]]></record>
+      <record><![CDATA[Secundair]]></record>
+      <record><![CDATA[Factuur]]></record>
+      <record><![CDATA[Verzend]]></record>
+    </lookup>
+    <lookup table="lookup_orgemail_types">
+      <record><![CDATA[Primair]]></record>
+      <record><![CDATA[Secundair]]></record>
+    </lookup>
+    <lookup table="lookup_orgphone_types">
+      <record><![CDATA[Primair]]></record>
+      <record><![CDATA[Fax]]></record>
+    </lookup>
+    <lookup table="lookup_payment_methods">
+      <record><![CDATA[Contant]]></record>
+      <record><![CDATA[Creditcard]]></record>
+      <record><![CDATA[Cheque]]></record>
+      <record><![CDATA[Overboeking]]></record>
+       </lookup>
+    <lookup table="lookup_payment_status">
+      <record><![CDATA[Aanhangig]]></record>
+      <record><![CDATA[In uitvoering]]></record>
+      <record><![CDATA[Goedgekeurd]]></record>
+      <record><![CDATA[Afgewezen]]></record>
+    </lookup>
+    <lookup table="lookup_phone_model">
+      <record><![CDATA[Geen telefonische ondersteuning]]></record>
+      <record><![CDATA[< 15 minuten]]></record>
+      <record><![CDATA[< 5 minuten]]></record>
+      <record><![CDATA[Ma-Vr 7AM-4PM]]></record>
+      <record><![CDATA[Ma-Vr 8AM-5PM]]></record>
+      <record><![CDATA[Ma-Vr 8AM-8PM]]></record>
+      <record><![CDATA[24x7]]></record>
+    </lookup>
+    <lookup table="lookup_product_category_type">
+    </lookup>
+    <lookup table="lookup_product_conf_result">
+      <record><![CDATA[integer]]></record>
+      <record><![CDATA[float]]></record>
+      <record><![CDATA[boolean]]></record>
+      <record><![CDATA[timestamp]]></record>
+      <record><![CDATA[string]]></record>
+    </lookup>
+    <lookup table="lookup_product_format">
+      <record><![CDATA[Fysiek]]></record>
+      <record><![CDATA[Electronisch]]></record>
+    </lookup>
+    <lookup table="lookup_product_keyword">
+    </lookup>
+    <lookup table="lookup_product_manufacturer">
+    </lookup>
+    <lookup table="lookup_product_shipping">
+      <record><![CDATA[DHL]]></record>
+      <record><![CDATA[TPG]]></record>
+      <record><![CDATA[UPS]]></record>
+      <record><![CDATA[TNT]]></record>
+    </lookup>
+    <lookup table="lookup_product_ship_time">
+      <record><![CDATA[24 uur]]></record>
+      <record><![CDATA[2 dagen]]></record>
+      <record><![CDATA[1 week]]></record>
+    </lookup>
+    <lookup table="lookup_product_tax">
+      <record><![CDATA[BTW]]></record>
+    </lookup>
+    <lookup table="lookup_product_type">
+    </lookup>
+    <lookup table="lookup_project_activity">
+    </lookup>
+    <lookup table="lookup_project_category">
+    </lookup>
+    <lookup table="lookup_project_loe">
+      <attribute name="base_value" type="integer"/>
+      <record default_item="true" base_value="60"><![CDATA[Minu(u)te(n)]]></record>
+      <record base_value="3600"><![CDATA[U(u)r(en)]]></record>
+      <record base_value="86400"><![CDATA[Dag(en)]]></record>
+      <record base_value="604800"><![CDATA[We(e)k(en)]]></record>
+      <record base_value="18144000"><![CDATA[Maand(en)]]></record>
+    </lookup>
+    <lookup table="lookup_project_role">
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" level="10" LUID="2251509"><![CDATA[Projectleider]]></record>
+      <record group_id="1" level="20" LUID="2251510"><![CDATA[Medewerker]]></record>
+      <record group_id="1" level="30" LUID="2251511"><![CDATA[Observator]]></record>
+      <record group_id="1" level="100" LUID="2251512"><![CDATA[Gast]]></record>
+    </lookup>
+    <lookup table="lookup_project_permission_category">
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" LUID="2251509"><![CDATA[Projectdetails]]></record>
+      <record group_id="1" LUID="2251510"><![CDATA[Teamleden]]></record>
+      <record group_id="1" LUID="2251511"><![CDATA[Nieuws]]></record>
+      <record group_id="1" LUID="2251512"><![CDATA[Plan]]></record>
+      <record group_id="1" LUID="2251513"><![CDATA[Overzichten]]></record>
+      <record group_id="1" LUID="2251514"><![CDATA[Forums]]></record>
+      <record group_id="1" LUID="2251515"><![CDATA[Tickets]]></record>
+      <record group_id="1" LUID="2251516"><![CDATA[Documentenbibliotheek]]></record>
+      <record group_id="1" LUID="2251520"><![CDATA[Lidmaatschappen]]></record>
+      <record group_id="1" LUID="2251517"><![CDATA[Setup]]></record>
+    </lookup>
+    <lookup table="lookup_project_permission">
+      <attribute name="group_id" type="integer" />
+      <attribute name="category_id" type="lookup_project_permission_category.LUID" />
+      <attribute name="default_role" type="lookup_project_role.LUID" />
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251512" permission="project-details-view"><![CDATA[Bekijk projectdetails]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-edit"><![CDATA[Wijzig projectdetails]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-delete"><![CDATA[Verwijder project]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251512" permission="project-team-view"><![CDATA[Bekijk teamleden]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251511" permission="project-team-view-email"><![CDATA[Bekijk emailadres teamlid]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit"><![CDATA[Wijzig team]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit-role"><![CDATA[Wijzig rol teamlid]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-view"><![CDATA[Bekijk huidig nieuws]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-view-unreleased"><![CDATA[Bekijk ongepubliceerd nieuws]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251511" permission="project-news-view-archived"><![CDATA[Bekijk gearchiveerd nieuws]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-add"><![CDATA[Toevoegen nieuws]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-edit"><![CDATA[Wijzig nieuws]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-delete"><![CDATA[Verwijder nieuws]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251512" permission="project-plan-view"><![CDATA[Bekijk overzichten]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-add"><![CDATA[Toevoegen overzicht]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-edit"><![CDATA[Wijzig details bestaand overzicht]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-delete"><![CDATA[Verwijder overzicht]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-modify"><![CDATA[Verander overzicht]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-activities-assign"><![CDATA[Wijs activiteiten opnieuw toe]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251512" permission="project-lists-view"><![CDATA[Bekijk lijsten]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-add"><![CDATA[toevoegen lijst]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-edit"><![CDATA[Wijzig details bestaande lijst]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251509" permission="project-lists-delete"><![CDATA[Verwijder lijst]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-modify"><![CDATA[Verander lijstitems]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-forums-view"><![CDATA[Bekijk discussieforums]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-add"><![CDATA[Toevoegen discussieforum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-edit"><![CDATA[Wijzig discussieforum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-delete"><![CDATA[Verwijder discussieforum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-topics-view"><![CDATA[Bekijk forumonderwerpen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-add"><![CDATA[Toevoegen forumonderwerpen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-edit"><![CDATA[Wijzig forumonderwerpen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-delete"><![CDATA[Verwijder forumonderwerpen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-add"><![CDATA[Post boodschappen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-reply"><![CDATA[Antwoord op boodschappen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-edit"><![CDATA[Wijzig bestaande boodschappen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-delete"><![CDATA[Verwijder boodschappen]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251512" permission="project-tickets-view"><![CDATA[Bekijk tickets]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251511" permission="project-tickets-add"><![CDATA[Toevoegen ticket]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251510" permission="project-tickets-edit"><![CDATA[Wijzig bestaand ticket]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-delete"><![CDATA[Verwijder tickets]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-assign"><![CDATA[Toewijzen tickets]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-view"><![CDATA[Bekijk documenten]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-add"><![CDATA[Aanmaken mappen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-edit"><![CDATA[Wijzig mappen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-delete"><![CDATA[Verwijder mappen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-upload"><![CDATA[Upload bestanden]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-files-download"><![CDATA[Download bestanden]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-rename"><![CDATA[Hernoem bestanden]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-files-delete"><![CDATA[Verwijder bestanden]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251511" permission="project-accounts-view"><![CDATA[Bekijk lidmaatschapskoppelingen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251509" permission="project-accounts-manage"><![CDATA[Beheer lidmaatschapskoppelingen]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-customize"><![CDATA[Aanpassen projecteigenschappen]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-permissions"><![CDATA[Configureer projectbevoegdheden]]></record>
+    </lookup>
+    <lookup table="lookup_project_priority">
+      <attribute name="type" type="integer"/>
+      <attribute name="graphic" type="integer"/>
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" type="10"><![CDATA[Laag]]></record>
+      <record group_id="1" type="20" default_item="true"><![CDATA[Normaal]]></record>
+      <record group_id="1" type="30"><![CDATA[Hoog]]></record>
+    </lookup>
+    <lookup table="lookup_project_status">
+      <attribute name="group_id" type="integer"/>
+      <attribute name="type" type="integer"/>      
+      <record group_id="1" graphic="box.gif" type="1"><![CDATA[Niet gestart]]></record>
+      <record group_id="1" graphic="box.gif" type="2"><![CDATA[In uitvoering]]></record>
+      <record group_id="1" graphic="box-checked.gif" type="3"><![CDATA[Afgerond]]></record>
+      <record group_id="1" graphic="box-closed.gif" type="4"><![CDATA[Gesloten]]></record>
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[In de wacht]]></record>
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[Wachtend op eisen(*)]]></record>
+    </lookup>
+    <!--
+    <lookup table="lookup_news_template">
+      <attribute name="group_id" type="integer"/>
+      <attribute name="load_article" type="integer"/>
+      <record group_id="1" mapped_jsp="templateArticle.jsp" load_article="true"><![CDATA[Article]]></record>
+    </lookup>
+    -->
+    <lookup table="lookup_quote_condition">
+    </lookup>
+    <lookup table="lookup_quote_delivery">
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Fax]]></record>
+      <record><![CDATA[Persoonlijk]]></record>
+      <record><![CDATA[DHL]]></record>
+      <record><![CDATA[TNT]]></record>
+      <record><![CDATA[UPS]]></record>
+      <record><![CDATA[TPG]]></record>
+    </lookup>
+    <lookup table="lookup_quote_remarks">
+    </lookup>
+    <lookup table="lookup_quote_source">
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Fax]]></record>
+      <record><![CDATA[Binnengekomen telefoongesprek]]></record>
+      <record><![CDATA[Uitgaand telefoongesprek]]></record>
+      <record><![CDATA[Persoonlijk]]></record>
+      <record><![CDATA[Mail]]></record>
+      <record><![CDATA[Verzoek tussenpersoon]]></record>
+    </lookup>
+    <lookup table="lookup_quote_status">
+      <record><![CDATA[Niet afgerond]]></record>
+      <record><![CDATA[Wachtend op interne goedkeuring]]></record>
+      <record><![CDATA[Intern goedgekeurd]]></record>
+      <record><![CDATA[Intern afgekeurd]]></record>
+      <record><![CDATA[Wachtend op acceptatie klant]]></record>
+      <record><![CDATA[Geaccepteerd door klant]]></record>
+      <record><![CDATA[Afgekeurd door klant]]></record>
+      <record><![CDATA[Veranderingen aangevraagd door klant]]></record>
+      <record><![CDATA[Geannuleerd]]></record>
+      <record><![CDATA[Afgerond]]></record>
+    </lookup>
+    <lookup table="lookup_quote_terms">
+    </lookup>
+    <lookup table="lookup_quote_type">
+      <record><![CDATA[Nieuw]]></record>
+      <record><![CDATA[Verander]]></record>
+      <record><![CDATA[Upgrade/Downgrade]]></record>
+      <record><![CDATA[Afbreken]]></record>
+      <record><![CDATA[Verplaats]]></record>
+    </lookup>
+    <lookup table="lookup_recurring_type">
+      <record><![CDATA[Wekelijks]]></record>
+      <record><![CDATA[Maandelijks]]></record>
+      <record><![CDATA[Jaarlijks]]></record>
+    </lookup>
+    <lookup table="lookup_relationship_types" key="type_id">
+      <attribute name="category_id_maps_from" type="integer" />
+      <attribute name="category_id_maps_to" type="integer" />
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Onderdeel van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Eigenaar van]]></reciprocal_name_2>
+      </record>
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Klant van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Leverancier van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Partner van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Partner van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Concurrent van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Concurrent van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Medewerker van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Werkgever van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Afdeling van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organisatie samengesteld uit]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Groep van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organisatie samengesteld uit]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Lid van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organisatie samengesteld uit]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Consultant van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Consultant van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Beïnvloeder van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Beïnvloed door]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Vijand van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Vijand van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Verdediger van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Gesteund door]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Bondgenoot van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Bondgenoot van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Sponsor van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Gesponserd door]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Relatie van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Relatie van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Aangesloten bij]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Aangesloten bij]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Partner van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Partner van]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Financier van]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Gefinancierd door]]></reciprocal_name_2>
+      </record>             
+    </lookup>
+    <lookup table="lookup_response_model">
+      <record><![CDATA[Geen gegarandeerde responsetijd]]></record>
+      <record><![CDATA[Ma-Vr 8AM-5PM 8 uur]]></record>
+      <record><![CDATA[Ma-Vr 8AM-5PM 6 uur]]></record>
+      <record><![CDATA[Ma-Vr 8AM-5PM 4 uur]]></record>
+      <record><![CDATA[Ma-Vr 8AM-5PM zelfde dag]]></record>
+      <record><![CDATA[Ma-Vr 8AM-5PM volgende werkdag]]></record>
+      <record><![CDATA[Ma-Vr 8AM-8PM 4 uur]]></record>
+      <record><![CDATA[M-F 8AM-8PM 2 hours]]></record>
+      <record><![CDATA[24x7 8 uur]]></record>
+      <record><![CDATA[24x7 4 uur]]></record>
+      <record><![CDATA[24x7 2 uur]]></record>
+    </lookup>
+    <lookup table="lookup_revenuedetail_types">
+    </lookup>
+    <lookup table="lookup_revenue_types">
+    </lookup>
+    <lookup table="lookup_sc_category">
+      <record><![CDATA[Consultancy]]></record>
+      <record><![CDATA[Hardware-onderhoud]]></record>
+      <record><![CDATA[Onderhoud fabrikant]]></record>
+      <record><![CDATA[Controle]]></record>
+      <record><![CDATA[Tijd en materialen]]></record>
+      <record><![CDATA[Garantie]]></record>
+    </lookup>
+    <lookup table="lookup_sc_type">
+    </lookup>
+    <lookup table="lookup_stage">
+      <record><![CDATA[Onderzoek]]></record>
+      <record><![CDATA[Kwalificatie]]></record>
+      <record><![CDATA[Behoefteanalyse]]></record>
+      <record><![CDATA[Waardevoorstel]]></record>
+      <record><![CDATA[Waarnemingsanalyse]]></record>
+      <record><![CDATA[Voorstel/prijsofferte]]></record>
+      <record><![CDATA[Onderhandeling/bespreking]]></record>
+      <record><![CDATA[Afgesloten binnengehaald]]></record>
+      <record><![CDATA[Agesloten verloren]]></record>
+    </lookup>
+    <lookup table="lookup_survey_types">
+      <record><![CDATA[Open]]></record>
+      <record><![CDATA[Kwantitatief (geen opmerkingen)]]></record>
+      <record><![CDATA[Kwantitatief (met opmerkingen)]]></record>
+      <record><![CDATA[Itemlijst]]></record>
+    </lookup>
+    <lookup table="lookup_task_category">
+    </lookup>
+    <lookup table="lookup_task_loe">
+      <record><![CDATA[Minu(u)t(en)]]></record>
+      <record><![CDATA[U(u)r(en)]]></record>
+      <record><![CDATA[Dag(en)]]></record>
+      <record><![CDATA[We(e)k(en)]]></record>
+      <record><![CDATA[Maand(en)]]></record>
+    </lookup>
+    <lookup table="lookup_task_priority">
+      <record default_item="true"><![CDATA[1]]></record>
+      <record><![CDATA[2]]></record>
+      <record><![CDATA[3]]></record>
+      <record><![CDATA[4]]></record>
+      <record><![CDATA[5]]></record>
+    </lookup>
+    <lookup table="lookup_textmessage_types">
+      <record><![CDATA[Zakelijk]]></record>
+      <record><![CDATA[Persoonlijk]]></record>
+      <record><![CDATA[Anders]]></record>
+    </lookup>
+    <lookup table="lookup_ticketsource">
+      <record><![CDATA[Telefoon]]></record>
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Internet]]></record>
+      <record><![CDATA[Brief]]></record>
+      <record><![CDATA[Anders]]></record>
+    </lookup>
+    <lookup table="lookup_ticket_status" />
+    <lookup table="product_option_configurator" key="configurator_id">
+      <attribute name="result_type" type="integer" />
+      <attribute name="class_name" type="string" />
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.StringConfigurator">
+        <configurator_name><![CDATA[Tekst]]></configurator_name>
+        <short_description><![CDATA[Een tekstveld voor aanvullende informatie in vrije vorm]]></short_description>
+        <long_description><![CDATA[Karakter configurator]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.CheckboxConfigurator">
+        <configurator_name><![CDATA[Checkbox]]></configurator_name>
+        <short_description><![CDATA[Een checkbox voor ja/nee informatie]]></short_description>
+        <long_description><![CDATA[Checkbox configurator]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.LookupListConfigurator">
+        <configurator_name><![CDATA[Opzoeklijst]]></configurator_name>
+        <short_description><![CDATA[Een lijst van beschikbare keuzes die gekozen kunnen worden]]></short_description>
+        <long_description><![CDATA[Opzoeklijst configurator]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.NumericalConfigurator">
+        <configurator_name><![CDATA[Getal]]></configurator_name>
+        <short_description><![CDATA[Een invoerveld slechts voor getallen]]></short_description>
+        <long_description><![CDATA[Numerieke configurator]]></long_description>
+      </record>
+    </lookup>
+    <lookup table="search_fields" key="id">
+      <attribute name="field" type="string" />
+      <attribute name="searchable" type="boolean" />
+      <attribute name="field_typeid" type="integer" />
+      <attribute name="table_name" type="string" />
+      <attribute name="object_class" type="string" />
+      <record field="company" searchable="true" field_typeid="0"><![CDATA[Bedrijfsnaam]]></record>
+      <record field="namefirst" searchable="true" field_typeid="0"><![CDATA[Voornaam contactpersoon]]></record>
+      <record field="namelast" searchable="true" field_typeid="0"><![CDATA[Achternaam contactpersoon]]></record>
+      <record field="entered" searchable="true" field_typeid="1"><![CDATA[Invoerdatum]]></record>
+      <record field="zip" searchable="true" field_typeid="0"><![CDATA[Postcode]]></record>
+      <record field="areacode" searchable="true" field_typeid="0"><![CDATA[Provincie]]></record>
+      <record field="city" searchable="true" field_typeid="0"><![CDATA[Plaats]]></record>
+      <record field="typeId" searchable="true" field_typeid="0"><![CDATA[Type contactpersoon]]></record>
+      <record field="contactId" searchable="false" field_typeid="0"><![CDATA[ContactpersoonID]]></record>
+      <record field="title" searchable="false" field_typeid="0"><![CDATA[Titel contactpersoon]]></record>
+      <record field="accountTypeId" searchable="true" field_typeid="0"><![CDATA[Type klant]]></record>
+      <record field="siteId" searchable="true" field_typeid="0"><![CDATA[Site]]></record>
+    </lookup>
+    <lookup table="survey" key="survey_id">
+      <attribute name="type" type="integer" />
+      <attribute name="enteredby" type="integer" />
+      <attribute name="modifiedby" type="integer" />
+      <record type="2" enteredby="0" modifiedby="0">
+        <name>Address Update Request</name>
+      </record>
+    </lookup>
+    <lookup table="ticket_level">
+      <record><![CDATA[Ingangsniveau]]></record>
+      <record><![CDATA[Eerste niveau]]></record>
+      <record><![CDATA[Tweede niveau]]></record>
+      <record><![CDATA[Derde niveau]]></record>
+      <record><![CDATA[Hoogste niveau]]></record>
+    </lookup>
+    <lookup table="ticket_priority">
+      <record><![CDATA[Volgende]]></record>
+      <record style="background-color:lightgreen;color:black;"><![CDATA[Zoals ingepland]]></record>
+      <record style="background-color:yellow;color:black;"><![CDATA[Spoed]]></record>
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[Kritiek]]></record>
+    </lookup>
+    <lookup table="ticket_severity">
+      <record style="background-color:lightgreen;color:black;"><![CDATA[Normaal]]></record>
+      <record style="background-color:yellow;color:black;"><![CDATA[Belangrijk]]></record>
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[Kritiek]]></record>
+    </lookup>
+    <lookup table="ticket_category_draft" key="id">       
+      <attribute name="parent_cat_code" type="ticket_category_draft.LUID"/>
+      <attribute name="cat_level" type="integer"/>
+      <record LUID="2005022711"><![CDATA[Verkoop]]></record>
+      <record LUID="2005022712"><![CDATA[Facturatie]]></record>
+      <record LUID="2005022714"><![CDATA[Technisch]]></record>
+      <record LUID="2005022715"><![CDATA[Order]]></record>
+      <record LUID="2005022717"><![CDATA[Anders]]></record>
+    </lookup>
+    <lookup table="lookup_opportunity_environment">
+    </lookup>
+    <lookup table="lookup_opportunity_competitors">
+    </lookup>
+    <lookup table="lookup_opportunity_event_compelling">
+    </lookup>
+    <lookup table="lookup_opportunity_budget">
+    </lookup>
+    <lookup table="lookup_duration_type">
+      <record><![CDATA[minutes]]></record>
+      <record><![CDATA[hours]]></record>
+      <record><![CDATA[days]]></record>
+      <record><![CDATA[weeks]]></record>
+      <record><![CDATA[months]]></record>
+      <record><![CDATA[years]]></record>
+    </lookup>
+    <lookup table="lookup_step_actions">
+      <attribute name="constant_id" type="integer" />
+      <record constant_id="110061030"><![CDATA[Require user to attach or create an opportunity]]></record>
+      <record constant_id="110061031"><![CDATA[Require user to attach or upload a document]]></record>
+<!--      <record constant_id="110061032"><![CDATA[Require user to attach or create an activity]]></record> -->
+      <record constant_id="110061033"><![CDATA[Require user to update a specific action plan folder]]></record>
+      <record constant_id="110061034"><![CDATA[Require user to update the rating]]></record>
+      <record constant_id="110061035"><![CDATA[Require user to attach or create a single note]]></record>
+      <record constant_id="110061036"><![CDATA[Require user to attach or create multiple notes]]></record>
+<!--      <record constant_id="110061037"><![CDATA[Require user to attach or create a lookup list]]></record> -->
+      <record constant_id="110061038"><![CDATA[Allow user to view the account]]></record>
+      <record constant_id="110061039"><![CDATA[Require user to attach or create an account contact]]></record>
+      <record constant_id="110061040"><![CDATA[Require user to create account relationships]]></record>
+      <record constant_id="302061653"><![CDATA[Require user to add a recipient to the active campaign]]></record>
+    </lookup>
+    <lookup table="lookup_asset_materials">
+    </lookup>
+    <lookup table="lookup_ticket_cause">
+    </lookup>
+    <lookup table="lookup_ticket_resolution">
+    </lookup>
+    <lookup table="action_plan_constants" key="map_id">
+      <attribute name="constant_id" type="integer"/>
+      <record LUID="2005101901" constant_id="42420034"><![CDATA[accounts]]></record>
+      <record LUID="2005101902" constant_id="912051329"><![CDATA[tickets]]></record>
+      <record LUID="2005101903" constant_id="2"><![CDATA[contacts]]></record>
+      <record LUID="2005101904" constant_id="912051328"><![CDATA[quotes]]></record>
+      <record LUID="2005101905" constant_id="3"><![CDATA[pipeline]]></record>
+      <record LUID="2005101906" constant_id="912051330"><![CDATA[projects]]></record>
+      <record LUID="2005101907" constant_id="912051331"><![CDATA[communications]]></record>
+      <record LUID="2005101908" constant_id="912051332"><![CDATA[admin]]></record>
+      <record LUID="2005101909" constant_id="912051333"><![CDATA[calls]]></record>
+      <record LUID="2005101910" constant_id="912051334"><![CDATA[cfsnote]]></record>
+      <record LUID="2005101911" constant_id="912051335"><![CDATA[pipeline_calls]]></record>
+      <record LUID="2005101912" constant_id="912051336"><![CDATA[myhomepage]]></record>
+      <record LUID="2005101913" constant_id="831200519"><![CDATA[note]]></record>
+      <record LUID="2005101914" constant_id="831200520"><![CDATA[selection]]></record>
+      <record LUID="2005101915" constant_id="1011200517"><![CDATA[pipeline_component]]></record>
+      <record LUID="2005101916" constant_id="110061020"><![CDATA[relationship]]></record>
+    </lookup>
+    <lookup table="step_action_map" key="map_id">
+      <attribute name="constant_id" type="action_plan_constants.LUID"/>
+      <attribute name="action_constant_id" type="integer"/>
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061030" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061031" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061032" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061033" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061034" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061039" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061040" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="302061653" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="302061653" />
+    </lookup>
+    <lookup table="lookup_ticket_task_category">
+    </lookup>
+    <lookup table="lookup_account_size">
+      <record><![CDATA[1-10]]></record>
+      <record><![CDATA[11-100]]></record>
+      <record><![CDATA[101-1000]]></record>
+      <record><![CDATA[>1000]]></record>
+    </lookup>
+    <lookup table="lookup_segments">
+    </lookup>
+    <lookup table="lookup_sub_segment">
+    </lookup>
+    <lookup table="lookup_site_id">
+    </lookup>
+    <lookup table="lookup_title">
+      <record><![CDATA[Mr.]]></record>
+      <record><![CDATA[Mrs.]]></record>
+      <record><![CDATA[Ms.]]></record>
+      <record><![CDATA[Miss]]></record>
+      <record><![CDATA[Dr.]]></record>
+      <record><![CDATA[Prof.]]></record>
+    </lookup>
+    <lookup table="lookup_ticket_state">
+      <record><![CDATA[Under review]]></record>
+      <record><![CDATA[In progress]]></record>
+      <record><![CDATA[Solution is being tested]]></record>
+      <record><![CDATA[Solution is being verified]]></record>
+      <record><![CDATA[Solution complete]]></record>
+      <record><![CDATA[Cannot resolve]]></record>
+      <record><![CDATA[Duplicate]]></record>
+    </lookup>
+</lookupLists>

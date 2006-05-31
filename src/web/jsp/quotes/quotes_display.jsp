@@ -62,7 +62,7 @@
     <td class="formLabel"> Description </td>
       <td>
   <% if(quote.getIssuedDate() != null){ %>
-        <dhv:label name="quotes.preparedFor.and.on" param="<%= "name="+toHtml(quote.getNameFirst() +" "+ quote.getNameLast())+"|company="+toHtml(quote.getName())+"|time="+getTime(pageContext,quote.getIssuedDate(),"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;") %>">Prepared for <%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %> and <%= toHtml(quote.getName()) %> on <dhv:tz timestamp="<%= quote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/></dhv:label>
+        <dhv:label name="quotes.preparedFor.and.on" param="<%= "name="+toHtml(quote.getNameFirst() +" "+ quote.getNameLast())+"|company="+toHtml(quote.getName())+"|time="+getTime(pageContext,quote.getIssuedDate(),"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;") %>">Prepared for <%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %> and <%= toHtml(quote.getName()) %> on <zeroio:tz timestamp="<%= quote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/></dhv:label>
   <% } else { %>
         <dhv:label name="quotes.preparedFor" param="<%= "name="+toHtml(quote.getNameFirst() +" "+ quote.getNameLast())+"|company="+toHtml(quote.getName()) %>">Prepared for <%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %> and <%= toHtml(quote.getName()) %></dhv:label>
   <% } %>

@@ -19,6 +19,7 @@ import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.jsp.JspException;
@@ -40,6 +41,7 @@ public class UsernameHandler extends TagSupport {
   private boolean lastFirst = false;
   private boolean firstInitialLast = false;
   private String defaultText = null;
+  private boolean forJS = false;
 
 
   /**
@@ -103,6 +105,26 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
+   * Sets the forJS attribute of the UsernameHandler object
+   *
+   * @param  tmp  The new forJS value
+   */
+  public void setForJS(boolean tmp) {
+    this.forJS = tmp;
+  }
+
+
+  /**
+   * Sets the forJS attribute of the UsernameHandler object
+   *
+   * @param  tmp  The new forJS value
+   */
+  public void setForJS(String tmp) {
+    this.forJS = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    * Prints the user's name from the user cache, if not found displays the
    * default text value.
    *
@@ -126,17 +148,35 @@ public class UsernameHandler extends TagSupport {
           Contact thisContact = thisUser.getContact();
           if (thisContact != null) {
             if (lastFirst) {
-              this.pageContext.getOut().write(
-                  StringUtils.toHtml(
-                      thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+              if (forJS) {
+                this.pageContext.getOut().write(
+                    StringUtils.jsStringEscape(
+                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+              } else {
+                this.pageContext.getOut().write(
+                    StringUtils.toHtml(
+                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+              }
             } else if (firstInitialLast) {
-              this.pageContext.getOut().write(
-                  StringUtils.toHtml(
-                      thisContact.getNameFirstInitialLast() + (!thisUser.getEnabled() ? " *" : "")));
+              if (forJS) {
+                this.pageContext.getOut().write(
+                    StringUtils.jsStringEscape(
+                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+              } else {
+                this.pageContext.getOut().write(
+                    StringUtils.toHtml(
+                    thisContact.getNameFirstInitialLast() + (!thisUser.getEnabled() ? " *" : "")));
+              }
             } else {
-              this.pageContext.getOut().write(
-                  StringUtils.toHtml(
-                      thisContact.getNameFirstLast() + (!thisUser.getEnabled() ? " *" : "")));
+              if (forJS) {
+                this.pageContext.getOut().write(
+                    StringUtils.jsStringEscape(
+                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+              } else {
+                this.pageContext.getOut().write(
+                    StringUtils.toHtml(
+                    thisContact.getNameFirstLast() + (!thisUser.getEnabled() ? " *" : "")));
+              }
             }
           }
         } else {

@@ -115,7 +115,7 @@
           <% if(!"".equals(toString(thisContact.getNameLastFirst()))){ %>
             <%= toHtml(thisContact.getOrgName()) %>
           <%}else{%>
-            <a href="Sales.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getOrgName()) %></a>
+            <a href="SalesImports.do?command=ContactDetails&contactId=<%= thisContact.getId() %>"><%= toHtml(thisContact.getOrgName()) %></a>
             <%= thisContact.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <%}%>
         </td>

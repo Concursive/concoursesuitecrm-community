@@ -25,6 +25,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.documents.base.DocumentStore;
 import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.naming.*;
 import java.io.FileNotFoundException;
@@ -32,6 +33,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 
 /**
@@ -705,6 +708,25 @@ public class BaseWebdavContext implements ModuleContext {
    *
    * @return Description of the Return Value
    */
+  public int getUserSiteId(Connection db, int userId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT site_id " +
+      "FROM \"access\" " +
+      "WHERE user_id = ? ");
+    pst.setInt(1, userId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      return DatabaseUtils.getInt(rs, "site_id");
+    }
+    return -1;
+  }
+  
+  
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Return Value
+   */
 
   public String toString() {
     StringBuffer sb = new StringBuffer();
@@ -892,7 +914,7 @@ public class BaseWebdavContext implements ModuleContext {
       int tmpDepartmentId = tmpContact.getDepartment();
 
       thisMember = new DocumentStoreTeamMember(
-          db, thisDocumentStore.getId(), userId, tmpUserRoleId, tmpDepartmentId);
+          db, thisDocumentStore.getId(), userId, tmpUserRoleId, tmpDepartmentId, tmpUser.getSiteId());
     } catch (Exception notValid) {
       // Create a guest
       // TODO: VERIFY THAT A GUEST CAN HAVE ACCESS!

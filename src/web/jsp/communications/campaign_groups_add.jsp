@@ -41,7 +41,7 @@ function checkForm(form) {
   return true;
 }
 </SCRIPT>
-<body onLoad="javascript:document.searchForm.groupName.focus()">
+<body onLoad="javascript:document.searchForm.groupName.focus();javascript:updateOperators()">
 <form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">

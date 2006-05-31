@@ -24,6 +24,7 @@ import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactHistory;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.DatabaseUtils;
 
@@ -45,6 +46,11 @@ public class Quote extends GenericBean {
   public final static int PRINT = 2004110801;
   public final static int EMAIL = 2004110802;
   public final static int FAX = 2004110803;
+
+  //preference for multiple components
+  public static String QUOTE_CONFIG_NAME = "org.aspcfs.modules.quotes.base.Quote";
+  public static String MULTIPLE_QUOTE_CONFIG_PARAM = "multipleQuotePerOpportunity";
+  public static String MULTIPLE_VERSION_CONFIG_PARAM = "multipleQuoteVersionPerOpportunity";
 
   // fields
   private int id = -1;
@@ -92,6 +98,12 @@ public class Quote extends GenericBean {
   private String nameFirst = null;
   private String nameMiddle = null;
 
+  // Opportunity info
+  private boolean lock = false;
+
+  // Site Name
+  private String siteName = null;
+
   // Resources
   private boolean buildProducts = false;
   private QuoteProductList productList = new QuoteProductList();
@@ -113,6 +125,7 @@ public class Quote extends GenericBean {
   private String canPrint = "false";
   private boolean canNotCopyExpirationDate = false;
   private SystemStatus systemStatus = null;
+
 
   /**
    * Gets the logoFileId attribute of the Quote object
@@ -705,6 +718,12 @@ public class Quote extends GenericBean {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
+
+  /**
+   * Gets the trashed attribute of the Quote object
+   *
+   * @return The trashed value
+   */
   public boolean isTrashed() {
     return (trashedDate != null);
   }
@@ -747,6 +766,26 @@ public class Quote extends GenericBean {
    */
   public void setNameMiddle(String tmp) {
     this.nameMiddle = tmp;
+  }
+
+
+  /**
+   * Sets the lock attribute of the Quote object
+   *
+   * @param tmp The new lock value
+   */
+  public void setLock(boolean tmp) {
+    this.lock = tmp;
+  }
+
+
+  /**
+   * Sets the lock attribute of the Quote object
+   *
+   * @param tmp The new lock value
+   */
+  public void setLock(String tmp) {
+    this.lock = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -1067,6 +1106,16 @@ public class Quote extends GenericBean {
    */
   public String getNameMiddle() {
     return nameMiddle;
+  }
+
+
+  /**
+   * Gets the lock attribute of the Quote object
+   *
+   * @return The lock value
+   */
+  public boolean getLock() {
+    return lock;
   }
 
 
@@ -1539,6 +1588,12 @@ public class Quote extends GenericBean {
     this.closed = DatabaseUtils.parseTimestamp(tmp);
   }
 
+
+  /**
+   * Gets the closed attribute of the Quote object
+   *
+   * @return The closed value
+   */
   public boolean isClosed() {
     return (closed != null);
   }
@@ -1687,19 +1742,79 @@ public class Quote extends GenericBean {
     this.statusName = tmp;
   }
 
+
+  /**
+   * Gets the systemStatus attribute of the Quote object
+   *
+   * @return The systemStatus value
+   */
   public SystemStatus getSystemStatus() {
     return systemStatus;
   }
 
+
+  /**
+   * Sets the systemStatus attribute of the Quote object
+   *
+   * @param tmp The new systemStatus value
+   */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
   }
 
+
+  /**
+   * Gets the siteName attribute of the Quote object
+   *
+   * @return The siteName value
+   */
+  public String getSiteName() {
+    return siteName;
+  }
+
+
+  /**
+   * Sets the siteName attribute of the Quote object
+   *
+   * @param tmp The new siteName value
+   */
+  public void setSiteName(String tmp) {
+    this.siteName = tmp;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public static boolean allowMultipleQuotesPerOpportunity(String tmp) {
+    if (tmp != null && "false".equals(tmp)) {
+      return false;
+    }
+    return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public static boolean allowMultipleVersionsPerQuote(String tmp) {
+    if (tmp != null && "false".equals(tmp)) {
+      return false;
+    }
+    return true;
+  }
+
+
   /**
    * Constructor for the Quote object
    */
-  public Quote() {
-  }
+  public Quote() { }
 
 
   /**
@@ -1707,6 +1822,7 @@ public class Quote extends GenericBean {
    *
    * @param db Description of the Parameter
    * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public Quote(Connection db, int id) throws SQLException {
@@ -1718,6 +1834,7 @@ public class Quote extends GenericBean {
    * Constructor for the Quote object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public Quote(ResultSet rs) throws SQLException {
@@ -1738,14 +1855,16 @@ public class Quote extends GenericBean {
     }
     StringBuffer sb = new StringBuffer(
         " SELECT qe.*, " +
-        " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName " +
-        " FROM quote_entry qe " +
-        " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
-        " LEFT JOIN organization org ON (qe.org_id = org.org_id) " +
-        " LEFT JOIN lookup_quote_status lqs ON ( qe.status_id = lqs.code ) " +
-        " LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id) " +
-        " LEFT JOIN opportunity_header opp ON (qe.opp_id = opp.opp_id) " +
-        " WHERE qe.quote_id = ? ");
+            " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName, opp.\"lock\" as opplock, " +
+            " lsi.description AS sitename " +
+            " FROM quote_entry qe " +
+            " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
+            " LEFT JOIN organization org ON (qe.org_id = org.org_id) " +
+            " LEFT JOIN lookup_site_id lsi ON (org.site_id = lsi.code) " +
+            " LEFT JOIN lookup_quote_status lqs ON ( qe.status_id = lqs.code ) " +
+            " LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id) " +
+            " LEFT JOIN opportunity_header opp ON (qe.opp_id = opp.opp_id) " +
+            " WHERE qe.quote_id = ? ");
     PreparedStatement pst = db.prepareStatement(sb.toString());
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -1824,7 +1943,15 @@ public class Quote extends GenericBean {
     nameFirst = rs.getString("namefirst");
     nameMiddle = rs.getString("namemiddle");
     nameLast = rs.getString("namelast");
+
+    //Quote Status
     statusName = rs.getString("statusName");
+
+    //Opportunity Info
+    lock = rs.getBoolean("opplock");
+
+    //Site Name
+    siteName = rs.getString("sitename");
   }
 
 
@@ -1899,7 +2026,7 @@ public class Quote extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "quote_entry_quote_id_seq");
       sql.append(
           "INSERT INTO quote_entry (parent_id, org_id, contact_id, source_id, grand_total, " +
-          "status_id, status_date, expiration_date, show_total, show_subtotal, logo_file_id, trashed_date, ");
+              "status_id, status_date, expiration_date, show_total, show_subtotal, logo_file_id, trashed_date, ");
       if (id > -1) {
         sql.append("quote_id, ");
       }
@@ -1908,9 +2035,9 @@ public class Quote extends GenericBean {
       }
       sql.append(
           "quote_terms_id, quote_type_id, " +
-          "issued, short_description, notes, ticketid, product_id, " +
-          "customer_product_id, opp_id, version, group_id, delivery_id, " +
-          "email_address, phone_number, address, fax_number, submit_action, ");
+              "issued, short_description, notes, ticketid, product_id, " +
+              "customer_product_id, opp_id, \"version\", group_id, delivery_id, " +
+              "email_address, phone_number, address, fax_number, submit_action, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2056,7 +2183,7 @@ public class Quote extends GenericBean {
       conditions.setQuoteId(this.getId());
       conditions.buildList(db);
       conditions.delete(db);
-      
+
       //delete the contact history for this quote.
       ContactHistory.deleteObject(db, OrganizationHistory.QUOTE, this.getId());
 
@@ -2080,11 +2207,11 @@ public class Quote extends GenericBean {
       Quote childQuote = new Quote();
       int childQuoteId = -1;
       pst = db.prepareStatement(
-          " SELECT qe.quote_id AS quote_id " +
-          " FROM quote_entry qe " +
-          " LEFT JOIN quote_entry pqe " +
-          " ON ( qe.parent_id = pqe.quote_id ) " +
-          " WHERE pqe.quote_id = ? ");
+          "SELECT qe.quote_id AS quote_id " +
+              "FROM quote_entry qe " +
+              "LEFT JOIN quote_entry pqe " +
+              "ON ( qe.parent_id = pqe.quote_id ) " +
+              "WHERE pqe.quote_id = ? ");
       pst.setInt(1, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2140,97 +2267,116 @@ public class Quote extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
+    boolean commit = false;
     if (this.getId() == -1) {
       return -1;
     }
-    // NOTE: For daffodil, needs to happen before the UPDATE quote_entry
-    updateEntry(db);
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "UPDATE quote_entry " +
-        " SET parent_id = ?, " +
-        " org_id = ?, " +
-        " contact_id = ?, " +
-        " source_id = ?, " +
-        " grand_total = ?, " +
-        " status_id = ?, " +
-        " status_date = ?, " +
-        " expiration_date = ?, " +
-        " show_total = ?, " +
-        " show_subtotal = ?, logo_file_id = ?, ");
-    if (this.getClosed() != null) {
-      sql.append(" closed = ?, ");
-    } else if (this.getCloseIt()) {
-      sql.append(" closed = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
-    }
-    sql.append(
-        " quote_terms_id = ?, " +
-        " quote_type_id = ?, " +
-        " issued = ?, " +
-        " short_description = ?, " +
-        " notes = ?, " +
-        " ticketid = ?, " +
-        " product_id = ?, " +
-        " customer_product_id = ?, " +
-        " opp_id = ?, " +
-        " version = ?, " +
-        " group_id = ?, " +
-        " delivery_id = ?, " +
-        " email_address = ?, " +
-        " phone_number = ?, " +
-        " address = ?, " +
-        " fax_number = ?, " +
-        " submit_action = ?, " +
-        " modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-        " modifiedby = ?, " +
-        " trashed_date = ? " +
-        " WHERE quote_id = ? ");
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      // NOTE: For daffodil, needs to happen before the UPDATE quote_entry
+      updateEntry(db);
+      PreparedStatement pst = null;
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          "UPDATE quote_entry " +
+              "SET parent_id = ?, " +
+              "org_id = ?, " +
+              "contact_id = ?, " +
+              "source_id = ?, " +
+              "grand_total = ?, " +
+              "status_id = ?, " +
+              "status_date = ?, " +
+              "expiration_date = ?, " +
+              "show_total = ?, " +
+              "show_subtotal = ?, logo_file_id = ?, ");
+      if (this.getClosed() != null) {
+        sql.append(" closed = ?, ");
+      } else if (this.getCloseIt()) {
+        sql.append("closed = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      sql.append(
+          "quote_terms_id = ?, " +
+              "quote_type_id = ?, " +
+              "issued = ?, " +
+              "short_description = ?, " +
+              "notes = ?, " +
+              "ticketid = ?, " +
+              "product_id = ?, " +
+              "customer_product_id = ?, " +
+              "opp_id = ?, " +
+              "\"version\" = ?, " +
+              "group_id = ?, " +
+              "delivery_id = ?, " +
+              "email_address = ?, " +
+              "phone_number = ?, " +
+              "address = ?, " +
+              "fax_number = ?, " +
+              "submit_action = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+              "modifiedby = ?, " +
+              "trashed_date = ? " +
+              "WHERE quote_id = ? ");
 
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    DatabaseUtils.setInt(pst, ++i, this.getParentId());
-    DatabaseUtils.setInt(pst, ++i, this.getOrgId());
-    DatabaseUtils.setInt(pst, ++i, this.getContactId());
-    DatabaseUtils.setInt(pst, ++i, this.getSourceId());
-    DatabaseUtils.setDouble(pst, ++i, this.getGrandTotal());
-    DatabaseUtils.setInt(pst, ++i, this.getStatusId());
-    pst.setTimestamp(++i, this.getStatusDate());
-    pst.setTimestamp(++i, this.getExpirationDate());
-    pst.setBoolean(++i, this.getShowTotal());
-    pst.setBoolean(++i, this.getShowSubtotal());
-    DatabaseUtils.setInt(pst, ++i, this.getLogoFileId());
-    if (this.getClosed() != null) {
-      pst.setTimestamp(++i, this.getClosed());
-    }
-    DatabaseUtils.setInt(pst, ++i, this.getQuoteTermsId());
-    DatabaseUtils.setInt(pst, ++i, this.getQuoteTypeId());
-    pst.setTimestamp(++i, this.getIssuedDate());
-    pst.setString(++i, this.getShortDescription());
-    pst.setString(++i, this.getNotes());
-    DatabaseUtils.setInt(pst, ++i, this.getTicketId());
-    DatabaseUtils.setInt(pst, ++i, this.getProductId());
-    DatabaseUtils.setInt(pst, ++i, this.getCustomerProductId());
-    DatabaseUtils.setInt(pst, ++i, this.getHeaderId());
-    pst.setString(++i, this.getVersion());
-    DatabaseUtils.setInt(pst, ++i, this.getGroupId());
-    DatabaseUtils.setInt(pst, ++i, this.getDeliveryId());
-    pst.setString(++i, this.getEmailAddress());
-    pst.setString(++i, this.getPhoneNumber());
-    pst.setString(++i, this.getAddress());
-    pst.setString(++i, this.getFaxNumber());
-    DatabaseUtils.setInt(pst, ++i, this.getSubmitAction());
-    pst.setInt(++i, this.getModifiedBy());
-    pst.setTimestamp(++i, this.getTrashedDate());
-    pst.setInt(++i, this.getId());
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      DatabaseUtils.setInt(pst, ++i, this.getParentId());
+      DatabaseUtils.setInt(pst, ++i, this.getOrgId());
+      DatabaseUtils.setInt(pst, ++i, this.getContactId());
+      DatabaseUtils.setInt(pst, ++i, this.getSourceId());
+      DatabaseUtils.setDouble(pst, ++i, this.getGrandTotal());
+      DatabaseUtils.setInt(pst, ++i, this.getStatusId());
+      pst.setTimestamp(++i, this.getStatusDate());
+      pst.setTimestamp(++i, this.getExpirationDate());
+      pst.setBoolean(++i, this.getShowTotal());
+      pst.setBoolean(++i, this.getShowSubtotal());
+      DatabaseUtils.setInt(pst, ++i, this.getLogoFileId());
+      if (this.getClosed() != null) {
+        pst.setTimestamp(++i, this.getClosed());
+      }
+      DatabaseUtils.setInt(pst, ++i, this.getQuoteTermsId());
+      DatabaseUtils.setInt(pst, ++i, this.getQuoteTypeId());
+      pst.setTimestamp(++i, this.getIssuedDate());
+      pst.setString(++i, this.getShortDescription());
+      pst.setString(++i, this.getNotes());
+      DatabaseUtils.setInt(pst, ++i, this.getTicketId());
+      DatabaseUtils.setInt(pst, ++i, this.getProductId());
+      DatabaseUtils.setInt(pst, ++i, this.getCustomerProductId());
+      DatabaseUtils.setInt(pst, ++i, this.getHeaderId());
+      pst.setString(++i, this.getVersion());
+      DatabaseUtils.setInt(pst, ++i, this.getGroupId());
+      DatabaseUtils.setInt(pst, ++i, this.getDeliveryId());
+      pst.setString(++i, this.getEmailAddress());
+      pst.setString(++i, this.getPhoneNumber());
+      pst.setString(++i, this.getAddress());
+      pst.setString(++i, this.getFaxNumber());
+      DatabaseUtils.setInt(pst, ++i, this.getSubmitAction());
+      pst.setInt(++i, this.getModifiedBy());
+      pst.setTimestamp(++i, this.getTrashedDate());
+      pst.setInt(++i, this.getId());
 
-    resultCount = pst.executeUpdate();
-    pst.close();
-    this.setBuildProducts(true);
-    this.setBuildResources(true);
-    this.setBuildConditions(true);
-    this.setBuildRemarks(true);
-    this.queryRecord(db, this.getId());
+      resultCount = pst.executeUpdate();
+      pst.close();
+      this.setBuildProducts(true);
+      this.setBuildResources(true);
+      this.setBuildConditions(true);
+      this.setBuildRemarks(true);
+      this.queryRecord(db, this.getId());
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
     return resultCount;
   }
 
@@ -2238,8 +2384,9 @@ public class Quote extends GenericBean {
   /**
    * Description of the Method
    *
-   * @param db      Description of the Parameter
-   * @param toTrash Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
@@ -2255,10 +2402,10 @@ public class Quote extends GenericBean {
       }
       sql.append(
           "UPDATE quote_entry " +
-          "SET trashed_date = ? , " +
-          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
-          "modifiedby = ? " +
-          "WHERE quote_id = ? ");
+              "SET trashed_date = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+              "modifiedby = ? " +
+              "WHERE quote_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       if (toTrash) {
@@ -2271,7 +2418,7 @@ public class Quote extends GenericBean {
       pst.setInt(++i, this.id);
       pst.executeUpdate();
       pst.close();
-      
+
       /*
        *  update the child quote's parent id
        *  The root quote has the highest version number for a quote group.
@@ -2284,11 +2431,11 @@ public class Quote extends GenericBean {
         Quote childQuote = new Quote();
         int childQuoteId = -1;
         pst = db.prepareStatement(
-            " SELECT qe.quote_id AS quote_id " +
-            " FROM quote_entry qe " +
-            " LEFT JOIN quote_entry pqe " +
-            " ON ( qe.parent_id = pqe.quote_id ) " +
-            " WHERE pqe.quote_id = ? ");
+            "SELECT qe.quote_id AS quote_id " +
+                "FROM quote_entry qe " +
+                "LEFT JOIN quote_entry pqe " +
+                "ON ( qe.parent_id = pqe.quote_id ) " +
+                "WHERE pqe.quote_id = ? ");
         pst.setInt(1, this.getId());
         rs = pst.executeQuery();
 
@@ -2303,16 +2450,18 @@ public class Quote extends GenericBean {
           childQuote.update(db);
         }
       } else {
-        /*If untrashing the quote from a group, search for 
-        the quote's previous parent and the child and insert the quote 
-        in between them*/
+        /*
+         *  If untrashing the quote from a group, search for
+         *  the quote's previous parent and the child and insert the quote
+         *  in between them
+         */
         Quote childQuote = new Quote();
         int childQuoteId = -1;
         pst = db.prepareStatement(
-            " SELECT MAX(quote_id) AS quote_id " +
-            " FROM quote_entry " +
-            " WHERE quote_id < ? " +
-            " AND group_id = ? ");
+            "SELECT MAX(quote_id) AS quote_id " +
+                "FROM quote_entry " +
+                "WHERE quote_id < ? " +
+                "AND group_id = ? ");
         pst.setInt(1, this.getId());
         pst.setInt(2, this.getGroupId());
         rs = pst.executeQuery();
@@ -2370,8 +2519,8 @@ public class Quote extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as parentcount " +
-          "FROM quote_entry " +
-          "WHERE parent_id = ? ");
+              "FROM quote_entry " +
+              "WHERE parent_id = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2394,9 +2543,9 @@ public class Quote extends GenericBean {
     try {
       i = 0;
       pst = db.prepareStatement(
-          " SELECT count(*) as recordcount " +
-          " FROM quote_notes " +
-          " WHERE quote_id = ?");
+          "SELECT count(*) as recordcount " +
+              "FROM quote_notes " +
+              "WHERE quote_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2419,9 +2568,9 @@ public class Quote extends GenericBean {
     try {
       i = 0;
       pst = db.prepareStatement(
-          " SELECT count(*) as recordcount " +
-          " FROM order_entry " +
-          " WHERE quote_id = ?");
+          "SELECT count(*) as recordcount " +
+              "FROM order_entry " +
+              "WHERE quote_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2439,14 +2588,14 @@ public class Quote extends GenericBean {
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
-    
+
     // Check for the History of this quote
     try {
       i = 0;
       pst = db.prepareStatement(
-          " SELECT count(*) as recordcount " +
-          " FROM quotelog " +
-          " WHERE quote_id = ?");
+          "SELECT count(*) as recordcount " +
+              "FROM quotelog " +
+              "WHERE quote_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2470,8 +2619,8 @@ public class Quote extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           " SELECT count(*) as recordcount " +
-          " FROM quote_condition " +
-          " WHERE quote_id = ?");
+              " FROM quote_condition " +
+              " WHERE quote_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2495,8 +2644,8 @@ public class Quote extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           " SELECT count(*) AS productcount " +
-          " FROM quote_product qp " +
-          " WHERE qp.quote_id = ? ");
+              " FROM quote_product qp " +
+              " WHERE qp.quote_id = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2562,9 +2711,9 @@ public class Quote extends GenericBean {
       throw new SQLException("Error: Incorrect usage");
     }
     PreparedStatement pst = db.prepareStatement(
-        " SELECT oe.order_id as order_id " +
-        " FROM order_entry oe LEFT JOIN quote_entry qe ON ( oe.quote_id = qe.quote_id ) " +
-        " WHERE oe.quote_id = ? ");
+        "SELECT oe.order_id as order_id " +
+            "FROM order_entry oe LEFT JOIN quote_entry qe ON ( oe.quote_id = qe.quote_id ) " +
+            "WHERE oe.quote_id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -2607,7 +2756,12 @@ public class Quote extends GenericBean {
     copyQuote.setBuildTicket(this.getBuildTicket());
     copyQuote.setShowTotal(this.getShowTotal());
     copyQuote.setShowSubtotal(this.getShowSubtotal());
-    if (copyQuote.getContactId() == -1) {
+
+    if (copyQuote.getOrgId() == -1) {
+      copyQuote.setOrgId(this.getOrgId());
+    }
+    if (copyQuote.getContactId() == -1 && copyQuote.getOrgId() == this.getOrgId())
+    {
       copyQuote.setContactId(this.getContactId());
     }
     if (copyQuote.getCustomerProductId() == -1) {
@@ -2620,8 +2774,12 @@ public class Quote extends GenericBean {
       copyQuote.setExpirationDate(this.getExpirationDate());
     }
     copyQuote.setGrandTotal(this.getGrandTotal());
-    if (copyQuote.getHeaderId() == -1) {
-      copyQuote.setHeaderId(this.getHeaderId());
+    if (copyQuote.getHeaderId() == -1 && copyQuote.getOrgId() == this.getOrgId() && this.getHeaderId() != -1) {
+      OpportunityHeader opp = new OpportunityHeader(db, this.getHeaderId());
+      if ((opp.getContactLink() == -1 || opp.getContactLink() == this.getContactId()) && 
+          (opp.getAccountLink() == -1 || opp.getAccountLink() == this.getOrgId())) {
+        copyQuote.setHeaderId(this.getHeaderId());
+      }
     }
     if (copyQuote.getModifiedBy() == -1) {
       copyQuote.setModifiedBy(this.getModifiedBy());
@@ -2650,7 +2808,8 @@ public class Quote extends GenericBean {
       copyQuote.setStatusId(this.getStatusId());
       copyQuote.setStatusDate(this.getStatusDate());
     }
-    if (copyQuote.getTicketId() == -1) {
+    if (copyQuote.getTicketId() == -1 && copyQuote.getOrgId() == this.getOrgId())
+    {
       copyQuote.setTicketId(this.getTicketId());
     }
     if (copyQuote.getVersion() == null || "".equals(copyQuote.getVersion())) {
@@ -2674,7 +2833,13 @@ public class Quote extends GenericBean {
         copyQuote.getFaxNumber())) {
       copyQuote.setFaxNumber(this.getFaxNumber());
     }
-    if (copyQuote.getLogoFileId() == -1) {
+/*
+    if (copyQuote.getHeaderId() == -1){
+      copyQuote.setHeaderId(this.getHeaderId());
+    }
+*/
+    if (copyQuote.getLogoFileId() == -1 && copyQuote.getOrgId() == this.getOrgId())
+    {
       copyQuote.setLogoFileId(this.getLogoFileId());
     }
 
@@ -2904,8 +3069,8 @@ public class Quote extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "quote_group_group_id_seq");
     pst = db.prepareStatement(
         "INSERT INTO quote_group " +
-        "(" + (id > -1 ? "group_id, " : "") + "unused) VALUES " +
-        "(" + (id > -1 ? "?, " : "") + "null) ");
+            "(" + (id > -1 ? "group_id, " : "") + "unused) VALUES " +
+            "(" + (id > -1 ? "?, " : "") + "null) ");
     if (id > -1) {
       pst.setInt(1, id);
     }

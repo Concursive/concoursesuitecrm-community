@@ -132,6 +132,7 @@ public class ProcessUserCleanup {
 
     sourceContacts = new ContactList();
     sourceContacts.setOwner(userId);
+    sourceContacts.setIncludeAllSites(true);
     sourceContacts.setBuildDetails(false);
     sourceContacts.setBuildTypes(false);
     sourceContacts.buildList(db);
@@ -144,6 +145,7 @@ public class ProcessUserCleanup {
 
     sourceOpenTickets = new TicketList();
     sourceOpenTickets.setAssignedTo(userId);
+    sourceOpenTickets.setIncludeAllSites(true);
     sourceOpenTickets.setOnlyOpen(true);
     sourceOpenTickets.buildList(db);
     valid += sourceOpenTickets.size();

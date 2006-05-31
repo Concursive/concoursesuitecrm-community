@@ -184,7 +184,7 @@ public class WebdavManager {
     boolean status = false;
     PreparedStatement pst = db.prepareStatement(
         "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.\"role\" " +
-        "FROM access a, \"role\" r " +
+        "FROM \"access\" a, \"role\" r " +
         "WHERE a.role_id = r.role_id " +
         "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
         "AND a.enabled = ? ");
@@ -223,7 +223,7 @@ public class WebdavManager {
     boolean status = false;
     PreparedStatement pst = db.prepareStatement(
         "SELECT a.expires, a.alias, a.user_id, a.role_id, a.webdav_password, r.\"role\" " +
-        "FROM access a, \"role\" r " +
+        "FROM \"access\" a, \"role\" r " +
         "WHERE a.role_id = r.role_id " +
         "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
         "AND a.enabled = ? ");
@@ -261,7 +261,7 @@ public class WebdavManager {
     String password = "";
     PreparedStatement pst = db.prepareStatement(
         "SELECT webdav_password " +
-        "FROM access " +
+        "FROM \"access\" " +
         "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = ? " +
         "AND enabled = ? ");
     pst.setString(1, username.toLowerCase());

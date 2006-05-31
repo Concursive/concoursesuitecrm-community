@@ -59,6 +59,10 @@
   }
 </script>
 <form method="POST" name="inputForm" action="DocumentStoreManagementFiles.do?command=Upload&documentStoreId=<%= request.getParameter("documentStoreId") %>&folderId=<%= request.getParameter("folderId") %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="documentStoreId" value="<%= documentStore.getId() %>">
+<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+<input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
@@ -119,14 +123,10 @@
       </td>
     </tr>
   </table>
-  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   <p align="center"><dhv:label name="documents.documents.largeFileUploadMessage" param="break=<br />">* Large files may take awhile to upload.<br />
      Wait for file completion message when upload finishes.</dhv:label>
   </p>
   <input type="submit" value=" <dhv:label name="documents.documents.upload">Upload</dhv:label> " name="upload" />
   <input type="submit" value="<dhv:label name="documents.documents.cancelUpload">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='DocumentManagement.do?command=DocumentStoreCenter&section=File_Library&documentStoreId=<%= documentStore.getId() %>&folderId=<%= request.getParameter("folderId") %>';" />
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="documentStoreId" value="<%= documentStore.getId() %>">
-  <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </form>
 </body>

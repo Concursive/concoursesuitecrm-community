@@ -464,6 +464,7 @@ public final class ProductCategories extends CFSModule {
       DependencyList dependencies = category.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.addMessage(
+          systemStatus.getLabel("productCategory.deleteMsg") + "\n\n" +
           systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
       htmlDialog.addButton(

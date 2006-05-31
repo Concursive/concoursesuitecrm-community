@@ -269,12 +269,23 @@ public final class Reports extends CFSModule {
         params.setParameters(jasperReport);
       }
       //Load the criteria if the user selected to base on existing criteria
-      if (criteriaId != null && !criteriaId.equals("-1") && !"".equals(
-          criteriaId)) {
-        Criteria criteria = new Criteria(db, Integer.parseInt(criteriaId));
-        criteria.buildResources(db);
-        params.setParameters(criteria);
-        context.getRequest().setAttribute("criteria", criteria);
+      context.getRequest().setAttribute("criteriaId", "-1");
+      if (criteriaId != null && !criteriaId.equals("-1") && !"".equals(criteriaId)) {
+
+        CriteriaList criteriaList = new CriteriaList();
+        criteriaList.setReportId(report.getId());
+        criteriaList.setOwner(getUserId(context));
+        criteriaList.setCriteriaId(criteriaId);
+        criteriaList.buildList(db);
+        if (criteriaList.size() != 0){
+          Criteria criteria = new Criteria(db, Integer.parseInt(criteriaId));
+          criteria.buildResources(db);
+          params.setParameters(criteria);
+          context.getRequest().setAttribute("criteria", criteria);
+          context.getRequest().setAttribute("criteriaId", criteriaId);
+        } else{ 
+          context.getRequest().setAttribute("criteriaId", "-1");
+        }
       }
       //Auto-populate some defaults to show the user
       Iterator i = params.iterator();
@@ -366,6 +377,18 @@ public final class Reports extends CFSModule {
           Parameter thisParam = params.getParameter("day_part");
           params.addParam(
               "day_part", DatabaseUtils.getDayPart(
+                  db, thisParam.getDescription()));
+        }
+        if (params.getParameter("hour_part") != null) {
+          Parameter thisParam = params.getParameter("hour_part");
+          params.addParam(
+              "hour_part", DatabaseUtils.getHourPart(
+                  db, thisParam.getDescription()));
+        }
+        if (params.getParameter("min_part") != null) {
+          Parameter thisParam = params.getParameter("min_part");
+          params.addParam(
+              "min_part", DatabaseUtils.getMinutePart(
                   db, thisParam.getDescription()));
         }
         //Populate a criteria record which will be used in the report

@@ -18,10 +18,11 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*, org.aspcfs.modules.documents.base.* " %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.documents.base.* " %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="documentStore" class="org.aspcfs.modules.documents.base.DocumentStore" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="currentTeam" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="vectorUserId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="vectorState" class="java.lang.String" scope="request"/>
@@ -88,8 +89,17 @@
           <tr>
             <td align="center" valign="top">
               <select size='10' name='selDirectory' style='width: 160px' onChange="updateCategory();">
-               <option value="role|all"><dhv:label name="documents.team.roleList">Role list</dhv:label></option>
-               <option value="dept|all"><dhv:label name="documents.team.departmentList">Department list</dhv:label></option>
+            <%  if(User.getUserRecord().getSiteId() == -1) { 
+                  Iterator iter = (Iterator) SiteIdList.iterator();
+                  while (iter.hasNext()) {
+                    LookupElement element = (LookupElement) iter.next();
+            %>
+               <option value="role|all|<%= element.getCode() %>"><dhv:label name="documents.team.roleList">Role list</dhv:label><%= element.getCode() != -1?" ("+element.getDescription()+")":"" %></option>
+               <option value="dept|all|<%= element.getCode() %>"><dhv:label name="documents.team.departmentList">Department list</dhv:label><%= element.getCode() != -1?" ("+element.getDescription()+")":"" %></option>
+            <%  } } else { %>
+               <option value="role|all|<%= User.getUserRecord().getSiteId() %>"><dhv:label name="documents.team.roleList">Role list</dhv:label><%= User.getUserRecord().getSiteId() != -1?" (" + SiteIdList.getSelectedValue(User.getUserRecord().getSiteId()) + ")":"" %></option>
+               <option value="dept|all|<%= User.getUserRecord().getSiteId() %>"><dhv:label name="documents.team.departmentList">Department list</dhv:label><%= User.getUserRecord().getSiteId() != -1?" (" + SiteIdList.getSelectedValue(User.getUserRecord().getSiteId()) + ")":"" %></option>
+            <%  } %>
               </select>
             </td>
             <td align="center" valign="top">

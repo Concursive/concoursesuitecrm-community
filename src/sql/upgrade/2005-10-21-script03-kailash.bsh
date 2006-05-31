@@ -1,0 +1,105 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Inserts data from vendor column of the asset table into the lookup_asset_vendor.
+  After the lookup list is populated, the the vendor_code column in the asset table 
+  is updated to reference the respective code in the lookup list 
+*/
+import org.aspcfs.utils.DatabaseUtils;
+
+print("Getting Distinct Asset Vendor...");
+distinctVendors = new ArrayList();
+lookupVendors = new HashMap();
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "SELECT DISTINCT vendor " +
+    "FROM asset ");
+  rs = pst.executeQuery();
+  count = 0;
+  while (rs.next()){
+    distinctVendors.add(rs.getString("vendor"));
+    count++;
+  }
+  print("Distinct Vendors --> " + count);
+  rs.close();
+  pst.close();
+}
+
+print("Inserting Distinct Asset Vendors into lookup_asset_vendor...");
+if (1 == 1){
+  id = DatabaseUtils.getNextSeq(db, "lookup_asset_vendor_code_seq");
+  pst = db.prepareStatement(
+          "INSERT INTO lookup_asset_vendor " +
+          "(" +
+           (id > -1 ? "code, " : "") +
+          "description, "+
+          "level )" +
+          "VALUES(" + 
+          (id > -1 ? "?, " : "") +
+          "?,?) " );
+  Iterator itr = distinctVendors.iterator();
+  i = 0;
+  while (itr.hasNext()){
+    value = (String) itr.next();
+    if (value != null){
+      if (!"".equals(value.trim())){
+        pstCount = 0;
+        if (id > -1) {
+          pst.setInt(++pstCount, id);
+        }
+        pst.setString(++pstCount, value);
+        pst.setInt(++pstCount, i++);
+        pst.execute();
+        id = DatabaseUtils.getCurrVal(db, "lookup_asset_vendor_code_seq", id);
+        lookupVendors.put(new Integer(id), value.trim());
+        id = -1;
+        if (itr.hasNext()) {
+          id = DatabaseUtils.getNextSeq(db, "lookup_asset_vendor_code_seq");
+        }
+      }
+    }
+  }
+  pst.close();
+}
+
+print("Getting assetid vendor mapping...");
+assetVendors = new HashMap();
+if (1 == 1){
+  pst = db.prepareStatement(
+    "SELECT asset_id, vendor " +
+    "FROM asset " +
+    "WHERE vendor IS NOT NULL");
+  rs = pst.executeQuery();
+  while (rs.next()){
+    id = rs.getInt("asset_id");
+    vendor = rs.getString("vendor");
+    assetVendors.put(new Integer(id),vendor);
+  }
+  rs.close();
+  pst.close();
+}
+
+print("Updating vendorCode in asset table based on the code in the lookup_asset_vendor table...");
+Iterator itr1 = lookupVendors.keySet().iterator();
+pst = db.prepareStatement(
+        "UPDATE asset " +
+        "SET vendor_code = ? " +
+        "WHERE asset_id = ? ");
+while (itr1.hasNext()){
+  lookupVendorCode = (Integer)itr1.next();
+  lookupVendor = (String)lookupVendors.get(lookupVendorCode);
+  Iterator itr2 = assetVendors.keySet().iterator();
+  if (lookupVendor != null){
+    while(itr2.hasNext()){
+      assetId = (Integer)itr2.next();
+      assetVendor = (String)assetVendors.get(assetId);
+      if (lookupVendor.equals(assetVendor.trim())){
+        pst.setInt(1,lookupVendorCode.intValue());
+        pst.setInt(2, assetId.intValue());
+        pst.execute();
+      }
+    }
+  }
+}
+pst.close();

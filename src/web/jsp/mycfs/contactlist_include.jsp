@@ -19,8 +19,10 @@
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="session"/>
 <jsp:useBean id="ProjectListSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="session"/>
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="Filters" class="org.aspcfs.modules.base.FilterList" scope="request"/>
+<jsp:useBean id="viewUserId" class="java.lang.String" scope="session"/>
 <table width="100%" border="0">
   <tr>
     <td>
@@ -37,17 +39,17 @@
   if (ContactListInfo.getListView().equals("employees")) {
     DepartmentList.setSelectSize(1); 
     DepartmentList.setJsEvent("onchange=\"javascript:document.contactListView.submit();\"");
+    if (request.getAttribute("departmentId") == null || "".equals((String) request.getAttribute("departmentId"))) {
 %>
         <%= DepartmentList.getHtmlSelect("listFilter1",ContactListInfo.getFilterKey("listFilter1")) %>
-<%
-  } else if (ContactListInfo.getListView().equals("myprojects")) {
+<%} } else if (ContactListInfo.getListView().equals("myprojects")) {
     ProjectListSelect.setSelectSize(1);  
     ProjectListSelect.setJsEvent("onchange=\"javascript:document.contactListView.submit();\"");
-%>
+%> 
     <%= ProjectListSelect.getHtml("listFilter1",ContactListInfo.getFilterKey("listFilter1")) %>
-<%} else{ %>
+<%} else {%>
       <select size="1" name="temp">
-        <option value="0"><dhv:label name="calendar.none.4dashes">--None--</dhv:label></option>
+        <option value="0"><dhv:label name="calendar.none.4dashes">-- None --</dhv:label></option>
       </select>
 <%}%>
     </td>
@@ -65,11 +67,19 @@
       <dhv:label name="contacts.name">Name</dhv:label>
     </th>
     <th>
+      <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
+    </th>
+    <th>
       <dhv:label name="accounts.accounts_add.Email">Email</dhv:label>
     </th>
     <th>
       <dhv:label name="accounts.accounts_contacts_add.ContactType">Contact Type</dhv:label>
     </th>
+<dhv:evaluate if="<%= !ContactList.getExclusiveToSite() || ContactList.getIncludeAllSites() %>">
+    <th>
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </th>
+</dhv:evaluate>
   </tr>
 <%
 	Iterator j = ContactList.iterator();
@@ -97,8 +107,16 @@
       <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getValidName()) %>">
     </td>
     <td nowrap>
+<% if (request.getParameter("source") != null && "attachplan".equals(request.getParameter("source"))) { %>
+      <a href="Contacts.do?command=Modify&id=<%= thisContact.getId() %>&popup=true&source=attachplan&actionStepWork=<%= request.getParameter("actionStepWork") %>&orgId=<%= request.getParameter("orgId") %>"><%= toHtml(thisContact.getNameFull()) %></a>
+<% } else { %>   
       <%= toHtml(thisContact.getNameFull()) %>
+<% } %>
     </td>
+    <td nowrap>
+      <%= toHtml(thisContact.getTitle()) %>
+    </td>
+
 <%
       String email ="",emailType ="";
       int size   = thisContact.getEmailAddressList().size();
@@ -109,7 +127,7 @@
           email     =  thisAddress.getEmail();
           emailType =  thisAddress.getTypeName();
         }
-        if (!email.equals("")){
+        if (email != null && !"".equals(email.trim())) {
 %>
     <td nowrap><%= toHtml(email) %> (<%= toHtml(emailType) %>)</td>
 <%  
@@ -131,7 +149,7 @@
           if((selectedContacts.get(new Integer(thisContactId))!= null)){
             selectedEmail = (String)selectedContacts.get(new Integer(thisContactId));
           }
-          if (!email.equals("")) {
+          if (email != null && !"".equals(email.trim())) {
 %>
         <option value="<%=email%>" <%=((selectedEmail.equals(email))?" selected":"")%>><%=toHtml(email)%> (<%=toHtml(emailType)%>)</option>
 <%
@@ -145,13 +163,18 @@
       <%= toHtml(thisContact.getTypesNameString()) %>
       <input type="hidden" name="contactemail<%= count %>" value="<%= toHtmlValue(email) %>">
     </td>
+<dhv:evaluate if="<%= !ContactList.getExclusiveToSite() || ContactList.getIncludeAllSites() %>">
+    <td nowrap>
+      <%= SiteIdList.getSelectedValue(thisContact.getSiteId()) %>
+    </td>
+</dhv:evaluate>
   </tr>
 <%
     }
   } else {
 %>
   <tr>
-    <td class="containerBody" colspan="4">
+    <td class="containerBody" colspan="<%= !ContactList.getExclusiveToSite() || ContactList.getIncludeAllSites()?"6":"5" %>">
       <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
     </td>
   </tr>
@@ -165,6 +188,19 @@
   <input type="hidden" name="hierarchy" value="<%= toHtmlValue(request.getParameter("hierarchy")) %>">
   <input type="hidden" name="nonUsersOnly" value="<%= toHtmlValue(request.getParameter("nonUsersOnly")) %>">
   <input type="hidden" name="campaign" value="<%= toHtmlValue(request.getParameter("campaign")) %>">
+  <input type="hidden" name="actionplan" value="<%= toHtmlValue(request.getParameter("actionplan")) %>">
   <input type="hidden" name="filters" value="<%= toHtmlValue(request.getParameter("filters")) %>">
   <input type="hidden" name="displayType" value="<%= toHtmlValue(request.getParameter("displayType")) %>">
+  <input type="hidden" name="actionStepWork" value="<%= toHtmlValue(request.getParameter("actionStepWork")) %>">
+  <input type="hidden" name="actionPlanWork" value="<%= toHtmlValue(request.getParameter("actionPlanWork")) %>">
+  <input type="hidden" name="orgId" value="<%= toHtmlValue(request.getParameter("orgId")) %>">
+  <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
+  <input type="hidden" name="hiddensource" value="<%= toHtmlValue(request.getParameter("hiddensource")) %>">
+  <input type="hidden" name="addNewContact" value="<%= toHtmlValue(request.getParameter("addNewContact")) %>">
+  <input type="hidden" name="siteIdUser" value="<%= toHtmlValue(request.getParameter("siteIdUser")) %>"/>
+  <input type="hidden" name="siteIdContact" value="<%= toHtmlValue(request.getParameter("siteIdContact")) %>"/>
+  <input type="hidden" name="siteIdOrg" value="<%= toHtmlValue(request.getParameter("siteIdOrg")) %>"/>
+  <input type="hidden" name="siteId" value="<%=request.getAttribute("siteId")%>">
+  <input type="hidden" name="includeAllSites" value="<%=request.getAttribute("includeAllSites")%>">
+  <input type="hidden" name="mySiteOnly" value="<%=request.getAttribute("mySiteOnly")%>">
 </table>

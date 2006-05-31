@@ -23,15 +23,13 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Hashtable;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Enhanced web app capabilities
@@ -46,6 +44,7 @@ public class AutoPopulate {
   private HttpServletRequest request = null;
   private ArrayList timeParams = null;
   private ArrayList numberParams = null;
+  private ArrayList userIdParams = null;
   private User user = null;
   private Calendar cal = null;
   private NumberFormat nf = null;
@@ -88,6 +87,12 @@ public class AutoPopulate {
       }
       nf = NumberFormat.getInstance(user.getLocale());
     }
+    userIdParams = (ArrayList) ObjectUtils.getObject(bean, "UserIdParams");
+    if (userIdParams != null && user != null) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("AutoPopulate-> Found userIdParams");
+      }
+    }
   }
 
 
@@ -112,9 +117,6 @@ public class AutoPopulate {
    */
   public boolean populateObject(Object bean, String param, String value) {
     if (user == null) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("AutoPopulate-> User session not set");
-      }
       return false;
     }
     boolean modified = false;
@@ -192,7 +194,7 @@ public class AutoPopulate {
                 "AutoPopulate-> numberParams trying to set number: " + param);
           }
           modified = ObjectUtils.setParam(
-              bean, param, nf.parse(value).doubleValue());
+              bean, param, (nf.parse(StringUtils.replace(value," ",""))).doubleValue());
           return true;
         } catch (Exception e) {
           //e.printStackTrace(System.out);
@@ -210,6 +212,37 @@ public class AutoPopulate {
 
 
   /**
+   * Description of the Method
+   *
+   * @param bean Description of the Parameter
+   */
+  public void populateDefaults(Object bean) {
+    //Populate user related fields with user's id
+    //eg: enteredby, modifiedby, owner
+    if (userIdParams != null) {
+      try {
+        Iterator params = userIdParams.iterator();
+        while (params.hasNext()) {
+          String param = (String) params.next();
+          String value = String.valueOf(user.getId());
+          String currentVal = ObjectUtils.getParam(bean, param);
+          //If the current value is null or -1, default the attribute to the user's id 
+          if (currentVal == null || (currentVal != null && "-1".equals(currentVal)))
+          {
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println(
+                  "AutoPopulate-> userIdParams trying to set id: " + param);
+            }
+            ObjectUtils.setParam(bean, param, value);
+          }
+        }
+      } catch (Exception e) {
+      }
+    }
+  }
+
+
+  /**
    * Adds a feature to the Error attribute of the AutoPopulate class
    *
    * @param bean    The feature to be added to the Error attribute
@@ -221,13 +254,17 @@ public class AutoPopulate {
     try {
       ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute(
           "ConnectionElement");
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) request.getSession().getServletContext().getAttribute(
-          "SystemStatus")).get(ce.getUrl());
-      if (systemStatus != null) {
-        ((GenericBean) bean).getErrors().put(
-            param + "Error", systemStatus.getLabel(message));
-      } else {
+      if (ce == null) {
         ((GenericBean) bean).getErrors().put(param + "Error", message);
+      } else {
+        SystemStatus systemStatus = (SystemStatus) ((Hashtable) request.getSession().getServletContext().getAttribute(
+            "SystemStatus")).get(ce.getUrl());
+        if (systemStatus != null) {
+          ((GenericBean) bean).getErrors().put(
+              param + "Error", systemStatus.getLabel(message));
+        } else {
+          ((GenericBean) bean).getErrors().put(param + "Error", message);
+        }
       }
     } catch (Exception e) {
     }

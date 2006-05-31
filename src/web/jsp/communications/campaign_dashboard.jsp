@@ -96,17 +96,28 @@
 	%>      
 	<tr class="containerBody">
     <td width="8" valign="center" align="center" nowrap class="row<%= rowid %>">
-      <%  int cancelPermission = 0;
+      <%  boolean cancelPermission = false;
+          boolean restartPermission = false;
+          boolean deletePermission = false;
           int downloadAvailable = 0;
-          if(!campaign.hasRun()){
-            cancelPermission = 1;
+          if(!campaign.hasRun()) {
+            restartPermission = true;
           }
-          if(campaign.hasFiles()){
+          if(campaign.hasFiles()) {
             downloadAvailable  = 1;
           }
       %>
+      <dhv:hasAuthority owner="<%= campaign.getEnteredBy() %>">
+        <% 
+          if(!campaign.hasRun()) {
+            cancelPermission = true;
+          }
+          deletePermission = true;
+        %>
+      </dhv:hasAuthority>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('select<%= count %>','menuCampaign', '<%= campaign.getId() %>', '<%= cancelPermission %>', '<%= downloadAvailable %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuCampaign');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= count %>','menuCampaign', '<%= campaign.getId() %>', '<%= cancelPermission %>', '<%= downloadAvailable %>','<%= restartPermission %>', '<%= deletePermission %>');" 
+      onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuCampaign');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>

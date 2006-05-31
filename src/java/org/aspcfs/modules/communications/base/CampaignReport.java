@@ -909,7 +909,11 @@ public class CampaignReport {
 
     //address
     thisCell = dataRow.createCell((short) (++startIndex));
-    thisCell.setCellValue(thisContact.getPrimaryAddress().toString());
+    if (thisContact.getPrimaryAddress() != null){
+      thisCell.setCellValue(thisContact.getPrimaryAddress().toString());
+    } else {
+      thisCell.setCellValue("");
+    }
 
     //phone
     thisCell = dataRow.createCell((short) (++startIndex));

@@ -21,6 +21,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,com.zeroio.iteam.base.*,org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="TicketRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -43,7 +44,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm"><dhv:label name="accounts.accounts_reports.GenerateNewExport">Generate new export</dhv:label></a></dhv:permission>
+<dhv:permission name="tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm&searchcodeSited=<%= User.getUserRecord().getSiteId() %>"><dhv:label name="accounts.accounts_reports.GenerateNewExport">Generate new export</dhv:label></a></dhv:permission>
 <dhv:permission name="tickets-reports-add" none="true"><br></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="TicketRptListInfo"/></center></dhv:include>

@@ -2,10 +2,23 @@
 // Database upgrade v3.1 (2005-07-07)
 
 import java.sql.*;
-import org.aspcfs.utils.web.LookupListElement;
+import org.aspcfs.modules.admin.base.Permission;
 import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
 
 print("Inserting new lookup tables...");
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator");
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
 
 void insertLookup(Connection db, int moduleId, int lookupId, String tableName, int level, String description, int categoryId) {
   LookupListElement lookupList = new LookupListElement();
@@ -21,7 +34,40 @@ void insertLookup(Connection db, int moduleId, int lookupId, String tableName, i
 
 int constantId = 4;
 int lookupId = PermissionCategory.lookupId(db, constantId);
-insertLookup(db, lookupId, 707050229, "lookup_opportunity_environment", 30, "Environment", constantId);
-insertLookup(db, lookupId, 707050230, "lookup_opportunity_competitors", 40, "Competitors", constantId);
-insertLookup(db, lookupId, 707050231, "lookup_opportunity_event_compelling", 50, "Compelling Event", constantId);
-insertLookup(db, lookupId, 707050232, "lookup_opportunity_budget", 60, "Budget", constantId);
+if (1==1) {
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_OPPORTUNITY_ENVIRONMENT);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, 707050229, "lookup_opportunity_environment", 30, dictionary.getTerm("system.fields.label", "pipeline.environment", "value"), constantId);
+    print("Environment entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Environment already exists");
+  }
+}
+if (1==1) {
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_OPPORTUNITY_COMPETITORS);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, 707050230, "lookup_opportunity_competitors", 40, dictionary.getTerm("system.fields.label", "pipeline.competitors", "value"), constantId);
+    print("Competitors entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Competitors already exists");
+  }
+}
+if (1==1) {
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_OPPORTUNITY_COMPELLING_EVENT);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, 707050231, "lookup_opportunity_event_compelling", 50, dictionary.getTerm("system.fields.label", "pipeline.compellingEvent", "value"), constantId);
+    print("Compelling Event entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Compelling Event already exists");
+  }
+}
+if (1==1) {
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_OPPORTUNITY_BUDGET);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, 707050232, "lookup_opportunity_budget", 60, dictionary.getTerm("system.fields.label", "project.budget", "value"), constantId);
+    print("Budget entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Budget already exists");
+  }
+}
+

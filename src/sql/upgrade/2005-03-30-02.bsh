@@ -2,10 +2,25 @@
 // Database upgrade v3.0 (2005-03-30)
 
 import java.sql.*;
-import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
 
 print("Inserting new lookup tables...");
 
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator");
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+/*
 PreparedStatement pst = db.prepareStatement(
     "INSERT INTO lookup_lists_lookup " +
     "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
@@ -21,33 +36,366 @@ void insertLookup(Connection db, int moduleId, int lookupId, String tableName, i
   pst.setString(7, description);
   pst.executeUpdate();
 }
+*/
+//Leads Module
+int categoryId = PermissionCategory.lookupId(db, 228051100);
+if (categoryId > -1) {
+  if (1==1) {
+    //insertLookup(db, categoryId, 228051102, "lookup_contact_rating", 10, "Contact Rating", 228051100);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_CONTACTS_RATING);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_SALES);
+      element.setLookupId(PermissionCategory.LOOKUP_CONTACTS_RATING);
+      element.setTableName("lookup_contact_rating");
+      element.setClassName("lookupList");
+      element.setLevel(10);
+      element.setDescription(dictionary.getTerm("system.fields.label", "leads.contact.rating", "value"));
+      element.insert(db);
+      print("Contact Rating entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Contact Rating already exists");
+    }
+  }
 
-int leadsId = PermissionCategory.lookupId(db, "Leads");
-insertLookup(db, leadsId, 228051102, "lookup_contact_rating", 10, "Contact Rating", 228051100);
-insertLookup(db, leadsId, 228051103, "lookup_contact_source", 20, "Contact Source", 228051100);
+  if (1==1) {
+    //insertLookup(db, categoryId, 228051103, "lookup_contact_source", 20, "Contact Source", 228051100);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_CONTACTS_SOURCE);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_SALES);
+      element.setLookupId(PermissionCategory.LOOKUP_CONTACTS_SOURCE);
+      element.setTableName("lookup_contact_source");
+      element.setClassName("lookupList");
+      element.setLevel(20);
+      element.setDescription(dictionary.getTerm("system.fields.label", "leads.contact.source", "value"));
+      element.insert(db);
+      print("Contact Source entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Contact Source already exists");
+    }
+  }
+}
 
-int productCatalogId = PermissionCategory.lookupId(db, "Product Catalog");
-insertLookup(db, productCatalogId, 1017040901, "lookup_product_type", 10, "Product Types", 330041409);
-insertLookup(db, productCatalogId, 1017040902, "lookup_product_format", 20, "Product Format Types", 330041409);
-insertLookup(db, productCatalogId, 1017040903, "lookup_product_shipping", 30, "Product Shipping Types", 330041409);
-insertLookup(db, productCatalogId, 1017040904, "lookup_product_ship_time", 40, "Product Shipping Times", 330041409);
-insertLookup(db, productCatalogId, 1017040905, "lookup_product_category_type", 50, "Product Category Types", 330041409);
-insertLookup(db, productCatalogId, 1017040906, "lookup_product_tax", 60, "Product Tax Types", 330041409);
-insertLookup(db, productCatalogId, 1017040907, "lookup_currency", 70, "Currency Types", 330041409);
-insertLookup(db, productCatalogId, 1017040908, "lookup_recurring_type", 80, "Price Recurring Types", 330041409);
-insertLookup(db, productCatalogId, 1017040909, "lookup_product_manufacturer", 90, "Product Manufacturer Types", 330041409);
+//Product Catalog
+categoryId = PermissionCategory.lookupId(db, 330041409);
+if (categoryId > -1) {
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040901, "lookup_product_type", 10, "Product Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_PRODUCT_TYPE);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_PRODUCT_TYPE);
+      element.setTableName("lookup_product_type");
+      element.setClassName("lookupList");
+      element.setLevel(10);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.productTypes", "value"));
+      element.insert(db);
+      print("Product Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Product Types already exists");
+    }
+  }
 
-int quotesId = PermissionCategory.lookupId(db, "Quotes");
-insertLookup(db, quotesId, 1123041000, "lookup_quote_status", 10, "Quote Status", 420041017);
-insertLookup(db, quotesId, 1123041003, "lookup_quote_source", 40, "Quote Source", 420041017);
-insertLookup(db, quotesId, 1123041004, "lookup_quote_delivery", 50, "Quote Delivery", 420041017);
-insertLookup(db, quotesId, 1123041005, "lookup_quote_condition", 60, "Quote Terms & Conditions", 420041017);
-insertLookup(db, quotesId, 1123041006, "lookup_quote_remarks", 70, "Quote Remarks", 420041017);
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040902, "lookup_product_format", 20, "Product Format Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_PRODUCT_FORMAT);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_PRODUCT_FORMAT);
+      element.setTableName("lookup_product_format");
+      element.setClassName("lookupList");
+      element.setLevel(20);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.productFormat", "value"));
+      element.insert(db);
+      print("Product Format entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Product Format already exists");
+    }
+  }
 
-int accountsId = PermissionCategory.lookupId(db, "Accounts");
-insertLookup(db, accountsId, 302051030, "lookup_industry", 70, "Industry Types", 1);
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040903, "lookup_product_shipping", 30, "Product Shipping Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_PRODUCT_SHIPPING);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_PRODUCT_SHIPPING);
+      element.setTableName("lookup_product_shipping");
+      element.setClassName("lookupList");
+      element.setLevel(30);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.productShippingTypes", "value"));
+      element.insert(db);
+      print("Product Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Product Types already exists");
+    }
+  }
 
-int contactsId = PermissionCategory.lookupId(db, "Contacts");
-insertLookup(db, contactsId, 111051354, "lookup_textmessage_types", 50, "Text Messaging Types", 2);
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040904, "lookup_product_ship_time", 40, "Product Shipping Times", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_PRODUCT_SHIP_TIME);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_PRODUCT_SHIP_TIME);
+      element.setTableName("lookup_product_ship_time");
+      element.setClassName("lookupList");
+      element.setLevel(40);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.productShipTimes", "value"));
+      element.insert(db);
+      print("Product Shipping Times entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Product Shipping Times already exists");
+    }
+  }
 
-pst.close();
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040905, "lookup_product_category_type", 50, "Product Category Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_PRODUCT_CATEGORY_TYPE);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_PRODUCT_CATEGORY_TYPE);
+      element.setTableName("lookup_product_category_type");
+      element.setClassName("lookupList");
+      element.setLevel(50);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.productCategoryTypes", "value"));
+      element.insert(db);
+      print("Product Category Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Product Category Types already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040906, "lookup_product_tax", 60, "Product Tax Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_PRODUCT_TAX);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_PRODUCT_TAX);
+      element.setTableName("lookup_product_tax");
+      element.setClassName("lookupList");
+      element.setLevel(60);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.productTaxTypes", "value"));
+      element.insert(db);
+      print("Product Tax Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Product Tax Types already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040907, "lookup_currency", 70, "Currency Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_CURRENCY);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_CURRENCY);
+      element.setTableName("lookup_currency");
+      element.setClassName("lookupList");
+      element.setLevel(70);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.currencyTypes", "value"));
+      element.insert(db);
+      print("Currency Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Currency Types already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040908, "lookup_recurring_type", 80, "Price Recurring Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_RECURRING_TYPE);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_RECURRING_TYPE);
+      element.setTableName("lookup_recurring_type");
+      element.setClassName("lookupList");
+      element.setLevel(80);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.priceRecurringTypes", "value"));
+      element.insert(db);
+      print("Price Recurring Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Price Recurring Types already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1017040909, "lookup_product_manufacturer", 90, "Product Manufacturer Types", 330041409);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_MANUFACTURER_TYPE);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG);
+      element.setLookupId(PermissionCategory.LOOKUP_MANUFACTURER_TYPE);
+      element.setTableName("lookup_product_manufacturer");
+      element.setClassName("lookupList");
+      element.setLevel(90);
+      element.setDescription(dictionary.getTerm("system.fields.label", "product.productManufacturerTypes", "value"));
+      element.insert(db);
+      print("Product Manufacturer Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Product Manufacturer Types already exists");
+    }
+  }
+}
+
+//Quotes Module
+categoryId = PermissionCategory.lookupId(db, 420041017);
+if (categoryId > -1) {
+  if (1==1) {
+    //insertLookup(db, categoryId, 1123041000, "lookup_quote_status", 10, "Quote Status", 420041017);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_QUOTE_STATUS);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_QUOTES);
+      element.setLookupId(PermissionCategory.LOOKUP_QUOTE_STATUS);
+      element.setTableName("lookup_quote_status");
+      element.setClassName("lookupList");
+      element.setLevel(10);
+      element.setDescription(dictionary.getTerm("system.fields.label", "accounts.accounts_quotes_list.QuoteStatus", "value"));
+      element.insert(db);
+      print("Quote Status entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Quote Status already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1123041003, "lookup_quote_source", 40, "Quote Source", 420041017);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_QUOTE_SOURCE);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_QUOTES);
+      element.setLookupId(PermissionCategory.LOOKUP_QUOTE_SOURCE);
+      element.setTableName("lookup_quote_source");
+      element.setClassName("lookupList");
+      element.setLevel(40);
+      element.setDescription(dictionary.getTerm("system.fields.label", "quotes.quoteSource", "value"));
+      element.insert(db);
+      print("Quote Source entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Quote Source already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1123041004, "lookup_quote_delivery", 50, "Quote Delivery", 420041017);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_QUOTE_DELIVERY);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_QUOTES);
+      element.setLookupId(PermissionCategory.LOOKUP_QUOTE_DELIVERY);
+      element.setTableName("lookup_quote_delivery");
+      element.setClassName("lookupList");
+      element.setLevel(50);
+      element.setDescription(dictionary.getTerm("system.fields.label", "quotes.quoteDelivery", "value"));
+      element.insert(db);
+      print("Quote Delivery entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Quote Delivery already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1123041005, "lookup_quote_condition", 60, "Quote Terms & Conditions", 420041017);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_QUOTE_CONDITION);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_QUOTES);
+      element.setLookupId(PermissionCategory.LOOKUP_QUOTE_CONDITION);
+      element.setTableName("lookup_quote_condition");
+      element.setClassName("lookupList");
+      element.setLevel(60);
+      element.setDescription(dictionary.getTerm("system.fields.label", "quotes.quoteTermsAndConditions", "value"));
+      element.insert(db);
+      print("Quote Terms & Conditions entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Quote Terms & Conditions already exists");
+    }
+  }
+
+  if (1==1) {
+    //insertLookup(db, categoryId, 1123041006, "lookup_quote_remarks", 70, "Quote Remarks", 420041017);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_QUOTE_REMARKS);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_QUOTES);
+      element.setLookupId(PermissionCategory.LOOKUP_QUOTE_REMARKS);
+      element.setTableName("lookup_quote_remarks");
+      element.setClassName("lookupList");
+      element.setLevel(70);
+      element.setDescription(dictionary.getTerm("system.fields.label", "quotes.quoteRemarks", "value"));
+      element.insert(db);
+      print("Quote Remarks entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Quote Remarks already exists");
+    }
+  }
+}
+
+//Accounts Module
+categoryId = PermissionCategory.lookupId(db, 1);
+if (categoryId > -1) {
+  if (1==1) {
+    //insertLookup(db, categoryId, 302051030, "lookup_industry", 70, "Industry Types", 1);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_ACCOUNTS_INDUSTRY);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_ACCOUNTS);
+      element.setLookupId(PermissionCategory.LOOKUP_ACCOUNTS_INDUSTRY);
+      element.setTableName("lookup_industry");
+      element.setClassName("lookupList");
+      element.setLevel(70);
+      element.setDescription(dictionary.getTerm("system.fields.label", "accounts.industryTypes", "value"));
+      element.insert(db);
+      print("Industry Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Industry Types already exists");
+    }
+  }
+}
+
+//Contacts Module
+categoryId = PermissionCategory.lookupId(db, 2);
+if (categoryId > -1) {
+  if (1==1) {
+    //insertLookup(db, categoryId, 111051354, "lookup_textmessage_types", 50, "Text Messaging Types", 2);
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_CONTACTS_TEXT);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_CONTACTS);
+      element.setLookupId(PermissionCategory.LOOKUP_CONTACTS_TEXT);
+      element.setTableName("lookup_textmessage_types");
+      element.setClassName("lookupList");
+      element.setLevel(50);
+      element.setDescription(dictionary.getTerm("system.fields.label", "contacts.textMessagingTypes", "value"));
+      element.insert(db);
+      print("Text Messaging Types entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element Text Messaging Types already exists");
+    }
+  }
+}
+//pst.close();

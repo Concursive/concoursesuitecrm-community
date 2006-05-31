@@ -84,19 +84,17 @@ public class PrivateString {
     try {
       File file = new File(filename);
       if (!file.exists()) {
+        // Generate key
         KeyGenerator generator = KeyGenerator.getInstance("DES");
         generator.init(56, new SecureRandom());
         Key key = generator.generateKey();
-
+        // Save key
         ObjectOutputStream out = new ObjectOutputStream(
             new FileOutputStream(filename));
         out.writeObject(key);
         out.close();
-
-        return key;
-      } else {
-        return PrivateString.loadKey(filename);
       }
+      return PrivateString.loadKey(filename);
     } catch (Exception e) {
       System.out.println(e);
     }

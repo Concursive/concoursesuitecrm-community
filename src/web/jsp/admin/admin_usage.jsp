@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -102,6 +102,16 @@
 <%
   }
 %>
+<tr>
+<%
+long free = java.lang.Runtime.getRuntime().freeMemory();
+long total = java.lang.Runtime.getRuntime().totalMemory();
+%>
+<td>
+Available Memory:<%= free %> <br />
+Total Memory:<%= total %> 
+</td>
+</tr>
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">

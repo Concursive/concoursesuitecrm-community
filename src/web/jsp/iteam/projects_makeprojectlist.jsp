@@ -33,7 +33,7 @@ function page_init() {
     Project thisProject = (Project) i.next();
 %>
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<%= StringUtils.jsStringEscape(thisProject.getTitle()) %>';
+    newOpt.text="<%= StringUtils.jsStringEscape(thisProject.getTitle()) %>";
     newOpt.value='<%= thisProject.getId() %>';
     list.options[list.length] = newOpt;
 <%

@@ -94,4 +94,3 @@ public class CategoryEditorList extends ArrayList {
     pst.close();
   }
 }
-

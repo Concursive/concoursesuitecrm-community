@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.base.Constants,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.base.Filter,org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="ContactListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="selectedContacts" class="java.util.HashMap" scope="session"/>
@@ -59,6 +60,9 @@ function finalize(selectedContacts, actionId){
   <br />
   <br />
   <input type="hidden" name="actionId" value="<%= request.getParameter("actionId") %>" />
+  <input type="hidden" name="siteId" value="<%=request.getAttribute("siteId")%>">
+  <input type="hidden" name="includeAllSites" value="<%=request.getAttribute("includeAllSites")%>">
+  <input type="hidden" name="mySiteOnly" value="<%=request.getAttribute("mySiteOnly")%>">
 </form>
 <% }else{
   Set s = selectedContacts.keySet();

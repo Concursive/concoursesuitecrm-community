@@ -24,11 +24,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Represents a category in which a Ticket is classified
+ *  Represents a category in which a Ticket is classified
  *
- * @author chris
- * @version $Id$
- * @created December 11, 2001
+ * @author     chris
+ * @created    December 11, 2001
+ * @version    $Id: TicketCategory.java,v 1.8.12.1 2005/10/14 21:12:41
+ *      mrajkowski Exp $
  */
 public class TicketCategory extends GenericBean {
 
@@ -38,21 +39,22 @@ public class TicketCategory extends GenericBean {
   private String description = "";
   private boolean enabled = true;
   private int level = -1;
+  private int siteId = -1;
   private TicketCategoryDraftList shortChildList = new TicketCategoryDraftList();
 
 
   /**
-   * Constructor for the TicketCategory object
+   *  Constructor for the TicketCategory object
    */
-  public TicketCategory() {
-  }
+  public TicketCategory() { }
 
 
   /**
-   * Constructor for the TicketCategory object
+   *  Constructor for the TicketCategory object
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  rs                Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of Exception
    */
   public TicketCategory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -60,11 +62,12 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Constructor for the TicketCategory object
+   *  Constructor for the TicketCategory object
    *
-   * @param db Description of Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of Exception
+   * @param  db                Description of Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of Exception
    */
   public TicketCategory(Connection db, int id) throws SQLException {
     if (id < 0) {
@@ -90,9 +93,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the Code attribute of the TicketCategory object
+   *  Sets the Code attribute of the TicketCategory object
    *
-   * @param tmp The new Code value
+   * @param  tmp  The new Code value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -100,9 +103,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the TicketCategory object
+   *  Sets the id attribute of the TicketCategory object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -110,9 +113,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the categoryLevel attribute of the TicketCategory object
+   *  Sets the categoryLevel attribute of the TicketCategory object
    *
-   * @param tmp The new categoryLevel value
+   * @param  tmp  The new categoryLevel value
    */
   public void setCategoryLevel(int tmp) {
     this.categoryLevel = tmp;
@@ -120,9 +123,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the categoryLevel attribute of the TicketCategory object
+   *  Sets the categoryLevel attribute of the TicketCategory object
    *
-   * @param tmp The new categoryLevel value
+   * @param  tmp  The new categoryLevel value
    */
   public void setCategoryLevel(String tmp) {
     this.categoryLevel = Integer.parseInt(tmp);
@@ -130,9 +133,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the Level attribute of the TicketCategory object
+   *  Sets the Level attribute of the TicketCategory object
    *
-   * @param level The new Level value
+   * @param  level  The new Level value
    */
   public void setLevel(int level) {
     this.level = level;
@@ -140,9 +143,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the Level attribute of the TicketCategory object
+   *  Sets the Level attribute of the TicketCategory object
    *
-   * @param level The new Level value
+   * @param  level  The new Level value
    */
   public void setLevel(String level) {
     this.level = Integer.parseInt(level);
@@ -150,9 +153,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the ParentCode attribute of the TicketCategory object
+   *  Sets the ParentCode attribute of the TicketCategory object
    *
-   * @param tmp The new ParentCode value
+   * @param  tmp  The new ParentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -160,9 +163,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the ParentCode attribute of the TicketCategory object
+   *  Sets the ParentCode attribute of the TicketCategory object
    *
-   * @param tmp The new ParentCode value
+   * @param  tmp  The new ParentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -170,9 +173,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the Description attribute of the TicketCategory object
+   *  Sets the Description attribute of the TicketCategory object
    *
-   * @param tmp The new Description value
+   * @param  tmp  The new Description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -180,9 +183,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the Enabled attribute of the TicketCategory object
+   *  Sets the Enabled attribute of the TicketCategory object
    *
-   * @param tmp The new Enabled value
+   * @param  tmp  The new Enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -190,9 +193,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the enabled attribute of the TicketCategory object
+   *  Sets the enabled attribute of the TicketCategory object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -200,9 +203,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Sets the shortChildList attribute of the TicketCategory object
+   *  Sets the shortChildList attribute of the TicketCategory object
    *
-   * @param shortChildList The new shortChildList value
+   * @param  shortChildList  The new shortChildList value
    */
   public void setShortChildList(TicketCategoryDraftList shortChildList) {
     this.shortChildList = shortChildList;
@@ -210,9 +213,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Gets the shortChildList attribute of the TicketCategory object
+   *  Gets the shortChildList attribute of the TicketCategory object
    *
-   * @return The shortChildList value
+   * @return    The shortChildList value
    */
   public TicketCategoryDraftList getShortChildList() {
     return shortChildList;
@@ -220,9 +223,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Gets the Level attribute of the TicketCategory object
+   *  Gets the Level attribute of the TicketCategory object
    *
-   * @return The Level value
+   * @return    The Level value
    */
   public int getLevel() {
     return level;
@@ -230,9 +233,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Gets the Code attribute of the TicketCategory object
+   *  Gets the Code attribute of the TicketCategory object
    *
-   * @return The Code value
+   * @return    The Code value
    */
   public int getId() {
     return id;
@@ -240,9 +243,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Gets the categoryLevel attribute of the TicketCategory object
+   *  Gets the categoryLevel attribute of the TicketCategory object
    *
-   * @return The categoryLevel value
+   * @return    The categoryLevel value
    */
   public int getCategoryLevel() {
     return categoryLevel;
@@ -250,9 +253,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Gets the ParentCode attribute of the TicketCategory object
+   *  Gets the ParentCode attribute of the TicketCategory object
    *
-   * @return The ParentCode value
+   * @return    The ParentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -260,9 +263,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Gets the Description attribute of the TicketCategory object
+   *  Gets the Description attribute of the TicketCategory object
    *
-   * @return The Description value
+   * @return    The Description value
    */
   public String getDescription() {
     return description;
@@ -270,9 +273,9 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Gets the Enabled attribute of the TicketCategory object
+   *  Gets the Enabled attribute of the TicketCategory object
    *
-   * @return The Enabled value
+   * @return    The Enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -280,11 +283,41 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Gets the siteId attribute of the TicketCategory object
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @return    The siteId value
+   */
+  public int getSiteId() {
+    return siteId;
+  }
+
+
+  /**
+   *  Sets the siteId attribute of the TicketCategory object
+   *
+   * @param  tmp  The new siteId value
+   */
+  public void setSiteId(int tmp) {
+    this.siteId = tmp;
+  }
+
+
+  /**
+   *  Sets the siteId attribute of the TicketCategory object
+   *
+   * @param  tmp  The new siteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -293,8 +326,8 @@ public class TicketCategory extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "ticket_category_id_seq");
       sql.append(
           "INSERT INTO ticket_category " +
-          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, \"level\", enabled) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, \"level\", enabled, site_id) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (id > -1) {
@@ -309,6 +342,7 @@ public class TicketCategory extends GenericBean {
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getLevel());
       pst.setBoolean(++i, this.getEnabled());
+      DatabaseUtils.setInt(pst, ++i, this.getSiteId());
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "ticket_category_id_seq", id);
@@ -324,11 +358,11 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (id == -1) {
@@ -362,10 +396,10 @@ public class TicketCategory extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  rs             Description of Parameter
+   * @throws  SQLException  Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
@@ -374,6 +408,79 @@ public class TicketCategory extends GenericBean {
     description = rs.getString("description");
     level = rs.getInt("level");
     enabled = rs.getBoolean("enabled");
+    siteId = DatabaseUtils.getInt(rs,"site_id");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    //delete the draft categories
+    PreparedStatement pst = db.prepareStatement("DELETE from ticket_category_draft WHERE link_id = ? ");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
+
+    //delete the category
+    pst = db.prepareStatement("DELETE FROM ticket_category WHERE id = ? ");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public TicketCategory cloneCategory() {
+    TicketCategory category = new TicketCategory();
+    category.setCategoryLevel(this.getCategoryLevel());
+    category.setDescription(this.getDescription());
+    category.setEnabled(this.getEnabled());
+    category.setLevel(this.getLevel());
+    return category;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  description       Description of the Parameter
+   * @param  siteId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int lookupCategory(Connection db, String description, int siteId) throws SQLException {
+    int result = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT id FROM ticket_category WHERE site_id = ? AND description = ? AND cat_level = ? ");
+    pst.setInt(1, siteId);
+    pst.setString(2, description);
+    pst.setInt(3, this.getCategoryLevel());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      result = DatabaseUtils.getInt(rs, "id");
+    }
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public String toString() {
+    return (this.getDescription()+"("+this.getId()+")");
   }
 }
 

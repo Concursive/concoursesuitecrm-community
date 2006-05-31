@@ -1020,3 +1020,133 @@ a:visited:hover{color:#FF3300;}
   width: 120px;
   padding-right: 3px;
 }
+.highlightRed {
+  background: #C1665A;
+}
+.highlightRed td {
+  color: #FFFFFF;
+}
+.highlightRed a {color:#FFFFFF;}
+.highlightRed a:active {color:#FFFFFF;}
+.highlightRed a:visited {color:#FFFFFF;}
+.highlightRed a:hover {color:#FFFFFF;}
+.highlightRed a:visited:hover {color:#FFFFFF;}
+
+.stageProgress {
+  border: 1px solid #000000;
+}
+.stageComplete {
+  background: #EDEDED;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-right: 1px solid #000000;
+  text-align: center;
+  vertical-align: middle;
+}
+.stageCurrent {
+  background: #99CC66;
+  padding-left: 24px;
+  padding-right: 18px;
+  text-align: center;
+  vertical-align: middle;
+}
+.stageCurrentArrow {
+  background: #99CC66;
+  background-image: url(../images/progress/currentStage.gif);
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+.stageIncomplete {
+  background: #FFFFFF;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-right: 1px solid #000000;
+  text-align: center;
+  vertical-align: middle;
+}
+.progressTable {
+  /*border-top: 1px solid #9C9A9C;*/
+}
+.progressTable th {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: center;
+  color: #000000;
+  font-weight: bold;
+}
+.progressTable td {
+  background-image: url(../images/layout/dot-h.gif);
+  background-position: bottom left;
+  background-repeat: repeat-x;
+  /* border-right: 1px solid #9C9A9C; */
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.phaseComplete {
+  background: #FFFFFF;
+  border-left: 1px solid #000000;
+  border-top: 1px solid #000000;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none !important;
+}
+.phaseCurrent {
+  background: #99CC66;
+  border-left: 1px solid #000000;
+  border-top: 1px solid #000000;
+  text-align: center;
+  vertical-align: middle;
+  border-right: none !important;
+  background-image: none !important;
+}
+.phaseIncomplete {
+  background: #FFFFFF;
+  border-left: 1px solid #000000;
+  border-top: 1px solid #000000;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none !important;
+}
+
+.phaseStepNoneImage {
+  border-left: 1px solid #000000;
+  border-right: none !important;
+  background-image: none !important;
+}
+.phaseStepCurrentImage {
+  background: #fff7bd;
+  background-image: url(../images/progress/currentStep.gif) !important;
+  background-repeat: no-repeat !important;
+  background-position: left center !important;
+  border-right: none !important;
+}
+.phaseStepRandomImage {
+  background: #fff7bd;
+  border-left: 1px solid #000000;
+  border-right: none !important;
+  background-image: none !important;
+}
+.phaseStepNone {
+
+}
+.phaseStepCurrent {
+  background: #fff7bd;
+
+}
+.phaseStepRandom {
+  background: #fff7bd;
+
+}
+.phaseStepHighlight {
+  background: #fff7bd;
+  font-weight: bold;
+}
+.phaseCurrentLink {color:#000000;text-decoration:none;font-weight: bold;}
+.phaseCurrentLink:active {color:#000000;text-decoration:none;font-weight: bold;}
+.phaseCurrentLink:visited {color:#000000;text-decoration:none;font-weight: bold;}
+.phaseCurrentLink:hover {color:#000000;text-decoration:underline;font-weight: bold;}
+.phaseCurrentLink:visited:hover {color:#000000;text-decoration:underline;font-weight: bold;}

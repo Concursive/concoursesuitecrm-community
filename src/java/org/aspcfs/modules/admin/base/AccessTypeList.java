@@ -116,8 +116,8 @@ public class AccessTypeList extends LookupList {
 
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM lookup_access_types " +
-        "WHERE code > -1 ");
+            "FROM lookup_access_types " +
+            "WHERE code > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -134,7 +134,7 @@ public class AccessTypeList extends LookupList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() + sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(description) < ? ");
+                "AND " + DatabaseUtils.toLowerCase(db) + "(description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -159,8 +159,8 @@ public class AccessTypeList extends LookupList {
     }
     sqlSelect.append(
         "* " +
-        "FROM lookup_access_types " +
-        "WHERE code > -1 ");
+            "FROM lookup_access_types " +
+            "WHERE code > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -264,6 +264,47 @@ public class AccessTypeList extends LookupList {
       }
     }
     return -1;
+  }
+
+  public int getRuleId(int code) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      AccessType thisType = (AccessType) i.next();
+      if (thisType.getCode() == code) {
+        return thisType.getRuleId();
+      }
+    }
+    return -1;
+  }
+
+  public String getDescriptionFromRuleId(int ruleId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      AccessType thisType = (AccessType) i.next();
+      if (thisType.getRuleId() == ruleId) {
+        return thisType.getDescription();
+      }
+    }
+    return null;
+  }
+
+  public static boolean exists(Connection db, int linkModuleId, int ruleId) throws SQLException {
+    boolean result = false;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT code " +
+            "FROM lookup_access_types " +
+            "WHERE link_module_id = ? " +
+            "AND rule_id = ? "
+    );
+    pst.setInt(1, linkModuleId);
+    pst.setInt(2, ruleId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      result = true;
+    }
+    rs.close();
+    pst.close();
+    return result;
   }
 }
 

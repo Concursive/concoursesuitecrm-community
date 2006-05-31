@@ -38,7 +38,7 @@
 <dhv:permission name="documents_documentstore-add">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr><td>
-<a href="DocumentManagement.do?command=AddDocumentStore"><dhv:label name="documents.add.CreateDocumentStore">Create a document store</dhv:label></a>
+<a href="DocumentManagement.do?command=AddDocumentStore"><dhv:label name="documents.add.createDocumentStore">Create a document store</dhv:label></a>
 </td></tr></table>
 <br />
 </dhv:permission>
@@ -54,7 +54,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus label="Document Stores" title="<%= showError(request, "actionError") %>" object="documentStoreListInfo"/>
+      <dhv:pagedListStatus label="DocumentStores" title="<%= showError(request, "actionError") %>" object="documentStoreListInfo"/>
     </td>
     </form>
   </tr>
@@ -120,7 +120,7 @@
 %>
   <tr>
     <td colspan="3">
-      <dhv:label name="documents.enterprise.NoDocumentStoresMessage">No document stores to display.</dhv:label>
+      <dhv:label name="documents.enterprise.noDocumentStoresMessage">No document stores to display.</dhv:label>
     </td>
   </tr>
 <%  

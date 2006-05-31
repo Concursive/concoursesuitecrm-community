@@ -14,22 +14,37 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/div.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript">
+  var materials = '';
+  var currentMaterialIds = '';
+  var currentMaterialQuantities = '';
+<%
+  Iterator iter = (Iterator) asset.getMaterials().iterator();
+  while (iter.hasNext()) {
+    AssetMaterial material = (AssetMaterial) iter.next();
+%>
+      materials = materials+'<%= material.getCode()+","+material.getQuantity() %>|';
+      currentMaterialIds = currentMaterialIds + '<%= material.getCode() %>|';
+      currentMaterialQuantities = currentMaterialQuantities + '<%= material.getQuantity() %>|';
+<%}%>
   <%-- Dynamic combo boxes --%>
   function updateCategoryList(id) {
     var sel = document.forms['addAccountAsset'].elements['level' + id];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "AccountsAssets.do?command=CategoryJSList&form=addAccountAsset&level=" + id + "&code=" + escape(value);
+    var url = "AccountsAssets.do?command=CategoryJSList&form=addAccountAsset&orgId=<%= OrgDetails.getOrgId() %>&level=" + id + "&code=" + escape(value);
+    document.getElementById('materials_elements').value = materials;
     window.frames['server_commands'].location.href=url;
   }
+
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
       return true;
@@ -37,8 +52,47 @@
       return(checkForm(form));
     }
   }
-  function checkForm(form) {
   
+  function resetMaterials(mater) {
+    var url = 'AccountsAssets.do?command=ViewMaterials&materials='+mater;
+    document.forms['addAccountAsset'].materials_elements.value=mater;
+    materials = mater;
+    currentMaterialIds = '';
+    currentMaterialQuantities = '';
+    var entry = mater.split("|");
+    for (i=0;i<entry.length;i++) {
+      if (entry[i] != '') {
+        var values = entry[i].split(",");
+        if (values[0] != '') {
+          currentMaterialIds = currentMaterialIds + values[0]+'|';
+          currentMaterialQuantities = currentMaterialQuantities + values[1]+'|';
+        }
+      }
+    }
+    window.frames['server_list'].location.href = url;
+  }
+
+  function removeMaterial(code) {
+    var copyMaterials = '';
+    var entry = materials.split("|");
+    for (i=0;i<entry.length;i++) {
+      if (entry[i] != '') {
+        var values = entry[i].split(",");
+        if (values[0] != '' && values[0] != code) {
+          copyMaterials = copyMaterials+ entry[i]+"|";
+        }
+      }
+    }
+    resetMaterials(copyMaterials);
+  }
+  
+  function refreshMaterials() {
+    var url = 'AccountsAssets.do?command=ViewMaterials&materials='+materials;
+    document.forms['addAccountAsset'].materials_elements.value=materials;
+    window.frames['server_list'].location.href = url;
+  }
+  
+  function checkForm(form) {
     formTest = true;
     message = "";
     if (form.dateListed.value == "") { 
@@ -71,8 +125,8 @@
     <dhv:label name="accounts.accountasset_include.Vendor">Vendor</dhv:label>
     </td>
     <td>
-      <input type="text" size="20" name="vendor" maxlength="30" value="<%= toHtmlValue(asset.getVendor()) %>">
-      <%= showAttribute(request, "vendorError") %>
+      <%= assetVendorList.getHtmlSelect("vendorCode", asset.getVendorCode()) %>
+      <%= showAttribute(request, "vendorCodeError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -80,8 +134,8 @@
       <dhv:label name="accounts.accountasset_include.Manufacturer">Manufacturer</dhv:label>
     </td>
     <td>
-      <input type="text" size="20" name="manufacturer" maxlength="30" value="<%= toHtmlValue(asset.getManufacturer()) %>">
-      <%= showAttribute(request, "manufacturerError") %>
+      <%= assetManufacturerList.getHtmlSelect("manufacturerCode", asset.getManufacturerCode()) %>
+      <%= showAttribute(request, "manufacturerCodeError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -365,6 +419,24 @@
     </td>
   </tr>
 </table>
+<br />
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong><dhv:label name="accounts.assets.listOfMaterials">List of Materials</dhv:label></strong>
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td valign="top" class="formLabel">
+      <dhv:label name="accounts.assets.materials">Materials</dhv:label>
+    </td>
+    <td>
+      <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popAssetMaterialsSelectMultiple('materials','1','lookup_asset_materials','<%= asset.getId() %>',currentMaterialIds, currentMaterialQuantities);" /><br />
+      <iframe src="../empty.html" name="server_list" id="server_list" border="0" frameborder="0" width="100%" height="0"></iframe>
+      <input type="hidden" name="materials_elements" id="materials_elements" value="" />
+    </td>
+  </tr>
+</table>
 <input type="hidden" name="modified" value="<%= asset.getModified() %>" />
+<input type="hidden" name="parentId" value="<%= asset.getParentId() == -1 ?(parent != null && parent.getId() != -1 ? parent.getId():-1):asset.getParentId() %>"/>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
-

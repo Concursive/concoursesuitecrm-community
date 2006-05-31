@@ -1,0 +1,89 @@
+import org.aspcfs.modules.troubletickets.base.*;
+import java.sql.*;
+import java.util.*;
+
+HashMap map = new HashMap();
+
+print ("Build a list...");
+TicketCategoryList categoryList = new TicketCategoryList();
+categoryList.setIncludeDisabled(true);
+categoryList.buildList(db);
+
+print ("Iterating categoryList entries: " + categoryList.size());
+Iterator iterator = (Iterator) categoryList.iterator();
+while (iterator.hasNext()) {
+  TicketCategory category = (TicketCategory) iterator.next();
+  TicketCategory tmpCat = (TicketCategory) map.get(category.getDescription());
+  if (tmpCat != null) {
+    print("found duplicate category name "+ category.getDescription());
+    if (tmpCat.getCategoryLevel() == category.getCategoryLevel()) {
+      print("found duplicate category with id "+ category.getId() + " for category with id "+ tmpCat.getId());
+      category = new TicketCategory(db, category.getId());
+      //found the duplicate entry
+      //TODO::now update all tickets related to this category
+      TicketList ticketList = new TicketList();
+      switch(category.getCategoryLevel()) {
+        case 0:
+          ticketList.setCatCode(category.getId());break;
+        case 1:
+          ticketList.setSubCat1(category.getId());break;
+        case 2:
+          ticketList.setSubCat2(category.getId());break;
+        case 3:
+          ticketList.setSubCat3(category.getId());break;
+        default:
+          ticketList.setCatCode(category.getId());break;
+      }
+      ticketList.buildList(db);
+      Iterator iter = (Iterator) ticketList.iterator();
+      while (iter.hasNext()) {
+        Ticket ticket = (Ticket) iter.next();
+        switch(category.getCategoryLevel()) {
+          case 0:
+            print("ticket old cat code is "+ ticket.getCatCode());
+            ticket.setCatCode(tmpCat.getId());break;
+          case 1:
+            print("ticket old subCat1 is "+ ticket.getCatCode());
+            ticket.setSubCat1(tmpCat.getId());break;
+          case 2:
+            print("ticket old subCat2 is "+ ticket.getCatCode());
+            ticket.setSubCat2(tmpCat.getId());break;
+          case 3:
+            print("ticket old subCat3 is "+ ticket.getCatCode());
+            ticket.setSubCat3(tmpCat.getId());break;
+          default:
+            ticket.setCatCode(tmpCat.getId());break;
+        }
+        ticket.update(db);
+        print("updated the ticket with id "+ ticket.getId()+" to have a new category id "+ tmpCat.getId());
+      }
+      //update the parents of the current category to be deleted
+      TicketCategoryList list = new TicketCategoryList();
+      list.setParentCode(category.getId());
+      list.buildList(db);
+      Iterator iter2 = (Iterator) list.iterator();
+      while (iter2.hasNext()) {
+        TicketCategory child = (TicketCategory) iter2.next();
+        child.setParentCode(tmpCat.getId());
+        child.update(db);
+        print("updated the ticket category child with id "+ child.getId() +" to have the parent id "+ tmpCat.getId());
+      }
+      //update all the draft categories
+      try {
+        TicketCategoryDraft draftCat = new TicketCategoryDraft(db, "ticket_category", category.getId(), true);
+        draftCat.setActualCatId(tmpCat.getId());
+        draftCat.update(db, "ticket_category");
+        print("updated the draft category with id "+draftCat.getId() +" with the new link_id "+ tmpCat.getId());
+      } catch (Exception e) {
+        print("Matching draft not found.");
+      }
+      //delete the duplicate ticket category
+      category.delete(db);
+      print("deleted the category with description "+ category.getDescription()+" and id "+ category.getId());
+      iterator.remove();
+    }
+  } else {
+    map.put(category.getDescription(), category);
+  }
+}
+print("CategoryList size: " + map.size());

@@ -21,9 +21,9 @@
   var thisCampaignId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, campaignId, cancel, download) {
+  function displayMenu(loc, id, campaignId, cancel, download, restart, candelete) {
     thisCampaignId = campaignId;
-    updateMenu(cancel, download);
+    updateMenu(cancel, download, restart, candelete);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCampaign", "down", 0, 0, 170, getHeight("menuCampaignTable"));
@@ -32,11 +32,21 @@
   }
   
   //Update menu for this Contact based on permissions
-  function updateMenu(hasCancelPermission, hasDownload){
-    if(hasCancelPermission == 0){
+  function updateMenu(hasCancelPermission, hasDownload, restart, candelete){
+    if(hasCancelPermission == 'false'){
       hideSpan('menuCancel');
-    }else{
+    } else {
       showSpan('menuCancel');
+    }
+    if (restart == 'false') {
+      hideSpan('menuRestart');
+    } else {
+      showSpan('menuRestart');
+    }
+    if (candelete == 'false') {
+      hideSpan('menuDelete');
+    } else {
+      showSpan('menuDelete');
     }
   }
   
@@ -47,6 +57,12 @@
   
   function generateReport() {
     window.location.href='CampaignManager.do?command=ExportReport&id=' + thisCampaignId;
+  }
+  
+  function restartCampaign() {
+    if (confirm(label("confirm.restart.campaign", "Are you sure you want to restart this campaign?"))) {
+      window.location.href='CampaignManager.do?command=Restart&id='+ thisCampaignId;
+    }
   }
   
   function deleteCampaign() {
@@ -70,8 +86,18 @@
         </td>
       </tr>
       </dhv:permission>
+      <dhv:permission name="campaign-campaigns-edit">
+      <tr id="menuRestart" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="restartCampaign();">
+        <th>
+          <img src="images/icons/stock_toggle-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="campaigns.restartCampaign">Restart Campaign</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
       <dhv:permission name="campaign-campaigns-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCampaign()">
+      <tr id="menuDelete" nmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCampaign()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

@@ -176,6 +176,34 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
     opener.changeDivContent(displayFieldId,recipientEmails[i]);
   }
 }
+
+function setParentListActionPlan(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId,source,actionPlanWork,actionStepWork){
+  var i = 0 ;
+  if (listType == "single") {
+    if (source == "attachplan") {
+      opener.document.getElementById(hiddenFieldId).value = recipientIds[i];
+      opener.changeDivContent(displayFieldId,recipientEmails[i]);
+      opener.attachContact(actionStepWork);
+    } else if (source == "reassignplan") {
+      opener.continueReassignPlan(recipientIds[i],actionPlanWork);
+    }
+  }
+}
+
+function setParentListRecipients(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId,source,allowDuplicateRecipient, actionItemId) {
+  if (source == 'recipients') {
+    opener.continueAddRecipient(recipientIds[0], true);
+  } else if (source == 'actionplanrecipients') {
+    opener.continueAddRecipient(recipientIds[0], allowDuplicateRecipient, displayFieldId, actionItemId);
+  }
+}
+  
+function setParentListLead(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId,source,from,leadId) {
+  var i = 0 ;
+  if (source == "leads") {
+    opener.continueReassign(recipientIds[i]);
+  }
+}
   
 function setParentListCampaign(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
   if (recipientEmails.length == 0 && listType == "list") {

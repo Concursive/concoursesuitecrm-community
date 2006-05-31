@@ -1,0 +1,106 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import java.util.*;
+import org.aspcfs.util.web.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.modules.actionplans.base.LookupStepAction;
+
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator");
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+LookupStepAction element = null;
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061030);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachOpportunity.text", "value"));
+  element.setLevel(10);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061031);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachDocument.text", "value"));
+  element.setLevel(20);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061032);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachActivity.text", "value"));
+  element.setLevel(30);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061033);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachFolder.text", "value"));
+  element.setLevel(40);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061034);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.updateRating.text", "value"));
+  element.setLevel(50);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061035);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachNoteSingle.text", "value"));
+  element.setLevel(60);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061036);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachNoteMultiple.text", "value"));
+  element.setLevel(70);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061037);
+  element.setEnabled(false);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachLookupListMultiple.text", "value"));
+  element.setLevel(80);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061038);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.viewAccount.text", "value"));
+  element.setLevel(90);
+  element.insert(db);
+}
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(110061039);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.attachAccountContact.text", "value"));
+  element.setLevel(100);
+  element.insert(db);
+}

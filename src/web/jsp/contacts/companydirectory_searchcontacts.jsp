@@ -24,6 +24,8 @@
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SearchContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
@@ -36,6 +38,9 @@
     document.forms['searchContact'].listView.options.selectedIndex = 0;
     document.forms['searchContact'].listFilter1.options.selectedIndex = 0;
     document.forms['searchContact'].searchFirstName.focus();
+    <dhv:evaluate if="<%=User.getSiteId() == -1 %>" >
+      document.forms['searchContact'].searchcodeSiteId.options.selectedIndex = 0;
+    </dhv:evaluate>
   }
 </script>
 <body onLoad="javascript:document.searchContact.searchFirstName.focus();">
@@ -114,6 +119,21 @@
         <option <%= SearchContactsInfo.getOptionValue("all") %>><dhv:label name="actionList.allContacts">All Contacts</dhv:label></option>
         <option <%= SearchContactsInfo.getOptionValue("hierarchy") %>><dhv:label name="contact.controlledHierarchyContacts">Controlled-Hierarchy Contacts</dhv:label></option>
       </select>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </td>
+    <td>
+    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
+      <%= SiteList.getHtmlSelect("searchcodeSiteId", ("".equals(SearchContactsInfo.getSearchOptionValue("searchcodeSiteId")) ? String.valueOf(Constants.INVALID_SITE) : SearchContactsInfo.getSearchOptionValue("searchcodeSiteId"))) %>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() != -1 %>" >
+        <input type="hidden" name="searchcodeSiteId" value="<%= User.getUserRecord().getSiteId() %>">
+        <%= SiteList.getSelectedValue(User.getUserRecord().getSiteId()) %>
+    </dhv:evaluate>
+    <input type="hidden" name="searchcodeExclusiveToSite" value="true"/>
     </td>
   </tr>
   <%--

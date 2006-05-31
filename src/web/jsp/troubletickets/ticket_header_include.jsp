@@ -16,26 +16,33 @@
   - Version: $Id$
   - Description:
   --%>
-<%@ page import="org.aspcfs.modules.base.Constants" %>
+<%@ page import="org.aspcfs.modules.base.Constants, org.aspcfs.modules.troubletickets.base.Ticket" %>
 <%
   Ticket thisTicket = (Ticket)request.getAttribute("TicketDetails");
   if (thisTicket == null) {
     thisTicket = (Ticket)request.getAttribute("ticketDetails");
   }
+  if (thisTicket == null) {
+    thisTicket = (Ticket) request.getAttribute("ticket");
+  }
 %>
 <table width="100%" border="0">
   <tr>
-    <td nowrap>
-        <strong><dhv:label name="accounts.company.colon">Company:</dhv:label></strong> <%= toHtml(thisTicket.getCompanyName()) %>
+    <td nowrap width="100%"><table width="100%" class="empty">
+        <dhv:evaluate if="<%= thisTicket.getCompanyNameHierarchy() != null && !"".equals(thisTicket.getCompanyNameHierarchy().trim()) %>">
+        <tr><td nowrap width="100%" align="left"><strong><dhv:label name="tickets.parentAccounts.colon">Parent Accounts:</dhv:label></strong> <%= toHtml(thisTicket.getCompanyNameHierarchy()) %></td></tr>
+        </dhv:evaluate>
+        <tr><td nowrap colspan="2" align="left"><strong><dhv:label name="accounts.organization.colon">Organization:</dhv:label></strong> <%= toHtml(thisTicket.getCompanyName()) %></td></tr>
+      </table>
     </td>
-    <td  width="100%" align="right">
+    <td nowrap align="right">
       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="TroubleTickets.do?command=PrintReport&id=<%= thisTicket.getId() %>"><dhv:label name="accounts.tickets.print">Printable Ticket Form</dhv:label></a>
     </td>
   </tr>
   <tr>
-      <td nowrap>
-        <strong><dhv:label name="quotes.quotes.header.status">Status:</dhv:label></strong>
+    <td nowrap width="100%">
+      <strong><dhv:label name="quotes.quotes.header.status">Status:</dhv:label></strong>
   <% if (thisTicket.isTrashed()) { %>
         <dhv:label name="global.trashed">Trashed</dhv:label>&nbsp;
         <% if (thisTicket.getClosed() == null){ %>

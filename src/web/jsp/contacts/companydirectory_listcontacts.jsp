@@ -18,8 +18,11 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.io.*,java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.base.*" %>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="SearchContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -70,8 +73,14 @@
       <strong><a href="ExternalContacts.do?command=SearchContacts&column=c.org_name"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></a></strong>
       <%= SearchContactsInfo.getSortIcon("c.org_name") %>
     </th>
+<dhv:evaluate if="<%= SearchContactsInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+    <th nowrap>
+      <strong><a href="ExternalContacts.do?command=SearchContacts&column=lsi.description"><dhv:label name="accounts.site">Site</dhv:label></a></strong>
+      <%= SearchContactsInfo.getSortIcon("lsi.description") %>
+    </th>
+</dhv:evaluate>
     <th>
-      <strong><dhv:label name="accounts.phones">Phone(s)</dhv:label></strong>
+      <strong><dhv:label name="account.phones">Phone(s)</dhv:label></strong>
     </th>
     <dhv:evaluate if="<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>">
       <th>
@@ -89,8 +98,8 @@
       rowid = (rowid != 1 ? 1 : 2);
       Contact thisContact = (Contact)i.next();
 %>    
-      <tr>
-        <td width="8" class="row<%= rowid %>" nowrap>
+      <tr class="row<%= rowid %>">
+        <td width="8" nowrap>
          <%-- check if user has edit or delete based on the type of contact --%>
         <%
           int hasEditPermission = 0;
@@ -129,7 +138,7 @@
          <a href="javascript:displayMenu('select<%= count %>','menuContact','<%= thisContact.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>', '<%= hasClonePermission %>', '<%= hasAddressRequestPermission %>' ,'<%= thisContact.getOrgId() %>','<%= thisContact.isTrashed() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuContact');">
          <img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
-        <td class="row<%= rowid %>" <%= "".equals(toString(thisContact.getNameFull())) ? "width=\"10\"" : ""  %> nowrap>
+        <td <%= "".equals(toString(thisContact.getNameFull())) ? "width=\"10\"" : ""  %> nowrap>
           <% if(!"".equals(toString(thisContact.getNameFull()))){ %>
           <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameFull()) %></a>
           <%= thisContact.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
@@ -138,7 +147,7 @@
             &nbsp;
           <%}%>
         </td>
-        <td class="row<%= rowid %>">
+        <td>
           <% if(!"".equals(toString(thisContact.getNameFull()))){ %>
             <%= toHtml(thisContact.getOrgName()) %>
           <%}else{%>
@@ -146,26 +155,34 @@
             <%= thisContact.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <%}%>
         </td>
-        <td class="row<%= rowid %>" nowrap>
+<dhv:evaluate if="<%= SearchContactsInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+        <td valign="top"><%= SiteIdList.getSelectedValue(thisContact.getSiteId()) %></td>
+</dhv:evaluate>
+        <td nowrap>
           <%
             Iterator phoneItr = thisContact.getPhoneNumberList().iterator();
             while (phoneItr.hasNext()) {
               PhoneNumber phoneNumber = (PhoneNumber)phoneItr.next(); %>
-              <%= phoneNumber.getPhoneNumber()%>(<%=phoneNumber.getTypeName()%>)
+              <%= phoneNumber.getPhoneNumber() %> (<%=phoneNumber.getTypeName()%>)
+              <dhv:evaluate if="<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>">
+                <dhv:evaluate if="<%= hasText(phoneNumber.getPhoneNumber()) %>">
+                  <a href="javascript:popURL('OutboundDialer.do?command=Call&auto-populate=true&number=<%= StringUtils.jsStringEscape(phoneNumber.getPhoneNumber()) %>','OUTBOUND_CALL','400','200','yes','yes');"><img src="images/icons/stock_call-16.gif" align="absMiddle" title="Call number" border="0"/></a>
+                </dhv:evaluate>
+              </dhv:evaluate>
               <%=(phoneItr.hasNext()?"<br />":"")%>
            <%}%>&nbsp;
           </td>
         <dhv:evaluate if="<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>">
-          <td class="row<%= rowid %>" nowrap>
+          <td nowrap>
             <dhv:username id="<%= thisContact.getOwner() %>"/>
           </td>
         </dhv:evaluate>
       </tr>
 <%
     }
-  } else {%>  
+  } else {%>
   <tr>
-    <td class="containerBody" colspan="5">
+    <td class="containerBody" colspan="<%= SearchContactsInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) ? "6":"5" %>">
       <dhv:label name="contact.noContactsFound.text">No contacts found with the specified search parameters.</dhv:label><br />
       <a href="ExternalContacts.do?command=SearchContactsForm"><dhv:label name="accounts.accounts_list.ModifySearch">Modify Search</dhv:label></a>.
     </td>

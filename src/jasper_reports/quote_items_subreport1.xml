@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="quote_items"
+		 name="quote_items_subreport1"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -38,6 +38,7 @@
 		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["/Users/Ananth/source/crm3/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
@@ -45,7 +46,7 @@
 qp.quantity, qp.price_amount,
 qp.estimated_delivery as delivery,
 pc.product_name, pc.sku,
-qp.comment as comment 
+qp."comment" as "comment" 
 FROM quote_product qp
 LEFT JOIN product_catalog pc ON (qp.product_id = pc.product_id)
 WHERE quote_id = $P{quote_id}]]></queryString>
@@ -70,7 +71,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 		<variableExpression><![CDATA[new Double($F{quantity}.intValue() * $F{price_amount}.doubleValue())]]></variableExpression>
 		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
 	</variable>
-		<group  name="items" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+		<group  name="items" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="55" >
 			<groupExpression><![CDATA[$F{item_id}]]></groupExpression>
 			<groupHeader>
 			<band height="33"  isSplitAllowed="true" >
@@ -80,7 +81,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						x="2"
 						y="5"
 						width="23"
-						height="17"
+						height="26"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-1"
@@ -89,7 +90,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
@@ -102,7 +103,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						x="29"
 						y="5"
 						width="87"
-						height="17"
+						height="26"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-2"
@@ -111,7 +112,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
@@ -124,7 +125,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						x="121"
 						y="5"
 						width="79"
-						height="17"
+						height="26"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-3"
@@ -133,7 +134,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
@@ -155,7 +156,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
@@ -168,7 +169,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						x="351"
 						y="5"
 						width="62"
-						height="17"
+						height="26"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-5"
@@ -177,7 +178,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
@@ -190,7 +191,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						x="417"
 						y="5"
 						width="85"
-						height="17"
+						height="26"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-6"
@@ -199,7 +200,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
@@ -212,7 +213,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						x="508"
 						y="5"
 						width="68"
-						height="17"
+						height="26"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-9"
@@ -221,7 +222,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
@@ -375,7 +376,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="false" >
 			</band>
 			</groupFooter>
 		</group>
@@ -677,7 +678,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="21"  isSplitAllowed="true" >
+			<band height="21"  isSplitAllowed="false" >
 				<subreport  isUsingCache="true">
 					<reportElement
 						mode="Opaque"
@@ -694,7 +695,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isRemoveLineWhenBlank="true"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{REPORT_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{SCRIPT_DB_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<subreportParameter  name="item_id">
 						<subreportParameterExpression><![CDATA[$F{item_id}]]></subreportParameterExpression>
@@ -730,7 +731,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isRemoveLineWhenBlank="true"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{REPORT_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{SCRIPT_DB_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<graphicElement stretchType="RelativeToBandHeight" pen="1Point" fill="Solid" />
 				</line>
@@ -750,7 +751,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isRemoveLineWhenBlank="true"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{REPORT_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{SCRIPT_DB_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<graphicElement stretchType="RelativeToBandHeight" pen="1Point" fill="Solid" />
 				</line>
@@ -770,7 +771,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isRemoveLineWhenBlank="true"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{REPORT_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{SCRIPT_DB_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<graphicElement stretchType="RelativeToBandHeight" pen="1Point" fill="Solid" />
 				</line>
@@ -790,7 +791,7 @@ WHERE quote_id = $P{quote_id}]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{REPORT_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).hasQuoteProductOptions($P{SCRIPT_DB_CONNECTION}, $F{item_id}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<graphicElement stretchType="NoStretch" pen="1Point" fill="Solid" />
 				</line>

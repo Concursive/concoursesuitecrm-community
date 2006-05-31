@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.base.Constants" %>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/scrollReload.js"></script>
@@ -67,14 +68,18 @@ function reopenContact(id) {
       <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><input type="button" value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('ExternalContacts.do?command=MoveToAccount&orgId=<%=ContactDetails.getOrgId()%>&id=<%=ContactDetails.getId()%>&popup=true','ExternalContacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
     </dhv:evaluate>
     <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.downloadVcard">Download VCard</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=DownloadVCard&id=<%= ContactDetails.getId() %>'"/></dhv:permission>
-    <dhv:permission name="contacts-external_contacts-view,contacts-external_contacts-add,contacts-external_contacts-edit,contacts-external_contacts-delete"><br>&nbsp;</dhv:permission>
+    <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
+      <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-add" all="true"><input type="button" value="<dhv:label name="button.workAsAccount">Work as Account</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=WorkAsAccount&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>';"/></dhv:permission>
+    </dhv:evaluate>
+    <dhv:permission name="contacts-external_contacts-view,contacts-external_contacts-add,contacts-external_contacts-edit,contacts-external_contacts-delete,accounts-accounts-add"><br />&nbsp;</dhv:permission>
   </dhv:evaluate>
 <%--  <dhv:evaluate if="<%= ContactDetails.isTrashed() %>">
       <dhv:permission name="contacts-external_contacts-delete">
         <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=Restore&id=<%= ContactDetails.getId() %>';submit();"><br>&nbsp;
       </dhv:permission>
   </dhv:evaluate> --%>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+<dhv:evaluate if="<%= hasText(ContactDetails, "additionalNames,nickname,birthDate,title,role") %>">  
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
       <strong><dhv:label name="contacts.details">Details</dhv:label></strong>
@@ -103,13 +108,14 @@ function reopenContact(id) {
   <dhv:evaluate if="<%= ContactDetails.getBirthDate() != null %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= ContactDetails.getBirthDate() %>" dateOnly="true"/>
     </td>
   </tr>
   </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
@@ -118,6 +124,7 @@ function reopenContact(id) {
       <%= toHtml(ContactDetails.getTitle()) %>
     </td>
   </tr>
+  </dhv:evaluate>
   <dhv:evaluate if="<%= hasText(ContactDetails.getRole()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -128,8 +135,10 @@ function reopenContact(id) {
     </td>
   </tr>
   </dhv:evaluate>
-  </table>
-  &nbsp;<br />
+</table>
+&nbsp;<br />
+</dhv:evaluate>
+<dhv:include name="contact.emailAddresses" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -165,7 +174,8 @@ function reopenContact(id) {
   <%}%>
   </table>
   &nbsp;
-  
+  </dhv:include>
+  <dhv:include name="contact.instantMessageAddresses" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -205,6 +215,8 @@ function reopenContact(id) {
   <%}%>
   </table>
   &nbsp;
+  </dhv:include>
+  <dhv:include name="contact.textMessageAddresses" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -243,6 +255,8 @@ function reopenContact(id) {
   <%}%>
   </table>
   &nbsp;
+  </dhv:include>
+  <dhv:include name="contact.phoneNumbers" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -260,7 +274,12 @@ function reopenContact(id) {
           <%= toHtml(thisPhoneNumber.getTypeName()) %>
         </td>
         <td>
-          <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;
+          <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
+          <dhv:evaluate if="<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>">
+            <dhv:evaluate if="<%= hasText(thisPhoneNumber.getPhoneNumber()) %>">
+              <a href="javascript:popURL('OutboundDialer.do?command=Call&auto-populate=true&number=<%= StringUtils.jsStringEscape(thisPhoneNumber.getPhoneNumber()) %>','OUTBOUND_CALL','400','200','yes','yes');"><img src="images/icons/stock_call-16.gif" align="absMiddle" title="Call number" border="0"/></a>
+            </dhv:evaluate>
+          </dhv:evaluate>
           <dhv:evaluate if="<%=thisPhoneNumber.getPrimaryNumber()%>">
             <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
           </dhv:evaluate>
@@ -278,6 +297,8 @@ function reopenContact(id) {
   <%}%>
   </table>
   &nbsp;
+  </dhv:include>
+  <dhv:include name="contact.addresses" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -313,6 +334,8 @@ function reopenContact(id) {
   <%}%>
   </table>
   &nbsp;
+  </dhv:include>
+  <dhv:include name="contact.additionalDetails" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -325,6 +348,7 @@ function reopenContact(id) {
     </tr>
   </table>
   &nbsp;
+  </dhv:include>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -340,6 +364,16 @@ function reopenContact(id) {
         <dhv:evaluate if="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red"><dhv:label name="accounts.accounts_importcontact_details.NoLongerAccess">(No longer has access)</dhv:label></font></dhv:evaluate>
       </td>
     </tr>
+    <dhv:evaluate if="<%= ContactDetails.getConversionDate() != null %>">
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="leads.conversionDate">Lead Conversion Date</dhv:label>
+        </td>
+        <td>
+          <zeroio:tz timestamp="<%= ContactDetails.getConversionDate() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="false" default="&nbsp;"/>
+        </td>
+      </tr>
+    </dhv:evaluate>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
         <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
@@ -370,6 +404,9 @@ function reopenContact(id) {
       <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><input type="button" value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('ExternalContacts.do?command=MoveToAccount&orgId=<%=ContactDetails.getOrgId()%>&id=<%=ContactDetails.getId()%>&popup=true','ExternalContacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
     </dhv:evaluate>
     <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.downloadVcard">Download VCard</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=DownloadVCard&id=<%= ContactDetails.getId() %>'"/></dhv:permission>
+    <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
+      <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-add"><input type="button" value="<dhv:label name="button.workAsAccount">Work as Account</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=WorkAsAccount&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>';"/></dhv:permission>
+    </dhv:evaluate>
   </dhv:evaluate>
 <%--  <dhv:evaluate if="<%= ContactDetails.isTrashed() %>">
       <br><dhv:permission name="contacts-external_contacts-delete">

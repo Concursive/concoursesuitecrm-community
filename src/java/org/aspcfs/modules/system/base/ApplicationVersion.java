@@ -16,6 +16,7 @@
 package org.aspcfs.modules.system.base;
 
 import org.aspcfs.controller.ApplicationPrefs;
+import com.darkhorseventures.framework.hooks.CustomHook;
 
 /**
  * Class for reading the application version information
@@ -26,9 +27,9 @@ import org.aspcfs.controller.ApplicationPrefs;
  * @created July 31, 2003
  */
 public class ApplicationVersion {
-  public final static String VERSION = "3.1 (2005-08-04)";
-  public final static String APP_VERSION = "2005-08-04";
-  public final static String DB_VERSION = "2005-08-04";
+  public final static String VERSION = "4.0.1 (2006-05-09)";
+  public final static String APP_VERSION = "2006-05-09";
+  public final static String DB_VERSION = "2006-05-09";
 
 
   /**
@@ -38,13 +39,7 @@ public class ApplicationVersion {
    * @return The outOfDate value
    */
   public static boolean isOutOfDate(ApplicationPrefs prefs) {
-    // BEGIN DHV CODE ONLY
-    String installedVersion = getInstalledVersion(prefs);
-    if (installedVersion != null) {
-      return !installedVersion.equals(ApplicationVersion.VERSION);
-    }
-    // END DHV CODE ONLY
-    return false;
+    return CustomHook.isOutOfDate(prefs);
   }
 
 
@@ -57,6 +52,7 @@ public class ApplicationVersion {
   public static String getInstalledVersion(ApplicationPrefs prefs) {
     String installedVersion = prefs.get("VERSION");
     if (installedVersion == null || "".equals(installedVersion)) {
+      // Return the first version that had an integrated upgrade utility
       return "2.8 (2004-03-16)";
     } else {
       return installedVersion;
@@ -64,4 +60,3 @@ public class ApplicationVersion {
   }
 
 }
-

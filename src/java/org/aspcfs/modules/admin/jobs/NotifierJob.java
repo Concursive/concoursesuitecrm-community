@@ -27,7 +27,6 @@ import org.quartz.SchedulerContext;
 import org.quartz.StatefulJob;
 
 import java.sql.Connection;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 
@@ -51,8 +50,6 @@ public class NotifierJob implements StatefulJob {
       ApplicationPrefs prefs = (ApplicationPrefs) schedulerContext.get(
           "ApplicationPrefs");
       cp = (ConnectionPool) schedulerContext.get("ConnectionPool");
-      Hashtable systemStatusList = (Hashtable) schedulerContext.get(
-          "SystemStatus");
       if (System.getProperty("DEBUG") != null) {
         System.out.println("NotifierJob-> Checking for notifications...");
       }
@@ -64,7 +61,9 @@ public class NotifierJob implements StatefulJob {
         Site thisSite = (Site) i.next();
         db = cp.getConnection(thisSite.getConnectionElement());
         notifier.buildOpportunityAlerts(db, thisSite);
-        notifier.buildCommunications(db, thisSite);
+        cp.renew(db);
+        notifier.buildCommunications(db, thisSite, cp);
+        cp.renew(db);
         notifier.buildCallAlerts(db, thisSite);
         cp.free(db);
         db = null;

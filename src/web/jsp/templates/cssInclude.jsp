@@ -50,19 +50,18 @@
 <%-- Use the system's language if not specified at user --%>
 <dhv:evaluate if="<%= User.getUserRecord() == null %>">
   <dhv:evaluate if="<%= !"en_US".equals(applicationPrefs.get("SYSTEM.LANGUAGE")) %>">
-    <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>.js"></SCRIPT>
+    <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" CHARSET="iso-8859-1" SRC="javascript/languages/dictionary_<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>.js"></SCRIPT>
   </dhv:evaluate>
-  <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_en_US.js"></SCRIPT>
+  <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" CHARSET="iso-8859-1" SRC="javascript/languages/dictionary_en_US.js"></SCRIPT>
 </dhv:evaluate>
 <%-- Use the user's language since they are logged in --%>
 <dhv:evaluate if="<%= User.getUserRecord() != null %>">
   <dhv:evaluate if="<%= !"en_US".equals(User.getUserRecord().getLanguage()) %>">
     <dhv:evaluate if="<%= new File(request.getRealPath("/") + "javascript/languages/dictionary_" +  User.getUserRecord().getLanguage() + ".js").exists() %>">
-      <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
+      <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" CHARSET="iso-8859-1" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
     </dhv:evaluate>
   </dhv:evaluate>
-  <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_en_US.js"></SCRIPT>
+  <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" CHARSET="iso-8859-1" SRC="javascript/languages/dictionary_en_US.js"></SCRIPT>
 </dhv:evaluate>
 <%-- The JavaScript resource label handler --%>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/language.js"></SCRIPT>
-

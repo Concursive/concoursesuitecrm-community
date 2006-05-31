@@ -37,7 +37,8 @@ public class SiteList extends ArrayList {
   private int enabled = Constants.UNDEFINED;
   private String siteCode = null;
   private String virtualHost = null;
-
+  private String databaseName = null;
+  private String dbHost = null;
 
   /**
    * Constructor for the SiteList object
@@ -135,6 +136,21 @@ public class SiteList extends ArrayList {
     return virtualHost;
   }
 
+  public String getDbHost() {
+    return dbHost;
+  }
+
+  public void setDbHost(String dbHost) {
+    this.dbHost = dbHost;
+  }
+
+  public String getDatabaseName() {
+    return databaseName;
+  }
+
+  public void setDatabaseName(String databaseName) {
+    this.databaseName = databaseName;
+  }
 
   /**
    * Builds a list of sites based on the specified parameters, requires a
@@ -215,6 +231,12 @@ public class SiteList extends ArrayList {
     if (virtualHost != null) {
       sqlFilter.append("AND vhost = ? ");
     }
+    if (dbHost != null) {
+      sqlFilter.append("AND dbhost = ? ");
+    }
+    if (databaseName != null) {
+      sqlFilter.append("AND dbname = ? ");
+    }
   }
 
 
@@ -236,8 +258,13 @@ public class SiteList extends ArrayList {
     if (virtualHost != null) {
       pst.setString(++i, virtualHost);
     }
+    if (dbHost != null) {
+      pst.setString(++i, dbHost);
+    }
+    if (databaseName != null) {
+      pst.setString(++i, databaseName);
+    }
     return i;
   }
 
 }
-

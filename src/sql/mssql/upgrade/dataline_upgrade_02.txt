@@ -1,0 +1,176 @@
+#
+# These scripts bring dataline from 2.9+ to 3.0
+#
+
+# Permission Category Constants
+
+# Product Catalog Editor
+2004-10-15-script01.bsh
+
+# WebDAV feature / Permission Category changes
+2004-11-17-script02.bsh
+2004-11-17-script03.bsh
+
+# Add Permission Category (Some already have this, so a check is made)
+2004-10-00-script01.bsh
+2004-10-00-script02.bsh
+2004-10-00-script03.bsh
+
+# Quote Management 
+2004-11-29-script06.bsh
+2004-11-29-script08.bsh
+
+# Additional Adjustments
+2004-11-29-script13.bsh
+
+# Document Management
+2004-12-02-script2.bsh
+2004-12-02-script3.bsh
+2004-12-02-script4.bsh
+2004-12-09.bsh
+
+# Merge f-improvements-20041201
+2004-12-20-script01.bsh
+
+# Merge f-contact_request-20041216
+2004-12-16-script1.bsh
+
+# Merge bug-version29_20050114
+
+# Merge f-contact_request-20050103
+2005-01-18-script02.bsh
+
+# Merge f-folders-20050120
+2005-01-20-script02.bsh
+2005-01-20-script03.bsh
+2005-01-26-script02.bsh
+2005-01-27-script02.bsh
+
+# Merge f-contact_request-20050119
+2005-01-20-script01.bsh
+#(Install templates.xml if it does not exist)
+2005-02-07-script01.bsh
+
+# Merge Project Management
+
+# Merge bug-version3-20050210
+
+# Industry list
+2005-03-02-script01.bsh
+
+# Account Project permissions and Project permissions
+2005-03-02-script02.bsh
+2005-03-02-script03.bsh
+
+# Employee projects
+2005-03-02-script05.bsh
+
+# Lookup list changes
+
+# Product Catalog Editor v2
+2005-03-01-script01.bsh
+
+# Leads Module
+2005-02-28-script01.bsh
+2005-02-28-script02.bsh
+
+# Leads Module (merge4)
+2005-03-16-script01.bsh
+2005-03-17-script01.bsh
+
+# Product
+
+# Product catalog permissions
+2005-03-28-script01.bsh
+
+# Missing leads lookup editors
+2005-04-09-script01.bsh
+
+#
+# End of scripts to bring dataline from 2.9+ to 3.0
+#
+
+#
+# For scripts to bring dataline from 3.0 to 3.1, refer to updgrade_v30-31.txt
+#
+
+# Relationships (Only for systems that don't have a relationship table)
+
+# Instant Messaging fields
+2005-06-21-script02.bsh
+
+# Lookups
+2005-07-07-script01-partha.bsh
+
+ History and deleting updates
+2005-06-27-script02.bsh
+####2005-06-27gk.bsh
+2005-05-25-script01-partha.bsh
+2005-05-25-script02-partha.bsh
+2005-05-25-script03-partha.bsh
+2005-05-25-script04-partha.bsh
+2005-05-25-script05-partha.bsh
+2005-05-25-script06-partha.bsh
+2005-05-25-script07-partha.bsh
+2005-05-25-script08-partha.bsh
+2005-05-25-script09-partha.bsh
+2005-05-25-script10-partha.bsh
+2005-05-25-script11-partha.bsh
+2005-05-25-script12-partha.bsh
+2005-05-25-script13-partha.bsh
+2005-05-25-script14-partha.bsh
+
+# Activity - Opportunity relationship
+2005-07-14-script01-partha.bsh
+
+# Permissions
+#(UNCOMMENT AFTER FIX)2005-07-01-script01.bsh
+2005-07-01-script02.bsh
+
+# Template files
+#dne:(copies templates)2005-07-20-script01-mr.bsh
+
+# Locale adjustments
+
+#
+# End of scripts to bring dataline from 3.0 to 3.1
+#
+
+#
+# Scripts to bring dataline from 3.1 to current (more to come here)
+#
+2005-07-07-script01-partha.bsh
+2005-07-14-script01-partha.bsh
+2005-08-04-script01-partha.bsh
+2005-08-08-mr.bsh
+2005-08-17-script02-partha.bsh
+2005-08-17-script02-ananth.bsh
+2005-08-24-script01-partha.bsh
+2005-08-29-script01-ananth.bsh
+2005-08-29-script01-ananth.bsh
+2005-09-07-script01-partha.bsh
+2005-09-12-script02-partha.bsh
+2005-09-12-script02-ananth.bsh
+2005-09-12-script02-ananth.bsh
+2005-09-15-script01-ananth.bsh
+2005-09-16-script01-partha.bsh
+2005-09-21-script01-ananth.bsh
+2005-09-22-script02-partha.bsh
+2005-09-22-script02-ananth.bsh
+2005-09-25-script02-partha.bsh
+2005-09-29-script01-partha.bsh
+2005-10-04-script02-partha.bsh
+2005-10-04-script03-partha.bsh
+2005-10-11-script01-partha.bsh
+2005-10-17-script02-partha.bsh
+2005-10-17-script03-partha.bsh
+2005-10-26-script01-partha.bsh
+2005-11-03-script01-mr.bsh
+2005-11-03-script02-mr.bsh
+2005-11-03-script03-mr.bsh
+2005-11-03-script04-mr.bsh
+2005-11-03-script06-mr.bsh
+
+#
+# End of scripts to bring dataline from 3.1 to current
+#

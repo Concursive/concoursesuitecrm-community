@@ -284,5 +284,8 @@ public class ContactPhoneNumberList extends PhoneNumberList {
     pst.close();
   }
 
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 

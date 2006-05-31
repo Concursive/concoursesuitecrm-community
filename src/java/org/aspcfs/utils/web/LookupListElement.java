@@ -27,12 +27,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Represents an item from a LookupListLookup table.
+ *  Represents an item from a LookupListLookup table.
  *
- * @author Mathur
- * @version $Id: LookupListElement.java,v 1.2 2003/01/10 16:17:48 mrajkowski
- *          Exp $
- * @created December 18, 2002
+ * @author     Mathur
+ * @created    December 18, 2002
+ * @version    $Id: LookupListElement.java,v 1.2 2003/01/10 16:17:48 mrajkowski
+ *      Exp $
  */
 
 public class LookupListElement {
@@ -50,12 +50,13 @@ public class LookupListElement {
 
 
   /**
-   * Constructor for the LookupListElement object
+   *  Constructor for the LookupListElement object
    *
-   * @param db       Description of the Parameter
-   * @param moduleId Description of the Parameter
-   * @param lookupId Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  moduleId          Description of the Parameter
+   * @param  lookupId          Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public LookupListElement(Connection db, int moduleId, int lookupId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -75,26 +76,37 @@ public class LookupListElement {
 
 
   /**
-   * Constructor for the LookupListElement object
+   *  Constructor for the LookupListElement object
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public LookupListElement(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
-  public LookupListElement() {
-  }
 
+  /**
+   *  Constructor for the LookupListElement object
+   */
+  public LookupListElement() { }
+
+
+  /**
+   *  Gets the id attribute of the LookupListElement object
+   *
+   * @return    The id value
+   */
   public int getId() {
     return id;
   }
 
+
   /**
-   * Sets the moduleId attribute of the LookupListElement object
+   *  Sets the moduleId attribute of the LookupListElement object
    *
-   * @param moduleId The new moduleId value
+   * @param  moduleId  The new moduleId value
    */
   public void setModuleId(int moduleId) {
     this.moduleId = moduleId;
@@ -102,9 +114,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the categoryId attribute of the LookupListElement object
+   *  Sets the categoryId attribute of the LookupListElement object
    *
-   * @param categoryId The new categoryId value
+   * @param  categoryId  The new categoryId value
    */
   public void setCategoryId(int categoryId) {
     this.categoryId = categoryId;
@@ -112,9 +124,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the lookupId attribute of the LookupListElement object
+   *  Sets the lookupId attribute of the LookupListElement object
    *
-   * @param lookupId The new lookupId value
+   * @param  lookupId  The new lookupId value
    */
   public void setLookupId(int lookupId) {
     this.lookupId = lookupId;
@@ -122,9 +134,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the tableName attribute of the LookupListElement object
+   *  Sets the tableName attribute of the LookupListElement object
    *
-   * @param tableName The new tableName value
+   * @param  tableName  The new tableName value
    */
   public void setTableName(String tableName) {
     this.tableName = tableName;
@@ -132,9 +144,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the level attribute of the LookupListElement object
+   *  Sets the level attribute of the LookupListElement object
    *
-   * @param level The new level value
+   * @param  level  The new level value
    */
   public void setLevel(int level) {
     this.level = level;
@@ -142,9 +154,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the description attribute of the LookupListElement object
+   *  Sets the description attribute of the LookupListElement object
    *
-   * @param description The new description value
+   * @param  description  The new description value
    */
   public void setDescription(String description) {
     this.description = description;
@@ -152,9 +164,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the entered attribute of the LookupListElement object
+   *  Sets the entered attribute of the LookupListElement object
    *
-   * @param entered The new entered value
+   * @param  entered  The new entered value
    */
   public void setEntered(java.sql.Timestamp entered) {
     this.entered = entered;
@@ -162,9 +174,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the lookupList attribute of the LookupListElement object
+   *  Sets the lookupList attribute of the LookupListElement object
    *
-   * @param lookupList The new lookupList value
+   * @param  lookupList  The new lookupList value
    */
   public void setLookupList(LookupList lookupList) {
     this.lookupList = lookupList;
@@ -172,9 +184,9 @@ public class LookupListElement {
 
 
   /**
-   * Sets the className attribute of the LookupListElement object
+   *  Sets the className attribute of the LookupListElement object
    *
-   * @param className The new className value
+   * @param  className  The new className value
    */
   public void setClassName(String className) {
     this.className = className;
@@ -182,9 +194,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the className attribute of the LookupListElement object
+   *  Gets the className attribute of the LookupListElement object
    *
-   * @return The className value
+   * @return    The className value
    */
   public String getClassName() {
     return className;
@@ -192,9 +204,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the lookupList attribute of the LookupListElement object
+   *  Gets the lookupList attribute of the LookupListElement object
    *
-   * @return The lookupList value
+   * @return    The lookupList value
    */
   public LookupList getLookupList() {
     return lookupList;
@@ -202,9 +214,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the moduleId attribute of the LookupListElement object
+   *  Gets the moduleId attribute of the LookupListElement object
    *
-   * @return The moduleId value
+   * @return    The moduleId value
    */
   public int getModuleId() {
     return moduleId;
@@ -212,9 +224,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the categoryId attribute of the LookupListElement object
+   *  Gets the categoryId attribute of the LookupListElement object
    *
-   * @return The categoryId value
+   * @return    The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -222,9 +234,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the lookupId attribute of the LookupListElement object
+   *  Gets the lookupId attribute of the LookupListElement object
    *
-   * @return The lookupId value
+   * @return    The lookupId value
    */
   public int getLookupId() {
     return lookupId;
@@ -232,9 +244,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the tableName attribute of the LookupListElement object
+   *  Gets the tableName attribute of the LookupListElement object
    *
-   * @return The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -242,9 +254,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the level attribute of the LookupListElement object
+   *  Gets the level attribute of the LookupListElement object
    *
-   * @return The level value
+   * @return    The level value
    */
   public int getLevel() {
     return level;
@@ -252,9 +264,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the description attribute of the LookupListElement object
+   *  Gets the description attribute of the LookupListElement object
    *
-   * @return The description value
+   * @return    The description value
    */
   public String getDescription() {
     return description;
@@ -262,9 +274,9 @@ public class LookupListElement {
 
 
   /**
-   * Gets the entered attribute of the LookupListElement object
+   *  Gets the entered attribute of the LookupListElement object
    *
-   * @return The entered value
+   * @return    The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -272,11 +284,12 @@ public class LookupListElement {
 
 
   /**
-   * Builds the lookupList for a module
+   *  Builds the lookupList for a module
    *
-   * @param db     Description of the Parameter
-   * @param userId Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  userId         Description of the Parameter
+   * @param  thisSystem     Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildLookupList(SystemStatus thisSystem, Connection db, int userId) throws SQLException {
     if (className.equals("lookupList")) {
@@ -286,7 +299,6 @@ public class LookupListElement {
       contactTypeList.setIncludeDefinedByUser(userId);
       contactTypeList.setCategory(
           categoryId == Constants.ACCOUNTS ? ContactType.ACCOUNT : ContactType.GENERAL);
-      contactTypeList.setShowPersonal(true);
       contactTypeList.buildList(db);
       setLookupList(contactTypeList.getLookupList(thisSystem, "list", 0));
     } else {
@@ -297,10 +309,10 @@ public class LookupListElement {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
@@ -314,6 +326,13 @@ public class LookupListElement {
     categoryId = rs.getInt("category_id");
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "lookup_lists_lookup_id_seq");
     PreparedStatement pst = db.prepareStatement(
@@ -334,6 +353,22 @@ public class LookupListElement {
     pst.executeUpdate();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "lookup_lists_lookup_id_seq", id);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM lookup_lists_lookup " +
+        "WHERE id = ? ");
+    pst.setInt(1, id);
+    pst.execute();
+    pst.close();
   }
 }
 

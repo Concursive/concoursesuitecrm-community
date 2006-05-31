@@ -48,12 +48,12 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong><dhv:label name="admin.selectAContact">Select a Contact</dhv:label></strong>
+        <strong><dhv:label name="admin.selectUser">Select User</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
+        <dhv:label name="campaign.user">User</dhv:label>
       </td>
       <td valign="bottom">
         <table class="empty">
@@ -69,10 +69,10 @@
               </div>
             </td>
             <td>
-              <font color="red">*</font><%= showAttribute(request, "ContactError") %>
               <input type="hidden" name="vpUserId" id="contactid" value="-1">
-              [<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true&filters=employees');"><dhv:label name="admin.changeContact">Change Contact</dhv:label></a>]&nbsp;
-              [<a href="javascript:document.viewpointForm.vpUserId.value='-1';javascript:changeDivContent('changecontact',label('label.none','None'));"><dhv:label name="admin.clearContact">Clear Contact</dhv:label></a>]
+              [<a href="javascript:popContactsListSingle('contactid','changecontact','&listView=employees&usersOnly=true&siteId=<%=UserRecord.getSiteId()%>&mySiteOnly=true&reset=true&filters=accountcontacts|employees');"><dhv:label name="admin.changeUser">Change User</dhv:label></a>]&nbsp;
+              [<a href="javascript:document.viewpointForm.vpUserId.value='-1';javascript:changeDivContent('changecontact',label('label.none','None'));"><dhv:label name="admin.clearUser">Clear User</dhv:label></a>]
+              <font color="red">*</font><%= showAttribute(request, "ContactError") %>
             </td>
           </tr>
         </table>

@@ -46,6 +46,7 @@
     String documentFileDetails = "AccountsDocuments.do?command=Details&orgId="+ OrgDetails.getOrgId();
     String documentModule = "Accounts";
     String specialID = ""+OrgDetails.getId();
+    boolean hasPermission = true;
   %>
   <%@ include file="documents_list_include.jsp" %>&nbsp;
 </dhv:container>

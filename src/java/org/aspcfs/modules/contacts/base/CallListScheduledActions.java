@@ -179,7 +179,7 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
         }
       }
     } catch (SQLException e) {
-      throw new SQLException("Error Building Call Calendar Alerts");
+      throw new SQLException("Error Building Call Calendar Alerts: " + e.getMessage());
     }
   }
 

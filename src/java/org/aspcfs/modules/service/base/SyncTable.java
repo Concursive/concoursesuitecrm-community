@@ -51,14 +51,14 @@ public class SyncTable extends GenericBean {
   /**
    * Constructor for the SyncTable object
    */
-  public SyncTable() {
-  }
+  public SyncTable() { }
 
 
   /**
    * Constructor for the SyncTable object
    *
    * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of Exception
    */
   public SyncTable(ResultSet rs) throws SQLException {
@@ -79,9 +79,9 @@ public class SyncTable extends GenericBean {
     int tableId = -1;
     String sql =
         "SELECT table_id " +
-        "FROM sync_table " +
-        "WHERE system_id = ? " +
-        "AND mapped_class_name = ? ";
+            "FROM sync_table " +
+            "WHERE system_id = ? " +
+            "AND mapped_class_name = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, systemId);
     pst.setString(2, className);
@@ -326,12 +326,19 @@ public class SyncTable extends GenericBean {
     key = rs.getString("object_key");
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
   public void insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "sync_table_table_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO sync_table " +
-        "(" + (id > -1 ? "table_id, " : "") + "system_id, element_name, mapped_class_name, create_statement, order_id, sync_item, object_key" + ") " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
+            "(" + (id > -1 ? "table_id, " : "") + "system_id, element_name, mapped_class_name, create_statement, order_id, sync_item, object_key" + ") " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -345,6 +352,25 @@ public class SyncTable extends GenericBean {
     pst.setString(++i, key);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "sync_table_table_id_seq", id);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void updateKey(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE sync_table " +
+            "SET object_key = ? " +
+            "WHERE system_id = ? AND element_name = ? ");
+    int i = 0;
+    pst.setString(++i, key);
+    pst.setInt(++i, systemId);
+    pst.setString(++i, name);
+    pst.executeUpdate();
   }
 }
 

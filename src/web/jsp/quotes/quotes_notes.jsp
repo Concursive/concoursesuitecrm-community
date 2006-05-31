@@ -87,7 +87,7 @@
   %>
     <tr class="row<%= rowid %>">
       <td valign="top" nowrap>
-        <dhv:tz timestamp="<%= quoteNote.getEntered() %>" dateOnly="false" dateFormat="<%= DateFormat.SHORT %>"/>
+        <zeroio:tz timestamp="<%= quoteNote.getEntered() %>" timeZone="<%= User.getTimeZone() %>" dateOnly="false" dateFormat="<%= DateFormat.SHORT %>"/>
       </td>
       <td valign="top" nowrap>
         <dhv:username id="<%= quoteNote.getEnteredBy() %>" />

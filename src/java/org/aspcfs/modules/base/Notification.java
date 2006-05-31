@@ -19,6 +19,7 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.apps.workFlowManager.ComponentContext;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.communications.base.Campaign;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.SMTPMessage;
@@ -31,8 +32,8 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 /**
- * A logged message sent to a person using 1 of several transports: SMTP, Fax,
- * Letter, IM
+ *  A logged message sent to a person using 1 of several transports: SMTP, Fax,
+ *  Letter, IM
  *
  * @author mrajkowski
  * @version $Id$
@@ -97,13 +98,13 @@ public class Notification extends Thread {
 
   private String bcc = null;
   private String cc = null;
+  private int campaignType = -1;
 
 
   /**
    * Constructor for the Notification object
    */
-  public Notification() {
-  }
+  public Notification() { }
 
 
   /**
@@ -317,6 +318,16 @@ public class Notification extends Thread {
 
 
   /**
+   * Sets the status attribute of the Notification object
+   *
+   * @param tmp The new status value
+   */
+  public void setStatus(String tmp) {
+    this.status = tmp;
+  }
+
+
+  /**
    * Sets the fileAttachments attribute of the Notification object
    *
    * @param tmp The new fileAttachments value
@@ -425,28 +436,82 @@ public class Notification extends Thread {
     return size;
   }
 
+
+  /**
+   *  Gets the bcc attribute of the Notification object
+   *
+   *@return    The bcc value
+   */
   public String getBcc() {
     return bcc;
   }
 
+
+  /**
+   *  Sets the bcc attribute of the Notification object
+   *
+   *@param  tmp  The new bcc value
+   */
   public void setBcc(String tmp) {
     this.bcc = tmp;
   }
 
+
+  /**
+   *  Gets the cc attribute of the Notification object
+   *
+   *@return    The cc value
+   */
   public String getCc() {
     return cc;
   }
 
+
+  /**
+   *  Sets the cc attribute of the Notification object
+   *
+   *@param  tmp  The new cc value
+   */
   public void setCc(String tmp) {
     this.cc = tmp;
   }
 
 
   /**
-   * Gets the New attribute of the Notification object
+   *  Sets the campaignType attribute of the Notification object
    *
-   * @param db Description of Parameter
-   * @return The New value
+   *@param  tmp  The new campaignType value
+   */
+  public void setCampaignType(int tmp) {
+    this.campaignType = tmp;
+  }
+
+
+  /**
+   *  Sets the campaignType attribute of the Notification object
+   *
+   *@param  tmp  The new campaignType value
+   */
+  public void setCampaignType(String tmp) {
+    this.campaignType = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the campaignType attribute of the Notification object
+   *
+   *@return    The campaignType value
+   */
+  public int getCampaignType() {
+    return campaignType;
+  }
+
+
+  /**
+   *  Gets the New attribute of the Notification object
+   *
+   *@param  db  Description of Parameter
+   *@return     The New value
    */
   public boolean isNew(Connection db) {
     int resultCheck = -1;
@@ -507,7 +572,7 @@ public class Notification extends Thread {
       id = DatabaseUtils.getNextSeq(db, "notification_notification_i_seq");
       String sql =
           "INSERT INTO notification " +
-          "(" + (id > -1 ? "notification_id, " : "") + "notify_user, \"module\", item_id, item_modified, notify_type, subject, message, result, errorMessage) " +
+          "(" + (id > -1 ? "notification_id, " : "") + "notify_user, \"module\", item_id, item_modified, notify_type, subject, \"message\", result, errorMessage) " +
           "VALUES " +
           "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
@@ -676,43 +741,50 @@ public class Notification extends Thread {
         }
         //Send it...
         if (type == EMAIL) {
-          System.out.println(
-              "Notification-> To: " + thisContact.getPrimaryEmailAddress());
-          SMTPMessage mail = new SMTPMessage();
-          mail.setHost(host);
-          mail.setFrom(from);
-          if (from != null && !from.equals("")) {
-            mail.addReplyTo(from);
-          }
-          if (bcc != null && !"".equals(bcc)) {
-            mail.setBcc(bcc);
-          }
-          if (cc != null && !"".equals(cc)) {
-            mail.setCc(cc);
-          }
-          mail.setType("text/html");
-          mail.addTo(thisContact.getPrimaryEmailAddress());
-          mail.setSubject(subject);
-          mail.setBody(messageToSend);
-          mail.setAttachments(fileAttachments);
-          int errorCode = mail.send();
-          if (errorCode > 0) {
-            status = "Email Error";
+          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoEmail())){
+            status = "Email opt out";
+          } else{
             System.out.println(
-                "Send error: " + mail.getErrorMsg() + "<br><br>");
-            System.err.println(
-                "ReportBuilder Error: Report could not be sent");
-            System.err.println(mail.getErrorMsg());
-          } else {
-            status = "Email Sent";
-            insertNotification(db);
-            size = subject.length() +
-                messageToSend.length() +
-                fileAttachments.getFileSize();
+                "Notification-> To: " + thisContact.getPrimaryEmailAddress());
+            SMTPMessage mail = new SMTPMessage();
+            mail.setHost(host);
+            mail.setFrom(from);
+            if (from != null && !from.equals("")) {
+              mail.addReplyTo(from);
+            }
+            if (bcc != null && !"".equals(bcc)) {
+              mail.setBcc(bcc);
+            }
+            if (cc != null && !"".equals(cc)) {
+              mail.setCc(cc);
+            }
+            mail.setType("text/html");
+            mail.addTo(thisContact.getPrimaryEmailAddress());
+            mail.setSubject(subject);
+            mail.setBody(messageToSend);
+            mail.setAttachments(fileAttachments);
+            int errorCode = mail.send();
+            if (errorCode > 0) {
+              status = "Email Error";
+              System.out.println(
+                  "Send error: " + mail.getErrorMsg() + "<br><br>");
+              System.err.println(
+                  "ReportBuilder Error: Report could not be sent");
+              System.err.println(mail.getErrorMsg());
+            } else {
+              status = "Email Sent";
+              insertNotification(db);
+              size = subject.length() +
+                  messageToSend.length() +
+                  fileAttachments.getFileSize();
+            }
           }
         } else if (type == IM) {
-
-          status = "IM Sent";
+          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoInstantMessage())){
+            status = "IM opt out";
+          } else{
+            status = "IM Sent";
+          }
         } else if (type == BROADCAST) {
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
@@ -721,16 +793,21 @@ public class Notification extends Thread {
             mail.addReplyTo(from);
           }
           mail.setType("text/html");
+          boolean canEmail = false;
           //sending to all email addresses
-          Iterator itr = thisContact.getEmailAddressList().iterator();
-          if (itr.hasNext()) {
-            while (itr.hasNext()) {
-              EmailAddress tmpEmailAddress = (EmailAddress) itr.next();
-              mail.addTo(tmpEmailAddress.getEmail());
+          if (!((campaignType == Campaign.GENERAL) && (thisContact.getNoEmail()))){
+            canEmail = true;
+            Iterator itr = thisContact.getEmailAddressList().iterator();
+            if (itr.hasNext()) {
+              while (itr.hasNext()) {
+                EmailAddress tmpEmailAddress = (EmailAddress) itr.next();
+                mail.addTo(tmpEmailAddress.getEmail());
+              }
             }
           }
+          boolean canPage = true;
           //sending to all text message addresses
-          itr = thisContact.getTextMessageAddressList().iterator();
+          Iterator itr = thisContact.getTextMessageAddressList().iterator();
           if (itr.hasNext()) {
             while (itr.hasNext()) {
               TextMessageAddress tmpTextMessageAddress = (TextMessageAddress) itr.next();
@@ -749,7 +826,19 @@ public class Notification extends Thread {
                 "ReportBuilder Error: Report could not be sent");
             System.err.println(mail.getErrorMsg());
           } else {
-            status = "Email Sent";
+            if (canEmail && canPage){
+              status = "Broadcast Sent";
+            } else {
+              if (!canEmail){
+                status = "Email Opt Out";
+              } 
+              if (!canPage){
+                status = "Text Message Opt Out";
+              }
+              if ((!canEmail) && (!canPage)){
+                status = "Email and Text Message Opt Out";
+              }
+            }
             insertNotification(db);
             size = subject.length() +
                 messageToSend.length() +
@@ -758,7 +847,9 @@ public class Notification extends Thread {
         } else if (type == FAX) {
           String phoneNumber = thisContact.getPhoneNumber("Business Fax");
           System.out.println("Notification-> To: " + phoneNumber);
-          if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
+          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoFax())){
+            status = "Fax opt out";
+          } else if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
             phoneNumber = PhoneNumber.convertToNumber(phoneNumber);
             if (phoneNumber.startsWith("1")) {
               phoneNumber = phoneNumber.substring(1);
@@ -775,7 +866,11 @@ public class Notification extends Thread {
           }
         } else if (type == LETTER) {
           contact = thisContact;
-          status = "Added to Report";
+          if (!((campaignType == Campaign.GENERAL) && (thisContact.getNoMail()))){
+            status = "Added to Report";
+          } else {
+            status = "Mail opt out";
+          }
         } else if (type == SSL) {
 
         }

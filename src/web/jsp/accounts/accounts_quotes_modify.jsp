@@ -75,6 +75,7 @@
   String titleLabel = "quotes.modifyQuote";
   String quoteParams = "quoteId="+quoteBean.getGroupId()+"|version="+quoteBean.getVersion(); 
   boolean changeAccount = false;
+  boolean changeContact = true;
   boolean changeOpportunity = true;
   String opportunityName = (opportunity.getDescription() != null) ? opportunity.getDescription() : "Opportunity Selected";
   String opportunityNameLabel = opportunity.getDescription() != null? "":"quotes.opportunitySelected";

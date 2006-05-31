@@ -24,8 +24,10 @@
       <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings" enabled="false"/>
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
       <permission name="myhomepage-action-lists" attributes="vaed" description="Action Lists"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" description="Action Plans"/>
       <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Task list by due date" description="What are the tasks due withing a date range?"/>
       <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Task list" description="What are all the tasks in the system?"/>
+      <report file="contact_activities.xml" type="user" permission="contacts-external_contacts-calls" title="Contact Activities" description="What are the activities associated with a contact?"/>
     </category>
     <category id="420041014" name="Products and Services" folders="false" lookups="false" reports="false" enabled="false">
       <permission name="products" attributes="v---" description="Access to Products and Services module"/>
@@ -36,6 +38,9 @@
       <permission name="sales" attributes="v---" description="Access to the Leads Module"/>
       <permission name="sales-leads" attributes="vaed" description="Lead Records"/>
       <permission name="sales-import" attributes="v---" description="Access to Import Leads"/>
+      <permission name="sales-dashboard" attributes="v---" description="Leads Dashboard"/>
+      <permission name="sales-reports" attributes="va-d" description="Export Leads Data"/>
+      <report file="leads_user.xml" type="user" permission="sales-leads" title="User Leads" description="Who are the leads owned by a specific user?"/>
     </category>
     <category id="2" name="Contacts" folders="true" lookups="true" reports="true">
       <folder constantId="2" description="Contacts"/>
@@ -44,6 +49,7 @@
       <lookup constantId="3" class="lookupList" table="lookup_contactaddress_types" description="Address Types"/>
       <lookup constantId="4" class="lookupList" table="lookup_contactphone_types" description="Phone Types"/>
       <lookup constantId="111051354" class="lookupList" table="lookup_textmessage_types" description="Text Messaging Types"/>
+      <lookup constantId="128051433" class="lookupList" table="lookup_title" description="Salutation"/>
       <!--
       <lookup constantId="111051308" class="lookupList" table="lookup_im_types" description="Instant Messaging Types"/>
       -->
@@ -67,6 +73,7 @@
       <lookup constantId="707050230" class="lookupList" table="lookup_opportunity_competitors" description="Competitors"/>
       <lookup constantId="707050231" class="lookupList" table="lookup_opportunity_event_compelling" description="Compelling Event"/>
       <lookup constantId="707050232" class="lookupList" table="lookup_opportunity_budget" description="Budget"/>
+      <lookup constantId="206061500" class="lookupList" table="lookup_call_types" description="Activity Type"/>
       <permission name="pipeline" attributes="v---" description="Access to Pipeline module" viewpoints="true"/>
       <permission name="pipeline-opportunities" attributes="vaed" description="Opportunity Records"/>
       <permission name="pipeline-dashboard" attributes="v---" description="Dashboard"/>
@@ -74,12 +81,13 @@
       <permission name="pipeline-opportunities-calls" attributes="vaed" description="Activities"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
       <permission name="pipeline-folders" attributes="vaed" description="Folders"/>
+      <permission name="pipeline-quotes" attributes="vaed" description="Quotes"/>
       <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Stage" description="What are my upcoming opportunities by stage?"/>
       <report file="opportunity_account.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Account" description="What are all the accounts associated with my opportunities?"/>
       <report file="opportunity_owner.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Owner" description="What are all the opportunities based on ownership?"/>
       <report file="opportunity_contact.xml" type="user" permission="pipeline-opportunities" title="Opportunity Contacts" description="Who are the contacts of my opportunities?"/>
     </category>
-    <category id="1" name="Accounts" folders="true" lookups="true" reports="true" webdav="true">
+    <category id="1" name="Accounts" folders="true" lookups="true" reports="true" webdav="true" actionPlans="true">
       <folder constantId="1" description="Accounts"/>
       <lookup constantId="1" class="lookupList" table="lookup_account_types" description="Account Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_revenue_types" description="Revenue Types"/>
@@ -88,6 +96,10 @@
       <lookup constantId="819041649" class="lookupList" table="lookup_orgaddress_types" description="Address Types"/>
       <lookup constantId="819041650" class="lookupList" table="lookup_orgphone_types" description="Phone Types"/>
       <lookup constantId="302051030" class="lookupList" table="lookup_industry" description="Industry Types"/>
+      <lookup constantId="128051430" class="lookupList" table="lookup_segments" description="Segment"/>
+      <lookup constantId="128051431" class="lookupList" table="lookup_sub_segment" description="Sub Segment"/>
+      <lookup constantId="128051432" class="lookupList" table="lookup_site_id" description="Site"/>
+      <lookup constantId="158051538" class="lookupList" table="lookup_account_size" description="Account Size"/>
       <webdav class="org.aspcfs.modules.accounts.webdav.AccountsWebdavContext"/>
       <permission name="accounts" attributes="v---" description="Access to Accounts module"/>
       <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
@@ -122,12 +134,20 @@
       <permission name="accounts-accounts-relationships" attributes="vaed" description="Relationships"/>
       <permission name="accounts-accounts-contact-updater" attributes="v---" description="Request contact information update"/>
       <permission name="accounts-projects" attributes="v---" description="Projects"/>
+      <permission name="accounts-action-plans" attributes="vaed" description="Action Plans"/>
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" description="Contact Opportunities Quotes"/>
+      <permission name="accounts-directbill" attributes="vaed" description="Direct Bill" enabled="false"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed" description="Contact Folders"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" description="Contact Opportunity Folders"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
       <report file="accounts_current.xml" type="user" permission="accounts-accounts" title="Current Accounts" description="What are my current accounts?"/>
       <report file="accounts_contacts.xml" type="user" permission="accounts-accounts-contacts" title="Account Contacts" description="Who are the contacts in each account?"/>
       <report file="folder_accounts.xml" type="user" permission="accounts-accounts-folders" title="Account Folders" description="What is the folder data for each account?"/>
+      <report file="action_plan_summary.xml" type="user" permission="accounts-action-plans" title="Action Plan Summary" description="What is the action plan summary for each account?"/>
+      <report file="action_plan_activity.xml" type="user" permission="accounts-action-plans" title="Action Plan Activity" description="What are the action plan activities by date for each account?"/>
+      <actionPlanEditor constantId="42420034" description="Action Plans related to Accounts"/>
     </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
@@ -178,19 +198,30 @@
     </category>
     <category id="130041000" name="Assets" folders="false" lookups="true" reports="false" categories="true">
       <lookup constantId="130041304" class="lookupList" table="lookup_asset_status" description="Asset Status"/>
+      <lookup constantId="928051135" class="lookupList" table="lookup_asset_materials" description="Asset Materials"/>
+      <lookup constantId="910040914" class="lookupList" table="lookup_asset_vendor" description="Asset Vendor"/>
+      <lookup constantId="910040915" class="lookupList" table="lookup_asset_manufacturer" description="Asset Manufacturer"/>
       <multipleCategory constantId="202041400" table="asset_category" maxLevels="3" description="Asset Categories"/>
     </category>
-    <category id="8" name="Help Desk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true">
+    <category id="8" name="Help Desk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true" actionPlans="true" customListViews="true">
       <folder constantId="11072003" description="Tickets"/>
       <lookup constantId="1" class="lookupList" table="lookup_ticketsource" description="Ticket Source"/>
       <lookup constantId="2" class="lookupList" table="ticket_severity" description="Ticket Severity"/>
       <lookup constantId="3" class="lookupList" table="ticket_priority" description="Ticket Priority"/>
+      <lookup constantId="922051718" class="lookupList" table="lookup_ticket_cause" description="Ticket Cause"/>
+      <lookup constantId="922051719" class="lookupList" table="lookup_ticket_resolution" description="Ticket Resolution"/>
+      <lookup constantId="101705190" class="lookupList" table="lookup_ticket_task_category" description="Ticket Task Categories"/>
+      <lookup constantId="910040913" class="lookupList" table="lookup_ticket_escalation" description="Ticket Escalation Level"/>
+      <lookup constantId="112205113" class="lookupList" table="lookup_ticket_state" description="Ticket State"/>
       <permission name="tickets" attributes="v---" description="Access to Help Desk module"/>
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
       <permission name="tickets-maintenance-report" attributes="vaed" description="Maintenance Notes"/>
       <permission name="tickets-activity-log" attributes="vaed" description="Activities"/>
+      <permission name="tickets-knowledge-base" attributes="vaed" description="Knowledge Base"/>
+      <permission name="tickets-defects" attributes="vaed" description="Ticket Defects"/>
+      <permission name="tickets-action-plans" attributes="vaed" description="Action Plans"/>
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
       <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How many tickets are there in the system on a particular date?"/>
       <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>
@@ -205,12 +236,23 @@
       <report file="callvolume_month_cat.xml" type="user" permission="tickets-tickets" title="Call Volume by Category per Month" description="How many tickets are there by category per month?"/>
       <report file="callvolume_day_enteredby.xml" type="user" permission="tickets-tickets" title="Call Volume by User Entered per Day" description="How many tickets are there by user who entered the ticket per day?"/>
       <report file="callvolume_month_ent.xml" type="user" permission="tickets-tickets" title="Call Volume by User Entered per Month" description="How many tickets are there by user who entered the ticket per month?"/>
+      <report file="callvolume_resolved_by.xml" type="user" permission="tickets-tickets" title="Call Volume by User Resolved" description="How many tickets have been resolved by an user?"/>
+      <report file="callvolume_resolvable_account.xml" type="user" permission="tickets-tickets" title="Call Volume per Account (Resolvable)" description="How many tickets are resolvable per account?"/>
+      <report file="callvolume_resolvable_category.xml" type="user" permission="tickets-tickets" title="Call Volume per Category (Resolvable)" description="How many tickets are resolvable per category?"/>
+      <report file="callvolume_entered_timeofday.xml" type="user" permission="tickets-tickets" title="Call Volume (Time of Day)" description="How many tickets have been entered at a specific time of day?"/>
       <multipleCategory constantId="202041401" table="ticket_category" maxLevels="4" description="Ticket Categories"/>
+      <actionPlanEditor constantId="912051329" description="Action Plans related to Tickets"/>
+      <customListViewCategory constantId="113051436" description="Ticket Custom List Views"/>
     </category>
     <category id="1202041528" name="Documents" lookups="false" enabled="true" webdav="true">
       <webdav class="org.aspcfs.modules.documents.webdav.DocumentsWebdavContext"/>
       <permission name="documents" attributes="v---" description="Access to Documents module"/>
       <permission name="documents_documentstore" attributes="vaed" description="Manage Document Stores"/>
+    </category>
+    <category id="1021051129" name="NetApp" reports="true" enabled="false">
+      <permission name="netapps_expiration_contracts" attributes="vaed" description="Manage Network Application Information"/>
+      <permission name="netapps_expiration_contracts_imports" attributes="vaed" description="Network Application Import"/>
+      <report file="dataline_contract_renewal.xml" type="user" permission="netapps_expiration_contracts" title="Contract expirations by date" description="Which contracts expire between any two dates?"/>
     </category>
     <category id="1111031131" name="Employees" folders="true" lookups="true" reports="true">
       <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departments"/>
@@ -250,7 +292,10 @@
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Configure Module Categories"/>
       <permission name="admin-sysconfig-products" attributes="vaed" description="Product Catalog Editor"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" description="Configure Module Logos"/>
+      <permission name="admin-actionplans" attributes="vaed" description="Configure Action Plans"/>
       <report file="users.xml" type="user" permission="admin" title="System Users" description="Who are all the users of the system?"/>
+      <report file="login_usage.xml" type="user" permission="admin-usage" title="System Usage" description="What is the login activity per user on a day?"/>
+      <multipleCategory constantId="907051127" table="action_plan_category" maxLevels="4" description="Action Plan Categories"/>
     </category>
     <category id="10" name="Help" folders="false" lookups="false">
       <permission name="help" attributes="v---" description="Access to Help System"/>
@@ -274,6 +319,7 @@
       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
       <permission name="myhomepage-profile-password" attributes="--e-"/>
       <permission name="myhomepage-action-lists" attributes="vaed"/>
+      <permission name="myhomepage-action-plans" attributes="vaed"/>
       <permission name="myhomepage-reassign" attributes="v-e-"/>
       <permission name="products" attributes="v---" />
       <permission name="sales" attributes="v---"/>
@@ -296,6 +342,7 @@
       <permission name="pipeline-opportunities-calls" attributes="vaed"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed"/>
       <permission name="pipeline-folders" attributes="vaed"/>
+      <permission name="pipeline-quotes" attributes="vaed" />
       <permission name="accounts" attributes="v---"/>
       <permission name="accounts-accounts" attributes="vaed" />
       <permission name="accounts-accounts-folders" attributes="vaed" />
@@ -324,6 +371,10 @@
       <permission name="accounts-accounts-relationships" attributes="vaed" />
       <permission name="accounts-accounts-contact-updater" attributes="v---" />
       <permission name="accounts-projects" attributes="v---" />
+      <permission name="accounts-action-plans" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" />
       <permission name="portal-user" attributes="vaed" />
       <permission name="quotes" attributes="v---" />
       <permission name="quotes-quotes" attributes="vaed" />
@@ -341,6 +392,9 @@
       <permission name="tickets-tickets-tasks" attributes="vaed"/>
       <permission name="tickets-maintenance-report" attributes="vaed" />
       <permission name="tickets-activity-log" attributes="vaed" />
+      <permission name="tickets-knowledge-base" attributes="vaed" />
+      <permission name="tickets-defects" attributes="vaed" />
+      <permission name="tickets-action-plans" attributes="vaed" />
       <permission name="employees" attributes="vae-"/>
       <permission name="contacts-internal_contacts" attributes="vaed"/>
       <permission name="contacts-internal_contacts-folders" attributes="vaed" />
@@ -357,6 +411,7 @@
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
       <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" />
+      <permission name="admin-actionplans" attributes="vaed" />
       <permission name="help" attributes="v---"/>
       <permission name="globalitems-search" attributes="v---"/>
       <permission name="globalitems-myitems" attributes="v---"/>
@@ -379,6 +434,7 @@
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
        <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="contacts" attributes="v---" />
        <permission name="contacts-external_contacts" attributes="vaed"/>
        <permission name="contacts-external_contacts-reports" attributes="va-d"/>
@@ -394,6 +450,7 @@
        <permission name="pipeline-opportunities-calls" attributes="vaed"/>
        <permission name="pipeline-opportunities-documents" attributes="vaed"/>
        <permission name="pipeline-folders" attributes="vaed"/>
+       <permission name="pipeline-quotes" attributes="vaed" />
        <permission name="accounts" attributes="v---"/>
        <permission name="accounts-accounts" attributes="vaed"/>
        <permission name="accounts-accounts-folders" attributes="vae-"/>
@@ -417,6 +474,10 @@
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
        <permission name="accounts-projects" attributes="v---" />
+       <permission name="accounts-action-plans" attributes="vae-" />
+       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-" />
+       <permission name="accounts-accounts-contacts-folders" attributes="vae-" />
+       <permission name="accounts-accounts-contacts-opps-folders" attributes="vae-" />
        <permission name="portal-user" attributes="vaed" />
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
@@ -434,6 +495,9 @@
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
        <permission name="tickets-maintenance-report" attributes="vae-" />
        <permission name="tickets-activity-log" attributes="vae-" />
+       <permission name="tickets-knowledge-base" attributes="vae-" />
+       <permission name="tickets-defects" attributes="vae-" />
+       <permission name="tickets-action-plans" attributes="vae-" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="contacts-internal_contacts-projects" attributes="v---" />
@@ -460,6 +524,7 @@
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
        <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="sales" attributes="v---"/>
        <permission name="sales-leads" attributes="vaed"/>
        <permission name="sales-import" attributes="v---"/>
@@ -478,6 +543,7 @@
        <permission name="pipeline-opportunities-calls" attributes="vaed"/>
        <permission name="pipeline-opportunities-documents" attributes="vaed"/>
        <permission name="pipeline-folders" attributes="vaed"/>
+       <permission name="pipeline-quotes" attributes="vaed" />
        <permission name="accounts" attributes="v---"/>
        <permission name="accounts-accounts" attributes="vaed"/>
        <permission name="accounts-accounts-folders" attributes="vae-"/>
@@ -503,6 +569,10 @@
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="accounts-accounts-relationships" attributes="vaed" />
        <permission name="accounts-projects" attributes="v---" />
+       <permission name="accounts-action-plans" attributes="vaed" />
+       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" />
+       <permission name="accounts-accounts-contacts-folders" attributes="vaed" />
+       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" />
        <permission name="portal-user" attributes="v---" />
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
@@ -520,6 +590,9 @@
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
        <permission name="tickets-maintenance-report" attributes="v---" />
        <permission name="tickets-activity-log" attributes="v---" />
+       <permission name="tickets-knowledge-base" attributes="v---" />
+       <permission name="tickets-defects" attributes="v---" />
+       <permission name="tickets-action-plans" attributes="v---" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="contacts-internal_contacts-projects" attributes="v---" />
@@ -550,6 +623,7 @@
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
        <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="sales" attributes="v---"/>
        <permission name="sales-leads" attributes="vae-"/>
        <permission name="sales-import" attributes="v---"/>
@@ -567,6 +641,7 @@
        <permission name="pipeline-opportunities-calls" attributes="vaed"/>
        <permission name="pipeline-opportunities-documents" attributes="vaed"/>
        <permission name="pipeline-folders" attributes="vaed"/>
+       <permission name="pipeline-quotes" attributes="vaed" />
        <permission name="accounts" attributes="v---"/>
        <permission name="accounts-accounts" attributes="vae-"/>
        <permission name="accounts-accounts-folders" attributes="vae-"/>
@@ -591,6 +666,10 @@
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="accounts-accounts-relationships" attributes="vae-" />
        <permission name="accounts-projects" attributes="v---" />
+       <permission name="accounts-action-plans" attributes="vaed" />
+       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-" />
+       <permission name="accounts-accounts-contacts-folders" attributes="vae-" />
+       <permission name="accounts-accounts-contacts-opps-folders" attributes="vae-" />
        <permission name="portal-user" attributes="v---" />
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
@@ -608,6 +687,9 @@
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
        <permission name="tickets-maintenance-report" attributes="v---" />
        <permission name="tickets-activity-log" attributes="v---" />
+       <permission name="tickets-knowledge-base" attributes="vae-" />
+       <permission name="tickets-defects" attributes="vae-" />
+       <permission name="tickets-action-plans" attributes="vae-" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="contacts-internal_contacts-projects" attributes="v---" />
@@ -638,6 +720,7 @@
        <permission name="myhomepage-profile-personal" attributes="v-e-"/>
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="accounts" attributes="v---"/>
        <permission name="accounts-accounts" attributes="vae-"/>
        <permission name="accounts-accounts-folders" attributes="vae-"/>
@@ -659,6 +742,8 @@
        <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
        <permission name="accounts-accounts-relationships" attributes="vaed" />
        <permission name="accounts-projects" attributes="v---" />
+       <permission name="accounts-action-plans" attributes="vae-" />
+       <permission name="accounts-accounts-contacts-folders" attributes="vaed" />
        <permission name="portal-user" attributes="vaed" />
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
@@ -676,6 +761,9 @@
        <permission name="tickets-tickets-tasks" attributes="vaed"/>
        <permission name="tickets-maintenance-report" attributes="vaed" />
        <permission name="tickets-activity-log" attributes="vaed" />
+       <permission name="tickets-knowledge-base" attributes="vaed" />
+       <permission name="tickets-defects" attributes="vaed" />
+       <permission name="tickets-action-plans" attributes="vaed" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="contacts-internal_contacts-projects" attributes="v---" />
@@ -701,6 +789,7 @@
        <permission name="myhomepage-profile-personal" attributes="v-e-"/>
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="accounts" attributes="v---"/>
        <permission name="accounts-accounts" attributes="vae-"/>
        <permission name="accounts-accounts-folders" attributes="vae-"/>
@@ -721,6 +810,7 @@
        <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
        <permission name="accounts-accounts-relationships" attributes="vae-" />
        <permission name="accounts-projects" attributes="v---" />
+       <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="portal-user" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
@@ -737,6 +827,9 @@
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
        <permission name="tickets-maintenance-report" attributes="vae-" />
        <permission name="tickets-activity-log" attributes="vae-" />
+       <permission name="tickets-knowledge-base" attributes="vae-" />
+       <permission name="tickets-defects" attributes="vae-" />
+       <permission name="tickets-action-plans" attributes="vae-" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="contacts-internal_contacts-projects" attributes="v---" />
@@ -763,6 +856,7 @@
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
        <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="contacts" attributes="v---" />
        <permission name="contacts-external_contacts" attributes="vaed"/>
        <permission name="contacts-external_contacts-reports" attributes="va-d"/>
@@ -803,6 +897,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="accounts-accounts-relationships" attributes="vaed" />
        <permission name="accounts-projects" attributes="v---" />
+       <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
@@ -818,6 +913,9 @@
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
        <permission name="tickets-maintenance-report" attributes="v---" />
        <permission name="tickets-activity-log" attributes="v---" />
+       <permission name="tickets-knowledge-base" attributes="v---" />
+       <permission name="tickets-defects" attributes="v---" />
+       <permission name="tickets-action-plans" attributes="v---" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="contacts-internal_contacts-projects" attributes="v---" />
@@ -843,6 +941,7 @@
        <permission name="myhomepage-profile-personal" attributes="v-e-"/>
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="contacts" attributes="v---" />
        <permission name="contacts-external_contacts" attributes="vaed"/>
        <permission name="contacts-external_contacts-reports" attributes="va-d"/>
@@ -880,6 +979,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="accounts-accounts-relationships" attributes="vaed" />
        <permission name="accounts-projects" attributes="v---" />
+       <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
@@ -895,6 +995,9 @@
        <permission name="tickets-tickets-tasks" attributes="v---"/>
        <permission name="tickets-maintenance-report" attributes="v---" />
        <permission name="tickets-activity-log" attributes="v---" />
+       <permission name="tickets-knowledge-base" attributes="v---" />
+       <permission name="tickets-defects" attributes="v---" />
+       <permission name="tickets-action-plans" attributes="v---" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="contacts-internal_contacts-projects" attributes="v---" />
@@ -923,6 +1026,7 @@
        <permission name="myhomepage-profile-personal" attributes="v-e-"/>
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>

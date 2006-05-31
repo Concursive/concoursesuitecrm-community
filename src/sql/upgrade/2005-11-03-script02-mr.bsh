@@ -1,0 +1,67 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Adds accounts-directbill permissions to the specified module
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+
+int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_ACCOUNTS);
+String permissionName = "accounts-directbill";
+String translationParam = "accounts.accounts_add.directBill";
+int permissionLevel = 160;
+boolean view = true;
+boolean add = true;
+boolean edit = true;
+boolean delete = true;
+boolean enabled = false;
+boolean active = true;
+boolean viewpoints = false;
+
+if (categoryId != -1) {
+
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator") ;
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+
+  // Load permission category for later use
+  PermissionCategory permissionCategory = new PermissionCategory(db, categoryId);
+
+  // See if permission already exists
+  int existingId = Permission.lookupId(db, permissionName);
+
+  if (existingId == -1) {
+    // Insert a new permission so that user roles can access folders
+    Permission permission = new Permission();
+    permission.setCategoryId(permissionCategory.getId());
+    permission.setName(permissionName);
+    permission.setDescription(dictionary.getTerm("system.fields.label", translationParam, "value"));
+    permission.setView(view);
+    permission.setAdd(add);
+    permission.setEdit(edit);
+    permission.setDelete(delete);
+    permission.setPermissionLevel(permissionLevel);
+    permission.setEnabled(enabled);
+    permission.setActive(active);
+    permission.setViewpoints(viewpoints);
+    permission.insert(db);
+
+    print("Permission added: " + permissionName);
+  } else {
+    print("Permission already exists: " + permissionName);
+  }
+} else {
+  print("Category id could not be found");
+}
+

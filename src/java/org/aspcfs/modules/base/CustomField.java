@@ -1485,9 +1485,8 @@ public class CustomField extends GenericBean implements Cloneable {
       case LINK:
         return ("<a href=\"" + jsEvent + "\" >" + display + "</a>");
       case STATE_SELECT:
-        StateSelect stateSelect = new StateSelect(thisSystem);
-        return (stateSelect.getHtml(
-            elementName, StringUtils.toHtmlValue(enteredValue)));
+        StateSelect stateSelect = new StateSelect(thisSystem,"UNITED STATES");
+        return (stateSelect.getHtmlSelect(elementName, "UNITED STATES", StringUtils.toHtmlValue(enteredValue)));
       default:
         String maxlength = this.getParameter("maxlength");
         String size = "";
@@ -2066,6 +2065,26 @@ public class CustomField extends GenericBean implements Cloneable {
     this.setParameters(param);
   }
 
+  public String toString() {
+    StringBuffer str = new StringBuffer();
+    str.append("CustomField::groupId "+groupId);
+    str.append("\nCustomField::id "+id);
+    str.append("\nCustomField::name "+name);
+    str.append("\nCustomField::level "+level);
+    str.append("\nCustomField::enteredValue "+enteredValue);
+    str.append("\nCustomField::enteredNumber "+enteredNumber);
+    str.append("\nCustomField::enteredDouble "+enteredDouble);
+    str.append("\nCustomField::selectedItemId "+selectedItemId);
+    str.append("\nCustomField::type "+type);
+    str.append("\nCustomField::validationType "+validationType);
+    str.append("\nCustomField::required "+required);
+    str.append("\nCustomField::startDate "+startDate);
+    str.append("\nCustomField::endDate "+endDate);
+    str.append("\nCustomField::entered "+entered);
+    str.append("\nCustomField::enabled "+enabled);
+    str.append("\nCustomField::additionalText "+additionalText);
+    return str.toString();
+  }
 
   /**
    * Description of the Method

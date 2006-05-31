@@ -18,15 +18,20 @@ package org.aspcfs.modules.pipeline.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.GraphSummaryList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.pipeline.beans.OpportunityBean;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.UserUtils;
 import org.aspcfs.utils.web.*;
@@ -135,8 +140,7 @@ public final class Leads extends CFSModule {
       //check if a header needs to be built.
       if (id != null && !"-1".equals(id)) {
         //Build the container items
-        OpportunityHeader oppHeader = new OpportunityHeader(
-            db, Integer.parseInt(id));
+        OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(id));
         context.getRequest().setAttribute("opportunityHeader", oppHeader);
       }
       if ("list".equals(context.getRequest().getParameter("source"))) {
@@ -160,6 +164,12 @@ public final class Leads extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
+      //add access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       return "PrepareOK";
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -182,17 +192,18 @@ public final class Leads extends CFSModule {
     int resultCount = 0;
     String componentId = context.getRequest().getParameter("id");
     String permission = "pipeline-opportunities-add";
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(
         context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    OpportunityBean bean = new OpportunityBean();
     OpportunityHeader header = null;
     OpportunityComponent oldComponent = null;
     OpportunityComponent newComponent = (OpportunityComponent) context.getFormBean();
-    SystemStatus systemStatus = this.getSystemStatus(context);
-    newComponent.setTypeList(
-        context.getRequest().getParameterValues("selectedList"));
+    if (!systemStatus.hasField("opportunity.componentTypes")) {
+      newComponent.setTypeList(context.getRequest().getParameterValues("selectedList"));
+    }
     newComponent.setEnteredBy(getUserId(context));
     newComponent.setModifiedBy(getUserId(context));
     String action = (newComponent.getId() > 0 ? "modify" : "insert");
@@ -208,15 +219,18 @@ public final class Leads extends CFSModule {
       header = new OpportunityHeader(db, newComponent.getHeaderId());
       newComponent.setContactId(header.getContactLink());
       newComponent.setOrgId(header.getAccountLink());
+      bean.setHeader(header);
       if (newComponent.getId() > 0) {
         oldComponent = new OpportunityComponent(
             db, Integer.parseInt(componentId));
-        if (!hasViewpointAuthority(
-            db, context, "pipeline", oldComponent.getOwner(), userId)) {
+        if (!(hasViewpointAuthority(db, context, "pipeline", oldComponent.getOwner(), userId) ||
+            hasViewpointAuthority(db, context, "pipeline", header.getManager(), userId))) {
           return "PermissionError";
         }
         newComponent.setModifiedBy(getUserId(context));
-        isValid = this.validateObject(context, db, newComponent);
+        bean.setComponent(newComponent);
+        isValid = this.validateObject(context, db, bean);
+        isValid = this.validateObject(context, db, newComponent) && isValid;
         if (isValid) {
           resultCount = newComponent.update(db, context);
         }
@@ -225,7 +239,12 @@ public final class Leads extends CFSModule {
           this.processUpdateHook(context, oldComponent, newComponent);
         }
       } else {
-        isValid = this.validateObject(context, db, newComponent);
+        if (!hasViewpointAuthority(db, context, "pipeline", header.getManager(), userId)) {
+          return "PermissionError";
+        }
+        bean.setComponent(newComponent);
+        isValid = this.validateObject(context, db, bean);
+        isValid = this.validateObject(context, db, newComponent) && isValid;
         if (isValid) {
           recordInserted = newComponent.insert(db, context);
         }
@@ -272,8 +291,13 @@ public final class Leads extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
-      newComponent.setTypeListToTypes(db);
+      if (!systemStatus.hasField("opportunity.componentTypes")) {
+        newComponent.setTypeListToTypes(db);
+      }
       context.getRequest().setAttribute("ComponentDetails", newComponent);
+      //add access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -294,7 +318,7 @@ public final class Leads extends CFSModule {
         } else if (context.getRequest().getParameter("popup") != null) {
           return "PopupCloseOK";
         }
-        return ("DetailsComponentOK");
+        return (executeCommandDetailsComponent(context));
       }
     }
     return (executeCommandPrepare(context));
@@ -318,10 +342,10 @@ public final class Leads extends CFSModule {
         "OppDetails");
     //String association = context.getRequest().getParameter("opp_type");
     Contact linkedContact = null;
-
-    //set types
-    newOpp.getComponent().setTypeList(
-        context.getRequest().getParameterValues("selectedList"));
+    if (!systemStatus.hasField("opportunity.componentTypes")) {
+      //set types
+      newOpp.getComponent().setTypeList(context.getRequest().getParameterValues("selectedList"));
+    }
     newOpp.getComponent().setEnteredBy(getUserId(context));
     newOpp.getComponent().setModifiedBy(getUserId(context));
     newOpp.getHeader().setEnteredBy(getUserId(context));
@@ -332,7 +356,7 @@ public final class Leads extends CFSModule {
     } else if (newOpp.getHeader().getContactLink() > -1) {
       newOpp.getHeader().setAccountLink("-1");
     }
-
+    context.getRequest().setAttribute("oppDetails", newOpp);
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -341,7 +365,10 @@ public final class Leads extends CFSModule {
         linkedContact = new Contact(db, newOpp.getHeader().getContactLink());
         newOpp.getHeader().setContactName(linkedContact.getNameLastFirst());
       }
-      isValid = this.validateObject(context, db, newOpp.getHeader());
+      // newOpp only validates the owner of the component to
+      //the accessType and manager in the header
+      isValid = this.validateObject(context, db, newOpp);
+      isValid = this.validateObject(context, db, newOpp.getHeader()) && isValid;
       isValid = this.validateObject(context, db, newOpp.getComponent()) && isValid;
       if (isValid) {
         recordInserted = newOpp.insert(db, context);
@@ -371,6 +398,9 @@ public final class Leads extends CFSModule {
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute(
             "TypeList", newOpp.getComponent().getTypeList());
+        //add access types
+        AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+        context.getRequest().setAttribute("accessTypeList", accessTypeList);
         if (newOpp.getHeader().getAccountLink() > -1) {
           Organization thisOrg = new Organization(
               db, newOpp.getHeader().getAccountLink());
@@ -385,6 +415,9 @@ public final class Leads extends CFSModule {
     }
     if (recordInserted) {
       addRecentItem(context, newOpp.getHeader());
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("CloseInsertOppPopup");
+      }
       context.getRequest().setAttribute(
           "headerId", String.valueOf(newOpp.getHeader().getId()));
       return (executeCommandDetailsOpp(context));
@@ -404,11 +437,14 @@ public final class Leads extends CFSModule {
       return ("PermissionError");
     }
     int headerId = -1;
+    PagedListInfo searchOppListInfo = this.getPagedListInfo(
+        context, "SearchOppListInfo");
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
     addModuleBean(context, "View Opportunities", "View Opportunity Details");
     String fromQuoteDetails = (String) context.getRequest().getParameter(
         "fromQuoteDetails");
+    String viewSource = context.getRequest().getParameter("viewSource");
     if (fromQuoteDetails != null && "true".equals(fromQuoteDetails)) {
       context.getSession().removeAttribute("LeadsComponentListInfo");
       context.getSession().removeAttribute("PipelineViewpointInfo");
@@ -419,8 +455,7 @@ public final class Leads extends CFSModule {
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     //Check parameters
     if (context.getRequest().getParameter("headerId") != null) {
-      headerId = Integer.parseInt(
-          context.getRequest().getParameter("headerId"));
+      headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
     } else {
       headerId = Integer.parseInt(
           (String) context.getRequest().getAttribute("headerId"));
@@ -442,22 +477,55 @@ public final class Leads extends CFSModule {
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", thisHeader);
+      //add access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       //Generate the list of components
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
-      componentList.setOwnerIdRange(this.getUserRange(context, userId));
+      componentList.setAccessType(thisHeader.getAccessType());
+      String accessType = searchOppListInfo.getSearchOptionValue("searchcodeAccessType");
+      if (viewSource != null && !"dashboard".equals(viewSource)) {
+        if (accessType != null && !"".equals(accessType.trim()) && AccessType.CONTROLLED_HIERARCHY == accessTypeList.getRuleId(Integer.parseInt(accessType))) {
+          if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
+            componentList.setControlledHierarchy(Constants.TRUE, this.getUserRange(context, searchOppListInfo.getFilterKey("listFilter2")));
+          } else {
+            componentList.setControlledHierarchy(Constants.TRUE, this.getUserRange(context));
+          }
+        } else if (accessType != null && !"".equals(accessType.trim()) && AccessType.PUBLIC == accessTypeList.getRuleId(Integer.parseInt(accessType))) {
+          if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
+            componentList.setControlledHierarchy(Constants.FALSE, this.getUserRange(context, searchOppListInfo.getFilterKey("listFilter2")));
+          } else {
+            componentList.setControlledHierarchy(Constants.FALSE, this.getUserRange(context));
+          }
+        } else {
+          componentList.setOwnerIdRange(this.getUserRange(context));
+          componentList.setControlledHierarchyOnly(Constants.UNDEFINED);
+        }
+      } else {
+        componentList.setOwnerIdRange(this.getUserRange(context));
+        componentList.setControlledHierarchyOnly(Constants.UNDEFINED);
+      }
       componentList.setHeaderId(thisHeader.getId());
       componentList.setIncludeOnlyTrashed((thisHeader.isTrashed()));
       componentList.buildList(db);
       context.getRequest().setAttribute("ComponentList", componentList);
+      if (!allowMultiple(context) && (componentList.size() > 0)) {
+        //Load the opportunity header for display
+        OpportunityComponent thisComponent = (OpportunityComponent) componentList.get(0);
+        context.getRequest().setAttribute("LeadsComponentDetails", thisComponent);
+      }
       addRecentItem(context, thisHeader);
-      return ("OppDetailsOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    if (!allowMultiple(context) && (componentList.size() > 0)) {
+      return this.getReturn(context, "DetailsComponent");
+    }
+    return ("OppDetailsOK");
   }
 
 
@@ -476,6 +544,7 @@ public final class Leads extends CFSModule {
         context, "SearchOppListInfo");
     //Prepare viewpoints
     SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
     ViewpointInfo viewpointInfo = this.getViewpointInfo(
         context, "PipelineViewpointInfo");
     int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
@@ -502,8 +571,12 @@ public final class Leads extends CFSModule {
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
       LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
-      typeSelect.addItem(0, "All Types");
+      typeSelect.addItem(0, systemStatus.getLabel("accounts.allTypes","All Types"));
       context.getRequest().setAttribute("TypeSelect", typeSelect);
+      //add access types
+      AccessTypeList accessTypeList = null;
+      accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       //Generate user list
       User thisRec = this.getUser(context, userId);
       UserList shortChildList = thisRec.getShortChildList();
@@ -519,7 +592,7 @@ public final class Leads extends CFSModule {
       //check if account/contact is already selected, if so build it
       if (!"".equals(
           searchOppListInfo.getSearchOptionValue("searchcodeOrgId")) && !"-1".equals(
-              searchOppListInfo.getSearchOptionValue("searchcodeOrgId"))) {
+          searchOppListInfo.getSearchOptionValue("searchcodeOrgId"))) {
         String orgId = searchOppListInfo.getSearchOptionValue(
             "searchcodeOrgId");
         Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
@@ -527,7 +600,7 @@ public final class Leads extends CFSModule {
       }
       if (!"".equals(
           searchOppListInfo.getSearchOptionValue("searchcodeContactId")) && !"-1".equals(
-              searchOppListInfo.getSearchOptionValue("searchcodeContactId"))) {
+          searchOppListInfo.getSearchOptionValue("searchcodeContactId"))) {
         String id = searchOppListInfo.getSearchOptionValue(
             "searchcodeContactId");
         Contact thisContact = new Contact(db, Integer.parseInt(id));
@@ -535,8 +608,15 @@ public final class Leads extends CFSModule {
       }
       //stage
       LookupList stageSelect = new LookupList(db, "lookup_stage");
-      stageSelect.addItem(-1, "All Stages");
+      stageSelect.addItem(-1, systemStatus.getLabel("pipeline.allstages","All Stages"));
       context.getRequest().setAttribute("StageList", stageSelect);
+
+      //sites lookup
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
+      siteList.setJsEvent("onChange=\"javascript:resetSiteData(this.form);\"");
+      context.getRequest().setAttribute("SiteIdList", siteList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -572,7 +652,7 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       thisOpp = new OpportunityHeader(db, id);
-      DependencyList dependencies = thisOpp.processDependencies(db);
+      DependencyList dependencies = thisOpp.processDependencies(db, allowMultiple(context));
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
@@ -586,7 +666,7 @@ public final class Leads extends CFSModule {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
         htmlDialog.addButton(
             systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='Leads.do?command=TrashOpp&id=" + id + RequestUtils.addLinkParams(
-                context.getRequest(), "viewSource") + "'");
+            context.getRequest(), "viewSource") + "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
@@ -660,7 +740,7 @@ public final class Leads extends CFSModule {
 
     UserList fullChildList = new UserList();
     UserList shortChildList = new UserList();
-    OpportunityList realFullOppList = new OpportunityList();
+    OpportunityComponentList realFullOppList = new OpportunityComponentList();
     HtmlSelect graphTypeSelect = new HtmlSelect();
 
     //Determine the graph type to generate
@@ -711,19 +791,6 @@ public final class Leads extends CFSModule {
             "leadspreviousId", String.valueOf(thisRec.getManagerId()));
       }
 
-      //Check the cache and see if the current graph exists and is valid
-      if (thisRec.getIsValid() == true) {
-        if (graphString.equals("gmr")) {
-          checkFileName = thisRec.getGmr().getLastFileName();
-        } else if (graphString.equals("ramr")) {
-          checkFileName = thisRec.getRamr().getLastFileName();
-        } else if (graphString.equals("cgmr")) {
-          checkFileName = thisRec.getCgmr().getLastFileName();
-        } else if (graphString.equals("cramr")) {
-          checkFileName = thisRec.getCramr().getLastFileName();
-        }
-      }
-
       //Build the html graph combo box
       SystemStatus systemStatus = this.getSystemStatus(context);
       graphTypeSelect.setSelectName("whichGraph");
@@ -736,7 +803,7 @@ public final class Leads extends CFSModule {
           "cgmr", systemStatus.getLabel("pipeline.graphTypeSelect.item.CGMR"));
       graphTypeSelect.addItem(
           "cramr", systemStatus.getLabel(
-              "pipeline.graphTypeSelect.item.CRAMR"));
+          "pipeline.graphTypeSelect.item.CRAMR"));
       graphTypeSelect.setDefaultKey(graphString);
 
       //Generate the opportunities pagedList for the idToUse (builds component count and value of idToUse only), right of graph
@@ -750,8 +817,34 @@ public final class Leads extends CFSModule {
       headerList.setQueryOpenOnly(true);
       headerList.setComponentsOwnedByUser(idToUse);
       headerList.setBuildTotalValues(true);
+      headerList.setBuildActionPlans(true);
       headerList.buildList(db);
       context.getRequest().setAttribute("oppList", headerList);
+
+      //Check the cache and see if the current graph exists and is valid
+      if (thisRec.getIsValid()) {
+        if (graphString.equals("gmr")) {
+          checkFileName = thisRec.getGmr().getLastFileName();
+        } else if (graphString.equals("ramr")) {
+          checkFileName = thisRec.getRamr().getLastFileName();
+        } else if (graphString.equals("cgmr")) {
+          checkFileName = thisRec.getCgmr().getLastFileName();
+        } else if (graphString.equals("cramr")) {
+          checkFileName = thisRec.getCramr().getLastFileName();
+        }
+      }
+
+      // See if the file exists, otherwise reset the user and the checkFileName
+      if (checkFileName != null) {
+        File checkFile = new File(context.getServletContext().getRealPath("/") + "graphs" + fs + checkFileName + ".jpg");
+        if (!checkFile.exists()) {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Leads-> Invalidating data, file not found: " + context.getServletContext().getRealPath("/") + "graphs" + fs + checkFileName + ".jpg");
+          }
+          thisRec.setIsValid(false, true);
+          checkFileName = null;
+        }
+      }
 
       //FullChildList is the complete user hierarchy for the selected user and
       //is needed for the graph
@@ -763,16 +856,22 @@ public final class Leads extends CFSModule {
         String range = fullChildList.getUserListIds(idToUse);
         //All of the opportunities that make up this graph calculation
         //TODO: Set a max date for less records
-        realFullOppList.setUnits("M");
+//        realFullOppList.setUnits("M");
         realFullOppList.setOwnerIdRange(range);
-        realFullOppList.setExcludeClosedComponents(true);
+        realFullOppList.setQueryOpenOnly(true);
         //ignores components not relevant for the graph
         realFullOppList.setIncludeOnlyForGraph(true);
+        if (getPref(context, "OPPORTUNITY.DEFAULT_TERM") != null) {
+          realFullOppList.setDefaultTerms(getPref(context, "OPPORTUNITY.DEFAULT_TERM"));
+        }
+        if (getPref(context, "OPPORTUNITY.DEFAULT_UNITS") != null) {
+          realFullOppList.setDefaultUnits(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"));
+        }
         Calendar calendar = Calendar.getInstance(
             getUserTimeZone(context), UserUtils.getUserLocale(
-                context.getRequest()));
+            context.getRequest()));
         realFullOppList.setCloseDateEnd(
-            new java.sql.Date(
+            new java.sql.Timestamp(
                 calendar.getTimeInMillis() + ((long) 1000 * 60 * 60 * 24 * 395)));
         realFullOppList.buildList(db);
       }
@@ -800,12 +899,12 @@ public final class Leads extends CFSModule {
           System.out.println("Leads-> Preparing the chart");
         }
         //Filter out the selected user for graph
-        OpportunityList tempOppList = new OpportunityList();
+        OpportunityComponentList tempOppList = new OpportunityComponentList();
         Iterator z = realFullOppList.iterator();
         while (z.hasNext()) {
-          OpportunityBean tempOpp = (OpportunityBean) (z.next());
-          if (tempOpp.getComponent().getOwner() == idToUse) {
-            tempOppList.add(tempOpp);
+          OpportunityComponent tempOppComponent = (OpportunityComponent) (z.next());
+          if (tempOppComponent.getOwner() == idToUse) {
+            tempOppList.add(tempOppComponent);
           }
         }
         //add up all opportunities for children line on graph
@@ -814,12 +913,12 @@ public final class Leads extends CFSModule {
         while (n.hasNext()) {
           User thisRecord = (User) n.next();
           tempUserList = prepareLines(
-              thisRecord, realFullOppList, tempUserList);
+              context, thisRecord, realFullOppList, tempUserList);
         }
         UserList linesToDraw = new UserList();
         linesToDraw = calculateLine(tempUserList, linesToDraw);
         //set my own, on top of the children line
-        tempUserList = prepareLines(thisRec, tempOppList, tempUserList);
+        tempUserList = prepareLines(context, thisRec, tempOppList, tempUserList);
         linesToDraw = calculateLine(thisRec, linesToDraw);
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Leads-> Drawing the chart");
@@ -874,7 +973,7 @@ public final class Leads extends CFSModule {
         java.util.Date testDate = new java.util.Date();
         String fileName = String.valueOf(idToUse) + String.valueOf(
             testDate.getTime()) + String.valueOf(
-                context.getSession().getCreationTime());
+            context.getSession().getCreationTime());
 
         // Write the chart image
         ChartRenderingInfo info = new ChartRenderingInfo(
@@ -884,7 +983,7 @@ public final class Leads extends CFSModule {
             imageFile, 1.0f, chart, width, height, info);
         PrintWriter pw = new PrintWriter(
             new BufferedWriter(new FileWriter(filePath + fileName + ".map")));
-        ChartUtilities.writeImageMap(pw, fileName, info);
+        ChartUtilities.writeImageMap(pw, fileName, info, false);
         pw.flush();
         pw.close();
 
@@ -933,8 +1032,7 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(
           db, context.getRequest().getParameter("id"));
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", newOpp.getEnteredBy(), userId)) {
+      if (!hasViewpointAuthority(db, context, "pipeline", newOpp.getManager(), userId)) {
         return "PermissionError";
       }
       recordDeleted = newOpp.delete(db, context, getDbNamePath(context));
@@ -981,8 +1079,7 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(
           db, context.getRequest().getParameter("id"));
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", newOpp.getEnteredBy(), userId)) {
+      if (!hasViewpointAuthority(db, context, "pipeline", newOpp.getManager(), userId)) {
         return "PermissionError";
       }
       recordUpdated = newOpp.updateStatus(
@@ -1028,8 +1125,7 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(
           db, context.getRequest().getParameter("id"));
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", newOpp.getEnteredBy(), userId)) {
+      if (!hasViewpointAuthority(db, context, "pipeline", newOpp.getManager(), userId)) {
         return "PermissionError";
       }
       recordUpdated = newOpp.updateStatus(
@@ -1065,13 +1161,14 @@ public final class Leads extends CFSModule {
 
     boolean recordDeleted = false;
     OpportunityComponent component = null;
+    OpportunityHeader header = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
-      component = new OpportunityComponent(
-          db, context.getRequest().getParameter("id"));
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", component.getOwner(), userId)) {
+      component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
+      header = new OpportunityHeader(db, component.getHeaderId());
+      if (!(hasViewpointAuthority(db, context, "pipeline", component.getOwner(), userId) ||
+          hasViewpointAuthority(db, context, "pipeline", header.getManager(), userId))) {
         return "PermissionError";
       }
       recordDeleted = component.delete(db, context);
@@ -1159,11 +1256,10 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, componentId);
       //Build the container item
-      OpportunityHeader oppHeader = new OpportunityHeader(
-          db, component.getHeaderId());
+      OpportunityHeader oppHeader = new OpportunityHeader(db, component.getHeaderId());
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", component.getOwner(), userId)) {
+      if (!(hasViewpointAuthority(db, context, "pipeline", component.getOwner(), userId) ||
+          hasViewpointAuthority(db, context, "pipeline", oppHeader.getManager(), userId))) {
         return "PermissionError";
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -1182,6 +1278,12 @@ public final class Leads extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
+      //add access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -1205,7 +1307,7 @@ public final class Leads extends CFSModule {
     context.getRequest().setAttribute("UserList", userList);
 
     if (context.getRequest().getParameter("popup") != null) {
-      return ("PopupModifyOK");
+      return ("ModifyPopupOK");
     } else {
       return executeCommandPrepare(context);
     }
@@ -1233,10 +1335,11 @@ public final class Leads extends CFSModule {
       //Generate the header
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
+      thisHeader.setBuildRecordDetails(true);
       thisHeader.queryRecord(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", thisHeader);
       addRecentItem(context, thisHeader);
-      return ("ModifyOppOK");
+      return getReturn(context, "ModifyOpp");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1292,29 +1395,49 @@ public final class Leads extends CFSModule {
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
       LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
-      typeSelect.addItem(0, "All Types");
+      typeSelect.addItem(0, systemStatus.getLabel("accounts.allTypes","All Types"));
       context.getRequest().setAttribute("TypeSelect", typeSelect);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
+      context.getRequest().setAttribute("systemStatus", systemStatus);
+      //add access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       //The list of opportunities, according to drop-down filter
       oppList.setPagedListInfo(searchOppListInfo);
       searchOppListInfo.setIsValid(true);
       searchOppListInfo.setSearchCriteria(oppList, context);
-      if ("all".equals(searchOppListInfo.getListView())) {
+      if (oppList.getSiteId() == Constants.INVALID_SITE) {
+        oppList.setSiteId(this.getUser(context, vpUserId).getSiteId());
+        oppList.setIncludeAllSites(true);
+      } else {
+        oppList.setIncludeAllSites(false);
+      }
+      if (AccessType.CONTROLLED_HIERARCHY == accessTypeList.getRuleId(oppList.getAccessType())) {
         if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
-          oppList.setOwner(searchOppListInfo.getFilterKey("listFilter2"));
+          oppList.setControlledHierarchy(Constants.TRUE, this.getUserRange(context, searchOppListInfo.getFilterKey("listFilter2")));
         } else {
-          oppList.setOwnerIdRange(this.getUserRange(context, userId));
+          if (!excludeHierarchy(context)) {
+            oppList.setControlledHierarchy(Constants.TRUE, this.getUserRange(context, userId));
+          }
         }
-        oppList.setQueryOpenOnly(true);
-      } else if ("closed".equals(searchOppListInfo.getListView())) {
+      } else if (AccessType.PUBLIC == accessTypeList.getRuleId(oppList.getAccessType())) {
         if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
-          oppList.setOwner(searchOppListInfo.getFilterKey("listFilter2"));
+          oppList.setControlledHierarchy(Constants.FALSE, this.getUserRange(context, searchOppListInfo.getFilterKey("listFilter2")));
         } else {
-          oppList.setOwnerIdRange(this.getUserRange(context, userId));
+          if (!excludeHierarchy(context)) {
+            oppList.setControlledHierarchy(Constants.FALSE, this.getUserRange(context, userId));
+          }
         }
-        oppList.setQueryClosedOnly(true);
       } else {
         oppList.setOwner(userId);
+        oppList.setControlledHierarchyOnly(Constants.UNDEFINED);
+      }
+      if ("open".equals(searchOppListInfo.getListView())) {
         oppList.setQueryOpenOnly(true);
+      } else if ("closed".equals(searchOppListInfo.getListView())) {
+        oppList.setQueryClosedOnly(true);
       }
       oppList.setTypeId(searchOppListInfo.getFilterKey("listFilter1"));
       isValid = searchOppListInfo.getIsValid();
@@ -1337,6 +1460,10 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("UserList", userList);
       addModuleBean(context, "View Opportunities", "Opportunities Add");
       if (fetchedList) {
+        OrganizationList disabledOrgs = new OrganizationList();
+        disabledOrgs.setIncludeEnabled(Constants.FALSE);
+        disabledOrgs.buildList(db);
+        context.getRequest().setAttribute("disabledOrgs", disabledOrgs);
         return ("OppListOK");
       } else {
         processErrors(context, oppList.getErrors());
@@ -1374,8 +1501,7 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       OpportunityHeader oldHeader = new OpportunityHeader(db, headerId);
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", oppHeader.getEnteredBy(), userId)) {
+      if (!hasViewpointAuthority(db, context, "pipeline", oppHeader.getManager(), userId)) {
         return "PermissionError";
       }
       oppHeader.setModifiedBy(getUserId(context));
@@ -1395,6 +1521,7 @@ public final class Leads extends CFSModule {
         resultCount = oppHeader.update(db);
       }
       if (resultCount == 1) {
+        oppHeader.checkResetActionStepAttachment(db, oldHeader);
         this.processUpdateHook(context, oldHeader, oppHeader);
       }
     } catch (Exception e) {
@@ -1438,6 +1565,7 @@ public final class Leads extends CFSModule {
     addModuleBean(context, "View Opportunities", "Component Details");
     String componentId = context.getRequest().getParameter("id");
     OpportunityComponent thisComponent = null;
+    OpportunityHeader header = null;
     //Begin processing
     Connection db = null;
     try {
@@ -1458,17 +1586,20 @@ public final class Leads extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
-      thisComponent = new OpportunityComponent(
-          db, Integer.parseInt(componentId));
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", thisComponent.getOwner(), userId)) {
+      //add access types
+      AccessTypeList accessTypeList = null;
+      accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
+
+      thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
+      header = new OpportunityHeader(db, thisComponent.getHeaderId());
+      if (!hasViewpointAuthority(db, context, "pipeline", thisComponent.getOwner(), userId) &&
+          accessTypeList.getCode(AccessType.PUBLIC) != header.getAccessType()) {
         return "PermissionError";
       }
       thisComponent.checkEnabledOwnerAccount(db);
       //Build the container item
-      OpportunityHeader oppHeader = new OpportunityHeader(
-          db, thisComponent.getHeaderId());
-      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+      context.getRequest().setAttribute("opportunityHeader", header);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -1484,12 +1615,151 @@ public final class Leads extends CFSModule {
   /**
    * Description of the Method
    *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandComponentHistoryDetails(ActionContext context) {
+    if (!hasPermission(context, "pipeline-opportunities-view")) {
+      return ("PermissionError");
+    }
+    //Get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
+    //Configure the action
+    addModuleBean(context, "View Opportunities", "Component Details");
+    
+    String historyId = context.getRequest().getParameter("id");
+    String componentId = context.getRequest().getParameter("componentId");
+    String headerId = context.getRequest().getParameter("headerId");
+    
+    OpportunityComponentLog thisComponentLog = null;
+    OpportunityComponent component = null;
+    OpportunityHeader header = null;
+    //Begin processing
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      
+      thisComponentLog = new OpportunityComponentLog(db, Integer.parseInt(historyId));
+      
+      if (componentId != null && !"".equals(componentId.trim())) {
+        if (Integer.parseInt(componentId) != -1) { 
+          component = new OpportunityComponent(db, Integer.parseInt(componentId));
+          context.getRequest().setAttribute("opportunityComponent", component);
+        }
+      }
+      
+      if (headerId != null && !"".equals(headerId.trim())) {
+        header = new OpportunityHeader(db, Integer.parseInt(headerId));
+        context.getRequest().setAttribute("opportunityHeader", header);
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("componentLogDetails", thisComponentLog);
+    return ("ComponentHistoryDetailsOK");
+  }
+
+  
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandComponentHistory(ActionContext context) {
+	    if (!hasPermission(context, "pipeline-opportunities-view")) {
+	      return ("PermissionError");
+	    }
+	    int headerId = -1;
+	    int componentId = -1;
+	    
+      PagedListInfo componentHistoryListInfo = this.getPagedListInfo(
+	        context, "componentHistoryListInfo");
+	    
+      OpportunityHeader thisHeader = null;
+      OpportunityComponent thisComponent = null;
+	    OpportunityComponentLogList componentLogList = null;
+	    
+      addModuleBean(context, "View Opportunities", "View Opportunity Details");
+	    
+      //Get Viewpoints if any
+	    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+	        context, "PipelineViewpointInfo");
+	    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+	    
+      //Check parameters
+	    if (context.getRequest().getParameter("headerId") != null) {
+	    	headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
+	    } else {
+	    	headerId = Integer.parseInt(
+	          (String) context.getRequest().getAttribute("headerId"));
+	    }
+	    
+      if (context.getRequest().getParameter("id") != null) {
+	    	componentId = Integer.parseInt(context.getRequest().getParameter("id"));
+	    } else if (context.getRequest().getAttribute("id") != null) {
+	    	componentId = Integer.parseInt(
+	          (String) context.getRequest().getAttribute("id"));
+	    }
+      
+	    Connection db = null;
+	    //Configure the paged list info
+	    if ("true".equals(context.getRequest().getParameter("reset"))) {
+	      context.getSession().removeAttribute("componentHistoryListInfo");
+	    }
+	    componentHistoryListInfo.setLink(
+	        "LeadsComponents.do?command=ComponentHistory" + 
+            "&headerId="+ headerId + RequestUtils.addLinkParams(
+	            context.getRequest(), "id|viewSource"));
+	    try {
+	      db = this.getConnection(context);
+        //Generate the component
+        if (componentId > -1) {
+          thisComponent = new OpportunityComponent();
+          thisComponent.queryRecord(db, componentId);
+          context.getRequest().setAttribute("opportunityComponent", thisComponent);
+        }
+        //Generate the opportunity header
+        thisHeader = new OpportunityHeader();
+        thisHeader.setBuildComponentCount(true);
+        thisHeader.queryRecord(db, headerId);
+        context.getRequest().setAttribute("opportunityHeader", thisHeader);
+	      //Generate the list of component log entries for this header
+        componentLogList = new OpportunityComponentLogList();
+        componentLogList.setPagedListInfo(componentHistoryListInfo);
+	      componentLogList.setHeaderId(thisHeader.getId());
+        if (componentId > -1) {
+          //filters the component log list to a specific component
+          componentLogList.setComponentId(componentId);
+        }
+	      componentLogList.buildList(db);
+	      context.getRequest().setAttribute("componentHistoryList", componentLogList);
+	    } catch (Exception errorMessage) {
+	      context.getRequest().setAttribute("Error", errorMessage);
+	      return ("SystemError");
+	    } finally {
+	      this.freeConnection(context, db);
+	    }
+	    return ("ComponentHistoryOK");
+	  }
+
+
+  
+  /**
+   * Description of the Method
+   *
    * @param pertainsTo   Description of Parameter
    * @param oppList      Description of Parameter
    * @param usersToGraph Description of Parameter
    * @return Description of the Returned Value
    */
-  private UserList prepareLines(User pertainsTo, OpportunityList oppList, UserList usersToGraph) {
+  private UserList prepareLines(ActionContext context, User pertainsTo, OpportunityComponentList oppList, UserList usersToGraph) {
     java.util.Date myDate = null;
     Calendar readDate = Calendar.getInstance();
     Calendar readDateAdjusted = Calendar.getInstance();
@@ -1515,9 +1785,9 @@ public final class Leads extends CFSModule {
     twelveMonths.set(Calendar.DAY_OF_MONTH, 1);
     twelveMonths.add(Calendar.MONTH, +13);
 
-    if (pertainsTo.getIsValid() == false) {
+    if (!pertainsTo.getIsValid()) {
       pertainsTo.doOpportunityLock();
-      if (pertainsTo.getIsValid() == false) {
+      if (!pertainsTo.getIsValid()) {
         try {
           if (System.getProperty("DEBUG") != null) {
             System.out.println(
@@ -1530,14 +1800,18 @@ public final class Leads extends CFSModule {
 
           Iterator oppIterator = oppList.iterator();
           while (oppIterator.hasNext()) {
-            OpportunityBean tempOpp = (OpportunityBean) oppIterator.next();
-            if (tempOpp.getComponent().getOwner() == pertainsTo.getId()) {
-              myDate = tempOpp.getComponent().getCloseDate();
+            OpportunityComponent tempOpp = (OpportunityComponent) oppIterator.next();
+            if (tempOpp.getOwner() == pertainsTo.getId()) {
+              myDate = tempOpp.getCloseDate();
               readDate.setTime(myDate);
               readDateAdjusted.setTime(myDate);
-              readDateAdjusted.add(
-                  java.util.Calendar.MONTH, +(int) (java.lang.Math.round(
-                      tempOpp.getComponent().getTerms())));
+              if (getPref(context, "OPPORTUNITY.DEFAULT_UNITS") != null && getPref(context, "OPPORTUNITY.DEFAULT_TERM") != null) {
+                readDateAdjusted.add(
+                    java.util.Calendar.MONTH, +(int) (java.lang.Math.round(
+                    tempOpp.getTermsInMonths(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.DEFAULT_TERM")))));
+              } else {
+                readDateAdjusted.add(java.util.Calendar.MONTH, +(int) (java.lang.Math.round(tempOpp.getTermsInMonths())));
+              }
               if (readDate.get(Calendar.DATE) >= 15) {
                 readDate.add(java.util.Calendar.MONTH, +1);
               }
@@ -1546,38 +1820,62 @@ public final class Leads extends CFSModule {
                   String.valueOf(readDate.get(java.util.Calendar.MONTH));
 
               //get the individual graph values
-              gmrAddTerm = new Double(
-                  (tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()));
-              ramrAddTerm = new Double(
-                  (tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()) * tempOpp.getComponent().getCloseProb());
-              cgmrAddTerm = new Double(
-                  (tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()) * tempOpp.getComponent().getCommission());
-              cramrAddTerm = new Double(
-                  ((tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()) * tempOpp.getComponent().getCloseProb() * tempOpp.getComponent().getCommission()));
+              if (getPref(context, "OPPORTUNITY.DEFAULT_UNITS") != null && getPref(context, "OPPORTUNITY.DEFAULT_TERM") != null && getPref(context, "OPPORTUNITY.MULTIPLIER") != null) {
+                gmrAddTerm = new Double(
+                    (tempOpp.getGuess(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.MULTIPLIER")) / tempOpp.getTermsInMonths(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.DEFAULT_TERM"))));
+              } else {
+                gmrAddTerm = new Double(
+                    (tempOpp.getGuess() / tempOpp.getTermsInMonths()));
+              }
+              if (getPref(context, "OPPORTUNITY.DEFAULT_UNITS") != null && getPref(context, "OPPORTUNITY.DEFAULT_TERM") != null && getPref(context, "OPPORTUNITY.MULTIPLIER") != null) {
+                ramrAddTerm = new Double(
+                    (tempOpp.getGuess(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.MULTIPLIER")) / tempOpp.getTermsInMonths(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.DEFAULT_TERM"))) * tempOpp.getCloseProb());
+              } else {
+                ramrAddTerm = new Double(
+                    (tempOpp.getGuess() / tempOpp.getTermsInMonths()) * tempOpp.getCloseProb());
+              }
+              if (getPref(context, "OPPORTUNITY.DEFAULT_UNITS") != null && getPref(context, "OPPORTUNITY.DEFAULT_TERM") != null && getPref(context, "OPPORTUNITY.MULTIPLIER") != null) {
+                cgmrAddTerm = new Double(
+                    (tempOpp.getGuess(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.MULTIPLIER")) / tempOpp.getTermsInMonths(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.DEFAULT_TERM"))) * tempOpp.getCommission());
+              } else {
+                cgmrAddTerm = new Double(
+                    (tempOpp.getGuess() / tempOpp.getTermsInMonths()) * tempOpp.getCommission());
+              }
+              if (getPref(context, "OPPORTUNITY.DEFAULT_UNITS") != null && getPref(context, "OPPORTUNITY.DEFAULT_TERM") != null && getPref(context, "OPPORTUNITY.MULTIPLIER") != null) {
+                cramrAddTerm = new Double(
+                    ((tempOpp.getGuess(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.MULTIPLIER")) / tempOpp.getTermsInMonths(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.DEFAULT_TERM"))) * tempOpp.getCloseProb() * tempOpp.getCommission()));
+              } else {
+                cramrAddTerm = new Double(
+                    ((tempOpp.getGuess() / tempOpp.getTermsInMonths()) * tempOpp.getCloseProb() * tempOpp.getCommission()));
+              }
 
               //case: close date within 0-6m range
               if (((rightNow.before(readDate) || rightNowAdjusted.before(
                   readDate)) && twelveMonths.after(readDate)) || rightNow.equals(
-                      readDate) || twelveMonths.equals(readDate)) {
+                  readDate) || twelveMonths.equals(readDate)) {
                 pertainsTo.setGraphValues(
                     valKey, gmrAddTerm, ramrAddTerm, cgmrAddTerm, cramrAddTerm);
               }
               //case: close date plus terms within 0-6m range, or greater than 6m
               else if (rightNowAdjusted.after(readDate) && ((rightNow.before(
                   readDateAdjusted) || rightNowAdjusted.before(
-                      readDateAdjusted)))) {
+                  readDateAdjusted)))) {
                 pertainsTo.setGraphValues(
                     valKey, gmrAddTerm, ramrAddTerm, cgmrAddTerm, cramrAddTerm);
               }
 
               //more terms
-              if ((java.lang.Math.round(tempOpp.getComponent().getTerms())) > 1) {
+              if ((java.lang.Math.round(
+                  (getPref(context, "OPPORTUNITY.DEFAULT_UNITS") != null && getPref(context, "OPPORTUNITY.DEFAULT_TERM") != null ?
+                      tempOpp.getTermsInMonths(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.DEFAULT_TERM")) :
+                      tempOpp.getTermsInMonths())
+              )) > 1) {
                 for (x = 1; x < java.lang.Math.round(
-                    tempOpp.getComponent().getTerms()); x++) {
+                    tempOpp.getTermsInMonths(getPref(context, "OPPORTUNITY.DEFAULT_UNITS"), getPref(context, "OPPORTUNITY.DEFAULT_TERM"))); x++) {
                   readDate.add(java.util.Calendar.MONTH, +1);
                   if (((rightNow.before(readDate) || rightNowAdjusted.before(
                       readDate)) && twelveMonths.after(readDate)) || rightNow.equals(
-                          readDate) || twelveMonths.equals(readDate)) {
+                      readDate) || twelveMonths.equals(readDate)) {
                     valKey = String.valueOf(
                         readDate.get(java.util.Calendar.YEAR)) +
                         String.valueOf(readDate.get(java.util.Calendar.MONTH));
@@ -1672,20 +1970,20 @@ public final class Leads extends CFSModule {
     for (int count = 0; count < 12; count++) {
       thisLine.getGmr().setValue(
           valKeys[count], new Double(
-              primaryNode.getGmr().getValue(valKeys[count]).doubleValue() + (addToMe.getGmr().getValue(
-                  valKeys[count])).doubleValue()));
+          primaryNode.getGmr().getValue(valKeys[count]).doubleValue() + (addToMe.getGmr().getValue(
+              valKeys[count])).doubleValue()));
       thisLine.getRamr().setValue(
           valKeys[count], new Double(
-              primaryNode.getRamr().getValue(valKeys[count]).doubleValue() + (addToMe.getRamr().getValue(
-                  valKeys[count])).doubleValue()));
+          primaryNode.getRamr().getValue(valKeys[count]).doubleValue() + (addToMe.getRamr().getValue(
+              valKeys[count])).doubleValue()));
       thisLine.getCgmr().setValue(
           valKeys[count], new Double(
-              primaryNode.getCgmr().getValue(valKeys[count]).doubleValue() + (addToMe.getCgmr().getValue(
-                  valKeys[count])).doubleValue()));
+          primaryNode.getCgmr().getValue(valKeys[count]).doubleValue() + (addToMe.getCgmr().getValue(
+              valKeys[count])).doubleValue()));
       thisLine.getCramr().setValue(
           valKeys[count], new Double(
-              primaryNode.getCramr().getValue(valKeys[count]).doubleValue() + (addToMe.getCramr().getValue(
-                  valKeys[count])).doubleValue()));
+          primaryNode.getCramr().getValue(valKeys[count]).doubleValue() + (addToMe.getCramr().getValue(
+              valKeys[count])).doubleValue()));
     }
     currentLines.add(thisLine);
     return currentLines;
@@ -1726,5 +2024,53 @@ public final class Leads extends CFSModule {
     return currentLines;
   }
 
-}
 
+  /**
+   * Returns an access type list for repopulating a html select
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandAccessTypeJSList(ActionContext context) {
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return getReturn(context, "AccessTypeJSList");
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  private boolean allowMultiple(ActionContext context) {
+    //get the preference for single/multiple components
+    String multiple = this.getSystemPref(context, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+    return OpportunityComponent.allowMultiple(multiple);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  private boolean excludeHierarchy(ActionContext context) {
+    //get the preference for single/multiple components
+    String exclude = this.getSystemPref(context, OpportunityComponent.MULTPLE_CONFIG_NAME, "excludeHierarchy");
+    return DatabaseUtils.parseBoolean(exclude);
+  }
+
+}

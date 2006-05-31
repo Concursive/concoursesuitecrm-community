@@ -1,4 +1,4 @@
-<!--
+
 function field(id, name, type){
 	this.id = id
 	this.name = name
@@ -20,7 +20,7 @@ function popPreview() {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  if (document.searchForm.searchCriteriaText.value.length == 0) {
+  if (document.searchForm.searchCriteriaText.value.length == 0 || checkNullString(document.searchForm.searchCriteriaText.value)) {
     alert('Please add contacts or criteria then try again.\r\n'+
       'A group without any criteria will return all contacts');
   } else {
@@ -55,9 +55,14 @@ function addValues() {
 	var fieldList = document.searchForm.fieldSelect;
 	var operatorList = document.searchForm.operatorSelect;
 	var searchList = document.searchForm.searchCriteria;
+  if (document.searchForm.allSites){
+    var sites =  document.searchForm.siteId2;
+  }
 	var count = 0;
   var fieldType = "select";
-  if (document.searchForm.fieldSelect.selectedIndex != 7 && document.searchForm.fieldSelect.selectedIndex != 8) {
+  if (document.searchForm.fieldSelect.selectedIndex != 7 && 
+      document.searchForm.fieldSelect.selectedIndex != 8 &&
+      document.searchForm.fieldSelect.selectedIndex != 9) {
     fieldType = "text";
   }
   
@@ -78,15 +83,42 @@ function addValues() {
 	operatorName = operatorList.options[operatorList.selectedIndex].text;
 	operatorID = operatorList.options[operatorList.selectedIndex].value
 	searchText = document.searchForm.searchValue.value;
+  if (document.searchForm.allSites){
+    siteName = sites.options[sites.selectedIndex].text;
+    siteID = sites.options[sites.selectedIndex].value;
+  } else {
+    siteName = document.searchForm.siteName2.value;
+    siteID = document.searchForm.siteId2.value;
+  }
 	
-	var typeValue = document.searchForm.idSelect.value;
-	var newOption = fieldName + " (" + operatorName + ") " + searchText + " [" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].text + "]";
+	var typeValue = '';
+  if (document.searchForm.fieldSelect.selectedIndex == 7 || 
+      document.searchForm.fieldSelect.selectedIndex == 8) {
+    typeValue = document.searchForm.idSelect.value;
+  } else {
+    if (document.searchForm.fieldSelect.selectedIndex == 9){
+      typeValue = document.searchForm.siteId1.value;
+    }
+  }
+  
+	var newOption = '';
+  if (document.searchForm.fieldSelect.selectedIndex != 9){
+    newOption = fieldName + " (" + operatorName + ") " + searchText + " [" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].text + ", " + siteName + "]";
+  } else {
+    newOption = fieldName + " (" + operatorName + ") " + searchText + " [" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].text + "]";
+  }
 	
   //TODO: replace these numbers with code values rather than select indexes
-	if (document.searchForm.fieldSelect.selectedIndex != 7 && document.searchForm.fieldSelect.selectedIndex != 8) {
-		var newCriteria = fieldID  + "|" + operatorID + "|" + searchText + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value;
+	if (document.searchForm.fieldSelect.selectedIndex != 7 &&
+      document.searchForm.fieldSelect.selectedIndex != 8 &&
+      document.searchForm.fieldSelect.selectedIndex != 9) {
+		var newCriteria = fieldID  + "|" + operatorID + "|" + searchText + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
 	} else {
-		var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value;
+    if (document.searchForm.fieldSelect.selectedIndex != 9){
+      var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
+    } else {
+      var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|-1";
+    }
 	}
   
   for (j=0; j<searchCriteria.length; j++) {
@@ -108,7 +140,9 @@ function addValues() {
 			searchList.options[searchList.length] = new Option(newOption);
   }
 	searchCriteria[searchCriteria.length] = newCriteria;
-	document.searchForm.searchValue.value = document.searchForm.searchValue.defaultValue;
+  if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value != 12) {
+    document.searchForm.searchValue.value = document.searchForm.searchValue.defaultValue;
+  }
 	//document.searchForm.searchValue.focus();
 }
 
@@ -164,6 +198,7 @@ function removeValues(){
   } else {
 		var index = searchList.selectedIndex;
     removeValue(index);
+    saveValues();
   }
 }
 
@@ -188,8 +223,7 @@ function saveValues(){
       criteria += searchCriteria[i];
       criteria += "^";
     }
-    document.searchForm.searchCriteriaText.value = criteria;
   }
+  document.searchForm.searchCriteriaText.value = criteria;
 }
 
--->

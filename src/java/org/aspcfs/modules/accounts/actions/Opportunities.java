@@ -19,6 +19,8 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
@@ -28,13 +30,18 @@ import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.pipeline.base.OpportunityComponent;
 import org.aspcfs.modules.pipeline.base.OpportunityComponentList;
+import org.aspcfs.modules.pipeline.base.OpportunityComponentLog;
+import org.aspcfs.modules.pipeline.base.OpportunityComponentLogList;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
+import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.pipeline.beans.OpportunityBean;
 import org.aspcfs.modules.quotes.base.QuoteList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 
@@ -84,27 +91,40 @@ public final class Opportunities extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
 
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
       oppList.setPagedListInfo(oppPagedInfo);
-      oppList.setBuildTotalValues(true);
+      oppList.setAllowMultipleComponents(allowMultiple(context));
       oppList.setOrgId(orgId);
+      oppList.setBuildTotalValues(true);
       if (thisOrganization.isTrashed()) {
         oppList.setIncludeOnlyTrashed(true);
       }
-      if ("all".equals(oppPagedInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context));
-        oppList.setQueryOpenOnly(true);
-      } else if ("closed".equals(oppPagedInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context));
-        oppList.setQueryClosedOnly(true);
-      } else {
+      if ("".equals(oppPagedInfo.getListView()) || oppPagedInfo.getListView() == null) {
+        oppPagedInfo.setListView("all");
+      }
+      if ("my".equals(oppPagedInfo.getListView())) {
+        oppList.setControlledHierarchyOnly(Constants.UNDEFINED);
         oppList.setOwner(this.getUserId(context));
         oppList.setQueryOpenOnly(true);
+      } else if ("closed".equals(oppPagedInfo.getListView())) {
+        if (!excludeHierarchy(context)) {
+          oppList.setControlledHierarchy(Constants.FALSE, this.getUserRange(context));
+        }
+        oppList.setAccessType(accessTypeList.getCode(AccessType.PUBLIC));
+        oppList.setQueryClosedOnly(true);
+      } else {
+        if (!excludeHierarchy(context)) {
+          oppList.setControlledHierarchy(Constants.FALSE, this.getUserRange(context));
+        }
+        oppList.setAccessType(accessTypeList.getCode(AccessType.PUBLIC));
+        oppList.setQueryOpenOnly(true);
       }
-
       oppList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -113,7 +133,7 @@ public final class Opportunities extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("OpportunityList", oppList);
+      context.getRequest().setAttribute("OpportunityHeaderList", oppList);
       return ("ListOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -136,6 +156,7 @@ public final class Opportunities extends CFSModule {
     String orgId = null;
     String permission = "accounts-accounts-opportunities-add";
     Connection db = null;
+    OpportunityBean bean = new OpportunityBean();
     OpportunityComponent newComponent = (OpportunityComponent) context.getFormBean();
     OpportunityHeader header = null;
     String action = (newComponent.getId() == -1 ? "insert" : "modify");
@@ -152,8 +173,10 @@ public final class Opportunities extends CFSModule {
       return ("PermissionError");
     }
     //set types
-    newComponent.setTypeList(
+    if (!systemStatus.hasField("opportunity.componentTypes")) {
+      newComponent.setTypeList(
         context.getRequest().getParameterValues("selectedList"));
+    }
     newComponent.setEnteredBy(getUserId(context));
     newComponent.setModifiedBy(getUserId(context));
 
@@ -174,11 +197,20 @@ public final class Opportunities extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       header = new OpportunityHeader(db, newComponent.getHeaderId());
+      bean.setHeader(header);
       newComponent.setContactId(header.getContactLink());
       newComponent.setOrgId(header.getAccountLink());
       if ("insert".equals(action)) {
-        isValid = this.validateObject(context, db, newComponent);
+        if (!hasAuthority(context, header.getManager())) {
+          return ("PermissionError");
+        }
+        bean.setComponent(newComponent);
+        isValid = this.validateObject(context, db, bean);
+        isValid = this.validateObject(context, db, newComponent) && isValid;
         if (isValid) {
           recordInserted = newComponent.insert(db, context);
         }
@@ -189,11 +221,14 @@ public final class Opportunities extends CFSModule {
       } else {
         OpportunityComponent oldComponent = new OpportunityComponent(
             db, newComponent.getId());
-        if (!hasAuthority(context, oldComponent.getOwner())) {
+        if (!hasAuthority(context, oldComponent.getOwner()) &&
+            !hasAuthority(context, header.getManager())) {
           return ("PermissionError");
         }
         newComponent.setModifiedBy(getUserId(context));
-        isValid = this.validateObject(context, db, newComponent);
+        bean.setComponent(newComponent);
+        isValid = this.validateObject(context, db, bean);
+        isValid = this.validateObject(context, db, newComponent) && isValid;
         if (isValid) {
           resultCount = newComponent.update(db, context);
         }
@@ -235,6 +270,9 @@ public final class Opportunities extends CFSModule {
       }
     } else {
       if (resultCount == 1) {
+        if (context.getRequest().getParameter("popup") != null) {
+          return ("CloseAddPopup");
+        }
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
             "return").equals("list")) {
           return (executeCommandDetails(context));
@@ -325,7 +363,12 @@ public final class Opportunities extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
-
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       if (context.getRequest().getParameter("OrgDetails") == null) {
         thisOrganization = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
@@ -373,8 +416,11 @@ public final class Opportunities extends CFSModule {
 
     //set types
     if ("insert".equals(action)) {
-      newOpp.getComponent().setTypeList(
+      
+      if (!systemStatus.hasField("opportunity.componentTypes")) {
+        newOpp.getComponent().setTypeList(
           context.getRequest().getParameterValues("selectedList"));
+      }
       newOpp.getComponent().setEnteredBy(getUserId(context));
       newOpp.getComponent().setModifiedBy(getUserId(context));
       newOpp.getHeader().setEnteredBy(getUserId(context));
@@ -399,9 +445,16 @@ public final class Opportunities extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       if ("insert".equals(action)) {
-        isValid = this.validateObject(context, db, newOpp.getHeader());
+        isValid = this.validateObject(context, db, newOpp);
+        isValid = this.validateObject(context, db, newOpp.getHeader()) && isValid;
         isValid = this.validateObject(context, db, newOpp.getComponent()) && isValid;
         if (isValid) {
           recordInserted = newOpp.insert(db, context);
@@ -421,7 +474,7 @@ public final class Opportunities extends CFSModule {
       } else {
         OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
         OpportunityHeader oldHeader = new OpportunityHeader(db, headerId);
-        if (!hasAuthority(context, oppHeader.getEnteredBy())) {
+        if (!hasAuthority(context, oppHeader.getManager())) {
           return ("PermissionError");
         }
         oppHeader.setModifiedBy(getUserId(context));
@@ -445,6 +498,9 @@ public final class Opportunities extends CFSModule {
     if ("insert".equals(action)) {
       if (recordInserted) {
         addRecentItem(context, newOpp.getHeader());
+        if (context.getRequest().getParameter("popup") != null) {
+          return ("CloseAddPopup");
+        }
         context.getRequest().setAttribute(
             "headerId", String.valueOf(newOpp.getHeader().getId()));
         return (executeCommandDetails(context));
@@ -511,6 +567,9 @@ public final class Opportunities extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       //Load the organization
       Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
@@ -519,17 +578,20 @@ public final class Opportunities extends CFSModule {
           db, Integer.parseInt(componentId));
       thisComponent.checkEnabledOwnerAccount(db);
       //Load the header
-      OpportunityHeader oppHeader = new OpportunityHeader(
-          db, thisComponent.getHeaderId());
+      OpportunityHeader oppHeader = new OpportunityHeader(db, thisComponent.getHeaderId());
       context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+      if (!hasAuthority(context, oppHeader.getManager()) &&
+          !hasAuthority(context, thisComponent.getOwner()) &&
+          accessTypeList.getCode(AccessType.PUBLIC) != oppHeader.getAccessType()) {
+        if (!excludeHierarchy(context)) {
+          return ("PermissionError");
+        }
+      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
-    }
-    if (!hasAuthority(context, thisComponent.getOwner())) {
-      return ("PermissionError");
     }
     context.getRequest().setAttribute("OppComponentDetails", thisComponent);
     addRecentItem(context, thisComponent);
@@ -567,8 +629,8 @@ public final class Opportunities extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("AccountsComponentListInfo");
     }
-    PagedListInfo componentListInfo = this.getPagedListInfo(
-        context, "AccountsComponentListInfo");
+    PagedListInfo oppPagedInfo = this.getPagedListInfo(context, "OpportunityPagedInfo");
+    PagedListInfo componentListInfo = this.getPagedListInfo(context, "AccountsComponentListInfo");
     componentListInfo.setLink(
         "Opportunities.do?command=Details&headerId=" + headerId + "&orgId=" + orgId);
     try {
@@ -590,38 +652,55 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
-      if (!(hasAuthority(context, thisHeader.getEnteredBy()) || OpportunityHeader.isComponentOwner(
-          db, headerId, this.getUserId(context)))) {
+      if (!excludeHierarchy(context)) {
+	     if (!hasAuthority(context, thisHeader.getManager()) &&
+          accessTypeList.getCode(AccessType.PUBLIC) != thisHeader.getAccessType()) {
         return "PermissionError";
+        }
       }
-      context.getRequest().setAttribute("opportunityHeader", thisHeader);
-
+      context.getRequest().setAttribute("OpportunityHeader", thisHeader);
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
-      componentList.setOwnerIdRange(this.getUserRange(context));
+      componentList.setAccessType(thisHeader.getAccessType());
+      //get access types
+      if (oppPagedInfo.getListView() != null && "my".equals(oppPagedInfo.getListView())) {
+        componentList.setControlledHierarchyOnly(Constants.UNDEFINED);
+        componentList.setOwner(this.getUserId(context));
+        componentList.setQueryOpenOnly(true);
+      } else {
+        if (!excludeHierarchy(context)) {
+          componentList.setControlledHierarchy(Constants.FALSE, this.getUserRange(context));
+        }
+      }
       componentList.setHeaderId(thisHeader.getId());
       if (thisHeader.isTrashed()) {
         componentList.setIncludeOnlyTrashed(true);
       }
       componentList.buildList(db);
       context.getRequest().setAttribute("ComponentList", componentList);
+      if (!allowMultiple(context) && (componentList.size() > 0)) {
+        //Load the opportunity header for display
+        OpportunityComponent thisComponent = (OpportunityComponent) componentList.get(0);
+        context.getRequest().setAttribute("OppComponentDetails", thisComponent);
+      }
     } catch (Exception e) {
-      errorMessage = e;
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addRecentItem(context, thisHeader);
-      return ("DetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    addRecentItem(context, thisHeader);
+    if (!allowMultiple(context) && (componentList.size() > 0)) {
+      return this.getReturn(context, "DetailsComponent");
     }
+    return ("DetailsOK");
   }
 
 
@@ -644,7 +723,7 @@ public final class Opportunities extends CFSModule {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(
           db, context.getRequest().getParameter("id"));
-      if (!hasAuthority(context, newOpp.getEnteredBy())) {
+      if (!hasAuthority(context, newOpp.getManager())) {
         return "PermissionError";
       }
       recordDeleted = newOpp.delete(db, context, getDbNamePath(context));
@@ -683,6 +762,7 @@ public final class Opportunities extends CFSModule {
     }
     Exception errorMessage = null;
     OpportunityComponent thisComponent = null;
+    OpportunityHeader header = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = context.getRequest().getParameter("id");
     String orgId = context.getRequest().getParameter("orgId");
@@ -690,8 +770,13 @@ public final class Opportunities extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
       thisComponent = new OpportunityComponent(db, id);
-      if (!hasAuthority(context, thisComponent.getOwner())) {
+      header = new OpportunityHeader(db, thisComponent.getHeaderId());
+      if (!hasAuthority(context, thisComponent.getOwner()) &&
+          !hasAuthority(context, header.getManager())) {
         return "PermissionError";
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -730,13 +815,18 @@ public final class Opportunities extends CFSModule {
     Exception errorMessage = null;
     boolean recordDeleted = false;
     OpportunityComponent component = null;
+    OpportunityHeader header = null;
     String orgId = context.getRequest().getParameter("orgId");
     Connection db = null;
     try {
       db = this.getConnection(context);
-      component = new OpportunityComponent(
-          db, context.getRequest().getParameter("id"));
-      if (!hasAuthority(context, component.getOwner())) {
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
+      component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
+      header = new OpportunityHeader(db, component.getHeaderId());
+      if (!hasAuthority(context, component.getOwner()) &&
+          !hasAuthority(context, header.getManager())) {
         return "PermissionError";
       }
       recordDeleted = component.delete(db, context);
@@ -786,11 +876,18 @@ public final class Opportunities extends CFSModule {
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
+      if (!hasAuthority(context, thisHeader.getManager())) {
+        return "PermissionError";
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       systemStatus = this.getSystemStatus(context);
       contacts = new ContactList();
       contacts.setOrgId(thisHeader.getAccountLink());
+      if (thisHeader.getAccountLink() == -1) {
+        contacts.setSiteId(thisOrganization.getSiteId());
+        contacts.setExclusiveToSite(true);
+      }
       contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contacts.addIgnoreTypeId(Contact.LEAD_TYPE);
       contacts.setEmployeesOnly(Constants.FALSE);
@@ -810,9 +907,6 @@ public final class Opportunities extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("opportunityHeader", thisHeader);
-    if (!hasAuthority(context, thisHeader.getEnteredBy())) {
-      return "PermissionError";
-    }
     addRecentItem(context, thisHeader);
     return "PrepareModifyOppOK";
   }
@@ -836,10 +930,10 @@ public final class Opportunities extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       OpportunityHeader thisOpp = new OpportunityHeader(db, headerId);
-      if (!hasAuthority(context, thisOpp.getEnteredBy())) {
+      if (!hasAuthority(context, thisOpp.getManager())) {
         return "PermissionError";
       }
-      DependencyList dependencies = thisOpp.processDependencies(db);
+      DependencyList dependencies = thisOpp.processDependencies(db, allowMultiple(context));
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.addMessage(
           systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
@@ -872,19 +966,30 @@ public final class Opportunities extends CFSModule {
     }
     Connection db = null;
     OpportunityComponent component = null;
+    OpportunityHeader oppHeader = null;
     addModuleBean(context, "View Accounts", "Modify a Component");
     //Parameters
     String componentId = context.getRequest().getParameter("id");
+    String headerId = context.getRequest().getParameter("headerId");
     try {
       db = this.getConnection(context);
       //Load the component
-      component = new OpportunityComponent(db, componentId);
+      if (componentId != null && !"".equals(componentId.trim()) && Integer.parseInt(componentId) > -1) {
+        component = new OpportunityComponent(db, componentId);
+        oppHeader = new OpportunityHeader(db, component.getHeaderId());
+      } 
+      
       context.getRequest().setAttribute("ComponentDetails", component);
-      //Load the header
-      OpportunityHeader oppHeader = new OpportunityHeader(
-          db, component.getHeaderId());
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
+      
       SystemStatus systemStatus = this.getSystemStatus(context);
+      //get the access type list
+      AccessTypeList accessTypeList = systemStatus.getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
+      if (!hasAuthority(context, component.getOwner()) &&
+          !hasAuthority(context, oppHeader.getManager())) {
+        return ("PermissionError");
+      }
       LookupList environmentSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_environment");
       context.getRequest().setAttribute(
@@ -905,9 +1010,6 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
-    }
-    if (!hasAuthority(context, component.getOwner())) {
-      return ("PermissionError");
     }
     addRecentItem(context, component);
     return executeCommandPrepare(context);
@@ -934,7 +1036,7 @@ public final class Opportunities extends CFSModule {
       db = this.getConnection(context);
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       OpportunityHeader oldHeader = new OpportunityHeader(db, headerId);
-      if (!hasAuthority(context, oppHeader.getEnteredBy())) {
+      if (!hasAuthority(context, oppHeader.getManager())) {
         return ("PermissionError");
       }
       oppHeader.setModifiedBy(getUserId(context));
@@ -954,6 +1056,7 @@ public final class Opportunities extends CFSModule {
         resultCount = oppHeader.update(db);
       }
       if (resultCount == 1) {
+        oppHeader.checkResetActionStepAttachment(db, oldHeader);
         this.processUpdateHook(context, oldHeader, oppHeader);
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -972,6 +1075,9 @@ public final class Opportunities extends CFSModule {
       LookupList budgetSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_budget");
       context.getRequest().setAttribute("budgetSelect", budgetSelect);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -994,5 +1100,147 @@ public final class Opportunities extends CFSModule {
       return ("UserError");
     }
   }
+  /**
+   * Description of the Method
+   *
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   */
+  public String executeCommandComponentHistory(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-opportunities-view")) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    int headerId = -1;
+    int componentId = -1;
+    addModuleBean(context, "View Accounts", "View Opportunity Details");
+    if (context.getRequest().getParameter("id") != null) {
+        componentId = Integer.parseInt(context.getRequest().getParameter("id"));
+    } else {
+        componentId = Integer.parseInt(
+          (String) context.getRequest().getAttribute("id"));
+    }
+    String orgId = context.getRequest().getParameter("orgId");
+    Connection db = null;
+    Organization thisOrganization = null;
+    OpportunityComponent thisComponent = null;
+    OpportunityHeader thisHeader = null;
+    OpportunityComponentLogList componentLogList = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("componentHistoryListInfo");
+    }
+    PagedListInfo oppPagedInfo = this.getPagedListInfo(
+        context, "opportunityPagedInfo");
+    PagedListInfo componentHistoryListInfo = this.getPagedListInfo(
+        context, "componentHistoryListInfo");
+    componentHistoryListInfo.setLink(
+        "OpportunitiesComponents.do?command=ComponentHistory&orgId=" + orgId +  
+          "&id="+ componentId + RequestUtils.addLinkParams(
+            context.getRequest(), "viewSource"));
+
+    try {
+      db = this.getConnection(context);
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("orgDetails", thisOrganization);
+      //get the access type list
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
+
+      //Generate the component
+      thisComponent = new OpportunityComponent();
+      thisComponent.queryRecord(db, componentId);
+      context.getRequest().setAttribute("opportunityComponent", thisComponent);
+      //Generate the opportunity header
+      thisHeader = new OpportunityHeader();
+      thisHeader.setBuildComponentCount(true);
+      thisHeader.queryRecord(db, thisComponent.getHeaderId());
+      context.getRequest().setAttribute("opportunityHeader", thisHeader);
+
+      //Generate the list of components
+      componentLogList = new OpportunityComponentLogList();
+      componentLogList.setPagedListInfo(componentHistoryListInfo);
+      componentLogList.setHeaderId(thisHeader.getId());
+      componentLogList.setComponentId(componentId);
+      componentLogList.buildList(db);
+      context.getRequest().setAttribute("componentHistoryList", componentLogList);
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ComponentHistoryOK");
+  }
+  /**
+   * Description of the Method
+   *
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   */
+  public String executeCommandComponentHistoryDetails(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-opportunities-view")) {
+      return ("PermissionError");
+    }
+    //Configure the action
+    addModuleBean(context, "View Opportunities", "Component Details");
+    String historyId = context.getRequest().getParameter("id");
+    String orgId = context.getRequest().getParameter("orgId");
+    Organization thisOrganization = null;
+    OpportunityComponentLog thisComponentLog = null;
+    OpportunityComponent component = null;
+    OpportunityHeader header = null;
+    //Begin processing
+    Connection db = null; 
+    try {
+      db = this.getConnection(context);
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("orgDetails", thisOrganization);
+      thisComponentLog = new OpportunityComponentLog(db, Integer.parseInt(historyId));
+      component = new OpportunityComponent(db, thisComponentLog.getComponentId());
+      context.getRequest().setAttribute("opportunityComponent", component);
+      header = new OpportunityHeader(db, component.getHeaderId());
+      context.getRequest().setAttribute("opportunityHeader", header);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("accountsComponentDetails", thisComponentLog);
+    return ("ComponentHistoryDetailsOK");
+  }
+
+  
+
+  /**
+   *  Determines of multiple components are allowed for this site
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  private boolean allowMultiple(ActionContext context) {
+    //get the preference for single/multiple components
+    String multiple = this.getSystemPref(context, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+    return OpportunityComponent.allowMultiple(multiple);
+  }
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  private boolean excludeHierarchy(ActionContext context) {
+    //get the preference for single/multiple components
+    String exclude = this.getSystemPref(context, OpportunityComponent.MULTPLE_CONFIG_NAME, "excludeHierarchy");
+    if (exclude != null && !"".equals(exclude)) {
+      return DatabaseUtils.parseBoolean(exclude);
+    }
+    return false;
+  }
+  
 }
 

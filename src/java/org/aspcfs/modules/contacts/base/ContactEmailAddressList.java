@@ -351,5 +351,8 @@ public class ContactEmailAddressList extends EmailAddressList {
     return emailListSelect.getHtml(selectName, defaultKey);
   }
 
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 

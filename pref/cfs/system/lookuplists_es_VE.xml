@@ -193,6 +193,8 @@
       <record link_module_id="707031028" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>
       <record link_module_id="707031028" rule_id="626030334">Public</record>
       <record link_module_id="707031028" rule_id="626030333">Personal</record>
+      <record link_module_id="804051057" default_item="true" rule_id="626030334">Public</record>
+      <record link_module_id="804051057" rule_id="626030335">Controlled-Hierarchy</record>
     </lookup>
     <lookup table="lookup_account_types">
       <record><![CDATA[Pequeño]]></record>
@@ -328,9 +330,9 @@
       <record><![CDATA[Email despuès Fax]]></record>
       <record><![CDATA[Email despuès Carta]]></record>
       <record><![CDATA[Email, Fax, despuès Carta]]></record>
-      <record><![CDATA[Difusión]]></record>
       <record enabled="false"><![CDATA[Mensaje instantáneo]]></record>
       <record enabled="false"><![CDATA[Conexión Segura]]></record>
+      <record><![CDATA[Difusión]]></record>
     </lookup>
     <lookup table="lookup_department">
       <record><![CDATA[Contadurìa]]></record>
@@ -356,9 +358,9 @@
     <lookup table="lookup_document_store_role">
       <attribute name="group_id" type="integer" />
       <record group_id="1" level="1" LUID="2251509"><![CDATA[Gerente]]></record>
-      <record group_id="1" level="2" LUID="2251510"><![CDATA[Contribuidor Nivel 3]]></record>
-      <record group_id="1" level="3" LUID="2251511"><![CDATA[Contribuidor Nivel 2]]></record>
-      <record group_id="1" level="4" LUID="2251512"><![CDATA[Contribuidor Nivel 1]]></record>
+      <record group_id="1" level="2" LUID="2251510"><![CDATA[Contribuyente Nivel 3]]></record>
+      <record group_id="1" level="3" LUID="2251511"><![CDATA[Contribuyente Nivel 2]]></record>
+      <record group_id="1" level="4" LUID="2251512"><![CDATA[Contribuyente Nivel 1]]></record>
       <record group_id="1" level="5" LUID="2251513"><![CDATA[Invitado]]></record>
     </lookup>
     <lookup table="lookup_document_store_permission">
@@ -452,7 +454,7 @@
       <record><![CDATA[Servicios]]></record>
     </lookup>
     <lookup table="lookup_orderaddress_types">
-      <record><![CDATA[Factiración]]></record>
+      <record><![CDATA[Facturación]]></record>
       <record><![CDATA[Envìo]]></record>
     </lookup>
     <lookup table="lookup_order_source">
@@ -563,7 +565,7 @@
     <lookup table="lookup_project_role">
       <attribute name="group_id" type="integer"/>
       <record group_id="1" level="10" LUID="2251509"><![CDATA[Lìder de Proyecto]]></record>
-      <record group_id="1" level="20" LUID="2251510"><![CDATA[Contribuidor]]></record>
+      <record group_id="1" level="20" LUID="2251510"><![CDATA[Contribuyente]]></record>
       <record group_id="1" level="30" LUID="2251511"><![CDATA[Observador]]></record>
       <record group_id="1" level="100" LUID="2251512"><![CDATA[Invitado]]></record>
     </lookup>
@@ -760,7 +762,7 @@
         <reciprocal_name_2><![CDATA[Consultor de]]></reciprocal_name_2>
       </record>             
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
-        <reciprocal_name_1><![CDATA[Influenciador de]]></reciprocal_name_1>
+        <reciprocal_name_1><![CDATA[Influyente de]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Influenciado por]]></reciprocal_name_2>
       </record>             
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
@@ -910,6 +912,7 @@
       <record field="contactId" searchable="false" field_typeid="0"><![CDATA[ID del contacto]]></record>
       <record field="title" searchable="false" field_typeid="0"><![CDATA[Tìtulo del contacto]]></record>
       <record field="accountTypeId" searchable="true" field_typeid="0"><![CDATA[Tipo de cuenta]]></record>
+      <record field="siteId" searchable="true" field_typeid="0"><![CDATA[Site]]></record>
     </lookup>
     <lookup table="survey" key="survey_id">
       <attribute name="type" type="integer" />
@@ -953,5 +956,105 @@
     <lookup table="lookup_opportunity_event_compelling">
     </lookup>
     <lookup table="lookup_opportunity_budget">
+    </lookup>
+    <lookup table="lookup_duration_type">
+      <record><![CDATA[minutos]]></record>
+      <record><![CDATA[horas]]></record>
+      <record><![CDATA[dìas]]></record>
+      <record><![CDATA[semanas]]></record>
+      <record><![CDATA[meses]]></record>
+      <record><![CDATA[años]]></record>
+    </lookup>
+    <lookup table="lookup_step_actions">
+      <attribute name="constant_id" type="integer" />
+      <record constant_id="110061030"><![CDATA[Requerir al Usuario adjuntar o crear una oportunidad]]></record>
+      <record constant_id="110061031"><![CDATA[Requerir al Usuario adjuntar o cargar un documento]]></record>
+<!--      <record constant_id="110061032"><![CDATA[Requerir al Usuario adjuntar o crear una actividad]]></record> -->
+      <record constant_id="110061033"><![CDATA[Requerir al Usuario actualizar una carpeta de Plan de Acción especìfica]]></record>
+      <record constant_id="110061034"><![CDATA[Requerir al Usuario actualizar la calificación]]></record>
+      <record constant_id="110061035"><![CDATA[Requerir al Usuario adjuntar o crear una nota simple]]></record>
+      <record constant_id="110061036"><![CDATA[Requerir al Usuario adjuntar o crear m˙ltiples notas]]></record>
+<!--      <record constant_id="110061037"><![CDATA[Require user to attach or create a lookup list]]></record> -->
+      <record constant_id="110061038"><![CDATA[Permitir al Usuario visualizar la cuenta]]></record>
+      <record constant_id="110061039"><![CDATA[Requerir al Usuario adjuntar o crear un contacto de la cuenta]]></record>
+      <record constant_id="110061040"><![CDATA[Requerir al Usuario crear relaciones en la cuenta]]></record>
+      <record constant_id="302061653"><![CDATA[Requerir al Usuario agregar un receptor en la campaña activa]]></record>
+    </lookup>
+    <lookup table="lookup_asset_materials">
+    </lookup>
+    <lookup table="lookup_ticket_cause">
+    </lookup>
+    <lookup table="lookup_ticket_resolution">
+    </lookup>
+    <lookup table="action_plan_constants" key="map_id">
+      <attribute name="constant_id" type="integer"/>
+      <record LUID="2005101901" constant_id="42420034"><![CDATA[cuentas]]></record>
+      <record LUID="2005101902" constant_id="912051329"><![CDATA[tickets]]></record>
+      <record LUID="2005101903" constant_id="2"><![CDATA[contactos]]></record>
+      <record LUID="2005101904" constant_id="912051328"><![CDATA[cotizaciones]]></record>
+      <record LUID="2005101905" constant_id="3"><![CDATA[negocios]]></record>
+      <record LUID="2005101906" constant_id="912051330"><![CDATA[proyectos]]></record>
+      <record LUID="2005101907" constant_id="912051331"><![CDATA[comunicaciones]]></record>
+      <record LUID="2005101908" constant_id="912051332"><![CDATA[admin]]></record>
+      <record LUID="2005101909" constant_id="912051333"><![CDATA[llamadas]]></record>
+      <record LUID="2005101910" constant_id="912051334"><![CDATA[nota_cfs]]></record>
+      <record LUID="2005101911" constant_id="912051335"><![CDATA[llamadas_negocios]]></record>
+      <record LUID="2005101912" constant_id="912051336"><![CDATA[mipaginadeinicio]]></record>
+      <record LUID="2005101913" constant_id="831200519"><![CDATA[nota]]></record>
+      <record LUID="2005101914" constant_id="831200520"><![CDATA[seleccion]]></record>
+      <record LUID="2005101915" constant_id="1011200517"><![CDATA[componente_negocios]]></record>
+      <record LUID="2005101916" constant_id="110061020"><![CDATA[relaciones]]></record>
+    </lookup>
+    <lookup table="step_action_map" key="map_id">
+      <attribute name="constant_id" type="action_plan_constants.LUID"/>
+      <attribute name="action_constant_id" type="integer"/>
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061030" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061031" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061032" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061033" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061034" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061039" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061040" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="302061653" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="302061653" />
+    </lookup>
+    <lookup table="lookup_ticket_task_category">
+    </lookup>
+    <lookup table="lookup_account_size">
+      <record><![CDATA[1-10]]></record>
+      <record><![CDATA[11-100]]></record>
+      <record><![CDATA[101-1000]]></record>
+      <record><![CDATA[>1000]]></record>
+    </lookup>
+    <lookup table="lookup_segments">
+    </lookup>
+    <lookup table="lookup_sub_segment">
+    </lookup>
+    <lookup table="lookup_site_id">
+    </lookup>
+    <lookup table="lookup_title">
+      <record><![CDATA[Sr.]]></record>
+      <record><![CDATA[Sta.]]></record>
+      <record><![CDATA[Sra.]]></record>
+      <record><![CDATA[Ing.]]></record>
+      <record><![CDATA[Lic.]]></record>
+      <record><![CDATA[Dr.]]></record>
+    </lookup>
+    <lookup table="lookup_ticket_state">
+      <record><![CDATA[Bajo Revisión]]></record>
+      <record><![CDATA[En progreso]]></record>
+      <record><![CDATA[La solución está siendo probada]]></record>
+      <record><![CDATA[La solución está siendo verificada]]></record>
+      <record><![CDATA[Solución Completa]]></record>
+      <record><![CDATA[No pudo ser resuelto]]></record>
+      <record><![CDATA[Duplicar]]></record>
     </lookup>
 </lookupLists>

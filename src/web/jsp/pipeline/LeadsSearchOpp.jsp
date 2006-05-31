@@ -22,6 +22,9 @@
 <jsp:useBean id="SearchOppListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="accessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
+<jsv:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -40,28 +43,68 @@
     changeDivContent('changeaccount', label('label.all','All'));
     document.forms['searchLeads'].searchcodeContactId.value="";
     changeDivContent('changecontact', label('label.any','Any'));
-    document.forms['searchLeads'].searchcodeStage.options.selectedIndex = 0;
+    <dhv:include name="opportunity.currentStage" none="true">
+      document.forms['searchLeads'].searchcodeStage.options.selectedIndex = 0;
+    </dhv:include>
     document.forms['searchLeads'].searchdateCloseDateStart.value="";
     document.forms['searchLeads'].searchdateCloseDateEnd.value="";
-    document.forms['searchLeads'].listView.options.selectedIndex = 0;
-    document.forms['searchLeads'].listFilter1.options.selectedIndex = 0;
+    <dhv:include name="opportunity.openOrClosed" none="true">
+      document.forms['searchLeads'].listView.options.selectedIndex = 0;
+    </dhv:include>
+    <dhv:include name="opportunity.componentTypes" none="true">
+      document.forms['searchLeads'].listFilter1.options.selectedIndex = 0;
+    </dhv:include>
     document.forms['searchLeads'].listFilter2.options.selectedIndex = 0;
+    <dhv:include name="opportunity.source" none="true">
+      document.forms['searchLeads'].searchcodeAccessType.options.selectedIndex = 0;
+    </dhv:include>
     document.forms['searchLeads'].searchDescription.focus();
+    <dhv:evaluate if="<%=User.getSiteId() == -1 %>" >
+      document.forms['searchLeads'].searchcodeSiteId.options.selectedIndex = 0;
+    </dhv:evaluate>
     updateOwnedBy();
   }
   
-  function updateOwnedBy(){
-    if(document.searchLeads.listView.value == "all" || document.searchLeads.listView.value == "closed"){
+  function resetSiteData(form) {
+    document.forms['searchLeads'].searchcodeOrgId.value="";
+    changeDivContent('changeaccount', label('label.all','All'));
+    document.forms['searchLeads'].searchcodeContactId.value="";
+    changeDivContent('changecontact', label('label.any','Any'));
+  }
+  
+  function getSiteId() {
+    var site = document.forms['searchLeads'].searchcodeSiteId;
+    var siteId = '';
+    if ('<%= User.getUserRecord().getSiteId() == -1 %>' == 'true') {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
+    if (siteId == '<%= Constants.INVALID_SITE %>') {
+      siteId = '&includeAllSites=true';
+    } else {
+      siteId = siteId + '&thisSiteIdOnly=true';
+    }
+    return siteId
+  }
+  
+  function updateOwnedBy() {
+    <dhv:include name="opportunity.source" none="true">
+    if(document.searchLeads.searchcodeAccessType.options[document.searchLeads.searchcodeAccessType.options.selectedIndex].value != -1){
       showSpan('ownedby');
     }else{
       document.forms['searchLeads'].listFilter2.options.selectedIndex = 0;
       hideSpan('ownedby');
     }
+    </dhv:include>
+    <dhv:include name="opportunity.source">
+      showSpan('ownedby');
+    </dhv:include>
   }
   
   function checkOwnedBy(){
-    <%
-      if("all".equals(SearchOppListInfo.getListView()) || "closed".equals(SearchOppListInfo.getListView())){
+    <%  //systemStatus.getLabel("pipeline.myOpportunities",
+      if(!"My Opportunities".equals(SearchOppListInfo.getSearchOptionValue("searchcodeAccessType"))){
     %>
       showSpan('ownedby');
     <% }else{ %>
@@ -75,7 +118,6 @@
 
   
 </script>
-<body onLoad="javascript:document.searchLeads.searchDescription.focus();checkOwnedBy();">
 <form name="searchLeads" action="Leads.do?command=Search" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -120,7 +162,7 @@
           </td>
           <td>
             <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId" value="<%= SearchOppListInfo.getSearchOptionValue("searchcodeOrgId") %>">
-            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'siteId='+getSiteId()+'&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp [<a href="javascript:changeDivContent('changeaccount',label('quotes.all','All'));javascript:resetFieldValue('searchcodeOrgId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
           </td>
         </tr>
@@ -145,13 +187,14 @@
           </td>
           <td>
             <input type="hidden" id="contactId" name="searchcodeContactId" value="<%= SearchOppListInfo.getSearchOptionValue("searchcodeContactId") %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('contactId','changecontact', 'reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('contactId','changecontact', 'siteId='+getSiteId()+'&filters=accountcontacts&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp [<a href="javascript:changeDivContent('changecontact',label('pipeline.any','Any'));javascript:resetFieldValue('contactId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
           </td>
         </tr>
       </table>
     </td>
   </tr>
+  <dhv:include name="opportunity.currentStage" none="true">
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
@@ -160,6 +203,7 @@
       <%= StageList.getHtmlSelect("searchcodeStage", SearchOppListInfo.getSearchOptionValue("searchcodeStage")) %>
     </td>
   </tr>
+  </dhv:include>
   <tr>
     <td valign="top" class="formLabel">
       <dhv:label name="pipeline.estimatedCloseDateBetween">Estimated Close Date between</dhv:label>
@@ -171,6 +215,7 @@
       &nbsp;<%=showAttribute(request,"searchdateCloseDateEndError")%>
     </td>
   </tr>
+  <dhv:include name="opportunity.componentTypes" none="true">
   <tr>
     <td class="formLabel">
       <dhv:label name="pipeline.opportunityType">Opportunity Type</dhv:label>
@@ -179,18 +224,39 @@
       <%= TypeSelect.getHtmlSelect("listFilter1", SearchOppListInfo.getFilterKey("listFilter1")) %>
     </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="opportunity.openOrClosed" none="true">
+  <tr>
+    <td class="formLabel"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
+    <td align="left" valign="bottom">
+      <select size="1" name="listView">
+        <option <%= SearchOppListInfo.getOptionValue("open") %>><dhv:label name="quotes.open">Open</dhv:label></option>
+        <option <%= SearchOppListInfo.getOptionValue("closed") %>><dhv:label name="quotes.closed">Closed</dhv:label></option>
+        <option <%= SearchOppListInfo.getOptionValue("any") %>><dhv:label name="pipeline.any">Any</dhv:label></option>
+      </select>
+    </td>
+  </tr>
+  </dhv:include>
+  <dhv:include name="opportunity.openOrClosed">
+    <input type="hidden" name="listView" value="<%= SearchOppListInfo.getOptionValue("open") %>"/>
+  </dhv:include>
+  <dhv:include name="opportunity.source" none="true">
   <tr>
     <td class="formLabel">
       <dhv:label name="contact.source">Source</dhv:label>
     </td>
-    <td align="left" valign="bottom">
-      <select size="1" name="listView" onChange="javascript:updateOwnedBy();">
-        <option <%= SearchOppListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label></option>
-        <option <%= SearchOppListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
-        <option <%= SearchOppListInfo.getOptionValue("closed") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllClosedOpportunities">All Closed Opportunities</dhv:label></option>
-      </select>
+    <td>
+        <select name="searchcodeAccessType" onChange="updateOwnedBy();">
+          <option value="<%= accessTypeList.getCode(AccessType.PUBLIC) %>" <%= SearchOppListInfo.getSearchOptionValue("searchcodeAccessType").equals(""+accessTypeList.getCode(AccessType.PUBLIC)) ?"selected":"" %>><dhv:label name="pipeline.allOpportunities">All Opportunities</dhv:label></option>
+          <option value="<%= accessTypeList.getCode(AccessType.CONTROLLED_HIERARCHY) %>" <%= SearchOppListInfo.getSearchOptionValue("searchcodeAccessType").equals(""+accessTypeList.getCode(AccessType.CONTROLLED_HIERARCHY)) ?"selected":"" %>><dhv:label name="pipeline.controlledHierarchyOpportunities">Controlled Hierarchy Opportunities</dhv:label></option>
+          <option value="-1" <%= SearchOppListInfo.getSearchOptionValue("searchcodeAccessType").equals("-1") ?"selected":"" %>><dhv:label name="pipeline.myOpportunities">My Opportunities</dhv:label></option>
+        </select>
     </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="opportunity.source">
+    <input type="hidden" name="searchcodeAccessType" value="<%= accessTypeList.getCode(AccessType.CONTROLLED_HIERARCHY) %>"/>
+  </dhv:include>
   <tr id="ownedby" style="display:none">
     <td class="formLabel">
       <dhv:label name="reports.accounts.contacts.ownedBy">Owned By</dhv:label>
@@ -203,20 +269,30 @@
       <%= userSelect.getHtml("listFilter2", SearchOppListInfo.getFilterKey("listFilter2")) %>
     </td>
   </tr>
-  <%--
+  <dhv:include name="pipeline.search.sites" none="true">
   <tr>
-    <td class="formLabel">
-      <dhv:label name="global.trashed">Trashed</dhv:label>
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
     </td>
     <td>
-      <input type="checkbox" name="searchcodeIncludeOnlyTrashed" value="true" <%= "true".equals(SearchOppListInfo.getSearchOptionValue("searchcodeIncludeOnlyTrashed"))? "checked":""%> />
+     <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
+      <%= SiteIdList.getHtmlSelect("searchcodeSiteId", ("".equals(SearchOppListInfo.getSearchOptionValue("searchcodeSiteId")) ? String.valueOf(Constants.INVALID_SITE) : SearchOppListInfo.getSearchOptionValue("searchcodeSiteId"))) %>
+     </dhv:evaluate>
+     <dhv:evaluate if="<%=User.getUserRecord().getSiteId() != -1 %>" >
+        <input type="hidden" name="searchcodeSiteId" value="<%= User.getUserRecord().getSiteId() %>">
+        <%= SiteIdList.getSelectedValue(User.getUserRecord().getSiteId()) %>
+     </dhv:evaluate>
+     <input type="hidden" name="searchcodeExclusiveToSite" value="true"/>
     </td>
-	</tr>
-  --%>
+  </tr>
+  </dhv:include>
 </table>
 &nbsp;<br>
 <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
 <input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 <input type="hidden" name="source" value="searchForm">
 </form>
-</body>
+<script type="text/javascript">
+  document.searchLeads.searchDescription.focus();
+  checkOwnedBy();
+</script>

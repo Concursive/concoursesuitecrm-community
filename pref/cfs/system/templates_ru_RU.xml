@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <mappings>
+    <map id="contactInformation.details" displayName="Контактная Информация"><![CDATA[
+В файле имеется следующая контактная информация...
+<br />
+<b>Имя:</b> ${name}<br />
+<br />
+<b>Адрес Email:</b><br />
+${emailAddresses}
+${noEmailAddresses=В записях нет адреса email.<br />}
+<br />
+<br />
+<b>Адрес для текстового сообщения:</b><br />
+${textMessageAddresses}
+${noTextMessageAddresses=В записях нет адреса текстопого сообщения.<br />}
+<br />
+<br />
+<b>Номера телефонов:</b><br />
+${phoneNumbers}
+${noPhoneNumbers=В записях нет номера телефона.<br />}
+<br />
+<br />
+<b>Почтовые адреса:</b><br />
+${postalAddresses}
+${noPostalAddresses=В записях нет почтового адреса.<br />}
+]]></map>
+    <!-- Project Management User Added -->
+    <map id="projects.userAdded.subject" displayName="Пользователь Менеджер Проекта добавлен"><![CDATA[Приглашение принять участие в проекте]]></map>
+    <map id="projects.userAdded.body" displayName="Пользователь Менеджер Проекта добавлен"><![CDATA[
+<body>
+Здравствуте ${invite.name},<br />
+<br />
+${user.name} открыл(а) проект Centric CRM и Вас просят принять участие:<br />
+<br />
+Название проекта: ${project.name}<br />
+Описание: ${project.description}<br />
+<br />
+Для принятия или отклонения приглашения войдите в систему и просмотрите свои проекты, щелкнув мышью по ссылке:<br />
+<a href="${link}" target="_blank">${link}</a><br />
+<br />
+После вхождения в систему перейдите к модулю Проектов и выберите просмотр Ваших приглашений.<br />
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+    <!-- Project Management News Email -->
+    <map id="projects.news.email.subject" displayName="Новости Проекта"><![CDATA[${news.subject}]]></map>
+    <map id="projects.news.email.body" displayName="Новости Проекта"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td>
+      ${news.intro}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ${news.continued=[сообщение будет продолжено...]}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">Просмотр сообщения онлайн</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+
+<!-- Assigned Leads Email -->
+<map id="leads.assigned.email.subject" displayName="Assigned Leads Email"><![CDATA[${leads.assigned.email.subject}]]></map>
+<map id="leads.assigned.email.body" displayName="Assigned Leads Email"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td colspan="2">
+      You have been assigned a Lead in the Leads Module
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Lead Details:
+    </td>
+    <td>${contact.name} ${contact.company}</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">View the Lead online</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+
+<!-- Worked Leads Email -->
+<map id="leads.worked.email.subject" displayName="Worked Leads Email"><![CDATA[${leads.worked.email.subject}]]></map>
+<map id="leads.worked.email.body" displayName="Worked Leads Email"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td colspan="2">
+      You have been assigned a new Prospect in the Accounts Module
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Prospect Details:
+    </td>
+    <td>${contact.name} ${contact.company}</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">View the Prospect online</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+<!-- Action Plan Assignment Email -->
+<map id="actionplan.assign.email.subject" displayName="Action Plan Assignment Email"><![CDATA[Action Plan Assignment]]></map>
+<map id="actionplan.assign.email.body" displayName="Action Plan Assignment Email"><![CDATA[
+<body>
+<strong>The following Action Plan has been assigned:</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">Account:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">Manager:</td>
+    <td>${actionplan.manager}</td>
+  </tr>
+  <tr>
+    <td align="right">Assigned To:</td>
+    <td>${actionplan.assignedTo}</td>
+  </tr>
+</table>
+<br />
+<br />
+Click <a href="${link}">here</a> to view the Action Plan
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- Action Plan Re-assignment Email -->
+<map id="actionplan.reassign.email.subject" displayName="Action Plan Re-assignment Email"><![CDATA[Action Plan Re-assignment]]></map>
+<map id="actionplan.reassign.email.body" displayName="Action Plan Re-assignment Email"><![CDATA[
+<body>
+<strong>The following Action Plan has been Re-assigned</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">Account:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">Manager:</td>
+    <td>${actionplan.manager}</td>
+  </tr>
+  <tr>
+    <td align="right">Assigned From:</td>
+    <td>${actionplan.assignedFrom}</td>
+  </tr>
+  <tr>
+    <td align="right">Assigned To:</td>
+    <td>${actionplan.assignedTo}</td>
+  </tr>
+</table>
+<br />
+<br />
+Click <a href="${link}">here</a> to view the Action Plan
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- Action Step Alert Email -->
+<map id="actionstep.alert.email.subject" displayName="Action Step Alert Email"><![CDATA[Action Step Alert]]></map>
+<map id="actionstep.alert.email.body" displayName="Action Plan Alert Email"><![CDATA[
+<body>
+<strong>The following Action Step requires your attention</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">Account:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">Step:</td>
+    <td>${actionstep.description}</td>
+  </tr>
+  <tr>
+    <td align="right">Owner:</td>
+    <td>${actionstep.owner}</td>
+  </tr>
+</table>
+<br />
+<br />
+Click <a href="${link}">here</a> to view the Action Plan
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- Action Step Completion Alert Email -->
+<map id="actionstep.stepCompletion.alert.email.subject" displayName="Action Step Completion Alert Email"><![CDATA[Action Step Completion Alert]]></map>
+<map id="actionstep.stepCompletion.alert.email.body" displayName="Action Plan Step Completion Alert Email"><![CDATA[
+<body>
+<strong>The following Action Step has been completed</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">Account:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">Step:</td>
+    <td>${actionstep.description}</td>
+  </tr>
+  <tr>
+    <td align="right">Owner:</td>
+    <td>${actionstep.owner}</td>
+  </tr>
+</table>
+<br />
+<br />
+Click <a href="${link}">here</a> to view the Action Plan
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+  </mappings>
+</templates>

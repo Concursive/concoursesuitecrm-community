@@ -19,7 +19,9 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.admin.base.*,org.aspcfs.modules.troubletickets.base.*, java.util.*, org.aspcfs.utils.web.HtmlSelect" %>
 <jsp:useBean id="categoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList"  scope="request"/>
+<jsp:useBean id="siteId" class="java.lang.String" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript">
   function populateForm(){
@@ -182,6 +184,7 @@
     'categories=' + escape(document.getElementById('categories').value) + 
     '&parentCode=' + <%= request.getParameter("categoryId") %> + 
     '&level=' + <%= request.getParameter("level") %> +
+    '&siteId=' + <%= siteId %> +
     '&constantId=' + <%= request.getParameter("constantId") %>;
     window.location.href = 'AdminCategories.do?command=Save&' + params;
   }
@@ -208,11 +211,11 @@
       </tr>
       <tr>
         <td nowrap align="left">
-          <input type="text" name="description" value="" size="30" id ="newitem">
+          <input type="text" name="description" value="" size="30" maxlength="300" id ="newitem">
           <font color="red">*</font>
         </td>
         <td nowrap align="right" width="12">
-          <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onClick="javascript:addValues();" id="addButton">
+          <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onClick="javascript:if(checkNullString(document.getElementById('newitem').value)){alert(label('check.description','- Check that the description is entered\r\n'));} else {addValues();}" id="addButton">
         </td>
      </tr>
     </table>

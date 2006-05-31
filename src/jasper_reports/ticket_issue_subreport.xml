@@ -17,7 +17,7 @@
 		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="2" />
+	<property name="ireport.scriptlethandling" value="0" />
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
@@ -58,7 +58,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 						key="textField"
 						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
+						isPrintRepeatedValues="false"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>

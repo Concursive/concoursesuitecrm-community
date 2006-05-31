@@ -53,7 +53,7 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_list_enum2-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>">Lists</a> >
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>"><dhv:label name="project.lists">Lists</dhv:label></a> >
       <a href="ProjectManagement.do?command=ProjectCenter&section=Lists&pid=<%= Project.getId() %>&cid=<%= category.getId() %>"><%= toHtml(category.getDescription()) %></a> >
       <% if (Task.getId() == -1) { %>
       <dhv:label name="button.add">Add</dhv:label>
@@ -66,14 +66,19 @@
 <br>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.donew.value='false'">
 <dhv:evaluate if="<%= Task.getId() == -1 %>">
-  <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
+  <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="javascript:this.form.donew.value='true'">
 </dhv:evaluate>
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists<%= ((category.getId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= category.getId() %>';"><br />
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <%= Task.getId()==-1?"Add":"Update" %> Item
+        <dhv:evaluate if="<%= Task.getId() == -1 %>">
+          <dhv:label name="product.addItem">Add Item</dhv:label>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= Task.getId() != -1 %>">
+          <dhv:label name="project.updateItem">Update Item</dhv:label>
+        </dhv:evaluate>
       </th>
     </tr>
     <tr class="containerBody">
@@ -83,15 +88,15 @@
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Priority</td>
+      <td nowrap class="formLabel"><dhv:label name="reports.myhomepage.tasks.priority">Priority</dhv:label></td>
       <td>
         <%= PriorityList.getHtmlSelect("priority",Task.getPriority()) %>
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Status</td>
+      <td nowrap class="formLabel"><dhv:label name="documents.details.status">Status</dhv:label></td>
       <td>
-        <input type="checkbox" name="complete" <%=Task.getComplete()?" checked":""%>> Complete
+        <input type="checkbox" name="complete" <%=Task.getComplete()?" checked":""%>> <dhv:label name="reports.myhomepage.tasks.complete">Complete</dhv:label>
       </td>
     </tr>
     <tr class="containerBody">
@@ -104,7 +109,7 @@
   <br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.donew.value='false'">
 <dhv:evaluate if="<%= Task.getId() == -1 %>">
-  <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
+  <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="javascript:this.form.donew.value='true'">
 </dhv:evaluate>
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists<%= ((category.getId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= category.getId() %>';">
   <input type="hidden" name="pid" value="<%= Project.getId() %>">

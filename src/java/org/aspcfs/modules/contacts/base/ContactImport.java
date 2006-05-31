@@ -22,6 +22,9 @@ import org.aspcfs.apps.transfer.reader.mapreader.PropertyMap;
 import org.aspcfs.controller.ImportManager;
 import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Import;
@@ -32,6 +35,9 @@ import org.aspcfs.utils.formatter.AddressFormatter;
 import org.aspcfs.utils.formatter.ContactNameFormatter;
 import org.aspcfs.utils.formatter.EmailAddressFormatter;
 import org.aspcfs.utils.formatter.PhoneNumberFormatter;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.StateSelect;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedWriter;
@@ -500,6 +506,18 @@ public class ContactImport extends Import implements Runnable {
       //add the header to the log file
       recordError(null, record.line, 0);
 
+      // get salutation list
+      LookupList salutationList = new LookupList(db, "lookup_title");
+      LookupList emailAddressTypeList = new LookupList(db, "lookup_contactemail_types");
+      LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
+      LookupList phoneNumberTypeList = new LookupList(db, "lookup_contactphone_types");
+      
+      UserList userList = new UserList();
+      userList.setBuildContact(true);
+      userList.setSiteId(this.getSiteId());
+      userList.setIncludeUsersWithAccessToAllSites(true);
+      userList.buildList(db);
+
       //process data
       while (importThread == currentThread && !done) {
         if ((record = fileReader.nextLine()) != null) {
@@ -510,285 +528,423 @@ public class ContactImport extends Import implements Runnable {
           ++recordCount;
 
           try {
-            //get the record
-            thisRecord = record.data;
 
-            //get the line and pad it if necessary for missing columns
-            line = fileReader.padLine(
-                record.line, header.size() - thisRecord.size());
+            if (!record.isEmpty()) {
+              //get the record
+              thisRecord = record.data;
 
-            Contact thisContact = new Contact();
-            thisContact.setImportId(this.getId());
-            thisContact.setStatusId(Import.PROCESSED_UNAPPROVED);
-            //set contact properties
-            String nameLast = this.getValue(
-                thisRecord, propertyMap.getProperty("nameLast"));
-            if (!"".equals(StringUtils.toString(nameLast))) {
-              thisContact.setNameLast(nameLast);
-            } else {
-              String nameFull = this.getValue(
-                  thisRecord, propertyMap.getProperty("nameFull"));
-              if (!"".equals(StringUtils.toString(nameFull))) {
-                nameFormatter.format(thisContact, nameFull);
-              }
-              if ("".equals(StringUtils.toString(thisContact.getNameLast()))) {
-                //log the record as failed
-                error.append("Last Name is a required field");
-              }
-            }
+              //get the line and pad it if necessary for missing columns
+              line = fileReader.padLine(
+                  record.line, header.size() - thisRecord.size());
 
-            String nameFirst = this.getValue(
-                thisRecord, propertyMap.getProperty("nameFirst"));
-            if (!"".equals(StringUtils.toString(nameFirst))) {
-              thisContact.setNameFirst(nameFirst);
-            }
-            thisContact.setNameMiddle(
-                this.getValue(
-                    thisRecord, propertyMap.getProperty("nameMiddle")));
-            thisContact.setNameSuffix(
-                this.getValue(
-                    thisRecord, propertyMap.getProperty("nameSuffix")));
-            thisContact.setTitle(
-                this.getValue(thisRecord, propertyMap.getProperty("title")));
-            thisContact.setNotes(
-                this.getValue(thisRecord, propertyMap.getProperty("notes")));
-            thisContact.setUrl(
-                this.getValue(thisRecord, propertyMap.getProperty("url")));
-
-            //is the contact a lead
-            if (lead) {
-              thisContact.setIsLead(true);
-            }
-
-            if (leadStatus != -1) {
-              thisContact.setLeadStatus(leadStatus);
-            }
-
-            //entered by
-            String propertyValue = this.getValue(
-                thisRecord, propertyMap.getProperty("enteredBy"));
-            if (!"".equals(StringUtils.toString(propertyValue))) {
-              thisContact.setEnteredBy(propertyValue);
-            } else {
-              thisContact.setEnteredBy(userId);
-            }
-
-            //modified by
-            propertyValue = this.getValue(
-                thisRecord, propertyMap.getProperty("modifiedBy"));
-            if (!"".equals(StringUtils.toString(propertyValue))) {
-              thisContact.setModifiedBy(propertyValue);
-            } else {
-              thisContact.setModifiedBy(userId);
-            }
-
-            //owner
-            propertyValue = this.getValue(
-                thisRecord, propertyMap.getProperty("owner"));
-            if (!"".equals(StringUtils.toString(propertyValue))) {
-              thisContact.setOwner(propertyValue);
-            } else {
-              thisContact.setOwner(owner);
-            }
-
-            //access type
-            propertyValue = this.getValue(
-                thisRecord, propertyMap.getProperty("accessType"));
-            if (!"".equals(StringUtils.toString(propertyValue))) {
-              thisContact.setAccessType(propertyValue);
-            } else {
-              thisContact.setAccessType(accessTypeId);
-            }
-
-            //company
-            Property companyProperty = propertyMap.getProperty("company");
-            propertyValue = this.getValue(thisRecord, companyProperty);
-            if (!"".equals(StringUtils.toString(propertyValue))) {
-              thisContact.setCompany(propertyValue);
-            }
-            //check if user wants to lookup the account
-            if (lookupAccount) {
-              if (!"".equals(StringUtils.toString(propertyValue))) {
-                int orgId = Organization.lookupAccount(
-                    db, propertyValue, this.getId());
-                if (orgId > 0) {
-                  Organization thisOrg = new Organization(db, orgId);
-                  if (!thisOrg.getEnabled() || thisOrg.isTrashed()) {
-                    orgId = -1;
-                  }
+              Contact thisContact = new Contact();
+              thisContact.setImportId(this.getId());
+              thisContact.setStatusId(Import.PROCESSED_UNAPPROVED);
+              thisContact.setSiteId(this.getSiteId());
+              thisContact.setRating(this.getRating());
+              thisContact.setComments(this.getComments());
+              //set contact properties
+              String nameLast = this.getValue(
+                  thisRecord, propertyMap.getProperty("nameLast"));
+              if (!"".equals(StringUtils.toString(nameLast))) {
+                thisContact.setNameLast(nameLast);
+              } else {
+                String nameFull = this.getValue(
+                    thisRecord, propertyMap.getProperty("nameFull"));
+                if (!"".equals(StringUtils.toString(nameFull))) {
+                  nameFormatter.format(thisContact, nameFull);
                 }
-                if (orgId < 0) {
-                  //add a new account
-                  Organization thisOrg = new Organization();
-                  thisOrg.setName(propertyValue);
-                  thisOrg.setEnteredBy(userId);
-                  thisOrg.setModifiedBy(userId);
-                  thisOrg.setModifiedBy(userId);
-                  thisOrg.setOwner(owner);
-                  thisOrg.setImportId(this.getId());
-                  thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
-                  recordInserted = thisOrg.insert(db);
-                  if (!recordInserted) {
-                    error.append("; Error adding account");
+                if ("".equals(StringUtils.toString(thisContact.getNameLast()))) {
+                  //Last Name not found.
+                  if (getType() == Constants.IMPORT_ACCOUNT_CONTACTS) {
+                    error.append("Last Name is a required field");
                   } else {
-                    orgId = thisOrg.getOrgId();
+                    //Check to see if company information is found else log error
+                    String company = this.getValue(thisRecord, propertyMap.getProperty("company"));
+                    if ("".equals(StringUtils.toString(company))) {
+                      //log the record as failed since both last name and company information missing
+                      error.append("Last Name or Company info should be present");
+                    }
                   }
                 }
-                thisContact.setOrgId(orgId);
+              }
+
+              String nameFirst = this.getValue(
+                  thisRecord, propertyMap.getProperty("nameFirst"));
+              if (!"".equals(StringUtils.toString(nameFirst))) {
+                thisContact.setNameFirst(nameFirst);
+              }
+              thisContact.setNameMiddle(
+                  this.getValue(
+                      thisRecord, propertyMap.getProperty("nameMiddle")));
+              thisContact.setNameSuffix(
+                  this.getValue(
+                      thisRecord, propertyMap.getProperty("nameSuffix")));
+              thisContact.setAdditionalNames(
+                  this.getValue(thisRecord, propertyMap.getProperty("additionalNames")));
+              thisContact.setNickname(
+                  this.getValue(thisRecord, propertyMap.getProperty("nickname")));
+              thisContact.setBirthDate(
+                  this.getValue(thisRecord, propertyMap.getProperty("birthDate")));
+              thisContact.setRole(
+                  this.getValue(thisRecord, propertyMap.getProperty("role")));
+              thisContact.setTitle(
+                  this.getValue(thisRecord, propertyMap.getProperty("title")));
+              thisContact.setNotes(
+                  this.getValue(thisRecord, propertyMap.getProperty("notes")));
+              thisContact.setUrl(
+                  this.getValue(thisRecord, propertyMap.getProperty("url")));
+
+              //is the contact a lead
+              if (lead) {
+                thisContact.setIsLead(true);
+              }
+
+              if (leadStatus != -1) {
+                thisContact.setLeadStatus(leadStatus);
+              }
+
+              //entered by
+              String propertyValue = this.getValue(
+                  thisRecord, propertyMap.getProperty("enteredBy"));
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                try {
+                  User user = userList.getUserById(Integer.parseInt(propertyValue));
+                  thisContact.setEnteredBy((user != null?user.getId():-1));
+                } catch (NumberFormatException nfe) {
+                  thisContact.setEnteredBy(userList.getUserIdByName(propertyValue));
+                }
+                if (thisContact.getEnteredBy() == -1) {
+                  thisContact.setEnteredBy(userId);
+                }
+              } else {
+                thisContact.setEnteredBy(userId);
+              }
+
+              //modified by
+              propertyValue = this.getValue(
+                  thisRecord, propertyMap.getProperty("modifiedBy"));
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                try {
+                  User user = userList.getUserById(Integer.parseInt(propertyValue));
+                  thisContact.setModifiedBy((user != null?user.getId():-1));
+                } catch (NumberFormatException nfe) {
+                  thisContact.setModifiedBy(userList.getUserIdByName(propertyValue));
+                }
+                if (thisContact.getModifiedBy() == -1) {
+                  thisContact.setModifiedBy(userId);
+                }
+              } else {
+                thisContact.setModifiedBy(userId);
+              }
+
+              //owner
+              propertyValue = this.getValue(
+                  thisRecord, propertyMap.getProperty("owner"));
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                try {
+                  User user = userList.getUserById(Integer.parseInt(propertyValue));
+                  thisContact.setOwner((user != null?user.getId():-1));
+                } catch (NumberFormatException nfe) {
+                  thisContact.setOwner(userList.getUserIdByName(propertyValue));
+                }
+                if (thisContact.getOwner() == -1) {
+                  thisContact.setOwner(owner);
+                }
+              } else {
+                thisContact.setOwner(owner);
+              }
+
+              //access type
+              propertyValue = this.getValue(
+                  thisRecord, propertyMap.getProperty("accessType"));
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                thisContact.setAccessType(propertyValue);
+              } else {
+                thisContact.setAccessType(accessTypeId);
+              }
+              Property accountIndustryPropertyForContact = propertyMap.getProperty("industryTempCode");
+              propertyValue = this.getValue(thisRecord, accountIndustryPropertyForContact);
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                LookupList contactIndustryTypeList = new LookupList(db, "lookup_industry");
+                int industryCode = contactIndustryTypeList.getIdFromValue(propertyValue);
+                if (industryCode == -1) {
+                  LookupElement thisElement = new LookupElement();
+                  thisElement.setDescription(propertyValue);
+                  thisElement.insertElement(db, "lookup_industry");
+                  industryCode = thisElement.getCode();
+                  // invalidate cache
+                  this.getSystemStatus().removeLookup("lookup_industry");
+                }
+                thisContact.setIndustryTempCode(industryCode);
+              }
+
+              propertyValue = this.getValue(
+                  thisRecord, propertyMap.getProperty("potential"));
+              propertyValue = StringUtils.replace(propertyValue, "$", "");
+              propertyValue = StringUtils.replace(propertyValue, ",", "");
+              thisContact.setPotential(StringUtils.parseDouble(propertyValue, 0.0));
+
+              propertyValue = this.getValue(
+                  thisRecord, propertyMap.getProperty("revenue"));
+              propertyValue = StringUtils.replace(propertyValue, "$", "");
+              propertyValue = StringUtils.replace(propertyValue, ",", "");
+              thisContact.setRevenue(StringUtils.parseDouble(propertyValue, 0.0));
+
+              // salutation
+              propertyValue = this.getValue(thisRecord, propertyMap.getProperty("nameSalutation"));
+              if (!(propertyValue == null || "".equals(propertyValue))){
+                int salutationId = salutationList.getIdFromValue(propertyValue);
+                thisContact.setListSalutation(salutationId);
+              }
+
+              thisContact.setSource(this.getSourceType());
+
+              //company
+              Property companyProperty = propertyMap.getProperty("company");
+              propertyValue = this.getValue(thisRecord, companyProperty);
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                thisContact.setCompany(propertyValue);
                 thisContact.setOrgName(propertyValue);
-              } else {
-                error.append("; Invalid Account Name");
               }
-            }
 
-            //account number
-            if (lookupAccount) {
-              Property accountNumberProperty = propertyMap.getProperty(
-                  "accountNumber");
-              propertyValue = this.getValue(thisRecord, accountNumberProperty);
               //check if user wants to lookup the account
-              if (!"".equals(StringUtils.toString(propertyValue))) {
-                int orgId = Organization.lookupAccount(
-                    db, thisContact.getOrgName(), this.getId());
-                if (orgId < 0) {
-                  //add the account number
-                  Organization thisOrg = new Organization(db, orgId);
-                  thisOrg.setAccountNumber(propertyValue);
-                  thisOrg.setModifiedBy(userId);
-                  int resultCount = thisOrg.update(db);
-                  if (resultCount != 1) {
-                    error.append("; Error adding account number");
+              if (lookupAccount) {
+                if (propertyValue != null && !"".equals(StringUtils.toString(propertyValue))) {
+                  int orgId = Organization.lookupAccount(
+                      db, propertyValue, this.getId(), thisContact.getSiteId());
+                  if (orgId < 0) {
+                    //add a new account
+                    Organization thisOrg = new Organization();
+                    thisOrg.setName(propertyValue);
+                    thisOrg.setEnteredBy(userId);
+                    thisOrg.setModifiedBy(userId);
+                    thisOrg.setModifiedBy(userId);
+                    thisOrg.setOwner(owner);
+                    thisOrg.setImportId(this.getId());
+                    thisOrg.setPotential(thisContact.getPotential());
+                    thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
+                    thisOrg.setSiteId(thisContact.getSiteId());
+                    recordInserted = thisOrg.insert(db);
+                    if (!recordInserted) {
+                      error.append("; Error adding account");
+                    } else {
+                      orgId = thisOrg.getOrgId();
+                    }
                   }
-                }
-              }
-            }
-
-            //email addresses
-            ArrayList emailInstances = propertyMap.getDependencyMapList(
-                "contactEmail");
-            Iterator i = emailInstances.iterator();
-            while (i.hasNext()) {
-              PropertyMap thisMap = (PropertyMap) i.next();
-              String email = this.getValue(
-                  thisRecord, thisMap.getProperty("email"));
-              String type = this.getValue(
-                  thisRecord, thisMap.getProperty("type"));
-              //format email
-              EmailAddressFormatter thisFormatter = new EmailAddressFormatter();
-              ContactEmailAddress emailAddress = new ContactEmailAddress();
-              emailAddress.setEmail(email);
-              if (!"".equals(StringUtils.toString(type))) {
-                emailAddress.setType(type);
-              }
-              if (emailAddress.isValid()) {
-                thisFormatter.format(emailAddress);
-                if (emailAddress.isValid()) {
-                  thisContact.getEmailAddressList().add(emailAddress);
+                  if (orgId > 0) {
+                    Organization thisOrg = new Organization(db, orgId);
+                    if (!thisOrg.getEnabled() || thisOrg.isTrashed()) {
+                      orgId = -1;
+                    }
+                  }
+                  thisContact.setOrgId(orgId);
+                  thisContact.setOrgName(propertyValue);
                 } else {
-                  error.append("; Invalid Email");
-                }
-              }
-            }
-
-            //phone numbers
-            ArrayList phoneInstances = propertyMap.getDependencyMapList(
-                "contactPhone");
-            Iterator j = phoneInstances.iterator();
-            while (j.hasNext()) {
-              PropertyMap thisMap = (PropertyMap) j.next();
-              String phone = this.getValue(
-                  thisRecord, thisMap.getProperty("number"));
-              String phoneExt = this.getValue(
-                  thisRecord, thisMap.getProperty("extension"));
-              String type = this.getValue(
-                  thisRecord, thisMap.getProperty("type"));
-              ContactPhoneNumber phoneNumber = new ContactPhoneNumber();
-              if (!"".equals(StringUtils.toString(phone))) {
-                phoneNumber.setNumber(phone);
-                if (!"".equals(StringUtils.toString(phoneExt))) {
-                  phoneNumber.setExtension(phoneExt);
-                }
-                if (!"".equals(StringUtils.toString(type))) {
-                  phoneNumber.setType(type);
-                }
-                if (phoneNumber.isValid()) {
-                  phoneFormatter.format(phoneNumber);
-                  //check if number is still valid
-                  if (phoneNumber.isValid()) {
-                    thisContact.getPhoneNumberList().add(phoneNumber);
+                  //Company Information NOT available. An individual account needs to be inserted
+                  if (thisContact.getNameLastFirst() != null &&
+                      !"".equals(thisContact.getNameLastFirst())) {
+                    Organization thisOrg = new Organization();
+                    //Disable automatic insertion of primary contact information, since this contact is
+                    //inserted in the end after inserting an organization record.
+                    thisOrg.setInsertPrimaryContact(false);
+                    thisOrg.setName(thisContact.getNameLastFirst());
+                    thisOrg.setNameLast(thisContact.getNameLast());
+                    thisOrg.setNameFirst(thisContact.getNameFirst());
+                    thisOrg.setEnteredBy(userId);
+                    thisOrg.setModifiedBy(userId);
+                    thisOrg.setModifiedBy(userId);
+                    thisOrg.setOwner(owner);
+                    thisOrg.setImportId(this.getId());
+                    thisOrg.setPotential(thisContact.getPotential());
+                    thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
+                    thisOrg.setSiteId(this.getSiteId());
+                    recordInserted = thisOrg.insert(db);
+                    if (!recordInserted) {
+                      error.append("; Error adding account");
+                    }
+                    thisContact.setOrgId(thisOrg.getOrgId());
+                    thisContact.setOrgName(thisContact.getNameLastFirst());
+                    thisContact.setPrimaryContact(true);
                   } else {
-                    error.append("; Invalid Phone Number");
+                    error.append("; Invalid Individual Account Name");
                   }
                 }
               }
-            }
+              
+              //account number
+              Property accountNumberPropertyForContact = propertyMap.getProperty("accountNumber");
+              propertyValue = this.getValue(thisRecord, accountNumberPropertyForContact);
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                thisContact.setAccountNumber(propertyValue);
+              }
 
-            //addresses
-            ArrayList addressInstances = propertyMap.getDependencyMapList(
-                "contactAddress");
-            Iterator k = addressInstances.iterator();
-            while (k.hasNext()) {
-              PropertyMap thisMap = (PropertyMap) k.next();
-              String type = this.getValue(
-                  thisRecord, thisMap.getProperty("type"));
-              ContactAddress address = new ContactAddress();
-              address.setStreetAddressLine1(
-                  this.getValue(
-                      thisRecord, thisMap.getProperty("streetAddressLine1")));
-              address.setStreetAddressLine2(
-                  this.getValue(
-                      thisRecord, thisMap.getProperty("streetAddressLine2")));
-              address.setStreetAddressLine3(
-                  this.getValue(
-                      thisRecord, thisMap.getProperty("streetAddressLine3")));
-              address.setCity(
-                  this.getValue(thisRecord, thisMap.getProperty("city")));
-              address.setCountry(
-                  this.getValue(thisRecord, thisMap.getProperty("country")));
-              if (address.getCountry() == null || "".equals(
-                  address.getCountry()) && this.getSystemStatus() != null) {
-                address.setCountry(
-                    this.getSystemStatus().getApplicationPrefs().get(
-                        "SYSTEM.COUNTRY"));
-              }
-              if ("UNITED STATES".equals(address.getCountry()) || ("CANADA".equals(
-                  address.getCountry()))) {
-                address.setState(
-                    this.getValue(thisRecord, thisMap.getProperty("state")));
-              } else {
-                address.setOtherState(
-                    this.getValue(thisRecord, thisMap.getProperty("state")));
-              }
-              address.setZip(
-                  this.getValue(thisRecord, thisMap.getProperty("zip")));
-              if (!"".equals(StringUtils.toString(type))) {
-                address.setType(type);
-              }
-              if (address.isValid()) {
-                AddressFormatter thisFormatter = new AddressFormatter();
-                thisFormatter.format(address);
-                if (address.isValid()) {
-                  thisContact.getAddressList().add(address);
-                } else {
-                  error.append("; Invalid Address");
+              //account number
+              if (lookupAccount) {
+                //check if user wants to lookup the account
+                if (propertyValue != null && !"".equals(StringUtils.toString(propertyValue))) {
+                  int orgId = Organization.lookupAccount(
+                      db, thisContact.getOrgName(), this.getId(), thisContact.getSiteId());
+                  if (orgId > 0) {
+                    //add the account number
+                    Organization thisOrg = new Organization(db, orgId);
+                    thisOrg.setAccountNumber(propertyValue);
+                    thisOrg.setModifiedBy(userId);
+                    int resultCount = thisOrg.update(db);
+                    if (resultCount != 1) {
+                      error.append("; Error adding account number");
+                    }
+                  }
                 }
               }
-            }
 
-            if (error.length() == 0) {
-              //insert the contact
-              boolean isValid = ObjectValidator.validate(
-                  null, db, thisContact);
-              if (isValid) {
-                recordInserted = thisContact.insert(db);
+              //email addresses
+              ArrayList emailInstances = propertyMap.getDependencyMapList(
+                  "contactEmail");
+              Iterator i = emailInstances.iterator();
+              while (i.hasNext()) {
+                PropertyMap thisMap = (PropertyMap) i.next();
+                String email = this.getValue(
+                    thisRecord, thisMap.getProperty("email"));
+                String type = this.getValue(
+                    thisRecord, thisMap.getProperty("type"));
+                //format email
+                EmailAddressFormatter thisFormatter = new EmailAddressFormatter();
+                ContactEmailAddress emailAddress = new ContactEmailAddress();
+                emailAddress.setEmail(email);
+                if (!"".equals(StringUtils.toString(type))) {
+                  try {
+                    emailAddress.setType((new Integer(type).intValue()));
+                  } catch (NumberFormatException nfe) {
+                    emailAddress.setType(emailAddressTypeList.getIdFromValue(type));
+                  }
+                } else {
+                  emailAddress.setType((emailAddressTypeList.get(0) != null?((LookupElement) emailAddressTypeList.get(0)).getCode():-1));
+                }
+                if (emailAddress.isValid()) {
+                  thisFormatter.format(emailAddress);
+                  if (emailAddress.isValid()) {
+                    thisContact.getEmailAddressList().add(emailAddress);
+                  } else {
+                    error.append("; Invalid Email");
+                  }
+                }
               }
-              if (recordInserted) {
-                incrementTotalImportedRecords();
+
+              //phone numbers
+              ArrayList phoneInstances = propertyMap.getDependencyMapList(
+                  "contactPhone");
+              Iterator j = phoneInstances.iterator();
+              while (j.hasNext()) {
+                PropertyMap thisMap = (PropertyMap) j.next();
+                String phone = this.getValue(
+                    thisRecord, thisMap.getProperty("number"));
+                String phoneExt = this.getValue(
+                    thisRecord, thisMap.getProperty("extension"));
+                String type = this.getValue(
+                    thisRecord, thisMap.getProperty("type"));
+                ContactPhoneNumber phoneNumber = new ContactPhoneNumber();
+                if (!"".equals(StringUtils.toString(phone))) {
+                  phoneNumber.setNumber(phone);
+                  if (!"".equals(StringUtils.toString(phoneExt))) {
+                    phoneNumber.setExtension(phoneExt);
+                  }
+                  if (!"".equals(StringUtils.toString(type))) {
+                    try {
+                      phoneNumber.setType((new Integer(type).intValue()));
+                    } catch (NumberFormatException nfe) {
+                      phoneNumber.setType(phoneNumberTypeList.getIdFromValue(type));
+                    }
+                  } else {
+                    phoneNumber.setType((phoneNumberTypeList.get(0) != null?((LookupElement) phoneNumberTypeList.get(0)).getCode():-1));
+                  }
+                  if (phoneNumber.isValid()) {
+                    phoneFormatter.format(phoneNumber);
+                    //check if number is still valid
+                    if (phoneNumber.isValid()) {
+                      thisContact.getPhoneNumberList().add(phoneNumber);
+                    } else {
+                      error.append("; Invalid Phone Number");
+                    }
+                  }
+                }
+              }
+              //addresses
+              ArrayList addressInstances = propertyMap.getDependencyMapList(
+                  "contactAddress");
+              Iterator k = addressInstances.iterator();
+              while (k.hasNext()) {
+                PropertyMap thisMap = (PropertyMap) k.next();
+                String type = this.getValue(
+                    thisRecord, thisMap.getProperty("type"));
+                ContactAddress address = new ContactAddress();
+                address.setStreetAddressLine1(
+                    this.getValue(
+                        thisRecord, thisMap.getProperty("streetAddressLine1")));
+                address.setStreetAddressLine2(
+                    this.getValue(
+                        thisRecord, thisMap.getProperty("streetAddressLine2")));
+                address.setStreetAddressLine3(
+                    this.getValue(
+                        thisRecord, thisMap.getProperty("streetAddressLine3")));
+                address.setStreetAddressLine4(
+                    this.getValue(
+                        thisRecord, thisMap.getProperty("streetAddressLine4")));
+                address.setCity(
+                    this.getValue(thisRecord, thisMap.getProperty("city")));
+                address.setCountry(
+                    this.getValue(thisRecord, thisMap.getProperty("country")));
+                if (address.getCountry() == null || "".equals(
+                    address.getCountry()) && this.getSystemStatus() != null) {
+                  address.setCountry(
+                      this.getSystemStatus().getApplicationPrefs().get(
+                          "SYSTEM.COUNTRY"));
+                }
+                StateSelect stateSelect = new StateSelect(address.getCountry());
+                if (stateSelect.hasCountry(address.getCountry())) {
+                  address.setState(
+                      this.getValue(thisRecord, thisMap.getProperty("state")));
+                } else {
+                  address.setOtherState(
+                      this.getValue(thisRecord, thisMap.getProperty("state")));
+                }
+                address.setZip(
+                    this.getValue(thisRecord, thisMap.getProperty("zip")));
+                if (!"".equals(StringUtils.toString(type).trim())) {
+                  try {
+                    address.setType((new Integer(type).intValue()));
+                  } catch (NumberFormatException nfe) {
+                    address.setType(addressTypeList.getIdFromValue(type));
+                  }
+                } else {
+                  address.setType((addressTypeList.get(0) != null?((LookupElement) addressTypeList.get(0)).getCode():-1));
+                }
+                if (address.isValid()) {
+                  AddressFormatter thisFormatter = new AddressFormatter();
+                  thisFormatter.format(address);
+                  if (address.isValid()) {
+                    thisContact.getAddressList().add(address);
+                  } else {
+                    error.append("; Invalid Address");
+                  }
+                }
+              }
+
+              if (error.length() == 0) {
+                //insert the contact
+                boolean isValid = ObjectValidator.validate(
+                    null, db, thisContact);
+                if (isValid) {
+                  recordInserted = thisContact.insert(db);
+                }
+                if (recordInserted) {
+                  incrementTotalImportedRecords();
+                } else {
+                  incrementTotalFailedRecords();
+                }
               } else {
-                incrementTotalFailedRecords();
+                recordError(error.toString(), line, recordCount);
               }
-            } else {
-              recordError(error.toString(), line, recordCount);
             }
           } catch (Exception unknownException) {
             unknownException.printStackTrace();
@@ -964,8 +1120,8 @@ public class ContactImport extends Import implements Runnable {
     int recordCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) as recordcount " +
-        "FROM contact " +
-        "WHERE import_id = ? ");
+            "FROM contact " +
+            "WHERE import_id = ? ");
     pst.setInt(++i, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1001,7 +1157,7 @@ public class ContactImport extends Import implements Runnable {
       //delete import record
       PreparedStatement pst = db.prepareStatement(
           "DELETE from import " +
-          "WHERE import_id = ? ");
+              "WHERE import_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -1034,28 +1190,28 @@ public class ContactImport extends Import implements Runnable {
       }
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM contact_emailaddress " +
-          "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_emailaddress.contact_id AND import_id = ?) ");
+              "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_emailaddress.contact_id AND import_id = ?) ");
       pst.setInt(1, thisImportId);
       pst.executeUpdate();
       pst.close();
 
       pst = db.prepareStatement(
           "DELETE FROM contact_phone " +
-          "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_phone.contact_id AND import_id = ?) ");
+              "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_phone.contact_id AND import_id = ?) ");
       pst.setInt(1, thisImportId);
       pst.executeUpdate();
       pst.close();
 
       pst = db.prepareStatement(
           "DELETE FROM contact_address " +
-          "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_address.contact_id AND import_id = ?) ");
+              "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_address.contact_id AND import_id = ?) ");
       pst.setInt(1, thisImportId);
       pst.executeUpdate();
       pst.close();
 
       pst = db.prepareStatement(
           "DELETE FROM contact " +
-          "WHERE import_id = ?");
+              "WHERE import_id = ?");
       pst.setInt(1, thisImportId);
       pst.executeUpdate();
       pst.close();
@@ -1075,5 +1231,4 @@ public class ContactImport extends Import implements Runnable {
     return true;
   }
 }
-
 

@@ -121,10 +121,10 @@
       <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
-      <%= CallTypeList.getHtmlSelect("callTypeId", (PreviousCallDetails.getId() > 0 ? -1 : CallDetails.getCallTypeId())) %><font color="red">*</font><%= showAttribute(request, "typeError") %>
+      <%= CallTypeList.getHtmlSelect("callTypeId",CallDetails.getCallTypeId()) %><font color="red">*</font><%= showAttribute(request, "typeError") %>
       <dhv:include name="call-type" none="true">
       <dhv:label name="contact.length.colon">Length:</dhv:label>
-      <input type="text" size="5" name="length" value="<%= (PreviousCallDetails.getId() > 0 ? "" : toHtmlValue(CallDetails.getLengthString())) %>"> <dhv:label name="admin.minutes">minutes</dhv:label>  <%= showAttribute(request, "lengthError") %>
+      <input type="text" size="5" name="length" value="<%= toHtmlValue(CallDetails.getLengthString()) %>"> <dhv:label name="admin.minutes">minutes</dhv:label>  <%= showAttribute(request, "lengthError") %>
       </dhv:include>
     </td>
   </tr>
@@ -151,7 +151,7 @@
       <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
-      <input type="text" size="50" maxlength="255" name="subject" value="<%= (PreviousCallDetails.getId() > 0 ? "" : toHtmlValue(CallDetails.getSubject())) %>"><font color="red">*</font><%= showAttribute(request, "subjectError") %>
+      <input type="text" size="50" maxlength="255" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>"><font color="red">*</font><%= showAttribute(request, "subjectError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -159,7 +159,7 @@
       <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
-      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= (PreviousCallDetails.getId() > 0 ? "" :toString(CallDetails.getNotes())) %></TEXTAREA>
+      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(CallDetails.getNotes()) %></TEXTAREA>
     </td>
   </tr>
   <tr class="containerBody">
@@ -175,7 +175,7 @@
           thisLookupList = callResultList.getCompletedLookupList(CallDetails.getResultId());
         }
        if((CallDetails.getStatusId() != Call.CANCELED && !"cancel".equals(request.getParameter("action"))) && (CallDetails.getId() == -1 || (CallDetails.getId() > 0 && ((CallDetails.getAlertDate() == null) || (request.getAttribute("alertDateWarning") != null))  ))){ 
-        HtmlSelect resultSelect = thisLookupList.getHtmlSelectObj(PreviousCallDetails.getId() > 0 ? -1 : CallDetails.getResultId());
+        HtmlSelect resultSelect = thisLookupList.getHtmlSelectObj(CallDetails.getResultId());
         resultSelect.addAttribute("onChange", "javascript:makeSuggestion();");
         resultSelect.addAttribute("id", "resultId");
       %>

@@ -17,9 +17,51 @@
     <!-- An unlimited number of parameters can exist under each config -->
     <param name="accounts-employees" obsolete="true" since="2004-01-22"/>
     <param name="accounts-revenue" obsolete="true" since="2004-01-22"/>
-    <param name="organization.employees"/>
     <param name="organization.revenue"/>
     <!--
+    <param name="organization.employees"/>
+    <param name="leads.search.country"/>
+    <param name="leads.search.unread"/>
+    <param name="leads.search.getNextLead"/>
+    <param name="leads.list.name"/>
+    <param name="leads.list.entered"/>
+    <param name="sales.details.workContact"/>
+    <param name="sales.details.workAccount"/>
+    <param name="sales.details.assignLead"/>
+    <param name="sales.details.workContact"/>
+    <param name="sales.details.skipThisLeadR"/>
+    <param name="opportunity.alertDate"/>
+    <param name="opportunity.alertDescription"/>
+    <param name="opportunity.estimatedCommission"/>
+    <param name="opportunity.budget"/>
+    <param name="opportunity.compellingEvent"/>
+    <param name="opportunity.competitors"/>
+    <param name="opportunity.environment"/>
+    <param name="opportunity.currentStage"/>
+    <param name="opportunity.lowEstimate"/>
+    <param name="opportunity.source"/>
+    <param name="opportunity.additionalNotes"/>
+    <param name="opportunity.details.entered"/>
+    <param name="opportunity.details.modified"/>
+    <param name="opportunity.componentTypes"/>
+    <param name="opportunity.singleComponent"/>
+    <param name="opportunity.termsAndUnits"/>
+    <param name="opportunity.openOrClosed"/>
+    <param name="opportunity.highEstimateDisabled"/>
+    <param name="opportunity.assignTo"/>
+    <param name="opportunity.lowEstimateCanNotBeZero"/>
+    <param name="contact.role"/>
+    <param name="contact.additionalNames"/>
+    <param name="contact.instantMessageAddresses"/>
+    <param name="contact.textMessageAddresses"/>
+    <param name="contact.birthday"/>
+    <param name="contact.additionalDetails"/>
+    <param name="contact.phoneNumbers"/>
+    <param name="contact.emailAddresses"/>
+    <param name="contact.addresses"/>
+    <param name="opportunity.units.month"/>
+    <param name="opportunity.units.week"/>
+    <param name="contact.secretword" show="true"/>
     <param name="organization.phoneNumbers"/>
     <param name="organization.emailAddresses"/>
     <param name="organization.addresses"/>
@@ -30,6 +72,10 @@
     <param name="organization.industry"/>
     <param name="organization.url"/>
     <param name="organization.ticker"/>
+    <param name="ticket.actionplans"/>
+    <param name="ticket.userGroup"/>
+    <param name="ticket.resolutionId"/>
+    <param name="ticket.causeId"/>
     <param name="ticket.contact"/>
     <param name="ticket.contractNumber"/>
     <param name="ticket.asset"/>
@@ -50,25 +96,40 @@
   </config>
   
   <!-- The following text is dynamically renamed in the application -->
-  <config name="system.fields.label" enabled="false">
+  <config name="system.fields.label" enabled="true">
     <!--
-    <param name="logo"><value><![CDATA[<img border="0" src="images/dev21.jpg">]]></value></param>
-    -->
-   </config>
+    <param name="logo"><value><![CDATA[<img src="images/centriccrm.gif" align="absMiddle" height="30" width="135" border="0" />]]></value></param>
+    <param name="organization.employees"><value><![CDATA[Subscriber Count]]></value></param>
+    <param name="sales.Unprocessed"><value><![CDATA[Unassigned]]></value></param>
+    <param name="sales.Unprocessed"><value><![CDATA[Unassigned]]></value></param>
+    <param name="opp.updateAComponent"><value><![CDATA[Update Opportunity]]></value></param>
+    <param name="opp.addAComponent"><value><![CDATA[Add Opportunity]]></value></param>
+    <param name="pipeline.componentDescription"><value><![CDATA[Description]]></value></param>
+    <param name="accounts.accounts_contacts_opps_details.AddAComponent"><value><![CDATA[Add Opportunity]]></value></param>
+    <param name="accounts.accounts_contacts_oppcomponent_add.HighEstimate"><value><![CDATA[Estimated Weekly Potential]]></value></param>
+    <param name="pipeline.bestGuessEstimate"><value><![CDATA[Near-term weekly opportunity]]></value></param>
+    <param name="accounts.accounts_contacts_opps_details.GuessAmount"><value><![CDATA[Near-term weekly opportunity]]></value></param>
+    <param name="pipeline.highAmount"><value><![CDATA[Estimated Weekly Potential]]></value></param>
+    <param name="accounts.accounts_contacts_oppcomponent_add.LowEstimate"><value><![CDATA[Validated Weekly Potential]]></value></param>
+    <param name="object.validation.opportunityComponent.lowNotGTGuess"><value><![CDATA[Near-term weekly opportunity cannot be higher than the Validated Weekly Potential]]></value></param>
+    <param name="accounts.accounts_contacts_oppcomponent_add.BestGuess"><value><![CDATA[Near-term weekly opportunity]]></value></param>
+    <param name="accounts.accounts_contacts_opps_details.Component"><value><![CDATA[Description]]></value></param>
+    --> 
+    </config>
 
   <!-- The following are the menu names that are renamed -->
 	<config name="system.modules.label" enabled="false">
-		<param name="Employees">
+    <param name="Employees">
 			<page_title>Users</page_title>
 			<menu_title>Users</menu_title>
 		</param>
 		<param name="Accounts">
-			<page_title>Providers</page_title>
-			<menu_title>Providers</menu_title>
+			<page_title>Prospects</page_title>
+			<menu_title>Prospects</menu_title>
 		</param>
-		<param name="Help Desk">
-			<page_title>Action Log</page_title>
-			<menu_title>Action Log</menu_title>
+		<param name="Documents">
+			<page_title>Document Library</page_title>
+			<menu_title>![CDATA[Document<br />Library]]</menu_title>
 		</param>
 	</config>
   

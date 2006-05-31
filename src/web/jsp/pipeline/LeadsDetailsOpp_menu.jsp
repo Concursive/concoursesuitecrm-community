@@ -19,15 +19,21 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisCompId = -1;
+  var thisHeaderId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, compId, trashed) {
+  function displayMenu(loc, id, headerId ,compId, trashed, hasPermission) {
     thisCompId = compId;
+    thisHeaderId = headerId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
     }
-    updateMenu(trashed);
+    if (hasPermission == 'true') {
+      updateMenu(trashed);
+    } else {
+      updateMenu('true');
+    }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
 
@@ -43,7 +49,11 @@
 
   //Menu link functions
   function details() {
-    window.location.href = 'LeadsComponents.do?command=DetailsComponent&id=' + thisCompId + '<%= addLinkParams(request, "viewSource") %>';
+    window.location.href = 'LeadsComponents.do?command=DetailsComponent&headerId=' + thisHeaderId + '&id=' + thisCompId + '&return=details<%= addLinkParams(request, "viewSource") %>';
+  }
+  
+  function log() {
+    window.location.href = 'LeadsComponents.do?command=ComponentHistory&headerId=' + thisHeaderId + '&id=' + thisCompId + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function modify() {
@@ -65,6 +75,16 @@
         </th>
         <td width="100%">
           <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="pipeline-opportunities-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="log()">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="accounts.accounts_contacts_oppcomponent.viewComponentLog">View Component Log</dhv:label>
         </td>
       </tr>
       </dhv:permission>

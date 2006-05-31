@@ -1,0 +1,34 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.organization.base.OrganizationHistoryList;
+import org.aspcfs.modules.organization.base.OrganizationHistory;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+
+org.aspcfs.modules.troubletickets.base.TicketList projectTickets = new org.aspcfs.modules.troubletickets.base.TicketList();
+projectTickets.setProjectTicketsOnly(true);
+projectTickets.setIncludeAllSites(true);
+projectTickets.buildList(db);
+print("The number of projectTickets are "+ projectTickets.size());
+Iterator iter = (Iterator) projectTickets.iterator();
+while (iter.hasNext()) {
+  org.aspcfs.modules.troubletickets.base.Ticket ticket = (org.aspcfs.modules.troubletickets.base.Ticket) iter.next();
+  org.aspcfs.modules.accounts.base.OrganizationHistory historyItem = new org.aspcfs.modules.accounts.base.OrganizationHistory();
+  historyItem.setLinkObjectId(org.aspcfs.modules.accounts.base.OrganizationHistory.TICKET);
+  historyItem.setLinkItemId(ticket.getId());
+  boolean foundHistory = historyItem.queryRecord(db);
+  if (foundHistory) {
+    boolean result = historyItem.delete(db);
+    if (result) {
+      print("History item for the Project Ticket with id = "+ historyItem.getLinkItemId()+" has been deleted");
+    } else {
+      print("History item for the Project Ticket with id = "+ historyItem.getLinkItemId()+" could not be deleted");
+    }
+  } else {
+    print("The History for the Project Ticket with id = "+ historyItem.getLinkItemId()+" could not be found"); 
+  }
+}

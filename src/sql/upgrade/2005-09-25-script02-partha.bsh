@@ -1,0 +1,44 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
+
+int categoryId = PermissionCategory.lookupId(db, 130041000);
+
+if (categoryId != -1) {
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator");
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+  print("Inserting new lookup table entry into lookup_lists_lookup table...");
+  LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_ASSET_MATERIALS);
+  if (element.getId() < 0) {
+    element = new LookupListElement();
+    element.setModuleId(categoryId);
+    element.setCategoryId(PermissionCategory.PERMISSION_CAT_ASSETS);
+    element.setLookupId(PermissionCategory.LOOKUP_ASSET_MATERIALS);
+    element.setTableName("lookup_asset_materials");
+    element.setClassName("lookupList");
+    element.setLevel(20);
+    element.setDescription(dictionary.getTerm("system.fields.label", "accounts.assets.materials", "value"));
+    element.insert(db);
+    print("Asset list of materials entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element for asset materials already exists");
+  }
+} else {
+  print("The category Id has not been found");
+}
+

@@ -1,7 +1,8 @@
 #!/bin/sh
 //bin/true; exec java -classpath .:lib/bsh.jar:build/lib/aspcfs.jar:lib/postgresql.jar:build/lib/darkhorseventures.jar:lib/mail.jar:lib/activation.jar:build/lib/zeroio-iteam.jar bsh.Interpreter "$0" "$@"
 
-/* Display admin users
+/* 
+ * Display admin users
  *
  *@author     matt rajkowski
  *@created    January 12, 2005

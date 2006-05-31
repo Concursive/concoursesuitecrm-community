@@ -36,8 +36,8 @@
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
 	<queryString><![CDATA[SELECT price_amount,
-qpot.value, pot.value as label,
-qpof.value as unitprice
+qpot."value", pot."value" as label,
+qpof."value" as unitprice
 FROM quote_product_options qpo
 LEFT JOIN quote_product_option_text qpot ON (qpo.quote_product_option_id = qpot.quote_product_option_id)
 LEFT JOIN quote_product_option_float qpof ON (qpo.quote_product_option_id = qpof.quote_product_option_id)

@@ -80,7 +80,8 @@ CREATE TABLE document_store_user_member (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER  REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER REFERENCES access(user_id) NOT NULL 
+  modifiedby INTEGER REFERENCES access(user_id) NOT NULL,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 
@@ -95,7 +96,8 @@ CREATE TABLE document_store_role_member (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER  REFERENCES access(user_id) NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER  REFERENCES access(user_id) NOT NULL
+  modifiedby INTEGER  REFERENCES access(user_id) NOT NULL,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 
@@ -110,5 +112,6 @@ CREATE TABLE document_store_department_member (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER  REFERENCES access(user_id) NOT NULL 
+  modifiedby INTEGER  REFERENCES access(user_id) NOT NULL,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );

@@ -1271,7 +1271,6 @@ public class ProductCatalog extends GenericBean {
     if (id == -1) {
       throw new SQLException("Invalid Product Catalog Number");
     }
-
     PreparedStatement pst = db.prepareStatement(
         "SELECT " +
         "pctlg.*, " +
@@ -1280,12 +1279,12 @@ public class ProductCatalog extends GenericBean {
         "pctlgformat.description AS format_name, " +
         "pctlgshipping.description AS shipping_name, " +
         "pctlgshiptime.description AS shiptime_name " +
-        "FROM product_catalog AS pctlg " +
-        "LEFT JOIN product_catalog AS pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        "LEFT JOIN lookup_product_type AS pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
-        "LEFT JOIN lookup_product_format AS pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
-        "LEFT JOIN lookup_product_shipping AS pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
-        "LEFT JOIN lookup_product_ship_time AS pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+        "FROM product_catalog pctlg " +
+        "LEFT JOIN product_catalog pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+        "LEFT JOIN lookup_product_type pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+        "LEFT JOIN lookup_product_format pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+        "LEFT JOIN lookup_product_shipping pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+        "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
         "WHERE pctlg.product_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -1600,7 +1599,7 @@ public class ProductCatalog extends GenericBean {
       //delete all records that contain product_id in the product_catalog_category_mapping
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
-          "DELETE from product_catalog_category_map " +
+          "DELETE FROM product_catalog_category_map " +
           "WHERE product_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
@@ -1614,7 +1613,7 @@ public class ProductCatalog extends GenericBean {
       //delete all the records that contain product_id in the product_catalog_option_map
       i = 0;
       pst = db.prepareStatement(
-          "DELETE from product_option_map " +
+          "DELETE FROM product_option_map " +
           "WHERE product_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
@@ -1626,7 +1625,7 @@ public class ProductCatalog extends GenericBean {
       //delete all the records that contain product_id in the product_catalog_pricing
       i = 0;
       pst = db.prepareStatement(
-          "DELETE from product_catalog_pricing " +
+          "DELETE FROM product_catalog_pricing " +
           "WHERE product_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
@@ -1635,7 +1634,7 @@ public class ProductCatalog extends GenericBean {
       //delete the product from the catalog
       i = 0;
       pst = db.prepareStatement(
-          "DELETE from product_catalog " +
+          "DELETE FROM product_catalog " +
           "WHERE product_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
@@ -1706,7 +1705,7 @@ public class ProductCatalog extends GenericBean {
       if (modified != null) {
         sql.append(" modified, ");
       }
-      sql.append("start_date, expiration_date, enabled, active)");
+      sql.append("start_date, expiration_date, enabled, \"active\")");
       sql.append(
           "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -1866,7 +1865,7 @@ public class ProductCatalog extends GenericBean {
         "expiration_date = ?, " +
         "enabled = ?, " +
         "trashed_date = ?, " +
-        "active = ?, " +
+        "\"active\" = ?, " +
         "modifiedby = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
     sql.append("WHERE product_id = ? ");
@@ -1935,6 +1934,7 @@ public class ProductCatalog extends GenericBean {
 
     TicketList ticketList = new TicketList();
     ticketList.setProductId(this.getId());
+    ////NEEDS SITE COMPLIANCE
     if (!toTrash) {
       ticketList.setIncludeOnlyTrashed(true);
     }
@@ -1990,7 +1990,7 @@ public class ProductCatalog extends GenericBean {
 
     //Check for the current product mappings in product_option_map
     pst = db.prepareStatement(
-        "SELECT count(*) as optioncount " +
+        "SELECT count(*) AS optioncount " +
         "FROM product_option_map " +
         "WHERE product_id = ? ");
     pst.setInt(++i, this.getId());
@@ -2011,7 +2011,7 @@ public class ProductCatalog extends GenericBean {
     //Check for the current product mappings in service_contract_product
     i = 0;
     pst = db.prepareStatement(
-        "SELECT count(*) as catalogcount " +
+        "SELECT count(*) AS catalogcount " +
         "FROM service_contract_products " +
         "WHERE link_product_id = ? ");
     pst.setInt(++i, this.getId());
@@ -2034,7 +2034,7 @@ public class ProductCatalog extends GenericBean {
     //Check for the current product mappings in ticket
     i = 0;
     pst = db.prepareStatement(
-        "SELECT count(*) as catalogcount " +
+        "SELECT count(*) AS catalogcount " +
         "FROM ticket " +
         "WHERE product_id = ? ");
     pst.setInt(++i, this.getId());
@@ -2057,7 +2057,7 @@ public class ProductCatalog extends GenericBean {
     //Check for the current quote product links
     i = 0;
     pst = db.prepareStatement(
-        "SELECT count(*) as catalogcount " +
+        "SELECT count(*) AS catalogcount " +
         "FROM quote_product " +
         "WHERE product_id = ? ");
     pst.setInt(++i, this.getId());
@@ -2091,11 +2091,11 @@ public class ProductCatalog extends GenericBean {
   public void getProductCatalogByName(Connection db, String productName, String dimensions, int categoryId) throws SQLException {
     int i = 0;
     StringBuffer sql = new StringBuffer(
-        " SELECT pctlg.product_id as product_id " +
-        " FROM product_catalog AS pctlg " +
-        " LEFT JOIN product_catalog_category_map AS pctlgmap " +
+        " SELECT pctlg.product_id AS product_id " +
+        " FROM product_catalog pctlg " +
+        " LEFT JOIN product_catalog_category_map pctlgmap " +
         " ON ( pctlg.product_id = pctlgmap.product_id ) " +
-        " LEFT JOIN product_category AS pctgy " +
+        " LEFT JOIN product_category pctgy " +
         " ON ( pctlgmap.category_id = pctgy.category_id ) " +
         " WHERE pctgy.category_id = ? ");
     if (dimensions != null && !"".equals(dimensions)) {

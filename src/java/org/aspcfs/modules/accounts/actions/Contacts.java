@@ -16,15 +16,14 @@
 package org.aspcfs.modules.accounts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationHistoryList;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.CustomFieldRecordList;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.communications.base.Campaign;
 import org.aspcfs.modules.communications.base.CampaignList;
 import org.aspcfs.modules.communications.base.CommunicationsPreference;
@@ -33,23 +32,26 @@ import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.StateSelect;
 
 import java.sql.Connection;
+import java.util.Iterator;
 
 /**
- * Web actions for the Accounts->Contacts module
+ *  Web actions for the Accounts->Contacts module
  *
- * @author chris
- * @version $Id$
- * @created August 29, 2001
+ * @author     chris
+ * @created    August 29, 2001
+ * @version    $Id: Contacts.java 14240 2006-02-14 13:28:00 -0500 (Tue, 14 Feb
+ *      2006) partha@darkhorseventures.com $
  */
 public final class Contacts extends CFSModule {
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Connection db = null;
@@ -72,21 +74,38 @@ public final class Contacts extends CFSModule {
       }
       addModuleBean(context, "View Accounts", "Add Contact to Account");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
+
       //prepare org
       if (thisOrganization == null) {
         thisOrganization = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
       }
       //prepare contact type list
-      SystemStatus systemStatus = this.getSystemStatus(context);
+
+      LookupList salutationList = new LookupList(db, "lookup_title");
+      salutationList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SalutationList", salutationList);
+
       ContactTypeList ctl = new ContactTypeList();
       ctl.setIncludeDefinedByUser(this.getUserId(context));
       ctl.setCategory(ContactType.ACCOUNT);
       ctl.buildList(db);
       ctl.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ContactTypeList", ctl);
+
+      if ("add_contact".equals(context.getRequest().getParameter("target"))) {
+        if ("true".equals(context.getRequest().getParameter("copyAddress"))) {
+          thisContact.setRequestItems(context);
+        }
+      }
+
       context.getRequest().setAttribute("systemStatus", systemStatus);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -99,10 +118,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
@@ -115,6 +134,10 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       cloneContact = new Contact(db, contactId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, cloneContact.getOrgId())) {
+        return ("PermissionError");
+      }
       cloneContact.resetBaseInfo();
       context.getRequest().setAttribute("ContactDetails", cloneContact);
     } catch (Exception errorMessage) {
@@ -128,10 +151,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     boolean recordInserted = false;
@@ -151,6 +174,10 @@ public final class Contacts extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       boolean newContact = (thisContact.getId() == -1);
       thisContact.setRequestItems(context);
       thisContact.setTypeList(
@@ -162,8 +189,8 @@ public final class Contacts extends CFSModule {
       AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(
           db, AccessType.ACCOUNT_CONTACTS);
       thisContact.setAccessType(accessTypes.getDefaultItem());
-
-      if ("true".equals(context.getRequest().getParameter("primaryContact"))) {
+      if (context.getRequest().getParameter("primaryContact") != null &&
+          "true".equals(context.getRequest().getParameter("primaryContact"))) {
         thisContact.setPrimaryContact(true);
       }
       isValid = validateObject(context, db, thisContact);
@@ -193,6 +220,7 @@ public final class Contacts extends CFSModule {
         }
         thisOrganization = new Organization(db, thisContact.getOrgId());
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
+        context.getRequest().setAttribute("id", String.valueOf(thisContact.getId()));
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -202,6 +230,7 @@ public final class Contacts extends CFSModule {
     }
     context.getRequest().setAttribute("orgId", "" + thisContact.getOrgId());
     if (recordInserted) {
+      this.addRecentItem(context, thisContact);
       if ("true".equals(context.getRequest().getParameter("saveAndClone"))) {
         thisContact.resetBaseInfo();
         context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -216,6 +245,9 @@ public final class Contacts extends CFSModule {
       }
       return ("DetailsOK");
     } else if (resultCount == 1) {
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("CloseAddPopup");
+      }
       if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
           "return").equals("list")) {
         return (executeCommandView(context));
@@ -230,10 +262,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Connection db = null;
@@ -254,6 +286,10 @@ public final class Contacts extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       thisContact = new Contact(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       thisContact.checkUserAccount(db);
       DependencyList dependencies = thisContact.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
@@ -262,7 +298,7 @@ public final class Contacts extends CFSModule {
       if (thisContact.getPrimaryContact()) {
         htmlDialog.setHeader(
             systemStatus.getLabel(
-                "confirmdelete.contactIndividualAccountHeader"));
+            "confirmdelete.contactIndividualAccountHeader"));
       } else {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
       }
@@ -283,10 +319,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-view")) {
@@ -294,6 +330,9 @@ public final class Contacts extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "View Contact Details");
     String contactId = context.getRequest().getParameter("id");
+    if (contactId == null) {
+      contactId = (String) context.getRequest().getAttribute("id");
+    }
     Connection db = null;
     Contact newContact = null;
     Organization thisOrganization = null;
@@ -303,9 +342,13 @@ public final class Contacts extends CFSModule {
       thisOrganization = new Organization(db, newContact.getOrgId());
 
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context, newContact.getOrgId())) {
+      if (!isRecordAccessPermitted(context, db, newContact.getOrgId())) {
         return ("PermissionError");
       }
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      addFormElements(context, db, systemStatus, newContact);
+      this.addRecentItem(context, newContact);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -319,10 +362,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
@@ -339,6 +382,10 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, context.getRequest().getParameter("id"));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       //thisContact.setForceDelete(DatabaseUtils.parseBoolean((String) context.getRequest().getParameter("forceDelete")));
       recordDeleted = thisContact.delete(db, getDbNamePath(context));
       processErrors(context, thisContact.getErrors());
@@ -365,10 +412,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandTrash(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
@@ -385,6 +432,10 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, context.getRequest().getParameter("id"));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       recordUpdated = thisContact.updateStatus(
           db, context, true, this.getUserId(context));
       this.invalidateUserData(context, this.getUserId(context));
@@ -410,10 +461,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandRestore(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
@@ -430,6 +481,10 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, context.getRequest().getParameter("id"));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       recordUpdated = thisContact.updateStatus(
           db, context, false, this.getUserId(context));
       this.invalidateUserData(context, this.getUserId(context));
@@ -454,10 +509,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -467,10 +522,15 @@ public final class Contacts extends CFSModule {
     String passedId = context.getRequest().getParameter("id");
     Connection db = null;
     Contact newContact = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       newContact = (Contact) context.getFormBean();
       newContact.queryRecord(db, Integer.parseInt(passedId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, newContact.getOrgId())) {
+        return ("PermissionError");
+      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -482,10 +542,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -499,6 +559,10 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       thisContact.checkUserAccount(db);
       if (thisContact.getPrimaryContact()) {
         DependencyList dependencies = thisContact.processDependencies(db);
@@ -507,7 +571,7 @@ public final class Contacts extends CFSModule {
             systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
         htmlDialog.setHeader(
             systemStatus.getLabel(
-                "accounts.contacts.contactIndividualAccountHeader"));
+            "accounts.contacts.contactIndividualAccountHeader"));
         htmlDialog.addButton(
             systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         context.getSession().setAttribute("Dialog", htmlDialog);
@@ -518,7 +582,7 @@ public final class Contacts extends CFSModule {
         Organization organization = new Organization(db, orgId);
         Contact.move(
             db, contactId, orgId, organization.getName(), this.getUserId(
-                context));
+            context));
       } else {
         return ("PermissionError");
       }
@@ -533,10 +597,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
 
   public String executeCommandView(ActionContext context) {
@@ -549,11 +613,6 @@ public final class Contacts extends CFSModule {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
 
-    //find record permissions for portal users
-    if (!isRecordAccessPermitted(context, Integer.parseInt(orgid))) {
-      return ("PermissionError");
-    }
-
     PagedListInfo companyDirectoryInfo = this.getPagedListInfo(
         context, "ContactListInfo");
     companyDirectoryInfo.setLink("Contacts.do?command=View&orgId=" + orgid);
@@ -563,6 +622,10 @@ public final class Contacts extends CFSModule {
     this.resetPagedListInfo(context);
     try {
       db = this.getConnection(context);
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgid))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
 
       contactList.setPagedListInfo(companyDirectoryInfo);
@@ -586,10 +649,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * View Message Details of an Account Contact
+   *  View Message Details of an Account Contact
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandMessageDetails(ActionContext context) {
 
@@ -632,10 +695,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * View Account Contact Messages
+   *  View Account Contact Messages
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandViewMessages(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -698,10 +761,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandAddCommunicationsPreference(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -719,6 +782,10 @@ public final class Contacts extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
       if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -746,10 +813,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSaveCommunicationsPreference(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -769,6 +836,10 @@ public final class Contacts extends CFSModule {
       if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -781,10 +852,10 @@ public final class Contacts extends CFSModule {
       commPref.setEndDay((String) context.getRequest().getParameter("endDay"));
       commPref.setStartTimeHour(
           (String) context.getRequest().getParameter("startTimeHour"), (String) context.getRequest().getParameter(
-              "startTimeAMPM"));
+          "startTimeAMPM"));
       commPref.setEndTimeHour(
           (String) context.getRequest().getParameter("endTimeHour"), (String) context.getRequest().getParameter(
-              "endTimeAMPM"));
+          "endTimeAMPM"));
       commPref.setStartTimeMinute(
           (String) context.getRequest().getParameter("startTimeMinute"));
       commPref.setEndTimeMinute(
@@ -811,10 +882,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDeleteCommunicationsPreference(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -838,6 +909,10 @@ public final class Contacts extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
       if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -864,9 +939,9 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
+   * @param  context  Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "AccountContactCallsListInfo");
@@ -877,10 +952,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandMoveToAccount(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-move-view")) {
@@ -894,16 +969,20 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       thisContact.checkUserAccount(db);
       DependencyList dependencies = thisContact.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.addMessage(
           systemStatus.getLabel("confirmdelete.caution") + "\n" + thisContact.getHtmlString(
-              dependencies, systemStatus));
+          dependencies, systemStatus));
       if (thisContact.getPrimaryContact()) {
         htmlDialog.setHeader(
             systemStatus.getLabel(
-                "accounts.contacts.contactIndividualAccount.title"));
+            "accounts.contacts.contactIndividualAccount.title"));
         htmlDialog.addButton(
             systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         context.getSession().setAttribute("Dialog", htmlDialog);
@@ -931,10 +1010,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandMoveContact(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-move-view")) {
@@ -955,46 +1034,12 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      organization = new Organization(db, orgId);
-      OpportunityHeaderList opportunities = new OpportunityHeaderList();
-      opportunities.setContactId(contactId);
-      opportunities.buildList(db);
-      if (opportunities.size() > 0) {
-        if (moveOpportunities == Constants.FALSE) {
-          opportunities.delete(db, context, getDbNamePath(context));
-        } else if (moveOpportunities == Constants.TRUE) {
-          opportunities.moveOpportunitiesToAccount(db, thisContact.getOrgId());
-        }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
       }
-      if (moveFolders == Constants.FALSE) {
-        CustomFieldRecordList folderList = new CustomFieldRecordList();
-        folderList.setLinkModuleId(Constants.CONTACTS);
-        folderList.setLinkItemId(thisContact.getId());
-        folderList.buildList(db);
-        if (folderList.size() > 0) {
-          folderList.delete(db);
-        }
-      }
-      CallList activities = new CallList();
-      activities.setContactId(contactId);
-      activities.buildList(db);
-      if (activities.size() > 0) {
-        if (moveActivities == Constants.TRUE) {
-          activities.reassignAccount(db, context, orgId);
-        } else if (moveActivities == Constants.FALSE) {
-          activities.delete(db);
-        }
-      }
-      //Reset the contact history notes to the previous organization.
-      OrganizationHistoryList historyList = new OrganizationHistoryList();
-      historyList.setContactId(contactId);
-      historyList.setNotes(true);
-      historyList.buildList(db);
-      historyList.moveNotesToAccountHistory(db, thisContact.getOrgId());
-      //Move the contact
-      Contact.move(
-          db, contactId, orgId, organization.getName(), this.getUserId(
-              context));
+      thisContact.setModifiedBy(this.getUserId(context));
+      thisContact.moveContact(db, context, getDbNamePath(context), orgId, moveOpportunities, moveFolders, moveActivities);
       thisContact.queryRecord(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
@@ -1006,6 +1051,13 @@ public final class Contacts extends CFSModule {
     return ("MoveContactOK");
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandPrepareMessage(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
       return ("PermissionError");
@@ -1017,6 +1069,10 @@ public final class Contacts extends CFSModule {
     try {
       db = getConnection(context);
       contact = new Contact(db, Integer.parseInt(contactId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, contact.getOrgId())) {
+        return ("PermissionError");
+      }
       orgDetails = new Organization(db, contact.getOrgId());
       context.getRequest().setAttribute("OrgDetails", orgDetails);
     } catch (Exception e) {
@@ -1028,6 +1084,13 @@ public final class Contacts extends CFSModule {
     return "CreateMessageOK";
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandSendMessage(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
       return ("PermissionError");
@@ -1039,6 +1102,10 @@ public final class Contacts extends CFSModule {
     try {
       db = getConnection(context);
       recipient = new Contact(db, Integer.parseInt(contactId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, recipient.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", recipient);
       orgDetails = new Organization(db, recipient.getOrgId());
       context.getRequest().setAttribute("OrgDetails", orgDetails);
@@ -1049,6 +1116,593 @@ public final class Contacts extends CFSModule {
       this.freeConnection(context, db);
     }
     return "SendMessageOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandAddFolderRecord(ActionContext context) {
+    Connection db = null;
+    Contact thisContact = null;
+    Organization thisOrganization = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+
+      if (!(hasPermission(context, "accounts-accounts-contacts-folders-add")) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-edit")))) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      context.getRequest().setAttribute("Category", thisCategory);
+
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "External Contacts", "Add Folder Record");
+    return this.getReturn(context, "AddFolderRecord");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandFolderList(ActionContext context) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-folders-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Contact thisContact = null;
+    Organization thisOrganization = null;
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, Integer.parseInt(contactId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      //Show a list of the different folders available in Accounts
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setLinkItemId(thisContact.getId());
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.setBuildTotalNumOfRecords(true);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      //load the account
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "Contacts", "Custom Fields Details");
+
+    return getReturn(context, "FolderList");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandFields(ActionContext context) {
+    Connection db = null;
+    Contact thisContact = null;
+    String recordId = null;
+    boolean showRecords = true;
+    String selectedCatId = null;
+    Organization thisOrganization = null;
+
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+
+      if (!(hasPermission(context, "accounts-accounts-contacts-folders-view")) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-view")))) {
+        return ("PermissionError");
+      }
+      if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      //Show a list of the different folders available in Contacts
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      //See which one is currently selected or use the default
+      selectedCatId = (String) context.getRequest().getParameter("catId");
+      if (selectedCatId == null) {
+        selectedCatId = (String) context.getRequest().getAttribute("catId");
+      }
+      if (selectedCatId == null) {
+        selectedCatId = String.valueOf(thisList.getDefaultCategoryId());
+      }
+      context.getRequest().setAttribute("catId", selectedCatId);
+
+      if (Integer.parseInt(selectedCatId) > 0) {
+        //See if a specific record has been chosen from the list
+        recordId = context.getRequest().getParameter("recId");
+        String recordDeleted = (String) context.getRequest().getAttribute("recordDeleted");
+        if (recordDeleted != null) {
+          recordId = null;
+        }
+
+        //Now build the specified or default category
+        CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
+        if (recordId == null && thisCategory.getAllowMultipleRecords()) {
+          //The user didn't request a specific record, so show a list
+          //of records matching this category that the user can choose from
+          PagedListInfo folderListInfo = this.getPagedListInfo(context, "ContactFolderInfo");
+          folderListInfo.setLink("ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId);
+
+          CustomFieldRecordList recordList = new CustomFieldRecordList();
+          recordList.setLinkModuleId(Constants.CONTACTS);
+          recordList.setLinkItemId(thisContact.getId());
+          recordList.setCategoryId(thisCategory.getId());
+          recordList.buildList(db);
+          recordList.buildRecordColumns(db, thisCategory);
+          context.getRequest().setAttribute("Records", recordList);
+        } else {
+          //The user requested a specific record, or this category only
+          //allows a single record.
+          thisCategory.setLinkModuleId(Constants.CONTACTS);
+          thisCategory.setLinkItemId(thisContact.getId());
+          if (recordId != null) {
+            thisCategory.setRecordId(Integer.parseInt(recordId));
+          } else {
+            thisCategory.buildRecordId(db);
+            recordId = String.valueOf(thisCategory.getRecordId());
+          }
+          thisCategory.setIncludeEnabled(Constants.TRUE);
+          thisCategory.setIncludeScheduled(Constants.TRUE);
+          thisCategory.setBuildResources(true);
+          thisCategory.buildResources(db);
+          showRecords = false;
+
+          if (thisCategory.getRecordId() > -1) {
+            CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
+            context.getRequest().setAttribute("Record", thisRecord);
+          }
+        }
+        context.getRequest().setAttribute("Category", thisCategory);
+      }
+
+      //load the account
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "External Contacts", "Custom Fields Details");
+    if (Integer.parseInt(selectedCatId) <= 0) {
+      return this.getReturn(context, "FieldsEmpty");
+    } else if (recordId == null && showRecords) {
+      return this.getReturn(context, "FieldRecordList");
+    } else {
+      return this.getReturn(context, "Fields");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandModifyFields(ActionContext context) {
+    Connection db = null;
+    Contact thisContact = null;
+    Organization thisOrganization = null;
+    String selectedCatId = (String) context.getRequest().getParameter("catId");
+    String recordId = (String) context.getRequest().getParameter("recId");
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
+
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!(hasPermission(context, "accounts-accounts-contacts-folders-edit")) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-edit")))) {
+        return ("PermissionError");
+      }
+      if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
+
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setRecordId(Integer.parseInt(recordId));
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      context.getRequest().setAttribute("Category", thisCategory);
+
+      //load the account
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "External Contacts", "Modify Custom Fields");
+    if (recordId.equals("-1")) {
+      return this.getReturn(context, "AddFolderRecord");
+    } else {
+      return this.getReturn(context, "ModifyFields");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandUpdateFields(ActionContext context) {
+    Connection db = null;
+    Contact thisContact = null;
+    Organization thisOrganization = null;
+    int resultCount = 0;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
+    boolean isValid = false;
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!(hasPermission(context, "accounts-accounts-contacts-folders-edit")) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-edit")))) {
+        return ("PermissionError");
+      }
+      if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      String recordId = (String) context.getRequest().getParameter("recId");
+
+      context.getRequest().setAttribute("catId", selectedCatId);
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setRecordId(Integer.parseInt(recordId));
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setModifiedBy(this.getUserId(context));
+      if (!thisCategory.getReadOnly()) {
+        thisCategory.setCanNotContinue(true);
+        isValid = this.validateObject(context, db, thisCategory);
+        if (isValid) {
+          Iterator groups = (Iterator) thisCategory.iterator();
+          while (groups.hasNext()) {
+            CustomFieldGroup group = (CustomFieldGroup) groups.next();
+            Iterator fields = (Iterator) group.iterator();
+            while (fields.hasNext()) {
+              CustomField field = (CustomField) fields.next();
+              field.setValidateData(true);
+              field.setRecordId(thisCategory.getRecordId());
+              isValid = this.validateObject(context, db, field) && isValid;
+            }
+          }
+        }
+        if (isValid && resultCount != -1) {
+          thisCategory.setCanNotContinue(true);
+          resultCount = thisCategory.update(db);
+          thisCategory.setCanNotContinue(false);
+          resultCount = thisCategory.insertGroup(
+              db, thisCategory.getRecordId());
+        }
+      }
+      context.getRequest().setAttribute("Category", thisCategory);
+      //load the account
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      if (resultCount != -1 && isValid) {
+        thisCategory.buildResources(db);
+        CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
+        context.getRequest().setAttribute("Record", thisRecord);
+      } else {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Contacts-> ModifyField validation error");
+        }
+        context.getRequest().setAttribute(
+            "systemStatus", this.getSystemStatus(context));
+        return getReturn(context, "ModifyFields");
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (resultCount == 1) {
+      return this.getReturn(context, "UpdateFields");
+    }
+    context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+    return ("UserError");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandInsertFields(ActionContext context) {
+    Connection db = null;
+    int resultCode = -1;
+    Contact thisContact = null;
+    Organization thisOrganization = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
+    boolean isValid = false;
+
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!(hasPermission(context, "accounts-accounts-contacts-folders-add")) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-edit")))) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      context.getRequest().setAttribute("catId", selectedCatId);
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setEnteredBy(this.getUserId(context));
+      thisCategory.setModifiedBy(this.getUserId(context));
+      if (!thisCategory.getReadOnly()) {
+        thisCategory.setCanNotContinue(true);
+        isValid = this.validateObject(context, db, thisCategory);
+        if (isValid) {
+          resultCode = thisCategory.insert(db);
+          Iterator groups = (Iterator) thisCategory.iterator();
+          while (groups.hasNext()) {
+            CustomFieldGroup group = (CustomFieldGroup) groups.next();
+            Iterator fields = (Iterator) group.iterator();
+            while (fields.hasNext()) {
+              CustomField field = (CustomField) fields.next();
+              field.setValidateData(true);
+              field.setRecordId(thisCategory.getRecordId());
+              isValid = this.validateObject(context, db, field) && isValid;
+            }
+          }
+        }
+        thisCategory.setCanNotContinue(false);
+        if (isValid && resultCode != -1) {
+          resultCode = thisCategory.insertGroup(
+              db, thisCategory.getRecordId());
+        }
+      }
+      if (resultCode == -1) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Contacts-> InsertField validation error");
+        }
+      }
+      context.getRequest().setAttribute("Category", thisCategory);
+      if (resultCode != -1 && isValid) {
+        processInsertHook(context, thisCategory);
+      } else {
+        if (thisCategory.getRecordId() != -1) {
+          CustomFieldRecord record = new CustomFieldRecord(
+              db, thisCategory.getRecordId());
+          record.delete(db);
+        }
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Contacts-> InsertField validation error");
+        }
+        context.getRequest().setAttribute(
+            "systemStatus", this.getSystemStatus(context));
+        return getReturn(context, "AddFolderRecord");
+      }
+
+      //load the account
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (resultCode == -1) {
+      return this.getReturn(context, "AddFolderRecord");
+    } else {
+      return (this.executeCommandFields(context));
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandDeleteFields(ActionContext context) {
+    Connection db = null;
+    boolean recordDeleted = false;
+    Organization thisOrganization = null;
+    try {
+      db = this.getConnection(context);
+      String selectedCatId = context.getRequest().getParameter("catId");
+      String recordId = context.getRequest().getParameter("recId");
+      String contactId = context.getRequest().getParameter("contactId");
+
+      Contact thisContact = new Contact(db, Integer.parseInt(contactId));
+      if (!(hasPermission(context, "accounts-accounts-contacts-folders-delete")) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-edit")))) {
+        return ("PermissionError");
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
+
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+
+      CustomFieldRecord thisRecord = new CustomFieldRecord(db, Integer.parseInt(recordId));
+      thisRecord.setLinkModuleId(Constants.CONTACTS);
+      thisRecord.setLinkItemId(Integer.parseInt(contactId));
+      thisRecord.setCategoryId(Integer.parseInt(selectedCatId));
+      if (!thisCategory.getReadOnly()) {
+        recordDeleted = thisRecord.delete(db);
+      }
+      context.getRequest().setAttribute("recordDeleted", "true");
+
+      //load the account
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("DeleteFieldsOK");
+  }
+
+
+  /**
+   *  Adds a feature to the FormElements attribute of the Contacts object
+   *
+   * @param  context        The feature to be added to the FormElements
+   *      attribute
+   * @param  db             The feature to be added to the FormElements
+   *      attribute
+   * @param  systemStatus   The feature to be added to the FormElements
+   *      attribute
+   * @param  tmpContact     The feature to be added to the FormElements
+   *      attribute
+   * @exception  Exception  Description of the Exception
+   */
+  private void addFormElements(ActionContext context, Connection db, SystemStatus systemStatus, Contact tmpContact) throws Exception {
+
+    LookupList siteid = new LookupList(db, "lookup_site_id");
+    siteid.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SiteIdList", siteid);
+
+    LookupList contactTypeList = new LookupList(db, "lookup_contact_types");
+    contactTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("ContactTypeList2", contactTypeList);
+
+    LookupList contactSourceList = new LookupList(db, "lookup_contact_source");
+    //contactSourceList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("ContactSourceList", contactSourceList);
+
+    LookupList salutationList = new LookupList(db, "lookup_title");
+    salutationList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SalutationList", salutationList);
+
+    Organization thisOrganization = null;
+    thisOrganization = new Organization(db, tmpContact.getOrgId());
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
   }
 }
 

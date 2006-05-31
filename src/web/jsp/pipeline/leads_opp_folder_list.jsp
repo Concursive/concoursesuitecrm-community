@@ -21,6 +21,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,org.aspcfs.modules.base.*" %>
 <jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
+<jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -30,12 +31,21 @@
 <tr>
 <td>
 <a href="Leads.do?command=Dashboard"><dhv:label name="pipeline.pipeline">PIPELINE</dhv:label></a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<% } %>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>">Opportunity Details</a> >
 <dhv:label name="accounts.Folders">Folders</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  &nbsp;<br>
 </dhv:evaluate>
 <dhv:container name="opportunities" selected="folders" object="OpportunityHeader" param="<%= "id=" + OpportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

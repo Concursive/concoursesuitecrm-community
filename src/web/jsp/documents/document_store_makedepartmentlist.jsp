@@ -21,6 +21,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.utils.web.*,org.aspcfs.utils.StringUtils, org.aspcfs.modules.documents.base.* " %>
 <jsp:useBean id="departments" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="siteId" class="java.lang.String" scope="request"/>
 <body onload='page_init();'>
 <script language='Javascript'>
 function page_init() {
@@ -32,19 +34,19 @@ function page_init() {
     LookupElement element = (LookupElement) i.next();
     if ("group".equals(request.getAttribute("memberType"))){
 %>
-      if ( !(inArray(parent.document.forms['documentStoreMemberForm'].elements['selRoleList'], <%= element.getId() %> + '-D')) ) {
+      if ( !(inArray(parent.document.forms['documentStoreMemberForm'].elements['selRoleList'], <%= element.getId() %> + '-D<%= siteId.trim() %>')) ) {
         var newOpt = parent.document.createElement("OPTION");
-        newOpt.text='<%= StringUtils.jsStringEscape(element.getDescription()) %>';
-        newOpt.value='<%= element.getId() %>'  + '-D';
+        newOpt.text="<%= StringUtils.jsStringEscape(element.getDescription()) %><%= siteId != null && !"".equals(siteId.trim()) && !"-1".equals(siteId.trim()) ?" ("+SiteIdList.getSelectedValue(Integer.parseInt(siteId))+")":"" %>";
+        newOpt.value='<%= element.getId() %>'  + '-D<%= (siteId != null && !"".equals(siteId.trim())? siteId:"-1") %>';
         list.options[list.length] = newOpt;
       }
-      parent.initList(<%= element.getId()%>  + '-D');
+      parent.initList(<%= element.getId()%>  + '-D<%= (siteId != null && !"".equals(siteId.trim())? siteId:"-1") %>');
       parent.setGroupType('<%=DocumentStoreTeamMemberList.DEPARTMENT%>');
 <%
    }else{
 %>
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<%= StringUtils.jsStringEscape(element.getDescription()) %>';
+    newOpt.text="<%= StringUtils.jsStringEscape(element.getDescription()) %>";
     newOpt.value='<%= element.getId() %>';
     list.options[list.length] = newOpt;
 <%

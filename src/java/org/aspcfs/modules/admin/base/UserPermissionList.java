@@ -15,8 +15,6 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import org.aspcfs.utils.DatabaseUtils;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,16 +73,16 @@ public class UserPermissionList extends Vector {
         "SELECT p.*, c.category, role_add, role_view, role_edit, role_delete " +
         "FROM permission p, permission_category c, role_permission r " +
         "WHERE p.category_id = c.category_id " +
-        "AND p.permission_id = r.permission_id " +
-        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
-
+        "AND p.permission_id = r.permission_id ");
     sqlOrder.append("ORDER BY role_id, c.\"level\", p.\"level\" ");
-
     createFilter(sqlFilter);
+    sqlFilter.append("AND p.enabled = ? ");
+    sqlFilter.append("AND c.enabled = ? ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    pst.setBoolean(++items, true);
+    pst.setBoolean(++items, true);
     rs = pst.executeQuery();
     while (rs.next()) {
       Permission thisPermission = new Permission(rs);

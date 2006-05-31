@@ -19,8 +19,15 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="ContactAddressList" class="org.aspcfs.modules.contacts.base.ContactAddressList" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/> 
+<jsp:useBean id="ContactSourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="ContactTypeList2" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SalutationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="Address" class="org.aspcfs.modules.base.Address" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -47,8 +54,8 @@ function reopen() {
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
-  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
-    <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() || !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
+    <dhv:evaluate if="<%= (OrgDetails.getEnabled() && !OrgDetails.isTrashed()) && (ContactDetails.getEnabled() && !ContactDetails.isTrashed()) %>">
       <input type="hidden" name="id" value="<%=ContactDetails.getId()%>">
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
       <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
@@ -61,7 +68,8 @@ function reopen() {
     <dhv:permission name="accounts-accounts-contacts-view,accounts-accounts-contacts-add,accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
 <%-- TODO: Currently this block appears and hides depending on the content,
      this will need to be changed --%>
-<dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) || hasText(ContactDetails.getTypesNameString()) %>">
+<dhv:formMessage />
+<dhv:evaluate if="<%= hasText(ContactDetails, "title, typesNameString, additionalNames, nickname, birthDate, title, role") %>">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -101,21 +109,33 @@ function reopen() {
   <dhv:evaluate if="<%= ContactDetails.getBirthDate() != null %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= ContactDetails.getBirthDate() %>" dateOnly="true"/>
     </td>
   </tr>
   </dhv:evaluate>
-  <tr class="containerBody">
-    <td class="formLabel">
-      <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
-    </td>
-    <td>
-      <%= toHtml(ContactDetails.getTitle()) %>
-    </td>
-  </tr>
+  <dhv:evaluate if="<%= (ContactDetails.getSource() > 0) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="contact.source">Source</dhv:label>
+      </td>
+      <td>
+        <%= ContactSourceList.getSelectedValue(ContactDetails.getSource()) %>  
+      </td>
+    </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
+      </td>
+      <td>
+        <%= toHtml(ContactDetails.getTitle()) %>
+      </td>
+    </tr>
+  </dhv:evaluate>
   <dhv:evaluate if="<%= hasText(ContactDetails.getRole()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -127,8 +147,9 @@ function reopen() {
   </tr>
   </dhv:evaluate>
 </table>
-&nbsp;
+&nbsp;<br />
 </dhv:evaluate>
+<dhv:include name="contact.emailAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -169,6 +190,8 @@ function reopen() {
 <%}%>
 </table>
 <br />
+</dhv:include>
+<dhv:include name="contact.instantMessageAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -208,6 +231,8 @@ function reopen() {
 <%}%>
 </table>
 <br>
+</dhv:include>
+<dhv:include name="contact.textMessageAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -243,6 +268,8 @@ function reopen() {
 <%}%>
 </table>
 &nbsp;
+</dhv:include>
+<dhv:include name="contact.phoneNumbers" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -260,7 +287,12 @@ function reopen() {
       <%= toHtml(thisPhoneNumber.getTypeName()) %>
     </td>
     <td>
-      <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;
+      <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
+      <dhv:evaluate if="<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>">
+        <dhv:evaluate if="<%= hasText(thisPhoneNumber.getPhoneNumber()) %>">
+          <a href="javascript:popURL('OutboundDialer.do?command=Call&auto-populate=true&number=<%= StringUtils.jsStringEscape(thisPhoneNumber.getPhoneNumber()) %>','OUTBOUND_CALL','400','200','yes','yes');"><img src="images/icons/stock_call-16.gif" align="absMiddle" title="Call number" border="0"/></a>
+        </dhv:evaluate>
+      </dhv:evaluate>
 <% if(!thisPhoneNumber.getPrimaryNumber()) {%>
   &nbsp;
 <%} else {%>
@@ -280,6 +312,8 @@ function reopen() {
 <%}%>
 </table>
 &nbsp;
+</dhv:include>
+<dhv:include name="contact.addresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -317,6 +351,8 @@ function reopen() {
 <%}%>
 </table>
 &nbsp;
+</dhv:include>
+<dhv:include name="contact.additionalDetails" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -329,12 +365,23 @@ function reopen() {
   </tr>
 </table>
 &nbsp;
+</dhv:include>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
       <strong><dhv:label name="accounts.accounts_contacts_calls_details.RecordInformation">Record Information</dhv:label></strong>
     </th>
   </tr>
+  <dhv:evaluate if="<%= ContactDetails.getConversionDate() != null %>">
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="leads.conversionDate">Lead Conversion Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%= ContactDetails.getConversionDate() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="false" default="&nbsp;"/>
+      </td>
+    </tr>
+  </dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
       <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
@@ -354,7 +401,7 @@ function reopen() {
     </td>
   </tr>
 </table>
-  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+  <dhv:evaluate if="<%= (OrgDetails.getEnabled() && !OrgDetails.isTrashed()) && (ContactDetails.getEnabled() && !ContactDetails.isTrashed()) %>">
     <dhv:permission name="accounts-accounts-contacts-view,accounts-accounts-contacts-add,accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
     <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
     <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>

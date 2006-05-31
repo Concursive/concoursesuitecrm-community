@@ -29,13 +29,13 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 /**
- * Contains a list of phone numbers... currently used to build the list from
- * the database with any of the parameters to limit the results.
+ *  Contains a list of phone numbers... currently used to build the list from
+ *  the database with any of the parameters to limit the results.
  *
- * @author mrajkowski
- * @version $Id: OrganizationPhoneNumberList.java,v 1.3 2002/09/11 15:29:43
- *          chris Exp $
- * @created September 4, 2001
+ * @author     mrajkowski
+ * @version    $Id: OrganizationPhoneNumberList.java,v 1.3 2002/09/11 15:29:43
+ *      chris Exp $
+ * @created    September 4, 2001
  */
 public class OrganizationPhoneNumberList extends PhoneNumberList {
 
@@ -47,18 +47,18 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Constructor for the OrganizationPhoneNumberList object
+   *  Constructor for the OrganizationPhoneNumberList object
    *
-   * @since 1.1
+   * @since    1.1
    */
   public OrganizationPhoneNumberList() {
   }
 
 
   /**
-   * Constructor for the OrganizationPhoneNumberList object
+   *  Constructor for the OrganizationPhoneNumberList object
    *
-   * @param context Description of the Parameter
+   * @param  context  Description of the Parameter
    */
   public OrganizationPhoneNumberList(ActionContext context) {
     int i = 0;
@@ -81,9 +81,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Sets the lastAnchor attribute of the OrganizationPhoneNumberList object
+   *  Sets the lastAnchor attribute of the OrganizationPhoneNumberList object
    *
-   * @param tmp The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -91,9 +91,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Sets the nextAnchor attribute of the OrganizationPhoneNumberList object
+   *  Sets the nextAnchor attribute of the OrganizationPhoneNumberList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -101,9 +101,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Sets the syncType attribute of the OrganizationPhoneNumberList object
+   *  Sets the syncType attribute of the OrganizationPhoneNumberList object
    *
-   * @param tmp The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -111,9 +111,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Gets the tableName attribute of the OrganizationPhoneNumberList object
+   *  Gets the tableName attribute of the OrganizationPhoneNumberList object
    *
-   * @return The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -121,9 +121,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Gets the uniqueField attribute of the OrganizationPhoneNumberList object
+   *  Gets the uniqueField attribute of the OrganizationPhoneNumberList object
    *
-   * @return The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -131,9 +131,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Gets the lastAnchor attribute of the OrganizationPhoneNumberList object
+   *  Gets the lastAnchor attribute of the OrganizationPhoneNumberList object
    *
-   * @return The lastAnchor value
+   * @return    The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -141,9 +141,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Gets the nextAnchor attribute of the OrganizationPhoneNumberList object
+   *  Gets the nextAnchor attribute of the OrganizationPhoneNumberList object
    *
-   * @return The nextAnchor value
+   * @return    The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -151,9 +151,9 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Gets the syncType attribute of the OrganizationPhoneNumberList object
+   *  Gets the syncType attribute of the OrganizationPhoneNumberList object
    *
-   * @return The syncType value
+   * @return    The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -161,11 +161,11 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Gets the htmlSelect attribute of the OrganizationPhoneNumberList object
+   *  Gets the htmlSelect attribute of the OrganizationPhoneNumberList object
    *
-   * @param selectName Description of the Parameter
-   * @param defaultKey Description of the Parameter
-   * @return The htmlSelect value
+   * @param  selectName  Description of the Parameter
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect phoneListSelect = new HtmlSelect();
@@ -186,13 +186,13 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Builds a list of addresses based on several parameters. The parameters are
-   * set after this object is constructed, then the buildList method is called
-   * to generate the list.
+   *  Builds a list of addresses based on several parameters. The parameters are
+   *  set after this object is constructed, then the buildList method is called
+   *  to generate the list.
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -284,5 +284,15 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
     pst.close();
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 

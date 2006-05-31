@@ -84,6 +84,9 @@ public class BeanUtils
   public void populateObject(Object bean, HttpServletRequest request, String nestedAttribute, String indexAttribute) {
     // Object to help populating
     AutoPopulate autoPopulate = new AutoPopulate(request, bean);
+    //Before the object is populated with values available in the request, populate fields
+    //that need to have default values (eg: record keeping fields like enteredby, modifiedby etc)
+    autoPopulate.populateDefaults(bean);
     // Populate the request parameters
     Enumeration e = request.getParameterNames();
     String paramName = null;
@@ -117,7 +120,8 @@ public class BeanUtils
    * @param autoPopulate    Description of the Parameter
    */
   public static void populateParameter(AutoPopulate autoPopulate, String param, Object value, Object target, String nestedAttribute, String indexAttribute) {
-    if ((param == null) || (param.length() == 0) || (value == null) || (target == null)) {
+    if ((param == null) || (param.length() == 0) || (value == null) || (target == null))
+    {
       return;
     }
     String paramName = param.substring(0, 1).toUpperCase() + param.substring(

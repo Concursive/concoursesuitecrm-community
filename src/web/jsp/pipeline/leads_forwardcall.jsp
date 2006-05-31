@@ -72,7 +72,7 @@ function reopenOpportunity(id) {
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=Details&id=<%= request.getParameter("id")%>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource|view") %>'">
   <%}%>
   <br><br>
-  <%@ include file="../newmessage.jsp" %>
+  <%@ include file="../newmessage_include.jsp" %>
   <br>
   <input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
   <% if("list".equals(request.getParameter("return"))){ %>

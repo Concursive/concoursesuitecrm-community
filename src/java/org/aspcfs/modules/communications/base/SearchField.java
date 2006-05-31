@@ -15,8 +15,12 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * The SearchField represents information that is required for performing a
@@ -101,6 +105,9 @@ public class SearchField {
     this.searchable = tmp;
   }
 
+  public void setSearchable(String tmp) {
+    searchable = DatabaseUtils.parseBoolean(tmp);
+  }
 
   /**
    * Sets the fieldTypeId attribute of the SearchField object
@@ -229,5 +236,50 @@ public class SearchField {
     tableName = rs.getString("table_name");
     objectClass = rs.getString("object_class");
   }
+
+
+  public boolean insert(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    boolean commit = db.getAutoCommit();
+    try {
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      id = DatabaseUtils.getNextSeq(db, "search_fields_id_seq");
+      sql.append(
+          "INSERT INTO search_fields (" + (id > -1 ? "id, " : "") +
+              "field, description, searchable, field_typeid, table_name, object_class) ");
+      sql.append("VALUES (" + (id > -1 ? "?, " : "") +
+          "?, ?, ?, ?, ?, ?) ");
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
+      pst.setString(++i, fieldName);
+      pst.setString(++i, description);
+      pst.setBoolean(++i, searchable);
+      pst.setInt(++i, fieldTypeId);
+      pst.setString(++i, tableName);
+      pst.setString(++i, objectClass);
+      pst.execute();
+      pst.close();
+      id = DatabaseUtils.getCurrVal(db, "search_fields_id_seq", id);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return true;
+  }
+
 }
 

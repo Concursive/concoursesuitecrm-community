@@ -45,6 +45,7 @@
         <ul>
           <dhv:permission name="admin-users-view"><li><a href="Users.do?command=ListUsers"><dhv:label name="admin.manageUsers">Manage Users</dhv:label></a></li></dhv:permission>
           <dhv:permission name="admin-roles-view"><li><a href="Roles.do?command=ListRoles"><dhv:label name="admin.manageRoles">Manage Roles</dhv:label></a></li></dhv:permission>
+          <dhv:permission name="admin-users-view"><li><a href="UserGroups.do?command=List"><dhv:label name="usergroups.manageGroups">Manage Groups</dhv:label></a></li></dhv:permission>
         </ul>
       </td>
     </tr>
@@ -52,7 +53,7 @@
   &nbsp;
 </dhv:permission>
 
-<dhv:permission name="admin-sysconfig-view">
+<dhv:permission name="admin-sysconfig-view,admin-actionplans-view">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>

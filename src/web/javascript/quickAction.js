@@ -17,4 +17,17 @@ function quickAction(id) {
 //  if (id == 'message') {
 //    popURL('MyCFSInbox.do?command=NewMessage&actionSource=GlobalItem&popup=true','Message','700','550','yes','yes');
 //  }
+
+  if (id == 'account') {
+    popURL('Accounts.do?command=Add&actionSource=GlobalItem&popup=true','Account','600','425','yes','yes');
+  }
+
+  if (id == 'contact') {
+    popURL('ExternalContacts.do?command=Prepare&actionSource=GlobalItem&popup=true','contact','600','425','yes','yes');
+  }
+
+  if (id == 'call') {
+    popURL('ExternalContactsCalls.do?command=Add&contactId=-1&actionSource=GlobalItem&popup=true','Activity','600','425','yes','yes');
+	}
+
 }

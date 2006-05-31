@@ -31,8 +31,8 @@ import java.util.Iterator;
  * Represents a list of imports
  *
  * @author Mathur
- * @version $id:exp$
- * @created April 19, 2004
+ *@created    April 19, 2004
+ * @version $Id$
  */
 public class ImportList extends ArrayList {
   private int enteredBy = -1;
@@ -42,6 +42,9 @@ public class ImportList extends ArrayList {
   private ImportManager manager = null;
   private int type = -1;
   private SystemStatus systemStatus = null;
+
+  private int siteId = -1;
+  private boolean includeImportsApplicableToAllSites = false;
 
 
   /**
@@ -212,10 +215,73 @@ public class ImportList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Sets the siteId attribute of the ImportList object
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  tmp  The new siteId value
+   */
+  public void setSiteId(int tmp) {
+    this.siteId = tmp;
+  }
+
+
+  /**
+   *  Sets the siteId attribute of the ImportList object
+   *
+   *@param  tmp  The new siteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the includeImportsApplicableToAllSites attribute of the ImportList
+   *  object
+   *
+   *@param  tmp  The new includeImportsApplicableToAllSites value
+   */
+  public void setIncludeImportsApplicableToAllSites(boolean tmp) {
+    this.includeImportsApplicableToAllSites = tmp;
+  }
+
+
+  /**
+   *  Sets the includeImportsApplicableToAllSites attribute of the ImportList
+   *  object
+   *
+   *@param  tmp  The new includeImportsApplicableToAllSites value
+   */
+  public void setIncludeImportsApplicableToAllSites(String tmp) {
+    this.includeImportsApplicableToAllSites = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the siteId attribute of the ImportList object
+   *
+   *@return    The siteId value
+   */
+  public int getSiteId() {
+    return siteId;
+  }
+
+
+  /**
+   *  Gets the includeImportsApplicableToAllSites attribute of the ImportList
+   *  object
+   *
+   *@return    The includeImportsApplicableToAllSites value
+   */
+  public boolean getIncludeImportsApplicableToAllSites() {
+    return includeImportsApplicableToAllSites;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db             Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -271,9 +337,9 @@ public class ImportList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "m.import_id, m.type, m.name, m.description, m.source_type, m.source, " +
+        "m.import_id, m.\"type\", m.name, m.description, m.source_type, m.source, " +
         "m.record_delimiter, m.column_delimiter, m.total_imported_records, m.total_failed_records, " +
-        "m.status_id, m.file_type, m.entered, m.enteredby, m.modified, m.modifiedby " +
+        "m.status_id, m.file_type, m.entered, m.enteredby, m.modified, m.modifiedby, m.site_id, m.rating, m.comments " +
         "FROM import m " +
         "WHERE m.import_id > -1 AND status_id != ? ");
     pst = db.prepareStatement(
@@ -326,7 +392,27 @@ public class ImportList extends ArrayList {
     }
 
     if (type != -1) {
-      sqlFilter.append("AND m.type = ? ");
+      sqlFilter.append("AND m.\"type\" = ? ");
+    }
+
+    // includes only those imports with the specified site
+    // and those that have no site associated with it
+    if (siteId != -1){
+      sqlFilter.append("AND ");
+      if (includeImportsApplicableToAllSites){
+        sqlFilter.append(" ( ");
+      }
+      sqlFilter.append("m.site_id = ? ");
+      if (includeImportsApplicableToAllSites){
+        sqlFilter.append("OR m.site_id IS NULL ) ");
+      }
+    }
+
+    // includes only those imports with no site.
+    if (siteId == -1){
+      if (includeImportsApplicableToAllSites){
+        sqlFilter.append("AND m.site_id IS NULL ");
+      }
     }
   }
 
@@ -334,9 +420,9 @@ public class ImportList extends ArrayList {
   /**
    * Description of the Method
    *
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   *@param  pst            Description of the Parameter
+   *@return                Description of the Return Value
+   *@throws  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -348,6 +434,10 @@ public class ImportList extends ArrayList {
 
     if (type != -1) {
       pst.setInt(++i, type);
+    }
+
+    if (siteId != -1) {
+      pst.setInt(++i, siteId);
     }
     return i;
   }
@@ -383,4 +473,3 @@ public class ImportList extends ArrayList {
     }
   }
 }
-

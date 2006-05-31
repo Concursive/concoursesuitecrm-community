@@ -24,7 +24,7 @@ import java.util.Iterator;
 /**
  * A class for merging a text template with variable elements.
  *
- * @author Matt Rajkowski
+ * @author     Matt Rajkowski
  * @version $Id$
  * @created March 15, 2002
  */
@@ -48,7 +48,7 @@ public class Template {
   /**
    * Constructor for the Template object
    *
-   * @param theText Description of the Parameter
+   * @param  theText  Description of the Parameter
    */
   public Template(String theText) {
     text = theText;
@@ -58,7 +58,7 @@ public class Template {
   /**
    * Sets the valueEncoding attribute of the Template object
    *
-   * @param tmp The new valueEncoding value
+   * @param  tmp  The new valueEncoding value
    */
   public void setValueEncoding(int tmp) {
     this.valueEncoding = tmp;
@@ -68,7 +68,7 @@ public class Template {
   /**
    * Gets the valueEncoding attribute of the Template object
    *
-   * @return The valueEncoding value
+   * @return    The valueEncoding value
    */
   public int getValueEncoding() {
     return valueEncoding;
@@ -78,7 +78,7 @@ public class Template {
   /**
    * Sets the parseElements attribute of the Template object
    *
-   * @param tmp The new parseElements value
+   * @param  tmp  The new parseElements value
    */
   public void setParseElements(HashMap tmp) {
     this.parseElements = tmp;
@@ -88,7 +88,7 @@ public class Template {
   /**
    * Sets the text attribute of the Template object
    *
-   * @param tmp The new text value
+   * @param  tmp  The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -98,7 +98,7 @@ public class Template {
   /**
    * Gets the parseElements attribute of the Template object
    *
-   * @return The parseElements value
+   * @return    The parseElements value
    */
   public HashMap getParseElements() {
     return parseElements;
@@ -108,7 +108,7 @@ public class Template {
   /**
    * Gets the text attribute of the Template object
    *
-   * @return The text value
+   * @return    The text value
    */
   public String getText() {
     return text;
@@ -118,7 +118,7 @@ public class Template {
   /**
    * Gets the parsedText attribute of the Template object
    *
-   * @return The parsedText value
+   * @return    The parsedText value
    */
   public String getParsedText() {
     if (parseElements != null) {
@@ -141,8 +141,8 @@ public class Template {
   /**
    * Adds a feature to the ParseElement attribute of the Template object
    *
-   * @param key   The feature to be added to the ParseElement attribute
-   * @param value The feature to be added to the ParseElement attribute
+   * @param  key    The feature to be added to the ParseElement attribute
+   * @param  value  The feature to be added to the ParseElement attribute
    */
   public void addParseElement(String key, int value) {
     this.addParseElement(key, String.valueOf(value));
@@ -152,8 +152,8 @@ public class Template {
   /**
    * Adds a feature to the ParseElement attribute of the Template object
    *
-   * @param key   The feature to be added to the ParseElement attribute
-   * @param value The feature to be added to the ParseElement attribute
+   * @param  key    The feature to be added to the ParseElement attribute
+   * @param  value  The feature to be added to the ParseElement attribute
    */
   public void addParseElement(String key, String value) {
     if (parseElements == null) {
@@ -168,8 +168,8 @@ public class Template {
   /**
    * Gets the value attribute of the Template object
    *
-   * @param key Description of the Parameter
-   * @return The value value
+   * @param  key  Description of the Parameter
+   * @return      The value value
    */
   public String getValue(String key) {
     String value = null;
@@ -203,7 +203,7 @@ public class Template {
   /**
    * Gets the variables attribute of the Template object
    *
-   * @return The variables value
+   * @return    The variables value
    */
   public ArrayList getVariables() {
     ArrayList variables = new ArrayList();
@@ -222,9 +222,28 @@ public class Template {
 
 
   /**
-   * Gets the keyValuePairs attribute of the Template object
+   *  Description of the Method
    *
-   * @return The keyValuePairs value
+   * @param  input  Description of the Parameter
+   * @return        Description of the Return Value
+   */
+  public boolean hasVariable(String input) {
+    ArrayList variables = getVariables();
+    Iterator i = variables.iterator();
+    while (i.hasNext()) {
+      String variable = (String) i.next();
+      if (variable.equals(input)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   *  Gets the keyValuePairs attribute of the Template object
+   *
+   * @return    The keyValuePairs value
    */
   public HashMap getKeyValuePairs() {
     HashMap keyValues = new HashMap();
@@ -260,7 +279,7 @@ public class Template {
     while (i.hasNext()) {
       String variableName = (String) i.next();
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Template-> populateVariebles: " + variableName);
+        System.out.println("Template-> populateVariables: " + variableName);
       }
       String value = ObjectUtils.getParam(object, variableName);
       if (value == null) {

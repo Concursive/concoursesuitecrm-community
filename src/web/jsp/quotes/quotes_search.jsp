@@ -4,6 +4,8 @@
 <jsp:useBean id="quoteListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="sourceSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="statusSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%--<jsp:useBean id="categorySelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/> --%>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkRadioButton.js"></script>
@@ -24,6 +26,21 @@
     return true;
   }
   
+  function getSiteId() {
+    var site = document.forms['searchQuote'].searchcodeSiteId;
+    var siteId = '';
+    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+      siteId = site.options[site.options.selectedIndex].value;
+    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+      siteId = site.value;
+    </dhv:evaluate>
+     if (siteId == '<%= Constants.INVALID_SITE %>') {
+      siteId = '<%= User.getUserRecord().getSiteId() %>&includeAllSites=true';
+     } else {
+      siteId = siteId + '&thisSiteIdOnly=true&exclusiveToSite=true';
+     }
+     return siteId;
+  }
   
   function clearForm() {
 //    document.forms['searchQuote'].listFilter1.options.selectedIndex = 0;
@@ -33,6 +50,9 @@
     setSelectedRadio(document.forms['searchQuote'].searchcodeSubmitAction,'-1');
     document.forms['searchQuote'].searchProductName.value="";
     document.forms['searchQuote'].searchSku.value="";
+    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
+      document.forms['searchQuote'].searchcodeSiteId.options.selectedIndex = 0;
+    </dhv:evaluate>
     document.forms['searchQuote'].searchcodeGroupId.focus();
   }
 </script>
@@ -115,6 +135,20 @@
     </td>
     <td>
       <input type="text" size="15" name="searchSku" value="<%= quoteListInfo.getSearchOptionValue("searchSku") %>"/>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </td>
+    <td>
+      <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
+        <%= SiteList.getHtmlSelect("searchcodeSiteId", ("".equals(quoteListInfo.getSearchOptionValue("searchcodeSiteId")) ? String.valueOf(User.getUserRecord().getSiteId()) : quoteListInfo.getSearchOptionValue("searchcodeSiteId"))) %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%=User.getUserRecord().getSiteId() != -1 %>" >
+        <input type="hidden" name="searchcodeSiteId" value="<%= User.getUserRecord().getSiteId() %>">
+        <%= SiteList.getSelectedValue(User.getUserRecord().getSiteId()) %>
+      </dhv:evaluate>
     </td>
   </tr>
 </table>

@@ -168,22 +168,33 @@ public class PagedListControlHandler extends TagSupport {
    * @return Description of the Returned Value
    */
   public final int doStartTag() {
+    return EVAL_BODY_INCLUDE;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Returned Value
+   */
+  public int doEndTag() {
     ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
         "ConnectionElement");
     SystemStatus systemStatus = null;
     if (ce != null) {
-      systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-          "SystemStatus")).get(ce.getUrl());
+      Hashtable statusList = (Hashtable) pageContext.getServletContext().getAttribute("SystemStatus");
+      systemStatus = (SystemStatus) statusList.get(ce.getUrl());
     }
     try {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(
           object);
-
       if (pagedListInfo != null) {
         pagedListInfo.setShowForm(showForm);
         pagedListInfo.setResetList(resetList);
         pagedListInfo.setEnableJScript(enableJScript);
         JspWriter out = this.pageContext.getOut();
+        
+        String batchHTML = (String) this.getValue("batchHTML");
         if (enableJScript) {
           out.write(
               "<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/pageListInfo.js\"></SCRIPT>");
@@ -197,7 +208,7 @@ public class PagedListControlHandler extends TagSupport {
             "align=\"center\"" +
             ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
             ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
-            ">");
+            " width=\"100%\">");
         out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
         out.write(
             "<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
@@ -223,7 +234,7 @@ public class PagedListControlHandler extends TagSupport {
           out.write("<font color=\"" + fontColor + "\">");
           if (!abbreviate) {
             map.put(
-                "${pagedListInfo.itemsPerPageEntry}", pagedListInfo.getItemsPerPageEntry());
+                "${pagedListInfo.itemsPerPageEntry}", pagedListInfo.getItemsPerPageEntry(systemStatus.getLabel("quotes.all","All")));
             out.write(
                 getLabel(
                     map, systemStatus.getLabel(
@@ -254,7 +265,7 @@ public class PagedListControlHandler extends TagSupport {
                 "of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(
                     pagedListInfo.getNumberOfPages())) + ", ");
             out.write(
-                "Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");
+                "Items per page: " + pagedListInfo.getItemsPerPageEntry(systemStatus.getLabel("quotes.all","All")) + " ");
           } else {
             out.write(
                 "of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(
@@ -266,6 +277,14 @@ public class PagedListControlHandler extends TagSupport {
         out.write("</font>");
         out.write("</td>");
         out.write("</tr>");
+        if (batchHTML != null) {
+          out.write("<tr><td valign=\"middle\" align=\"center\"" +
+            ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
+            ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
+            " nowrap>");
+          out.write(batchHTML);
+          out.write("</td></tr>");
+        }
         out.write(pagedListInfo.getListPropertiesFooter());
         out.write("</table>");
       } else {
@@ -275,16 +294,6 @@ public class PagedListControlHandler extends TagSupport {
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
-    return SKIP_BODY;
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @return Description of the Returned Value
-   */
-  public int doEndTag() {
     return EVAL_PAGE;
   }
 

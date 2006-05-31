@@ -158,11 +158,11 @@
       </th>
       <th nowrap>
         <strong><a href="AccountsHistory.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=history.entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></a></strong>
-        <%= orgHistoryListInfo.getSortIcon("entered") %>
+        <%= orgHistoryListInfo.getSortIcon("history.entered") %>
       </th>
       <th nowrap>
         <strong><a href="AccountsHistory.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=history.modified"><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></a></strong>
-        <%= orgHistoryListInfo.getSortIcon("modified") %>
+        <%= orgHistoryListInfo.getSortIcon("history.modified") %>
       </th>
     </tr>
 <%

@@ -335,7 +335,7 @@ public class OrderPaymentStatusList extends ArrayList implements SyncableList {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        " SELECT COUNT(ops.*) AS recordcount " +
+        " SELECT COUNT(*) AS recordcount " +
         " FROM order_payment_status ops " +
         " LEFT JOIN lookup_payment_status ps " +
         " ON ( ops.status_id = ps.code ) " +

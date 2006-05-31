@@ -18,9 +18,9 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.OpportunityHeader,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.modules.pipeline.beans.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<jsp:useBean id="opportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
+<jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="ExternalOppsPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
@@ -99,9 +99,9 @@
       <form name="listView" method="post" action="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
       <td align="left">
         <select size="1" name="listView" onChange="javascript:document.listView.submit();">
-          <option <%= ExternalOppsPagedListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
           <option <%= ExternalOppsPagedListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
           <option <%= ExternalOppsPagedListInfo.getOptionValue("closed") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllClosedOpportunities">All Closed Opportunities</dhv:label></option>
+          <option <%= ExternalOppsPagedListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
         </select>
       </td>
       <td>
@@ -126,16 +126,21 @@
       </th>
     </tr>
   <%
-    Iterator j = opportunityHeaderList.iterator();
+    Iterator j = OpportunityHeaderList.iterator();
     FileItem thisFile = new FileItem();
     if ( j.hasNext() ) {
       int rowid = 0;
       int count =0;
-        while (j.hasNext()) {
-          count++;
-          rowid = (rowid != 1?1:2);
-          OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+      HashMap headersListed = new HashMap();
+      while (j.hasNext()) {
+        count++;
+        rowid = (rowid != 1?1:2);
+        OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+        boolean hasPermission = false;
   %>
+  <dhv:hasAuthority owner="<%= oppHeader.getManager() %>">
+    <% hasPermission = true; %>
+  </dhv:hasAuthority>
     <tr class="row<%= rowid %>">
       <td width="8" valign="top" align="center" nowrap>
       <%-- check if user has edit or delete based on the type of contact --%>
@@ -160,7 +165,7 @@
 
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed()) %>" >
-          <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>','<%= oppHeader.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>','<%= ContactDetails.isTrashed() || oppHeader.isTrashed() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>','<%= oppHeader.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>','<%= ContactDetails.isTrashed() || oppHeader.isTrashed() %>','<%= hasPermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </dhv:evaluate>
         <dhv:evaluate if="<%= (!ContactDetails.getEnabled() || ContactDetails.isTrashed()) %>" >&nbsp;</dhv:evaluate>
       </td>

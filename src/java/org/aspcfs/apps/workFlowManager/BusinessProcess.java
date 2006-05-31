@@ -841,7 +841,6 @@ public class BusinessProcess {
           new Integer(startId));
       deleteComponentChildren(db, startComponent);
 
-      System.out.println(" Deleting from parameter library");
       //deleting the library parameter (!check whether this is neccessary!)
       /*
        *  pst = db.prepareStatement(
@@ -869,7 +868,9 @@ public class BusinessProcess {
       pst.setInt(1, id);
       pst.execute();
       pst.close();
-
+      if (autoCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       if (autoCommit) {
         db.rollback();
@@ -900,10 +901,8 @@ public class BusinessProcess {
         child.setParentId(component.getId());
         deleteComponentChildren(db, child);
       }
-      System.out.println("Trying Deleting Component");
       component.delete(db);
     }
   }
 
 }
-

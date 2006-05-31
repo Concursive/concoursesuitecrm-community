@@ -22,7 +22,8 @@
 <jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
 <jsp:useBean id="ContactActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<jsp:useBean id="viewUser" class="java.lang.String" scope="session"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="viewUserId" class="java.lang.String" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -67,7 +68,7 @@
 <%-- End Trails --%>
 <dhv:permission name="myhomepage-action-lists-edit">
 <a href="javascript:window.location.href='MyActionContacts.do?command=Prepare&actionId=<%= request.getParameter("actionId") %>&return=details&params=' + escape('&reset=true&filters=all|mycontacts|accountcontacts');"  onMouseOver="window.status='Add Contacts To List';return true;"  onMouseOut="window.status='';return true;"><dhv:label name="actionList.addContactsToList">Add Contacts to List</dhv:label></a>&nbsp;
-<a href="MyActionContacts.do?command=Modify&actionId=<%= request.getParameter("actionId") %>"><dhv:label name="project.modifyList">Modify List</dhv:label></a>
+<a href="MyActionContacts.do?command=Modify&actionId=<%= request.getParameter("actionId") %><%= viewUserId != null && !"".equals(viewUserId.trim()) ?"&siteIdUser="+viewUserId +"&mySiteOnly=true": (User.getSiteId() == -1?"&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getSiteId()) %>"><dhv:label name="project.modifyList">Modify List</dhv:label></a>
 <br>
 </dhv:permission>
 <br>
@@ -89,6 +90,7 @@
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
   <dhv:permission name="myhomepage-action-lists-edit">
     <th style="text-align: center;">
       &nbsp;
@@ -97,9 +99,14 @@
     <th>
       <strong><dhv:label name="contacts.name">Name</dhv:label></strong>
     </th>
-    <th>
+    <th nowrap>
       <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
+<dhv:evaluate if="<%= (viewUserId == null || "".equals(viewUserId.trim())) && User.getSiteId() == -1 %>">
+    <th nowrap>
+      <strong><dhv:label name="accounts.site">Site</dhv:label></strong>
+    </th>
+</dhv:evaluate>
     <th nowrap>
       <strong><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></strong>
     </th>
@@ -131,9 +138,7 @@
         <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|0','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');" onMouseOver="this.style.color='blue';window.status='View Details';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box-checked.gif" name="image<%= thisContact.getId() %>" id="1" border="0" title="Click to change" align="absmiddle"></a>
       <% } else { %>
         <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|1','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');"><img src="images/box.gif" name="image<%= thisContact.getId() %>" id="0" border="0" title="Click to change" align="absmiddle"></a>
-      <%
-        }
-      %>
+      <% } %>
     </dhv:permission>
     <dhv:permission name="myhomepage-action-lists-edit">
       <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&actionId=<%= thisContact.getId() %>&id=<%= thisContact.getContact().getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">
@@ -160,6 +165,11 @@
       <dhv:label name="actionList.noItemsInHistory">No items in History.</dhv:label>
     <% } %>
     </td>
+<dhv:evaluate if="<%= (viewUserId == null || "".equals(viewUserId.trim())) && User.getSiteId() == -1 %>">
+    <td align="center" valign="top" nowrap>
+      <%= SiteIdList.getSelectedValue(thisContact.getContact().getSiteId()) %>&nbsp;
+    </td>
+</dhv:evaluate>
     <td nowrap align="center" valign="top">
       <zeroio:tz timestamp="<%= thisContact.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
@@ -167,7 +177,7 @@
 <%}
 }else{%>
       <tr>
-        <td class="containerBody" colspan="4" valign="center">
+        <td class="containerBody" colspan="<%= (viewUserId == null || "".equals(viewUserId.trim())) && User.getSiteId() == -1?"5":"4" %>" valign="center">
           <dhv:label name="actionList.noActionContactsFound">No Action Contacts found in this view.</dhv:label>
         </td>
       </tr>
@@ -175,4 +185,3 @@
 </table>
 &nbsp;<br>
 <dhv:pagedListControl object="ContactActionListInfo" tdClass="row1"/>
-

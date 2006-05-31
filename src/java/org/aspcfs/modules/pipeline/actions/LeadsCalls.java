@@ -19,6 +19,8 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.mycfs.base.CFSNote;
@@ -148,8 +150,12 @@ public final class LeadsCalls extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+      //add access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
 
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      oppHeader.buildManagerOwnerIdRange(db, accessTypeList, this.getUserRange(context));
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
       if (oppHeader.isTrashed()) {
@@ -217,6 +223,7 @@ public final class LeadsCalls extends CFSModule {
 
       if (oppHeader.getAccountLink() > -1) {
         Organization oppOrg = new Organization(db, oppHeader.getAccountLink());
+        context.getRequest().setAttribute("OrgDetails", oppOrg);
         ContactList contactList = new ContactList();
         if (oppOrg.getOwner() != userId && userId != this.getUserId(context)) {
           contactList.setOwner(userId);
@@ -228,6 +235,9 @@ public final class LeadsCalls extends CFSModule {
         contactList.setOrgId(oppHeader.getAccountLink());
         contactList.buildList(db);
         context.getRequest().setAttribute("ContactList", contactList);
+      } else {
+        Contact contact = new Contact(db, oppHeader.getContactLink());
+        context.getRequest().setAttribute("ContactDetails", contact);
       }
 
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -445,9 +455,18 @@ public final class LeadsCalls extends CFSModule {
     Call thisCall = null;
     try {
       db = this.getConnection(context);
+      //add access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      context.getRequest().setAttribute("accessTypeList", accessTypeList);
+
       thisCall = new Call(db, callId);
-      if (!hasViewpointAuthority(
-          db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
+
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      oppHeader.buildManagerOwnerIdRange(db, accessTypeList, this.getUserRange(context));
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+
+      if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId) &&
+          oppHeader.getAccessType() != accessTypeList.getCode(AccessType.PUBLIC)) {
         return "PermissionError";
       }
 
@@ -464,8 +483,6 @@ public final class LeadsCalls extends CFSModule {
       CallResult thisResult = new CallResult(db, thisCall.getResultId());
       context.getRequest().setAttribute("CallResult", thisResult);
 
-      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
-      context.getRequest().setAttribute("opportunityHeader", oppHeader);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -562,20 +579,23 @@ public final class LeadsCalls extends CFSModule {
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
       if (!hasViewpointAuthority(
-          db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
+          db, context, "pipeline", thisCall.getEnteredBy(), userId) &&
+          oppHeader.getAccessType() != accessTypeList.getCode(AccessType.PUBLIC)) {
         return "PermissionError";
       }
 
       if (oppHeader.getAccountLink() > -1) {
         Organization oppOrg = new Organization(db, oppHeader.getAccountLink());
+        context.getRequest().setAttribute("OrgDetails", oppOrg);
         ContactList contactList = new ContactList();
         if (oppOrg.getOwner() != userId && userId != this.getUserId(context)) {
           contactList.setOwner(userId);
         } else if (oppOrg.getOwner() == this.getUserId(context)) {
           contactList.setOwner(this.getUserId(context));
         } else {
-          return ("PermissionError");
+          contactList.setOwner(oppOrg.getOwner());
         }
         contactList.setOwner(userId);
         contactList.setBuildDetails(false);
@@ -584,6 +604,9 @@ public final class LeadsCalls extends CFSModule {
         contactList.setDefaultContactId(thisCall.getContactId());
         contactList.buildList(db);
         context.getRequest().setAttribute("ContactList", contactList);
+      } else {
+        Contact contact = new Contact(db, oppHeader.getContactLink());
+        context.getRequest().setAttribute("ContactDetails", contact);
       }
 
       addModifyFormElements(db, context, thisCall);
@@ -632,8 +655,13 @@ public final class LeadsCalls extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       Call thisCall = new Call(db, msgId);
+      OpportunityHeader oppHeader = new OpportunityHeader(
+          db, Integer.parseInt(headerId));
+
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
       if (!hasViewpointAuthority(
-          db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
+          db, context, "pipeline", thisCall.getEnteredBy(), userId) &&
+          oppHeader.getAccessType() != accessTypeList.getCode(AccessType.PUBLIC)) {
         return "PermissionError";
       }
       newNote = new CFSNote();
@@ -656,15 +684,14 @@ public final class LeadsCalls extends CFSModule {
           contactName + StringUtils.toString(thisCall.getContactName()) + "\n" +
           type + StringUtils.toString(thisCall.getCallType()) + "\n" +
           length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-          subject + StringUtils.toString(thisCall.getSubject()) + "\n" +
+          subject + StringUtils.toString(thisCall.getSubject()) + 
+                (((!StringUtils.toString(thisCall.getSubject()).equals(StringUtils.toString(thisCall.getAlertText()))) && (!"".equals(StringUtils.toString(thisCall.getAlertText()))))? "\\" + StringUtils.toString(thisCall.getAlertText()):"") + "\n" +
           notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
           entered + getUser(context, thisCall.getEnteredBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(
               this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
           modified + getUser(context, thisCall.getModifiedBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(
               this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
 
-      OpportunityHeader oppHeader = new OpportunityHeader(
-          db, Integer.parseInt(headerId));
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

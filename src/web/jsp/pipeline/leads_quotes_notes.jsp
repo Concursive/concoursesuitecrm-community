@@ -85,6 +85,7 @@ function reopenOpportunity(id) {
   <dhv:container name="opportunitiesQuotes" selected="notes" object="quote" param="<%= "quoteId=" + quote.getId() + "|version=" + version %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <% String status = quoteStatusList.getValueFromId(quote.getStatusId()); %>
+    <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
     <dhv:evaluate if="<%= !quote.isTrashed() %>" >
       <dhv:evaluate if="<%= quote.getClosed() == null%>" >
         <dhv:permission name="pipeline-opportunities-edit">
@@ -93,6 +94,7 @@ function reopenOpportunity(id) {
         <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %><%= addLinkParams(request, "viewSource") %>'"/><br /><br />
       </dhv:evaluate>
     </dhv:evaluate>
+    </dhv:hasAuthority>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr><th colspan="3"><strong><dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label></strong></th></tr>
       <tr class="containerBody">
@@ -123,6 +125,7 @@ function reopenOpportunity(id) {
     <%}%>
     </table>
     <br />
+    <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
     <dhv:evaluate if="<%= !quote.isTrashed() %>" >
       <dhv:evaluate if="<%= quote.getClosed() == null%>" >
         <dhv:permission name="pipeline-opportunities-edit">
@@ -148,6 +151,7 @@ function reopenOpportunity(id) {
         <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %><%= addLinkParams(request, "viewSource") %>'"/>
       </dhv:evaluate>
     </dhv:evaluate>
+  </dhv:hasAuthority>
   </dhv:container>
 </dhv:container>
 </form>

@@ -102,8 +102,18 @@ CREATE TABLE opportunity_header (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  trashed_date TIMESTAMP(3)
+  trashed_date TIMESTAMP(3),
+  access_type INT NOT NULL REFERENCES lookup_access_types(code),
+  manager INT NOT NULL REFERENCES access(user_id),
+  lock BOOLEAN DEFAULT false,
+  contact_org_id INTEGER REFERENCES organization(org_id),
+  custom1_integer INTEGER,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
+
+CREATE INDEX "opp_contactlink_idx" ON "opportunity_header" (contactlink);
+CREATE INDEX "opp_header_contact_org_id_idx" ON "opportunity_header" (contact_org_id);
+CREATE INDEX "oppheader_description_idx" ON "opportunity_header" (description);
 
 CREATE TABLE opportunity_component (
   id SERIAL PRIMARY KEY,
@@ -136,9 +146,11 @@ CREATE TABLE opportunity_component (
   environment INT REFERENCES lookup_opportunity_environment(code),
   competitors INT REFERENCES lookup_opportunity_competitors(code),
   compelling_event INT REFERENCES lookup_opportunity_event_compelling(code),
-  budget INT REFERENCES lookup_opportunity_budget(code)
+  budget INT REFERENCES lookup_opportunity_budget(code),
+  status_id INTEGER
 );
 
+CREATE INDEX "oppcomplist_header_idx" ON "opportunity_component" (opp_id);
 CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);
 CREATE INDEX "oppcomplist_description" ON "opportunity_component" (description);
 
@@ -191,3 +203,24 @@ CREATE INDEX "call_org_id_idx" ON "call_log" (org_id);
 CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
 
 ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id); 
+
+CREATE TABLE opportunity_component_log(
+  id serial NOT NULL,
+  component_id INT REFERENCES opportunity_component(id),
+  header_id INT REFERENCES opportunity_header(opp_id),
+  description VARCHAR(80),
+  closeprob FLOAT,
+  closedate TIMESTAMP(3) NOT NULL,
+  terms FLOAT,
+  units CHAR(1),
+  lowvalue FLOAT,
+  guessvalue FLOAT,
+  highvalue FLOAT,
+  stage INT REFERENCES lookup_stage(code),
+  owner INT NOT NULL REFERENCES access(user_id),    
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  closedate_timezone VARCHAR(255),
+  closed TIMESTAMP(3) 
+);
+

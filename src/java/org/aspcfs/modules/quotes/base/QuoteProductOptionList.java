@@ -170,9 +170,9 @@ public class QuoteProductOptionList extends ArrayList {
     sqlSelect.append("SELECT ");
     sqlSelect.append(
         "opt.*, " +
-        "bool.value AS boolean_value, " +
-        "\"float\".value AS float_value, intr.value AS integer_value, " +
-        "tst.value AS timestamp_value, txt.value AS text_value, " +
+        "bool.\"value\" AS boolean_value, " +
+        "\"float\".\"value\" AS float_value, intr.\"value\" AS integer_value, " +
+        "tst.\"value\" AS timestamp_value, txt.\"value\" AS text_value, " +
         "pom.option_id, po.configurator_id, " +
         "prod.product_id " +
         "FROM quote_product_options opt " +

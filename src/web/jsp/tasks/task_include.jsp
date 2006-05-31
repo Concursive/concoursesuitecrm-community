@@ -21,10 +21,31 @@
 <jsp:useBean id="EstimatedLOETypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="ticketTaskCategoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
+<SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
+<script type="text/javascript">
+function selectLinkContact() {
+  var selectedAssignedTo = document.getElementById('ownerid').value;
+  if (selectedAssignedTo != '-1' && !checkNullString(selectedAssignedTo)) {
+    popContactsListSingle('contactid','changecontact','mySiteOnly=true&siteIdUser='+selectedAssignedTo+'&reset=true');
+  } else {
+    popContactsListSingle('contactid','changecontact','<%= User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>reset=true');
+  }
+}
+
+function selectAssignedTo() {
+  var selectedLinkContact = document.getElementById('contactid').value;
+  if (selectedLinkContact != '-1' && !checkNullString(selectedLinkContact)) {
+    popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&mySiteOnly=true&siteIdContact='+selectedLinkContact+'&reset=true');
+  } else {
+    popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true<%= User.getUserRecord().getSiteId() == -1? "&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&reset=true');
+  }
+}
+</script>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -40,6 +61,17 @@
       <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
+  <dhv:evaluate if="<%= ticketTaskCategoryList != null && ticketTaskCategoryList.size() > 0 %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="reports.helpdesk.category">Category</dhv:label>
+    </td>
+    <td><%= ticketTaskCategoryList.getHtmlSelect("ticketTaskCategoryId", Task.getTicketTaskCategoryId()) %>&nbsp;</td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ticketTaskCategoryList == null || ticketTaskCategoryList.size() == 0 %>">
+    <input type="hidden" name="ticketTaskCategoryId" value="<%= Task.getTicketTaskCategoryId() %>"/>
+  </dhv:evaluate>
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label>
@@ -105,7 +137,11 @@
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= Task.getOwner() == -1 ? User.getUserRecord().getId() : Task.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            <dhv:evaluate if="<%= Task.getTicketId() > -1 %>">
+              &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&ticketId=<%= Task.getTicketId() %>&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            </dhv:evaluate><dhv:evaluate if="<%= Task.getTicketId() == -1 %>">
+              &nbsp;[<a href="javascript:selectAssignedTo();"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            </dhv:evaluate>
           </td>
         </tr>
       </table>
@@ -146,7 +182,11 @@
           </td>
           <td>
             <input type="hidden" name="contact" id="contactid" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>">
-            &nbsp;[<a href="javascript:popContactsListSingle('contactid','changecontact','reset=true');"><dhv:label name="admin.changeContact">Change Contact</dhv:label></a>]
+            <dhv:evaluate if="<%= Task.getTicketId() > -1 %>">
+              &nbsp;[<a href="javascript:popContactsListSingle('contactid','changecontact','mySiteOnly=true&ticketId=<%= Task.getTicketId() %>&reset=true');"><dhv:label name="admin.changeContact">Change Contact</dhv:label></a>]
+            </dhv:evaluate><dhv:evaluate if="<%= Task.getTicketId() == -1 %>">
+              &nbsp;[<a href="javascript:selectLinkContact();"><dhv:label name="admin.changeContact">Change Contact</dhv:label></a>]
+            </dhv:evaluate>
           </td>
           <td>
             [<a href="javascript:document.addTask.contact.value='-1';javascript:changeDivContent('changecontact',label('label.none','None'));"><dhv:label name="admin.clearContact">Clear Contact</dhv:label></a>]
@@ -156,5 +196,6 @@
     </td>
   </tr>
 </table>
+<input type="hidden" name="ticketId" value="<%= Task.getTicketId() %>"/>
 <%= addHiddenParams(request, "popup|popupType|actionId") %> 
 <input type="hidden" name="onlyWarnings" value="<%=(Task.getOnlyWarnings()?"on":"off")%>" />

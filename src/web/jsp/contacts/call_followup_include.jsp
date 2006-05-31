@@ -106,7 +106,13 @@
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= CallDetails.getOwner() == -1 ? User.getUserRecord().getId() : CallDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true&filters=employees|accountcontacts|mycontacts|myprojects|all');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            <%if (ContactDetails.getId() != -1) { %>
+              &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&siteIdContact=<%=ContactDetails.getId()%>&reset=true&filters=employees|accountcontacts|mycontacts|myprojects|all');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            <%}else if (OrgDetails.getId() != -1){%>
+              &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&siteIdOrg=<%=OrgDetails.getId()%>&reset=true&filters=employees|accountcontacts|mycontacts|myprojects|all');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            <%}else{%>
+              &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true&filters=employees|accountcontacts|mycontacts|myprojects|all');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            <%}%>
           </td>
         </tr>
       </table>

@@ -15,17 +15,19 @@
  */
 package org.aspcfs.utils.web;
 
+import org.aspcfs.utils.StringUtils;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 /**
- * LookupTable generates an HTML SELECT dropdown or list box, optionally from a
- * set of database properties. HtmlSelect can perform the database query.
+ *  LookupTable generates an HTML SELECT dropdown or list box, optionally from a
+ *  set of database properties. HtmlSelect can perform the database query.
  *
- * @author Matt Rajkowski
- * @version $Id: HtmlSelect.java,v 1.19.36.1 2004/01/30 15:02:15 mrajkowski
- *          Exp $
+ * @author     Matt Rajkowski
+ * @version    $Id: HtmlSelect.java,v 1.19.36.1 2004/01/30 15:02:15 mrajkowski
+ *      Exp $
  * @created August 3, 2001
  */
 public class HtmlSelect extends ArrayList {
@@ -41,7 +43,7 @@ public class HtmlSelect extends ArrayList {
   protected String defaultValue = "";
   protected String jsEvent = null;
   protected boolean multiple = false;
-
+  protected boolean disabled = false;
   protected int processedRowCount = 0;
   protected boolean checkboxOutput = false;
 
@@ -54,28 +56,28 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Constructor for an HTML select box. Creates an HTML select box or series
-   * of checkboxes from the supplied items, either added manually or from a
-   * resultset. <br>
-   * A couple of built-in lists can also be retrieved. <p>
-   * <p/>
-   * Usage: <p>
-   * <p/>
-   * - Construct the object <br>
-   * - Then manually add items to the list by calling addItem() <br>
-   * - Then specify a default key or value <br>
-   * - Then build the list by calling build() or build(resultset...) <br>
-   * - To get the resulting HTML, use getHtml() <p>
-   * <p/>
-   * HtmlSelect stateSelect = new HtmlSelect(); <br>
-   * stateSelect.addItem("VA"); <br>
-   * stateSelect.addItem("VT"); <br>
-   * stateSelect.setDefaultKey("VT"); <br>
-   * stateSelect.setSelectName("state"); <br>
-   * stateSelect.build(); <br>
-   * context.getRequest().setAttribute("StateSelect", stateSelect); <br>
+   *  Constructor for an HTML select box. Creates an HTML select box or series
+   *  of checkboxes from the supplied items, either added manually or from a
+   *  resultset. <br>
+   *  A couple of built-in lists can also be retrieved. <p>
+   *  <p/>
+   *  Usage: <p>
+   *  <p/>
+   *  - Construct the object <br>
+   *  - Then manually add items to the list by calling addItem() <br>
+   *  - Then specify a default key or value <br>
+   *  - Then build the list by calling build() or build(resultset...) <br>
+   *  - To get the resulting HTML, use getHtml() <p>
+   *  <p/>
+   *  HtmlSelect stateSelect = new HtmlSelect(); <br>
+   *  stateSelect.addItem("VA"); <br>
+   *  stateSelect.addItem("VT"); <br>
+   *  stateSelect.setDefaultKey("VT"); <br>
+   *  stateSelect.setSelectName("state"); <br>
+   *  stateSelect.build(); <br>
+   *  context.getRequest().setAttribute("StateSelect", stateSelect); <br>
    *
-   * @since 1.0
+   * @since    1.0
    */
 
   public HtmlSelect() {
@@ -83,9 +85,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Constructor for the HtmlSelect object
+   *  Constructor for the HtmlSelect object
    *
-   * @param itemsToAdd Description of the Parameter
+   * @param  itemsToAdd  Description of the Parameter
    */
   public HtmlSelect(ArrayList itemsToAdd) {
     Iterator i = itemsToAdd.iterator();
@@ -97,9 +99,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Constructor for the HtmlSelect object
+   *  Constructor for the HtmlSelect object
    *
-   * @param itemsToAdd Description of the Parameter
+   * @param  itemsToAdd  Description of the Parameter
    */
   public HtmlSelect(Map itemsToAdd) {
     Iterator keys = itemsToAdd.keySet().iterator();
@@ -113,10 +115,30 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Set the name of the HTML Select element
+   *  Gets the disabled attribute of the HtmlSelect object
    *
-   * @param tmp The new SelectName value
-   * @since 1.0
+   * @return    The disabled value
+   */
+  public boolean getDisabled() {
+    return disabled;
+  }
+
+
+  /**
+   *  Sets the disabled attribute of the HtmlSelect object
+   *
+   * @param  tmp  The new disabled value
+   */
+  public void setDisabled(boolean tmp) {
+    this.disabled = tmp;
+  }
+
+
+  /**
+   *  Set the name of the HTML Select element
+   *
+   * @param  tmp  The new SelectName value
+   * @since       1.0
    */
   public void setSelectName(String tmp) {
     this.selectName = tmp;
@@ -124,10 +146,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Set the default value for the HTML Select, by value name
+   *  Set the default value for the HTML Select, by value name
    *
-   * @param tmp The new DefaultValue value
-   * @since 1.0
+   * @param  tmp  The new DefaultValue value
+   * @since       1.0
    */
   public void setDefaultValue(String tmp) {
     if (tmp == null) {
@@ -139,9 +161,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the Multiple attribute of the HtmlSelect object
+   *  Sets the Multiple attribute of the HtmlSelect object
    *
-   * @param multiple The new multiple value
+   * @param  multiple  The new multiple value
    */
   public void setMultiple(boolean multiple) {
     this.multiple = multiple;
@@ -149,10 +171,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Set the default value for the HTML Select, by value name
+   *  Set the default value for the HTML Select, by value name
    *
-   * @param tmp The new DefaultValue value
-   * @since 1.0
+   * @param  tmp  The new DefaultValue value
+   * @since       1.0
    */
   public void setDefaultValue(int tmp) {
     this.defaultValue = "" + tmp;
@@ -160,10 +182,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Set the default value for the HTML Select, by key name
+   *  Set the default value for the HTML Select, by key name
    *
-   * @param tmp The new DefaultKey value
-   * @since 1.0
+   * @param  tmp  The new DefaultKey value
+   * @since       1.0
    */
   public void setDefaultKey(String tmp) {
     if (tmp != null) {
@@ -180,10 +202,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Set the default value for the HTML Select, by key name
+   *  Set the default value for the HTML Select, by key name
    *
-   * @param tmp The new DefaultKey value
-   * @since 1.0
+   * @param  tmp  The new DefaultKey value
+   * @since       1.0
    */
   public void setDefaultKey(int tmp) {
     setDefaultKey(String.valueOf(tmp));
@@ -191,10 +213,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Set the visible size of the HTML Select, default 1 for combo box
+   *  Set the visible size of the HTML Select, default 1 for combo box
    *
-   * @param tmp The new SelectSize value
-   * @since 1.0
+   * @param  tmp  The new SelectSize value
+   * @since       1.0
    */
   public void setSelectSize(int tmp) {
     this.selectSize = tmp;
@@ -202,9 +224,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the selectStyle attribute of the HtmlSelect object
+   *  Sets the selectStyle attribute of the HtmlSelect object
    *
-   * @param tmp The new selectStyle value
+   * @param  tmp  The new selectStyle value
    */
   public void setSelectStyle(String tmp) {
     this.selectStyle = tmp;
@@ -212,9 +234,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the selectSize attribute of the HtmlSelect object
+   *  Gets the selectSize attribute of the HtmlSelect object
    *
-   * @return The selectSize value
+   * @return    The selectSize value
    */
   public int getSelectSize() {
     return selectSize;
@@ -222,9 +244,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the built attribute of the HtmlSelect object
+   *  Sets the built attribute of the HtmlSelect object
    *
-   * @param built The new built value
+   * @param  built  The new built value
    */
   public void setBuilt(boolean built) {
     this.built = built;
@@ -232,9 +254,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the built attribute of the HtmlSelect object
+   *  Gets the built attribute of the HtmlSelect object
    *
-   * @return The built value
+   * @return    The built value
    */
   public boolean getBuilt() {
     return built;
@@ -242,9 +264,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the idName attribute of the HtmlSelect object
+   *  Gets the idName attribute of the HtmlSelect object
    *
-   * @return The idName value
+   * @return    The idName value
    */
   public String getIdName() {
     return idName;
@@ -252,9 +274,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the idName attribute of the HtmlSelect object
+   *  Sets the idName attribute of the HtmlSelect object
    *
-   * @param idName The new idName value
+   * @param  idName  The new idName value
    */
   public void setIdName(String idName) {
     this.idName = idName;
@@ -262,10 +284,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Set a manual entry that appears first in the list, like Any or None, etc.
+   *  Set a manual entry that appears first in the list, like Any or None, etc.
    *
-   * @param tmp The new FirstEntry value
-   * @since 1.0
+   * @param  tmp  The new FirstEntry value
+   * @since       1.0
    */
   public void setFirstEntry(String tmp) {
     this.firstEntry = tmp;
@@ -273,11 +295,11 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the FirstEntry attribute of the HtmlSelect object
+   *  Sets the FirstEntry attribute of the HtmlSelect object
    *
-   * @param tmp1 The new FirstEntry value
-   * @param tmp2 The new FirstEntry value
-   * @since 1.0
+   * @param  tmp1  The new FirstEntry value
+   * @param  tmp2  The new FirstEntry value
+   * @since        1.0
    */
   public void setFirstEntry(String tmp1, String tmp2) {
     this.firstKey = tmp1;
@@ -286,10 +308,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the CheckboxOutput attribute of the HtmlSelect object
+   *  Sets the CheckboxOutput attribute of the HtmlSelect object
    *
-   * @param tmp The new CheckboxOutput value
-   * @since 1.0
+   * @param  tmp  The new CheckboxOutput value
+   * @since       1.0
    */
   public void setCheckboxOutput(boolean tmp) {
     checkboxOutput = tmp;
@@ -297,9 +319,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Pre-programmed lookup types that can be used
+   *  Pre-programmed lookup types that can be used
    *
-   * @since 1.0
+   * @since    1.0
    */
   public void setTypeHours() {
     this.addItem("12");
@@ -318,7 +340,7 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the TypeLocale attribute of the HtmlSelect object
+   *  Sets the TypeLocale attribute of the HtmlSelect object
    */
   public void setTypeLocale() {
     Locale[] locales;
@@ -332,9 +354,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the multipleSelects attribute of the HtmlSelect object
+   *  Gets the multipleSelects attribute of the HtmlSelect object
    *
-   * @return The multipleSelects value
+   * @return    The multipleSelects value
    */
   public LookupList getMultipleSelects() {
     return multipleSelects;
@@ -342,9 +364,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the multipleSelects attribute of the HtmlSelect object
+   *  Sets the multipleSelects attribute of the HtmlSelect object
    *
-   * @param multipleSelects The new multipleSelects value
+   * @param  multipleSelects  The new multipleSelects value
    */
   public void setMultipleSelects(LookupList multipleSelects) {
     this.multipleSelects = multipleSelects;
@@ -352,7 +374,7 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the TypeTimeZone attribute of the HtmlSelect object
+   *  Sets the TypeTimeZone attribute of the HtmlSelect object
    */
   public void setTypeTimeZone() {
     String[] timeZones;
@@ -383,9 +405,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the TypeMinutesQuarterly attribute of the HtmlSelect object
+   *  Sets the TypeMinutesQuarterly attribute of the HtmlSelect object
    *
-   * @since 1.0
+   * @since    1.0
    */
   public void setTypeMinutesQuarterly() {
     this.addItem("00");
@@ -396,9 +418,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the TypeAMPM attribute of the HtmlSelect object
+   *  Sets the TypeAMPM attribute of the HtmlSelect object
    *
-   * @since 1.0
+   * @since    1.0
    */
   public void setTypeAMPM() {
     this.addItem("AM");
@@ -407,7 +429,7 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the typeUSMonths attribute of the HtmlSelect object
+   *  Sets the typeUSMonths attribute of the HtmlSelect object
    */
   public void setTypeUSMonths() {
     this.addItem(1, "January");
@@ -426,9 +448,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the typeYears attribute of the HtmlSelect object
+   *  Sets the typeYears attribute of the HtmlSelect object
    *
-   * @param bottomLimitYear The new typeYears value
+   * @param  bottomLimitYear  The new typeYears value
    */
   public void setTypeYears(int bottomLimitYear) {
     java.util.Date d = new java.util.Date();
@@ -443,10 +465,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the JsEvent attribute of the HtmlSelect object
+   *  Sets the JsEvent attribute of the HtmlSelect object
    *
-   * @param tmp The new JsEvent value
-   * @since 1.7
+   * @param  tmp  The new JsEvent value
+   * @since       1.7
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -454,10 +476,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Sets the attribute attribute of the HtmlSelect object
+   *  Sets the attribute attribute of the HtmlSelect object
    *
-   * @param attrName  The new attribute value
-   * @param attrValue The new attribute value
+   * @param  attrName   The new attribute value
+   * @param  attrValue  The new attribute value
    */
   public void addAttribute(String attrName, String attrValue) {
     attributeList.put(attrName, attrValue);
@@ -465,9 +487,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the Multiple attribute of the HtmlSelect object
+   *  Gets the Multiple attribute of the HtmlSelect object
    *
-   * @return The Mutiple value
+   * @return    The Mutiple value
    */
   public boolean getMultiple() {
     return multiple;
@@ -475,9 +497,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the attributeList attribute of the HtmlSelect object
+   *  Gets the attributeList attribute of the HtmlSelect object
    *
-   * @return The attributeList value
+   * @return    The attributeList value
    */
   public String getAttributeList() {
     StringBuffer tmpList = new StringBuffer();
@@ -494,11 +516,11 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Returns the HTML list box with the specified name, must call build() first
+   *  Returns the HTML list box with the specified name, must call build() first
    *
-   * @param thisSelectName Description of Parameter
-   * @return The HTML value
-   * @since 1.0
+   * @param  thisSelectName  Description of Parameter
+   * @return                 The HTML value
+   * @since                  1.0
    */
   public String getHtml(String thisSelectName) {
     selectName = thisSelectName;
@@ -510,13 +532,13 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Returns the HTML list box with the specified name, defaulting to the
-   * specified default value, must call build() first
+   *  Returns the HTML list box with the specified name, defaulting to the
+   *  specified default value, must call build() first
    *
-   * @param thisSelectName   Description of Parameter
-   * @param thisDefaultValue Description of Parameter
-   * @return The HTML value
-   * @since 1.0
+   * @param  thisSelectName    Description of Parameter
+   * @param  thisDefaultValue  Description of Parameter
+   * @return                   The HTML value
+   * @since                    1.0
    */
   public String getHtml(String thisSelectName, String thisDefaultValue) {
     selectName = thisSelectName;
@@ -529,13 +551,13 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Returns the HTML list box with the specified name, defaulting to the
-   * specified key value, must call build() first
+   *  Returns the HTML list box with the specified name, defaulting to the
+   *  specified key value, must call build() first
    *
-   * @param thisSelectName Description of Parameter
-   * @param thisDefaultKey Description of Parameter
-   * @return The HTML value
-   * @since 1.0
+   * @param  thisSelectName  Description of Parameter
+   * @param  thisDefaultKey  Description of Parameter
+   * @return                 The HTML value
+   * @since                  1.0
    */
   public String getHtml(String thisSelectName, int thisDefaultKey) {
     selectName = thisSelectName;
@@ -548,10 +570,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Returns the HTML list box, must call build() first
+   *  Returns the HTML list box, must call build() first
    *
-   * @return The Html value
-   * @since 1.0
+   * @return    The Html value
+   * @since     1.0
    */
   public String getHtml() {
     //Build the html for the results
@@ -566,7 +588,8 @@ public class HtmlSelect extends ArrayList {
           "name='" + this.selectName + "'" +
           (jsEvent != null ? " " + this.jsEvent : "") +
           (idName != null ? " " + "id='" + this.idName + "' " : "") +
-          (multiple != false ? " multiple " : "") +
+          (multiple ? " multiple " : "") +
+          (disabled ? " disabled " : "") +
           this.getAttributeList() + ">");
     }
 
@@ -582,10 +605,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the JsEvent attribute of the HtmlSelect object
+   *  Gets the JsEvent attribute of the HtmlSelect object
    *
-   * @return The JsEvent value
-   * @since 1.7
+   * @return    The JsEvent value
+   * @since     1.7
    */
   public String getJsEvent() {
     return jsEvent;
@@ -593,10 +616,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
-   * @since 1.7
+   * @return    Description of the Returned Value
+   * @since     1.7
    */
   public String toString() {
     return this.getHtml();
@@ -604,9 +627,9 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Adds a feature to the Group attribute of the HtmlSelect object
+   *  Adds a feature to the Group attribute of the HtmlSelect object
    *
-   * @param category The feature to be added to the Group attribute
+   * @param  category  The feature to be added to the Group attribute
    */
   public void addGroup(String category) {
     HtmlOption thisGroup = new HtmlOption();
@@ -617,11 +640,11 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Adds a feature to the Item attribute of the HtmlSelect object
+   *  Adds a feature to the Item attribute of the HtmlSelect object
    *
-   * @param tmp1     The feature to be added to the Item attribute
-   * @param tmp2     The feature to be added to the Item attribute
-   * @param position The feature to be added to the Item attribute
+   * @param  tmp1      The feature to be added to the Item attribute
+   * @param  tmp2      The feature to be added to the Item attribute
+   * @param  position  The feature to be added to the Item attribute
    */
   protected void addItem(String tmp1, String tmp2, int position) {
     this.add(position, new HtmlOption(tmp1, tmp2));
@@ -629,11 +652,11 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Adds an option at a particular position with specified attributes
+   *  Adds an option at a particular position with specified attributes
    *
-   * @param tmp1       The feature to be added to the Item attribute
-   * @param tmp2       The feature to be added to the Item attribute
-   * @param attributes The feature to be added to the Item attribute
+   * @param  tmp1        The feature to be added to the Item attribute
+   * @param  tmp2        The feature to be added to the Item attribute
+   * @param  attributes  The feature to be added to the Item attribute
    */
   public void addItem(int tmp1, String tmp2, HashMap attributes) {
     this.add(new HtmlOption(String.valueOf(tmp1), tmp2, attributes));
@@ -641,12 +664,12 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Adds a feature to the Item attribute of the HtmlSelect object
+   *  Adds a feature to the Item attribute of the HtmlSelect object
    *
-   * @param tmp1       The feature to be added to the Item attribute
-   * @param tmp2       The feature to be added to the Item attribute
-   * @param attributes The feature to be added to the Item attribute
-   * @param enabled    The feature to be added to the Item attribute
+   * @param  tmp1        The feature to be added to the Item attribute
+   * @param  tmp2        The feature to be added to the Item attribute
+   * @param  attributes  The feature to be added to the Item attribute
+   * @param  enabled     The feature to be added to the Item attribute
    */
   public void addItem(int tmp1, String tmp2, HashMap attributes, boolean enabled) {
     this.add(new HtmlOption(String.valueOf(tmp1), tmp2, attributes, enabled));
@@ -654,12 +677,12 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Add a string to the HTML select, supplying two strings, the first String
-   * is the value, the second String is the display name
+   *  Add a string to the HTML select, supplying two strings, the first String
+   *  is the value, the second String is the display name
    *
-   * @param tmp1 The feature to be added to the Item attribute
-   * @param tmp2 The feature to be added to the Item attribute
-   * @since 1.0
+   * @param  tmp1  The feature to be added to the Item attribute
+   * @param  tmp2  The feature to be added to the Item attribute
+   * @since        1.0
    */
   public void addItem(String tmp1, String tmp2) {
     this.add(new HtmlOption(String.valueOf(tmp1), tmp2));
@@ -667,11 +690,11 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Add a string to the HTML select, supplying one string that will be used as
-   * both the value and display name
+   *  Add a string to the HTML select, supplying one string that will be used as
+   *  both the value and display name
    *
-   * @param tmp The feature to be added to the Item attribute
-   * @since 1.0
+   * @param  tmp  The feature to be added to the Item attribute
+   * @since       1.0
    */
   public void addItem(String tmp) {
     this.add(new HtmlOption(String.valueOf(tmp), String.valueOf(tmp)));
@@ -679,12 +702,12 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Add a string to the HTML select, supplying 1 int and 1 String, the first
-   * int is the value, the second String is the display name
+   *  Add a string to the HTML select, supplying 1 int and 1 String, the first
+   *  int is the value, the second String is the display name
    *
-   * @param tmp1 The feature to be added to the Item attribute
-   * @param tmp2 The feature to be added to the Item attribute
-   * @since 1.0
+   * @param  tmp1  The feature to be added to the Item attribute
+   * @param  tmp2  The feature to be added to the Item attribute
+   * @since        1.0
    */
   public void addItem(int tmp1, String tmp2) {
     this.add(new HtmlOption(String.valueOf(tmp1), tmp2));
@@ -692,11 +715,11 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Adds a feature to the Item attribute of the HtmlSelect object
+   *  Adds a feature to the Item attribute of the HtmlSelect object
    *
-   * @param tmp1     The feature to be added to the Item attribute
-   * @param tmp2     The feature to be added to the Item attribute
-   * @param position The feature to be added to the Item attribute
+   * @param  tmp1      The feature to be added to the Item attribute
+   * @param  tmp2      The feature to be added to the Item attribute
+   * @param  position  The feature to be added to the Item attribute
    */
   public void addItem(int tmp1, String tmp2, int position) {
     this.add(position, new HtmlOption(String.valueOf(tmp1), tmp2));
@@ -704,17 +727,17 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Adds a string to the Items attribute of the HtmlSelect object supplying a
-   * ResultSet along with the field names, and types to use for building the
-   * object.
+   *  Adds a string to the Items attribute of the HtmlSelect object supplying a
+   *  ResultSet along with the field names, and types to use for building the
+   *  object.
    *
-   * @param rs           The feature to be added to the Items attribute
-   * @param valueField   The feature to be added to the Items attribute
-   * @param valueType    The feature to be added to the Items attribute
-   * @param displayField The feature to be added to the Items attribute
-   * @param displayType  The feature to be added to the Items attribute
-   * @throws SQLException Description of Exception
-   * @since 1.7
+   * @param  rs             The feature to be added to the Items attribute
+   * @param  valueField     The feature to be added to the Items attribute
+   * @param  valueType      The feature to be added to the Items attribute
+   * @param  displayField   The feature to be added to the Items attribute
+   * @param  displayType    The feature to be added to the Items attribute
+   * @throws  SQLException  Description of Exception
+   * @since                 1.7
    */
   public void addItems(ResultSet rs, String valueField, String valueType, String displayField, String displayType) throws SQLException {
     while (rs.next()) {
@@ -727,10 +750,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Builds the HTML based on the items that were added to the rowList, and
-   * from the default entries and/or keys
+   *  Builds the HTML based on the items that were added to the rowList, and
+   *  from the default entries and/or keys
    *
-   * @since 1.0
+   * @since    1.0
    */
   public void build() {
     rowList.setLength(0);
@@ -794,7 +817,7 @@ public class HtmlSelect extends ArrayList {
         if (!checkboxOutput) {
           rowList.append(
               "<option " + optionSelected + "value='" + tmp1 + "' " + attributes + ">" + toHtml(
-                  tmp2) + "</option>");
+              tmp2) + "</option>");
         } else {
           rowList.append(
               "<input type='radio'" + optionChecked + ">" + toHtml(tmp2) + "&nbsp;");
@@ -808,15 +831,15 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Builds an HTML select list based on a resultSet and the resultSet
-   * properties
+   *  Builds an HTML select list based on a resultSet and the resultSet
+   *  properties
    *
-   * @param rs           Description of Parameter
-   * @param valueField   Description of Parameter
-   * @param valueType    Description of Parameter
-   * @param displayField Description of Parameter
-   * @param displayType  Description of Parameter
-   * @since 1.0
+   * @param  rs            Description of Parameter
+   * @param  valueField    Description of Parameter
+   * @param  valueType     Description of Parameter
+   * @param  displayField  Description of Parameter
+   * @param  displayType   Description of Parameter
+   * @since                1.0
    */
   public void build(ResultSet rs, String valueField, String valueType, String displayField, String displayType) {
     built = true;
@@ -866,7 +889,7 @@ public class HtmlSelect extends ArrayList {
         if (!checkboxOutput) {
           rowList.append(
               "<option " + optionSelected + "value='" + tmp1 + "'>" + toHtml(
-                  tmp2) + "</option>");
+              tmp2) + "</option>");
         } else {
           rowList.append(
               "<input type='radio'" + optionChecked + ">" + toHtml(tmp2) + "&nbsp;");
@@ -878,14 +901,14 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Retrieves the requested field as a String from the resultset, fieldname,
-   * and fieldtype
+   *  Retrieves the requested field as a String from the resultset, fieldname,
+   *  and fieldtype
    *
-   * @param thisRS        Description of Parameter
-   * @param thisField     Description of Parameter
-   * @param thisFieldType Description of Parameter
-   * @return The Column value
-   * @since 1.0
+   * @param  thisRS         Description of Parameter
+   * @param  thisField      Description of Parameter
+   * @param  thisFieldType  Description of Parameter
+   * @return                The Column value
+   * @since                 1.0
    */
   private String getColumn(ResultSet thisRS, String thisField, String thisFieldType) {
     String returnValue = "not found";
@@ -922,13 +945,13 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Base functions for this class
+   *  Base functions for this class
    *
-   * @param str Description of Parameter
-   * @param o   Description of Parameter
-   * @param n   Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.0
+   * @param  str  Description of Parameter
+   * @param  o    Description of Parameter
+   * @param  n    Description of Parameter
+   * @return      Description of the Returned Value
+   * @since       1.0
    */
   private static String replace(String str, String o, String n) {
     boolean all = true;
@@ -961,13 +984,15 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param s Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.0
+   * @param  s  Description of Parameter
+   * @return    Description of the Returned Value
+   * @since     1.0
    */
   private static String toHtml(String s) {
+    return StringUtils.toHtmlValue(s);
+    /*
     String htmlReady = s;
     htmlReady = replace(htmlReady, "\"", "&quot;");
     htmlReady = replace(htmlReady, "<", "&lt;");
@@ -976,14 +1001,15 @@ public class HtmlSelect extends ArrayList {
     htmlReady = replace(htmlReady, "/&lt;", "<");
     htmlReady = replace(htmlReady, "/&gt;", ">");
     return (htmlReady);
+    */
   }
 
 
   /**
-   * Gets the selectedValue attribute of the HtmlSelect object
+   *  Gets the selectedValue attribute of the HtmlSelect object
    *
-   * @param selectedId Description of the Parameter
-   * @return The selectedValue value
+   * @param  selectedId  Description of the Parameter
+   * @return             The selectedValue value
    */
   public String getSelectedValue(int selectedId) {
     try {
@@ -995,10 +1021,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the selectedValue attribute of the HtmlSelect object
+   *  Gets the selectedValue attribute of the HtmlSelect object
    *
-   * @param selectedId Description of the Parameter
-   * @return The selectedValue value
+   * @param  selectedId  Description of the Parameter
+   * @return             The selectedValue value
    */
   public String getSelectedValue(String selectedId) {
     return getValueFromId(selectedId);
@@ -1006,10 +1032,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Gets the selectedValue attribute of the HtmlSelect object
+   *  Gets the selectedValue attribute of the HtmlSelect object
    *
-   * @param selectedId Description of the Parameter
-   * @return The selectedValue value
+   * @param  selectedId  Description of the Parameter
+   * @return             The selectedValue value
    */
   public String getValueFromId(int selectedId) {
     try {
@@ -1021,10 +1047,10 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Returns the text of the specified key
+   *  Returns the text of the specified key
    *
-   * @param key Description of the Parameter
-   * @return The valueFromId value
+   * @param  key  Description of the Parameter
+   * @return      The valueFromId value
    */
   public String getValueFromId(String key) {
     Iterator i = this.iterator();
@@ -1039,16 +1065,27 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
-   * Checks whether the key exists
+   *  Checks whether the key exists
    *
-   * @param key Description of the Parameter
-   * @return Description of the Return Value
+   * @param  key  Description of the Parameter
+   * @return      Description of the Return Value
    */
   public boolean hasKey(String key) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       HtmlOption thisOption = (HtmlOption) i.next();
       if (key.equals(thisOption.getValue())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean hasText(String text) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      HtmlOption thisOption = (HtmlOption) i.next();
+      if (text.equals(thisOption.getText())) {
         return true;
       }
     }

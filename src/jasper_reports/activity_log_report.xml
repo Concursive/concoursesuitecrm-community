@@ -22,6 +22,17 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+  <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siteid" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[accounts.site]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(-1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siteid_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND o.site_id = $P{siteid}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["/Users/Ananth/source/centric31/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
@@ -35,6 +46,7 @@
 		<defaultValueExpression ><![CDATA["USD"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT sc.contract_id,
 sc.contract_number,
 sc.contract_value,  
@@ -43,6 +55,8 @@ o.name
 FROM service_contract sc
 LEFT JOIN organization o ON (sc.account_id = o.org_id)
 WHERE sc.contract_id > 0
+AND o.enabled = $P{TRUE}
+$P!{siteid_where}
 AND sc.trashed_date IS NULL
 ORDER BY o.name]]></queryString>
 	<field name="contract_id" class="java.lang.Integer"/>

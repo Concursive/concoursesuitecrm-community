@@ -16,6 +16,7 @@
 package org.aspcfs.modules.mycfs.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
@@ -316,7 +317,7 @@ public final class MyCFS extends CFSModule {
     newOrg.setEnteredBy(getUserId(context));
     newOrg.setModifiedBy(getUserId(context));
     newOrg.setOwner(-1);
-    newOrg.setMiner_only(true);
+    newOrg.setMinerOnly(true);
     try {
       db = this.getConnection(context);
       existsAlready = newOrg.checkIfExists(db, name);
@@ -1290,13 +1291,17 @@ public final class MyCFS extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      buildFormElements(context, db);
       SystemStatus systemStatus = this.getSystemStatus(context);
       context.getRequest().setAttribute("systemStatus", systemStatus);
       User thisUser = new User(db, this.getUserId(context));
       thisUser.setBuildContact(true);
       thisUser.setBuildContactDetails(true);
       thisUser.buildResources(db);
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      StateSelect stateSelect = new StateSelect(systemStatus, thisUser.getContact().getAddressList().getCountries()+","+prefs.get("SYSTEM.COUNTRY"));
+      stateSelect.setPreviousStates(thisUser.getContact().getAddressList().getSelectedStatesHashMap());
+      context.getRequest().setAttribute("StateSelect", stateSelect);
+      buildFormElements(context, db);
       context.getRequest().setAttribute("User", thisUser);
       context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
     } catch (Exception errorMessage) {
@@ -1537,10 +1542,13 @@ public final class MyCFS extends CFSModule {
     
     //Make the StateSelect and CountrySelect drop down menus available in the request. 
     //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-    StateSelect stateSelect = new StateSelect(systemStatus);
+    
+    StateSelect stateSelect = (StateSelect) context.getRequest().getAttribute("StateSelect");
+    if (stateSelect == null) {
+      stateSelect = new StateSelect(systemStatus);
+      context.getRequest().setAttribute("StateSelect", stateSelect);
+    }
     CountrySelect countrySelect = new CountrySelect(systemStatus);
-
-    context.getRequest().setAttribute("StateSelect", stateSelect);
     context.getRequest().setAttribute("CountrySelect", countrySelect);
   }
 }

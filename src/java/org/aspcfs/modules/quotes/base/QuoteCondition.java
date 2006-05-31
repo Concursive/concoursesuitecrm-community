@@ -193,12 +193,12 @@ public class QuoteCondition extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT " +
-        "qc.*, " +
-        "lqc.description AS condition_name " +
-        "FROM quote_condition AS qc " +
-        "LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
-        "LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
-        "WHERE qc.map_id = ? ");
+            "qc.*, " +
+            "lqc.description AS condition_name " +
+            "FROM quote_condition qc " +
+            "LEFT JOIN quote_entry qe ON (qc.quote_id = qe.quote_id) " +
+            "LEFT JOIN lookup_quote_condition lqc ON (qc.condition_id = lqc.code) " +
+            "WHERE qc.map_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, id);
@@ -229,13 +229,13 @@ public class QuoteCondition extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT " +
-        "qc.*, " +
-        "lqc.description AS condition_name " +
-        "FROM quote_condition AS qc " +
-        "LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
-        "LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
-        "WHERE qc.condition_id = ? " +
-        "AND qc.quote_id = ? ");
+            "qc.*, " +
+            "lqc.description AS condition_name " +
+            "FROM quote_condition qc " +
+            "LEFT JOIN quote_entry qe ON (qc.quote_id = qe.quote_id) " +
+            "LEFT JOIN lookup_quote_condition lqc ON (qc.condition_id = lqc.code) " +
+            "WHERE qc.condition_id = ? " +
+            "AND qc.quote_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, cId);
@@ -284,7 +284,7 @@ public class QuoteCondition extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "quote_condition_map_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO quote_condition (" + (id > -1 ? "map_id, " : "") + "quote_id, condition_id ) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?) ");
+            "VALUES (" + (id > -1 ? "?," : "") + "?,?) ");
     if (id > -1) {
       pst.setInt(++i, id);
     }
@@ -351,8 +351,8 @@ public class QuoteCondition extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO lookup_quote_condition " +
-        "(" + (tempId > -1 ? "code, " : "") + "description) " +
-        "VALUES (" + (tempId > -1 ? "?," : "") + "?)");
+            "(" + (tempId > -1 ? "code, " : "") + "description) " +
+            "VALUES (" + (tempId > -1 ? "?," : "") + "?)");
     if (tempId > -1) {
       pst.setInt(++i, tempId);
     }

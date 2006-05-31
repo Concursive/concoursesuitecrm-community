@@ -49,26 +49,27 @@
 		<defaultValueExpression ><![CDATA["USD"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[SELECT distinct(x.opp_id) AS header_opp_id, 
-x.description AS header_description, 
-x.acctlink AS header_acctlink, 
-x.contactlink AS header_contactlink, 
-org.name AS acct_name,
-ct.namelast AS last_name, ct.namefirst AS first_name,
-ct.company AS ctcompany
-FROM opportunity_header x
-LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id)
-LEFT JOIN organization org ON (x.acctlink = org.org_id)
-LEFT JOIN contact ct ON (x.contactlink = ct.contact_id)
-LEFT JOIN contact ow ON (oc.owner = ow.user_id),
-lookup_stage y
-WHERE y.code = oc.stage
-AND x.opp_id > 0
-AND x.trashed_date IS NULL
-AND oc.owner IN ($P!{userid_range})
-ORDER BY header_opp_id,
-acct_name,
-last_name, first_name]]></queryString>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<queryString><![CDATA[
+    SELECT distinct(x.opp_id) AS header_opp_id, 
+    x.description AS header_description, 
+    x.acctlink AS header_acctlink, 
+    x.contactlink AS header_contactlink, 
+    org.name AS acct_name,
+    ct.namelast AS last_name, ct.namefirst AS first_name,
+    ct.company AS ctcompany
+    FROM opportunity_header x
+    LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id)
+    LEFT JOIN organization org ON (x.acctlink = org.org_id)
+    LEFT JOIN contact ct ON (x.contactlink = ct.contact_id)
+    LEFT JOIN contact ow ON (oc.owner = ow.user_id),
+    lookup_stage y
+    WHERE y.code = oc.stage
+    AND x.opp_id > 0
+    AND x.trashed_date IS NULL
+    AND oc.owner IN ($P!{userid_range})
+    ORDER BY x.opp_id, org.name, ct.namelast, ct.namefirst
+   ]]></queryString>
 	<field name="header_description" class="java.lang.String"/>
 	<field name="acct_name" class="java.lang.String"/>
 	<field name="ctcompany" class="java.lang.String"/>

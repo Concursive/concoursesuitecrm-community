@@ -177,7 +177,7 @@ public class CFSNote extends GenericBean {
     rs.close();
     pst.close();
     if (id == -1) {
-      throw new SQLException("CFS Note not found.");
+      throw new SQLException(Constants.NOT_FOUND_ERROR);
     }
   }
 
@@ -438,7 +438,7 @@ public class CFSNote extends GenericBean {
     try {
       if (id != -1) {
         PreparedStatement pst = db.prepareStatement(
-            "SELECT ct_eb.namefirst as sent_namefirst, ct_eb.namelast as sent_namelast,ml.status " +
+            "SELECT ct_eb.namefirst as sent_namefirst, ct_eb.namelast as sent_namelast, ct_eb.company AS sent_company,ml.status " +
             "FROM cfsinbox_messagelink ml " +
             "LEFT JOIN contact ct_eb ON (ml.sent_to = ct_eb.contact_id) " +
             "WHERE ml.id > -1 " +
@@ -446,8 +446,8 @@ public class CFSNote extends GenericBean {
         pst.setInt(1, this.getId());
         ResultSet rs = pst.executeQuery();
         while (rs.next()) {
-          String recipient = Contact.getNameFirstLast(
-              rs.getString("sent_namefirst"), rs.getString("sent_namelast"));
+          String recipient = Contact.getNameFirstLastOrCompany(
+              rs.getString("sent_namefirst"), rs.getString("sent_namelast"), rs.getString("sent_company"));
           Integer status = new Integer(rs.getInt("status"));
           recipients.put(recipient, status);
         }
@@ -760,7 +760,7 @@ public class CFSNote extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "cfsinbox_message_id_seq");
       sql.append(
           "INSERT INTO cfsinbox_message " +
-          "(" + (id > -1 ? "id, " : "") + "enteredby, modifiedby, body, reply_id, type, delete_flag) " +
+          "(" + (id > -1 ? "id, " : "") + "enteredby, modifiedby, body, reply_id, \"type\", delete_flag) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -908,20 +908,20 @@ public class CFSNote extends GenericBean {
       int inboxCount = -1;
       int outboxCount = -1;
       String outboxQuery = "SELECT count(*) as outboxcount FROM cfsinbox_message " +
-          "WHERE id ='" + this.getId() + "' " +
-          "AND delete_flag =" + DatabaseUtils.getFalse(db) + " ";
+          "WHERE id = ? " +
+          "AND delete_flag = ? ";
 
       String inboxQuery = "SELECT count(*) as inboxcount FROM cfsinbox_messagelink " +
           "WHERE id =" + this.getId() + " " +
           "AND status <> 3 ";
 
       db.setAutoCommit(false);
-      Statement st = db.createStatement();
-
       /*
        *  Get the status of deleted msgs by sender
        */
       pst = db.prepareStatement(outboxQuery);
+      pst.setInt(1, this.getId());
+      pst.setBoolean(2, false);
       rs = pst.executeQuery();
       if (rs.next()) {
         outboxCount = rs.getInt("outboxcount");
@@ -944,13 +944,18 @@ public class CFSNote extends GenericBean {
       ContactHistory.deleteObject(
           db, OrganizationHistory.CFSNOTE, this.getId());
       if ((outboxCount == 0 && inboxCount == 1) || (outboxCount == 1 && inboxCount == 0)) {
-        st.executeUpdate(
+        pst = db.prepareStatement(
             "DELETE FROM cfsinbox_messagelink " +
-            "WHERE id = " + this.getId() + " ");
-
-        st.executeUpdate(
+            "WHERE id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+        pst = db.prepareStatement(
             "DELETE FROM cfsinbox_message " +
-            "WHERE id = " + this.getId() + " ");
+            "WHERE id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
       } else {
         /*
          *  atleast one of the sender or the recipient(s) has not deleted message
@@ -959,20 +964,29 @@ public class CFSNote extends GenericBean {
           /*
            *  inbox or archived delete --> Mark status as 3
            */
-          st.executeUpdate(
+          pst = db.prepareStatement(
               "UPDATE cfsinbox_messagelink " +
-              "SET status = 3 " +
-              "WHERE  id = " + this.getId() + " AND sent_to = " + myId + " ");
+              "SET status = ? " +
+              "WHERE  id = ? " +
+              "AND sent_to = ? ");
+          pst.setInt(1, 3);
+          pst.setInt(2, this.getId());
+          pst.setInt(3, myId);
+          pst.executeUpdate();
+          pst.close();
         } else {
           /*
            *  Outbox delete --> Set delete_flag
            */
-          st.executeUpdate(
+          pst = db.prepareStatement(
               "UPDATE cfsinbox_message " +
-              "SET delete_flag =" + DatabaseUtils.getTrue(db) + " " +
-              "WHERE  id =" + this.getId() + " ");
+              "SET delete_flag = ? " +
+              "WHERE  id = ? ");
+          pst.setBoolean(1, true);
+          pst.setInt(2, this.getId());
+          pst.executeUpdate();
+          pst.close();
         }
-        st.close();
       }
       db.commit();
     } catch (SQLException e) {

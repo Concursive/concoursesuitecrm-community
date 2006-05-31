@@ -19,6 +19,7 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.Project;
 import com.zeroio.iteam.base.TeamMember;
 import com.zeroio.iteam.base.TeamMemberList;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
@@ -137,6 +138,7 @@ public final class ProjectManagementTeam extends CFSModule {
       if (deptId != null) {
         userList.setDepartment(Integer.parseInt(deptId));
       }
+      userList.setEnabled(Constants.TRUE);
       userList.buildList(db);
       userList = UserList.sortEnabledUsers(userList, new UserList());
       context.getRequest().setAttribute("UserList", userList);

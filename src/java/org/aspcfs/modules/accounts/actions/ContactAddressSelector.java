@@ -1,6 +1,7 @@
 package org.aspcfs.modules.accounts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
@@ -157,7 +158,16 @@ public final class ContactAddressSelector extends CFSModule {
       
       //Make the StateSelect and CountrySelect drop down menus available in the request. 
       //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-      StateSelect stateSelect = new StateSelect(systemStatus);
+      StateSelect stateSelect = (StateSelect) context.getRequest().getAttribute("StateSelect");
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      if (stateSelect == null) {
+        if (contactId != null && !"".equals(contactId)) {
+          stateSelect = new StateSelect(systemStatus, contact.getAddressList().getCountries()+","+prefs.get("SYSTEM.COUNTRY"));
+          stateSelect.setPreviousStates(contact.getAddressList().getSelectedStatesHashMap());
+        } else {
+          stateSelect = new StateSelect(systemStatus, prefs.get("SYSTEM.COUNTRY"));
+        }
+      }
       CountrySelect countrySelect = new CountrySelect(systemStatus);
       context.getRequest().setAttribute("StateSelect", stateSelect);
       context.getRequest().setAttribute("CountrySelect", countrySelect);

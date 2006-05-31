@@ -326,7 +326,7 @@ public class MessageList extends ArrayList {
 
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM message m " +
+        "FROM \"message\" m " +
         "WHERE m.id > -1 ");
 
     createFilter(sqlFilter);
@@ -377,7 +377,7 @@ public class MessageList extends ArrayList {
     }
     sqlSelect.append(
         "m.* " +
-        "FROM message m " +
+        "FROM \"message\" m " +
         "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
         "WHERE m.id > -1 ");

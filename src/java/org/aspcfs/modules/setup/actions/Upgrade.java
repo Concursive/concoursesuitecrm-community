@@ -15,21 +15,14 @@
  */
 package org.aspcfs.modules.setup.actions;
 
-import bsh.Interpreter;
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.apps.help.ImportHelp;
+import com.darkhorseventures.framework.hooks.CustomHook;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.system.base.ApplicationVersion;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.FileUtils;
 
-import java.io.File;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -105,111 +98,10 @@ public class Upgrade extends CFSModule {
       context.getRequest().setAttribute(
           "newVersion", ApplicationVersion.VERSION);
       Connection db = null;
-      String versionToInstall = null;
       try {
-        boolean buildHelp = false;
         // Get a connection from the connection pool for this user
         db = this.getConnection(context);
-        // BEGIN DHV CODE ONLY
-        // Determine if an upgrade needs to be executed (2.9)
-        versionToInstall = "2004-06-15";
-        if (!isInstalled(db, versionToInstall)) {
-          upgradeSQL(context, db, "2004-06-15.sql");
-          upgradeBSH(context, db, prefs, "2004-06-15.bsh");
-          installLog.add(versionToInstall + " database changes installed");
-          buildHelp = true;
-        }
-        // Determine if an upgrade needs to be executed (2.9.1)
-        versionToInstall = "2004-08-30";
-        if (!isInstalled(db, versionToInstall)) {
-          upgradeSQL(context, db, "2004-08-30.sql");
-          upgradeBSH(context, db, prefs, "2004-08-19.bsh");
-          upgradeBSH(context, db, prefs, "2004-08-20.bsh");
-          upgradeBSH(context, db, prefs, "2004-08-31.bsh");
-          installLog.add(versionToInstall + " database changes installed");
-          buildHelp = true;
-        }
-        // Determine if an upgrade needs to be executed (2.9.2)
-        versionToInstall = "2005-01-14";
-        if (!isInstalled(db, versionToInstall)) {
-          upgradeSQL(context, db, "2005-01-14.sql");
-          installLog.add(versionToInstall + " database changes installed");
-        }
-        // Determine if an upgrade needs to be executed (3.0)
-        versionToInstall = "2005-03-30";
-        if (!isInstalled(db, versionToInstall)) {
-          String setupPath =
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
-          //FileUtils.copyFile(new File(setupPath + "templates.xml"), new File(getDbNamePath(context) + "templates.xml"), true);
-          //installLog.add(versionToInstall +" files installed");
-          upgradeSQL(context, db, "2005-03-30.sql");
-          upgradeBSH(context, db, prefs, "2005-03-30-01.bsh");
-          upgradeBSH(context, db, prefs, "2005-03-30-02.bsh");
-          installLog.add(versionToInstall + " database changes installed");
-        }
-        // Determine if an upgrade needs to be executed (3.0.1)
-        versionToInstall = "2005-05-02";
-        if (!isInstalled(db, versionToInstall)) {
-          upgradeBSH(context, db, prefs, "2005-05-02-01.bsh");
-          upgradeSQL(context, db, "2005-05-02.sql");
-          installLog.add(versionToInstall + " database changes installed");
-        }
-        // Determine if an upgrade needs to be executed (3.1)
-        versionToInstall = "2005-07-08";
-        if (!isInstalled(db, versionToInstall)) {
-          String setupPath =
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
-          // Translated template files
-          FileUtils.copyFile(
-              new File(setupPath + "workflow_*.xml"), new File(
-                  getDbNamePath(context)), true);
-          FileUtils.copyFile(
-              new File(setupPath + "templates_*.xml"), new File(
-                  getDbNamePath(context)), true);
-          FileUtils.copyFile(
-              new File(setupPath + "application.xml"), new File(
-                  getDbNamePath(context) + "application.xml"), true);
-          installLog.add(versionToInstall + " files installed");
-          // Schema changes
-          upgradeSQL(context, db, "2005-07-08.sql");
-          installLog.add(versionToInstall + " database changes installed");
-          // Data changes
-          upgradeBSH(context, db, prefs, "2005-06-21-script02.bsh");
-          upgradeBSH(context, db, prefs, "2005-06-27-script02.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script01-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script02-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script03-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script04-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script05-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script06-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script07-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script08-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script09-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script10-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script11-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script12-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script13-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-05-25-script14-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-07-01-script01.bsh");
-          upgradeBSH(context, db, prefs, "2005-07-07-script01-partha.bsh");
-          upgradeBSH(context, db, prefs, "2005-07-14-script01-partha.bsh");
-          installLog.add(versionToInstall + " data additions installed");
-          //TODO: Insert database_version here since this is end of upgrade process
-        }
-        // Reinstall the help file if requested...
-        if (buildHelp) {
-          renewConnection(context, db);
-          // Install the help (blank tables should already exist)
-          ImportHelp help = new ImportHelp();
-          help.buildHelpInformation(
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "help.xml");
-          help.buildExistingPermissionCategories(db);
-          help.insertHelpRecords(db);
-          help.buildTableOfContents();
-          help.insertTableOfContents(db);
-          renewConnection(context, db);
-        }
-        // END DHV CODE ONLY
+        CustomHook.verifyDatabase(context, db, prefs, installLog, getDbNamePath(context));
         if (!prefs.save()) {
           context.getRequest().setAttribute(
               "errorMessage", "No write permission on file library, build.properties");
@@ -242,139 +134,4 @@ public class Upgrade extends CFSModule {
     return false;
   }
 
-
-  /**
-   * Gets the installedVersion attribute of the Upgrade object
-   *
-   * @param db Description of the Parameter
-   * @return The installedVersion value
-   * @throws SQLException Description of the Exception
-   */
-  private String getLastVersion(Connection db) throws SQLException {
-    String installedVersion = null;
-    // Query the installed version
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT script_version " +
-        "FROM database_version " +
-        "WHERE version_id IN " +
-        "(SELECT max(version_id) " +
-        " FROM database_version) ");
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      installedVersion = rs.getString("script_version");
-    }
-    rs.close();
-    pst.close();
-    return installedVersion;
-  }
-
-
-  /**
-   * Gets the installed attribute of the Upgrade object
-   *
-   * @param db      Description of the Parameter
-   * @param version Description of the Parameter
-   * @return The installed value
-   * @throws SQLException Description of the Exception
-   */
-  private boolean isInstalled(Connection db, String version) throws SQLException {
-    boolean isInstalled = false;
-    // Query the installed version
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT script_version " +
-        "FROM database_version " +
-        "WHERE script_version = ? ");
-    pst.setString(1, version);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      isInstalled = true;
-    }
-    rs.close();
-    pst.close();
-    return isInstalled;
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param context  Description of the Parameter
-   * @param db       Description of the Parameter
-   * @param baseName Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  private void upgradeSQL(ActionContext context, Connection db, String baseName) throws Exception {
-    renewConnection(context, db);
-    switch (DatabaseUtils.getType(db)) {
-      case DatabaseUtils.POSTGRESQL:
-        System.out.println(
-            "Upgrade-> Executing PostgreSQL script " + baseName);
-        DatabaseUtils.executeSQL(
-            db,
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_" + baseName);
-        break;
-      case DatabaseUtils.DAFFODILDB:
-        System.out.println(
-            "Upgrade-> Executing DaffodilDB script " + baseName);
-        DatabaseUtils.executeSQL(
-            db,
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "daffodildb_" + baseName);
-        break;
-      case DatabaseUtils.DB2:
-        System.out.println("Upgrade-> Executing DB2 script " + baseName);
-        DatabaseUtils.executeSQL(
-            db,
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "db2_" + baseName);
-        break;
-      case DatabaseUtils.FIREBIRD:
-        System.out.println("Upgrade-> Executing Firebird script " + baseName);
-        DatabaseUtils.executeSQL(
-            db,
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "firebird_" + baseName);
-        break;
-      case DatabaseUtils.MSSQL:
-        System.out.println("Upgrade-> Executing MSSQL script " + baseName);
-        DatabaseUtils.executeSQL(
-            db,
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_" + baseName);
-        break;
-      case DatabaseUtils.ORACLE:
-        System.out.println("Upgrade-> Executing Oracle script " + baseName);
-        DatabaseUtils.executeSQL(
-            db,
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "oracle_" + baseName);
-        break;
-      default:
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println(
-              "Upgrade-> * Database could not be determined: " + DatabaseUtils.getType(
-                  db));
-        }
-        break;
-    }
-
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param context    Description of the Parameter
-   * @param scriptName Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  private void upgradeBSH(ActionContext context, Connection db, ApplicationPrefs prefs, String scriptName) throws Exception {
-    System.out.println("Upgrade-> Executing BeanShell script " + scriptName);
-    renewConnection(context, db);
-    // Prepare bean shell script, if needed
-    Interpreter script = new Interpreter();
-    script.set("db", db);
-    script.set("dbFileLibraryPath", prefs.get("FILELIBRARY"));
-    script.set(
-        "fileLibraryPath", context.getServletContext().getRealPath("/"));
-    script.set("locale", prefs.get("SYSTEM.LANGUAGE"));
-    script.source(
-        context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + scriptName);
-  }
 }
-

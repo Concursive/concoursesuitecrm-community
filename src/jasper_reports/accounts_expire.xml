@@ -22,6 +22,14 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+  <parameter name="siteid" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[accounts.site]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(-1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siteid_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND o.site_id = $P{siteid}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[reports.parameter.endDateFrom]]></parameterDescription>
 		<defaultValueExpression ><![CDATA[java.sql.Timestamp.valueOf("2005-01-01 00:00:00")]]></defaultValueExpression>
@@ -40,6 +48,7 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT
 o.account_number as account_number,
 o.owner as owner,
@@ -60,6 +69,7 @@ LEFT JOIN lookup_account_types lat ON (atl.type_id = lat.code)
 WHERE o.org_id > 0
 AND (o.status_id IS NULL OR o.status_id = 7)
 AND o.trashed_date IS NULL
+$P!{siteid_where}
 AND o.contract_end >= $P{date_start}
 AND o.contract_end < $P{date_end}
 ORDER BY o.contract_end, lat."level"]]></queryString>

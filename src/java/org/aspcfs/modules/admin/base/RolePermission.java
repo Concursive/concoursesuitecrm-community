@@ -336,6 +336,7 @@ public class RolePermission extends GenericBean {
     pst.setBoolean(++i, edit);
     pst.setBoolean(++i, delete);
     pst.execute();
+    pst.close();
     id = DatabaseUtils.getCurrVal(db, "role_permission_id_seq", id);
     return true;
   }

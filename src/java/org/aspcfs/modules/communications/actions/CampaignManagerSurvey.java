@@ -23,13 +23,14 @@ import org.aspcfs.modules.communications.base.ItemList;
 import org.aspcfs.modules.communications.base.Survey;
 import org.aspcfs.modules.communications.base.SurveyList;
 import org.aspcfs.modules.communications.base.SurveyQuestionList;
+import org.aspcfs.modules.communications.base.SurveyQuestion;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.CustomForm;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Description of the Class
@@ -500,7 +501,7 @@ public final class CampaignManagerSurvey extends CFSModule {
       return ("PermissionError");
     }
     boolean recordInserted = false;
-    int recordsModified = 0;
+    int recordsModified = -1;
     boolean isValid = false;
     Connection db = null;
     try {
@@ -517,6 +518,11 @@ public final class CampaignManagerSurvey extends CFSModule {
       newSurvey.setRequestItems(context.getRequest());
       db = this.getConnection(context);
       isValid = this.validateObject(context, db, newSurvey);
+      Iterator iter = (Iterator) newSurvey.getQuestions().iterator();
+      while (iter.hasNext()) {
+        SurveyQuestion question = (SurveyQuestion) iter.next();
+        isValid = this.validateObject(context, db, question) && isValid;
+      }
       if (isValid) {
         if (surveyId == -1) {
           recordInserted = newSurvey.insert(db);
@@ -571,6 +577,7 @@ public final class CampaignManagerSurvey extends CFSModule {
     Survey thisSurvey = null;
     Connection db = null;
     //Insert Survey
+    context.getRequest().setAttribute("systemStatus", this.getSystemStatus(context));
     String result = executeCommandInsert(context);
     if (result.equals("AddOK")) {
       if (context.getRequest().getParameter("pg") != null) {
@@ -784,5 +791,4 @@ public final class CampaignManagerSurvey extends CFSModule {
     return ("MockInsertOK");
   }
 }
-
 

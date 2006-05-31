@@ -86,6 +86,9 @@
   }
 
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <form name="opportunityForm" action="AccountContactsOppComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <dhv:evaluate if="<%= !isPopup(request) %>">
@@ -111,14 +114,12 @@
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
-    <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
-    <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param="<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>">
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>
     </dhv:evaluate>
-    <br>
-    <br>
+    <br /><br />
     <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
     <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';" />
     <br />
@@ -133,6 +134,7 @@
     <input type="hidden" name="dosubmit" value="true">
     <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
     <input type="hidden" name="actionSource" value="AccountContactsOppComponents">
+    </dhv:container>
   </dhv:container>
 </dhv:container>
 </form>

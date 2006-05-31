@@ -68,6 +68,7 @@ function reopenOpportunity(id) {
    String param2 = addLinkParams(request, "viewSource");
 %>
 <dhv:container name="opportunities" selected="calls" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
+  <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
   <dhv:evaluate if="<%= !CallDetails.isTrashed() %>">
     <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
       <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource|view") %>'"></dhv:permission>
@@ -82,7 +83,8 @@ function reopenOpportunity(id) {
       <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource|view") %>'"></dhv:permission>
     </dhv:evaluate>
   </dhv:evaluate>
-  <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
+  </dhv:hasAuthority>
+  <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete,pipeline-opportunities-calls-view"><br>&nbsp;</dhv:permission>
   <% if("pending".equals(request.getParameter("view"))){ %>
     <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
     <%-- include follow up activity details --%>
@@ -127,6 +129,7 @@ function reopenOpportunity(id) {
     </tr>
   </table>
   <br>
+  <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
   <dhv:evaluate if="<%= !CallDetails.isTrashed() %>">
     <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
     <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource|view") %>'"></dhv:permission>
@@ -140,6 +143,7 @@ function reopenOpportunity(id) {
     <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource|view") %>'"></dhv:permission>
     </dhv:evaluate>
   </dhv:evaluate>
+  </dhv:hasAuthority>
   <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
 </dhv:container>
 

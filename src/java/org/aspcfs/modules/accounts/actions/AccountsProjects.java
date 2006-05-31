@@ -34,6 +34,10 @@ public class AccountsProjects extends CFSModule {
     try {
       db = this.getConnection(context);
       Organization thisOrganization = setOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrganization.getOrgId())) {
+        return ("PermissionError");
+      }
       //PagedList Info
       ProjectList projects = new ProjectList();
       PagedListInfo projectListInfo = this.getPagedListInfo(

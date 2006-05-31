@@ -6,6 +6,7 @@
 <jsp:useBean id="finalElements" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="hiddenFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Table" class="java.lang.String" scope="request"/>
 <jsp:useBean id="LookupSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
@@ -44,7 +45,13 @@
 %>
   <tr class="row<%= rowid + ((selectedElements.get(new Integer(thisElt.getCode()))!= null)?"hl":"") %>">
     <td align="center" width="8">
+    <% 
+      if ("list".equals(request.getParameter("listType"))) { 
+    %>
       <input type="checkbox" name="checkelement<%= count %>" value=<%= thisElt.getCode() %><%= ((selectedElements.get(new Integer(thisElt.getCode()))!= null)?" checked":"") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
+    <% } else { %>
+      <a href="javascript:document.elementListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','elementListView');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>
+    <% } %>
     </td>
     <td valign="center">
       <%= toHtml(thisElt.getDescription()) %>
@@ -71,15 +78,21 @@
 <input type="hidden" name="finalsubmit" value="false">
 <input type="hidden" name="rowcount" value="0">
 <input type="hidden" name="displayFieldId" value="<%= DisplayFieldId %>">
+<input type="hidden" name="hiddenFieldId" value="<%= hiddenFieldId %>">
+<input type="hidden" name="listType" value="<%= toHtmlValue(request.getParameter("listType")) %>">
 <input type="hidden" name="table" value="<%= Table %>">
-<input type='button' value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:document.elementListView.finalsubmit.value='true';document.elementListView.submit();">
-<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
-[<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>]
-[<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>]
+<% if("list".equals(request.getParameter("listType"))){ %>
+  <input type='button' value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:document.elementListView.finalsubmit.value='true';document.elementListView.submit();">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+  [<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>]
+  [<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>]
+<% } else { %>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+<% } %>
 <br>
 </form>
   <%} else {%>
-<body onLoad="javascript:setParentList(selectedIds,selectedValues,'list','<%= DisplayFieldId %>','<%= User.getBrowserId() %>');window.close();">
+<body onLoad="javascript:setParentList(selectedIds,selectedValues,'<%= request.getParameter("listType") %>','<%= DisplayFieldId %>','<%= hiddenFieldId %>','<%= User.getBrowserId() %>');window.close();">
 <script>selectedValues = new Array();selectedIds = new Array();</script>
 <%
   Set s = selectedElements.keySet();
@@ -92,7 +105,7 @@
     String value = st.toString();
 %>
 <script>
-  selectedValues[<%= count %>] = '<%= StringUtils.jsStringEscape(value) %>';
+  selectedValues[<%= count %>] = "<%= StringUtils.jsStringEscape(value) %>";
   selectedIds[<%= count %>] = '<%=id%>';
 </script>
 <%}%>

@@ -26,7 +26,12 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.opportunityForm.header_description.focus();">
+<dhv:include name="opportunity.singleComponent">
+  <body onLoad="javascript:document.opportunityForm.component_description.focus();">
+</dhv:include>
+<dhv:include name="opportunity.singleComponent" none="true">
+  <body onLoad="javascript:document.opportunityForm.header_description.focus();">
+</dhv:include>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
@@ -39,6 +44,7 @@
 <%
   OpportunityHeader opportunityHeader = OppDetails.getHeader();
 	OpportunityComponent ComponentDetails = OppDetails.getComponent();
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
 %>
 <SCRIPT LANGUAGE="JavaScript">
 function doCheck(form) {
@@ -52,23 +58,33 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
+  <dhv:include name="opportunity.singleComponent">
+    <dhv:evaluate if="<%= opportunityHeader.getId() == -1 %>">
+      updateHeaderFields(form);
+    </dhv:evaluate>
+  </dhv:include>
+  <dhv:include name="opportunity.lowEstimateCanNotBeZero" none="true">
   if (form.component_low.value != "" && form.component_low.value != "" && (parseInt(form.component_low.value) > parseInt(form.component_high.value))) { 
     message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
   if ((!checkNullString(form.component_alertText.value)) && (checkNullString(form.component_alertDate.value))) { 
     message += label("specify.alert.date", "- Please specify an alert date\r\n");
     formTest = false;
   }
-  if ((!checkNullString(form.component_alertDate.value)) && (checkNullString(form.component_alertText.value))) { 
+  if ((!checkNullString(form.component_alertDate.value)) && (checkNullString(form.component_alertText.value))) {
     message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
   if (!checkNumber(form.component_commission.value)) { 
       message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
   }
-  
+  </dhv:include>
   if (formTest == false) {
     alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
@@ -76,15 +92,18 @@ function checkForm(form) {
     if(alertMessage != ""){
        return confirmAction(alertMessage);
     }else{
+  <dhv:include name="opportunity.componentTypes" none="true">
       var test = document.opportunityForm.selectedList;
       if (test != null) {
         return selectAllOptions(document.opportunityForm.selectedList);
       }
+  </dhv:include>
     }
   }
 }
 </script>
-<form name="opportunityForm" action="Opportunities.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="opportunityForm" action="Opportunities.do?command=Save&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -98,17 +117,35 @@ function checkForm(form) {
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>">
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';" />
+  <dhv:evaluate if="<%= !isPopup(request) %>">
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';" />
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= isPopup(request) %>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"/>
+  </dhv:evaluate>
   <br />
   <dhv:formMessage />
   <%--  include basic opportunity form --%>
   <%@ include file="../pipeline/opportunity_include.jsp" %>
   <br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';" />
+  <dhv:evaluate if="<%= !isPopup(request) %>">
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';" />
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= isPopup(request) %>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"/>
+  </dhv:evaluate>
   <input type="hidden" name="dosubmit" value="true" />
+  <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
+  <input type="hidden" name="actionStepWork" value="<%= toHtmlValue(request.getParameter("actionStepWork")) %>">
 </dhv:container>
 </form>
-</body>
+<dhv:include name="opportunity.singleComponent">
+  </body>
+</dhv:include>
+<dhv:include name="opportunity.singleComponent" none="true">
+  </body>
+</dhv:include>

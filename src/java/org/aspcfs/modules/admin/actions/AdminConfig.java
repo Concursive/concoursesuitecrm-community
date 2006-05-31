@@ -17,6 +17,7 @@ package org.aspcfs.modules.admin.actions;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.hooks.CustomHook;
 import com.isavvix.tools.FileInfo;
 import com.isavvix.tools.HttpMultiPartParser;
 import org.aspcfs.apps.workFlowManager.BusinessProcessImporter;
@@ -26,16 +27,13 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.controller.objectHookManager.ObjectHookList;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.service.base.Record;
-import org.aspcfs.modules.service.base.RecordList;
-import org.aspcfs.modules.service.base.TransactionStatus;
-import org.aspcfs.modules.setup.beans.UpdateBean;
-import org.aspcfs.utils.*;
+import org.aspcfs.modules.service.base.SyncClientList;
+import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.web.CountrySelect;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.StateSelect;
-import sun.misc.BASE64Encoder;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -73,10 +71,30 @@ public final class AdminConfig extends CFSModule {
       ObjectHookList hookList = new ObjectHookList();
       hookList.setEnabled(Constants.TRUE);
       hookList.buildList(db);
+      //get the number of http-xml clients 
+      SyncClientList syncClientList = new SyncClientList();
+      syncClientList.setEnabledOnly(Constants.TRUE);
+      syncClientList.buildList(db);
+      //get the number of http-xml users
+      UserList httpUsers = new UserList();
+      httpUsers.setEnabled(Constants.TRUE);
+      httpUsers.setHasHttpApiAccess(Constants.TRUE);
+      httpUsers.buildList(db);
+      //get the number of webdav users
+      UserList webdavUsers = new UserList();
+      webdavUsers.setEnabled(Constants.TRUE);
+      webdavUsers.setHasWebdavAccess(Constants.TRUE);
+      webdavUsers.buildList(db);
       context.getRequest().setAttribute(
           "processes", "" + processList.values().size());
       context.getRequest().setAttribute(
           "hooks", "" + hookList.getSizeOfActions());
+      context.getRequest().setAttribute(
+          "clients", "" + syncClientList.size());
+      context.getRequest().setAttribute(
+          "httpUsers", "" + httpUsers.size());
+      context.getRequest().setAttribute(
+          "webdavUsers", "" + webdavUsers.size());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -170,10 +188,12 @@ public final class AdminConfig extends CFSModule {
         LookupList emailTypeList = systemStatus.getLookupList(
             db, "lookup_orgemail_types");
         context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-        
+
         //Make the StateSelect and CountrySelect drop down menus available in the request. 
         //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-        StateSelect stateSelect = new StateSelect(systemStatus);
+        ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+        StateSelect stateSelect = new StateSelect(systemStatus, myOrg.getAddressList().getCountries()+","+prefs.get("SYSTEM.COUNTRY"));
+        stateSelect.setPreviousStates(myOrg.getAddressList().getSelectedStatesHashMap());
         CountrySelect countrySelect = new CountrySelect(systemStatus);
         context.getRequest().setAttribute("StateSelect", stateSelect);
         context.getRequest().setAttribute("CountrySelect", countrySelect);
@@ -195,6 +215,15 @@ public final class AdminConfig extends CFSModule {
     if ("EMAILADDRESS".equals(module)) {
       return "ModifyEmailAddressOK";
     }
+    if ("ASTERISKSERVER".equals(module)) {
+      return "ModifyAsteriskOK";
+    }
+    if ("XMPPSERVER".equals(module)) {
+      return "ModifyXMPPOK";
+    }
+    if ("LDAPSERVER".equals(module)) {
+      return "ModifyLDAPOK";
+    }
     if ("FAXSERVER".equals(module)) {
       return "ModifyFaxOK";
     }
@@ -213,11 +242,10 @@ public final class AdminConfig extends CFSModule {
     if ("SYSTEM.COUNTRY".equals(module)) {
       return "ModifyCountryOK";
     }
-    // BEGIN DHV CODE ONLY
-    if ("LICENSE".equals(module)) {
-      return "ModifyLicenseOK";
+    String value = CustomHook.populateAdminConfig(module);
+    if (value != null) {
+      return value;
     }
-    // END DHV CODE ONLY
     return "ModifyError";
   }
 
@@ -300,6 +328,50 @@ public final class AdminConfig extends CFSModule {
     String fax = context.getRequest().getParameter("fax");
     if (fax != null) {
       prefs.add("FAXSERVER", fax);
+      if (fax != null && !"".equals(fax.trim())) {
+        prefs.add("FAXENABLED", "true");
+      } else {
+        prefs.add("FAXENABLED", "false");
+      }
+    }
+    //Process the request
+    String asterisk = context.getRequest().getParameter("asteriskUrl");
+    if (asterisk != null) {
+      prefs.add("ASTERISK.URL", asterisk);
+      prefs.add("ASTERISK.USERNAME", context.getRequest().getParameter("asteriskUsername"));
+      prefs.add("ASTERISK.PASSWORD", context.getRequest().getParameter("asteriskPassword"));
+      prefs.add("ASTERISK.CONTEXT", context.getRequest().getParameter("asteriskContext"));
+      prefs.add("ASTERISK.INBOUND.ENABLED", "true".equals(context.getRequest().getParameter("asteriskInbound")) ? "true" : "false");
+      prefs.add("ASTERISK.OUTBOUND.ENABLED", "true".equals(context.getRequest().getParameter("asteriskOutbound")) ? "true" : "false");
+      getSystemStatus(context).startServers(context.getServletContext());
+    }
+    //Process the request
+    String xmpp = context.getRequest().getParameter("xmppUrl");
+    if (xmpp != null) {
+      prefs.add("XMPP.CONNECTION.URL", xmpp);
+      prefs.add("XMPP.CONNECTION.PORT", context.getRequest().getParameter("xmppPort"));
+      prefs.add("XMPP.MANAGER.USERNAME", context.getRequest().getParameter("xmppUsername"));
+      prefs.add("XMPP.MANAGER.PASSWORD", context.getRequest().getParameter("xmppPassword"));
+      prefs.add("XMPP.CONNECTION.SSL", "true".equals(context.getRequest().getParameter("xmppSSL")) ? "true" : "false");
+      prefs.add("XMPP.ENABLED", "true".equals(context.getRequest().getParameter("xmppEnabled")) ? "true" : "false");
+      getSystemStatus(context).startServers(context.getServletContext());
+    }
+    //Process the request
+    String ldap = context.getRequest().getParameter("ldapUrl");
+    if (ldap != null) {
+      prefs.add("LDAP.SERVER", ldap);
+      prefs.add("LDAP.CENTRIC_CRM.FIELD", context.getRequest().getParameter("ldapCentricCRMField"));
+      prefs.add("LDAP.FACTORY", context.getRequest().getParameter("ldapFactory"));
+      prefs.add("LDAP.SEARCH.USERNAME", context.getRequest().getParameter("ldapSearchUsername"));
+      prefs.add("LDAP.SEARCH.PASSWORD", context.getRequest().getParameter("ldapSearchPassword"));
+      prefs.add("LDAP.SEARCH.CONTAINER", context.getRequest().getParameter("ldapSearchContainer"));
+      prefs.add("LDAP.SEARCH.ORGPERSON", context.getRequest().getParameter("ldapSearchOrgPerson"));
+      prefs.add("LDAP.SEARCH.ATTRIBUTE", context.getRequest().getParameter("ldapSearchAttribute"));
+      prefs.add("LDAP.SEARCH.PREFIX", context.getRequest().getParameter("ldapSearchPrefix"));
+      prefs.add("LDAP.SEARCH.POSTFIX", context.getRequest().getParameter("ldapSearchPostfix"));
+      prefs.add("LDAP.SEARCH.BY_ATTRIBUTE", "true".equals(context.getRequest().getParameter("ldapSearchByAttribute")) ? "true" : "false");
+      prefs.add("LDAP.SEARCH.SUBTREE", "true".equals(context.getRequest().getParameter("ldapSearchSubtree")) ? "true" : "false");
+      prefs.add("LDAP.ENABLED", "true".equals(context.getRequest().getParameter("ldapEnabled")) ? "true" : "false");
     }
     //Process the request
     String url = context.getRequest().getParameter("url");
@@ -320,6 +392,7 @@ public final class AdminConfig extends CFSModule {
     String language = context.getRequest().getParameter("language");
     if (language != null) {
       prefs.add("SYSTEM.LANGUAGE", language);
+      getSystemStatus(context).setLanguage(language);
     }
     //Process the request
     String country = context.getRequest().getParameter("country");
@@ -329,12 +402,11 @@ public final class AdminConfig extends CFSModule {
     //Save the prefs...
     prefs.save();
     prefs.populateContext(context.getServletContext());
-    prefs.loadLocalizationPrefs(context.getServletContext());
+    prefs.loadApplicationDictionary(context.getServletContext());
     return "UpdateOK";
   }
 
 
-  // BEGIN DHV CODE ONLY
   /**
    * Description of the Method
    *
@@ -345,99 +417,8 @@ public final class AdminConfig extends CFSModule {
     if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
-    //Prepare to change the prefs
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
-        "applicationPrefs");
-    if (prefs == null) {
-      return "ModifyError";
-    }
-    //Process the parameters
-    String process = context.getRequest().getParameter("doLicense");
-    try {
-      //If remote check, then perform steps similar to the initial setup
-      if ("internet".equals(process)) {
-        UpdateBean bean = new UpdateBean();
-        //Send the current key, email address, profile, and crc
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
-            getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        XMLUtils xml = new XMLUtils(
-            org.aspcfs.utils.PrivateString.decrypt(
-                key,
-                StringUtils.loadText(
-                    getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-        //Encode the license for transmission
-        BASE64Encoder encoder = new BASE64Encoder();
-        bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
-        bean.setEmail(XMLUtils.getNodeText(xml.getFirstChild("email")));
-        bean.setProfile(XMLUtils.getNodeText(xml.getFirstChild("profile")));
-        bean.setText(PrivateString.encrypt(key, "UPGRADE-1.0"));
-        bean.setText2(XMLUtils.getNodeText(xml.getFirstChild("text2")));
-        //Make sure the server received the key ok
-        String response = null;
-        boolean ssl = true;
-        if (ssl) {
-          response = HTTPUtils.sendPacket(
-              "https://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
-        } else {
-          response = HTTPUtils.sendPacket(
-              "http://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
-        }
-        if (response == null) {
-          context.getRequest().setAttribute(
-              "actionError", this.getSystemStatus(context).getLabel(
-                  "object.validation.unspecifiedErrorNoResponse"));
-          return "LicenseCheckERROR";
-        }
-        XMLUtils responseXML = new XMLUtils(response);
-        TransactionStatus thisStatus = new TransactionStatus(
-            responseXML.getFirstChild("response"));
-        if (thisStatus.getStatusCode() != 0) {
-          context.getRequest().setAttribute(
-              "actionError", this.getSystemStatus(context).getLabel(
-                  "object.validation.unspecifiedErrorRequestRejected") + thisStatus.getMessage());
-          return "LicenseCheckERROR";
-        }
-        //Response is good so save the new license
-        RecordList recordList = thisStatus.getRecordList();
-        if (recordList != null && recordList.getName().equals("license") && !recordList.isEmpty()) {
-          Record record = (Record) recordList.get(0);
-          if (record != null && record.getAction().equals("update")) {
-            String updatedLicense = (String) record.get("license");
-            //Validate and save it
-            XMLUtils xml2 = new XMLUtils(
-                PrivateString.decrypt(key, updatedLicense));
-            String entered = XMLUtils.getNodeText(
-                xml2.getFirstChild("entered"));
-            if (entered == null) {
-              return "LicenseCheckERROR";
-            }
-            StringUtils.saveText(
-                getPref(context, "FILELIBRARY") + "init" + fs + "input.txt", updatedLicense);
-            context.getServletContext().setAttribute(
-                "APP_TEXT", XMLUtils.getNodeText(
-                    xml2.getFirstChild("edition")));
-            String text2 = XMLUtils.getNodeText(xml2.getFirstChild("text2")).substring(
-                7);
-            if ("-1".equals(text2)) {
-              context.getServletContext().removeAttribute("APP_SIZE");
-            } else {
-              context.getServletContext().setAttribute("APP_SIZE", text2);
-            }
-            return "LicenseUpdatedOK";
-          }
-        }
-      }
-      //If manual input, then allow user to input the license code
-      if ("manual".equals(process)) {
-
-      }
-    } catch (Exception e) {
-      e.printStackTrace(System.out);
-      return "LicenseCheckERROR";
-    }
-    return "LicenseCheckOK";
+    return CustomHook.populateLicense(context, getSystemStatus(context));
   }
-  // END DHV CODE ONLY
 
 
   /**
@@ -482,4 +463,3 @@ public final class AdminConfig extends CFSModule {
   }
 
 }
-

@@ -21,7 +21,7 @@
 <table>  
   <tr>
     <th align="center" colspan=2 width="100%" nowrap>
-      <h2> Dataline, Incorporated </h2>
+      <h2> Centric CRM </h2>
     </th>
   </tr>
 </table>

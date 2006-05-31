@@ -18,12 +18,16 @@ package org.aspcfs.modules.service.actions;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SecurityHook;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.service.base.*;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.utils.LoginUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,12 +61,22 @@ public final class ProcessPacket extends CFSModule {
    * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
+    ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     TransactionStatusList statusMessages = new TransactionStatusList();
     Connection db = null;
     Connection dbLookup = null;
     String encoding = "UTF-8";
+    String commitLevel = "packet";
 
     try {
+      //Indicates if the commit happens at the packet level or the individual
+      //transaction level
+      String commit = context.getRequest().getHeader("commit-level");
+      if (commit != null && "transaction".equals(commit)) {
+        commitLevel = "transaction";
+      }
+
       //Put the request into an XML document
       XMLUtils xml = new XMLUtils(context.getRequest());
       if (System.getProperty("DEBUG") != null) {
@@ -85,21 +99,27 @@ public final class ProcessPacket extends CFSModule {
       //connection info to simulate the login; currently required for getConnection
       context.getSession().setAttribute("ConnectionElement", ce);
 
+      //Authentication Information can contain user login information
+      UserBean thisUser = null;
+
       db = this.getConnection(context);
 
-      if (!"true".equals(getPref(context, "WEBSERVER.ASPMODE"))) {
-        // Perform a lookup in the sync client table to set the authcode
-        SyncClient client = new SyncClient(db, auth.getClientId());
-        if (client.getEnabled()) {
-          auth.setAuthCode(client.getCode());
-        }
-        // The ASPMODE will look up the code in the gatekeeper table
+      boolean proceed = false;
+
+      //Authenticate based on type of authentication header
+      if (auth.getType() == AuthenticationItem.CENTRIC_USER) {
+        thisUser = isUserValid(context, db, auth, applicationPrefs);
+        proceed = (thisUser != null);
+      } else if (auth.getType() == AuthenticationItem.SYNC_CLIENT) {
+        proceed = isClientValid(context, db, auth);
       }
-      if (auth.isAuthenticated(context)) {
+
+      if (proceed) {
         //Environment variables for this packet request
         PacketContext packetContext = new PacketContext();
         packetContext.setActionContext(context);
         packetContext.setAuthenticationItem(auth);
+        packetContext.setUserBean(thisUser);
 
         //Prepare the SyncClientManager
         SyncClientManager clientManager = new SyncClientManager();
@@ -117,8 +137,10 @@ public final class ProcessPacket extends CFSModule {
         packetContext.setConnectionElement(ce);
 
         //Initialize the systemStatus for this request to reuse objects, if not already initialized
+        Site thisSite = SecurityHook.retrieveSite(context.getServletContext(), context.getRequest());
         SystemStatus systemStatus = SecurityHook.retrieveSystemStatus(
-            context.getServletContext(), db, ce);
+            context.getServletContext(), db, ce, thisSite.getLanguage());
+        packetContext.setSystemStatus(systemStatus);
 
         //Prepare the objectHooks that are cached
         ObjectHookManager hookManager = systemStatus.getHookManager();
@@ -133,7 +155,9 @@ public final class ProcessPacket extends CFSModule {
             xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         try {
-          dbLookup.setAutoCommit(false);
+          if ("packet".equals(commitLevel)) {
+            dbLookup.setAutoCommit(false);
+          }
           while (trans.hasNext()) {
             //Configure the transaction
             Element thisElement = (Element) trans.next();
@@ -146,22 +170,41 @@ public final class ProcessPacket extends CFSModule {
                 "org.aspcfs.modules.service.base.TransactionMeta");
             thisTransaction.addMapping("meta", metaMapping);
             thisTransaction.build(thisElement);
-            //Execute the transaction
-            int statusCode = thisTransaction.execute(db, dbLookup);
-            //Build a status from the transaction response
-            TransactionStatus thisStatus = new TransactionStatus();
-            thisStatus.setStatusCode(statusCode);
-            thisStatus.setId(thisTransaction.getId());
-            thisStatus.setMessage(thisTransaction.getErrorMessage());
-            thisStatus.setRecordList(thisTransaction.getRecordList());
-            statusMessages.add(thisStatus);
+
+            //Check to see if required permissions are satisfied
+            //to execute the transaction
+            if (auth.getType() == AuthenticationItem.CENTRIC_USER) {
+              //TODO: implement this
+              //proceed = thisUser.hasAccess(thisTransaction);
+              proceed = true;
+            } else if (auth.getType() == AuthenticationItem.SYNC_CLIENT) {
+              //TODO: determine access definitions
+              proceed = true;
+            }
+
+            if (proceed) {
+              int statusCode = thisTransaction.execute(db, dbLookup);
+              //Build a status from the transaction response
+              TransactionStatus thisStatus = new TransactionStatus();
+              thisStatus.setStatusCode(statusCode);
+              thisStatus.setId(thisTransaction.getId());
+              thisStatus.setMessage(thisTransaction.getErrorMessage());
+              thisStatus.setRecordList(thisTransaction.getRecordList());
+              statusMessages.add(thisStatus);
+            }
           }
-          dbLookup.commit();
+          if ("packet".equals(commitLevel)) {
+            dbLookup.commit();
+          }
         } catch (SQLException e) {
-          dbLookup.rollback();
+          if ("packet".equals(commitLevel)) {
+            dbLookup.rollback();
+          }
           throw new SQLException(e.getMessage());
         } finally {
-          dbLookup.setAutoCommit(true);
+          if ("packet".equals(commitLevel)) {
+            dbLookup.setAutoCommit(true);
+          }
         }
         //Each transaction provides a status that needs to be returned to the client
         if (statusMessages.size() == 0 && transactionList.size() == 0) {
@@ -221,6 +264,55 @@ public final class ProcessPacket extends CFSModule {
 
 
   /**
+   * Gets the userValid attribute of the ProcessPacket object
+   *
+   * @param context          Description of the Parameter
+   * @param db               Description of the Parameter
+   * @param auth             Description of the Parameter
+   * @param applicationPrefs Description of the Parameter
+   * @param thisUser         Description of the Parameter
+   * @return The userValid value
+   */
+  private UserBean isUserValid(ActionContext context, Connection db,
+                              AuthenticationItem auth, ApplicationPrefs applicationPrefs) throws Exception {
+    //Perform User Validation similar to Login
+    LoginUtils loginUtils = new LoginUtils(db, auth.getUsername(), auth.getCode());
+    loginUtils.setApplicationPrefs(applicationPrefs);
+    if (loginUtils.isUserValid(context, db)) {
+      if (loginUtils.hasHttpApiAccess(db)) {
+        return loginUtils.getUserBean();
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   * Gets the clientValid attribute of the ProcessPacket object
+   *
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param auth    Description of the Parameter
+   * @return The clientValid value
+   */
+  private boolean isClientValid(ActionContext context, Connection db, AuthenticationItem auth) throws Exception {
+    // Perform a lookup in the sync client table to set the authcode
+    SyncClient client = new SyncClient(db, auth.getClientId());
+    if (!client.getEnabled()) {
+      return false;
+    }
+    // Test aspmode first
+    if ((client.getCode() == null || "".equals(client.getCode())) && "true".equals(getPref(context, "WEBSERVER.ASPMODE")))
+    {
+      return auth.isAuthenticated(context);
+    }
+    // Test client
+    auth.setAuthCode(client.getCode());
+    return (auth.isAuthenticated(context));
+  }
+
+
+  /**
    * Clears the sync map that may have been cached in memory. The sync map only
    * needs to be cleared when the sync table has been modified.
    *
@@ -261,10 +353,7 @@ public final class ProcessPacket extends CFSModule {
         }
       }
     }
-    HashMap thisObjectMap = systemObjectMap.getObjectMapping(
-        auth.getSystemId());
-    return thisObjectMap;
+    return (systemObjectMap.getObjectMapping(auth.getSystemId()));
   }
 }
-
 

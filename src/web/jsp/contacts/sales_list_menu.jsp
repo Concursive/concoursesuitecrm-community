@@ -22,11 +22,19 @@
   var menu_init = false;
   var thisReturnValue = '';
   var thisIsLead = '';
+  var thisOrgId = '';
+  var thisIsAssigned = 'false';
+  var thisSiteId = -1;
+  var thisStatus = '';
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, value, isLead) {
+  function displayMenu(loc, id, contactId, value, isLead, orgId, isAssigned, siteId, status) {
     thisContactId = contactId;
     thisReturnValue = value;
     thisIsLead = isLead;
+    thisIsAssigned = isAssigned;
+    thisOrgId = orgId;
+    thisSiteId = siteId;
+    thisStatus = status;
     updateMenu();
     if (!menu_init) {
       menu_init = true;
@@ -38,15 +46,36 @@
   
   function updateMenu() {
     if (thisIsLead == 'true') {
+      hideSpan('menuAccount');
       hideSpan('menuContact');
+      if (thisIsAssigned == 'true') {
+        showSpan('menuLeadReassign');
+        hideSpan('menuLeadAssign');
+      } else {
+        showSpan('menuLeadAssign');
+        hideSpan('menuLeadReassign');
+      }
+      showSpan('menuLeadWorkAccount');
       showSpan('menuLeadDetails');
-      showSpan('menuLeadTrash');
       showSpan('menuLeadDelete');
+      if (thisStatus == '<%= Contact.LEAD_TRASHED %>') {
+        hideSpan('menuLeadTrash');
+      } else {
+        showSpan('menuLeadTrash');
+      }
     } else {
+      hideSpan('menuLeadAssign');
+      hideSpan('menuLeadReassign');
+      hideSpan('menuLeadWorkAccount');
       hideSpan('menuLeadDetails');
       hideSpan('menuLeadTrash');
       hideSpan('menuLeadDelete');
       showSpan('menuContact');
+      if (thisOrgId == '' || thisOrgId == '-1') {
+        hideSpan('menuAccount');
+      } else {
+        showSpan('menuAccount');
+      }
     }
   }
 
@@ -80,13 +109,29 @@
   function contactDetails() {
     popURL('ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '&popup=true&viewOnly=true','Details','650','500','yes','yes');
   }
+  
+  function orgDetails() {
+    popURL('Accounts.do?command=Details&orgId=' + thisOrgId + '&popup=true&viewOnly=true','Details','650','500','yes','yes');
+  }
 
+  function workAsAccount() {
+    popURL('Sales.do?command=AssignLead&contactId=' + thisContactId + '&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>&popup=true','Details','650','200','yes','yes');
+  }
+
+  function continueReassign(assignTo) {
+    window.location.href = 'Sales.do?command=Update&contactId='+thisContactId+'&next=&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>&owner='+assignTo;
+  }
+  
+  function reassign() {
+    var URL = 'ContactsList.do?command=ContactList&listView=employees&listType=single<%= User.getUserRecord().getSiteId() > -1?"&mySiteOnly=true":"" %>&siteId='+thisSiteId+'&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true&source=leads&flushtemplist=true&usersOnly=true&leads=true&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>';
+    popURL(URL, 'Action_Plan', 700, 425, 'yes', 'yes');
+  }
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
     <table id="menuContactTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="sales-leads-view">
-      <tr id="menuLeadDetails" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+      <tr id="menuLeadDetails" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details();">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -95,8 +140,38 @@
         </td>
       </tr>
       </dhv:permission>
+       <dhv:permission name="sales-leads-edit">
+      <tr id="menuLeadAssign" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reassign();">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="button.assignLead">Assign Lead ></dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
       <dhv:permission name="sales-leads-edit">
-      <tr id="menuLeadTrash" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="trash()">
+      <tr id="menuLeadReassign" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reassign();">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="button.reassignLead">Reassign Lead</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="sales-leads-edit">
+      <tr id="menuLeadWorkAccount" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="workAsAccount();">
+        <th>
+          <img src="images/icons/stock_link_account-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="button.workAsAccount">Work as Account</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="sales-leads-edit">
+      <tr id="menuLeadTrash" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="trash();">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -106,7 +181,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="sales-leads-delete">
-      <tr id="menuLeadDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteLead()">
+      <tr id="menuLeadDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteLead();">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -116,12 +191,22 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-view">
-      <tr id="menuContact" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="contactDetails()">
+      <tr id="menuContact" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="contactDetails();">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
           <dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-view">
+      <tr id="menuAccount" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="orgDetails();">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="actionPlan.viewAccount.text">View Account</dhv:label>
         </td>
       </tr>
       </dhv:permission>

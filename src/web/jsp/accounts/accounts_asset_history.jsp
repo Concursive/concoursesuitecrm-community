@@ -41,7 +41,18 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountsassets" selected="history" object="asset" param="<%= "id=" + asset.getId() %>">
+<%
+  if (asset.getParentList() != null && asset.getParentList().size() > 0) {
+    Iterator iter = (Iterator) asset.getParentList().iterator();
+    while (iter.hasNext()) {
+      Asset parentAsset = (Asset) iter.next();
+      String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
+      System.out.println("JSP:: printing "+ param1);
+%>
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" />
+<% }} %>
+<% String param2 = "id=" + asset.getId() + "|parentId="+asset.getId()+"|orgId="+OrgDetails.getOrgId(); %>
+<dhv:container name="accountsassets" selected="history" object="asset" param="<%= param2 %>">
     <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetHistoryInfo"/>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>

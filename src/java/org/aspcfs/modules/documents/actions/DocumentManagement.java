@@ -18,6 +18,7 @@ package org.aspcfs.modules.documents.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.FileFolderList;
 import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.Role;
 import org.aspcfs.modules.admin.base.User;
@@ -93,6 +94,7 @@ public final class DocumentManagement extends CFSModule {
       documentStoreList.setDocumentStoresForUser(getUserId(context));
       documentStoreList.setUserRole(tmpUserRoleId);
       documentStoreList.setDepartmentId(tmpDepartmentId);
+      documentStoreList.setSiteId(tmpUser.getSiteId());
       documentStoreList.setPagedListInfo(documentStoreListInfo);
       documentStoreList.buildList(db);
       context.getRequest().setAttribute(
@@ -153,6 +155,7 @@ public final class DocumentManagement extends CFSModule {
     }
     Connection db = null;
     boolean isValid = false;
+    User user = this.getUser(context, this.getUserId(context));
     try {
       db = getConnection(context);
       DocumentStore thisDocumentStore = (DocumentStore) context.getFormBean();
@@ -175,6 +178,7 @@ public final class DocumentManagement extends CFSModule {
         thisMember.setUserLevel(
             getDocumentStoreUserLevel(
                 context, db, DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER));
+        thisMember.setSiteId(user.getSiteId());
         thisMember.setEnteredBy(this.getUserId(context));
         thisMember.setModifiedBy(this.getUserId(context));
         thisMember.insert(db, DocumentStoreTeamMemberList.USER);
@@ -379,10 +383,14 @@ public final class DocumentManagement extends CFSModule {
       documentStoreId = (String) context.getRequest().getAttribute(
           "documentStoreId");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     String section = (String) context.getRequest().getParameter("section");
     //Determine the section to display
     try {
       db = getConnection(context);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
       thisDocumentStore = new DocumentStore(
           db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
@@ -531,8 +539,9 @@ public final class DocumentManagement extends CFSModule {
       context.getRequest().setAttribute(
           "IncludeSection", section.toLowerCase());
       //The user has access, so show that they accessed the Document Store
+      User user = this.getUser(context, this.getUserId(context));
       DocumentStoreTeamMember.updateLastAccessed(
-          db, thisDocumentStore.getId(), getUserId(context));
+          db, thisDocumentStore.getId(), user.getId(), user.getSiteId());
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -600,7 +609,7 @@ public final class DocumentManagement extends CFSModule {
       }
       thisDocumentStore.updateStatus(db, true, this.getUserId(context));
       updateDocumentStoreCache(context, thisDocumentStore.getId(), null);
-      indexAddItem(context, thisDocumentStore);
+      indexDeleteItem(context, thisDocumentStore);
 
       return "DeleteDocumentStoreOK";
     } catch (Exception errorMessage) {

@@ -1,0 +1,35 @@
+// Script (C) 2006 Dark Horse Ventures LLC, all rights reserved
+
+import org.aspcfs.utils.DatabaseUtils;
+import java.sql.*;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.modules.actionplans.base.*;
+
+print("Inserting new lookup table data...");
+int level = 0;
+level = LookupElement.retrieveMaxLevel(db, "lookup_step_actions");
+level += 10;
+
+int code = DatabaseUtils.getNextSeq(db, "lookup_step_actions_code_seq");
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_step_actions" +
+  "(" + (code > -1 ? "code, " : "") + "description, \"level\", constant_id) " +
+  "VALUES (" + (code > -1 ? "?, " : "") + "?, ?, ?) ");
+int i = 0;
+if (code > -1) {
+  pst.setInt(++i, code);
+}
+pst.setString(++i, "Require user to create account relationships");
+pst.setInt(++i, level);
+pst.setInt(++i, ActionStep.ATTACH_RELATIONSHIP);
+pst.execute();
+pst.close();
+code = DatabaseUtils.getCurrVal(db, "lookup_step_actions_code_seq", code);
+
+print("Inserting new step action mapping...");
+int constantId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS);
+ActionStepMap actionStepMap = new ActionStepMap();
+actionStepMap.setConstantId(constantId);
+actionStepMap.setActionConstantId(ActionStep.ATTACH_RELATIONSHIP);
+actionStepMap.insert(db);
+

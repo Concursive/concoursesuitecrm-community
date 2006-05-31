@@ -321,14 +321,13 @@ public class SurveyQuestionList extends ArrayList {
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     String sql =
         "SELECT sq.* " +
-        "FROM survey_questions sq " +
-        "WHERE sq.survey_id = ? " +
-        "ORDER BY sq.position ";
+            "FROM survey_questions sq " +
+            "WHERE sq.survey_id = ? " +
+            "ORDER BY sq.\"position\" ";
     pst = db.prepareStatement(sql);
     int i = 0;
     pst.setInt(++i, surveyId);
-    ResultSet rs = pst.executeQuery();
-    return rs;
+    return pst.executeQuery();
   }
 }
 

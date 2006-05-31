@@ -25,14 +25,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.HashMap;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author mrajkowski
- * @version $Id: RecipientList.java,v 1.10 2004/09/16 19:24:01 mrajkowski Exp
- *          $
- * @created November 26, 2001
+ * @author     mrajkowski
+ * @created    November 26, 2001
+ * @version    $Id: RecipientList.java,v 1.10 2004/09/16 19:24:01 mrajkowski Exp
+ *      $
  */
 public class RecipientList extends Vector {
 
@@ -52,19 +53,19 @@ public class RecipientList extends Vector {
   private boolean onlyResponded = false;
   private int surveyId = -1;
   private int contactId = -1;
+  private boolean allowDuplicates = false;
 
 
   /**
-   * Constructor for the RecipientList object
+   *  Constructor for the RecipientList object
    */
-  public RecipientList() {
-  }
+  public RecipientList() { }
 
 
   /**
-   * Sets the campaignId attribute of the RecipientList object
+   *  Sets the campaignId attribute of the RecipientList object
    *
-   * @param tmp The new campaignId value
+   * @param  tmp  The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -72,9 +73,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the runId attribute of the RecipientList object
+   *  Sets the runId attribute of the RecipientList object
    *
-   * @param tmp The new runId value
+   * @param  tmp  The new runId value
    */
   public void setRunId(int tmp) {
     this.runId = tmp;
@@ -82,9 +83,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the statusId attribute of the RecipientList object
+   *  Sets the statusId attribute of the RecipientList object
    *
-   * @param tmp The new statusId value
+   * @param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -92,9 +93,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the scheduledDate attribute of the RecipientList object
+   *  Sets the scheduledDate attribute of the RecipientList object
    *
-   * @param tmp The new scheduledDate value
+   * @param  tmp  The new scheduledDate value
    */
   public void setScheduledDate(java.sql.Timestamp tmp) {
     this.scheduledDate = tmp;
@@ -102,9 +103,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the sentDate attribute of the RecipientList object
+   *  Sets the sentDate attribute of the RecipientList object
    *
-   * @param tmp The new sentDate value
+   * @param  tmp  The new sentDate value
    */
   public void setSentDate(java.sql.Timestamp tmp) {
     this.sentDate = tmp;
@@ -112,9 +113,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the hasNullSentDate attribute of the RecipientList object
+   *  Sets the hasNullSentDate attribute of the RecipientList object
    *
-   * @param tmp The new hasNullSentDate value
+   * @param  tmp  The new hasNullSentDate value
    */
   public void setHasNullSentDate(boolean tmp) {
     this.hasNullSentDate = tmp;
@@ -122,9 +123,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the buildContact attribute of the RecipientList object
+   *  Sets the buildContact attribute of the RecipientList object
    *
-   * @param tmp The new buildContact value
+   * @param  tmp  The new buildContact value
    */
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
@@ -132,9 +133,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the pagedListInfo attribute of the RecipientList object
+   *  Sets the pagedListInfo attribute of the RecipientList object
    *
-   * @param tmp The new pagedListInfo value
+   * @param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -142,9 +143,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the statusRangeStart attribute of the RecipientList object
+   *  Sets the statusRangeStart attribute of the RecipientList object
    *
-   * @param tmp The new statusRangeStart value
+   * @param  tmp  The new statusRangeStart value
    */
   public void setStatusRangeStart(java.sql.Timestamp tmp) {
     this.statusRangeStart = tmp;
@@ -152,9 +153,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the statusRangeEnd attribute of the RecipientList object
+   *  Sets the statusRangeEnd attribute of the RecipientList object
    *
-   * @param tmp The new statusRangeEnd value
+   * @param  tmp  The new statusRangeEnd value
    */
   public void setStatusRangeEnd(java.sql.Timestamp tmp) {
     this.statusRangeEnd = tmp;
@@ -162,9 +163,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the status attribute of the RecipientList object
+   *  Sets the status attribute of the RecipientList object
    *
-   * @param tmp The new status value
+   * @param  tmp  The new status value
    */
   public void setStatus(String tmp) {
     this.status = tmp;
@@ -172,9 +173,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the onlyResponded attribute of the RecipientList object
+   *  Sets the onlyResponded attribute of the RecipientList object
    *
-   * @param tmp The new onlyResponded value
+   * @param  tmp  The new onlyResponded value
    */
   public void setOnlyResponded(boolean tmp) {
     this.onlyResponded = tmp;
@@ -182,9 +183,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the onlyResponded attribute of the RecipientList object
+   *  Sets the onlyResponded attribute of the RecipientList object
    *
-   * @param tmp The new onlyResponded value
+   * @param  tmp  The new onlyResponded value
    */
   public void setOnlyResponded(String tmp) {
     this.onlyResponded = DatabaseUtils.parseBoolean(tmp);
@@ -192,9 +193,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the surveyId attribute of the RecipientList object
+   *  Sets the surveyId attribute of the RecipientList object
    *
-   * @param tmp The new surveyId value
+   * @param  tmp  The new surveyId value
    */
   public void setSurveyId(int tmp) {
     this.surveyId = tmp;
@@ -202,9 +203,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the surveyId attribute of the RecipientList object
+   *  Sets the surveyId attribute of the RecipientList object
    *
-   * @param tmp The new surveyId value
+   * @param  tmp  The new surveyId value
    */
   public void setSurveyId(String tmp) {
     this.surveyId = Integer.parseInt(tmp);
@@ -212,9 +213,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the contactId attribute of the RecipientList object
+   *  Sets the contactId attribute of the RecipientList object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -222,9 +223,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Sets the contactId attribute of the RecipientList object
+   *  Sets the contactId attribute of the RecipientList object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -232,9 +233,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the campaignId attribute of the RecipientList object
+   *  Gets the campaignId attribute of the RecipientList object
    *
-   * @return The campaignId value
+   * @return    The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -242,9 +243,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the runId attribute of the RecipientList object
+   *  Gets the runId attribute of the RecipientList object
    *
-   * @return The runId value
+   * @return    The runId value
    */
   public int getRunId() {
     return runId;
@@ -252,9 +253,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the statusId attribute of the RecipientList object
+   *  Gets the statusId attribute of the RecipientList object
    *
-   * @return The statusId value
+   * @return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -262,9 +263,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the scheduledDate attribute of the RecipientList object
+   *  Gets the scheduledDate attribute of the RecipientList object
    *
-   * @return The scheduledDate value
+   * @return    The scheduledDate value
    */
   public java.sql.Timestamp getScheduledDate() {
     return scheduledDate;
@@ -272,9 +273,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the sentDate attribute of the RecipientList object
+   *  Gets the sentDate attribute of the RecipientList object
    *
-   * @return The sentDate value
+   * @return    The sentDate value
    */
   public java.sql.Timestamp getSentDate() {
     return sentDate;
@@ -282,9 +283,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the hasNullSentDate attribute of the RecipientList object
+   *  Gets the hasNullSentDate attribute of the RecipientList object
    *
-   * @return The hasNullSentDate value
+   * @return    The hasNullSentDate value
    */
   public boolean getHasNullSentDate() {
     return hasNullSentDate;
@@ -292,9 +293,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the buildContact attribute of the RecipientList object
+   *  Gets the buildContact attribute of the RecipientList object
    *
-   * @return The buildContact value
+   * @return    The buildContact value
    */
   public boolean getBuildContact() {
     return buildContact;
@@ -302,9 +303,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Gets the pagedListInfo attribute of the RecipientList object
+   *  Gets the pagedListInfo attribute of the RecipientList object
    *
-   * @return The pagedListInfo value
+   * @return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -312,10 +313,40 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Description of the Method
+   *  Gets the allowDuplicates attribute of the RecipientList object
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @return    The allowDuplicates value
+   */
+  public boolean getAllowDuplicates() {
+    return allowDuplicates;
+  }
+
+
+  /**
+   *  Sets the allowDuplicates attribute of the RecipientList object
+   *
+   * @param  tmp  The new allowDuplicates value
+   */
+  public void setAllowDuplicates(boolean tmp) {
+    this.allowDuplicates = tmp;
+  }
+
+
+  /**
+   *  Sets the allowDuplicates attribute of the RecipientList object
+   *
+   * @param  tmp  The new allowDuplicates value
+   */
+  public void setAllowDuplicates(String tmp) {
+    this.allowDuplicates = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -348,11 +379,12 @@ public class RecipientList extends Vector {
       pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
+      //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND (" + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? AND c.namelast IS NOT NULL) ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -365,10 +397,10 @@ public class RecipientList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("id", null);
+      pagedListInfo.setDefaultSort("c.namelast", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY id ");
+      sqlOrder.append("ORDER BY c.namelast ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -379,6 +411,7 @@ public class RecipientList extends Vector {
     }
     sqlSelect.append(
         "r.* FROM scheduled_recipient r " +
+        "LEFT JOIN contact c ON (r.contact_id = c.contact_id) " +
         "WHERE r.id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -405,9 +438,9 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param sqlFilter Description of the Parameter
+   * @param  sqlFilter  Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -445,17 +478,17 @@ public class RecipientList extends Vector {
           "AND r.contact_id NOT IN (SELECT contact_id FROM active_survey_responses WHERE active_survey_id = ?) ");
     }
     if (this.contactId != -1) {
-      sqlFilter.append("AND contact_id = ? ");
+      sqlFilter.append("AND r.contact_id = ? ");
     }
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -494,13 +527,13 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db       Description of the Parameter
-   * @param moduleId Description of the Parameter
-   * @param itemId   Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  moduleId       Description of the Parameter
+   * @param  itemId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;
@@ -527,10 +560,11 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     Iterator itr = this.iterator();
@@ -543,11 +577,11 @@ public class RecipientList extends Vector {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int queryRecordCount(Connection db) throws SQLException {
     int recordCount = 0;
@@ -568,6 +602,35 @@ public class RecipientList extends Vector {
     pst.close();
     rs.close();
     return recordCount;
+  }
+
+
+  /**
+   *  Adds a feature to the Recipient attribute of the RecipientList object
+   *
+   * @param  db                The feature to be added to the Recipient
+   *      attribute
+   * @param  contactId         The feature to be added to the Recipient
+   *      attribute
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public boolean addRecipient(Connection db, String contactId) throws SQLException {
+    if (!this.getAllowDuplicates()) {
+      Iterator itr = this.iterator();
+      while (itr.hasNext()) {
+        Recipient recipient = (Recipient) itr.next();
+        if (recipient.getContact().getId() == Integer.parseInt(contactId.trim())) {
+          return false;
+        }
+      }
+    }
+    Recipient recipient = new Recipient();
+    recipient.setContactId(contactId);
+    recipient.setCampaignId(this.getCampaignId());
+    recipient.setAllowDuplicates(this.getAllowDuplicates());
+    recipient.insert(db);
+    return (recipient.getId() != -1);
   }
 }
 

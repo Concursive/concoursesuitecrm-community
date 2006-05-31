@@ -34,7 +34,7 @@
       <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 %>">
         <br>
         <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle">
-        <dhv:evaluate if="<%= request.getParameter("popup") == null %>"><dhv:permission name="contacts-view,contacts-external_contacts-view"><a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>"></dhv:permission></dhv:evaluate><%= toHtml(opportunityHeader.getContactName()) %><dhv:evaluate if="<%= request.getParameter("popup") == null %>"><dhv:permission name="contacts-view,contacts-external_contacts-view"></a></dhv:permission></dhv:evaluate>
+        <dhv:evaluate if="<%= request.getParameter("popup") == null %>"><dhv:permission name="contacts-view,contacts-external_contacts-view"><a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>"></dhv:permission></dhv:evaluate><%= toHtml(opportunityHeader.getContactName()) %><dhv:evaluate if="<%= request.getParameter("popup") == null %>"><dhv:permission name="contacts-view,contacts-external_contacts-view,accounts-accounts-contacts-view"></a></dhv:permission></dhv:evaluate>
         <dhv:evaluate if="<%= hasText(opportunityHeader.getContactCompanyName()) %>">
           (<%= toHtml(opportunityHeader.getContactCompanyName()) %>)
         </dhv:evaluate>

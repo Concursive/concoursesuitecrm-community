@@ -66,7 +66,7 @@ public class ProductOptionConfiguratorList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_option_configurator AS poptconfig " +
+        "FROM product_option_configurator poptconfig " +
         "WHERE poptconfig.configurator_id > 0");
 
     createFilter(sqlFilter, db);
@@ -91,7 +91,7 @@ public class ProductOptionConfiguratorList extends ArrayList {
     }
     sqlSelect.append(
         "conf.* " +
-        "FROM product_option_configurator AS conf " +
+        "FROM product_option_configurator conf " +
         "WHERE conf.configurator_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

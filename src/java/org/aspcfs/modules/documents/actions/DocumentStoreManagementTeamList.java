@@ -16,6 +16,7 @@
 package org.aspcfs.modules.documents.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.RoleList;
@@ -25,6 +26,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.documents.base.DocumentStore;
 import org.aspcfs.modules.documents.base.DocumentStoreList;
 import org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList;
+import org.aspcfs.utils.UserUtils;
 import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 
@@ -57,11 +59,20 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
     String status = st.nextToken();
     //Build the list
     Connection db = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     String memberType = context.getRequest().getParameter("memberType");
     DocumentStoreList documentStoreList = new DocumentStoreList();
     try {
+      String siteId = "-1";
+      if (st.hasMoreTokens()) {
+        siteId = st.nextToken();
+        context.getRequest().setAttribute("siteId", siteId);
+      }
       db = getConnection(context);
       context.getRequest().setAttribute("memberType", memberType);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
       if ("my".equals(source) || "all".equals(source)) {
         documentStoreList.setDocumentStoresForUser(getUserId(context));
         if ("open".equals(status)) {
@@ -116,7 +127,12 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
     StringTokenizer st = new StringTokenizer(value, "|");
     String source = st.nextToken();
     String status = st.nextToken();
+    String siteId = String.valueOf(this.getUserSiteId(context));
     String id = st.nextToken();
+    if (st.hasMoreTokens()) {
+      siteId = st.nextToken();
+      context.getRequest().setAttribute("siteId", siteId);
+    }
     Connection db = null;
     try {
       db = getConnection(context);
@@ -142,6 +158,7 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
         UserList users = new UserList();
         users.setDepartment(Integer.parseInt(id));
         users.setBuildEmployeeUsersOnly(true);
+        users.setSiteId(siteId);
         users.buildList(db);
         context.getRequest().setAttribute("UserList", users);
         return ("MakeUserListOK");
@@ -161,6 +178,14 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
           Organization organization = new Organization(
               db, thisUser.getContact().getOrgId());
           
+          //remove account contacts whose siteId is different from the
+          //the siteId of the user.
+          if (UserUtils.getUserSiteId(context.getRequest()) != -1){
+            if (organization.getSiteId() != UserUtils.getUserSiteId(context.getRequest())){
+              itr.remove();
+              continue;
+            }
+          }
           //Append organization name if this user is not a primary contact of this organization
           if (organization.getPrimaryContact() != null) {
             if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()) {

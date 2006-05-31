@@ -62,35 +62,35 @@ public class CFSDatasource implements DataSource {
    */
   public static String querySearching =
       "SELECT \"second\", \"minute\", \"hour\", dayofmonth, " +
-      "\"month\", dayofweek, \"year\", task, extrainfo, businessDays " +
-      "FROM events " +
-      "WHERE task = ? ";
+          "\"month\", \"dayofweek\", \"year\", task, extrainfo, businessDays " +
+          "FROM events " +
+          "WHERE task = ? ";
 
   /**
    * This Query stores the Crontab entries
    */
   public static String queryStoring =
       "INSERT INTO events(" +
-      "\"second\", \"minute\", \"hour\", dayofmonth, " +
-      "\"month\", dayofweek, \"year\", " +
-      "task, extrainfo, businessDays) " +
-      "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+          "\"second\", \"minute\", \"hour\", dayofmonth, " +
+          "\"month\", \"dayofweek\", \"year\", " +
+          "task, extrainfo, businessDays) " +
+          "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
   /**
    * This Query removes the given Crontab Entries
    */
   public static String queryRemoving =
       "DELETE FROM events WHERE " +
-      "\"second\" = ? AND " +
-      "\"minute\" = ? AND " +
-      "\"hour\" = ? AND " +
-      "dayofmonth = ? AND " +
-      "\"month\" = ? AND " +
-      "dayofweek = ? AND " +
-      "\"year\" = ? AND " +
-      "task = ? AND " +
-      "extrainfo = ? AND " +
-      "businessDays = ?";
+          "\"second\" = ? AND " +
+          "\"minute\" = ? AND " +
+          "\"hour\" = ? AND " +
+          "dayofmonth = ? AND " +
+          "\"month\" = ? AND " +
+          "\"dayofweek\" = ? AND " +
+          "\"year\" = ? AND " +
+          "task = ? AND " +
+          "extrainfo = ? AND " +
+          "businessDays = ?";
 
   private static String DEFAULT_TABLE = "events";
 
@@ -167,6 +167,7 @@ public class CFSDatasource implements DataSource {
     ConnectionElement gk = new ConnectionElement(dbUrl, dbUser, dbPwd);
     gk.setDriver(
         crontab.getProperty("org.jcrontab.data.GenericSQLSource.driver"));
+    gk.setDbName(crontab.getProperty("org.jcrontab.data.GenericSQLSource.database"));
     Connection db = null;
     SiteList siteList = new SiteList();
     siteList.setEnabled(Constants.TRUE);
@@ -179,18 +180,29 @@ public class CFSDatasource implements DataSource {
       cp.free(db);
     }
     //For each qualifying database in gatekeeper, get events
-    Iterator sites = siteList.iterator();
-    while (sites.hasNext()) {
-      Site thisSite = (Site) sites.next();
-      ConnectionElement ce = new ConnectionElement(
-          thisSite.getDatabaseUrl(),
-          thisSite.getDatabaseUsername(),
-          thisSite.getDatabasePassword());
-      ce.setDriver(thisSite.getDatabaseDriver());
-      ce.setDbName(thisSite.getDatabaseName());
+    if (siteList.size() > 0) {
+      Iterator sites = siteList.iterator();
+      while (sites.hasNext()) {
+        Site thisSite = (Site) sites.next();
+        ConnectionElement ce = new ConnectionElement(
+            thisSite.getDatabaseUrl(),
+            thisSite.getDatabaseUsername(),
+            thisSite.getDatabasePassword());
+        ce.setDriver(thisSite.getDatabaseDriver());
+        ce.setDbName(thisSite.getDatabaseName());
+        try {
+          db = cp.getConnection(ce);
+          findAll(events, db, "business_process_events", ce);
+        } catch (Exception e) {
+        } finally {
+          cp.free(db);
+        }
+      }
+    } else {
+      // The gatekeeper must be the only site
       try {
-        db = cp.getConnection(ce);
-        findAll(events, db, "business_process_events", ce);
+        db = cp.getConnection(gk);
+        findAll(events, db, "business_process_events", gk);
       } catch (Exception e) {
       } finally {
         cp.free(db);
@@ -238,9 +250,9 @@ public class CFSDatasource implements DataSource {
     try {
       pst = conn.prepareStatement(
           "SELECT \"second\", \"minute\", \"hour\", dayofmonth, " +
-          "\"month\", dayofweek, \"year\", task, extrainfo, businessDays " +
-          "FROM " + table + " " +
-          "WHERE enabled = ?");
+              "\"month\", \"dayofweek\", \"year\", task, extrainfo, businessDays " +
+              "FROM " + table + " " +
+              "WHERE enabled = ?");
       pst.setBoolean(1, true);
       rs = pst.executeQuery();
       while (rs.next()) {
@@ -257,8 +269,8 @@ public class CFSDatasource implements DataSource {
         String extrainfo = rs.getString("extrainfo");
         String line =
             minute + " " + hour + " " + dayofmonth
-            + " " + month + " "
-            + dayofweek + " " + task + " " + extrainfo;
+                + " " + month + " "
+                + dayofweek + " " + task + " " + extrainfo;
         boolean businessDays = rs.getBoolean("businessDays");
         //Process the data into a bean
         CrontabEntryBean ceb = cp.marshall(line);
@@ -512,4 +524,3 @@ public class CFSDatasource implements DataSource {
     }
   }
 }
-

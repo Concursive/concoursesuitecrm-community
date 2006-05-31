@@ -25,6 +25,9 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <form name="details" action="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>" method="post">
+<input type="hidden" name="actionStepId" value="<%= request.getAttribute("actionStepId") %>"/>
+<input type="hidden" name="source" value="<%= request.getAttribute("source") %>"/>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -44,7 +47,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>">
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
       <td>
@@ -66,8 +70,8 @@
   </table>
   <dhv:evaluate if="<%= !Category.isEmpty() %>">
     <br>
-    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'" />
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'" /><br />
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&popup=<%= isPopup(request) %>'" />
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&popup=<%= isPopup(request) %>'" /><br />
     <br><dhv:formMessage showSpace="false" />
   </dhv:evaluate>
 <%
@@ -113,8 +117,8 @@
 <%}%>
   <dhv:evaluate if="<%= !Category.isEmpty() %>">
     <br>
-    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&popup=<%= isPopup(request) %>'">
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&popup=<%= isPopup(request) %>'">
   </dhv:evaluate>
 <%}else{%>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

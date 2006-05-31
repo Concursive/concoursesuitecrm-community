@@ -17,6 +17,7 @@ package org.aspcfs.modules.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.assets.base.Asset;
 import org.aspcfs.modules.assets.base.AssetList;
 import org.aspcfs.modules.base.CategoryList;
@@ -117,7 +118,13 @@ public final class AssetSelector extends CFSModule {
           -1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("assetStatusList", assetStatusList);
 
-      buildCategories(context, db, null);
+      LookupList assetManufacturerList = new LookupList(db, "lookup_asset_manufacturer");
+      assetManufacturerList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("assetManufacturerList", assetManufacturerList);
+      
+      String orgIdString = context.getRequest().getParameter("orgId");
+      Organization organization = new Organization(db,Integer.parseInt(orgIdString));
+      buildCategories(context, db, null, organization.getSiteId());
 
       try {
         tmpContractId = Integer.parseInt(
@@ -127,7 +134,7 @@ public final class AssetSelector extends CFSModule {
       }
       assetList.setServiceContractId(tmpContractId);
       setParameters(assetList, context);
-      assetList.setOrgId(context.getRequest().getParameter("orgId"));
+      assetList.setOrgId(orgIdString);
       assetList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -217,12 +224,13 @@ public final class AssetSelector extends CFSModule {
    * @param thisAsset Description of the Parameter
    * @throws SQLException Description of the Exception
    */
-  public void buildCategories(ActionContext context, Connection db, Asset thisAsset) throws SQLException {
+  public void buildCategories(ActionContext context, Connection db, Asset thisAsset, int siteId) throws SQLException {
     SystemStatus thisSystem = this.getSystemStatus(context);
 
     CategoryList categoryList1 = new CategoryList("asset_category");
     categoryList1.setCatLevel(0);
     categoryList1.setParentCode(0);
+    categoryList1.setSiteId(siteId);
     categoryList1.buildList(db);
     categoryList1.setHtmlJsEvent(
         "onChange=\"javascript:updateCategoryList('1');\"");
@@ -232,6 +240,7 @@ public final class AssetSelector extends CFSModule {
 
     CategoryList categoryList2 = new CategoryList("asset_category");
     categoryList2.setCatLevel(1);
+    categoryList2.setSiteId(siteId);
     if (thisAsset == null) {
       categoryList2.buildList(db);
     } else if (thisAsset.getLevel1() > -1) {
@@ -246,6 +255,7 @@ public final class AssetSelector extends CFSModule {
 
     CategoryList categoryList3 = new CategoryList("asset_category");
     categoryList3.setCatLevel(2);
+    categoryList3.setSiteId(siteId);
     if (thisAsset == null) {
       categoryList3.buildList(db);
     } else if (thisAsset.getLevel2() > -1) {

@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -46,13 +47,14 @@ public class SurveyQuestion {
   private String description = null;
   private boolean required = false;
   private ItemList itemList = null;
+  public HashMap errors = new HashMap();
+  public HashMap warnings = new HashMap();
 
 
   /**
    * Constructor for the SurveyQuestion object
    */
-  public SurveyQuestion() {
-  }
+  public SurveyQuestion() { }
 
 
   /**
@@ -75,6 +77,7 @@ public class SurveyQuestion {
    * Constructor for the SurveyQuestion object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public SurveyQuestion(ResultSet rs) throws SQLException {
@@ -335,25 +338,65 @@ public class SurveyQuestion {
 
 
   /**
+   * Gets the errors attribute of the SurveyQuestion object
+   *
+   * @return The errors value
+   */
+  public HashMap getErrors() {
+    return errors;
+  }
+
+
+  /**
+   * Sets the errors attribute of the SurveyQuestion object
+   *
+   * @param tmp The new errors value
+   */
+  public void setErrors(HashMap tmp) {
+    this.errors = tmp;
+  }
+
+
+  /**
+   * Gets the warnings attribute of the SurveyQuestion object
+   *
+   * @return The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
+  }
+
+
+  /**
+   * Sets the warnings attribute of the SurveyQuestion object
+   *
+   * @param tmp The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
    * Description of the Method
    *
    * @param db       Description of the Parameter
    * @param surveyId Description of the Parameter
+   * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, int surveyId) throws SQLException {
-    boolean doCommit = false;
+    boolean doCommit = db.getAutoCommit();
     try {
-      doCommit = db.getAutoCommit();
-      if (doCommit == true) {
+      if (doCommit) {
         db.setAutoCommit(false);
       }
       int i = 0;
       //calculate the next position for this question
       PreparedStatement pst = db.prepareStatement(
-          "SELECT max(position) as maxPosition " +
-          "FROM survey_questions " +
-          "WHERE survey_id = ? ");
+          "SELECT max(\"position\") as maxPosition " +
+              "FROM survey_questions " +
+              "WHERE survey_id = ? ");
       pst.setInt(++i, surveyId);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -365,9 +408,9 @@ public class SurveyQuestion {
       id = DatabaseUtils.getNextSeq(db, "survey_question_question_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO survey_questions " +
-          "(" + (id > -1 ? "question_id, " : "") + "survey_id, type, description, required, position ) " +
-          "VALUES " +
-          "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+              "(" + (id > -1 ? "question_id, " : "") + "survey_id, \"type\", description, required, \"position\" ) " +
+              "VALUES " +
+              "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       i = 0;
       if (id > -1) {
         pst.setInt(++i, id);
@@ -429,16 +472,16 @@ public class SurveyQuestion {
    * @throws SQLException Description of the Exception
    */
   public void update(Connection db, int thisSurveyId) throws SQLException {
-    boolean doCommit = false;
+    boolean doCommit = db.getAutoCommit();
     try {
-      if ((doCommit = db.getAutoCommit()) == true) {
+      if (doCommit) {
         db.setAutoCommit(false);
       }
       ItemList.delete(db, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_questions " +
-          "SET survey_id = ?, type = ?, description = ?, required = ?, position = ? " +
-          "WHERE question_id = ? ");
+              "SET survey_id = ?, \"type\" = ?, description = ?, required = ?, \"position\" = ? " +
+              "WHERE question_id = ? ");
       int i = 0;
       pst.setInt(++i, thisSurveyId);
       pst.setInt(++i, this.getType());
@@ -448,7 +491,6 @@ public class SurveyQuestion {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-
       if (this.getType() == ITEMLIST) {
         Iterator y = this.getItemList().iterator();
         while (y.hasNext()) {
@@ -481,9 +523,8 @@ public class SurveyQuestion {
    * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, int thisSurveyId) throws SQLException {
-    boolean commit = true;
+    boolean commit = db.getAutoCommit();
     try {
-      commit = db.getAutoCommit();
       int i = 0;
       if (commit) {
         db.setAutoCommit(false);
@@ -493,8 +534,7 @@ public class SurveyQuestion {
 
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM survey_questions " +
-          "WHERE survey_id = ? AND question_id = ? ");
-
+              "WHERE survey_id = ? AND question_id = ? ");
       pst.setInt(++i, thisSurveyId);
       pst.setInt(++i, this.getId());
       pst.execute();

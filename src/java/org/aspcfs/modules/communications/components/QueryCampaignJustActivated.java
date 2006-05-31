@@ -54,15 +54,12 @@ public class QueryCampaignJustActivated extends ObjectHookComponent implements C
     boolean result = false;
     Campaign thisCampaign = (Campaign) context.getThisObject();
     Campaign previousCampaign = (Campaign) context.getPreviousObject();
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
-      result = (previousCampaign.getStatusId() == Campaign.IDLE || previousCampaign.getStatusId() == Campaign.CANCELED) &&
-          (thisCampaign.getStatusId() == Campaign.QUEUE || thisCampaign.getStatusId() == Campaign.STARTED ||
-          thisCampaign.getStatusId() == Campaign.FINISHED || thisCampaign.getStatusId() == Campaign.ERROR);
-    } catch (Exception e) {
-    } finally {
-      this.freeConnection(context, db);
+    result = (previousCampaign.getStatusId() == Campaign.IDLE || previousCampaign.getStatusId() == Campaign.CANCELED) &&
+        (thisCampaign.getStatusId() == Campaign.QUEUE || thisCampaign.getStatusId() == Campaign.STARTED ||
+        thisCampaign.getStatusId() == Campaign.FINISHED || thisCampaign.getStatusId() == Campaign.ERROR);
+    if (!result) {
+      result = (previousCampaign.getStatusId() == Campaign.ERROR || previousCampaign.getStatusId() == Campaign.FINISHED || 
+                previousCampaign.getStatusId() == Campaign.QUEUE) && thisCampaign.getStatusId() == Campaign.QUEUE;
     }
     return result;
   }

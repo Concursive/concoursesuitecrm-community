@@ -48,7 +48,7 @@ function page_init() {
     }
   } else {
 %>
-    list.options[list.length] = newOpt("---------None---------", "-1");
+    list.options[list.length] = newOpt(label("option.none","-- None --"), "-1");
 <%
   }
   // Since level and level + 1 are filled, erase the others
@@ -64,7 +64,7 @@ function page_init() {
 }
 function resetList(list) {
   list.options.length = 0;
-  list.options[list.length] = newOpt("---------None---------", "-1");
+  list.options[list.length] = newOpt(label("option.none","-- None --"), "-1");
 }
 </script>
 </body>

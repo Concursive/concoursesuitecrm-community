@@ -16,6 +16,8 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -40,7 +42,7 @@
     </td>
   </tr>
 </table>
-<!-- (C) 2001-2004 Dark Horse Ventures -->
+<!-- (C) 2000-2006 Dark Horse Ventures, LLC -->
 </body>
 </html>
 

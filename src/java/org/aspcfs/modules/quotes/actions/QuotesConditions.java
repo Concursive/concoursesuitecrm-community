@@ -140,7 +140,9 @@ public final class QuotesConditions extends CFSModule {
         }
       }
       selectList.setTableName(tableName);
+      lookupSelectorInfo.setColumnToSortBy("description");
       selectList.setPagedListInfo(lookupSelectorInfo);
+      lookupSelectorInfo.setSearchCriteria(selectList, context);
       selectList.setSelectedItems(selectedList);
       selectList.buildList(db);
     } catch (Exception e) {
@@ -168,6 +170,11 @@ public final class QuotesConditions extends CFSModule {
     if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
         context, "accounts-quotes-edit")
         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    //Check access permission to organization record
+    Quote quote = new Quote(db, Integer.parseInt(quoteId));
+    if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
       return ("PermissionError");
     }
     QuoteConditionList oldConditions = new QuoteConditionList();
@@ -216,6 +223,10 @@ public final class QuotesConditions extends CFSModule {
       db = getConnection(context);
       if (quoteId != null && !"".equals(quoteId)) {
         quote = new Quote(db, Integer.parseInt(quoteId));
+        //Check access permission to organization record
+        if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+          return ("PermissionError");
+        }
         context.getRequest().setAttribute("quote", quote);
       }
     } catch (Exception e) {
@@ -252,7 +263,11 @@ public final class QuotesConditions extends CFSModule {
     try {
       db = getConnection(context);
       if (quoteId != null && !"".equals(quoteId)) {
+        //Check access permission to organization record
         quote = new Quote(db, Integer.parseInt(quoteId));
+        if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+          return ("PermissionError");
+        }
         context.getRequest().setAttribute("quote", quote);
         QuoteCondition condition = new QuoteCondition();
         condition.setConditionName(description);
@@ -298,6 +313,11 @@ public final class QuotesConditions extends CFSModule {
     if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
         context, "accounts-quotes-edit")
         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    //Check access permission to organization record
+    Quote quote = new Quote(db, Integer.parseInt(quoteId));
+    if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
       return ("PermissionError");
     }
     QuoteRemarkList oldRemarks = new QuoteRemarkList();
@@ -346,6 +366,10 @@ public final class QuotesConditions extends CFSModule {
       db = getConnection(context);
       if (quoteId != null && !"".equals(quoteId)) {
         quote = new Quote(db, Integer.parseInt(quoteId));
+        //Check access permission to organization record
+        if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+          return ("PermissionError");
+        }
         context.getRequest().setAttribute("quote", quote);
       }
     } catch (Exception e) {
@@ -383,6 +407,10 @@ public final class QuotesConditions extends CFSModule {
       db = getConnection(context);
       if (quoteId != null && !"".equals(quoteId)) {
         quote = new Quote(db, Integer.parseInt(quoteId));
+        //Check access permission to organization record
+        if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+          return ("PermissionError");
+        }
         context.getRequest().setAttribute("quote", quote);
         QuoteRemark remark = new QuoteRemark();
         remark.setRemarkName(description);
@@ -431,9 +459,15 @@ public final class QuotesConditions extends CFSModule {
         "conditionId");
     String orgId = (String) context.getRequest().getParameter("orgId");
     String headerId = (String) context.getRequest().getParameter("headerId");
+    String contactId = (String) context.getRequest().getParameter("contactId");
     Connection db = null;
     try {
       db = getConnection(context);
+      //Check access permission to organization record
+      Quote quote = new Quote(db, Integer.parseInt(quoteId));
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       QuoteCondition quoteCondition = new QuoteCondition();
       quoteCondition.queryRecord(
           db, Integer.parseInt(quoteId), Integer.parseInt(conditionId));
@@ -445,7 +479,12 @@ public final class QuotesConditions extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (orgId != null && !"".equals(orgId)) {
+    if (contactId != null && !"".equals(contactId)){
+      if (orgId != null && !"".equals(orgId) &&
+          headerId != null && !"".equals(headerId)){
+          return "RemoveConditionContactOppOK";
+      }
+    } else if (orgId != null && !"".equals(orgId)) {
       return "RemoveConditionOrgOK";
     } else if (headerId != null && !"".equals(headerId)) {
       return "RemoveConditionOppOK";
@@ -470,9 +509,15 @@ public final class QuotesConditions extends CFSModule {
     String remarkId = (String) context.getRequest().getParameter("remarkId");
     String orgId = (String) context.getRequest().getParameter("orgId");
     String headerId = (String) context.getRequest().getParameter("headerId");
+    String contactId = (String) context.getRequest().getParameter("contactId");
     Connection db = null;
     try {
       db = getConnection(context);
+      //Check access permission to organization record
+      Quote quote = new Quote(db, Integer.parseInt(quoteId));
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       QuoteRemark quoteRemark = new QuoteRemark(
           db, Integer.parseInt(quoteId), Integer.parseInt(remarkId));
       quoteRemark.delete(db);
@@ -483,7 +528,12 @@ public final class QuotesConditions extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (orgId != null && !"".equals(orgId)) {
+    if (contactId != null && !"".equals(contactId)){
+      if (orgId != null && !"".equals(orgId) &&
+          headerId != null && !"".equals(headerId)){
+          return "RemoveRemarkContactOppOK";
+      }
+    } else if (orgId != null && !"".equals(orgId)) {
       return "RemoveRemarkOrgOK";
     } else if (headerId != null && !"".equals(headerId)) {
       return "RemoveRemarkOppOK";

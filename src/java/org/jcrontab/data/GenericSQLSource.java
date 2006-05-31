@@ -54,7 +54,7 @@ public class GenericSQLSource implements DataSource {
    */
   public static String queryAll =
       "SELECT \"second\", \"minute\', \"hour\', dayofmonth, " +
-      "\"month\", dayofweek, \"year\", task, extrainfo, businessDays " +
+      "\"month\", \"dayofweek\", \"year\", task, extrainfo, businessDays " +
       "FROM events " +
       "WHERE enabled = ?";
 
@@ -64,7 +64,7 @@ public class GenericSQLSource implements DataSource {
    */
   public static String querySearching =
       "SELECT \"second\", \"minute\", \"hour\", dayofmonth, " +
-      "\"month\", dayofweek, \"year\", task, extrainfo, businessDays " +
+      "\"month\", \"dayofweek\", \"year\", task, extrainfo, businessDays " +
       "FROM events " +
       "WHERE task = ? ";
 
@@ -74,7 +74,7 @@ public class GenericSQLSource implements DataSource {
   public static String queryStoring =
       "INSERT INTO events(" +
       "\"second\", \"minute\", \"hour\", dayofmonth, " +
-      "\"month\", dayofweek, \"year\", " +
+      "\"month\", \"dayofweek\", \"year\", " +
       "task, extrainfo, businessDays) " +
       "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
@@ -88,7 +88,7 @@ public class GenericSQLSource implements DataSource {
       "\"hour\" = ? AND " +
       "dayofmonth = ? AND " +
       "\"month\" = ? AND " +
-      "dayofweek = ? AND " +
+      "\"dayofweek\" = ? AND " +
       "\"year\" = ? AND " +
       "task = ? AND " +
       "extrainfo = ? AND " +
@@ -445,4 +445,3 @@ public class GenericSQLSource implements DataSource {
     }
   }
 }
-

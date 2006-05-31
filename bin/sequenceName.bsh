@@ -1,0 +1,35 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh-2.0b2.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  sequenceName <name>");
+  print("");
+  print("A safe sequence name will be printed");
+  System.exit(0);
+}
+
+String psSequenceName = bsh.args[0].trim();
+String fbSequenceName = bsh.args[0].trim();
+String orSequenceName = bsh.args[0].trim();
+
+if (fbSequenceName.length() > 31) {
+  String seqPart1 = fbSequenceName.substring(0, 13);
+  String seqPart2 = fbSequenceName.substring(14);
+  fbSequenceName = seqPart1 + "_" + seqPart2.substring(seqPart2.length() - 17);
+}
+
+if (orSequenceName.length() > 30) {
+  String seqPart1 = orSequenceName.substring(0, 13);
+  String seqPart2 = orSequenceName.substring(14);
+  orSequenceName = seqPart1 + "_" + seqPart2.substring(seqPart2.length() - 16);
+}
+print("PostgreSQL:   " + psSequenceName);
+print("Firebird SQL: " + fbSequenceName);
+print("Oracle:       " + orSequenceName);
+
+System.exit(0);
+

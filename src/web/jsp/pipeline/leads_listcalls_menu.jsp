@@ -23,11 +23,15 @@
   var thisView = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, headerId, callId, view, trashed) {
+  function displayMenu(loc, id, headerId, callId, view, trashed, hasPermission) {
     thisHeaderId = headerId;
     thisCallId = callId;
     thisView = view;
-    updateMenu(trashed);
+    if (hasPermission == 'true') {
+      updateMenu(trashed);
+    } else {
+      updateMenu('true');
+    }
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));

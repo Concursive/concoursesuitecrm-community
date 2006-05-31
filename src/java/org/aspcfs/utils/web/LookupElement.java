@@ -69,7 +69,7 @@ public class LookupElement {
     }
     String sql =
         "SELECT code, description, default_item, \"level\", enabled " +
-        "FROM " + tableName + " " +
+        "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
         "WHERE code = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, code);
@@ -148,7 +148,7 @@ public class LookupElement {
     StringBuffer sql = new StringBuffer();
 
     sql.append(
-        "UPDATE " + tableName + " " +
+        "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
         "SET \"level\" = ? " +
         "WHERE code = ? ");
 
@@ -181,7 +181,7 @@ public class LookupElement {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE " + tableName + " " +
+        "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
         "SET description = ? " +
         "WHERE code = ? ");
     int i = 0;
@@ -495,7 +495,7 @@ public class LookupElement {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE " + tableName + " " +
+        "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
         "SET enabled = ? " +
         "WHERE code = ? ");
     int i = 0;
@@ -524,7 +524,7 @@ public class LookupElement {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE " + tableName + " " +
+        "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
         "SET enabled = ? " +
         "WHERE code = ? ");
     int i = 0;
@@ -555,7 +555,7 @@ public class LookupElement {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM " + tableName + " " +
+        "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
         "WHERE description = ? " +
         "AND enabled = ? ");
     int i = 0;
@@ -618,7 +618,7 @@ public class LookupElement {
     }
     int id = DatabaseUtils.getNextSeq(db, seqName + "_code_seq");
     sql.append(
-        "INSERT INTO " + tableName + " " +
+        "INSERT INTO " + DatabaseUtils.getTableName(db, tableName) + " " +
         "(" + (id > -1 ? "code, " : "") + "description, \"level\", enabled" +
         (fieldId > -1 ? ", field_id" : "") + ") " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?" + (fieldId > -1 ? ", ?" : "") + ") ");
@@ -639,16 +639,46 @@ public class LookupElement {
     return true;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  tableName         Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public static int retrieveMaxLevel(Connection db, String tableName) throws SQLException {
     int maxLevel = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT MAX(\"level\") AS max_level " +
-        "FROM " + tableName + " ");
+        "FROM " + DatabaseUtils.getTableName(db, tableName) + " ");
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       maxLevel = rs.getInt("max_level");
     }
     return maxLevel;
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "DELETE FROM " + tableName + " " +
+        "WHERE code = ? ");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, code);
+    pst.execute();
+    pst.close();
+  }
+
 }
 

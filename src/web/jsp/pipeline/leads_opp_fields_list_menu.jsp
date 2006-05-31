@@ -23,15 +23,26 @@
   var thisCatId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, catId, recId) {
+  function displayMenu(loc, id, contactId, catId, recId, hasPermission) {
     thisContactId = contactId;
     thisRecId = recId;
     thisCatId = catId;
+    updateMenu(hasPermission);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuField", "down", 0, 0, 170, getHeight("menuFieldTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
+  }
+  
+  function updateMenu(show) {
+    if(show == 'true') {
+      showSpan("menuModify");
+      showSpan("menuDelete");
+    } else {
+      hideSpan("menuModify");
+      hideSpan("menuDelete");
+    }
   }
   
   //Menu link functions
@@ -62,7 +73,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-internal_contacts-folders-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -72,7 +83,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-internal_contacts-folders-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteField()">
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteField()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

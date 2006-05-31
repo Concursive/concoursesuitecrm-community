@@ -22,12 +22,20 @@
   var menu_init = false;
   var thisAddParams = '';
   var modifiable = 'true';
+  var thisAllowMultipleQuote = 'true';
+  var thisAllowMultipleVersion = 'true';
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, quoteId, addParams, modi, trashed) {
+  function displayMenu(loc, id, quoteId, addParams, modi, trashed, hasPermission, allowMultipleQuote, allowMultipleVersion) {
     thisQuoteId = quoteId;
     modifiable = modi;
     thisAddParams = addParams;
-    updateMenu(trashed);
+    thisAllowMultipleQuote = allowMultipleQuote;
+    thisAllowMultipleVersion = allowMultipleVersion;
+    if (hasPermission == 'true') {
+      updateMenu(trashed);
+    } else {
+      updateMenu('true');
+    }
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuQuote", "down", 0, 0, 170, getHeight("menuQuoteTable"));
@@ -39,16 +47,24 @@
     if (trashed == 'true'){
       hideSpan('menuModify');
       hideSpan('menuClone');
-      hideSpan('menuVersion');
+      hideSpan('menuAddVersion');
       hideSpan('menuDelete');
     } else {
-      showSpan('menuClone');
-      showSpan('menuVersion');
       showSpan('menuDelete');
       if(modifiable == 'true'){
         showSpan('menuModify');
       }else{
         hideSpan('menuModify');
+      }
+      if(thisAllowMultipleQuote == 'true'){
+        showSpan('menuClone');
+      } else {
+        hideSpan('menuClone');
+      }
+      if(thisAllowMultipleVersion == 'true'){
+        showSpan('menuAddVersion');
+      } else {
+        hideSpan('menuAddVersion');
       }
     }
   }
@@ -112,7 +128,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-add">
-      <tr id="menuVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addVersion();">
+      <tr id="menuAddVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addVersion();">
         <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

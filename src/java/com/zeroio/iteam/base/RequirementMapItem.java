@@ -462,7 +462,7 @@ public class RequirementMapItem {
     if (prevMapId > -1) {
       //Get the next position to store the item if a previous mapId specified
       pst = db.prepareStatement(
-          "SELECT position " +
+          "SELECT \"position\" AS reqposition " +
           "FROM project_requirements_map " +
           "WHERE project_id = ? " +
           "AND requirement_id = ? " +
@@ -473,7 +473,7 @@ public class RequirementMapItem {
     } else {
       //Get the next position to store the item if no previous mapId specified
       pst = db.prepareStatement(
-          "SELECT max(position) AS position " +
+          "SELECT max(\"position\") AS reqposition " +
           "FROM project_requirements_map " +
           "WHERE project_id = ? " +
           "AND requirement_id = ? ");
@@ -482,7 +482,7 @@ public class RequirementMapItem {
     }
     rs = pst.executeQuery();
     if (rs.next()) {
-      position = rs.getInt("position");
+      position = rs.getInt("reqposition");
       if (rs.wasNull()) {
         position = 0;
       }
@@ -499,7 +499,7 @@ public class RequirementMapItem {
             "FROM project_requirements_map " +
             "WHERE project_id = ? " +
             "AND requirement_id = ? " +
-            "AND position = ? ");
+            "AND \"position\" = ? ");
         pst.setInt(1, projectId);
         pst.setInt(2, requirementId);
         pst.setInt(3, position);
@@ -520,10 +520,10 @@ public class RequirementMapItem {
       //TODO: What if the item below was indented? should be ok?
       pst = db.prepareStatement(
           "UPDATE project_requirements_map " +
-          "SET position = position + 1 " +
+          "SET \"position\" = \"position\" + 1 " +
           "WHERE project_id = ? " +
           "AND requirement_id = ? " +
-          "AND position > ? ");
+          "AND \"position\" > ? ");
       pst.setInt(1, projectId);
       pst.setInt(2, requirementId);
       pst.setInt(3, position);
@@ -534,7 +534,7 @@ public class RequirementMapItem {
     id = DatabaseUtils.getNextSeq(db, "project_requirements_map_map_id_seq");
     pst = db.prepareStatement(
         "INSERT INTO project_requirements_map " +
-        "(" + (id > -1 ? "map_id, " : "") + "project_id, requirement_id, position, indent, folder_id, assignment_id) " +
+        "(" + (id > -1 ? "map_id, " : "") + "project_id, requirement_id, \"position\", indent, folder_id, assignment_id) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
@@ -588,7 +588,7 @@ public class RequirementMapItem {
             "DELETE FROM project_requirements_map " +
             "WHERE project_id = ? " +
             "AND requirement_id = ? " +
-            "AND position = ? ");
+            "AND \"position\" = ? ");
         pst.setInt(1, projectId);
         pst.setInt(2, requirementId);
         pst.setInt(3, thisItem.getPosition());
@@ -599,10 +599,10 @@ public class RequirementMapItem {
       if (position > -1) {
         pst = db.prepareStatement(
             "UPDATE project_requirements_map " +
-            "SET position = position - 1 " +
+            "SET \"position\" = \"position\" - 1 " +
             "WHERE project_id = ? " +
             "AND requirement_id = ? " +
-            "AND position > ? ");
+            "AND \"position\" > ? ");
         pst.setInt(1, projectId);
         pst.setInt(2, requirementId);
         pst.setInt(3, position);
@@ -679,7 +679,7 @@ public class RequirementMapItem {
         PreparedStatement pst = db.prepareStatement(
             "UPDATE project_requirements_map " +
             "SET indent = indent + 1 " +
-            "WHERE project_id = ? AND requirement_id = ? AND position = ? ");
+            "WHERE project_id = ? AND requirement_id = ? AND \"position\" = ? ");
         int i = 0;
         pst.setInt(++i, projectId);
         pst.setInt(++i, requirementId);
@@ -693,7 +693,7 @@ public class RequirementMapItem {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_requirements_map " +
           "SET indent = indent - 1 " +
-          "WHERE project_id = ? AND requirement_id = ? AND position = ? " +
+          "WHERE project_id = ? AND requirement_id = ? AND \"position\" = ? " +
           "AND indent > 0 ");
       int i = 0;
       pst.setInt(++i, projectId);
@@ -758,7 +758,7 @@ public class RequirementMapItem {
         (!isRoot)) {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_requirements_map " +
-          "SET position = ? " +
+          "SET \"position\" = ? " +
           "WHERE map_id = ? ");
       int i = 0;
       if (isRoot) {
@@ -834,7 +834,7 @@ public class RequirementMapItem {
         (!isRoot)) {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_requirements_map " +
-          "SET position = ? " +
+          "SET \"position\" = ? " +
           "WHERE map_id = ? ");
       int i = 0;
       if (isRoot) {
@@ -871,7 +871,7 @@ public class RequirementMapItem {
    */
   public void buildRecord(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT map_id, project_id, position, indent " +
+        "SELECT map_id, project_id, \"position\", indent " +
         "FROM project_requirements_map " +
         "WHERE requirement_id = ? " +
         "AND " + (folderId > -1 ? "folder_id" : "assignment_id") + " = ? ");

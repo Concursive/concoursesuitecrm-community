@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -27,9 +27,13 @@
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="emailModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="asset" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
+<jsp:useBean id="parent" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
+<jsp:useBean id="assetMaterialQty" class="java.util.HashMap" scope="request"/>
 <jsp:useBean id="categoryList1" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList2" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
+<jsp:useBean id="assetVendorList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="assetManufacturerList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -40,7 +44,6 @@
     <%}%>
   }
 </script>
-<body onLoad="javascript:document.addAccountAsset.vendor.focus();setDefaultDateListedField()" >
 <form name="addAccountAsset" action="AccountsAssets.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -56,8 +59,17 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<%
+  if (parent != null && parent.getId() != -1 && parent.getParentList() != null && parent.getParentList().size() > 0) {
+    Iterator iter = (Iterator) parent.getParentList().iterator();
+    while (iter.hasNext()) {
+      Asset parentAsset = (Asset) iter.next(); 
+      String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
+%>
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>"/>
+<% }} %>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null && parent.getId() != -1 ? String.valueOf(parent.getId()):"") %>';this.form.dosubmit.value='false';" />
   <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
   <br />
   <dhv:formMessage />
@@ -66,8 +78,11 @@
   <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
   <br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null && parent.getId() != -1 ? String.valueOf(parent.getId()):"") %>';this.form.dosubmit.value='false';" />
   <input type="hidden" name="dosubmit" value="true" />
 </dhv:container>
 </form>
-</body>
+<script type="text/javascript">
+  setDefaultDateListedField();
+  refreshMaterials();
+</script>

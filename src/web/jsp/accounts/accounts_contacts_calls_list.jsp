@@ -150,7 +150,7 @@
 <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCallsListInfo.getExpandedSelection()) || AccountContactCompletedCallsListInfo.getExpandedSelection()) { %>
      <%-- Completed/Canceled list --%>
       <%-- accounts.accounts_contacts_calls_list.CompletedCanceledActivities --%>
-      <dhv:pagedListStatus showExpandLink="true" title="Completed/Canceled Activities" object="AccountContactCompletedCallsListInfo"/>
+      <dhv:pagedListStatus showExpandLink="true" title="<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.CompletedCanceledActivities", "Completed/Canceled Activities") %>" object="AccountContactCompletedCallsListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <dhv:evaluate if="<%= !isPopup(request) %>">
@@ -237,4 +237,3 @@
 <%}%>
   </dhv:container>
 </dhv:container>
-

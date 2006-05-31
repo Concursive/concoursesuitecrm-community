@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.Iterator;
 
 /**
  * Description of the Class
@@ -182,7 +183,7 @@ public class CFSNoteList extends Vector {
       sqlCount.append(
           "SELECT COUNT(*) AS recordcount " +
           "FROM cfsinbox_message m " +
-          "WHERE m.id > -1 AND m.delete_flag=" + DatabaseUtils.getFalse(db) + " ");
+          "WHERE m.id > -1 ");
     } else {
       sqlCount.append(
           "SELECT COUNT(*) AS recordcount " +
@@ -244,7 +245,7 @@ public class CFSNoteList extends Vector {
       sqlSelect.append(
           "m.id, m.subject, m.body, m.sent, m.delete_flag " +
           "FROM cfsinbox_message m " +
-          "WHERE m.id > -1 AND m.delete_flag = " + DatabaseUtils.getFalse(db) + " ");
+          "WHERE m.id > -1 ");
     } else {
       sqlSelect.append(
           "m.*, ml.*, ct_sent.namefirst AS sent_namefirst, ct_sent.namelast AS sent_namelast " +
@@ -268,11 +269,16 @@ public class CFSNoteList extends Vector {
         thisNote.setCurrentView(pagedListInfo.getListView());
       }
       thisNote.buildRecord(rs);
-      thisNote.buildRecipientList(db);
       this.addElement(thisNote);
     }
     rs.close();
     pst.close();
+    // Build additional data
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      CFSNote thisNote = (CFSNote) i.next();
+      thisNote.buildRecipientList(db);
+    }
   }
 
 
@@ -284,6 +290,9 @@ public class CFSNoteList extends Vector {
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
+    }
+    if (sentMessagesOnly) {
+      sqlFilter.append("AND m.delete_flag = ? ");
     }
     if (buildAll) {
       return;
@@ -314,7 +323,9 @@ public class CFSNoteList extends Vector {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
+    if (sentMessagesOnly) {
+      pst.setBoolean(++i, false);
+    }
     if (buildAll) {
       return i;
     }

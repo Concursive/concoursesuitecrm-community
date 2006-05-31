@@ -76,7 +76,7 @@ public class AccountsServiceContracts extends CFSModule {
     try {
       db = this.getConnection(context);
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context, Integer.parseInt(orgId))) {
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
         return ("PermissionError");
       }
       setOrganization(context, db);
@@ -189,6 +189,11 @@ public class AccountsServiceContracts extends CFSModule {
       setOrganization(context, db);
 
       ServiceContract thisContract = (ServiceContract) context.getFormBean();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
+      }
+
       thisContract.setProductList(
           context.getRequest().getParameterValues("selectedList"));
       thisContract.setEnteredBy(getUserId(context));
@@ -251,6 +256,10 @@ public class AccountsServiceContracts extends CFSModule {
       db = this.getConnection(context);
       setOrganization(context, db);
       ServiceContract thisContract = (ServiceContract) context.getFormBean();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
+      }
       ServiceContract previousContract = new ServiceContract(
           db, thisContract.getId());
       thisContract.setProductList(
@@ -335,6 +344,10 @@ public class AccountsServiceContracts extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       ServiceContract thisContract = new ServiceContract(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
+      }
       //Find depedencies for the service contract
       DependencyList dependencies = thisContract.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
@@ -343,7 +356,7 @@ public class AccountsServiceContracts extends CFSModule {
           systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsServiceContracts.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
+          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsServiceContracts.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -370,6 +383,67 @@ public class AccountsServiceContracts extends CFSModule {
    * @param context Description of the Parameter
    * @return Description of the Return Value
    */
+  public String executeCommandTrash(ActionContext context) {
+    if (!hasPermission(context, "accounts-service-contracts-delete")) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    boolean recordDeleted = false;
+    Connection db = null;
+    ServiceContract thisContract = null;
+    try {
+      //Get a connection from the connection pool for this user
+      db = this.getConnection(context);
+      setOrganization(context, db);
+
+      int id = Integer.parseInt((context.getRequest().getParameter("id")));
+      thisContract = new ServiceContract(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
+      }
+
+      recordDeleted = thisContract.updateStatus(db, true, this.getUserId(context));
+    } catch (Exception e) {
+      //An error occurred, go to generic error message page
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      //Always free the database connection
+      this.freeConnection(context, db);
+    }
+
+    if (recordDeleted) {
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountsServiceContracts.do?command=List&orgId=" + context.getRequest().getParameter(
+              "orgId"));
+      return getReturn(context, "Delete");
+    }
+
+    processErrors(context, thisContract.getErrors());
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
+            "orgId") + "&id=" + context.getRequest().getParameter("id"));
+    return getReturn(context, "Delete");
+/*
+    context.getRequest().setAttribute(
+        "actionError", systemStatus.getLabel(
+            "object.validation.actionError.contractDeletion"));
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
+            "orgId"));
+    return ("DeleteError");
+*/
+  }
+
+
+  /**
+   * Deletes a service contract and its dependent records
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-service-contracts-delete")) {
       return ("PermissionError");
@@ -384,8 +458,13 @@ public class AccountsServiceContracts extends CFSModule {
       db = this.getConnection(context);
       setOrganization(context, db);
 
-      thisContract = new ServiceContract();
-      thisContract.setId(context.getRequest().getParameter("id"));
+      int id = Integer.parseInt((context.getRequest().getParameter("id")));
+      thisContract = new ServiceContract(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
+      }
+
       recordDeleted = thisContract.delete(db, getDbNamePath(context));
     } catch (Exception e) {
       errorMessage = e;
@@ -396,29 +475,27 @@ public class AccountsServiceContracts extends CFSModule {
       //Always free the database connection
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordDeleted) {
-        context.getRequest().setAttribute(
-            "refreshUrl", "AccountsServiceContracts.do?command=List&orgId=" + context.getRequest().getParameter(
-                "orgId"));
-        return getReturn(context, "Delete");
-      }
-
-      processErrors(context, thisContract.getErrors());
+    if (recordDeleted) {
       context.getRequest().setAttribute(
-          "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
-              "orgId") + "&id=" + context.getRequest().getParameter("id"));
+          "refreshUrl", "AccountsServiceContracts.do?command=List&orgId=" + context.getRequest().getParameter(
+              "orgId"));
       return getReturn(context, "Delete");
     }
 
+    processErrors(context, thisContract.getErrors());
     context.getRequest().setAttribute(
+        "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
+            "orgId") + "&id=" + context.getRequest().getParameter("id"));
+    return getReturn(context, "Delete");
+
+/*    context.getRequest().setAttribute(
         "actionError", systemStatus.getLabel(
             "object.validation.actionError.contractDeletion"));
     context.getRequest().setAttribute(
         "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
             "orgId"));
     return ("DeleteError");
+*/
   }
 
 
@@ -446,6 +523,11 @@ public class AccountsServiceContracts extends CFSModule {
       if (thisContract.getId() == -1) {
         fromBean = false;
         thisContract.queryRecord(db, contractId);
+      }
+
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
       }
 
       buildFormElements(context, db);
@@ -534,10 +616,14 @@ public class AccountsServiceContracts extends CFSModule {
       int orgId = thisOrg.getOrgId();
 
       ServiceContract thisContract = new ServiceContract(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
+      }
 
       //find record permissions for portal users
-      if ((!isRecordAccessPermitted(context, thisContract.getOrgId())) ||
-          (!isRecordAccessPermitted(context, orgId))) {
+      if ((!isRecordAccessPermitted(context, db, thisContract.getOrgId())) ||
+          (!isRecordAccessPermitted(context, db, orgId))) {
         return ("PermissionError");
       }
 
@@ -593,6 +679,11 @@ public class AccountsServiceContracts extends CFSModule {
         "AccountsServiceContracts.do?command=HoursHistory&id=" + id);
     try {
       db = this.getConnection(context);
+      ServiceContract thisContract = new ServiceContract(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContract.getOrgId())) {
+        return ("PermissionError");
+      }
       LookupList serviceContractHoursReasonList = new LookupList(
           db, "lookup_hours_reason");
       serviceContractHoursReasonList.addItem(

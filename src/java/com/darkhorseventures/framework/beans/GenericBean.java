@@ -50,6 +50,8 @@ public class GenericBean implements Serializable {
   protected SimpleDateFormat longDateFormat = new SimpleDateFormat(
       "MMMMM d, yyyy");
   protected SimpleDateFormat longTimeFormat = new SimpleDateFormat("hh:mm a");
+  protected String permission = null;
+
   private String message = "";
   private boolean displayMessage = false;
   private Object entity = null;
@@ -308,7 +310,8 @@ public class GenericBean implements Serializable {
   public final static String decode(String value, String[] chars, String[] repl) {
     // return null if the value, chars[], repl[] are null or the number
     // of elemetns of the chars[] and repl[] are not the same.
-    if (value == null || chars == null || repl == null || chars.length != repl.length) {
+    if (value == null || chars == null || repl == null || chars.length != repl.length)
+    {
       return null;
     }
 
@@ -460,6 +463,16 @@ public class GenericBean implements Serializable {
     } else {
       return basePath;
     }
+  }
+
+
+  /**
+   * Gets the permission attribute of the GenericBean object
+   *
+   * @return The permission value
+   */
+  public String getPermission() {
+    return permission;
   }
 }
 

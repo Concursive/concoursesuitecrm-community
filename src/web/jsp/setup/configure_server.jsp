@@ -198,6 +198,268 @@
       &nbsp;<br>
     </td>
   </tr>
+
+  <%-- LDAP Server --%>
+  <tr class="sectionTitle">
+    <th><dhv:label name="setup.ldap">LDAP Server</dhv:label></th>
+  </tr>
+  <tr>
+    <td>
+      <dhv:label name="setup.ldap.question">For authenticating users, should an LDAP server be used?</dhv:label><br>
+      <dhv:label name="setup.ldap.text"><ul><li>A properly configured LDAP server is required</li>
+        <li>If searching for users by attribute, the LDAP administrator should create an LDAP user with permissions on the LDAP server to search for users by given attribute; access to other attributes is not necessary</li>
+      </ul></dhv:label>
+      <table border="0" class="empty">
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.ldap.enabled">LDAP Enabled:</dhv:label>
+          </td>
+          <td>
+            <dhv:checkbox name="ldapEnabled" value="true" checked="<%= server.getLdapEnabled() %>" />
+            <dhv:label name="admin.ldap.authenticateUsers">Authenticate users against LDAP server</dhv:label>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.ldap.userMapping">User Mapping:</dhv:label>
+          </td>
+          <td>
+            <input type="radio" name="ldapCentricCRMField" value="username" <%= ("username".equals(server.getLdapCentricCRMField()) ? "checked" : "") %> /><dhv:label name="admin.ldap.useCentricLogin">Use user's Centric CRM login</dhv:label><br />
+            <input type="radio" name="ldapCentricCRMField" value="email" <%= ("email".equals(server.getLdapCentricCRMField()) ? "checked" : "") %> /><dhv:label name="admin.ldap.useUserEmail">Lookup user's primary email from Centric CRM records</dhv:label><br />
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.ldap.factory">LDAP Factory:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="40" name="ldapFactory" value="<%= toHtmlValue(server.getLdapFactory()) %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.ldap.url">LDAP Server URL:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="40" name="ldapUrl" value="<%= toHtmlValue(server.getLdapUrl()) %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.ldap.type">Type:</dhv:label>
+          </td>
+          <td>
+            <table class="empty">
+              <tr>
+                <td nowrap valign="top">
+                  <table class="empty">
+                    <tr>
+                      <td colspan="2">
+                        <input type="radio" name="ldapSearchByAttribute" value="true" <%= (server.getLdapSearchByAttribute() ? "checked" : "") %> /><dhv:label name="admin.ldap.searchByAttribute">Search for user in LDAP by Attribute</dhv:label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <dhv:label name="admin.ldap.username">Username:</dhv:label>
+                      </td>
+                      <td>
+                        <input type="text" size="30" name="ldapSearchUsername" value="<%= toHtmlValue(server.getLdapSearchUsername()) %>" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <dhv:label name="admin.ldap.password">Password:</dhv:label>
+                      </td>
+                      <td>
+                        <input type="text" size="30" name="ldapSearchPassword" value="<%= toHtmlValue(server.getLdapSearchPassword()) %>"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <dhv:label name="admin.ldap.container">Container:</dhv:label>
+                      </td>
+                      <td nowrap>
+                        <input type="text" size="30" name="ldapSearchContainer" value="<%= toHtmlValue(server.getLdapSearchContainer()) %>"/>
+                        <dhv:checkbox name="ldapSearchSubtree" value="true" checked="<%= server.getLdapSearchSubtree() %>"/>Search subtree
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <dhv:label name="admin.ldap.objectClass">Object Class:</dhv:label>
+                      </td>
+                      <td>
+                        <input type="text" size="30" name="ldapSearchOrgPerson" value="<%= toHtmlValue(server.getLdapSearchOrgPerson()) %>"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <dhv:label name="admin.ldap.attribute">Attribute:</dhv:label>
+                      </td>
+                      <td>
+                        <input type="text" size="30" name="ldapSearchAttribute" value="<%= toHtmlValue(server.getLdapSearchAttribute()) %>"/>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td nowrap valign="top">
+                  <table class="empty">
+                    <tr>
+                      <td colspan="2">
+                        <input type="radio" name="ldapSearchByAttribute" value="false" <%= (!server.getLdapSearchByAttribute() ? "checked" : "") %> /><dhv:label name="admin.ldap.useComposite">Use LDAP Composite DN</dhv:label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <dhv:label name="admin.ldap.compositePrefix">Composite DN Prefix:</dhv:label>
+                      </td>
+                      <td>
+                        <input type="text" size="30" name="ldapSearchPrefix" value="<%= toHtmlValue(server.getLdapSearchPrefix()) %>" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <dhv:label name="admin.ldap.compositePostfix">Composite DN Postfix:</dhv:label>
+                      </td>
+                      <td>
+                        <input type="text" size="30" name="ldapSearchPostfix" value="<%= toHtmlValue(server.getLdapSearchPostfix()) %>" />
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      &nbsp;<br>
+    </td>
+  </tr>
+
+
+  <%-- Asterisk Server --%>
+  <tr class="sectionTitle">
+    <th><dhv:label name="setup.asterisk">Asterisk Server</dhv:label></th>
+  </tr>
+  <tr>
+    <td>
+      <dhv:label name="setup.asterisk.question">For inbound call monitoring and outbound call dialing, which Asterisk server should be used?</dhv:label><br>
+      <dhv:label name="setup.asterisk.text"><ul><li>A properly configured Asterisk server is required</li></ul></dhv:label>
+      <table border="0" class="empty">
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.asterisk.inbound">Inbound:</dhv:label>
+          </td>
+          <td>
+            <dhv:checkbox name="asteriskInbound" value="true" checked="<%= server.getAsteriskInbound() %>"/>Monitor inbound calls
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.asterisk.outbound">Outbound:</dhv:label>
+          </td>
+          <td>
+            <dhv:checkbox name="asteriskOutbound" value="true" checked="<%= server.getAsteriskOutbound() %>"/>Enable outbound call dialing
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.asterisk.server">Asterisk Server:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="asteriskUrl" value="<%= toHtmlValue(server.getAsteriskUrl()) %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.asterisk.username">Asterisk Username:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="asteriskUsername" value="<%= toHtmlValue(server.getAsteriskUsername()) %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.asterisk.password">Asterisk Password:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="asteriskPassword" value="<%= toHtmlValue(server.getAsteriskPassword()) %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.asterisk.context">Asterisk Context:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="asteriskContext" value="<%= toHtmlValue(server.getAsteriskContextDefault()) %>"/>
+          </td>
+        </tr>
+      </table>
+      &nbsp;<br>
+    </td>
+  </tr>
+
+  <%-- XMPP Server --%>
+  <tr class="sectionTitle">
+    <th><dhv:label name="setup.xmpp">XMPP Server</dhv:label></th>
+  </tr>
+  <tr>
+    <td>
+      <dhv:label name="setup.xmpp.question">For monitoring user presence and performing inbound screen-pops for Asterisk calls, which XMPP server should be used?</dhv:label><br>
+      <dhv:label name="setup.xmpp.text"><ul><li>Centric CRM will use the following user to subscribe and communicate with users using instant messaging</li></ul></dhv:label>
+      <table border="0" class="empty">
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.xmpp.status">XMPP Status:</dhv:label>
+          </td>
+          <td>
+            <dhv:checkbox name="xmppEnabled" value="true" checked="<%= server.getXmppEnabled() %>"/>Monitor user presence and send instant messages
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.xmpp.server">XMPP Server:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="xmppUrl" value="<%= toHtmlValue(server.getXmppUrl()) %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.xmpp.port">XMPP Port:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="xmppPort" value="<%= server.getXmppPort() %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.xmpp.ssl">XMPP SSL:</dhv:label>
+          </td>
+          <td>
+            <dhv:checkbox name="xmppSSL" value="true" checked="<%= server.getXmppSSL() %>"/>Use SSL connection to XMPP server
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.xmpp.username">XMPP Username:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="xmppUsername" value="<%= toHtmlValue(server.getXmppUsername()) %>"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            <dhv:label name="admin.xmpp.password">XMPP Password:</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="30" name="xmppPassword" value="<%= toHtmlValue(server.getXmppPassword()) %>"/>
+          </td>
+        </tr>
+      </table>
+      &nbsp;<br>
+    </td>
+  </tr>
+
   <%-- Fax Server --%>
   <tr class="sectionTitle">
     <th><dhv:label name="setup.faxes">Faxes</dhv:label></th>
@@ -223,8 +485,9 @@
         </tr>
       </table>
       &nbsp;<br>
-      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>
+
 </table>
+<input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>" />
 </form>

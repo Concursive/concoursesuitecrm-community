@@ -26,6 +26,7 @@
     <action name="MyTasksForward"/>
     <action name="MyActionLists"/>
     <action name="MyActionContacts"/>
+    <action name="MyActionPlans"/>
     <action name="Reassignments"/>
     <page title="My Home Page"/>
     <permission value="myhomepage-view"/>
@@ -62,6 +63,13 @@
       <link value="MyActionLists.do?command=List&amp;linkModuleId=2"/>
     </submenu>
 
+    <submenu name="My Action Plans">
+      <permission value="myhomepage-action-plans-view"/>
+      <long_html value="Action Plans"/>
+      <short_html value="Action Plans"/>
+      <link value="MyActionPlans.do?command=View"/>
+    </submenu>
+
     <submenu name="Reassign">
       <permission value="myhomepage-reassign-view"/>
       <long_html value="Re-assignments"/>
@@ -94,7 +102,7 @@
     <link value="Sales.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-myhome-on.gif" off="menu-myhome-off.gif" rollover=""/>
     <submenu name="Dashboard">
-      <permission value="sales-view"/>
+      <permission value="sales-dashboard-view"/>
       <long_html value="Dashboard"/>
       <short_html value="Dashboard"/>
       <link value="Sales.do?command=Dashboard"/>
@@ -116,6 +124,12 @@
       <long_html value="Import"/>
       <short_html value="Import"/>
       <link value="SalesImports.do?command=View"/>
+    </submenu>
+     <submenu name="Reports">
+      <permission value="sales-reports-view"/>
+      <long_html value="Export"/>
+      <short_html value="Export"/>
+      <link value="Sales.do?command=Reports"/>
     </submenu>
 <!--
     <submenu name="Reassign">
@@ -140,7 +154,7 @@
     <page title="Contacts"/>
     <permission value="contacts-view"/>
     <long_html value="Contacts"/>
-    <short_html value="&amp;nbsp;Contacts&amp;nbsp;"/>
+    <short_html value="Contacts"/>
     <link value="ExternalContacts.do"/>
     <graphic width="83" height="36" on="menu-general-contacts-on.gif" off="menu-general-contacts-off.gif" rollover=""/>
 
@@ -187,7 +201,7 @@
     <page title="Pipeline"/>
     <permission value="pipeline-view"/>
     <long_html value="Pipeline"/>
-    <short_html value="&amp;nbsp;Pipeline&amp;nbsp;"/>
+    <short_html value="Pipeline"/>
     <link value="Leads.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-pipeline-on.gif" off="menu-pipeline-off.gif" rollover=""/>
 
@@ -218,7 +232,6 @@
       <short_html value="Export"/>
       <link value="LeadsReports.do?command=Default"/>
     </submenu>
-
   </menu>
 
   <menu>
@@ -240,9 +253,12 @@
     <action name="AccountTicketsDocuments"/>
     <action name="AccountTicketTasks"/>
     <action name="AccountTicketFolders"/>
+    <action name="AccountTicketsDocumentsFolders"/>
+    <action name="AccountTicketActionPlans"/>
     <action name="AccountContactsCalls"/>
     <action name="AccountContactsOpps"/>
     <action name="AccountContactsOppComponents"/>
+    <action name="AccountContactsOppQuotes"/>
     <action name="AccountsServiceContracts"/>
     <action name="AccountsAssets"/>
     <action name="AccountTicketActivityLog"/>
@@ -256,10 +272,11 @@
     <action name="AccountsHistory"/>
     <action name="AccountContactsHistory"/>
     <action name="AccountContactsMessages"/>
+    <action name="AccountActionPlans"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
-    <short_html value="&amp;nbsp;Accounts&amp;nbsp;"/>
+    <short_html value="Accounts"/>
     <link value="Accounts.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-accounts-on.gif" off="menu-accounts-off.gif" rollover=""/>
 
@@ -334,7 +351,7 @@
     <page title="Auto Guide"/>
     <permission value="autoguide-view"/>
     <long_html value="Auto Guide"/>
-    <short_html value="&amp;nbsp;Auto Guide&amp;nbsp;"/>
+    <short_html value="Auto Guide"/>
     <link value="AutoGuide.do"/>
     <graphic width="83" height="36" on="menu-autoguide-on.gif" off="menu-autoguide-off.gif" rollover=""/>
     <submenu name="Auto Guide">
@@ -444,10 +461,11 @@
     <action name="CampaignManagerSurvey"/>
     <action name="CampaignManagerAttachment"/>
     <action name="CampaignDocuments"/>
+    <action name="CampaignUserGroups"/>
     <page title="Communications"/>
     <permission value="campaign-view"/>
     <long_html value="Communications"/>
-    <short_html value="&amp;nbsp;Communications&amp;nbsp;"/>
+    <short_html value="Communications"/>
     <link value="CampaignManager.do"/>
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>
 
@@ -515,7 +533,7 @@
     <page title="Projects"/>
     <permission value="projects-view"/>
     <long_html value="Projects"/>
-    <short_html value="&amp;nbsp;Projects&amp;nbsp;"/>
+    <short_html value="Projects"/>
     <link value="ProjectManagement.do"/>
     <graphic width="83" height="36" on="menu-project-on.gif" off="menu-project-off.gif" rollover=""/>
 
@@ -562,10 +580,13 @@
     <action name="TroubleTicketsDocumentsFolders"/>
     <action name="TroubleTicketActivityLog"/>
     <action name="TroubleTicketMaintenanceNotes"/>
+    <action name="TroubleTicketActionPlans"/>
+    <action name="TroubleTicketDefects"/>
+    <action name="KnowledgeBaseManager"/>
     <page title="Help Desk"/>
     <permission value="tickets-view"/>
     <long_html value="Help Desk"/>
-    <short_html value="&amp;nbsp;Help Desk&amp;nbsp;"/>
+    <short_html value="Help Desk"/>
     <link value="TroubleTickets.do?command=Home"/>
     <graphic width="83" height="36" on="menu-tickets-on.gif" off="menu-tickets-off.gif" rollover=""/>
     <submenu name="ViewTickets">
@@ -586,6 +607,18 @@
       <short_html value="Search"/>
       <link value="TroubleTickets.do?command=SearchTicketsForm"/>
     </submenu>
+    <submenu name="Defects">
+      <permission value="tickets-defects-view"/>
+      <long_html value="Defects"/>
+      <short_html value="Defects"/>
+      <link value="TroubleTicketDefects.do?command=View"/>
+    </submenu>
+    <submenu name="KnowledgeBase">
+      <permission value="tickets-knowledge-base-view"/>
+      <long_html value="Knowledge Base"/>
+      <short_html value="Knowledge Base"/>
+      <link value="KnowledgeBaseManager.do?command=Search"/>
+    </submenu>
     <submenu name="Reports">
       <permission value="tickets-reports-view"/>
       <long_html value="Export"/>
@@ -603,7 +636,7 @@
     <page title="Documents"/>
     <permission value="documents-view"/>
     <long_html value="Documents"/>
-    <short_html value="&amp;nbsp;Documents&amp;nbsp;"/>
+    <short_html value="Documents"/>
     <link value="DocumentManagement.do"/>
     <graphic width="83" height="36" on="menu-tickets-on.gif" off="menu-tickets-off.gif" rollover=""/>
     <submenu name="List">
@@ -623,6 +656,27 @@
       <long_html value="Search"/>
       <short_html value="Search"/>
       <link value="DocumentManagementSearch.do?command=ShowForm"/>
+    </submenu>
+  </menu>
+
+  <menu>
+    <action name="NetworkApplications"/>
+    <action name="NetworkApplicationsImports"/>
+    <permission value="netapps_expiration_contracts-view"/>
+    <page title="Net App"/>
+    <long_html value="Net App"/>
+    <short_html value="Net App"/>
+    <link value="NetworkApplications.do?"/>
+    <graphic width="83" height="36" on="menu-netapps-on.gif" off="menu-netapps-off.gif" rollover=""/>
+    <submenu name="netApps.search">
+      <long_html value="Search"/>
+      <short_html value="Search"/>
+      <link value="NetworkApplications.do?command=SearchForm"/>
+    </submenu>
+    <submenu name="netApps.import">
+      <long_html value="Import"/>
+      <short_html value="Import"/>
+      <link value="NetworkApplicationsImports.do?command=View"/>
     </submenu>
   </menu>
 
@@ -654,7 +708,7 @@
     <page title="Reports"/>
     <permission value="reports-view"/>
     <long_html value="Reports"/>
-    <short_html value="&amp;nbsp;Reports&amp;nbsp;"/>
+    <short_html value="Reports"/>
     <link value="Reports.do"/>
     <graphic width="83" height="36" on="menu-reports-on.gif" off="menu-reports-off.gif" rollover=""/>
     <submenu name="reports.queue">

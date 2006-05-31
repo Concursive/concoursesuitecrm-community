@@ -18,10 +18,12 @@ package org.aspcfs.modules.admin.base;
 import org.aspcfs.modules.communications.base.Message;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Represents Access Type for a component
@@ -36,6 +38,7 @@ public class AccessType extends LookupElement {
   public final static int ACCOUNT_CONTACTS = 626030331;
   public final static int EMPLOYEES = 626030332;
   public final static int COMMUNICATION_MESSAGES = 707031028;
+  public final static int OPPORTUNITIES = 804051057;
 
   //sharing types
   public final static int PERSONAL = 626030333;
@@ -44,6 +47,7 @@ public class AccessType extends LookupElement {
 
   int linkModuleId = -1;
   int ruleId = -1;
+  int code = -1;
 
 
   /**
@@ -65,6 +69,7 @@ public class AccessType extends LookupElement {
       System.out.println(
           "AccessType-> Retrieving ID: " + code + " from lookup_access_types ");
     }
+    this.setCode(code);
     PreparedStatement pst = db.prepareStatement(
         "SELECT code, link_module_id, description, default_item, \"level\", enabled, rule_id " +
         "FROM lookup_access_types " +
@@ -155,13 +160,43 @@ public class AccessType extends LookupElement {
 
 
   /**
+   *  Gets the code attribute of the AccessType object
+   *
+   * @return    The code value
+   */
+  public int getCode() {
+    return code;
+  }
+
+
+  /**
+   *  Sets the code attribute of the AccessType object
+   *
+   * @param  tmp  The new code value
+   */
+  public void setCode(int tmp) {
+    this.code = tmp;
+  }
+
+
+  /**
+   *  Sets the code attribute of the AccessType object
+   *
+   * @param  tmp  The new code value
+   */
+  public void setCode(String tmp) {
+    this.code = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Build the Access Type record
    *
    * @param rs Description of the Parameter
    * @throws java.sql.SQLException Description of the Exception
    */
   public void build(ResultSet rs) throws java.sql.SQLException {
-    code = rs.getInt("code");
+    this.code = rs.getInt("code");
     linkModuleId = rs.getInt("link_module_id");
     description = rs.getString("description");
     defaultItem = rs.getBoolean("default_item");
@@ -173,6 +208,28 @@ public class AccessType extends LookupElement {
     ruleId = rs.getInt("rule_id");
   }
 
+  public boolean insert(Connection db) throws SQLException {
+    int id = DatabaseUtils.getNextSeq(db, "lookup_access_types_code_seq");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO lookup_access_types " +
+        "(" + (id > -1 ? "code, " : "") + "link_module_id, description, default_item, \"level\", enabled, rule_id) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) "
+    );
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setInt(++i, linkModuleId);
+    pst.setString(++i, this.getDescription());
+    pst.setBoolean(++i, defaultItem);
+    pst.setInt(++i, level);
+    pst.setBoolean(++i, enabled);
+    pst.setInt(++i, ruleId);
+    pst.execute();
+    pst.close();
+    code = DatabaseUtils.getCurrVal(db, "lookup_access_types_code_seq", id);
+    return true;
+  }
 }
 
 

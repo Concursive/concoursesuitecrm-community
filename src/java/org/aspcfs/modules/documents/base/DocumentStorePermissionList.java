@@ -89,7 +89,7 @@ public class DocumentStorePermissionList extends HashMap {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT lp.permission, p.userlevel " +
-        "FROM document_store_permissions p, lookup_document_store_permission lp " +
+        "FROM document_store_permissions p, " + DatabaseUtils.getTableName(db, "lookup_document_store_permission") + " lp " +
         "WHERE p.permission_id = lp.code ");
     createFilter(sql);
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -256,6 +256,7 @@ public class DocumentStorePermissionList extends HashMap {
       list.setIncludeEnabled(Constants.TRUE);
       list.buildList(db);
       Iterator iterator = list.iterator();
+      // TODO: optimize because preparedStatement can be used outside iterator
       while (iterator.hasNext()) {
         DocumentStorePermissionLookup thisPermission = (DocumentStorePermissionLookup) iterator.next();
         int id = DatabaseUtils.getNextSeq(

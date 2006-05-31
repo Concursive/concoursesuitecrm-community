@@ -22,8 +22,19 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+  <parameter name="siteid" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[accounts.site]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(-1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siteid_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND o.site_id = $P{siteid}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="user_name" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["Matt Rajkowski"]]></defaultValueExpression>
+	</parameter>
+  <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["/home/esther/"]]></defaultValueExpression>
@@ -35,12 +46,17 @@
 		<defaultValueExpression ><![CDATA["en"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[select distinct o.name AS org_name, o.org_id AS org_id 
-FROM custom_field_record cfr
- LEFT JOIN organization o on (cfr.link_item_id = o.org_id )
- where cfr.link_module_id=1
- AND o.trashed_date IS NULL
- ORDER BY org_name]]></queryString>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<queryString><![CDATA[
+   SELECT DISTINCT o.name AS org_name, o.org_id AS org_id 
+   FROM custom_field_record cfr
+   LEFT JOIN organization o on (cfr.link_item_id = o.org_id )
+   WHERE cfr.link_module_id=1
+   AND o.trashed_date IS NULL
+   AND (o.status_id IS NULL OR o.status_id = 7)
+   AND o.enabled = $P{TRUE}
+   $P!{siteid_where}
+   ORDER BY o.name]]></queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.String"/>
 	<variable name="count" class="java.lang.Integer" resetType="Group" resetGroup="department" calculation="Nothing">

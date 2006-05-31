@@ -1,0 +1,122 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Adds folders to the specified module
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+
+
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator") ;
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+
+
+// Using the constant categoryId from permissions.xml, get the database id for
+// this module.  This allows for translated permission categories to be used...
+
+if (1 == 1) {
+  int categoryId = PermissionCategory.lookupId(db, 1);
+
+  if (categoryId != -1) {
+
+    // Load permission category for later use
+    PermissionCategory permissionCategory = new PermissionCategory(db, categoryId);
+
+    if (1 == 1) {
+      // See if permission already exists
+      int existingId = Permission.lookupId(db, "accounts-accounts-contacts-messages");
+
+      if (existingId == -1) {
+        // Insert a new permission so that user roles can access folders
+        Permission permission = new Permission();
+        permission.setCategoryId(permissionCategory.getId());
+        permission.setName("accounts-accounts-contacts-messages");
+        //permission.setDescription(dictionary.getTerm("system.fields.label", "accounts.accounts_relationships_add.Relationships", "value"));
+        permission.setDescription("Contact Messages");
+        permission.setView(true);
+        permission.setAdd(true);
+        permission.setEdit(true);
+        permission.setDelete(true);
+        permission.setPermissionLevel(70);
+        permission.setEnabled(true);
+        permission.setActive(true);
+        permission.setViewpoints(false);
+        permission.insert(db);
+
+        print("Account Contact Messages added.");
+      }
+    }
+    if (1 == 1) {
+      // See if permission already exists
+      int existingId = Permission.lookupId(db, "accounts-accounts-contacts-opportunities");
+
+      if (existingId == -1) {
+        // Insert a new permission so that user roles can access folders
+        Permission permission = new Permission();
+        permission.setCategoryId(permissionCategory.getId());
+        permission.setName("accounts-accounts-contacts-opportunities");
+        //permission.setDescription(dictionary.getTerm("system.fields.label", "accounts.accounts_relationships_add.Relationships", "value"));
+        permission.setDescription("Contact Opportunities");
+        permission.setView(true);
+        permission.setAdd(true);
+        permission.setEdit(true);
+        permission.setDelete(true);
+        permission.setPermissionLevel(35);
+        permission.setEnabled(true);
+        permission.setActive(true);
+        permission.setViewpoints(false);
+        permission.insert(db);
+
+        print("Account Contact Opportunities added.");
+      }
+    }
+
+  }
+}
+
+if (1 == 1) {
+  int categoryId = PermissionCategory.lookupId(db, 2);
+
+  if (categoryId != -1) {
+
+    // Load permission category for later use
+    PermissionCategory permissionCategory = new PermissionCategory(db, categoryId);
+
+    if (1 == 1) {
+      // See if permission already exists
+      int existingId = Permission.lookupId(db, "contacts-external-contact-updater");
+
+      if (existingId == -1) {
+        // Insert a new permission so that user roles can access folders
+        Permission permission = new Permission();
+        permission.setCategoryId(permissionCategory.getId());
+        permission.setName("contacts-external-contact-updater");
+        //permission.setDescription(dictionary.getTerm("system.fields.label", "accounts.accounts_relationships_add.Relationships", "value"));
+        permission.setDescription("Request contact information update");
+        permission.setView(true);
+        permission.setAdd(true);
+        permission.setEdit(true);
+        permission.setDelete(true);
+        permission.setPermissionLevel(90);
+        permission.setEnabled(true);
+        permission.setActive(true);
+        permission.setViewpoints(false);
+        permission.insert(db);
+
+        print("Request contact information update added.");
+      }
+    }
+  }
+}

@@ -263,12 +263,9 @@ public final class Viewpoints extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandInsertViewpointForm(ActionContext context) {
-
     if (!(hasPermission(context, "admin-roles-add"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     addModuleBean(context, "Users", "Add a Viewpoint");
     Connection db = null;
     String userId = context.getRequest().getParameter("userId");
@@ -286,17 +283,13 @@ public final class Viewpoints extends CFSModule {
       thisUser.buildRecord(db, Integer.parseInt(userId));
       context.getRequest().setAttribute("UserRecord", thisUser);
     } catch (Exception e) {
-      errorMessage = e;
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      return ("ViewpointInsertFormOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("ViewpointInsertFormOK");
   }
 
 
@@ -325,17 +318,34 @@ public final class Viewpoints extends CFSModule {
       ViewpointList viewpoints = new ViewpointList();
       viewpoints.setUserId(thisViewpoint.getUserId());
       viewpoints.buildList(db);
-      if (viewpoints.checkForDuplicates(thisViewpoint.getVpUserId()) != 0) {
-        HashMap errors = new HashMap();
-        SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put(
-            "actionError", systemStatus.getLabel(
-                "object.validation.duplicateViewpointUserCanNotBeInserted"));
-        processErrors(context, errors);
-        isValid = false;
-      }
+      
+      HashMap errors = new HashMap();
+      SystemStatus systemStatus = this.getSystemStatus(context);
       if (isValid) {
-        recordInserted = thisViewpoint.insert(db);
+        //check that he site ids of the view points are compliant
+        User tmpUser = this.getUser(context, thisViewpoint.getUserId());
+        User tmpViewPointUser = this.getUser(context, thisViewpoint.getVpUserId());
+        if (tmpUser.getSiteId() != -1){
+          if (tmpUser.getSiteId() != tmpViewPointUser.getSiteId()){
+            errors.put(
+                "actionError", systemStatus.getLabel(
+                    "object.validation.theSelectedUserHasIncompatibleSite"));
+            isValid = false;
+          }
+        }
+      
+        //Check for duplicates
+        if (viewpoints.checkForDuplicates(thisViewpoint.getVpUserId()) != 0) {
+          errors.put(
+              "actionError", systemStatus.getLabel(
+                  "object.validation.duplicateViewpointUserCanNotBeInserted"));
+          isValid = false;
+        }
+        if (isValid) {
+          recordInserted = thisViewpoint.insert(db);
+        } else {
+          processErrors(context, errors);
+        }
       }
       if (recordInserted) {
         PermissionList permissionList = new PermissionList(db);
@@ -358,6 +368,7 @@ public final class Viewpoints extends CFSModule {
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
+      e.printStackTrace();
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);

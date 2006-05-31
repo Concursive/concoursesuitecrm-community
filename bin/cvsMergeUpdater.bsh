@@ -1,5 +1,5 @@
 #!/bin/sh
-//usr/bin/true; exec java -classpath .:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+//usr/bin/true; exec java -classpath .:lib/bsh-2.0b2.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
 
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.StringUtils;

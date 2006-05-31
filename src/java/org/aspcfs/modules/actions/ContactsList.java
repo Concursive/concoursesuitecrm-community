@@ -17,16 +17,20 @@ package org.aspcfs.modules.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.ProjectList;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.FilterList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -54,6 +58,10 @@ public final class ContactsList extends CFSModule {
     boolean listDone = false;
     String selectedIds = context.getRequest().getParameter("selectedIds");
     String listType = context.getRequest().getParameter("listType");
+    String type = context.getRequest().getParameter("type");
+    if (type != null && !"".equals(type) && !"null".equals(type)) {
+      context.getRequest().setAttribute("type", type);
+    }
     String displayType = context.getRequest().getParameter("displayType");
     HashMap selectedList = new HashMap();
     //initialize from page, if list...
@@ -115,14 +123,17 @@ public final class ContactsList extends CFSModule {
       int rowCount = 1;
       //list
       if (listType.equalsIgnoreCase("list")) {
-        while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null) {
+        while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null)
+        {
           int contactId = 0;
           String emailAddress = "";
           contactId = Integer.parseInt(
               context.getRequest().getParameter("hiddencontactid" + rowCount));
 
-          if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
-            if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
+          if (context.getRequest().getParameter("checkcontact" + rowCount) != null)
+          {
+            if (context.getRequest().getParameter("contactemail" + rowCount) != null)
+            {
 
               //we want this "emailAddress" variable to be the email only if we are not in Campaign Mgr.
               if (context.getRequest().getParameter("campaign") == null) {
@@ -138,7 +149,8 @@ public final class ContactsList extends CFSModule {
             //If User does not have a emailAddress or if it is not a message use Name(LastFirst)
             if (emailAddress.equals("") || "single".equals(listType) || "name".equals(
                 displayType)) {
-              if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
+              if (context.getRequest().getParameter("hiddenname" + rowCount) != null)
+              {
                 emailAddress = "P:" + context.getRequest().getParameter(
                     "hiddenname" + rowCount);
               }
@@ -182,7 +194,11 @@ public final class ContactsList extends CFSModule {
       }
       //Set ContactList Parameters and build the list
       setParameters(contactList, context, db);
+      contactList.setLeadsOnly(Constants.FALSE);
       contactList.buildList(db);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -209,7 +225,7 @@ public final class ContactsList extends CFSModule {
    * @param contactList The new parameters value
    * @param context     The new parameters value
    */
-  private void setParameters(ContactList contactList, ActionContext context, Connection db) {
+  private void setParameters(ContactList contactList, ActionContext context, Connection db) throws Exception {
     SystemStatus thisSystem = this.getSystemStatus(context);
     // search for a particular contact
     String defaultFirstName = thisSystem.getLabel(
@@ -240,12 +256,70 @@ public final class ContactsList extends CFSModule {
     if (!contactListInfo.hasListFilters()) {
       contactListInfo.addFilter(1, "0");
     }
-
+    String leads = context.getRequest().getParameter("leads");
+    if (leads != null && !"".equals(leads.trim())) {
+      context.getRequest().setAttribute("leads", leads);
+    }
+    String recipient = context.getRequest().getParameter("recipient");
+    if (recipient != null && !"".equals(recipient)) {
+      context.getRequest().setAttribute("recipient", recipient);
+    }
     String secondFilter = context.getRequest().getParameter("listFilter1");
     String usersOnly = context.getRequest().getParameter("usersOnly");
     String hierarchy = context.getRequest().getParameter("hierarchy");
     String nonUsersOnly = context.getRequest().getParameter("nonUsersOnly");
-
+    String orgId = context.getRequest().getParameter("orgId");
+    String siteIdUser = context.getRequest().getParameter("siteIdUser");
+    String siteIdContact = context.getRequest().getParameter("siteIdContact");
+    String siteIdOrg = context.getRequest().getParameter("siteIdOrg");
+    String mySiteOnly = context.getRequest().getParameter("mySiteOnly");
+    String departmentId = context.getRequest().getParameter("departmentId");
+    String siteIdString = context.getRequest().getParameter("siteId");
+    String ticketIdString = context.getRequest().getParameter("ticketId");
+    String includeAllSites = context.getRequest().getParameter("includeAllSites");
+    String allowDuplicateRecipient = context.getRequest().getParameter("allowDuplicateRecipient");
+    if (allowDuplicateRecipient != null && !"".equals(allowDuplicateRecipient.trim())) {
+      context.getRequest().setAttribute("allowDuplicateRecipient", allowDuplicateRecipient);
+    }
+    String source = context.getRequest().getParameter("hiddensource");
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("hiddensource", source);
+    }
+    String actionItemId = context.getRequest().getParameter("actionItemId");
+    if (actionItemId != null && !"".equals(actionItemId.trim())) {
+      context.getRequest().setAttribute("actionItemId", actionItemId);
+    }
+    int siteId = this.getUserSiteId(context);
+    if (siteIdString != null && !"".equals(siteIdString.trim())) {
+      siteId = Integer.parseInt(siteIdString);
+    }
+    if (siteIdUser != null && !"".equals(siteIdUser.trim()) && !"-1".equals(siteIdUser.trim())) {
+      User user = this.getUser(context, Integer.parseInt(siteIdUser.trim()));
+      siteId = user.getSiteId();
+    }
+    if (siteIdContact != null && !"".equals(siteIdContact.trim()) && !"-1".equals(siteIdContact.trim())) {
+      Contact contact = new Contact(db, Integer.parseInt(siteIdContact.trim()));
+      siteId = contact.getSiteId();
+    }
+    if (siteIdOrg != null && !"".equals(siteIdOrg.trim()) && !"-1".equals(siteIdOrg.trim())) {
+      Organization org = new Organization(db, Integer.parseInt(siteIdOrg));
+      siteId = org.getSiteId();
+    }
+    if ((ticketIdString != null) &&
+        !"".equals(ticketIdString) &&
+        !"null".equals(ticketIdString) &&
+        !"-1".equals(ticketIdString)) {
+      Ticket ticket = new Ticket(db, Integer.parseInt(ticketIdString));
+      siteId = ticket.getOrgSiteId();
+    }
+    if (!isSiteAccessPermitted(context, String.valueOf(siteId))) {
+      throw new SQLException("PermissionError");
+    }
+/*
+    if (user.getSiteId() != -1 && user.getSiteId() != siteId) {
+      throw new SQLException("PermissionError");
+    }
+*/
     //add filters
     FilterList filters = new FilterList(thisSystem, context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
@@ -258,27 +332,32 @@ public final class ContactsList extends CFSModule {
       contactList.addIgnoreTypeId(Contact.LEAD_TYPE);
       contactList.setAllContacts(
           true, this.getUserId(context), this.getUserRange(context));
+      contactList.setSiteId(siteId);
     }
     if (firstFilter.equalsIgnoreCase("employees")) {
       contactList.setEmployeesOnly(Constants.TRUE);
       if (secondFilter != null && !"".equals(secondFilter)) {
         contactList.setDepartmentId(Integer.parseInt(secondFilter));
       }
+      contactList.setSiteId(siteId);
     }
     if (firstFilter.equalsIgnoreCase("mycontacts")) {
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.addIgnoreTypeId(Contact.LEAD_TYPE);
       contactList.setOwner(this.getUserId(context));
+      contactList.setSiteId(siteId);
       contactList.setPersonalId(this.getUserId(context));
     }
     if (firstFilter.equalsIgnoreCase("accountcontacts")) {
       contactList.setWithAccountsOnly(true);
+      contactList.setSiteId(siteId);
     }
     if (firstFilter.equalsIgnoreCase("myprojects")) {
       contactList.setWithProjectsOnly(true);
       if (secondFilter != null && !"".equals(secondFilter)) {
         contactList.setProjectId(Integer.parseInt(secondFilter));
       }
+      contactList.setSiteId(siteId);
     }
     contactListInfo.setListView(firstFilter);
     contactList.setPagedListInfo(contactListInfo);
@@ -299,8 +378,34 @@ public final class ContactsList extends CFSModule {
     if ("true".equals(nonUsersOnly)) {
       contactList.setIncludeNonUsersOnly(true);
     }
+    if (orgId != null && !"".equals(orgId.trim())) {
+      contactList.setOrgId(Integer.parseInt(orgId));
+    }
+    if ("true".equals(usersOnly)) {
+      if (departmentId != null && !"".equals(departmentId.trim()) && !"null".equals(departmentId.trim()))
+      {
+        context.getRequest().setAttribute("departmentId", departmentId);
+        contactList.setDepartmentId(Integer.parseInt(departmentId));
+      }
+    }
+
+    // Setting filter criterea for campaign groups based on
+    // siteId of the organization associated with the account contacts.
+    if ("true".equals(context.getRequest().getParameter("campaign")) &&
+        firstFilter.equalsIgnoreCase("accountcontacts")) {
+      contactList.setSiteId(siteId);
+    }
+    if (mySiteOnly != null && "true".equals(mySiteOnly)) {
+      contactList.setExclusiveToSite(true);
+    }
+    if (includeAllSites != null && "true".equals(includeAllSites.trim())) {
+      if (siteId == -1) {
+        contactList.setIncludeAllSites(true);
+      }
+    }
+    context.getRequest().setAttribute("includeAllSites", includeAllSites);
+    context.getRequest().setAttribute("siteId", String.valueOf(siteId));
+    context.getRequest().setAttribute("mySiteOnly", mySiteOnly);
   }
-
 }
-
 

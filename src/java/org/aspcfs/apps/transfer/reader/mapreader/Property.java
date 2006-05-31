@@ -24,12 +24,13 @@ import org.w3c.dom.Node;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.HashMap;
 
 /**
  * Represents a definition for a property of a map in XML
  *
- * @author Akhilesh Mathur
- * @version $id:exp$
+ * @author     Akhilesh Mathur
+ * @version $Id$
  * @created April 5, 2004
  */
 public class Property implements Cloneable {
@@ -47,6 +48,27 @@ public class Property implements Cloneable {
   private boolean multiple = false;
   private boolean isForPrompting = true;
   private ArrayList aliases = null;
+  private ArrayList dependencies = null;
+
+
+  /**
+   *  Gets the dependencies attribute of the Property object
+   *
+   * @return    The dependencies value
+   */
+  public ArrayList getDependencies() {
+    return dependencies;
+  }
+
+
+  /**
+   *  Sets the dependencies attribute of the Property object
+   *
+   * @param  tmp  The new dependencies value
+   */
+  public void setDependencies(ArrayList tmp) {
+    this.dependencies = tmp;
+  }
 
 
   /**
@@ -59,7 +81,7 @@ public class Property implements Cloneable {
   /**
    * Constructor for the Property object
    *
-   * @param name Description of the Parameter
+   * @param  name  Description of the Parameter
    */
   public Property(String name) {
     this.name = name;
@@ -69,7 +91,7 @@ public class Property implements Cloneable {
   /**
    * Sets the attributes of a property based on a XML node
    *
-   * @param n Description of the Parameter
+   * @param  n  Description of the Parameter
    */
   public Property(Node n) {
     //name
@@ -123,6 +145,42 @@ public class Property implements Cloneable {
     if (!"".equals(StringUtils.toString(tmpValue))) {
       this.setSubstitute(tmpValue);
     }
+
+    //Check for any dependent properties
+    String dependency = ((Element) n).getAttribute("depends");
+    if (!"".equals(StringUtils.toString(dependency))) {
+      dependencies = (StringUtils.toArrayList(dependency, ","));
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  fieldMappings  Description of the Parameter
+   * @return                Description of the Return Value
+   */
+  public boolean checkIsRequired(HashMap fieldMappings) {
+    if (dependencies != null) {
+      //checks to see if a dependent property exists in the mapped properties
+      //property is considered NOT required if a dependent property mapping exists
+      Iterator i = dependencies.iterator();
+      while (i.hasNext()) {
+        String dependency = (String) i.next();
+        Iterator fields = fieldMappings.keySet().iterator();
+        while (fields.hasNext()) {
+          String field = (String) fields.next();
+          Property mappedProperty = (Property) fieldMappings.get(field);
+          if (mappedProperty != null) {
+            if (mappedProperty.getName() != null && dependency.equals(mappedProperty.getName())) {
+              //Found a mapped property. This property's mapping NOT required
+              return false;
+            }
+          }
+        }
+      }
+    }
+    return true;
   }
 
 
@@ -149,7 +207,7 @@ public class Property implements Cloneable {
   /**
    * Sets the defaultValue attribute of the Property object
    *
-   * @param tmp The new defaultValue value
+   * @param  tmp  The new defaultValue value
    */
   public void setDefaultValue(String tmp) {
     this.defaultValue = tmp;
@@ -159,7 +217,7 @@ public class Property implements Cloneable {
   /**
    * Sets the required attribute of the Property object
    *
-   * @param tmp The new required value
+   * @param  tmp  The new required value
    */
   public void setRequired(boolean tmp) {
     this.required = tmp;
@@ -229,7 +287,7 @@ public class Property implements Cloneable {
   /**
    * Sets the delimiter attribute of the Property object
    *
-   * @param tmp The new delimiter value
+   * @param  tmp  The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
@@ -239,7 +297,7 @@ public class Property implements Cloneable {
   /**
    * Sets the displayName attribute of the Property object
    *
-   * @param tmp The new displayName value
+   * @param  tmp  The new displayName value
    */
   public void setDisplayName(String tmp) {
     this.displayName = tmp;
@@ -269,7 +327,7 @@ public class Property implements Cloneable {
   /**
    * Sets the isForPrompting attribute of the Property object
    *
-   * @param tmp The new isForPrompting value
+   * @param  tmp  The new isForPrompting value
    */
   public void setIsForPrompting(String tmp) {
     this.isForPrompting = DatabaseUtils.parseBoolean(tmp);
@@ -279,7 +337,7 @@ public class Property implements Cloneable {
   /**
    * Sets the groupId attribute of the Property object
    *
-   * @param tmp The new groupId value
+   * @param  tmp  The new groupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -309,7 +367,7 @@ public class Property implements Cloneable {
   /**
    * Gets the substitute attribute of the Property object
    *
-   * @return The substitute value
+   * @return    The substitute value
    */
   public String getSubstitute() {
     return substitute;
@@ -350,7 +408,7 @@ public class Property implements Cloneable {
    * Gets the dependency name of this property<br>
    * NOTE: Returns NULL if this is not a dependency property
    *
-   * @return The dependencyName value
+   * @return    The dependencyName value
    */
   public String getDependencyName() {
     if ("".equals(StringUtils.toString(uniqueName)) || uniqueName.indexOf(".") == -1) {
@@ -371,7 +429,7 @@ public class Property implements Cloneable {
   /**
    * Gets the displayName attribute of the Property object
    *
-   * @return The displayName value
+   * @return    The displayName value
    */
   public String getDisplayName() {
     return displayName;
@@ -411,7 +469,7 @@ public class Property implements Cloneable {
   /**
    * Gets the defaultValue attribute of the Property object
    *
-   * @return The defaultValue value
+   * @return    The defaultValue value
    */
   public String getDefaultValue() {
     return defaultValue;
@@ -441,7 +499,7 @@ public class Property implements Cloneable {
   /**
    * Gets the mappedColumn attribute of the Property object
    *
-   * @return The mappedColumn value
+   * @return    The mappedColumn value
    */
   public int getMappedColumn() {
     return mappedColumn;
@@ -474,7 +532,7 @@ public class Property implements Cloneable {
   /**
    * Creates a clone of this property
    *
-   * @return Description of the Return Value
+   * @return                                 Description of the Return Value
    * @throws CloneNotSupportedException Description of the Exception
    */
   public Property duplicate() throws CloneNotSupportedException {
@@ -522,4 +580,3 @@ public class Property implements Cloneable {
     return info.toString();
   }
 }
-

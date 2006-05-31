@@ -144,6 +144,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     ContactList contacts = new ContactList();
     contacts.setIncludeEnabled(-1);
     contacts.setAllContacts(true);
+    contacts.setIncludeAllSites(true);
     contacts.buildList(db);
     mappings.saveList(writer, contacts, "insert");
 

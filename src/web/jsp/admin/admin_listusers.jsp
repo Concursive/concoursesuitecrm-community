@@ -20,10 +20,11 @@
 <%@ page import="java.util.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="UserListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<%-- BEGIN DHV CODE ONLY --%>
+<jsp:useBean id="userListBatchInfo" class="org.aspcfs.utils.web.BatchInfo" scope="request"/>
+<jsp:useBean id="roleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="APP_SIZE" class="java.lang.String" scope="application"/>
-<%-- END DHV CODE ONLY --%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -43,15 +44,13 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<%-- BEGIN DHV CODE ONLY --%>
 <dhv:evaluate if="<%= hasText(APP_SIZE) %>">
-<table class="note" cellspacing="0">
-  <tr>
-    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td><dhv:label name="admin.installedLicenseLimits.text" param="<%= "appsize="+APP_SIZE %>">The installed license limits this system to <%= APP_SIZE %> active users.</dhv:label></td></tr>
-</table>
+  <table class="note" cellspacing="0">
+    <tr>
+      <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+      <td><dhv:label name="admin.installedLicenseLimits.text" param="<%= "appsize="+APP_SIZE %>">The installed license limits this system to <%= APP_SIZE %> active users.</dhv:label></td></tr>
+  </table>
 </dhv:evaluate>
-<%-- END DHV CODE ONLY --%>
 <dhv:permission name="admin-users-add"><a href="Users.do?command=InsertUserForm"><dhv:label name="admin.addNewUser">Add New User</dhv:label></a></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="UserListInfo"/></center></dhv:include>
@@ -66,6 +65,7 @@
         <option <%= UserListInfo.getOptionValue("aliases") %>><dhv:label name="admin.aliasedUsers">Aliased Users</dhv:label></option>
         </dhv:permission>
       </select>
+      <%= roleList.getHtmlSelect("listFilter1", UserList.getRoleId()) %>
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="UserListInfo"/>
@@ -73,6 +73,7 @@
     </form>
   </tr>
 </table>
+<dhv:batch object="userListBatchInfo">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th align="center">
@@ -93,6 +94,15 @@
     <th nowrap>
       <b><dhv:label name="admin.reportsTo">Reports To</dhv:label></b>
     </th>
+    <th nowrap>
+      <b><dhv:label name="admin.user.site">Site</dhv:label></b>
+    </th>
+    <th nowrap>
+      <b><dhv:label name="admin.config.httpApiAccess">HTTP-API Access</dhv:label></b>
+    </th>
+    <th nowrap>
+      <b><dhv:label name="admin.config.webdavAccess">Webdav Access</dhv:label></b>
+    </th>
   </tr>
 <%
   Iterator i = UserList.iterator();
@@ -107,6 +117,8 @@
 %>      
       <tr class="row<%= rowid %>" width="8">
         <td valign="center" align="center" nowrap>
+          <dhv:batchInput object="userListBatchInfo" value="<%= thisUser.getId() %>" hiddenParams="userId|roleId" 
+                    hiddenValues="<%= thisUser.getId() + "|" + thisUser.getRoleId() %>"/>
           <% int status = thisUser.getEnabled() ? 1 : 0; %>
           <dhv:permission name="admin-users-edit" none="true"><% status = -1; %></dhv:permission>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
@@ -123,7 +135,28 @@
         </td>
         <td nowrap>
           <dhv:username id="<%= thisUser.getManagerId() %>"/>
-          <dhv:evaluate if="<%=!(thisUser.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
+          <dhv:evaluate if="<%=thisUser.getManagerId() != -1 %>">
+            <dhv:evaluate if="<%=!(thisUser.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
+          </dhv:evaluate>
+        </td>
+        <td nowrap>
+          <%= toHtml(thisUser.getSiteIdName()) %>
+        </td>
+        <td nowrap align="center">
+          <dhv:evaluate if="<%= thisUser.getHasHttpApiAccess() %>">
+            <dhv:label name="account.yes">Yes</dhv:label>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= !thisUser.getHasHttpApiAccess() %>">
+            <dhv:label name="account.no">No</dhv:label>
+          </dhv:evaluate>
+        </td>
+        <td nowrap align="center">
+          <dhv:evaluate if="<%= thisUser.getHasWebdavAccess() %>">
+            <dhv:label name="account.yes">Yes</dhv:label>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= !thisUser.getHasWebdavAccess() %>">
+            <dhv:label name="account.no">No</dhv:label>
+          </dhv:evaluate>
         </td>
       </tr>
 <%
@@ -131,7 +164,7 @@
   } else {
 %>  
 <tr>
-    <td class="containerBody" valign="center" colspan="5">
+    <td class="containerBody" valign="center" colspan="8">
       <dhv:label name="admin.noUsersFound">No users found.</dhv:label>
     </td>
   </tr>
@@ -139,6 +172,17 @@
   }
 %>
 </table>
+</dhv:batch>
 <br>
-<dhv:pagedListControl object="UserListInfo" tdClass="row1"/>
-
+<dhv:pagedListControl object="UserListInfo" tdClass="row1">
+  <dhv:batchList object="userListBatchInfo" returnURL="Users.do?command=ListUsers">
+    <dhv:batchItem display="<%= systemStatus.getLabel("batch.enable.webdavaccess", "Enable Webdav Access") %>" 
+            link="Users.do?command=ProcessBatch&action=Webdav&status=Enable" />
+    <dhv:batchItem display="<%= systemStatus.getLabel("batch.enable.httpapiaccess", "Enable HTTP-API Access") %>" 
+            link="Users.do?command=ProcessBatch&action=HttpAPI&status=Enable" />
+    <dhv:batchItem display="<%= systemStatus.getLabel("batch.disable.webdavaccess", "Disable Webdav Access") %>" 
+            link="Users.do?command=ProcessBatch&action=Webdav&status=Disable" />
+    <dhv:batchItem display="<%= systemStatus.getLabel("batch.disable.httpapiaccess", "Disable HTTP-API Access") %>" 
+            link="Users.do?command=ProcessBatch&action=HttpAPI&status=Disable" />
+  </dhv:batchList>
+</dhv:pagedListControl>

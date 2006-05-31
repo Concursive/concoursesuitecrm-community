@@ -18,6 +18,7 @@ package org.aspcfs.modules.login.actions;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.hooks.CustomHook;
 import org.aspcfs.controller.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
@@ -27,10 +28,9 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.LDAPUtils;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,6 +46,35 @@ import java.util.Hashtable;
 public final class Login extends CFSModule {
 
   public final static String fs = System.getProperty("file.separator");
+
+  public String executeCommandDefault(ActionContext context) {
+    // Will need to use the following objects in some way...
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    Connection db = null;
+    try {
+      Site thisSite = SecurityHook.retrieveSite(context.getServletContext(), context.getRequest());
+      // Store a ConnectionElement in session for the LabelHandler to find the corresponding language
+      ConnectionElement ce = thisSite.getConnectionElement();
+      context.getSession().setAttribute("ConnectionElement", ce);
+      db = getConnection(context, ce);
+      // Load the system status for the corresponding site w/specified language
+      SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce, thisSite.getLanguage());
+    } catch (Exception e) {
+      System.out.println("Login-> Default error: " + e.getMessage());
+    } finally {
+      freeConnection(context, db);
+    }
+    // Determine entry page
+    String scheme = context.getRequest().getScheme();
+    // If SSL is configured, but this user isn't using SSL, then go to the welcome page
+    if ("true".equals((String) context.getServletContext().getAttribute("ForceSSL")) &&
+        scheme.equals("http")) {
+      context.getRequest().setAttribute("LAYOUT.JSP", prefs.get("LAYOUT.JSP.WELCOME"));
+    } else {
+      context.getRequest().setAttribute("LAYOUT.JSP", prefs.get("LAYOUT.JSP.LOGIN"));
+    }
+    return "IndexPageOK";
+  }
 
 
   /**
@@ -73,8 +102,7 @@ public final class Login extends CFSModule {
     gk.setDriver(gkDriver);
     //Prepare the database connection
     ConnectionPool sqlDriver =
-        (ConnectionPool) context.getServletContext().getAttribute(
-            "ConnectionPool");
+        (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     if (sqlDriver == null) {
       loginBean.setMessage("Connection pool missing!");
       return "LoginRetry";
@@ -83,9 +111,8 @@ public final class Login extends CFSModule {
     ConnectionElement ce = null;
     //Connect to the gatekeeper, validate this host and get new connection info
     try {
-      if ("true".equals(
-          (String) context.getServletContext().getAttribute(
-              "WEBSERVER.ASPMODE"))) {
+      if ("true".equals((String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE")))
+      {
         //Scan for the virtual host
         db = sqlDriver.getConnection(gk);
         SiteList siteList = new SiteList();
@@ -103,7 +130,7 @@ public final class Login extends CFSModule {
         } else {
           loginBean.setMessage(
               "* Access denied: Host does not exist (" +
-              serverName + ")");
+                  serverName + ")");
         }
       } else {
         //A single database is configured, so use it only regardless of ip/domain name
@@ -138,105 +165,83 @@ public final class Login extends CFSModule {
         continueId = true;
       } else {
         //A good place to initialize this SystemStatus, must be done before getting a user
+        Site thisSite = SecurityHook.retrieveSite(context.getServletContext(), context.getRequest());
         thisSystem = SecurityHook.retrieveSystemStatus(
-            context.getServletContext(), db, ce);
+            context.getServletContext(), db, ce, thisSite.getLanguage());
         if (System.getProperty("DEBUG") != null) {
-          System.out.println(
-              "Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
+          System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
         }
-        // BEGIN DHV CODE ONLY
-        //License check
-        try {
-          File keyFile = new File(
-              getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-          File inputFile = new File(
-              getPref(context, "FILELIBRARY") + "init" + fs + "input.txt");
-          if (keyFile.exists() && inputFile.exists()) {
-            java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
-                getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-            org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(
-                org.aspcfs.utils.PrivateString.decrypt(
-                    key, StringUtils.loadText(
-                        getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-            //The edition will be shown
-            String lpd = org.aspcfs.utils.XMLUtils.getNodeText(
-                xml.getFirstChild("text2"));
-            PreparedStatement pst = db.prepareStatement(
-                "SELECT count(*) AS user_count " +
-                "FROM access a, \"role\" r " +
-                "WHERE a.user_id > 0 " +
-                "AND a.role_id > 0 " +
-                "AND a.role_id = r.role_id " +
-                "AND r.role_type = ? " +
-                "AND a.enabled = ? ");
-            pst.setInt(1, Constants.ROLETYPE_REGULAR);
-            pst.setBoolean(2, true);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-              if (rs.getInt("user_count") <= Integer.parseInt(
-                  lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
-                continueId = true;
-              } else {
-                loginBean.setMessage(
-                    "* " + thisSystem.getLabel("login.msg.licenseError"));
-              }
-            }
-            rs.close();
-            pst.close();
-            userId2 = lpd.substring(7);
-          } else {
-            loginBean.setMessage(
-                "* " + thisSystem.getLabel("login.msg.licenseNotFound"));
-          }
-        } catch (Exception e) {
-          loginBean.setMessage(
-              "* " + thisSystem.getLabel("login.msg.licenseNotUptoDate"));
-        }
-        // END DHV CODE ONLY
+        continueId = CustomHook.populateLoginContext(context, db, thisSystem, loginBean);
       }
       //Query the user record
-      // BEGIN DHV CODE ONLY
+      String pw = null;
+      java.sql.Date expDate = null;
+      int tmpUserId = -1;
+      int roleType = -1;
       if (continueId) {
-        // END DHV CODE ONLY
+        // NOTE: The following is the simplest valid SQL that works
+        // on all versions of Centric CRM.  It must not be
+        // modified with new fields because .war users need to
+        // be able to login first, before the upgrade has happened
         PreparedStatement pst = db.prepareStatement(
-            "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.\"role\" " +
-            "FROM access a, \"role\" r " +
-            "WHERE a.role_id = r.role_id " +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
-            "AND a.enabled = ? ");
+            "SELECT a.\"password\", a.role_id, r.\"role\", a.expires, a.alias, a.user_id, r.role_type " +
+                "FROM \"access\" a, \"role\" r " +
+                "WHERE a.role_id = r.role_id " +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
+                "AND a.enabled = ? ");
         pst.setString(1, username.toLowerCase());
         pst.setBoolean(2, true);
         ResultSet rs = pst.executeQuery();
-        if (!rs.next()) {
-          loginBean.setMessage(
-              "* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
-        } else {
-          String pw = rs.getString("password");
-          if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute(
-              "GlobalPWInfo").equals(password))) {
-            loginBean.setMessage(
-                "* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
-          } else {
-            java.sql.Date expDate = rs.getDate("expires");
-            if (expDate != null && now.after(expDate)) {
-              loginBean.setMessage(
-                  "* " + thisSystem.getLabel("login.msg.accountExpired"));
-            } else {
-              aliasId = rs.getInt("alias");
-              userId = rs.getInt("user_id");
-              roleId = rs.getInt("role_id");
-              role = rs.getString("role");
-            }
-          }
+        if (rs.next()) {
+          pw = rs.getString("password");
+          roleId = rs.getInt("role_id");
+          role = rs.getString("role");
+          expDate = rs.getDate("expires");
+          aliasId = rs.getInt("alias");
+          tmpUserId = rs.getInt("user_id");
+          roleType = rs.getInt("role_type");
         }
         rs.close();
         pst.close();
-        // BEGIN DHV CODE ONLY
+        if (tmpUserId == -1) {
+          // NOTE: This could be modified so that LDAP records get inserted into CRM on the fly if they do not exist yet
+
+          // User record not found in database
+          loginBean.setMessage(
+              "* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Login-> User record not found in database for: " + username.toLowerCase());
+          }
+        } else if (expDate != null && now.after(expDate)) {
+          // Login expired
+          loginBean.setMessage(
+              "* " + thisSystem.getLabel("login.msg.accountExpired"));
+        } else {
+          // User exists, now verify password
+          boolean ldapEnabled = "true".equals(applicationPrefs.get("LDAP.ENABLED"));
+          if (ldapEnabled && roleType == Constants.ROLETYPE_REGULAR) {
+            // See if the CRM username and password matches in LDAP
+            int ldapResult = LDAPUtils.authenticateUser(applicationPrefs, db, loginBean);
+            if (ldapResult == LDAPUtils.RESULT_VALID) {
+              userId = tmpUserId;
+            }
+          } else {
+            // Validate against Centric CRM
+            if (pw == null || pw.trim().equals("") ||
+                (!pw.equals(password) && !context.getServletContext().getAttribute(
+                    "GlobalPWInfo").equals(password))) {
+              loginBean.setMessage(
+                  "* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
+            } else {
+              userId = tmpUserId;
+            }
+          }
+        }
       }
-      // END DHV CODE ONLY
       //Perform rest of user initialization if a valid user
       if (userId > -1) {
         thisUser = new UserBean();
+        thisUser.setSessionId(context.getSession().getId());
         thisUser.setUserId(aliasId > 0 ? aliasId : userId);
         thisUser.setActualUserId(userId);
         thisUser.setConnectionElement(ce);
@@ -246,8 +251,7 @@ public final class Login extends CFSModule {
           User userRecord = thisSystem.getUser(thisUser.getUserId());
           if (userRecord != null) {
             if (System.getProperty("DEBUG") != null) {
-              System.out.println(
-                  "Login-> Retrieved user from memory: " + userRecord.getUsername());
+              System.out.println("Login-> Retrieved user from memory: " + userRecord.getUsername());
             }
             thisUser.setIdRange(userRecord.getIdRange());
             thisUser.setUserRecord(userRecord);
@@ -259,13 +263,11 @@ public final class Login extends CFSModule {
                 db, context.getRequest().getParameter("password"));
           }
           if (!thisSystem.hasPermissions()) {
-            System.out.println(
-                "Login-> This system does not have any permissions loaded!");
+            System.out.println("Login-> This system does not have any permissions loaded!");
           }
         } else {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println(
-                "Login-> Fatal: User not found in this System!");
+            System.out.println("Login-> Fatal: User not found in this System!");
           }
         }
       } else {
@@ -302,8 +304,7 @@ public final class Login extends CFSModule {
     } else {
       //Check to see if user is already logged in.
       //If not then add them to the valid users list
-      SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
-          "SystemStatus")).get(ce.getUrl());
+      SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
       SessionManager sessionManager = thisSystem.getSessionManager();
       if (sessionManager.isUserLoggedIn(userId)) {
         UserSession thisSession = sessionManager.getUserSession(userId);
@@ -314,12 +315,6 @@ public final class Login extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Login-> Session Size: " + sessionManager.size());
       }
-      // BEGIN DHV CODE ONLY
-      // NOTE: This check is no longer valid until portal users are tracked
-      //if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
-      //  return "LicenseError";
-      //}
-      // END DHV CODE ONLY
       context.getSession().setMaxInactiveInterval(
           thisSystem.getSessionTimeout());
       sessionManager.addUser(context, userId);
@@ -351,10 +346,8 @@ public final class Login extends CFSModule {
     }
     String action = context.getRequest().getParameter("override");
     if ("yes".equals(action)) {
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
-          "SystemStatus")).get(thisUser.getConnectionElement().getUrl());
-      context.getSession().setMaxInactiveInterval(
-          systemStatus.getSessionTimeout());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(thisUser.getConnectionElement().getUrl());
+      context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
       //replace userSession in SessionManager HashMap & reset timeout
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Login-> Invalidating old Session");
@@ -364,11 +357,10 @@ public final class Login extends CFSModule {
       // TODO: Replace this so it does not need to be maintained
       // NOTE: Make sure to update this similar code in the previous method
       if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
-        ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute(
-            "applicationPrefs");
+        ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
         if (applicationPrefs.isUpgradeable()) {
-          if (thisUser.getRoleId() == 1 || "Administrator".equals(
-              thisUser.getRole())) {
+          if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole()))
+          {
             return "PerformUpgradeOK";
           } else {
             return "UpgradeCheck";
@@ -398,10 +390,10 @@ public final class Login extends CFSModule {
   public String executeCommandLogout(ActionContext context) {
     HttpSession oldSession = context.getRequest().getSession(false);
     if (oldSession != null) {
+      oldSession.removeAttribute("User");
       oldSession.invalidate();
     }
     return "LoginRetry";
   }
 
 }
-

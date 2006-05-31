@@ -68,6 +68,7 @@
 		<defaultValueExpression ><![CDATA["USD"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT x.opp_id AS header_opp_id,
 x.description AS header_description, 
 x.acctlink AS header_acctlink, 

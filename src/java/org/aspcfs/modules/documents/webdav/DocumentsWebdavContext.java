@@ -22,6 +22,7 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.naming.NamingException;
 import java.io.FileNotFoundException;
@@ -204,7 +205,7 @@ public class DocumentsWebdavContext
         "WHERE document_store_id > -1 " +
         "AND ((document_store_id in (SELECT DISTINCT document_store_id FROM document_store_user_member WHERE item_id = ? )) " +
         "OR (document_store_id in (SELECT DISTINCT document_store_id FROM document_store_role_member WHERE item_id = ? )) " +
-        "OR (document_store_id in (SELECT DISTINCT document_store_id FROM document_store_department_member WHERE item_id = ? ))) " +
+        "OR (document_store_id in (SELECT DISTINCT document_store_id FROM " + DatabaseUtils.getTableName(db, "document_store_department_member") + " WHERE item_id = ? ))) " +
         "AND trashed_date IS NULL ");
     int i = 0;
     pst.setInt(++i, userId);

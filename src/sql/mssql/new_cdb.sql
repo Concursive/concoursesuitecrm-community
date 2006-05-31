@@ -6,6 +6,15 @@
  *@version    $Id$
  */
 
+CREATE TABLE lookup_site_id (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  short_description VARCHAR(300), 
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
 CREATE TABLE access (
   user_id INT IDENTITY(0,1) PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
@@ -30,7 +39,10 @@ CREATE TABLE access (
   currency VARCHAR(5),
   language VARCHAR(20),
   webdav_password VARCHAR(80),
-  hidden BIT DEFAULT 0
+  hidden BIT DEFAULT 0,
+  site_id INT REFERENCES lookup_site_id(code),
+  allow_webdav_access BIT DEFAULT 1 NOT NULL,
+  allow_httpapi_access BIT DEFAULT 1 NOT NULL
 );
 
 CREATE TABLE lookup_industry (
@@ -106,8 +118,7 @@ CREATE TABLE lookup_orgemail_types (
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
-)
-;
+);
 
 CREATE TABLE lookup_orgphone_types (
   code INT IDENTITY PRIMARY KEY,
@@ -115,8 +126,7 @@ CREATE TABLE lookup_orgphone_types (
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
-)
-;
+);
 
 CREATE TABLE lookup_im_types (
   code INT IDENTITY PRIMARY KEY,
@@ -180,8 +190,7 @@ CREATE TABLE lookup_contactaddress_types (
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
-)
-;
+);
 
 CREATE TABLE lookup_contactemail_types (
   code INT IDENTITY PRIMARY KEY,
@@ -189,8 +198,7 @@ CREATE TABLE lookup_contactemail_types (
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
-)
-;
+);
 
 CREATE TABLE lookup_contactphone_types (
   code INT IDENTITY PRIMARY KEY,
@@ -198,8 +206,7 @@ CREATE TABLE lookup_contactphone_types (
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
-)
-;
+);
 
 CREATE TABLE lookup_access_types (
   code INT IDENTITY PRIMARY KEY,
@@ -209,6 +216,39 @@ CREATE TABLE lookup_access_types (
   level INTEGER, 
   enabled BIT DEFAULT 1,
   rule_id INT NOT NULL
+);
+
+CREATE TABLE lookup_segments (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE lookup_account_size (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE lookup_sub_segment (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL, 
+  segment_id  INT REFERENCES lookup_segments(code),
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE lookup_title (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
 );
 
 CREATE TABLE organization (
@@ -221,7 +261,7 @@ CREATE TABLE organization (
   employees INT,
   notes TEXT,
   sic_code VARCHAR(40),
-  ticker_symbol VARCHAR(10) DEFAULT NULL,
+  ticker_symbol VARCHAR(10),
   taxid CHAR(80),
   lead VARCHAR(40),
   sales_rep int NOT NULL DEFAULT 0, 
@@ -238,9 +278,9 @@ CREATE TABLE organization (
   duplicate_id int default -1,
   custom1 int default -1,
   custom2 int default -1,
-  contract_end DATETIME default null,
-  alertdate DATETIME default null,
-  alert varchar(100) default null,
+  contract_end DATETIME,
+  alertdate DATETIME,
+  alert varchar(100),
   custom_data TEXT,
   namesalutation varchar(80),
   namelast varchar(80),
@@ -251,7 +291,15 @@ CREATE TABLE organization (
   status_id INT,
   alertdate_timezone VARCHAR(255),
   contract_end_timezone VARCHAR(255),
-  trashed_date DATETIME
+  trashed_date DATETIME,
+  source INTEGER REFERENCES lookup_contact_source(code),
+  rating INTEGER REFERENCES lookup_contact_rating(code),
+  potential FLOAT,
+  segment_id INT REFERENCES lookup_segments(code),
+  sub_segment_id INT REFERENCES lookup_sub_segment(code),
+  direct_bill BIT DEFAULT 0,
+  account_size INT REFERENCES lookup_account_size(code),
+  site_id INT REFERENCES lookup_site_id(code)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -302,13 +350,28 @@ CREATE TABLE contact (
   additional_names VARCHAR(255),
   nickname VARCHAR(80),
   role VARCHAR(255),
-  trashed_date DATETIME
+  trashed_date DATETIME,
+  secret_word VARCHAR(255),
+  account_number VARCHAR(50),
+  revenue FLOAT,
+  industry_temp_code INTEGER REFERENCES lookup_industry(code),
+  potential FLOAT,
+  no_email BIT DEFAULT 0,
+  no_mail BIT DEFAULT 0,
+  no_phone BIT DEFAULT 0,
+  no_textmessage BIT DEFAULT 0,
+  no_im BIT DEFAULT 0,
+  no_fax BIT DEFAULT 0,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
 CREATE INDEX "contactlist_namecompany" ON "contact" (namelast, namefirst, company);
 CREATE INDEX "contactlist_company" ON "contact" (company, namelast, namefirst);
 CREATE INDEX "contact_import_id_idx" ON "contact" ("import_id");
+CREATE INDEX contact_org_id_idx ON contact(org_id);
+CREATE INDEX contact_islead_idx ON contact(lead);
+
 
 CREATE TABLE contact_lead_skipped_map (
   map_id INT IDENTITY PRIMARY KEY,
@@ -316,11 +379,18 @@ CREATE TABLE contact_lead_skipped_map (
   contact_id INT NOT NULL REFERENCES contact(contact_id)
 );
 
+CREATE INDEX contact_lead_skip_u_idx ON contact_lead_skipped_map(user_id);
+
+
 CREATE TABLE contact_lead_read_map (
   map_id INT IDENTITY PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
   contact_id INT NOT NULL REFERENCES contact(contact_id)
 );
+
+CREATE INDEX contact_lead_read_u_idx ON contact_lead_read_map(user_id);
+CREATE INDEX contact_lead_read_c_idx ON contact_lead_read_map(contact_id);
+
 
 CREATE TABLE role (
   role_id INT IDENTITY PRIMARY KEY,
@@ -351,7 +421,9 @@ CREATE TABLE permission_category (
   products BIT NOT NULL DEFAULT 0,
   webdav BIT NOT NULL DEFAULT 0,
 	logos BIT NOT NULL DEFAULT 0,
-  constant INT NOT NULL
+  constant INT NOT NULL,
+  action_plans BIT NOT NULL DEFAULT 0,
+  custom_list_views BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE permission (
@@ -387,17 +459,15 @@ CREATE TABLE lookup_stage (
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
-)
-;
+);
 
 CREATE TABLE lookup_delivery_options (
   code INT IDENTITY PRIMARY KEY,
-  description VARCHAR(50) NOT NULL,
+  description VARCHAR(100) NOT NULL,
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
-)
-;
+);
 
 CREATE TABLE news (
   rec_id INT IDENTITY PRIMARY KEY,
@@ -426,9 +496,11 @@ CREATE TABLE organization_address (
   enteredby INT NOT NULL references access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
-  primary_address BIT NOT NULL DEFAULT 0
+  primary_address BIT NOT NULL DEFAULT 0,
+  addrline4 VARCHAR(80)
 )
 ;
+CREATE INDEX organization_address_postalcode_idx ON organization_address(postalcode);
 
 CREATE TABLE organization_emailaddress (
   emailaddress_id INT IDENTITY PRIMARY KEY,
@@ -440,8 +512,7 @@ CREATE TABLE organization_emailaddress (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_email BIT NOT NULL DEFAULT 0
-)
-;
+);
 
 CREATE TABLE organization_phone (
   phone_id INT IDENTITY PRIMARY KEY,
@@ -454,8 +525,7 @@ CREATE TABLE organization_phone (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_number BIT NOT NULL DEFAULT 0
-)
-;
+);
 
 CREATE TABLE contact_address (
   address_id INT IDENTITY PRIMARY KEY,
@@ -472,11 +542,15 @@ CREATE TABLE contact_address (
   enteredby INT NOT NULL references access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
-  primary_address BIT NOT NULL DEFAULT 0
-)
-;
+  primary_address BIT NOT NULL DEFAULT 0,
+  addrline4 VARCHAR(80)
+);
 
 CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
+CREATE INDEX contact_address_postalcode_idx ON contact_address(postalcode);
+CREATE INDEX "contact_city_idx" on contact_address(city);
+CREATE INDEX contact_address_prim_idx ON contact_address(primary_address);
+
 
 CREATE TABLE contact_emailaddress (
   emailaddress_id INT IDENTITY PRIMARY KEY,
@@ -488,10 +562,11 @@ CREATE TABLE contact_emailaddress (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_email BIT NOT NULL DEFAULT 0
-)
-;
+);
 
 CREATE INDEX "contact_email_contact_id_idx" ON "contact_emailaddress" (contact_id);
+CREATE INDEX contact_email_prim_idx ON contact_emailaddress(primary_email);
+
 
 CREATE TABLE contact_phone (
   phone_id INT IDENTITY PRIMARY KEY,
@@ -504,8 +579,7 @@ CREATE TABLE contact_phone (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_number BIT NOT NULL DEFAULT 0
-)
-;
+);
 
 CREATE INDEX "contact_phone_contact_id_idx" ON "contact_phone" (contact_id);
 
@@ -526,13 +600,13 @@ CREATE TABLE contact_imaddress (
 CREATE TABLE contact_textmessageaddress (
   address_id INT IDENTITY PRIMARY KEY,
   contact_id INT REFERENCES contact(contact_id),
-  textmessageaddress_type INT references lookup_im_types(code),
   textmessageaddress VARCHAR(256),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
-  primary_textmessage_address BIT NOT NULL DEFAULT 0
+  primary_textmessage_address BIT NOT NULL DEFAULT 0,
+  textmessageaddress_type INT references lookup_textmessage_types(code)
 );
 
 CREATE TABLE notification (
@@ -622,7 +696,6 @@ CREATE TABLE category_editor_lookup(
   max_levels INT NOT NULL
 );
 
-/* Viewpoints */
 CREATE TABLE viewpoint(
   viewpoint_id INT IDENTITY PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
@@ -644,7 +717,6 @@ CREATE TABLE viewpoint_permission (
   viewpoint_delete BIT NOT NULL DEFAULT 0
 );
 
-/* Reports */
 CREATE TABLE report (
   report_id INT IDENTITY PRIMARY KEY,
   category_id INT NOT NULL REFERENCES permission_category(category_id),
@@ -699,7 +771,6 @@ CREATE TABLE report_queue_criteria (
   value TEXT
 );
 
-/* Action Lists */
 CREATE TABLE action_list (
   action_id INT IDENTITY PRIMARY KEY,
   description VARCHAR(255) NOT NULL,
@@ -754,7 +825,10 @@ CREATE TABLE import(
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  site_id INT REFERENCES lookup_site_id(code),
+  rating INT REFERENCES lookup_contact_rating(code),
+  comments TEXT
 );
 
 CREATE INDEX "import_entered_idx" ON "import" (entered);
@@ -791,4 +865,54 @@ CREATE TABLE relationship (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,
   trashed_date DATETIME
+);
+
+-- Create a new table to group users
+CREATE TABLE user_group (
+  group_id INT IDENTITY PRIMARY KEY,
+  group_name VARCHAR(255) NOT NULL,
+  description text,
+  enabled BIT NOT NULL DEFAULT 1,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP,
+  enteredby INTEGER NOT NULL REFERENCES access(user_id),
+  modified DATETIME DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  site_id INTEGER REFERENCES lookup_site_id(code)
+);
+
+-- Create the user group map table
+CREATE TABLE user_group_map (
+  group_map_id INT IDENTITY PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES access(user_id),
+  group_id INTEGER NOT NULL REFERENCES user_group(group_id),
+  level INTEGER NOT NULL DEFAULT 10,
+  enabled BIT NOT NULL DEFAULT 1,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Custom List Views Editor
+CREATE TABLE custom_list_view_editor (
+  editor_id INT IDENTITY PRIMARY KEY,
+  module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
+  constant_id INTEGER NOT NULL,
+  description TEXT,
+  level INTEGER default 0,
+  category_id INT NOT NULL
+);
+
+-- Custom List View
+CREATE TABLE custom_list_view (
+  view_id INT IDENTITY PRIMARY KEY,
+  editor_id INTEGER NOT NULL REFERENCES custom_list_view_editor(editor_id),
+  name VARCHAR(80) NOT NULL,
+  description TEXT,
+  is_default BIT DEFAULT 0,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Custom List View Field
+CREATE TABLE custom_list_view_field (
+  field_id INT IDENTITY PRIMARY KEY,
+  view_id INTEGER NOT NULL REFERENCES custom_list_view(view_id),
+  name VARCHAR(80) NOT NULL
 );

@@ -148,12 +148,12 @@
         </tr>
         <tr>
           <td align="center"><input type="checkbox" name="showAccounts" value="ON"<%= Project.getShowAccounts() ? " checked" : "" %>></td>
-          <td><dhv:label name="documents.accounts.long_html">Accounts</dhv:label></td>
+          <td><dhv:label name="project.accounts">Accounts</dhv:label></td>
           <td><input type="text" name="labelAccounts" value="<%= toHtmlValue(Project.getLabelAccounts()) %>" maxlength="50"/></td>
         </tr>
         <tr>
           <td align="center"><input type="checkbox" name="showTeam" value="ON"<%= Project.getShowTeam() ? " checked" : "" %>></td>
-          <td><dhv:label name="documents.team.long_html">Team</dhv:label></td>
+          <td><dhv:label name="project.team">Team</dhv:label></td>
           <td><input type="text" name="labelTeam" value="<%= toHtmlValue(Project.getLabelTeam()) %>" maxlength="50"/></td>
         </tr>
         <tr>

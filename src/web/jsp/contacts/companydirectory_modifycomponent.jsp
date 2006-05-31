@@ -31,6 +31,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
 function doCheck(form) {
   if (form.dosubmit.value == "false") {
@@ -43,10 +44,11 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
-  if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
-    message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
-    formTest = false;
-  }
+///*  if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
+//    message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
+//    formTest = false;
+//  }*/
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
   if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
     message += label("specify.alert.date", "- Please specify an alert date\r\n");
     formTest = false;
@@ -55,11 +57,13 @@ function checkForm(form) {
     message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
   if (!checkNumber(form.commission.value)) { 
     message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
     formTest = false;
   }
-  
+  </dhv:include>
   if (formTest == false) {
     alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
@@ -84,6 +88,9 @@ function reopenOpportunity(id) {
   }
 }
 </SCRIPT>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <form name="opportunityForm" action="ExternalContactsOppComponents.do?command=SaveComponent&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>

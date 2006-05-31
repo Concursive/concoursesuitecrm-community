@@ -25,6 +25,14 @@ CREATE TABLE lookup_task_category (
   enabled boolean DEFAULT true
 );
 
+CREATE SEQUENCE lookup_ticket_task_cat_code_seq;
+CREATE TABLE lookup_ticket_task_category (
+  code INTEGER PRIMARY KEY,
+  description VARCHAR(255) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
 
 CREATE SEQUENCE task_task_id_seq;
 CREATE TABLE task (
@@ -32,14 +40,14 @@ CREATE TABLE task (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   enteredby INT NOT NULL REFERENCES access(user_id),
   priority INTEGER NOT NULL REFERENCES lookup_task_priority,
-  description VARCHAR(80),
+  description VARCHAR(255),
   duedate TIMESTAMP,
   reminderid INT,
   notes CLOB,
   sharing INT NOT NULL,
   complete boolean DEFAULT false NOT NULL,
   enabled boolean DEFAULT false NOT NULL,
-  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP  NOT NULL ,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   modifiedby INT REFERENCES access(user_id),
   estimatedloe FLOAT,
   estimatedloetype INTEGER REFERENCES lookup_task_loe,
@@ -48,9 +56,9 @@ CREATE TABLE task (
   completedate TIMESTAMP,
   category_id INTEGER REFERENCES lookup_task_category,
   duedate_timezone VARCHAR(255),
-  trashed_date TIMESTAMP
+  trashed_date TIMESTAMP,
+  ticket_task_category_id INTEGER REFERENCES lookup_ticket_task_category(code)
 );
-
 
 CREATE TABLE tasklink_contact (
   task_id INT NOT NULL REFERENCES task,
@@ -60,7 +68,8 @@ CREATE TABLE tasklink_contact (
 
 CREATE TABLE tasklink_ticket (
   task_id INT NOT NULL REFERENCES task,
-  ticket_id INT NOT NULL REFERENCES ticket(ticketid)
+  ticket_id INT NOT NULL REFERENCES ticket(ticketid),
+  category_id INT REFERENCES lookup_ticket_task_category(code)
 );
 
 CREATE TABLE tasklink_project (

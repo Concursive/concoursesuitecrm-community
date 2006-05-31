@@ -442,11 +442,9 @@ public class TextMessageAddress {
         this.setContactId(-1);
       }
     }
-    this.setType(rs.getInt("textmessageaddress_type"));
     if (rs.wasNull()) {
       this.setType(-1);
     }
-    this.setTypeName(rs.getString("description"));
     this.setTextMessageAddress(rs.getString("textmessageaddress"));
     this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
@@ -461,6 +459,8 @@ public class TextMessageAddress {
       this.setPrimaryTextMessageAddress(
           rs.getBoolean("primary_textmessage_address"));
     }
+    this.setType(rs.getInt("textmessageaddress_type"));
+    this.setTypeName(rs.getString("description"));
 
     if (modifiedBy == -1) {
       this.setModifiedBy(0);

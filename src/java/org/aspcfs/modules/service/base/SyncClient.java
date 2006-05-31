@@ -78,8 +78,8 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM sync_client " +
-        "WHERE client_id = ? ");
+            "FROM sync_client " +
+            "WHERE client_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setInt(1, clientId);
     rs = pst.executeQuery();
@@ -107,8 +107,8 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM sync_client " +
-        "WHERE client_id = ? ");
+            "FROM sync_client " +
+            "WHERE client_id = ? ");
     if (anchor == null) {
       sql.append("AND anchor is null ");
     } else {
@@ -142,8 +142,8 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE sync_client " +
-        "SET anchor = ? " +
-        "WHERE client_id = ? ");
+            "SET anchor = ? " +
+            "WHERE client_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setTimestamp(1, anchor);
     pst.setInt(2, id);
@@ -379,16 +379,18 @@ public class SyncClient extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "sync_client_client_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO sync_client " +
-        "(" + (id > -1 ? "client_id, " : "") + "type, version, enteredby, modifiedby) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
+            "(" + (id > -1 ? "client_id, " : "") + "\"type\", version, enabled, code, enteredby, modifiedby) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
     }
     pst.setString(++i, type);
     pst.setString(++i, version);
+    pst.setBoolean(++i, enabled);
+    pst.setString(++i, code);
     pst.setInt(++i, this.getEnteredBy());
-    pst.setInt(++i, this.getEnteredBy());
+    pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "sync_client_client_id_seq", id);
@@ -406,26 +408,73 @@ public class SyncClient extends GenericBean {
     if (id == -1) {
       throw new SQLException("ID was not specified");
     }
+    boolean commit = db.getAutoCommit();
 
-    PreparedStatement pst = null;
-    //Delete related records (mappings)
+    try {
+      if (commit) {
+        db.setAutoCommit(false);
+      }
 
-    //Delete the record
-    int recordCount = 0;
-    pst = db.prepareStatement(
-        "DELETE FROM sync_client " +
-        "WHERE client_id = ? ");
-    pst.setInt(1, id);
-    recordCount = pst.executeUpdate();
-    pst.close();
+      PreparedStatement pst = null;
+      //Delete related records (mappings)
 
-    if (recordCount == 0) {
-      errors.put(
-          "actionError",
-          "Sync Client could not be deleted because it no longer exists.");
-      return false;
-    } else {
-      return true;
+      //Delete the record
+      int recordCount = 0;
+      pst = db.prepareStatement(
+          "DELETE FROM sync_client " +
+              "WHERE client_id = ? ");
+      pst.setInt(1, id);
+      recordCount = pst.executeUpdate();
+      pst.close();
+
+      if (recordCount == 0) {
+        errors.put(
+            "actionError",
+            "Sync Client could not be deleted because it no longer exists.");
+        return false;
+      } else {
+        pst = db.prepareStatement(
+            "DELETE FROM sync_map " +
+                "WHERE client_id = ? ");
+        pst.setInt(1, id);
+        pst.executeUpdate();
+        pst.close();
+
+        pst = db.prepareStatement(
+            "DELETE FROM sync_conflict_log " +
+                "WHERE client_id = ? ");
+        pst.setInt(1, id);
+        pst.executeUpdate();
+        pst.close();
+
+        pst = db.prepareStatement(
+            "DELETE FROM sync_log " +
+                "WHERE client_id = ? ");
+        pst.setInt(1, id);
+        pst.executeUpdate();
+        pst.close();
+
+        pst = db.prepareStatement(
+            "DELETE FROM process_log " +
+                "WHERE client_id = ? ");
+        pst.setInt(1, id);
+        pst.executeUpdate();
+        pst.close();
+
+        if (commit) {
+          db.commit();
+        }
+        return true;
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 
@@ -447,17 +496,18 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE sync_client " +
-        "SET type = ?, version = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
-        "WHERE client_id = ? " +
-        "AND modified = ? ");
+            "SET \"type\" = ?, version = ?, code = ?, modifiedby = ?, " +
+            "enabled = ?, " +
+            "modified = CURRENT_TIMESTAMP " +
+            "WHERE client_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, type);
     pst.setString(++i, version);
+    pst.setString(++i, code);
     pst.setInt(++i, modifiedBy);
+    pst.setBoolean(++i, enabled);
     pst.setInt(++i, id);
-    pst.setTimestamp(++i, this.getModified());
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

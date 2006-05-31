@@ -25,7 +25,12 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.opportunityForm.header_description.focus();">
+<dhv:include name="opportunity.singleComponent">
+  <body onLoad="javascript:document.opportunityForm.component_description.focus();">
+</dhv:include>
+<dhv:include name="opportunity.singleComponent" none="true">
+  <body onLoad="javascript:document.opportunityForm.header_description.focus();">
+</dhv:include>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
@@ -39,6 +44,7 @@
 <%
   OpportunityHeader opportunityHeader = OppDetails.getHeader();
 	OpportunityComponent ComponentDetails = OppDetails.getComponent();
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
 %>
 <SCRIPT LANGUAGE="JavaScript">
 function doCheck(form) {
@@ -52,10 +58,18 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
+  <dhv:include name="opportunity.singleComponent">
+    <dhv:evaluate if="<%= opportunityHeader.getId() == -1 %>">
+      updateHeaderFields(form);
+    </dhv:evaluate>
+  </dhv:include>
+  <dhv:include name="opportunity.lowEstimateCanNotBeZero" none="true">
   if (form.component_low.value != "" && form.component_low.value != "" && (parseInt(form.component_low.value) > parseInt(form.component_high.value))) { 
     message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
   if ((!checkNullString(form.component_alertText.value)) && (checkNullString(form.component_alertDate.value))) { 
     message += label("specify.alert.date", "- Please specify an alert date\r\n");
     formTest = false;
@@ -64,10 +78,13 @@ function checkForm(form) {
     message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
   if (!checkNumber(form.component_commission.value)) { 
     message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
     formTest = false;
   }
+  </dhv:include>
   if (formTest == false) {
     alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
@@ -75,10 +92,12 @@ function checkForm(form) {
     if(alertMessage != ""){
        return confirmAction(alertMessage);
     }else{
+  <dhv:include name="opportunity.componentTypes" none="true">
       var test = document.opportunityForm.selectedList;
       if (test != null) {
         return selectAllOptions(document.opportunityForm.selectedList);
       }
+  </dhv:include>
     }
   }
 }

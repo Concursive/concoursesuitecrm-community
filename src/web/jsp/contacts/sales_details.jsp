@@ -20,11 +20,14 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ include file="../initPage.jsp" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
-<%@ page import="org.aspcfs.modules.base.*" %>
+<%@ page import="org.aspcfs.modules.base.*, org.aspcfs.modules.actionplans.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%--<jsp:useBean id="SalesListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session" /> --%>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="actionPlanSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="actionPlanWork" class="org.aspcfs.modules.actionplans.base.ActionPlanWork" scope="request"/>
 <jsp:useBean id="hasDuplicateLastName" class="java.lang.String" scope="request" />
 <jsp:useBean id="hasDuplicateEmailAddress" class="java.util.HashMap" scope="request" />
 <jsp:useBean id="hasDuplicateCompany" class="java.lang.String" scope="request" />
@@ -32,6 +35,8 @@
 <jsp:useBean id="nextValue" class="java.lang.String" scope="request" />
 <jsp:useBean id="from" class="java.lang.String" scope="request" />
 <jsp:useBean id="listForm" class="java.lang.String" scope="request" />
+<jsp:useBean id="ImportDetails" class="org.aspcfs.modules.contacts.base.ContactImport" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -72,9 +77,14 @@
       divToChange.innerHTML = divContents;
     }
   }
-  
+
   function workLead() {
     var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=work&popup=true&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
+    popURL(url,'WorkLead','650','500','yes','yes');
+  }
+
+  function workAccount() {
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=account&popup=true&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
     popURL(url,'WorkLead','650','500','yes','yes');
   }
 
@@ -85,7 +95,7 @@
     hideSpan("worklead");
     showSpan("nextlead");
   }
-  
+
   function nextLead() {
     if ('<%= from %>' == 'dashboard') {
       scrollReload('Sales.do?command=Dashboard');
@@ -93,8 +103,30 @@
       window.location.href = "Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=true&listForm=<%= (listForm != null?listForm:"") %>";
     }
   }
-  
-  function assignLead() {
+
+  function modifyLead() {
+    var owner = document.forms['details'].owner.value;
+    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
+    var manager = document.forms['details'].planManager.value;
+
+    if (owner == '-1') {
+     owner = '<%= User.getUserRecord().getId() %>';
+    }
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=modify&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner=' + owner + '&actionPlan=' + actionPlan + '&manager=' + manager;
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueModifyLead() {
+    var rating = document.forms['details'].rating.value;
+    var comments = document.forms['details'].comments.value;
+    var contactId = '<%= ContactDetails.getId() %>';
     var owner = document.forms['details'].owner.value;
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
@@ -106,7 +138,45 @@
       }
     } catch (oException) {
     }
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assign&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner='+owner;
+    var url = "Sales.do?command=Modify&contactId="+contactId+"&nextValue=true&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
+    window.location.href= url;
+  }
+
+  function assignLead() {
+    var owner = document.forms['details'].owner.value;
+    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
+    var manager = document.forms['details'].planManager.value;
+
+    if (owner == '-1') {
+     owner = '<%= User.getUserRecord().getId() %>';
+    }
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assign&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner=' + owner + '&actionPlan=' + actionPlan + '&manager=' + manager;
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function assignAccount() {
+    var owner = document.forms['details'].owner.value;
+    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
+    var manager = document.forms['details'].planManager.value;
+
+    if (owner == '-1') {
+     owner = '<%= User.getUserRecord().getId() %>';
+    }
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assignaccount&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner=' + owner + '&actionPlan=' + actionPlan + '&manager=' + manager;
     window.frames['server_commands'].location.href=url;
   }
 
@@ -127,6 +197,28 @@
     }
     var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
     url += "&comments="+comments+"&rating="+rating;
+    window.location.href= url;
+  }
+
+  function continueAssignAccount() {
+    var rating = document.forms['details'].rating.value;
+    var comments = document.forms['details'].comments.value;
+    var contactId = '<%= ContactDetails.getId() %>';
+    var owner = document.forms['details'].owner.value;
+    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
+    var manager = document.forms['details'].planManager.value;
+    if (owner == '-1') {
+     owner = '<%= User.getUserRecord().getId() %>';
+    }
+    var nextTo = '<%= from %>';
+    try {
+      if (!document.getElementById("toNextLead").checked) {
+        nextTo = "dashboard";
+      }
+    } catch (oException) {
+    }
+    var url = "Sales.do?command=Update&contactId="+contactId+"&id="+contactId+"&next=assignaccount&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
+    url += "&comments="+comments+"&rating="+rating+"&actionPlan=" + actionPlan + "&manager=" + manager;
     window.location.href= url;
   }
 
@@ -223,7 +315,7 @@
     <td>
       <%= toHtml(ContactDetails.getNameFull()) %>
       <dhv:evaluate if="<%= hasDuplicateLastName != null && "true".equals(hasDuplicateLastName) %>">&nbsp;&nbsp;
-      <a href="javascript:popURL('Sales.do?command=ContactList&searchcodeLastName=<%= ContactDetails.getNameLast() %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
+      <a href="#" onClick="javascript:popURL('Sales.do?command=ContactList&searchcodeLastName=<%= StringUtils.jsEscape(ContactDetails.getNameLast()) %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
       <span class="duplicate"><dhv:label name="sales.foundDuplicateLastName">Duplicate last name found</dhv:label></span></a></dhv:evaluate>
         &nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getNameFull())+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
@@ -235,6 +327,46 @@
     </td>
   </tr>
 </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getAdditionalNames()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getAdditionalNames()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getNickname()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getNickname()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getBirthDate() != null %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
+    </td>
+    <td>
+      <zeroio:tz timestamp="<%= ContactDetails.getBirthDate() %>" dateOnly="true"/>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getRole()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.role">Role</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getRole()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
 <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
   <tr class="containerBody">
     <td class="formLabel">
@@ -253,7 +385,7 @@
     <td>
       <%= toHtml(ContactDetails.getCompany()) %>
       <dhv:evaluate if="<%= hasDuplicateCompany != null && !"".equals(hasDuplicateCompany) %>">&nbsp;&nbsp;
-      <a href="javascript:popURL('Sales.do?command=ContactList&searchcodeCompany=<%= ContactDetails.getCompany() %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
+      <a href="#" onClick="javascript:popURL('Sales.do?command=ContactList&searchcodeCompany=<%= StringUtils.jsEscape(ContactDetails.getCompany()) %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
         <span class="duplicate"><dhv:label name="sales.foundDuplicateCompanyName">Duplicate company name found</dhv:label></span></a>
       </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a>--%>
@@ -261,6 +393,22 @@
 <%--        &nbsp;<a href="http://www.hotbot.com/default.asp?query=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/hotbot_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a>--%>
         &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
         &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Potential
+    </td>
+    <td>
+      <zeroio:currency value="<%= ContactDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(IndustryList.getSelectedValue(ContactDetails.getIndustryTempCode())) %>
     </td>
   </tr>
 </dhv:evaluate>
@@ -303,7 +451,7 @@
       <dhv:evaluate if="<%=thisEmailAddress.getPrimaryEmail()%>">
         <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
       </dhv:evaluate>
-        <dhv:evaluate if="<%= hasDuplicateEmailAddress.get(thisEmailAddress.getEmail()) != null && ((Boolean) hasDuplicateEmailAddress.get(thisEmailAddress.getEmail())).booleanValue() %>">&nbsp;&nbsp; 
+        <dhv:evaluate if="<%= hasDuplicateEmailAddress.get(thisEmailAddress.getEmail()) != null && ((Boolean) hasDuplicateEmailAddress.get(thisEmailAddress.getEmail())).booleanValue() %>">&nbsp;&nbsp;
         <a href="javascript:popURL('Sales.do?command=ContactList&searchcodeEmailAddress=<%= thisEmailAddress.getEmail() %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
           <span class="duplicate"><dhv:label name="sales.foundDuplicateEmailAddress">Duplicate email address found</dhv:label></span></a>
         </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+thisEmailAddress.getEmail()+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
@@ -317,7 +465,7 @@
     </td>
   </tr>
 <%}%>
-<%  
+<%
   Iterator itmAddress = ContactDetails.getTextMessageAddressList().iterator();
   if (itmAddress.hasNext()) {
 %>
@@ -329,7 +477,7 @@
 <%
     while (itmAddress.hasNext()) {
       ContactTextMessageAddress thisTextMessageAddress = (ContactTextMessageAddress)itmAddress.next();
-%>    
+%>
       <%= toHtml(thisTextMessageAddress.getTypeName()) %> &nbsp;
       <dhv:evaluate if="<%= hasText(thisTextMessageAddress.getTextMessageAddress()) %>">
       <a href="mailto:<%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %>"><%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %></a>&nbsp;
@@ -337,6 +485,26 @@
           <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
         </dhv:evaluate>
       </dhv:evaluate><br />
+<%}%>
+    </td>
+  </tr>
+<%}
+  Iterator iaddress = ContactDetails.getAddressList().iterator();
+  if (iaddress.hasNext()) {
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+	    <dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label>
+	  </td>
+    <td>
+<%  while (iaddress.hasNext()) {
+        ContactAddress thisAddress = (ContactAddress)iaddress.next();
+%>
+      <%= toHtml(thisAddress.getTypeName()) %>&nbsp;
+      <%= toHtml(thisAddress.toString()) %>&nbsp;
+      <dhv:evaluate if="<%=thisAddress.getPrimaryAddress()%>">
+        <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+      </dhv:evaluate>
 <%}%>
     </td>
   </tr>
@@ -364,7 +532,7 @@
       <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
     </td>
     <td>
-      <dhv:tz timestamp="<%= ContactDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>"/>
+      <zeroio:tz timestamp="<%= ContactDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>"/>
     </td>
   </tr>
 </table>
@@ -378,8 +546,17 @@
   <tr class="containerBody">
     <td class="formLabel" nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
     <td>
-      <dhv:label name="sales.<%= ContactDetails.getLeadStatusString() %>"><%= toHtml(ContactDetails.getLeadStatusString()) %></dhv:label>
+      <dhv:label name="<%= "sales."+ContactDetails.getLeadStatusString() %>"><%= toHtml(ContactDetails.getLeadStatusString()) %></dhv:label>
       <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />&nbsp;&nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="admin.user.site">Site</dhv:label>
+    </td>
+    <td>
+       <%= SiteIdList.getSelectedValue(ContactDetails.getSiteId()) %>
+       <input type="hidden" name="siteId" value="<%=ContactDetails.getSiteId()%>" >
     </td>
   </tr>
   <tr class="containerBody">
@@ -401,8 +578,41 @@
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= ContactDetails.getOwner() == -1 ? User.getUserRecord().getId() : ContactDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&searchcodePermission=sales-leads-edit&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true<%= User.getUserRecord().getSiteId() > -1?"&mySiteOnly=true":"" %>&siteId=<%=ContactDetails.getSiteId()%>&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp; [<a href="javascript:changeDivContent('changeowner',label('none.selected','None Selected'));javascript:resetNumericFieldValue('ownerid');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="sales.actionPlan">Action Plan</dhv:label>
+    </td>
+    <td>
+      <%= actionPlanSelect.getHtml("actionPlan") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel" valign="top">
+      <dhv:label name="actionPlan.planManager">Plan Manager</dhv:label>
+    </td>
+    <td>
+      <table class="empty">
+        <tr>
+          <td>
+            <div id="changeplanmanager">
+            <% if (actionPlanWork.getManagerId() > 0) { %>
+              <dhv:username id="<%= actionPlanWork.getManagerId() %>"/>
+            <% }else{ %>
+               <dhv:username id="<%= User.getUserRecord().getId() %>"/>
+            <%}%>
+            </div>
+          </td>
+          <td>
+            <input type="hidden" name="planManager" id="planManagerId" value="<%= ((actionPlanWork.getManagerId() > 0) ? actionPlanWork.getManagerId() : User.getUserRecord().getId()) %>">
+            &nbsp;[<a href="javascript:popContactsListSingle('planManagerId','changeplanmanager', 'listView=employees&usersOnly=true&hierarchy=<%= User.getUserId() %>&siteId=<%=ContactDetails.getSiteId()%>&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp; [<a href="javascript:changeDivContent('changeplanmanager',label('none.selected','None Selected'));javascript:resetNumericFieldValue('planManagerId');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -426,14 +636,26 @@
   </tr>
 </table>
 <br />
+
 <span name="worklead" id="worklead" style="">
+<dhv:include name="sales.details.workContact" none="true">
 <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.workAsContact">Work as Contact</dhv:label>" onClick="javascript:workLead();" /></dhv:permission>
+</dhv:include>
+<dhv:include name="sales.details.workAccount" none="true">
+<dhv:evaluate if="<%= ContactDetails.getCompany() != null && !"".equals(ContactDetails.getCompany()) %>">
+  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.workAsAccount">Work as Account</dhv:label>" onClick="javascript:workAccount();" /></dhv:permission>
+</dhv:evaluate>
+</dhv:include>
+<dhv:include name="sales.details.assignLead" none="true">
 <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:assignLead();" /></dhv:permission>
+</dhv:include>
+<dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignAccountR">Assign Account ></dhv:label>" onClick="javascript:assignAccount();" /></dhv:permission>
 <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.trashLeadR">Trash Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
-<dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.skipThisLeadR">Skip this Lead ></dhv:label>" onClick="javascript:skipLead();" /></dhv:permission>
+<dhv:include name="sales.details.skipThisLeadR" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.skipThisLeadR">Skip this Lead ></dhv:label>" onClick="javascript:skipLead();" /></dhv:permission></dhv:include>
+<dhv:include name="sales.details.modifyLead" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:modifyLead();" /></dhv:permission></dhv:include>
 <dhv:permission name="sales-leads-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:deleteLead();" /></dhv:permission><br />
 <% if ((listForm != null && !"".equals(listForm)) || (from != null && "list".equals(from) && !"dashboard".equals(from))) { %>
-  <input type="checkbox" id="toNextLead" name="toNextLead" value="true" checked /> <dhv:label name="sales.continueToNextLead.text">Continue to next lead after assigning, trashing or skipping lead</dhv:label>
+  <input type="checkbox" id="toNextLead" name="toNextLead" value="true" /> <dhv:label name="sales.continueToNextLead.text">Continue to next lead after assigning, trashing or skipping lead</dhv:label>
 <% } %>
 
 </span>
@@ -452,6 +674,6 @@
           obj.options[i].selected = true;
       }
     }
-    document.forms['details'].comments.value = '<%= StringUtils.jsStringEscape(toString(ContactDetails.getComments())) %>';
+    document.forms['details'].comments.value = "<%= StringUtils.jsStringEscape(toString(ContactDetails.getComments())) %>";
   </script>
 </dhv:browser>

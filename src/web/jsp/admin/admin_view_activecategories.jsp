@@ -22,6 +22,10 @@
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <jsp:useBean id="categoryEditor" class="org.aspcfs.modules.admin.base.CategoryEditor" scope="request"/>
 <jsp:useBean id="categoryList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/> 
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="siteId" class="java.lang.String" scope="request"/>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -35,22 +39,39 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <script type="text/javascript">
 function loadCategories(level) {
-var categoryId = -1;
+  var categoryId = -1;
+  var siteId = document.getElementById('siteId').value;
   if(level < <%= categoryEditor.getMaxLevels() - 1 %>){
     categoryId =  document.getElementById('level' + level).options[document.getElementById('level' + level).selectedIndex].value;
   }
   if(categoryId > -1){
-    var url = "AdminCategories.do?command=ActiveCatJSList&constantId=<%= request.getParameter("constantId") %>&categoryId=" + categoryId + '&level=' + level;
+    var url = "AdminCategories.do?command=ActiveCatJSList&constantId=<%= request.getParameter("constantId") %>&categoryId=" + categoryId + '&level=' + level+'&siteId='+siteId+'<%= isPopup(request)?"&popup=true":"" %>';
     window.frames['server_commands'].location.href=url;
   }
 }
+
+function reopen() {
+  var siteId = document.getElementById("siteId").value;
+  var url = 'AdminCategories.do?command=ViewActive&moduleId=<%= PermissionCategory.getId() %>&constantId=<%= request.getParameter("constantId") %>&siteId='+siteId+'&popup=<%= isPopup(request) %>';
+  window.location.href=url;
+}
 </script>
-<strong>Categories</strong>
+<strong><dhv:label name="categories.categoriesForSite">Categories for Site</dhv:label></strong>&nbsp;
+<% if(User.getUserRecord().getSiteId() == -1) { %>
+<% SiteIdList.setJsEvent("onChange=\"javascript:reopen();\" id=\"siteId\""); %>
+<%= SiteIdList.getHtmlSelect("siteId", (siteId != null && !"".equals(siteId.trim())?Integer.parseInt(siteId):User.getUserRecord().getSiteId())) %>
+<%} else {%>
+<input type="hidden" name="siteId" id="siteId" value="<%= (siteId != null && !"".equals(siteId.trim())?Integer.parseInt(siteId):User.getUserRecord().getSiteId()) %>"/>
+<%= SiteIdList.getSelectedValue(User.getUserRecord().getSiteId()) %>
+<%}%>
 <% String param1 = "moduleId=" + PermissionCategory.getId(); %>
 <% String param2 = "constantId=" + request.getParameter("constantId"); %>
-<dhv:container name="categories" selected="active categories" param="<%= param1 + "|" + param2 %>" style="tabs">
+<% String param3 = "popup=" + (isPopup(request)?"true":"false"); %>
+<% String param4 = "siteId="+(siteId != null?siteId:String.valueOf(User.getUserRecord().getSiteId())); %>
+<dhv:container name="categories" selected="active categories" param="<%= param1 + "|" + param2 + "|" + param3 +"|" + param4 %>" style="tabs">
   <table border="0" cellpadding="2" cellspacing="0" class="empty">
     <tr>
       <td align="center">
@@ -67,14 +88,17 @@ var categoryId = -1;
   for (int k = 1; k < categoryEditor.getMaxLevels(); k++) {
 %>
       <td align="center">
-        Level <%= k + 1 %><br>
+        <dhv:label name="admin.level" param="<%= "level="+ (k+1) %>">Level <%= k + 1 %></dhv:label><br>
         <select name="level<%= k %>" id="level<%= k %>" size="10" onChange="javascript:loadCategories('<%= k %>');" style="width: 150px">
-          <option value="-1"><dhv:label name="admin.none.label">---------None---------</dhv:label></option>
+          <option value="-1"><dhv:label name="calendar.none.4dashes">---------None---------</dhv:label></option>
         </select>
       </td>
 <%}%>
     </tr>
   </table>
 </dhv:container>
+  <dhv:evaluate if="<%= isPopup(request) %>">
+    <br /><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:self.close();"/>
+  </dhv:evaluate>
 <dhv:formMessage />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

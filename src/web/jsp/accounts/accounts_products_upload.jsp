@@ -46,6 +46,8 @@
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 <form method="post" name="inputForm" action="AccountsProducts.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -129,8 +131,6 @@
   </p>
   <input type="submit" value="<dhv:label name="global.button.Upload">Upload</dhv:label>" name="upload">
   <input type="submit" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsProducts.do?command=List&orgId=<%= OrgDetails.getOrgId() %>';">
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>">
 </dhv:container>
 </form>
 </body>

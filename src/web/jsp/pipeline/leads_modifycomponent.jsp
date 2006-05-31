@@ -44,18 +44,22 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
-  if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
-    message += label("specify.alert.date", "- Please specify an alert date\r\n");
-    formTest = false;
-  }
-  if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
-    message += label("specify.alert.description", "- Please specify an alert description\r\n");
-    formTest = false;
-  }
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
+    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+      message += label("specify.alert.date", "- Please specify an alert date\r\n");
+      formTest = false;
+    }
+    if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
+      formTest = false;
+    }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
   if (!checkNumber(form.commission.value)) { 
       message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
     }
+  </dhv:include>
   if (formTest == false) {
     alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
@@ -63,10 +67,12 @@ function checkForm(form) {
     if(alertMessage != ""){
        return confirmAction(alertMessage);
     }else{
+  <dhv:include name="opportunity.componentTypes" none="true">
       var test = document.opportunityForm.selectedList;
       if (test != null) {
         return selectAllOptions(document.opportunityForm.selectedList);
       }
+  </dhv:include>
     }
   }
 }
@@ -85,6 +91,7 @@ function reopenOpportunity(id) {
 </SCRIPT>
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <%
+   boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
    boolean popUp = false;
    if(request.getParameter("popup")!=null){
      popUp = true;
@@ -99,11 +106,12 @@ function reopenOpportunity(id) {
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
 	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
+  <a href="Leads.do?command=SearchForm"><dhv:label name="">Search Form</dhv:label></a> >
 	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-<% if ("list".equals(request.getParameter("return"))) {%>
+<% if (request.getParameter("return") != null && "list".equals(request.getParameter("return"))) {%>
   <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> > 
-<%} else if (request.getParameter("return") != null) {%>
+<%} else if (request.getParameter("return") == null || !"list".equals(request.getParameter("return"))) {%>
   <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> > 
   <a href="LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.ComponentDetails">Component Details</dhv:label></a> >
 <%}%>
@@ -123,16 +131,16 @@ function reopenOpportunity(id) {
     if (request.getParameter("return") != null) {
       if (request.getParameter("return").equals("list")) {
   %>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=Search';"/> <%-- this.form.dosubmit.value='false';"> --%>
   <%
       } else if (request.getParameter("return").equals("details")) {
   %>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>';"/> <%-- this.form.dosubmit.value='false';"> --%>
   <%
       }
     } else {
   %>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>';"/> <%-- this.form.dosubmit.value='false';"> --%>
   <%
     }
   %>
@@ -149,12 +157,12 @@ function reopenOpportunity(id) {
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=Search';"/> <%-- this.form.dosubmit.value='false';"> --%>
     <%} else if(request.getParameter("return").equals("details")) {%>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>';"/> <%-- this.form.dosubmit.value='false';"> --%>
    <%}
    } else {%>
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>';"/> <%-- this.form.dosubmit.value='false';"> --%>
   <%}%>
   <dhv:evaluate if="<%= popUp %>">
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();">

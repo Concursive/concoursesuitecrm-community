@@ -15,11 +15,15 @@
  */
 package com.zeroio.taglib;
 
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
 
 /**
@@ -104,6 +108,25 @@ public class FolderHierarchyHandler extends TagSupport {
    */
   public int doStartTag() throws JspException {
     try {
+      // Translated labels needed
+      String topFolder = "Top Folder";
+      // Use the system status if available
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
+      if (ce == null) {
+        ApplicationPrefs prefs = (ApplicationPrefs) pageContext.getServletContext().getAttribute(
+            "applicationPrefs");
+        if (prefs != null) {
+          topFolder = prefs.getLabel("documents.documents.topfolder", prefs.get("SYSTEM.LANGUAGE"));
+        }
+      } else {
+        SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+            "SystemStatus")).get(ce.getUrl());
+        // Look up the label key in system status to get the value
+        if (systemStatus != null) {
+          topFolder = systemStatus.getLabel("documents.documents.topfolder", "Top Folder");
+        }
+      }
       String projectId = (String) pageContext.getRequest().getParameter("pid");
       //Show the open folder image
       this.pageContext.getOut().write(
@@ -121,7 +144,7 @@ public class FolderHierarchyHandler extends TagSupport {
                 "<a href=\"" + link + "&folderId=-1\">");
           }
         }
-        this.pageContext.getOut().write("Top Folder");
+        this.pageContext.getOut().write(topFolder);
         if (showLastLink) {
           this.pageContext.getOut().write("</a>");
         }
@@ -138,7 +161,7 @@ public class FolderHierarchyHandler extends TagSupport {
             this.pageContext.getOut().write(
                 "<a href=\"" + link + "&folderId=-1\">");
           }
-          this.pageContext.getOut().write("Top Folder");
+          this.pageContext.getOut().write(topFolder);
           this.pageContext.getOut().write("</a>");
           //Show the rest of the links, except the last, unless specified
           this.pageContext.getOut().write(" > ");
@@ -177,7 +200,7 @@ public class FolderHierarchyHandler extends TagSupport {
                   "<a href=\"" + link + "&folderId=-1\">");
             }
           }
-          this.pageContext.getOut().write("Top Folder");
+          this.pageContext.getOut().write(topFolder);
           if (showLastLink) {
             this.pageContext.getOut().write("</a>");
           }
@@ -200,4 +223,3 @@ public class FolderHierarchyHandler extends TagSupport {
     return EVAL_PAGE;
   }
 }
-

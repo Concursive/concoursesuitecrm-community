@@ -99,3 +99,63 @@ admin/admin_jsuser_contactlist.jsp
 
 ## 2005-06-17 updated driver
 WEB-INF/lib/jtds-1.0.1.jar
+
+## 2005-10-07 updated jasper-reports and dependent libs
+WEB-INF/lib/jasperreports-0.6.4.jar
+WEB-INF/lib/commons-digester.jar
+WEB-INF/lib/iText.jar
+WEB-INF/lib/jfreechart-0.9.21.jar
+WEB-INF/lib/bsh.jar
+WEB-INF/lib/jcommon-0.9.6.jar
+
+## 2005-10-17 unused and invalid syntax
+admin/admin_usergroup_add.jsp
+accounts/accounts_tickets_action_plan_work_details.jsp
+
+## 2005-11-03 should not exist
+contacts/accounts_contacts_fields_add.jsp
+WEB-INF/lib/oracle8i.jar
+WEB-INF/lib/oracle8ichar.jar
+
+## 2005-11-10
+WEB-INF/lib/asterisk-java-0.2-rc1.jar
+
+## 2005-12-05
+WEB-INF/lib/jtds-1.1.jar
+
+## 2005-12-08
+WEB-INF/lib/msbase.jar
+WEB-INF/lib/mssqlserver.jar
+WEB-INF/lib/msutil.jar
+
+## 2006-01-03
+WEB-INF/lib/firebirdsql-1.5.5.jar
+WEB-INF/lib/firebirdsql-j2ee-1.5.5.jar
+
+## 2006-01-13 renamed
+newmessage.jsp
+
+## 2006-01-17 unused / updated
+WEB-INF/lib/ccp_integration.jar
+WEB-INF/lib/asterisk-java-0.2-rc2.jar
+
+## 2006-01-17 updated
+WEB-INF/lib/postgresql-8.0-310.jdbc3.jar
+
+## 2006-02-14 updated
+WEB-INF/lib/quartz-1.4.5.jar
+WEB-INF/lib/commons-collections.jar
+
+## 2006-03-16 updated for compatibility
+WEB-INF/lib/DaffodilDB_402_Common.jar
+WEB-INF/lib/DaffodilDB_402_Embedded.jar
+
+## 2006-03-27 relaced with newer version
+WEB-INF/lib/oracle-10.1.0.4.0-jdbc14.jar
+
+## 2006-03-28 updated for compatibility
+WEB-INF/lib/lucene-1.4.2.jar
+
+## 2006-03-31 new driver
+WEB-INF/lib/postgresql-8.1-404.jdbc3.jar
+

@@ -47,7 +47,7 @@
 <dhv:evaluate if="<%= !Project.isTrashed() %>" >
   <zeroio:permission name="project-discussion-topics-add">
     <img border="0" src="images/icons/stock_new-callouts-16.gif" align="absmiddle">
-    <a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>">New Topic</a><br>
+    <a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>"><dhv:label name="project.newTopic">New Topic</dhv:label></a><br>
   </zeroio:permission>
 </dhv:evaluate>
 <%-- Temp. fix for Weblogic --%>
@@ -63,7 +63,7 @@ String actionError = showError(request, "actionError");
     <th align="center" nowrap><strong><dhv:label name="project.replies">Replies</dhv:label></strong></th>
     <th align="center" nowrap><strong><dhv:label name="project.lastPost">Last Post</dhv:label></strong></th>
   </tr>
-<%    
+<%
   IssueList issues = Project.getIssues();
   if (issues.size() == 0) {
 %>
@@ -79,12 +79,12 @@ String actionError = showError(request, "actionError");
     ++count;
     rowid = (rowid != 1?1:2);
     Issue thisIssue = (Issue) i.next();
-%>    
+%>
   <tr class="row<%= rowid %>">
     <td valign="top" nowrap>
       <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisIssue.getId() %>, <%= IssueCategory.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
-         onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
+         onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td valign="top" width="100%">

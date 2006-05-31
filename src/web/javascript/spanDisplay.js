@@ -11,5 +11,7 @@ function hideSpan(thisID) {
   return true;
 }
 function isSpanVisible(thisID) {
-  return document.getElementById(thisID).style.display == '';
+  if(document.getElementById(thisID) != null){
+    return document.getElementById(thisID).style.display == '';
+  }
 }

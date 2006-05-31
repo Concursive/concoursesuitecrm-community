@@ -27,7 +27,7 @@
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
   response.setHeader("Expires", "-1");
 %>
-<!-- (C) 2001-2004 Dark Horse Ventures -->
+<!-- (C) 2000-2006 Dark Horse Ventures, LLC -->
 <html>
 <head>
 <title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label><%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>

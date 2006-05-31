@@ -2369,6 +2369,7 @@ public class Project extends GenericBean {
         pst.setInt(++j, portalPageType);
         pst.setInt(++j, id);
         pst.execute();
+        pst.close();
       }
       if (autoCommit) {
         db.commit();

@@ -744,7 +744,8 @@ public final class AccountContactsCalls extends CFSModule {
           contactName + StringUtils.toString(thisCall.getContactName()) + "\n" +
           type + StringUtils.toString(thisCall.getCallType()) + "\n" +
           length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-          subject + StringUtils.toString(thisCall.getSubject()) + "\n" +
+          subject + StringUtils.toString(thisCall.getSubject()) + 
+                (((!StringUtils.toString(thisCall.getSubject()).equals(StringUtils.toString(thisCall.getAlertText()))) && (!"".equals(StringUtils.toString(thisCall.getAlertText()))))? "\\" + StringUtils.toString(thisCall.getAlertText()):"") + "\n" +
           notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
           entered + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(
               this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +

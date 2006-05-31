@@ -24,17 +24,18 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.StringUtils;
 
 import java.sql.*;
 import java.util.*;
 
 /**
- * A list of User objects.
+ *  A list of User objects.
  *
- * @author matt rajkowski
- * @version $Id: UserList.java,v 1.51.12.1 2004/11/19 21:36:20 mrajkowski Exp
- *          $
- * @created September 19, 2001
+ * @author     matt rajkowski
+ * @created    September 19, 2001
+ * @version    $Id: UserList.java,v 1.51.12.1 2004/11/19 21:36:20 mrajkowski Exp
+ *      $
  */
 public class UserList extends Vector implements SyncableList {
   public final static int TRUE = 1;
@@ -60,6 +61,8 @@ public class UserList extends Vector implements SyncableList {
   private boolean topLevel = false;
   private int department = -1;
   private int enabled = -1;
+  private int hasWebdavAccess = -1;
+  private int hasHttpApiAccess = -1;
   private String jsEvent = null;
   private int includeAliases = Constants.FALSE;
   private int hidden = Constants.UNDEFINED;
@@ -75,6 +78,7 @@ public class UserList extends Vector implements SyncableList {
   private String myValue = "";
   private int myId = -1;
   private String username = null;
+  private String password = null;
 
   private boolean excludeDisabledIfUnselected = false;
   private boolean includeUsersWithRolesOnly = true;
@@ -82,28 +86,34 @@ public class UserList extends Vector implements SyncableList {
   private java.sql.Timestamp enteredRangeStart = null;
   private java.sql.Timestamp enteredRangeEnd = null;
 
-  private int roleType = -1;
-
   //0 for regular users and 1 for portal users
+  private int roleType = -1;
+  private int userGroupId = -1;
+
+  // -1 indicates access to all sites, positive number indicates access
+  // to a particular site
+  private int siteId = -1;
+  private boolean includeUsersWithAccessToAllSites = false;
 
 
   /**
-   * Constructor for the UserList object
+   *  Constructor for the UserList object
    *
-   * @since 1.1
+   * @since    1.1
    */
-  public UserList() {
-  }
+  public UserList() { }
 
 
   /**
-   * Constructor for the UserList object
+   *  Constructor for the UserList object
    *
-   * @param db          Description of Parameter
-   * @param doHierarchy Description of Parameter
-   * @param parentUser  Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.9
+   * @param  db                Description of Parameter
+   * @param  doHierarchy       Description of Parameter
+   * @param  parentUser        Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
+   * @throws  SQLException     Description of Exception
+   * @since                    1.9
    */
   public UserList(Connection db, User parentUser, boolean doHierarchy) throws SQLException {
     this.managerId = parentUser.getId();
@@ -114,9 +124,89 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the lastAnchor attribute of the UserList object
+   *  Gets the hasWebdavAccess attribute of the UserList object
    *
-   * @param tmp The new lastAnchor value
+   * @return    The hasWebdavAccess value
+   */
+  public int getHasWebdavAccess() {
+    return hasWebdavAccess;
+  }
+
+
+  /**
+   *  Sets the hasWebdavAccess attribute of the UserList object
+   *
+   * @param  tmp  The new hasWebdavAccess value
+   */
+  public void setHasWebdavAccess(int tmp) {
+    this.hasWebdavAccess = tmp;
+  }
+
+
+  /**
+   *  Sets the hasWebdavAccess attribute of the UserList object
+   *
+   * @param  tmp  The new hasWebdavAccess value
+   */
+  public void setHasWebdavAccess(String tmp) {
+    this.hasWebdavAccess = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the hasHttpApiAccess attribute of the UserList object
+   *
+   * @return    The hasHttpApiAccess value
+   */
+  public int getHasHttpApiAccess() {
+    return hasHttpApiAccess;
+  }
+
+
+  /**
+   *  Sets the hasHttpApiAccess attribute of the UserList object
+   *
+   * @param  tmp  The new hasHttpApiAccess value
+   */
+  public void setHasHttpApiAccess(int tmp) {
+    this.hasHttpApiAccess = tmp;
+  }
+
+
+  /**
+   *  Sets the hasHttpApiAccess attribute of the UserList object
+   *
+   * @param  tmp  The new hasHttpApiAccess value
+   */
+  public void setHasHttpApiAccess(String tmp) {
+    this.hasHttpApiAccess = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the password attribute of the UserList object
+   *
+   * @return    The password value
+   */
+  public String getPassword() {
+    return password;
+  }
+
+
+  /**
+   *  Sets the password attribute of the UserList object
+   *
+   * @param  tmp  The new password value
+   */
+  public void setPassword(String tmp) {
+    this.password = tmp;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the UserList object
+   *
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -124,9 +214,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the lastAnchor attribute of the UserList object
+   *  Sets the lastAnchor attribute of the UserList object
    *
-   * @param tmp The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -134,9 +224,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the nextAnchor attribute of the UserList object
+   *  Sets the nextAnchor attribute of the UserList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -144,9 +234,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the nextAnchor attribute of the UserList object
+   *  Sets the nextAnchor attribute of the UserList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -154,9 +244,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the syncType attribute of the UserList object
+   *  Sets the syncType attribute of the UserList object
    *
-   * @param tmp The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -164,9 +254,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the syncType attribute of the UserList object
+   *  Sets the syncType attribute of the UserList object
    *
-   * @param tmp The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -174,9 +264,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the buildRevenueYTD attribute of the UserList object
+   *  Gets the buildRevenueYTD attribute of the UserList object
    *
-   * @return The buildRevenueYTD value
+   * @return    The buildRevenueYTD value
    */
   public boolean getBuildRevenueYTD() {
     return buildRevenueYTD;
@@ -184,9 +274,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the buildRevenueYTD attribute of the UserList object
+   *  Sets the buildRevenueYTD attribute of the UserList object
    *
-   * @param buildRevenueYTD The new buildRevenueYTD value
+   * @param  buildRevenueYTD  The new buildRevenueYTD value
    */
   public void setBuildRevenueYTD(boolean buildRevenueYTD) {
     this.buildRevenueYTD = buildRevenueYTD;
@@ -194,9 +284,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the excludeDisabledIfUnselected attribute of the UserList object
+   *  Gets the excludeDisabledIfUnselected attribute of the UserList object
    *
-   * @return The excludeDisabledIfUnselected value
+   * @return    The excludeDisabledIfUnselected value
    */
   public boolean getExcludeDisabledIfUnselected() {
     return excludeDisabledIfUnselected;
@@ -204,9 +294,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the includeUsersWithRolesOnly attribute of the UserList object
+   *  Gets the includeUsersWithRolesOnly attribute of the UserList object
    *
-   * @return The includeUsersWithRolesOnly value
+   * @return    The includeUsersWithRolesOnly value
    */
   public boolean getIncludeUsersWithRolesOnly() {
     return includeUsersWithRolesOnly;
@@ -214,10 +304,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the excludeDisabledIfUnselected attribute of the UserList object
+   *  Sets the excludeDisabledIfUnselected attribute of the UserList object
    *
-   * @param excludeDisabledIfUnselected The new excludeDisabledIfUnselected
-   *                                    value
+   * @param  excludeDisabledIfUnselected  The new excludeDisabledIfUnselected
+   *      value
    */
   public void setExcludeDisabledIfUnselected(boolean excludeDisabledIfUnselected) {
     this.excludeDisabledIfUnselected = excludeDisabledIfUnselected;
@@ -225,9 +315,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the includeUsersWithRolesOnly attribute of the UserList object
+   *  Sets the includeUsersWithRolesOnly attribute of the UserList object
    *
-   * @param tmp The new includeUsersWithRolesOnly value
+   * @param  tmp  The new includeUsersWithRolesOnly value
    */
   public void setIncludeUsersWithRolesOnly(boolean tmp) {
     this.includeUsersWithRolesOnly = tmp;
@@ -235,9 +325,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the enteredRangeStart attribute of the UserList object
+   *  Sets the enteredRangeStart attribute of the UserList object
    *
-   * @param tmp The new enteredRangeStart value
+   * @param  tmp  The new enteredRangeStart value
    */
   public void setEnteredRangeStart(java.sql.Timestamp tmp) {
     this.enteredRangeStart = tmp;
@@ -245,9 +335,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the enteredRangeEnd attribute of the UserList object
+   *  Sets the enteredRangeEnd attribute of the UserList object
    *
-   * @param tmp The new enteredRangeEnd value
+   * @param  tmp  The new enteredRangeEnd value
    */
   public void setEnteredRangeEnd(java.sql.Timestamp tmp) {
     this.enteredRangeEnd = tmp;
@@ -255,10 +345,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the PagedListInfo attribute of the UserList object
+   *  Sets the PagedListInfo attribute of the UserList object
    *
-   * @param tmp The new PagedListInfo value
-   * @since 1.4
+   * @param  tmp  The new PagedListInfo value
+   * @since       1.4
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -266,9 +356,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the roleType attribute of the UserList object
+   *  Sets the roleType attribute of the UserList object
    *
-   * @param tmp The new roleType value
+   * @param  tmp  The new roleType value
    */
   public void setRoleType(int tmp) {
     this.roleType = tmp;
@@ -276,9 +366,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the roleType attribute of the UserList object
+   *  Sets the roleType attribute of the UserList object
    *
-   * @param tmp The new roleType value
+   * @param  tmp  The new roleType value
    */
   public void setRoleType(String tmp) {
     this.roleType = Integer.parseInt(tmp);
@@ -286,9 +376,49 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the buildGrossPipelineValue attribute of the UserList object
+   *  Sets the siteId attribute of the UserList object
    *
-   * @return The buildGrossPipelineValue value
+   * @param  tmp  The new siteId value
+   */
+  public void setSiteId(int tmp) {
+    this.siteId = tmp;
+  }
+
+
+  /**
+   *  Sets the siteId attribute of the UserList object
+   *
+   * @param  tmp  The new siteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the includeUsersWithAccessToAllSites attribute of the UserList object
+   *
+   * @param  tmp  The new includeUsersWithAccessToAllSites value
+   */
+  public void setIncludeUsersWithAccessToAllSites(boolean tmp) {
+    this.includeUsersWithAccessToAllSites = tmp;
+  }
+
+
+  /**
+   *  Sets the includeUsersWithAccessToAllSites attribute of the UserList object
+   *
+   * @param  tmp  The new includeUsersWithAccessToAllSites value
+   */
+  public void setIncludeUsersWithAccessToAllSites(String tmp) {
+    this.includeUsersWithAccessToAllSites = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildGrossPipelineValue attribute of the UserList object
+   *
+   * @return    The buildGrossPipelineValue value
    */
   public boolean getBuildGrossPipelineValue() {
     return buildGrossPipelineValue;
@@ -296,9 +426,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the buildGrossPipelineValue attribute of the UserList object
+   *  Sets the buildGrossPipelineValue attribute of the UserList object
    *
-   * @param buildGrossPipelineValue The new buildGrossPipelineValue value
+   * @param  buildGrossPipelineValue  The new buildGrossPipelineValue value
    */
   public void setBuildGrossPipelineValue(boolean buildGrossPipelineValue) {
     this.buildGrossPipelineValue = buildGrossPipelineValue;
@@ -306,10 +436,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the EmptyHtmlSelectRecord attribute of the UserList object
+   *  Sets the EmptyHtmlSelectRecord attribute of the UserList object
    *
-   * @param tmp The new EmptyHtmlSelectRecord value
-   * @since 1.4
+   * @param  tmp  The new EmptyHtmlSelectRecord value
+   * @since       1.4
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -317,9 +447,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the enteredBy attribute of the UserList object
+   *  Sets the enteredBy attribute of the UserList object
    *
-   * @param tmp The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -327,10 +457,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the RoleId attribute of the UserList object
+   *  Sets the RoleId attribute of the UserList object
    *
-   * @param tmp The new RoleId value
-   * @since 1.8
+   * @param  tmp  The new RoleId value
+   * @since       1.8
    */
   public void setRoleId(int tmp) {
     this.roleId = tmp;
@@ -338,9 +468,19 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the Department attribute of the UserList object
+   *  Gets the roleId attribute of the UserList object
    *
-   * @param department The new Department value
+   * @return    The roleId value
+   */
+  public int getRoleId() {
+    return this.roleId;
+  }
+
+
+  /**
+   *  Sets the Department attribute of the UserList object
+   *
+   * @param  department  The new Department value
    */
   public void setDepartment(int department) {
     this.department = department;
@@ -348,9 +488,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the Department attribute of the UserList object
+   *  Sets the Department attribute of the UserList object
    *
-   * @param department The new Department value
+   * @param  department  The new Department value
    */
   public void setDepartment(String department) {
     this.department = Integer.parseInt(department);
@@ -358,9 +498,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the revenueType attribute of the UserList object
+   *  Gets the revenueType attribute of the UserList object
    *
-   * @return The revenueType value
+   * @return    The revenueType value
    */
   public int getRevenueType() {
     return revenueType;
@@ -368,9 +508,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the revenueType attribute of the UserList object
+   *  Sets the revenueType attribute of the UserList object
    *
-   * @param revenueType The new revenueType value
+   * @param  revenueType  The new revenueType value
    */
   public void setRevenueType(int revenueType) {
     this.revenueType = revenueType;
@@ -378,9 +518,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the username attribute of the UserList object
+   *  Sets the username attribute of the UserList object
    *
-   * @param username The new username value
+   * @param  username  The new username value
    */
   public void setUsername(String username) {
     this.username = username;
@@ -388,9 +528,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the JsEvent attribute of the UserList object
+   *  Sets the JsEvent attribute of the UserList object
    *
-   * @param jsEvent The new JsEvent value
+   * @param  jsEvent  The new JsEvent value
    */
   public void setJsEvent(String jsEvent) {
     this.jsEvent = jsEvent;
@@ -398,9 +538,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the Enabled attribute of the UserList object
+   *  Sets the Enabled attribute of the UserList object
    *
-   * @param tmp The new Enabled value
+   * @param  tmp  The new Enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -408,10 +548,20 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the IncludeMe attribute of the UserList object
+   *  Sets the enabled attribute of the UserList object
    *
-   * @param tmp The new IncludeMe value
-   * @since 1.19
+   * @param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the IncludeMe attribute of the UserList object
+   *
+   * @param  tmp  The new IncludeMe value
+   * @since       1.19
    */
   public void setIncludeMe(boolean tmp) {
     this.includeMe = tmp;
@@ -419,9 +569,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the revenueYear attribute of the UserList object
+   *  Gets the revenueYear attribute of the UserList object
    *
-   * @return The revenueYear value
+   * @return    The revenueYear value
    */
   public int getRevenueYear() {
     return revenueYear;
@@ -429,9 +579,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the revenueYear attribute of the UserList object
+   *  Sets the revenueYear attribute of the UserList object
    *
-   * @param revenueYear The new revenueYear value
+   * @param  revenueYear  The new revenueYear value
    */
   public void setRevenueYear(int revenueYear) {
     this.revenueYear = revenueYear;
@@ -439,10 +589,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the MyValue attribute of the UserList object
+   *  Sets the MyValue attribute of the UserList object
    *
-   * @param tmp The new MyValue value
-   * @since 1.19
+   * @param  tmp  The new MyValue value
+   * @since       1.19
    */
   public void setMyValue(String tmp) {
     this.myValue = tmp;
@@ -450,10 +600,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the MyId attribute of the UserList object
+   *  Sets the MyId attribute of the UserList object
    *
-   * @param tmp The new MyId value
-   * @since 1.19
+   * @param  tmp  The new MyId value
+   * @since       1.19
    */
   public void setMyId(int tmp) {
     this.myId = tmp;
@@ -461,9 +611,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the includeAliases attribute of the UserList object
+   *  Sets the includeAliases attribute of the UserList object
    *
-   * @param tmp The new includeAliases value
+   * @param  tmp  The new includeAliases value
    */
   public void setIncludeAliases(int tmp) {
     this.includeAliases = tmp;
@@ -471,10 +621,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the ManagerId attribute of the UserList object
+   *  Sets the ManagerId attribute of the UserList object
    *
-   * @param tmp The new ManagerId value
-   * @since 1.8
+   * @param  tmp  The new ManagerId value
+   * @since       1.8
    */
   public void setManagerId(int tmp) {
     this.managerId = tmp;
@@ -482,10 +632,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the TopLevel attribute of the UserList object
+   *  Sets the TopLevel attribute of the UserList object
    *
-   * @param tmp The new TopLevel value
-   * @since 1.20
+   * @param  tmp  The new TopLevel value
+   * @since       1.20
    */
   public void setTopLevel(boolean tmp) {
     this.topLevel = tmp;
@@ -493,10 +643,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the BuildContact attribute of the UserList object
+   *  Sets the BuildContact attribute of the UserList object
    *
-   * @param tmp The new BuildContact value
-   * @since 1.18
+   * @param  tmp  The new BuildContact value
+   * @since       1.18
    */
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
@@ -504,9 +654,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the buildContactDetails attribute of the UserList object
+   *  Sets the buildContactDetails attribute of the UserList object
    *
-   * @param tmp The new buildContactDetails value
+   * @param  tmp  The new buildContactDetails value
    */
   public void setBuildContactDetails(boolean tmp) {
     this.buildContactDetails = tmp;
@@ -514,10 +664,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the BuildHierarchy attribute of the UserList object
+   *  Sets the BuildHierarchy attribute of the UserList object
    *
-   * @param tmp The new BuildHierarchy value
-   * @since 1.17
+   * @param  tmp  The new BuildHierarchy value
+   * @since       1.17
    */
   public void setBuildHierarchy(boolean tmp) {
     this.buildHierarchy = tmp;
@@ -525,9 +675,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the buildEmployeeUsersOnly attribute of the UserList object
+   *  Sets the buildEmployeeUsersOnly attribute of the UserList object
    *
-   * @param tmp The new buildEmployeeUsersOnly value
+   * @param  tmp  The new buildEmployeeUsersOnly value
    */
   public void setBuildEmployeeUsersOnly(boolean tmp) {
     this.buildEmployeeUsersOnly = tmp;
@@ -535,9 +685,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the buildEmployeeUsersOnly attribute of the UserList object
+   *  Sets the buildEmployeeUsersOnly attribute of the UserList object
    *
-   * @param tmp The new buildEmployeeUsersOnly value
+   * @param  tmp  The new buildEmployeeUsersOnly value
    */
   public void setBuildEmployeeUsersOnly(String tmp) {
     this.buildEmployeeUsersOnly = DatabaseUtils.parseBoolean(tmp);
@@ -545,9 +695,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the buildAccountUsersOnly attribute of the UserList object
+   *  Sets the buildAccountUsersOnly attribute of the UserList object
    *
-   * @param tmp The new buildAccountUsersOnly value
+   * @param  tmp  The new buildAccountUsersOnly value
    */
   public void setBuildAccountUsersOnly(boolean tmp) {
     this.buildAccountUsersOnly = tmp;
@@ -555,9 +705,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the buildAccountUsersOnly attribute of the UserList object
+   *  Sets the buildAccountUsersOnly attribute of the UserList object
    *
-   * @param tmp The new buildAccountUsersOnly value
+   * @param  tmp  The new buildAccountUsersOnly value
    */
   public void setBuildAccountUsersOnly(String tmp) {
     this.buildAccountUsersOnly = DatabaseUtils.parseBoolean(tmp);
@@ -565,9 +715,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the ManagerUser attribute of the UserList object
+   *  Sets the ManagerUser attribute of the UserList object
    *
-   * @param tmp The new ManagerUser value
+   * @param  tmp  The new ManagerUser value
    */
   public void setManagerUser(User tmp) {
     this.managerUser = tmp;
@@ -575,9 +725,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the tableName attribute of the UserList object
+   *  Gets the tableName attribute of the UserList object
    *
-   * @return The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -585,9 +735,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the uniqueField attribute of the UserList object
+   *  Gets the uniqueField attribute of the UserList object
    *
-   * @return The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -595,9 +745,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the username attribute of the UserList object
+   *  Gets the username attribute of the UserList object
    *
-   * @return The username value
+   * @return    The username value
    */
   public String getUsername() {
     return username;
@@ -605,9 +755,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the includeAliases attribute of the UserList object
+   *  Gets the includeAliases attribute of the UserList object
    *
-   * @return The includeAliases value
+   * @return    The includeAliases value
    */
   public int getIncludeAliases() {
     return includeAliases;
@@ -615,9 +765,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the JsEvent attribute of the UserList object
+   *  Gets the JsEvent attribute of the UserList object
    *
-   * @return The JsEvent value
+   * @return    The JsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -625,9 +775,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the Department attribute of the UserList object
+   *  Gets the Department attribute of the UserList object
    *
-   * @return The Department value
+   * @return    The Department value
    */
   public int getDepartment() {
     return department;
@@ -635,10 +785,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the IncludeMe attribute of the UserList object
+   *  Gets the IncludeMe attribute of the UserList object
    *
-   * @return The IncludeMe value
-   * @since 1.19
+   * @return    The IncludeMe value
+   * @since     1.19
    */
   public boolean getIncludeMe() {
     return includeMe;
@@ -646,10 +796,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the MyValue attribute of the UserList object
+   *  Gets the MyValue attribute of the UserList object
    *
-   * @return The MyValue value
-   * @since 1.19
+   * @return    The MyValue value
+   * @since     1.19
    */
   public String getMyValue() {
     return myValue;
@@ -657,10 +807,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the MyId attribute of the UserList object
+   *  Gets the MyId attribute of the UserList object
    *
-   * @return The MyId value
-   * @since 1.19
+   * @return    The MyId value
+   * @since     1.19
    */
   public int getMyId() {
     return myId;
@@ -668,10 +818,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the ListSize attribute of the UserList object
+   *  Gets the ListSize attribute of the UserList object
    *
-   * @return The ListSize value
-   * @since 1.9
+   * @return    The ListSize value
+   * @since     1.9
    */
   public int getListSize() {
     return this.size();
@@ -679,11 +829,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the HtmlSelect attribute of the UserList object
+   *  Gets the HtmlSelect attribute of the UserList object
    *
-   * @param selectName Description of Parameter
-   * @return The HtmlSelect value
-   * @since 1.4
+   * @param  selectName  Description of Parameter
+   * @return             The HtmlSelect value
+   * @since              1.4
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -691,12 +841,12 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the HtmlSelect attribute of the UserList object
+   *  Gets the HtmlSelect attribute of the UserList object
    *
-   * @param selectName Description of Parameter
-   * @param defaultKey Description of Parameter
-   * @return The HtmlSelect value
-   * @since 1.4
+   * @param  selectName  Description of Parameter
+   * @param  defaultKey  Description of Parameter
+   * @return             The HtmlSelect value
+   * @since              1.4
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect userListSelect = new HtmlSelect();
@@ -719,11 +869,13 @@ public class UserList extends Vector implements SyncableList {
           thisUser.getExpires()))) {
         elementText += " *";
       }
-
+      if (thisUser.getSiteId() != -1) {
+        elementText += " (" + thisUser.getSiteIdName() + ")";
+      }
       if (thisUser.getEnabled() || (!thisUser.getEnabled() && !excludeDisabledIfUnselected) || (excludeDisabledIfUnselected && thisUser.getId() == defaultKey)) {
         if (thisUser.getExpires() == null || (thisUser.getExpires() != null && currentTime.before(
             thisUser.getExpires())) || ((thisUser.getExpires() != null && currentTime.after(
-                thisUser.getExpires())) && !excludeExpiredIfUnselected) || (excludeExpiredIfUnselected && thisUser.getId() == defaultKey)) {
+            thisUser.getExpires())) && !excludeExpiredIfUnselected) || (excludeExpiredIfUnselected && thisUser.getId() == defaultKey)) {
           if (thisUser.getId() != 0) {
             userListSelect.addItem(
                 thisUser.getId(),
@@ -737,11 +889,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the htmlSelectObj attribute of the UserList object
+   *  Gets the htmlSelectObj attribute of the UserList object
    *
-   * @param selectName Description of the Parameter
-   * @param defaultKey Description of the Parameter
-   * @return The htmlSelectObj value
+   * @param  selectName  Description of the Parameter
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj(String selectName, int defaultKey) {
     HtmlSelect userListSelect = new HtmlSelect();
@@ -763,6 +915,9 @@ public class UserList extends Vector implements SyncableList {
           thisUser.getExpires()))) {
         elementText += " *";
       }
+      if (thisUser.getSiteId() != -1) {
+        elementText += " (" + thisUser.getSiteIdName() + ")";
+      }
       if (thisUser.getEnabled() || (!thisUser.getEnabled() && !excludeDisabledIfUnselected) || (excludeDisabledIfUnselected && thisUser.getId() == defaultKey)) {
         userListSelect.addItem(thisUser.getId(), elementText);
       }
@@ -772,11 +927,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the UserListIds attribute of the UserList object
+   *  Gets the UserListIds attribute of the UserList object
    *
-   * @param toInclude Description of Parameter
-   * @return The UserListIds value
-   * @since 1.17
+   * @param  toInclude  Description of Parameter
+   * @return            The UserListIds value
+   * @since             1.17
    */
   public String getUserListIds(int toInclude) {
     StringBuffer values = new StringBuffer();
@@ -797,10 +952,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the UserListIds attribute of the UserList object
+   *  Gets the UserListIds attribute of the UserList object
    *
-   * @return The UserListIds value
-   * @since 1.16
+   * @return    The UserListIds value
+   * @since     1.16
    */
   public String getUserListIds() {
     StringBuffer values = new StringBuffer();
@@ -817,9 +972,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the hidden attribute of the UserList object
+   *  Gets the hidden attribute of the UserList object
    *
-   * @return The hidden value
+   * @return    The hidden value
    */
   public int getHidden() {
     return hidden;
@@ -827,9 +982,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the hidden attribute of the UserList object
+   *  Sets the hidden attribute of the UserList object
    *
-   * @param tmp The new hidden value
+   * @param  tmp  The new hidden value
    */
   public void setHidden(int tmp) {
     this.hidden = tmp;
@@ -837,9 +992,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the hidden attribute of the UserList object
+   *  Sets the hidden attribute of the UserList object
    *
-   * @param tmp The new hidden value
+   * @param  tmp  The new hidden value
    */
   public void setHidden(String tmp) {
     this.hidden = Integer.parseInt(tmp);
@@ -847,9 +1002,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the expires attribute of the UserList object
+   *  Gets the expires attribute of the UserList object
    *
-   * @return The expires value
+   * @return    The expires value
    */
   public Timestamp getExpires() {
     return expires;
@@ -857,9 +1012,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the expires attribute of the UserList object
+   *  Sets the expires attribute of the UserList object
    *
-   * @param tmp The new expires value
+   * @param  tmp  The new expires value
    */
   public void setExpires(Timestamp tmp) {
     this.expires = tmp;
@@ -867,9 +1022,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the expires attribute of the UserList object
+   *  Sets the expires attribute of the UserList object
    *
-   * @param tmp The new expires value
+   * @param  tmp  The new expires value
    */
   public void setExpires(String tmp) {
     this.expires = DatabaseUtils.parseTimestamp(tmp);
@@ -877,9 +1032,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the expired attribute of the UserList object
+   *  Gets the expired attribute of the UserList object
    *
-   * @return The expired value
+   * @return    The expired value
    */
   public int getExpired() {
     return expired;
@@ -887,9 +1042,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the expired attribute of the UserList object
+   *  Sets the expired attribute of the UserList object
    *
-   * @param tmp The new expired value
+   * @param  tmp  The new expired value
    */
   public void setExpired(int tmp) {
     this.expired = tmp;
@@ -897,9 +1052,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the expired attribute of the UserList object
+   *  Sets the expired attribute of the UserList object
    *
-   * @param tmp The new expired value
+   * @param  tmp  The new expired value
    */
   public void setExpired(String tmp) {
     this.expired = Integer.parseInt(tmp);
@@ -907,10 +1062,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the User attribute of the UserList object
+   *  Gets the User attribute of the UserList object
    *
-   * @param childId Description of Parameter
-   * @return The User value
+   * @param  childId  Description of Parameter
+   * @return          The User value
    */
   public User getUser(int childId) {
     Iterator i = this.iterator();
@@ -929,10 +1084,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the TopUser attribute of the UserList object
+   *  Gets the TopUser attribute of the UserList object
    *
-   * @param userId Description of Parameter
-   * @return The TopUser value
+   * @param  userId  Description of Parameter
+   * @return         The TopUser value
    */
   public User getTopUser(int userId) {
     Iterator i = this.iterator();
@@ -947,9 +1102,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the ManagerUser attribute of the UserList object
+   *  Gets the ManagerUser attribute of the UserList object
    *
-   * @return The ManagerUser value
+   * @return    The ManagerUser value
    */
   public User getManagerUser() {
     return managerUser;
@@ -957,11 +1112,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the object attribute of the UserList object
+   *  Gets the object attribute of the UserList object
    *
-   * @param rs Description of Parameter
-   * @return The object value
-   * @throws SQLException Description of Exception
+   * @param  rs             Description of Parameter
+   * @return                The object value
+   * @throws  SQLException  Description of Exception
    */
   public User getObject(ResultSet rs) throws SQLException {
     User thisUser = new User(rs);
@@ -970,9 +1125,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the roleType attribute of the UserList object
+   *  Gets the roleType attribute of the UserList object
    *
-   * @return The roleType value
+   * @return    The roleType value
    */
   public int getRoleType() {
     return roleType;
@@ -980,9 +1135,29 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Gets the excludeExpiredIfUnselected attribute of the UserList object
+   *  Gets the siteId attribute of the UserList object
    *
-   * @return The excludeExpiredIfUnselected value
+   * @return    The siteId value
+   */
+  public int getSiteId() {
+    return siteId;
+  }
+
+
+  /**
+   *  Gets the includeUsersWithAccessToAllSites attribute of the UserList object
+   *
+   * @return    The includeUsersWithAccessToAllSites value
+   */
+  public boolean getIncludeUsersWithAccessToAllSites() {
+    return includeUsersWithAccessToAllSites;
+  }
+
+
+  /**
+   *  Gets the excludeExpiredIfUnselected attribute of the UserList object
+   *
+   * @return    The excludeExpiredIfUnselected value
    */
   public boolean getExcludeExpiredIfUnselected() {
     return excludeExpiredIfUnselected;
@@ -990,9 +1165,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the excludeExpiredIfUnselected attribute of the UserList object
+   *  Sets the excludeExpiredIfUnselected attribute of the UserList object
    *
-   * @param tmp The new excludeExpiredIfUnselected value
+   * @param  tmp  The new excludeExpiredIfUnselected value
    */
   public void setExcludeExpiredIfUnselected(boolean tmp) {
     this.excludeExpiredIfUnselected = tmp;
@@ -1000,9 +1175,9 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Sets the excludeExpiredIfUnselected attribute of the UserList object
+   *  Sets the excludeExpiredIfUnselected attribute of the UserList object
    *
-   * @param tmp The new excludeExpiredIfUnselected value
+   * @param  tmp  The new excludeExpiredIfUnselected value
    */
   public void setExcludeExpiredIfUnselected(String tmp) {
     this.excludeExpiredIfUnselected = DatabaseUtils.parseBoolean(tmp);
@@ -1010,10 +1185,40 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Gets the userGroupId attribute of the UserList object
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
+   * @return    The userGroupId value
+   */
+  public int getUserGroupId() {
+    return userGroupId;
+  }
+
+
+  /**
+   *  Sets the userGroupId attribute of the UserList object
+   *
+   * @param  tmp  The new userGroupId value
+   */
+  public void setUserGroupId(int tmp) {
+    this.userGroupId = tmp;
+  }
+
+
+  /**
+   *  Sets the userGroupId attribute of the UserList object
+   *
+   * @param  tmp  The new userGroupId value
+   */
+  public void setUserGroupId(String tmp) {
+    this.userGroupId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -1021,12 +1226,12 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db       Description of the Parameter
-   * @param newOwner Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  newOwner       Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -1040,6 +1245,18 @@ public class UserList extends Vector implements SyncableList {
     return total;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context        Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @param  systemStatus   Description of the Parameter
+   * @param  newOwner       Description of the Parameter
+   * @param  userId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
+   */
   public HashMap reassignElements(ActionContext context, Connection db, SystemStatus systemStatus, int newOwner, int userId) throws SQLException {
     HashMap errors = new HashMap();
     int total = 0;
@@ -1062,6 +1279,17 @@ public class UserList extends Vector implements SyncableList {
     return errors;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  thisUser       Description of the Parameter
+   * @param  managerId      Description of the Parameter
+   * @param  errors         Description of the Parameter
+   * @param  systemStatus   Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
+   */
   public boolean checkManager(User thisUser, int managerId, HashMap errors, SystemStatus systemStatus) throws SQLException {
     //Check hierarchy context for circular references
     if (managerId > 0 && thisUser.getId() > -1 && thisUser.getAlias() == -1) {
@@ -1069,7 +1297,8 @@ public class UserList extends Vector implements SyncableList {
         //Check 1: User cannot report to self
         errors.put(
             "managerIdError", systemStatus.getLabel(
-                "user.userCanNotReportToSelf"));//"User cannot report to self");
+            "user.userCanNotReportToSelf"));
+        //"User cannot report to self");
       } else {
         //Check 2: User cannot report to someone already beneath them
         User updatedUser = systemStatus.getHierarchyList().getUser(
@@ -1096,7 +1325,8 @@ public class UserList extends Vector implements SyncableList {
             sb.append((String) names.pop());
             if (!names.empty()) {
               sb.append(
-                  systemStatus.getLabel("user.lessThan.withSpaces.symbol"));//" < ");
+                  systemStatus.getLabel("user.lessThan.withSpaces.symbol"));
+              //" < ");
             }
           }
           errors.put("managerIdError", sb.toString());
@@ -1109,14 +1339,15 @@ public class UserList extends Vector implements SyncableList {
     return true;
   }
 
+
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db       Description of the Parameter
-   * @param newOwner Description of the Parameter
-   * @param userId   Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  newOwner       Description of the Parameter
+   * @param  userId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
     int total = 0;
@@ -1133,11 +1364,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Generates the user list from the database
+   *  Generates the user list from the database
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.4
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.4
    */
   public void buildList(Connection db) throws SQLException {
     //A super query -- builds the user and contact data at same time
@@ -1163,10 +1394,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildRevenueYTD(Connection db) throws SQLException {
     Iterator x = this.iterator();
@@ -1179,10 +1410,10 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildPipelineValues(Connection db) throws SQLException {
     Iterator x = this.iterator();
@@ -1194,13 +1425,13 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * This method is required for synchronization, it allows for the resultset
-   * to be streamed with lower overhead
+   *  This method is required for synchronization, it allows for the resultset
+   *  to be streamed with lower overhead
    *
-   * @param db  Description of Parameter
-   * @param pst Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @param  pst            Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -1211,12 +1442,17 @@ public class UserList extends Vector implements SyncableList {
     StringBuffer sqlOrder = new StringBuffer();
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM access a " +
+        "FROM \"access\" a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
+        "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
+        "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+        "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
+        "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
+        "LEFT JOIN \"access\" m_usr ON (a.manager_id = m_usr.user_id) " +
         "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
+        "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
         "WHERE a.user_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -1261,24 +1497,34 @@ public class UserList extends Vector implements SyncableList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "a.username, a.password, a.role_id, a.last_login, a.manager_id, " +
-        "a.last_ip, a.timezone, a.startofday as access_startofday, " +
-        "a.endofday as access_endofday, a.expires, a.alias, " +
-        "a.contact_id as contact_id_link, a.user_id as access_user_id, " +
-        "a.enabled as access_enabled, a.assistant, " +
-        "a.entered as access_entered, a.enteredby as access_enteredby, " +
-        "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
-        "a.currency, a.\"language\", a.webdav_password, a.hidden, " +
+        "a.username, a.\"password\", a.role_id, a.last_login, a.manager_id, " +
+        "a.site_id AS siteid, " +
+        "a.last_ip, a.timezone, a.startofday AS access_startofday, " +
+        "a.endofday AS access_endofday, a.expires, a.alias, " +
+        "a.contact_id AS contact_id_link, a.user_id AS access_user_id, " +
+        "a.enabled AS access_enabled, a.assistant, " +
+        "a.entered AS access_entered, a.enteredby AS access_enteredby, " +
+        "a.modified AS access_modified, a.modifiedby AS access_modifiedby, " +
+        "a.currency, a.\"language\", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
         "r.\"role\" AS systemrole, r.role_type, " +
-        "m_usr.enabled as mgr_enabled, " +
-        "c.*, d.description as departmentname, " +
-        "o.name as org_name, o.enabled as orgenabled " +
-        "FROM access a " +
+        "m_usr.enabled AS mgr_enabled, " +
+        "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
+        "b.description AS site_id_name, " +
+        "lind.description AS industry_name, " +
+        "lcs.description AS source_name, " + 
+        "lcr.description AS rating_name, " +
+        "o.name AS org_name, o.enabled AS orgenabled " +
+        "FROM \"access\" a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
+        "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
+        "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+        "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
+        "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
+        "LEFT JOIN \"access\" m_usr ON (a.manager_id = m_usr.user_id) " +
         "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
+        "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
         "WHERE a.user_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -1292,11 +1538,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * For each user, the contact information is retrieved
+   *  For each user, the contact information is retrieved
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.4
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.4
    */
   private void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -1320,15 +1566,20 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Limits the recods that are retrieved, works with prepareFilter
+   *  Limits the recods that are retrieved, works with prepareFilter
    *
-   * @param sqlFilter Description of Parameter
-   * @since 1.4
+   * @param  sqlFilter  Description of Parameter
+   * @since             1.4
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    sqlFilter.append(
+        "AND (ca.address_id IS NULL OR ca.address_id IN ( " +
+        "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
+        "OR ca.address_id IN (SELECT MIN(ctadd.address_id) FROM contact_address ctadd WHERE ctadd.contact_id = c.contact_id AND " +
+        " ctadd.contact_id NOT IN (SELECT contact_id FROM contact_address WHERE contact_address.primary_address = ?))) ");
     if (includeAliases == Constants.TRUE) {
       sqlFilter.append("AND a.alias > -1 ");
     }
@@ -1361,8 +1612,17 @@ public class UserList extends Vector implements SyncableList {
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append("AND a.enabled = ? ");
     }
+    if (hasWebdavAccess != Constants.UNDEFINED) {
+      sqlFilter.append("AND a.allow_webdav_access = ? ");
+    }
+    if (hasHttpApiAccess != Constants.UNDEFINED) {
+      sqlFilter.append("AND a.allow_httpapi_access = ? ");
+    }
     if (username != null) {
       sqlFilter.append("AND a.username = ? ");
+    }
+    if (password != null) {
+      sqlFilter.append("AND a.\"password\" = ? ");
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -1387,6 +1647,24 @@ public class UserList extends Vector implements SyncableList {
     if (roleType != -1) {
       sqlFilter.append("AND r.role_type = ? ");
     }
+    // includes only those users who have access to the specified site
+    // and those who have access to all sites
+    if (siteId != -1) {
+      sqlFilter.append("AND ");
+      if (includeUsersWithAccessToAllSites) {
+        sqlFilter.append(" ( ");
+      }
+      sqlFilter.append("a.site_id = ? ");
+      if (includeUsersWithAccessToAllSites) {
+        sqlFilter.append("OR a.site_id IS NULL ) ");
+      }
+    }
+    // includes only those users who have access to all sites
+    if (siteId == -1) {
+      if (includeUsersWithAccessToAllSites) {
+        sqlFilter.append("AND a.site_id IS NULL ");
+      }
+    }
     if (buildEmployeeUsersOnly) {
       sqlFilter.append("AND c.org_id = 0 ");
     }
@@ -1394,25 +1672,30 @@ public class UserList extends Vector implements SyncableList {
       sqlFilter.append("AND c.org_id > 0 ");
     }
     if (hidden != Constants.UNDEFINED) {
-      sqlFilter.append("AND a.hidden = ? ");
+      sqlFilter.append("AND (a.hidden = ? " + (hidden == Constants.FALSE ? " OR a.hidden IS NULL " : " AND a.hidden IS NOT NULL ") + ")");
     }
     if (expired != Constants.UNDEFINED) {
       sqlFilter.append(
           "AND a.expires " + (expired == Constants.TRUE ? "<" : ">") + " ? ");
     }
+    if (userGroupId > -1) {
+      sqlFilter.append("AND a.user_id IN (SELECT user_id FROM user_group_map WHERE group_id = ?) ");
+    }
   }
 
 
   /**
-   * Limits the recods that are retrieved, works with createFilter
+   *  Limits the recods that are retrieved, works with createFilter
    *
-   * @param pst Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.4
+   * @param  pst            Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.4
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    pst.setBoolean(++i, true);
+    pst.setBoolean(++i, true);
     if (enteredBy > -1) {
       pst.setInt(++i, enteredBy);
     }
@@ -1428,8 +1711,17 @@ public class UserList extends Vector implements SyncableList {
     if (enabled != Constants.UNDEFINED) {
       pst.setBoolean(++i, enabled == TRUE);
     }
+    if (hasWebdavAccess != Constants.UNDEFINED) {
+      pst.setBoolean(++i, hasWebdavAccess == Constants.TRUE);
+    }
+    if (hasHttpApiAccess != Constants.UNDEFINED) {
+      pst.setBoolean(++i, hasHttpApiAccess == Constants.TRUE);
+    }
     if (username != null) {
       pst.setString(++i, username);
+    }
+    if (password != null) {
+      pst.setString(++i, password);
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -1451,32 +1743,39 @@ public class UserList extends Vector implements SyncableList {
     if (roleType != -1) {
       pst.setInt(++i, roleType);
     }
+    if (siteId != -1) {
+      pst.setInt(++i, siteId);
+    }
     if (hidden != Constants.UNDEFINED) {
       pst.setBoolean(++i, hidden == Constants.TRUE);
     }
     if (expired != Constants.UNDEFINED) {
       pst.setTimestamp(
           ++i, (expires != null) ? expires : new Timestamp(
-              Calendar.getInstance().getTimeInMillis()));
+          Calendar.getInstance().getTimeInMillis()));
+    }
+    if (userGroupId > -1) {
+      pst.setInt(++i, userGroupId);
     }
     return i;
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int queryRecordCount(Connection db) throws SQLException {
     int recordCount = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
         "SELECT COUNT(*) AS recordcount " +
-        "FROM access a " +
-        "LEFT JOIN contact c ON (a.contact_id = c.contact_id), " +
+        "FROM \"access\" a " +
+        "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
+        "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id), " +
         "\"role\" r " +
         "WHERE a.role_id = r.role_id ";
     createFilter(sqlFilter);
@@ -1494,11 +1793,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * A convenient method to retrieve a specific contact from the cache
+   *  A convenient method to retrieve a specific contact from the cache
    *
-   * @param context Description of the Parameter
-   * @param userId  Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @param  userId   Description of the Parameter
+   * @return          Description of the Return Value
    */
   public final static Contact retrieveUserContact(ActionContext context, int userId) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -1522,11 +1821,11 @@ public class UserList extends Vector implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param inList      Description of the Parameter
-   * @param currentList Description of the Parameter
-   * @return Description of the Return Value
+   * @param  inList       Description of the Parameter
+   * @param  currentList  Description of the Parameter
+   * @return              Description of the Return Value
    */
   public static UserList sortEnabledUsers(UserList inList, UserList currentList) {
     int counter = 0;
@@ -1543,6 +1842,48 @@ public class UserList extends Vector implements SyncableList {
     }
     return currentList;
   }
-}
 
+
+  /**
+   *  Gets the userIdByName attribute of the UserList object
+   *
+   * @param  name  Description of the Parameter
+   * @return       The userIdByName value
+   */
+  public int getUserIdByName(String name) {
+    int result = -1;
+    StringTokenizer str = null;
+    String[] names = StringUtils.getFirstLastNames(name);
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      User thisUser = (User) iterator.next();
+      Contact contact = thisUser.getContact();
+      if (StringUtils.checkNameMatch(contact.getNameLastFirst(),names[1], names[0])) {
+        result = thisUser.getId();
+        break;
+      }
+    }
+    return result;
+  }
+
+
+  /**
+   *  Gets the userById attribute of the UserList object
+   *
+   * @param  userId  Description of the Parameter
+   * @return         The userById value
+   */
+  public User getUserById(int userId) {
+    User result = null;
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      User thisUser = (User) iterator.next();
+      if (thisUser.getId() == userId) {
+        result = thisUser;
+        break;
+      }
+    }
+    return result;
+  }
+}
 

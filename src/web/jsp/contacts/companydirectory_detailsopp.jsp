@@ -66,6 +66,9 @@
     }
   }
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -89,19 +92,24 @@
     <%= thisFile.getImageTag() %>
   </dhv:evaluate>
   <br>
-  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
-    <% if(ContactDetails.getOrgId() > 0){ %>
-    <dhv:permission name="contacts-external_contacts-opportunities-add,accounts-accounts-contacts-opportunities-add"  all="true">
-      <br>
-      <a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br>
-    </dhv:permission>
-    <% }else{ %>
-      <dhv:permission name="contacts-external_contacts-opportunities-add">
-        <br>
-        <a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br>
-      </dhv:permission>
-    <%}%>
+  <dhv:hasAuthority owner="<%= opportunityHeader.getManager() %>">
+  <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
+    <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
+      <% if(ContactDetails.getOrgId() > 0){ %>
+      <dhv:permission name="contacts-external_contacts-opportunities-add,accounts-accounts-contacts-opportunities-add"  all="true">
+          <dhv:evaluate if="<%=allowMultiple || (!allowMultiple && (componentList.size() == 0))%>" >
+            <br /><a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br />
+          </dhv:evaluate>
+        </dhv:permission>
+      <% }else{ %>
+        <dhv:permission name="contacts-external_contacts-opportunities-add">
+          <br />
+          <a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br />
+        </dhv:permission>
+      <%}%>
+    </dhv:evaluate>
   </dhv:evaluate>
+  </dhv:hasAuthority>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
   <input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ComponentListInfo"/>
@@ -138,7 +146,12 @@
           count++;
           rowid = (rowid != 1?1:2);
           OpportunityComponent oppComponent = (OpportunityComponent)j.next();
+          boolean hasPermission = false;
   %>
+    <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) %>">
+      <% hasPermission = true; %>
+    </dhv:hasAuthority>
+    <zeroio:debug value="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) + " and the value of hasPermission is "+hasPermission %>"/>
     <tr class="containerBody">
       <td width="8" valign="top" nowrap class="row<%= rowid %>">
         <%-- check if user has edit or delete based on the type of contact --%>
@@ -156,13 +169,13 @@
           <dhv:permission name="contacts-external_contacts-opportunities-edit,accounts-accounts-contacts-opportunities-edit"  all="true">
            <% hasEditPermission = 1; %>
           </dhv:permission>
-          <dhv:permission name="contacts-external_contacts-opportunities-delete,,accounts-accounts-contacts-opportunities-delete" all="true">
+          <dhv:permission name="contacts-external_contacts-opportunities-delete,accounts-accounts-contacts-opportunities-delete" all="true">
            <% hasDeletePermission = 1; %>
           </dhv:permission>
         <% } %>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
-          <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>', '<%= opportunityHeader.getId() %>','<%= oppComponent.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>','<%= oppComponent.isTrashed() || opportunityHeader.isTrashed() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>', '<%= opportunityHeader.getId() %>','<%= oppComponent.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>','<%= oppComponent.isTrashed() || opportunityHeader.isTrashed() %>','<%= hasPermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </dhv:evaluate>
       </td>
       <td width="100%" valign="top" class="row<%= rowid %>">
@@ -202,8 +215,12 @@
   <br>
   <dhv:pagedListControl object="ComponentListInfo"/>
   <br />
-  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
-    <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"></dhv:sharing>
-    <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= ContactDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>&popup=true<%= isPopup(request)?"&sourcePopup=true":"" %><%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:sharing>
-  </dhv:evaluate>
+  <dhv:hasAuthority owner="<%= opportunityHeader.getManager() %>">
+    <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
+      <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
+        <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"></dhv:sharing>
+        <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= ContactDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>&popup=true<%= isPopup(request)?"&sourcePopup=true":"" %><%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:sharing>
+      </dhv:evaluate>
+    </dhv:evaluate>
+  </dhv:hasAuthority>
 </dhv:container>

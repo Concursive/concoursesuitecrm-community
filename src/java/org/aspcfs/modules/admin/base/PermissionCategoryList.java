@@ -373,7 +373,7 @@ public class PermissionCategoryList extends Vector {
       sqlFilter.append("AND enabled = ? ");
     }
     if (activeState != -1) {
-      sqlFilter.append("AND active = ? ");
+      sqlFilter.append("AND \"active\" = ? ");
     }
     if (customizableModulesOnly) {
       sqlFilter.append(
@@ -450,4 +450,3 @@ public class PermissionCategoryList extends Vector {
     return categoryListSelect.getHtml(selectName, defaultKey);
   }
 }
-

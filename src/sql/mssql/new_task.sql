@@ -30,6 +30,13 @@ CREATE TABLE lookup_task_category (
   enabled BIT DEFAULT 1
 );
 
+CREATE TABLE lookup_ticket_task_category (
+  code INTEGER IDENTITY PRIMARY KEY,
+  description VARCHAR(255) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
 
 CREATE TABLE task (
   task_id INT IDENTITY PRIMARY KEY,
@@ -52,7 +59,8 @@ CREATE TABLE task (
   completedate DATETIME,
   category_id INTEGER REFERENCES lookup_task_category,
   duedate_timezone VARCHAR(255),
-  trashed_date DATETIME
+  trashed_date DATETIME,
+  ticket_task_category_id INTEGER REFERENCES lookup_ticket_task_category(code)
 );
 
 CREATE TABLE tasklink_contact (
@@ -63,7 +71,8 @@ CREATE TABLE tasklink_contact (
 
 CREATE TABLE tasklink_ticket (
   task_id INT NOT NULL REFERENCES task,
-  ticket_id INT NOT NULL REFERENCES ticket(ticketid)
+  ticket_id INT NOT NULL REFERENCES ticket(ticketid),
+  category_id INT REFERENCES lookup_ticket_task_category(code)
 );
 
 CREATE TABLE tasklink_project (

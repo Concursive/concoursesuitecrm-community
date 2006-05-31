@@ -54,17 +54,10 @@ public class QueryCampaignJustCanceled extends ObjectHookComponent implements Co
     boolean result = false;
     Campaign thisCampaign = (Campaign) context.getThisObject();
     Campaign previousCampaign = (Campaign) context.getPreviousObject();
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
-      System.out.println(
-          "the current status id is " + thisCampaign.getStatusId() + " and the previous status id is " + previousCampaign.getStatusId());
-      result = (thisCampaign.getStatusId() == Campaign.CANCELED &&
-          (previousCampaign.getStatusId() == Campaign.QUEUE || previousCampaign.getStatusId() == Campaign.ERROR));
-    } catch (Exception e) {
-    } finally {
-      this.freeConnection(context, db);
-    }
+    System.out.println(
+        "the current status id is " + thisCampaign.getStatusId() + " and the previous status id is " + previousCampaign.getStatusId());
+    result = (thisCampaign.getStatusId() == Campaign.CANCELED &&
+        (previousCampaign.getStatusId() == Campaign.QUEUE || previousCampaign.getStatusId() == Campaign.ERROR));
     return result;
   }
 }

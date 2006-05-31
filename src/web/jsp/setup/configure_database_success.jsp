@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
 <jsp:useBean id="database" class="org.aspcfs.modules.setup.beans.DatabaseBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -36,8 +37,15 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.databaseConnectionSuccessful">Database Connection Successful!</dhv:label><br>
-      <br>
+      <dhv:label name="setup.databaseConnectionSuccessful">Database Connection Successful!</dhv:label>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+<dhv:evaluate if="<%= hasText(APP_TEXT) %>">
+  <tr>
+    <td>
       <dhv:label name="setup.createDatabaseTables.text">Centric CRM will now create all of the necessary database tables and initial data in the following database:</dhv:label><br>
       <br>
       <b><%= toHtmlValue(database.getUrl()) %></b><br>
@@ -52,5 +60,24 @@
       </span>
     </td>
   </tr>
+</dhv:evaluate>
+<dhv:evaluate if="<%= !hasText(APP_TEXT) %>">
+  <tr>
+    <td>
+      The Centric CRM Community Edition requires that the necessary database tables and initial data have been installed using &quot;ant installdb&quot; in the following database:<br />
+      <br>
+      <b><%= toHtmlValue(database.getUrl()) %></b><br>
+      <br>
+      The database schema will now be verified.<br />
+      <br>
+      <span id="buttons" name="buttons">
+        <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
+      </span>
+      <span id="progress" name="progress" style="display:none">
+        <font color="blue"><b>Please Wait... testing the database!</b></font>
+      </span>
+    </td>
+  </tr>
+</dhv:evaluate>
 </table>
 </form>

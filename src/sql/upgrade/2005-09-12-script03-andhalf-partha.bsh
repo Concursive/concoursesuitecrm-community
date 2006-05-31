@@ -1,0 +1,15 @@
+import org.aspcfs.modules.actionplans.base.ActionPlanList;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+import java.sql.*;
+ActionPlanList list = new ActionPlanList();
+int constantId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS);
+list.buildList(db);
+Iterator iter = (Iterator) list.iterator();
+while (iter.hasNext()) {
+  ActionPlan plan = (ActionPlan) iter.next();
+  if (plan.getLinkObjectId() == -1) {
+    plan.setLinkObjectId(constantId);
+    plan.update(db);
+  }
+}
+

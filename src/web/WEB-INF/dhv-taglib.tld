@@ -117,6 +117,10 @@
       <required>no</required>
     </attribute>
     <attribute>
+      <name>forJS</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
       <name>default</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
@@ -138,6 +142,30 @@
     <attribute>
       <name>listName</name>
       <required>yes</required>
+    </attribute>
+  </tag>
+
+  <tag>
+    <name>sitename</name> 
+    <tag-class>org.aspcfs.taglib.SiteNameHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Access the Application scope and retrieve site name from siteid or the object's id.
+    </display-name>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>objectName</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
   
@@ -252,6 +280,11 @@
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+    <attribute>
+      <name>item</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
   
   <tag>
@@ -274,7 +307,6 @@
   <tag>
     <name>pagedListControl</name> 
     <tag-class>org.aspcfs.taglib.PagedListControlHandler</tag-class>
-    <body-content>empty</body-content>
     <display-name>
       Displays a control panel(form) for the PagedListInfo specified.
     </display-name>
@@ -334,6 +366,7 @@
     <attribute>
     <name>label</name>
       <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
       <name>object</name>
@@ -404,6 +437,11 @@
     </attribute>
     <attribute>
       <name>externalText</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+    <name>params</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
@@ -666,7 +704,7 @@
     <tag-class>org.aspcfs.taglib.ProductCategoryHierarchyHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
-      Displat product category hierarchy trails
+      Display product category hierarchy trails
     </display-name>
     <attribute>
       <name>showLastLink</name>
@@ -680,6 +718,90 @@
     </attribute>
     <attribute>
       <name>displayJS</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
+    <name>batch</name>
+    <tag-class>org.aspcfs.taglib.BatchHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>Prepares a page to handle a set of batch operations on the screen</display-name>
+    <attribute>
+      <name>object</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
+    <name>batchInput</name>
+    <tag-class>org.aspcfs.taglib.BatchInputHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>Prepares a checkbox input for batch operations on the screen</display-name>
+    <attribute>
+      <name>object</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>hiddenParams</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>hiddenValues</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
+    <name>batchList</name>
+    <tag-class>org.aspcfs.taglib.BatchListHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>Prepares a list of batch operations that can be performed on the screen</display-name>
+    <attribute>
+      <name>object</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>label</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>returnURL</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
+    <name>batchItem</name>
+    <tag-class>org.aspcfs.taglib.BatchItemHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>A specific batch operation on the screen</display-name>
+    <attribute>
+      <name>display</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>link</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>params</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>

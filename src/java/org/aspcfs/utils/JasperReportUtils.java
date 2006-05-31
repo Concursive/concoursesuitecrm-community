@@ -65,7 +65,7 @@ public class JasperReportUtils {
     }
     System.setProperty(
         "jasper.reports.compiler.class",
-        "net.sf.jasperreports.engine.design.JRBshCompiler");
+        "net.sf.jasperreports.compilers.JRBshCompiler");
     //Check to see if the .jasper exists
     String jasperFilename = filename.substring(
         0, filename.lastIndexOf(".xml"));

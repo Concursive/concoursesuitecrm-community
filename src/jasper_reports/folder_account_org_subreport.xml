@@ -32,13 +32,15 @@
 		<defaultValueExpression ><![CDATA["/home/ananth/source/cfs2/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[select cfc.category_name AS category_name, cfr.record_id AS record_id 
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<queryString><![CDATA[
+   SELECT cfc.category_name AS category_name, cfr.record_id AS record_id 
 	 FROM custom_field_record cfr
 	 LEFT JOIN permission_category pc on (cfr.link_module_id = pc.category_id )
 	 LEFT JOIN custom_field_category cfc on (cfr.category_id = cfc.category_id )
-	 where cfr.link_module_id=1
-	 AND 
-	 cfr.link_item_id = $P{org_id};]]></queryString>
+	 WHERE cfr.link_module_id = 1
+	 AND cfr.link_item_id = $P{org_id}
+  ]]></queryString>
 	<field name="category_name" class="java.lang.String"/>
 	<field name="record_id" class="java.lang.String"/>
 		<background>

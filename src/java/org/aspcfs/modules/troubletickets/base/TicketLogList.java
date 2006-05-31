@@ -18,6 +18,7 @@ package org.aspcfs.modules.troubletickets.base;
 import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -290,6 +291,28 @@ public class TicketLogList extends ArrayList {
         }
         this.add(tempLog);
       }
+      if (current.getStateId() > 0) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.currentState");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put(
+                "${ticketLogList.stateName}", current.getStateName());
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText(
+                "[ Ticket state is " + current.getStateName() + " ]");
+          }
+        } else {
+          tempLog.setEntryText(
+              "[ Ticket state is " + current.getStateName() + " ]");
+        }
+        this.add(tempLog);
+      }
       if (current.getPriorityCode() > 0) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
@@ -332,6 +355,12 @@ public class TicketLogList extends ArrayList {
           tempLog.setEntryText(
               "[ Severity set to " + current.getSeverityName() + " ]");
         }
+        this.add(tempLog);
+      }
+      if (current.getEscalationCode() > 0) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        tempLog.setEntryText("[ Escalation level set to " + current.getEscalationName() + " ]");
         this.add(tempLog);
       }
       if (current.getClosed()) {
@@ -416,6 +445,36 @@ public class TicketLogList extends ArrayList {
         }
         this.add(tempLog);
       }
+      if (current.getStateId() != prev.getStateId()) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel(
+              "ticketloglist.stateChanged");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put(
+                "${ticketLogList.previousStateName}", isAssigned(
+                    prev.getStateName()));
+            map.put(
+                "${ticketLogList.currentStateName}", isAssigned(
+                    current.getStateName()));
+            tempLog.setEntryText(
+                "[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText(
+                "[ Ticket state changed from " + isAssigned(
+                    prev.getStateName()) + " to " + isAssigned(
+                        current.getStateName()) + " ]");
+          }
+        } else {
+          tempLog.setEntryText(
+              "[ Ticket state changed from " + isAssigned(
+                  prev.getStateName()) + " to " + isAssigned(
+                      current.getStateName()) + " ]");
+        }
+        this.add(tempLog);
+      }
       if (current.getPriorityCode() != prev.getPriorityCode()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
@@ -472,6 +531,12 @@ public class TicketLogList extends ArrayList {
               "[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(
                   current.getSeverityName()) + " ]");
         }
+        this.add(tempLog);
+      }
+      if (current.getEscalationCode() != prev.getEscalationCode()) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        tempLog.setEntryText("[ Escalation level changed from " + isAssigned(prev.getEscalationName()) + " to " + isAssigned(current.getEscalationName()) + " ]");
         this.add(tempLog);
       }
       if (!current.getClosed() && prev.getClosed()) {
@@ -601,6 +666,13 @@ public class TicketLogList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM ticketlog t " +
+        "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
+        "LEFT JOIN contact ct_eb ON (t.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_at ON (t.assigned_to = ct_at.user_id) " +
+        "LEFT JOIN ticket_priority tp ON (t.pri_code = tp.code) " +
+        "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
+        "LEFT JOIN lookup_department d ON (t.department_code = d.code) " +
+        "LEFT JOIN lookup_ticket_state lu_ts ON (t.state_id = lu_ts.code) " +
         "WHERE t.id > 0 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -621,7 +693,7 @@ public class TicketLogList extends ArrayList {
         pst = db.prepareStatement(
             sqlCount.toString() +
             sqlFilter.toString() +
-            "AND t.comment < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(t.\"comment\") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -650,9 +722,10 @@ public class TicketLogList extends ArrayList {
     sqlSelect.append(
         "t.*, " +
         "d.description as deptname, " +
-        "tp.description AS priorityname, ts.description AS severityname, " +
+        "tp.description AS priorityname, ts.description AS severityname, lu_te.description AS escalationname, " +
         "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
-        "ct_at.namelast AS at_namelast, ct_at.namefirst AS at_namefirst " +
+        "ct_at.namelast AS at_namelast, ct_at.namefirst AS at_namefirst, " +
+        "lu_ts.description AS state_name " +
         "FROM ticketlog t " +
         "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
         "LEFT JOIN contact ct_eb ON (t.enteredby = ct_eb.user_id) " +
@@ -660,6 +733,8 @@ public class TicketLogList extends ArrayList {
         "LEFT JOIN ticket_priority tp ON (t.pri_code = tp.code) " +
         "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
         "LEFT JOIN lookup_department d ON (t.department_code = d.code) " +
+        "LEFT JOIN lookup_ticket_escalation lu_te ON (t.escalation_code = lu_te.code) " +
+        "LEFT JOIN lookup_ticket_state lu_ts ON (t.state_id = lu_ts.code) " +
         "WHERE t.id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -752,4 +827,3 @@ public class TicketLogList extends ArrayList {
     return comments.toString();
   }
 }
-

@@ -5,14 +5,19 @@
       <properties>
         <property>id</property>
         <property aliases="accesstype,access_type" displayName="Access Type" isForPrompting="false">accessType</property>
-        <property aliases="title,author,title_id" displayName="Title">title</property>
-        <property aliases="company,company name,company_name,account name" displayName="Company">company</property>
+        <property aliases="title,author,title_id, job title" displayName="Title">title</property>
+        <property aliases="company,company name,company_name,account name, trade name" displayName="Company">company</property>
+        <property aliases="accountnumber,index" displayName="Account Number">accountNumber</property>
         <property aliases="salutation" displayName="Salutation">nameSalutation</property>
         <property aliases="full name,full_name" displayName="Full Name (First Last)">nameFull</property>
         <property aliases="first name,first_name,firstname" displayName="First Name">nameFirst</property>
         <property aliases="middle name,middlename,middle_name" displayName="Middle Name">nameMiddle</property>
-        <property aliases="last name,lastname,last_name" displayName="Last Name" required="true" substitute="nameFull">nameLast</property>
+        <property aliases="last name,lastname,last_name,contact name" displayName="Last Name" required="true" depends="company" substitute="nameFull">nameLast</property>
         <property aliases="suffix name,suffixname,suffix_name" displayName="Suffix">nameSuffix</property>
+        <property aliases="additional names,additional_names" displayName="Additional Names">additionalNames</property>
+        <property aliases="nickname,nick_name" displayName="Nickname">nickname</property>
+        <property aliases="birthday, birthdate, date of birth" displayName="Date of Birth">birthDate</property>
+        <property aliases="role" displayName="Role">role</property>
         <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Type" isForPrompting="false">typeId</property>
         <property aliases="site" displayName="Site" isForPrompting="false">site</property>
         <property aliases="siteid,site_id" displayName="Site Id" isForPrompting="false">siteId</property>
@@ -21,12 +26,15 @@
         <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
         <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
         <property aliases="enabled" displayName="Enabled" isForPrompting="false">enabled</property>
-        <property aliases="owner,owned_by" displayName="Owner" isForPrompting="false">owner</property>
+        <property aliases="owner,owned_by, assigned dsm" displayName="Owner">owner</property>
         <property aliases="url" displayName="Url">url</property>
         <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered" isForPrompting="false">entered</property>
         <property aliases="modified,modified_date,date_modified" displayName="Modified" isForPrompting="false">modified</property>
         <property aliases="listsalutation,list_salutation" displayName="List Salutation" isForPrompting="false">listSalutation</property>
         <property aliases="contact_source,contactsource,nameContactSource" displayName="Contact Source" isForPrompting="false">nameContactSource</property>
+        <property aliases="industry" displayName="Industry Code">industryTempCode</property>
+        <property aliases="revenue" displayName="Revenue">revenue</property>
+        <property aliases="potential,weekly potential" displayName="Potential">potential</property>
      </properties>
      <dependencies>
       <dependency id="contactEmail">
@@ -39,7 +47,7 @@
         <displayName>Phone</displayName>
       </dependency>
       <dependency id="contactAddress">
-        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,city,state,zip,country,type</properties>
+        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,streetAddressLine4,city,state,zip,country,type</properties>
         <enableGroups>true</enableGroups>
         <displayName>Address</displayName>
       </dependency>
@@ -50,7 +58,7 @@
         <property>id</property>
         <property aliases="accesstype,access_type" displayName="Access Type" isForPrompting="false">accessType</property>
         <property aliases="title,author,title_id" displayName="Title">title</property>
-        <property aliases="company,company name,company_name,account name" displayName="Company" required="true">company</property>
+        <property aliases="company,company name,company_name,account name, trade name" displayName="Company">company</property>
         <property aliases="account_number,account number" displayName="Account Number">accountNumber</property>
         <property aliases="salutation" displayName="Salutation">nameSalutation</property>
         <property aliases="full name,full_name" displayName="Full Name (First Last)">nameFull</property>
@@ -58,6 +66,10 @@
         <property aliases="middle name,middlename,middle_name" displayName="Middle Name">nameMiddle</property>
         <property aliases="last name,lastname,last_name" displayName="Last Name" required="true" substitute="nameFull">nameLast</property>
         <property aliases="suffix name,suffixname,suffix_name" displayName="Suffix">nameSuffix</property>
+        <property aliases="additional names,additional_names" displayName="Additional Names">additionalNames</property>
+        <property aliases="nickname,nick_name" displayName="Nickname">nickname</property>
+        <property aliases="birthday, birthdate, date of birth" displayName="Date of Birth">birthDate</property>
+        <property aliases="role" displayName="Role">role</property>
         <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Type" isForPrompting="false">typeId</property>
         <property aliases="site" displayName="Site" isForPrompting="false">site</property>
         <property aliases="siteid,site_id" displayName="Site Id" isForPrompting="false">siteId</property>
@@ -66,12 +78,15 @@
         <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
         <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
         <property aliases="enabled" displayName="Enabled" isForPrompting="false">enabled</property>
-        <property aliases="owner,owned_by" displayName="Owner" isForPrompting="false">owner</property>
+        <property aliases="owner,owned_by, assigned dsm" displayName="Owner">owner</property>
         <property aliases="url" displayName="Url">url</property>
         <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered" isForPrompting="false">entered</property>
         <property aliases="modified,modified_date,date_modified" displayName="Modified" isForPrompting="false">modified</property>
         <property aliases="listsalutation,list_salutation" displayName="List Salutation" isForPrompting="false">listSalutation</property>
         <property aliases="contact_source,contactsource,nameContactSource" displayName="Contact Source" isForPrompting="false">nameContactSource</property>
+        <property aliases="industry" displayName="Industry Code">industryTempCode</property>
+        <property aliases="revenue" displayName="Revenue">revenue</property>
+        <property aliases="potential,weekly potential" displayName="Potential">potential</property>
      </properties>
      <dependencies>
       <dependency id="contactEmail">
@@ -84,7 +99,7 @@
         <displayName>Phone</displayName>
       </dependency>
       <dependency id="contactAddress">
-        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,city,state,zip,country,type</properties>
+        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,streetAddressLine4,city,state,zip,country,type</properties>
         <enableGroups>true</enableGroups>
         <displayName>Address</displayName>
       </dependency>
@@ -103,7 +118,7 @@
     </map>
     <map class="org.aspcfs.modules.contacts.base.ContactPhone" id="contactPhone" displayName="Contact Phone">
       <properties>
-        <property aliases="phone" displayName="Phone">number</property>
+        <property aliases="phone,fax" displayName="Phone">number</property>
         <property aliases="extension,phone_extension,business_phone_extension" displayName="Extension">extension</property>
         <property aliases="type,phone_type,phone_type,phonetype" displayName="Phone Type">type</property>
         <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
@@ -115,9 +130,10 @@
     </map>
     <map class="org.aspcfs.modules.contacts.base.ContactAddress" id="contactAddress" displayName="Contact Address">
       <properties>
-        <property aliases="address_line1,business_address_line1,mailing street" displayName="Street Address Line1">streetAddressLine1</property>
+        <property aliases="address_line1,business_address_line1,mailing street,street" displayName="Street Address Line1">streetAddressLine1</property>
         <property aliases="address_line2,business_address_line2" displayName="Street Address Line2">streetAddressLine2</property>
         <property aliases="address_line3,business_address_line3" displayName="Street Address Line3">streetAddressLine3</property>
+        <property aliases="address_line4,business_address_line4" displayName="Street Address Line4">streetAddressLine4</property>
         <property aliases="city" displayName="City">city</property>
         <property aliases="state" displayName="State">state</property>
         <property aliases="country" displayName="Country">country</property>
@@ -128,6 +144,36 @@
         <property aliases="enabled,active" displayName="Enabled">enabled</property>
         <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered">entered</property>
         <property aliases="modified,modified_date,date_modified" modified="Modified" displayName="Modified">modified</property>
+      </properties>
+    </map>
+    <map class="org.aspcfs.modules.netapps.base.ContractExpiration" id="netAppContractExpiration" displayName="NetApp Contract Expiration">
+      <properties>
+        <property>id</property>
+        <property aliases="serial number" displayName="Serial Number" required="true">serialNumber</property>
+        <property aliases="agreement number" displayName="Agreement Number" required="true">agreementNumber</property>
+        <property aliases="services" displayName="Services" required="true">services</property>
+        <property aliases="start date" displayName="Start Date">startDate</property>
+        <property aliases="end date" displayName="End Date">endDate</property>
+        <property aliases="installed-at company name" displayName="Installed-at Company Name">installedAtCompanyName</property>
+        <property aliases="installed at site name" displayName="Installed at Site Name">installedAtSiteName</property>
+        <property aliases="group" displayName="Group">groupName</property>
+        <property aliases="product number" displayName="Product Number">productNumber</property>
+        <property aliases="system name" displayName="System Name">systemName</property>
+        <property aliases="os" displayName="Operating System">operatingSystem</property>
+        <property aliases="# of shelves" displayName="# of Shelves">noOfShelves</property>
+        <property aliases="# of disks" displayName="# of Disks">noOfDisks</property>
+        <property aliases="nvram" displayName="NVRAM">nvram</property>
+        <property aliases="memory" displayName="Memory">memory</property>
+        <property aliases="autosupport status" displayName="Autosupport Status">autosupportStatus</property>
+        <property aliases="installed-at address" displayName="Installed-at Address">installedAtAddress</property>
+        <property aliases="city" displayName="City">city</property>
+        <property aliases="state/province" displayName="State/Province">stateProvince</property>
+        <property aliases="postal code" displayName="Postal Code">postalCode</property>
+        <property aliases="country" displayName="Country">country</property>
+        <property aliases="installed-at contact first name" displayName="Installed-at Contact First Name">installedAtContactFirstName</property>
+        <property aliases="contact last name" displayName="Contact Last Name">contactLastName</property>
+        <property aliases="contact email" displayName="Contact Email">contactEmail</property>
+        <property aliases="agreement company" displayName="Agreement Company">agreementCompany</property>
       </properties>
     </map>
   </mappings>

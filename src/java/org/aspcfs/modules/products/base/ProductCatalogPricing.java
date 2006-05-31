@@ -831,13 +831,13 @@ public class ProductCatalogPricing extends GenericBean {
         "lrt.description AS recurring_type_name, " +
         "lccc.description AS cost_currency_name " +
         "FROM product_catalog_pricing pctlgprice " +
-        "LEFT JOIN product_catalog AS pctlg ON (pctlgprice.product_id = pctlg.product_id) " +
-        "LEFT JOIN lookup_product_tax AS lpt ON (pctlgprice.tax_id = lpt.code) " +
-        "LEFT JOIN lookup_currency AS lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
-        "LEFT JOIN lookup_currency AS lcpc ON (pctlgprice.price_currency = lcpc.code) " +
-        "LEFT JOIN lookup_currency AS lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
-        "LEFT JOIN lookup_recurring_type AS lrt ON (pctlgprice.recurring_type = lrt.code) " +
-        "LEFT JOIN lookup_currency AS lccc ON (pctlgprice.cost_currency = lccc.code) " +
+        "LEFT JOIN product_catalog pctlg ON (pctlgprice.product_id = pctlg.product_id) " +
+        "LEFT JOIN lookup_product_tax lpt ON (pctlgprice.tax_id = lpt.code) " +
+        "LEFT JOIN lookup_currency lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+        "LEFT JOIN lookup_currency lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+        "LEFT JOIN lookup_currency lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+        "LEFT JOIN lookup_recurring_type lrt ON (pctlgprice.recurring_type = lrt.code) " +
+        "LEFT JOIN lookup_currency lccc ON (pctlgprice.cost_currency = lccc.code) " +
         "WHERE pctlgprice.price_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -1151,12 +1151,12 @@ public class ProductCatalogPricing extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) AS pricecount " +
-          " FROM product_catalog_pricing AS pcp " +
-          " WHERE pcp.price_id = ? AND " +
-          " pcp.product_id NOT IN ( " +
-          " SELECT product_id " +
-          " FROM product_catalog_pricing " +
-          " WHERE price_id <> ? ) ");
+          "FROM product_catalog_pricing pcp " +
+          "WHERE pcp.price_id = ? AND " +
+          "pcp.product_id NOT IN ( " +
+          "SELECT product_id " +
+          "FROM product_catalog_pricing " +
+          "WHERE price_id <> ? ) ");
       pst.setInt(++i, this.getId());
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
@@ -1347,29 +1347,23 @@ public class ProductCatalogPricing extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public boolean compatiblePriceBounds(Connection db, ProductCatalogPricing price) throws SQLException {
-//    System.out.println("Compatible price bounds method..");
     if (price.getStartDate() != null && price.getExpirationDate() != null) {
-//      System.out.println("Trial 1:: active price exp date is "+price.getStartDate().toString()+" and current exp date is "+this.getStartDate().toString());
       if (price.getStartDate().before(this.getStartDate()) && price.getExpirationDate().after(
           this.getStartDate())) {
         return false;
       }
-//      System.out.println("Trial 1:: active price exp date is "+price.getExpirationDate().toString()+" and current exp date is "+this.getExpirationDate().toString());
       if (price.getStartDate().before(this.getExpirationDate()) && price.getExpirationDate().after(
           this.getExpirationDate())) {
         return false;
       }
     } else if (price.getStartDate() == null && price.getExpirationDate() != null) {
-//      System.out.println("Trial 2:: active price exp is "+price.getExpirationDate().toString()+" and current price st date is "+this.getStartDate().toString());
       if (price.getExpirationDate().after(this.getStartDate())) {
         return false;
       }
-//      System.out.println("Trial 2:: active price exp date is "+price.getExpirationDate().toString()+" and current exp date is "+this.getExpirationDate().toString());
       if (price.getExpirationDate().after(this.getExpirationDate())) {
         return false;
       }
     } else if (price.getStartDate() != null && price.getExpirationDate() == null) {
-//      System.out.println("Trial 3:: active price start date is "+ price.getStartDate().toString()+" and the current start date is "+ this.getStartDate().toString());
       if (price.getStartDate().before(this.getStartDate())) {
         return false;
       }
@@ -1377,7 +1371,6 @@ public class ProductCatalogPricing extends GenericBean {
         return false;
       }
     } else {
-//      System.out.println("Trial 4:: hence false");
       return false;
     }
     return true;
@@ -1394,20 +1387,16 @@ public class ProductCatalogPricing extends GenericBean {
    */
   public boolean compatiblePriceExpirationBound(Connection db, ProductCatalogPricing price) throws SQLException {
     if (price.getStartDate() != null && price.getExpirationDate() != null) {
-//      System.out.println("Trial 1:: active price start data is "+price.getStartDate().toString()+" and current price exp date is "+this.getExpirationDate().toString());
       if (price.getStartDate().before(this.getExpirationDate())) {
         return false;
       }
     } else if (price.getStartDate() == null && price.getExpirationDate() != null) {
-//      System.out.println("Trial 2:: hence false");
       return false;
     } else if (price.getStartDate() != null && price.getExpirationDate() == null) {
-//      System.out.println("Trial 3:: active price start date is "+price.getStartDate().toString()+" and the current exp date is "+this.getExpirationDate().toString());
       if (price.getStartDate().before(this.getExpirationDate())) {
         return false;
       }
     } else {
-//      System.out.println("Trial 4:: hence false ");
       return false;
     }
     return true;
@@ -1425,20 +1414,16 @@ public class ProductCatalogPricing extends GenericBean {
    */
   public boolean compatiblePriceStartBound(Connection db, ProductCatalogPricing price) throws SQLException {
     if (price.getStartDate() != null && price.getExpirationDate() != null) {
-//      System.out.println("Trial 1:: active price exp date is "+price.getExpirationDate().toString()+" and the start date is "+this.getStartDate().toString());
       if (price.getExpirationDate().after(this.getStartDate())) {
         return false;
       }
     } else if (price.getStartDate() == null && price.getExpirationDate() != null) {
-//      System.out.println("Trial 2:: active price exp date is "+ price.getExpirationDate().toString()+" and the current price start date is "+ this.getStartDate().toString());
       if (price.getExpirationDate().after(this.getStartDate())) {
         return false;
       }
     } else if (price.getStartDate() != null && price.getExpirationDate() == null) {
-//      System.out.println("Trial 3:: hence false");
       return false;
     } else {
-//      System.out.println("Trial 4:: hence false");
       return false;
     }
     return true;

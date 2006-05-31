@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -147,7 +147,7 @@ currentRemarkNames = '';
   <tr class="containerBody" valign="top">
     <td class="formLabel" nowrap><dhv:label name="quotes.quoteIssuedDate">Issued Date</dhv:label></td>
     <td width="100%">
-      <dhv:tz timestamp="<%= quote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+      <zeroio:tz timestamp="<%= quote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
     </td>
   </tr>
   <%} if(quote.getTicketId() != -1){ %>
@@ -184,8 +184,12 @@ currentRemarkNames = '';
     <td class="formLabel" valign="top" nowrap><dhv:label name="quotes.opportunity">Opportunity</dhv:label></td>
     <td width="100%">
     <dhv:permission name="<%= opportunityPermission %>">
-      <a href="<%= opportunityLink %>">
-      <%= toHtml(opportunity.getDescription()) %></a>
+      <dhv:evaluate if="<%= opportunity.isTrashed() %>" >
+        <%= toHtml(opportunity.getDescription()) %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= !opportunity.isTrashed() %>" >
+        <a href="<%= opportunityLink %>"><%= toHtml(opportunity.getDescription()) %></a>
+      </dhv:evaluate>
     </dhv:permission>
     <dhv:permission name="<%= opportunityPermission %>" none="true">
       <%= toHtml(opportunity.getDescription()) %>
@@ -206,14 +210,14 @@ currentRemarkNames = '';
     <td class="formLabel" valign="top" nowrap><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></td>
     <td width="100%">
       <dhv:evaluate if="<%= quote.getContact().getEmployee() %>">
-        <%= toHtml(quote.getContact().getNameFull()) %>
+        <%= toHtml(quote.getContact().getNameFull()+(!quote.getContact().getEnabled() || quote.getContact().isTrashed() ? " (X)":"")) %>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !quote.getContact().getEmployee() %>">
         <dhv:permission name="<%= contactPermission %>">
-          <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= quote.getContact().getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><strong><%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %></strong></a>
+          <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= quote.getContact().getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><strong><%= toHtml(quote.getContact().getNameFull()+(!quote.getContact().getEnabled() || quote.getContact().isTrashed() ? " (X)":"")) %></strong></a>
         </dhv:permission>
         <dhv:permission name="<%= contactPermission %>" none="true">
-          <strong><%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %></strong>
+          <strong><%= toHtml(quote.getContact().getNameFull()) %></strong>
         </dhv:permission>
       </dhv:evaluate>
     </td>
@@ -281,11 +285,13 @@ currentRemarkNames = '';
   <tr class="containerBody">
 <% int rowCounter = 0; %>
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
+   <dhv:evaluate if="<%=(!quote.getLock())%>" >
   <dhv:permission name="<%= quoteEditPermission %>">
       <td width="8" valign="middle">
         &nbsp;
       </td>
   </dhv:permission>
+</dhv:evaluate>
 </dhv:evaluate>
  <td width="8" valign="middle">
       <strong><dhv:label name="accounts.accounts_documents_details.Item">Item</dhv:label></strong>
@@ -329,13 +335,15 @@ if(quote.getProductList().size() != 0){
 %>
   <tr class="row<%= rowid %>">
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
+    <dhv:evaluate if="<%=(!quote.getLock())%>" >
   <dhv:permission name="<%= quoteEditPermission %>">
       <td <%= (optionsList.size() > 0 ? "rowspan=\"" + (optionsList.size() + 2) + "\"" : "") %> width="8" valign="top" nowrap class="row<%= rowid %>">
-        <a href="javascript:displayMenu('select<%= i %>','menuQuoteProduct', '<%= quote.getId() %>', '<%= product.getId() %>','<%= secondId %>', '<%= location %>');"
+        <a href="javascript:displayMenu('select<%= i %>','menuQuoteProduct', '<%= quote.getId() %>', '<%= product.getId() %>', '<%= location %>', '<%= orgId %>');"
         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuoteProduct');">
         <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0" /></a>
       </td>
   </dhv:permission>
+</dhv:evaluate>
 </dhv:evaluate>
     <td <%= (optionsList.size() > 0 ? "rowspan=\"" + (optionsList.size() + 2) + "\"" : "") %> width="8" valign="top" align="right" nowrap><%= i %>.</td>
     <td nowrap valign="top"><%= toHtml(productCatalog.getSku()) %></td>
@@ -383,8 +391,10 @@ rowCounter = '<%= rowCounter %>';
   <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><dhv:permission name="<%= quoteEditPermission %>">
 <td align="left" valign="top" width="100%">
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
-  <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popURL('ProductsCatalog.do?command=Categories&amp;quoteId=<%= quote.getId() %>','Products','600','500','yes','yes');" /> 
+  <dhv:evaluate if="<%=(!quote.getLock())%>" >
+  <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popURL('ProductsCatalog.do?command=Categories&amp;quoteId=<%= quote.getId() %>','Products','600','500','yes','yes');" />
   <dhv:permission name="admin-sysconfig-products-add"><input type="button" value="<dhv:label name="button.create">Create</dhv:label>" onClick="javascript:popURL('QuotesProducts.do?command=CreateForm&quoteId=<%= quote.getId() %>','QuoteItem','500','400','yes','yes');"/></dhv:permission> &nbsp;
+  </dhv:evaluate>
   <input type="checkbox" name="showTotals" id="showTotals" value="0" <%= quote.getShowTotal()?"CHECKED":"" %> onClick="javascript:setShowTotal(this);" /> <dhv:label name="quotes.showGrandTotalPrice">Show the grand total price</dhv:label>
   <input type="checkbox" name="showSubtotals" id="showSubtotals" value="0" <%= quote.getShowSubtotal()?"CHECKED":"" %> onClick="javascript:setShowSubtotal(this);" /> <dhv:label name="quotes.showSubTotalPrice">Show the sub-total price</dhv:label>
 </dhv:evaluate>&nbsp;
@@ -403,8 +413,10 @@ rowCounter = '<%= rowCounter %>';
   <tr class="containerBody">
     <td colspan="<%= 8+showAction %>" name="quoteItemEmpty" id="quoteItemEmpty">
     <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
-      <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popURL('ProductsCatalog.do?command=Categories&amp;quoteId=<%= quote.getId() %>','Products','500','400','yes','yes');" /> 
+     <dhv:evaluate if="<%=(!quote.getLock())%>" >
+      <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popURL('ProductsCatalog.do?command=Categories&amp;quoteId=<%= quote.getId() %>','Products','500','400','yes','yes');" />
       <dhv:permission name="admin-sysconfig-products-add"><input type="button" value="<dhv:label name="button.create">Create</dhv:label>" onClick="javascript:popURL('QuotesProducts.do?command=CreateForm&quoteId=<%= quote.getId() %>','QuoteItem','500','400','yes','yes');" /></dhv:permission>
+     </dhv:evaluate>
     </dhv:evaluate>&nbsp;
     </td>
   </tr>
@@ -416,10 +428,12 @@ rowCounter = '<%= rowCounter %>';
   <tr>
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
   <dhv:evaluate if="<%= quote.getRemarks().size() != 0 %>">
+   <dhv:evaluate if="<%=(!quote.getLock())%>" >
     <dhv:permission name="<%= quoteEditPermission %>">
         <th width="8">&nbsp;</th>
     </dhv:permission>
   </dhv:evaluate>
+</dhv:evaluate>
 </dhv:evaluate>
     <th width="100%">
       <strong><dhv:label name="quotes.remarks">Remarks</dhv:label></strong> &nbsp; &nbsp; 
@@ -438,13 +452,15 @@ rowCounter = '<%= rowCounter %>';
 %>
   <tr class="row<%= rowid %>">
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
+   <dhv:evaluate if="<%=(!quote.getLock())%>" >
   <dhv:permission name="<%= quoteEditPermission %>">
       <td width="8" valign="top" nowrap>
-        <a href="javascript:displayMenuCondition('select<%= i %>','menuQuoteCondition', '<%= quote.getId() %>', '<%= remark.getRemarkId() %>','<%= secondId %>', '<%= location %>', 'false');"
+        <a href="javascript:displayMenuCondition('select<%= i %>','menuQuoteCondition', '<%= quote.getId() %>', '<%= remark.getRemarkId() %>', '<%= location %>', 'false','<%= orgId %>', '<%= contactId %>', '<%= headerId %>');"
         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuoteCondition');">
         <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0" /></a>
       </td>
   </dhv:permission>
+</dhv:evaluate>
 </dhv:evaluate>
     <td valign="top" width="100%">
       <%= counter %>.
@@ -458,6 +474,7 @@ rowCounter = '<%= rowCounter %>';
   </tr>
 <%}%>
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
+ <dhv:evaluate if="<%=(!quote.getLock())%>" >
   <dhv:permission name="<%= quoteEditPermission %>">
     <tr class="containerBody">
       <td colspan="2">
@@ -467,16 +484,19 @@ rowCounter = '<%= rowCounter %>';
     </tr>
   </dhv:permission>
 </dhv:evaluate>
+</dhv:evaluate>
 </table>
 <br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
   <dhv:evaluate if="<%= quote.getConditions().size() != 0 %>">
+  <dhv:evaluate if="<%=(!quote.getLock())%>" >
     <dhv:permission name="<%= quoteEditPermission %>">
         <th width="8">&nbsp;</th>
     </dhv:permission>
   </dhv:evaluate>
+</dhv:evaluate>
 </dhv:evaluate>
     <th width="100%">
       <strong><dhv:label name="quotes.termsAndConditions">Terms and Conditions</dhv:label></strong>
@@ -495,13 +515,15 @@ rowCounter = '<%= rowCounter %>';
 %>
   <tr class="row<%= rowid %>">
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
+    <dhv:evaluate if="<%=(!quote.getLock())%>" >
   <dhv:permission name="<%= quoteEditPermission %>">
       <td width="8" valign="top" nowrap>
-        <a href="javascript:displayMenuCondition('select<%= i %>','menuQuoteCondition', '<%= quote.getId() %>', '<%= condition.getConditionId() %>','<%= secondId %>','<%= location %>','true');"
+        <a href="javascript:displayMenuCondition('select<%= i %>','menuQuoteCondition', '<%= quote.getId() %>', '<%= condition.getConditionId() %>','<%= location %>','true','<%= orgId %>','<%= contactId %>','<%= headerId %>');"
         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuoteCondition');">
         <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0" /></a>
       </td>
   </dhv:permission>
+</dhv:evaluate>
 </dhv:evaluate>
     <td valign="top" width="100%">
       <%= counter %>.
@@ -515,6 +537,7 @@ rowCounter = '<%= rowCounter %>';
   </tr>
 <%}%>
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
+  <dhv:evaluate if="<%=(!quote.getLock())%>" >
   <dhv:permission name="<%= quoteEditPermission %>">
     <tr class="containerBody">
       <td colspan="2">
@@ -523,6 +546,7 @@ rowCounter = '<%= rowCounter %>';
       </td>
     </tr>
   </dhv:permission>
+</dhv:evaluate>
 </dhv:evaluate>
 </table>
 <br />
@@ -539,4 +563,3 @@ rowCounter = '<%= rowCounter %>';
 </table>
 <br />
 <%}%>
-

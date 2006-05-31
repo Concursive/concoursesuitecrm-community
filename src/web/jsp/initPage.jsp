@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,java.text.*,org.aspcfs.controller.SystemStatus,com.darkhorseventures.database.ConnectionElement,org.aspcfs.utils.*" %>
-<%@ page import="org.aspcfs.modules.admin.base.*, org.aspcfs.modules.login.beans.UserBean,org.aspcfs.modules.contacts.base.*,java.sql.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.*, org.aspcfs.modules.login.beans.UserBean,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.quotes.base.*,java.sql.*" %>
 <%@ page import="org.aspcfs.controller.ApplicationPrefs" %>
 <%! 
     
@@ -168,6 +168,17 @@ public static String replace(String str, String o, String n) {
       return (in != null && !("".equals(in.trim())));
     }
 
+    public static boolean hasText(Object object, String in) {
+      StringTokenizer st = new StringTokenizer(in, ",");
+      while (st.hasMoreTokens()) {
+        String token = st.nextToken();
+        if (hasText(ObjectUtils.getParam(object, token.trim()))) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
     public static String toDateTimeString(java.sql.Timestamp inDate) {
       return toDateTimeString(inDate, "");
     }
@@ -245,6 +256,38 @@ public static String replace(String str, String o, String n) {
     }
   }
   
+  public boolean allowMultipleComponents(javax.servlet.jsp.PageContext context, String config, String param) {
+    java.util.Hashtable globalStatus = (java.util.Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus");
+    ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((java.util.Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    String multiple =  systemStatus.getValue(config, param);
+    if(multiple != null && "false".equals(multiple)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+  public boolean allowMultipleQuote(javax.servlet.jsp.PageContext context) {
+    ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((java.util.Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    String multiple =  systemStatus.getValue(Quote.QUOTE_CONFIG_NAME, Quote.MULTIPLE_QUOTE_CONFIG_PARAM);
+    if(multiple != null && "false".equals(multiple)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+  public boolean allowMultipleVersion(javax.servlet.jsp.PageContext context) {
+    ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((java.util.Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    String multiple =  systemStatus.getValue(Quote.QUOTE_CONFIG_NAME, Quote.MULTIPLE_VERSION_CONFIG_PARAM);
+    if(multiple != null && "false".equals(multiple)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   public String getTime(javax.servlet.jsp.PageContext context, Timestamp timestamp, String timeZone, int dateFormat, boolean showTimeZone, boolean userTimeZone, boolean dateOnly, String defaultValue) {
     String result = null;
     int timeFormat = DateFormat.SHORT;
@@ -338,6 +381,32 @@ public static String replace(String str, String o, String n) {
         result = StringUtils.toHtml(systemStatus.getLabel(defaultText));
       } else {
         result = defaultText;
+      }
+    }
+    return result;
+  }
+  
+  public boolean hasAuthority(javax.servlet.jsp.PageContext context, String owner) {
+    boolean result = false;
+    Hashtable globalStatus = (Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus");
+    ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    int userId = ((UserBean) context.getSession().getAttribute("User")).getUserId();
+    String[] owners = owner.split(",");
+    for (int i = 0; i < owners.length; i++) {
+      String oneOwner = owners[i];
+      if (userId == Integer.parseInt(oneOwner)) {
+        result = true;
+        break;
+      }
+      User userRecord = systemStatus.getUser(userId);
+      User childRecord = null;
+      if (oneOwner != null && !"".equals(oneOwner.trim())) {
+        childRecord = userRecord.getChild(Integer.parseInt(oneOwner));
+      }
+      if (childRecord != null) {
+        result = true;
+        break;
       }
     }
     return result;

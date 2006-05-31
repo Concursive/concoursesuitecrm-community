@@ -1,5 +1,5 @@
 #!/bin/sh
-//usr/bin/true; exec java -classpath .:$CATALINA_HOME/common/lib/servlet-api.jar:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+//usr/bin/true; exec java -classpath .:$CATALINA_HOME/common/lib/servlet-api.jar:lib/bsh-2.0b2.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
 
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.StringUtils;
@@ -62,7 +62,8 @@ void translateDictionary(File prefsFile) {
     File sourceFile = new File("src/languages/dictionary_en_US.xml");
     XMLUtils xml = new XMLUtils(sourceFile);
     // Prepare writing out the changes
-    BufferedWriter out = new BufferedWriter(new FileWriter("src/languages/dictionary_de_DE.xml"));
+    FileOutputStream fos = new FileOutputStream(new File("src/languages/dictionary_ru_RU.xml"));
+    OutputStreamWriter out = new OutputStreamWriter(fos, "UTF8");
     out.write("<aspcfs>" + CRLF);
     //Traverse the prefs and add the config nodes to the LinkedHashMap,
     //then for each config, add the param nodes into a child LinkedHashMap.

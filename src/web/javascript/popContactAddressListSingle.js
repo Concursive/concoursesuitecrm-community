@@ -22,8 +22,8 @@ function popContactAddressListSingle(contactId) {
   popURL('ContactAddressSelector.do?command=List&popup=true&contactId='+contactId, title,width,height,resize,bars);
 }
 
-function setContactAddress(line1,line2,line3,city,state,otherState,zip,country,type){
-  var something = opener.populateAddress(line1,line2,line3,city,state,otherState,zip,country,type);
+function setContactAddress(line1,line2,line3, line4, city,state,otherState,zip,country,type){
+  var something = opener.populateAddress(line1,line2,line3, line4, city,state,otherState,zip,country,type);
   self.close();
 }
 

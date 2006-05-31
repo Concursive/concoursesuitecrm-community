@@ -16,6 +16,7 @@
 package org.aspcfs.modules.documents.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -64,7 +65,7 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM lookup_document_store_permission_category " +
+        "FROM " + DatabaseUtils.getTableName(db, "lookup_document_store_permission_category") + " " +
         "WHERE code > 0 ");
     createFilter(sql);
     sql.append("ORDER BY \"level\", description ");

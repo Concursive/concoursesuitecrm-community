@@ -25,16 +25,16 @@ CREATE TABLE campaign (
   description VARCHAR(255),
   list_id int,
   message_id int DEFAULT -1,
-  reply_addr VARCHAR(255) DEFAULT NULL,
-  subject VARCHAR(255) DEFAULT NULL,
-  message TEXT DEFAULT NULL,
+  reply_addr VARCHAR(255),
+  subject VARCHAR(255),
+  message TEXT,
   status_id INT DEFAULT 0,
   status VARCHAR(255),
   active BOOLEAN DEFAULT false,
-  active_date TIMESTAMP(3) DEFAULT NULL,
+  active_date TIMESTAMP(3),
   send_method_id INT DEFAULT -1 NOT NULL,
-  inactive_date TIMESTAMP(3) DEFAULT NULL,
-  approval_date TIMESTAMP(3) DEFAULT NULL,
+  inactive_date TIMESTAMP(3),
+  approval_date TIMESTAMP(3),
   approvedby INT REFERENCES access(user_id),
   enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -74,7 +74,7 @@ CREATE TABLE active_campaign_groups (
   id SERIAL PRIMARY KEY,
   campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
   groupname VARCHAR(80) NOT NULL,
-  groupcriteria TEXT DEFAULT NULL
+  groupcriteria TEXT
 );
 
 
@@ -277,6 +277,24 @@ CREATE TABLE saved_criteriaelement (
   operatorid INTEGER NOT NULL references field_types(id),
   value VARCHAR(80) NOT NULL,
   source INT NOT NULL DEFAULT -1,
-  value_id INT NULL
+  value_id INT NULL,
+  site_id INT NULL
+);
+
+-- Messages received by an user, from a specific contact
+CREATE TABLE contact_message (
+  id SERIAL PRIMARY KEY,
+  message_id INTEGER NOT NULL REFERENCES message(id),
+  received_date TIMESTAMP(3) NOT NULL,
+  received_from INT NOT NULL REFERENCES contact(contact_id),
+  received_by INT NOT NULL REFERENCES access(user_id)
+);
+
+-- Each campaign can be associated with several user groups.
+-- The users belonging to the user groups will have access to the campaign results.
+CREATE TABLE campaign_group_map (
+  map_id SERIAL PRIMARY KEY,
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
+  user_group_id INT NOT NULL REFERENCES user_group(group_id)
 );
 

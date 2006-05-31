@@ -143,15 +143,15 @@ public class Assignment extends GenericBean {
   private void queryRecord(Connection db, int assignmentId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT a.*, s.description AS status, s.type AS status_type, s.graphic AS status_graphic, " +
-        "loe_e.description AS loe_estimated_type, loe_a.description AS loe_actual_type, pr.description AS priority " +
-        "FROM projects p, project_assignments a " +
-        " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
-        " LEFT JOIN lookup_project_loe loe_e ON (a.estimated_loetype = loe_e.code) " +
-        " LEFT JOIN lookup_project_loe loe_a ON (a.actual_loetype = loe_a.code) " +
-        " LEFT JOIN lookup_project_priority pr ON (a.priority_id = pr.code) " +
-        "WHERE assignment_id = ? " +
-        "AND p.project_id = a.project_id ");
+        "SELECT a.*, s.description AS status, s.\"type\" AS status_type, s.graphic AS status_graphic, " +
+            "loe_e.description AS loe_estimated_type, loe_a.description AS loe_actual_type, pr.description AS priority " +
+            "FROM projects p, project_assignments a " +
+            " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
+            " LEFT JOIN lookup_project_loe loe_e ON (a.estimated_loetype = loe_e.code) " +
+            " LEFT JOIN lookup_project_loe loe_a ON (a.actual_loetype = loe_a.code) " +
+            " LEFT JOIN lookup_project_priority pr ON (a.priority_id = pr.code) " +
+            "WHERE assignment_id = ? " +
+            "AND p.project_id = a.project_id ");
     if (projectId > -1) {
       sql.append("AND a.project_id = ? ");
     }
@@ -218,7 +218,7 @@ public class Assignment extends GenericBean {
     //lookup_project_loe
     estimatedLoeType = rs.getString("loe_estimated_type");
     actualLoeType = rs.getString("loe_actual_type");
-    
+
     //lookup_project_priority
     priority = rs.getString("priority");
   }
@@ -422,6 +422,9 @@ public class Assignment extends GenericBean {
    */
   public void setEstimatedLoe(String tmp) {
     try {
+      if (tmp.indexOf(".0") > -1) {
+        tmp = tmp.substring(0, tmp.indexOf(".0"));
+      }
       if (tmp.toLowerCase().endsWith("d")) {
         setEstimatedLoe(tmp.substring(0, tmp.indexOf("d")));
         setEstimatedLoeTypeId(3);
@@ -582,8 +585,13 @@ public class Assignment extends GenericBean {
   }
 
   public void setEstStartDate(java.util.Date tmp) {
-    this.estStartDate = new java.sql.Timestamp(tmp.getTime());
+    if (tmp != null) {
+      this.estStartDate = new java.sql.Timestamp(tmp.getTime());
+    } else {
+      this.estStartDate = null;
+    }
   }
+
 
   /**
    * Sets the estStartDate attribute of the Assignment object
@@ -625,8 +633,13 @@ public class Assignment extends GenericBean {
   }
 
   public void setDueDate(java.util.Date tmp) {
-    this.dueDate = new java.sql.Timestamp(tmp.getTime());
+    if (tmp != null) {
+      this.dueDate = new java.sql.Timestamp(tmp.getTime());
+    } else {
+      this.dueDate = null;
+    }
   }
+
 
   /**
    * Sets the dueDate attribute of the Assignment object
@@ -1707,10 +1720,10 @@ public class Assignment extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "project_assig_assignment_id_seq");
     sql.append(
         "INSERT INTO project_assignments " +
-        "(project_id, requirement_id, assignedBy, user_assign_id, technology, " +
-        "\"role\", estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
-        "priority_id, assign_date, est_start_date, start_date, " +
-        "due_date, due_date_timezone, status_id, status_date, percent_complete, complete_date, ");
+            "(project_id, requirement_id, assignedBy, user_assign_id, technology, " +
+            "\"role\", estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
+            "priority_id, assign_date, est_start_date, start_date, " +
+            "due_date, due_date_timezone, status_id, status_date, percent_complete, complete_date, ");
     if (id > -1) {
       sql.append("assignment_id, ");
     }
@@ -1760,7 +1773,8 @@ public class Assignment extends GenericBean {
     }
     DatabaseUtils.setTimestamp(pst, ++i, assignDate);
     DatabaseUtils.setTimestamp(pst, ++i, estStartDate);
-    if (statusTypeId != NOTSTARTED && statusTypeId != ONHOLD && startDate == null) {
+    if (statusTypeId != NOTSTARTED && statusTypeId != ONHOLD && startDate == null)
+    {
       java.util.Date tmpDate = new java.util.Date();
       startDate = new java.sql.Timestamp(tmpDate.getTime());
       startDate.setNanos(0);
@@ -1778,7 +1792,8 @@ public class Assignment extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, statusDate);
     DatabaseUtils.setInt(pst, ++i, percentComplete);
     //Handle assignment complete date
-    if ((statusTypeId == COMPLETE || statusTypeId == CLOSED) && completeDate == null) {
+    if ((statusTypeId == COMPLETE || statusTypeId == CLOSED) && completeDate == null)
+    {
       java.util.Date tmpDate = new java.util.Date();
       completeDate = new java.sql.Timestamp(tmpDate.getTime());
       completeDate.setNanos(0);
@@ -1848,14 +1863,14 @@ public class Assignment extends GenericBean {
       //Delete related status items
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM project_assignments_status " +
-          "WHERE assignment_id = ? ");
+              "WHERE assignment_id = ? ");
       pst.setInt(1, id);
       pst.executeUpdate();
       pst.close();
       //Delete the actual assignment
       pst = db.prepareStatement(
           "DELETE FROM project_assignments " +
-          "WHERE assignment_id = ? ");
+              "WHERE assignment_id = ? ");
       pst.setInt(1, id);
       recordCount = pst.executeUpdate();
       pst.close();
@@ -1866,7 +1881,7 @@ public class Assignment extends GenericBean {
       if (commit) {
         db.rollback();
       }
-      System.out.println(e.getMessage());
+      throw new SQLException(e.getMessage());
     } finally {
       if (commit) {
         db.setAutoCommit(true);
@@ -1910,13 +1925,13 @@ public class Assignment extends GenericBean {
     statusTypeId = lookupStatusIdType(db, statusId);
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments " +
-        "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, technology = ?, " +
-        "\"role\" = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
-        "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
-        "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
-        "WHERE assignment_id = ? " +
-        "AND modified = ? ");
+            "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, technology = ?, " +
+            "\"role\" = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
+            "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
+            "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
+            "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
+            "WHERE assignment_id = ? " +
+            "AND modified = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, requirementId);
     if (userAssignedId > -1) {
@@ -1952,7 +1967,8 @@ public class Assignment extends GenericBean {
     if (statusTypeId == NOTSTARTED || statusTypeId == ONHOLD) {
       startDate = null;
     }
-    if (previousState.getStartDate() == null && statusTypeId != NOTSTARTED && statusTypeId != ONHOLD) {
+    if (previousState.getStartDate() == null && statusTypeId != NOTSTARTED && statusTypeId != ONHOLD)
+    {
       java.util.Date tmpDate = new java.util.Date();
       startDate = new java.sql.Timestamp(tmpDate.getTime());
       startDate.setNanos(0);
@@ -1991,7 +2007,8 @@ public class Assignment extends GenericBean {
           "Assignment-> Assignment status type id = " + statusTypeId);
     }
     if (statusTypeId == COMPLETE || statusTypeId == CLOSED) {
-      if (previousState.getStatusTypeId() != COMPLETE && previousState.getStatusTypeId() != CLOSED) {
+      if (previousState.getStatusTypeId() != COMPLETE && previousState.getStatusTypeId() != CLOSED)
+      {
         java.util.Date tmpDate = new java.util.Date();
         completeDate = new java.sql.Timestamp(tmpDate.getTime());
         completeDate.setNanos(0);
@@ -2035,14 +2052,15 @@ public class Assignment extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public int updateDueDate(Connection db, ActionContext context) throws SQLException {
-    if (this.getId() == -1 || this.projectId == -1 || this.getModifiedBy() == -1) {
+    if (this.getId() == -1 || this.projectId == -1 || this.getModifiedBy() == -1)
+    {
       throw new SQLException("ID was not specified");
     }
     String sql =
         "UPDATE project_assignments " +
-        "SET due_date = ?, due_date_timezone = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
-        "WHERE assignment_id = ? ";
+            "SET due_date = ?, due_date_timezone = ?, " +
+            "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+            "WHERE assignment_id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     int i = 0;
     if (dueDate == null) {
@@ -2072,8 +2090,8 @@ public class Assignment extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments " +
-        "SET folder_id = ? " +
-        "WHERE assignment_id = ? ");
+            "SET folder_id = ? " +
+            "WHERE assignment_id = ? ");
     if (newFolderId == 0) {
       pst.setNull(1, java.sql.Types.INTEGER);
     } else {
@@ -2096,9 +2114,9 @@ public class Assignment extends GenericBean {
   public static int lookupStatusIdType(Connection db, int statusId) throws SQLException {
     int tmpStatusTypeId = -1;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT type " +
-        "FROM lookup_project_status s " +
-        "WHERE s.code = ? ");
+        "SELECT \"type\" " +
+            "FROM lookup_project_status s " +
+            "WHERE s.code = ? ");
     pst.setInt(1, statusId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -2215,5 +2233,4 @@ public class Assignment extends GenericBean {
     return webcal.toString();
   }
 }
-
 

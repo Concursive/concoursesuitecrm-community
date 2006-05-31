@@ -80,6 +80,14 @@ public final class QuotesProducts extends CFSModule {
       quoteProduct.setBuildProductOptions(true);
       quoteProduct.queryRecord(db, quoteProductId);
       context.getRequest().setAttribute("quoteProduct", quoteProduct);
+      //Check access permission to organization record
+      if (quoteProduct.getQuoteId() == quote.getId()){
+        if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+        return ("PermissionError");
+      }
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -121,22 +129,31 @@ public final class QuotesProducts extends CFSModule {
     int quoteId = Integer.parseInt(quoteIdString);
     int quoteProductId = Integer.parseInt(quoteProductIdString);
     int resultCount = -1;
-    Quote quote = null;
+    Quote previousQuote = null;
     QuoteProduct quoteProduct = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
-      //retrieve the quote from the database
-      quote = new Quote();
-      quote.setBuildProducts(true);
-      quote.queryRecord(db, quoteId);
-      quote.retrieveTicket(db);
-      context.getRequest().setAttribute("quote", quote);
+      previousQuote = new Quote();
+      previousQuote.setBuildProducts(true);
+      previousQuote.queryRecord(db, quoteId);
+      previousQuote.retrieveTicket(db);
+
 
       quoteProduct = new QuoteProduct();
       quoteProduct.setBuildProductOptions(true);
       quoteProduct.setBuildProduct(true);
       quoteProduct.queryRecord(db, quoteProductId);
+
+      //Check access permission to organization record
+      if (quoteProduct.getQuoteId() == previousQuote.getId()){
+        if (!isRecordAccessPermitted(context, db, previousQuote.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+        return ("PermissionError");
+      }
+
       quoteProduct.setPriceAmount(bean.getPriceAmount());
       quoteProduct.setComment(comment);
       quoteProduct.setQuantity(Integer.parseInt(quantity));
@@ -163,6 +180,14 @@ public final class QuotesProducts extends CFSModule {
       if (isValid && optionsValid) {
         resultCount = quoteProduct.update(db, context.getRequest());
       }
+      
+      Quote quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteId);
+      quote.retrieveTicket(db);
+      processUpdateHook(context, previousQuote, quote);
+
+      context.getRequest().setAttribute("quote", quote);
       context.getRequest().setAttribute("quoteProduct", quoteProduct);
     } catch (Exception e) {
       e.printStackTrace();
@@ -218,8 +243,12 @@ public final class QuotesProducts extends CFSModule {
           "RecurringTypeSelect", recurringTypeSelect);
 
       quote = new Quote();
-      quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
+      quote.buildProducts(db);
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
 
@@ -256,7 +285,7 @@ public final class QuotesProducts extends CFSModule {
     String quoteIdString = (String) context.getRequest().getParameter(
         "quoteId");
     int quoteId = Integer.parseInt(quoteIdString);
-    Quote quote = null;
+    Quote previousQuote = null;
     boolean productInserted = false;
     boolean priceInserted = false;
     boolean itemInserted = false;
@@ -268,11 +297,10 @@ public final class QuotesProducts extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      quote = new Quote();
-      quote.setBuildProducts(true);
-      quote.queryRecord(db, quoteId);
-      quote.retrieveTicket(db);
-      context.getRequest().setAttribute("quote", quote);
+      previousQuote = new Quote();
+      previousQuote.setBuildProducts(true);
+      previousQuote.queryRecord(db, quoteId);
+      previousQuote.retrieveTicket(db);
 
       QuoteProductBean bean = (QuoteProductBean) context.getFormBean();
       product = bean.getProduct();
@@ -294,13 +322,30 @@ public final class QuotesProducts extends CFSModule {
         }
       }
 
+      Quote quote = new Quote();
+      quote.queryRecord(db, quoteId);
       if (priceInserted && isValid) {
         item = bean.getQuoteProduct();
+        //Check access permission to organization record
+        if (item.getQuoteId() == quote.getId()){
+          if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+            return ("PermissionError");
+          }
+        } else {
+          return ("PermissionError");
+        }
         isValid = this.validateObject(context, db, item);
         if (isValid) {
           itemInserted = item.insert(db);
         }
       }
+      quote.buildProducts(db);
+      quote.retrieveTicket(db);
+      context.getRequest().setAttribute("quote", quote);
+
+      // Update quote and opportunity Related Information
+      processUpdateHook(context, previousQuote, quote);
+
       if (!itemInserted && !isValid) {
         db.rollback();
       } else {
@@ -363,6 +408,14 @@ public final class QuotesProducts extends CFSModule {
       quoteProduct.setBuildProduct(true);
       quoteProduct.setBuildProductOptions(true);
       quoteProduct.queryRecord(db, quoteProductId);
+      //Check access permission to organization record
+      if (quoteProduct.getQuoteId() == quote.getId()){
+        if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+        return ("PermissionError");
+      }
       clone = quoteProduct.clone(db);
       context.getRequest().setAttribute("quoteProduct", quoteProduct);
     } catch (Exception e) {

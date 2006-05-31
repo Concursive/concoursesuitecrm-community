@@ -161,6 +161,9 @@ public class Dictionary {
     if (languageFilePath == null) {
       throw new Exception("Dictionary file path not provided");
     }
+    if (!languageFilePath.endsWith(System.getProperty("file.separator"))) {
+      languageFilePath += System.getProperty("file.separator");
+    }
     String languageFilename = "dictionary_" + language + ".xml";
     if (System.getProperty("DEBUG") != null) {
       System.out.println(

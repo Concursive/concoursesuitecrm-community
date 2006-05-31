@@ -20,7 +20,8 @@
           hideSpan("select1SpanDepartment");
           showSpan("select1SpanRole");
         }
-        var url = "DocumentStoreManagementTeamList.do?command=DocumentStore&memberType=group&source=" + escape(value);
+        var url = "DocumentStoreManagementTeamList.do?command=DocumentStore&memberType=group&source=" 
+                  + escape(value);
         window.frames['server_commands'].location.href=url;
       }
     }

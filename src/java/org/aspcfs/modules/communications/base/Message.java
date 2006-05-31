@@ -24,6 +24,8 @@ import org.aspcfs.utils.DateUtils;
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Represents an HTML message than can be emailed, faxed, or printed. Messages
@@ -53,6 +55,28 @@ public class Message extends GenericBean {
   private int accessType = -1;
   private boolean disableNameValidation = false;
   private int inactiveCount = -1;
+  private HashMap parseElements = new HashMap();
+
+
+  /**
+   * Gets the parseElements attribute of the Message object
+   *
+   * @return The parseElements value
+   */
+  public HashMap getParseElements() {
+    return parseElements;
+  }
+
+
+  /**
+   * Sets the parseElements attribute of the Message object
+   *
+   * @param tmp The new parseElements value
+   */
+  public void setParseElements(HashMap tmp) {
+    this.parseElements = tmp;
+  }
+
 
   /**
    * Description of the Field
@@ -70,8 +94,7 @@ public class Message extends GenericBean {
   /**
    * Constructor for the Message object
    */
-  public Message() {
-  }
+  public Message() { }
 
 
   /**
@@ -122,10 +145,10 @@ public class Message extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT m.* " +
-        "FROM message m " +
-        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-        "WHERE m.id = ? ");
+            "FROM \"message\" m " +
+            "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+            "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+            "WHERE m.id = ? ");
     pst.setInt(1, messageId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -759,6 +782,33 @@ public class Message extends GenericBean {
 
 
   /**
+   * Adds a feature to the ParseElement attribute of the Message object
+   *
+   * @param key   The feature to be added to the ParseElement attribute
+   * @param value The feature to be added to the ParseElement attribute
+   */
+  public void addParseElement(String key, int value) {
+    this.addParseElement(key, String.valueOf(value));
+  }
+
+
+  /**
+   * Adds a feature to the ParseElement attribute of the Message object
+   *
+   * @param key   The feature to be added to the ParseElement attribute
+   * @param value The feature to be added to the ParseElement attribute
+   */
+  public void addParseElement(String key, String value) {
+    if (parseElements == null) {
+      parseElements = new HashMap();
+    }
+    if (value != null) {
+      parseElements.put(key, value);
+    }
+  }
+
+
+  /**
    * Description of the Method
    *
    * @param db Description of Parameter
@@ -774,7 +824,7 @@ public class Message extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "message_id_seq");
       sql.append(
           "INSERT INTO \"message\" " +
-          "(name, access_type, ");
+              "(name, access_type, ");
       if (id > -1) {
         sql.append("id, ");
       }
@@ -830,7 +880,6 @@ public class Message extends GenericBean {
     return true;
   }
 
-
   // end insert
 
   /**
@@ -877,9 +926,9 @@ public class Message extends GenericBean {
       st = db.createStatement();
       rs = st.executeQuery(
           "SELECT COUNT(*) AS message_count " +
-          "FROM campaign " +
-          "WHERE message_id = " + this.getId() + " " +
-          "AND status_id <> " + Campaign.FINISHED);
+              "FROM campaign " +
+              "WHERE message_id = " + this.getId() + " " +
+              "AND status_id <> " + Campaign.FINISHED);
       rs.next();
       inactiveCount = rs.getInt("message_count");
       rs.close();
@@ -893,7 +942,8 @@ public class Message extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
-      st.executeUpdate("DELETE FROM message WHERE id = " + this.getId());
+      st.executeUpdate("DELETE FROM contact_message WHERE message_id = " + this.getId());
+      st.executeUpdate("DELETE FROM \"message\" WHERE id = " + this.getId());
       st.close();
       if (commit) {
         db.commit();
@@ -976,10 +1026,10 @@ public class Message extends GenericBean {
     StringBuffer sql = new StringBuffer();
 
     sql.append(
-        "UPDATE message " +
-        "SET name=?, description = ?, template_id = ?, subject = ?, " +
-        "body = ?, reply_addr = ?, url = ?, img = ?, access_type = ?, " +
-        "enabled = ?, ");
+        "UPDATE \"message\" " +
+            "SET name=?, description = ?, template_id = ?, subject = ?, " +
+            "body = ?, reply_addr = ?, url = ?, img = ?, access_type = ?, " +
+            "enabled = ?, ");
 
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
@@ -987,7 +1037,7 @@ public class Message extends GenericBean {
 
     sql.append(
         "modifiedby = ? " +
-        "WHERE id = ? ");
+            "WHERE id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
     }
@@ -1015,6 +1065,19 @@ public class Message extends GenericBean {
     pst.close();
 
     return resultCount;
+  }
+
+
+  /**
+   * Gets the userIdParams attribute of the Task class
+   *
+   * @return The userIdParams value
+   */
+  public static ArrayList getUserIdParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("enteredBy");
+    thisList.add("modifiedBy");
+    return thisList;
   }
 
 

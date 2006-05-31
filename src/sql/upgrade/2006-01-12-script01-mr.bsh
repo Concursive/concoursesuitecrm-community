@@ -1,0 +1,12 @@
+/* BSH script to insert the constant for ActionPlan.PIPELINE_COMPONENT = 1011200517 */
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+
+HashMap map = ActionPlan.buildConstants(db);
+
+// ACTION_ITEM_WORK_RELATIONSHIP_OBJECT = 0110061020;
+if (map.get(new Integer(110061020)) == null) {
+  ActionPlan.insertConstant(db, 110061020, "relationship");
+  print("The constant for relationship has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for relationship already exists in the action_plan_constants table");
+}

@@ -129,7 +129,7 @@ public class Revenue extends GenericBean {
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
         "LEFT JOIN organization o ON (r.org_id = o.org_id) " +
-        "LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
+        "LEFT JOIN lookup_revenue_types rt ON (r.\"type\" = rt.code) " +
         "WHERE r.id = ? ");
     pst.setInt(1, revenueId);
     ResultSet rs = pst.executeQuery();
@@ -857,7 +857,7 @@ public class Revenue extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM access " +
+        "FROM \"access\" " +
         "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
@@ -955,7 +955,7 @@ public class Revenue extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "revenue_id_seq");
     sql.append(
         "INSERT INTO revenue " +
-        "(org_id, transaction_id, month, year, amount, type, owner, description, ");
+        "(org_id, transaction_id, \"month\", \"year\", amount, \"type\", owner, description, ");
     if (id > -1) {
       sql.append("id, ");
     }
@@ -1068,8 +1068,8 @@ public class Revenue extends GenericBean {
 
     sql.append(
         "UPDATE revenue " +
-        "SET month = ?, year = ?, amount = ?, owner = ?, description = ?, " +
-        "type = ?, " +
+        "SET \"month\" = ?, \"year\" = ?, amount = ?, owner = ?, description = ?, " +
+        "\"type\" = ?, " +
         "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
         "WHERE id = ? ");
     //if (!override) {

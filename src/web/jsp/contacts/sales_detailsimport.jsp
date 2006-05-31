@@ -20,6 +20,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.text.DateFormat,org.aspcfs.modules.base.Import" %>
 <jsp:useBean id="ImportDetails" class="org.aspcfs.modules.contacts.base.ContactImport" scope="request"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
@@ -149,6 +150,14 @@
   </td>
   </tr>
   </dhv:evaluate>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="admin.user.site">Site</dhv:label>
+    </td>
+    <td>
+        <%= SiteList.getSelectedValue(ImportDetails.getSiteId()) %>
+    </td>
+  </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
     <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>

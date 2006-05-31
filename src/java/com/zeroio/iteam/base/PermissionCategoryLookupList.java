@@ -16,6 +16,7 @@
 package com.zeroio.iteam.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,7 +66,7 @@ public class PermissionCategoryLookupList extends ArrayList {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM lookup_project_permission_category " +
+        "FROM " + DatabaseUtils.getTableName(db, "lookup_project_permission_category") +" " +
         "WHERE code > 0 ");
     createFilter(sql);
     sql.append("ORDER BY \"level\", description ");

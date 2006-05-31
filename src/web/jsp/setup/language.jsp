@@ -1,5 +1,5 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004-2006 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
@@ -21,7 +21,7 @@
 <%@ page import="org.aspcfs.utils.web.HtmlSelect" %>
 <script language="JavaScript">
   function checkForm(form) {
-    if (form.language.value == "-1") {
+    if (form.language.options.selectedIndex == -1) {
       alert(label("select.language","Please select a language to continue"));
       return false;
     }
@@ -31,14 +31,20 @@
 <form name="language" action="Setup.do?command=Welcome" method="post" onsubmit="return checkForm(this);">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th><dhv:label name="setup.centricCRMInstallation">Centric CRM Installation</dhv:label></th>
+    <th colspan="2"><dhv:label name="setup.centricCRMInstallation">Centric CRM Installation</dhv:label></th>
   </tr>
   <tr>
-    <td>
+    <td colspan="2">
       <dhv:label name="setup.chooseLanguageToContinue.colon">Choose a language to continue:</dhv:label><br />
-      <br />
+    </td>
+  </tr>
+  <tr>
+    <td nowrap>
       <% HtmlSelect selectLanguage = HtmlSelectLanguage.getSelect("language", "None Selected");
-         selectLanguage.addItem(-1, "None Selected", 0); %><%= selectLanguage.getHtml("language", "None Selected") %>
+         selectLanguage.setSelectSize(selectLanguage.size());
+         %><%= selectLanguage.getHtml("language", " ") %>
+    </td>
+    <td valign="top" width="100%">
       <input type="submit" value=">"/><br />
     </td>
   </tr>

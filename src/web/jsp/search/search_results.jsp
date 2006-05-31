@@ -18,20 +18,24 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*" %>
 <%@ page import="org.aspcfs.modules.accounts.base.Organization" %>
-<%@ page import="org.aspcfs.modules.base.*" %> 
+<%@ page import="org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="org.aspcfs.modules.base.PhoneNumber" %>
 <%@ page import="org.aspcfs.modules.contacts.base.Contact" %> 
-<%@ page import="org.aspcfs.modules.troubletickets.base.Ticket" %> 
 <%@ page import="org.aspcfs.modules.pipeline.beans.OpportunityBean" %>
-<%@ page import="org.aspcfs.modules.pipeline.base.OpportunityComponent" %>
+<%@ page import="org.aspcfs.modules.troubletickets.base.Ticket" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="org.aspcfs.modules.pipeline.base.OpportunityComponent"%>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="EmployeeList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="leadsList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <jsp:useBean id="OrganizationList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="OpportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="TicketList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="SearchSiteContactInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SearchSiteEmployeeInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="SearchSiteLeadInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SearchSiteAccountInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SearchSiteOppInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SearchSiteTicketInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -39,22 +43,19 @@
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%
-  String paramSearchText = "searchText=" + toHtml(request.getParameter("search"));
+  String searchText = "searchText=" + toHtml((String)SearchSiteContactInfo.getSavedCriteria().get("searchSearchText"));
+  String paramSearchText = "&searchSearchText=" + toHtml((String)SearchSiteContactInfo.getSavedCriteria().get("searchSearchText"));
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
 %>
-<dhv:label name="search.results.searchString" param="<%= paramSearchText %>">Your search for <b><%= toHtml(request.getParameter("search")) %></b> returned:</dhv:label>
-<br>&nbsp;<br> 
+<dhv:label name="search.results.searchString" param="<%= searchText %>">Your search for <b><%= toHtml(request.getParameter("searchSearchText")) %></b> returned:</dhv:label>
+<br />&nbsp;<br /> 
 <dhv:permission name="contacts-external_contacts-view,accounts-accounts-contacts-view">
-<% if(ContactList.size() < SearchSiteContactInfo.getMaxRecords()){ %>
-<% String temp_contactSize = "tempContactSize"+ContactList.size()+"|tempMaxRecords="+SearchSiteContactInfo.getMaxRecords();%>
-<dhv:label name="search.showingNumberOfTotal.text" param="<%= temp_contactSize %>">Showing <strong><%= ContactList.size() %></strong> result(s) of <%= SearchSiteContactInfo.getMaxRecords() %> in <strong>Contacts</strong>.</dhv:label>
-<% }else{ 
-  String temp_listSize = "ContactListSize="+ContactList.size();
-%>
-<dhv:label name="search.totalResultsInContacts.text" param="<%= temp_listSize %>"><strong><%= ContactList.size() %></strong> result(s) in <strong>Contacts</strong>.</dhv:label>
-<% } 
+<%
 Iterator i = ContactList.iterator();
 if (i.hasNext()) {
+  if ((request.getParameter("pagedListSectionId") == null && !(SearchSiteTicketInfo.getExpandedSelection()) &&!(SearchSiteOppInfo.getExpandedSelection()) && !(SearchSiteAccountInfo.getExpandedSelection()) && !(SearchSiteLeadInfo.getExpandedSelection()) && !(SearchSiteEmployeeInfo.getExpandedSelection())) || SearchSiteContactInfo.getExpandedSelection()) {
 %>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Contacts" type="accounts.Contacts" object="SearchSiteContactInfo" params="<%=paramSearchText%>" />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
@@ -78,15 +79,15 @@ if (i.hasNext()) {
 		while (i.hasNext()) {
       rowid = (rowid != 1?1:2);
       Contact thisContact = (Contact)i.next();
-%>      
+%>
       <tr class="row<%= rowid %>">
         <td nowrap>
           <%if(thisContact.getOrgId() < 0){%>
-          <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
+          <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameFull()) %></a>
           <%}else{%>
           <a href="Contacts.do?command=Details&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%}%>
-          <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"<dhv:label name='alt.sendEmail'>Send Email</dhv:label>\" align=\"absmiddle\">", "") %>
+          <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\""+systemStatus.getLabel("alt.sendEmail","Send Email")+"\" align=\"absmiddle\">", "") %>
           <dhv:evaluate if="<%= thisContact.getOrgId() > 0 %>">
             [<a href="Accounts.do?command=Details&orgId=<%=  thisContact.getOrgId() %>"><dhv:label name="accounts.account">Account</dhv:label></a>]
           </dhv:evaluate>
@@ -114,7 +115,7 @@ if (i.hasNext()) {
         <% } else if (thisContact.getEmailAddressList().size() == 1) { 
              EmailAddress thisAddress = (EmailAddress) thisContact.getEmailAddressList().get(0);
          %>
-             <%= String.valueOf(thisAddress.getTypeName().charAt(0)) + ":" + thisAddress.getEmail() %>
+             <%= String.valueOf(thisAddress.getTypeName().charAt(0)) + ":" + toHtml(thisAddress.getEmail()) %>
         <%}else{%>
           &nbsp;
         <%}%>
@@ -122,25 +123,22 @@ if (i.hasNext()) {
       </tr>
 <%}%>
 </table>
-<br>
-<%} else {%>
-	<br>&nbsp;<br>
-<%}%>
+  <% if (SearchSiteContactInfo.getExpandedSelection()) {%>
+<br />
+<dhv:pagedListControl object="SearchSiteContactInfo" tdClass="row1"/>
+<%   }
+   }
+ }%>
 </dhv:permission>
 <dhv:permission name="contacts-internal_contacts-view">
-<% if(EmployeeList.size() < SearchSiteEmployeeInfo.getMaxRecords()){ 
-      String temp_empSize = "EmployeeSize="+EmployeeList.size()+"|totalEmployees="+SearchSiteEmployeeInfo.getMaxRecords();
-%>
-<dhv:label name="search.showingNumberOfTotalEmployees.text" param="<%= temp_empSize %>">Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteEmployeeInfo.getMaxRecords() %> in <strong>Employees</strong>.</dhv:label>
-<% }else{ 
-      String temp_employeeSize = "EmployeeSize="+EmployeeList.size();
-%>
-<dhv:label name="search.totalResultsInEmployees.text" param="<%= temp_employeeSize %>"><strong><%= EmployeeList.size() %></strong> result(s) in <strong>Employees</strong>.</dhv:label>
-<% }
+<%
   Iterator j = EmployeeList.iterator();
   if (j.hasNext()) {
+  if ((request.getParameter("pagedListSectionId") == null && !(SearchSiteTicketInfo.getExpandedSelection()) &&!(SearchSiteOppInfo.getExpandedSelection()) && !(SearchSiteAccountInfo.getExpandedSelection()) && !(SearchSiteLeadInfo.getExpandedSelection()) && !(SearchSiteContactInfo.getExpandedSelection())) || SearchSiteEmployeeInfo.getExpandedSelection()) {
     int rowid = 0;
 %>
+<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Employees" type="employees.employees" object="SearchSiteEmployeeInfo" params="<%=paramSearchText%>" />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
@@ -160,11 +158,11 @@ if (i.hasNext()) {
     while (j.hasNext()) {
       rowid = (rowid != 1?1:2);
       Contact thisEmployee = (Contact)j.next();
-%>      
+%>
       <tr class="row<%= rowid %>">
         <td>
           <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a>
-          <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"<dhv:label name='alt.sendEmail'>Send Email</dhv:label>\" align=\"absmiddle\">", "") %>
+          <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\""+systemStatus.getLabel("alt.sendEmail","Send Email")+"\" align=\"absmiddle\">", "") %>
         </td>
         <td>
           <%= toHtml(thisEmployee.getDepartmentName()) %>
@@ -179,28 +177,111 @@ if (i.hasNext()) {
 <%      
     }
 %>
-</table><br>
-<%
-  } else {
-%>
-	<br>&nbsp;<br>  
-<%}%>
+</table>
+  <% if (SearchSiteEmployeeInfo.getExpandedSelection()) {%>
+<br>
+<dhv:pagedListControl object="SearchSiteEmployeeInfo" tdClass="row1"/>
+<%    }
+    }
+ }%>
 </dhv:permission>
-<dhv:permission name="accounts-accounts-view">
-<% if(OrganizationList.size() < SearchSiteAccountInfo.getMaxRecords()){ 
-      String temp_accountsSize = "AccountSize="+OrganizationList.size()+"|TotalAccounts="+SearchSiteAccountInfo.getMaxRecords();
-%>
-<dhv:label name="search.showingNumberOfAccounts.text" param="<%= temp_accountsSize %>">Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchSiteAccountInfo.getMaxRecords() %> in <strong>Accounts</strong>.</dhv:label>
-<% }else{ 
-      String temp_accountsSize = "AccountSize="+OrganizationList.size();
-%>
-<dhv:label name="search.totalResultsInAccounts" param="<%= temp_accountsSize %>"><strong><%= OrganizationList.size() %></strong> result(s) in <strong>Accounts</strong>.</dhv:label>
-<% }
-
-  Iterator k = OrganizationList.iterator();
-  if (k.hasNext()) {
+<dhv:permission name="sales-view">
+<%
+  Iterator w = leadsList.iterator();
+  if (w.hasNext()) {
+  if ((request.getParameter("pagedListSectionId") == null && !(SearchSiteTicketInfo.getExpandedSelection()) &&!(SearchSiteOppInfo.getExpandedSelection()) && !(SearchSiteAccountInfo.getExpandedSelection()) && !(SearchSiteEmployeeInfo.getExpandedSelection()) && !(SearchSiteContactInfo.getExpandedSelection())) || SearchSiteLeadInfo.getExpandedSelection()) {
     int rowid = 0;
 %>
+<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Leads" type="sales.leads" object="SearchSiteLeadInfo" params="<%=paramSearchText%>" />
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th width="50%">
+      <strong><dhv:label name="contacts.name">Name</dhv:label></strong>
+    </th>
+    <th width="50%">
+      <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></strong>
+    </th>
+    <th width="100" nowrap>
+      <strong><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></strong>
+    </th>
+    <th width="100">
+      <strong><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></strong>
+    </th>
+    <th width="100">
+      <strong><dhv:label name="accounts.accounts_add.Email">Email</dhv:label></strong>
+    </th>
+  </tr>
+<%    
+    while (w.hasNext()) {
+      rowid = (rowid != 1?1:2);
+      Contact thisLead = (Contact) w.next();
+%>
+      <tr class="row<%= rowid %>">
+        <td>
+          <dhv:evaluate if="<%= hasText(thisLead.getNameLastFirst()) %>">
+            <a href="Sales.do?command=Details&contactId=<%= thisLead.getId() %>"><%= toHtml(thisLead.getNameLastFirst()) %></a>
+            <%= thisLead.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\""+systemStatus.getLabel("alt.sendEmail","Send Email")+"\" align=\"absmiddle\">", "") %>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= !hasText(thisLead.getNameLastFirst()) %>">
+            --
+          </dhv:evaluate>
+        </td>
+        <td>
+          <dhv:evaluate if="<%= hasText(thisLead.getNameLastFirst()) %>">
+            <%= toHtml(thisLead.getCompany()) %>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= !hasText(thisLead.getNameLastFirst()) %>">
+            <a href="Sales.do?command=Details&contactId=<%= thisLead.getId() %>"><%= toHtml(thisLead.getCompany()) %></a>
+          </dhv:evaluate>
+        </td>
+        <td nowrap>
+          <%= toHtml(thisLead.getTitle()) %>
+        </td>
+        <td nowrap>
+          <% if (thisLead.getPhoneNumberList().size() > 1) { %>
+            <%= thisLead.getPhoneNumberList().getHtmlSelect("leadphone", -1) %>
+        <% } else if (thisLead.getPhoneNumberList().size() == 1) { 
+             PhoneNumber thisNumber = (PhoneNumber) thisLead.getPhoneNumberList().get(0);
+         %>
+             <%= String.valueOf(thisNumber.getTypeName().charAt(0)) + ":" + thisNumber.getNumber() %>
+        <%}else{%>
+          &nbsp;
+        <%}%>
+        </td>
+        <td nowrap>
+          <% if (thisLead.getEmailAddressList().size() > 1) { %>
+            <%= thisLead.getEmailAddressList().getHtmlSelect("leademail", -1) %>
+        <% } else if (thisLead.getEmailAddressList().size() == 1) { 
+             EmailAddress thisAddress = (EmailAddress) thisLead.getEmailAddressList().get(0);
+         %>
+             <%= String.valueOf(thisAddress.getTypeName().charAt(0)) + ":" + toHtml(thisAddress.getEmail()) %>
+        <%}else{%>
+          &nbsp;
+        <%}%>
+        </td>
+      </tr>
+<%      
+    }
+%>
+</table>
+  <% if (SearchSiteLeadInfo.getExpandedSelection()) {%>
+<br>
+  <dhv:pagedListControl object="SearchSiteLeadInfo" tdClass="row1"/>
+<%
+      }
+    }
+ }%>
+</dhv:permission>
+<dhv:permission name="accounts-accounts-view">
+<%
+  Iterator k = OrganizationList.iterator();
+  if (k.hasNext()) {
+  if ((request.getParameter("pagedListSectionId") == null && !(SearchSiteTicketInfo.getExpandedSelection()) &&!(SearchSiteOppInfo.getExpandedSelection()) && !(SearchSiteLeadInfo.getExpandedSelection()) && !(SearchSiteEmployeeInfo.getExpandedSelection()) && !(SearchSiteContactInfo.getExpandedSelection())) || SearchSiteAccountInfo.getExpandedSelection()) {
+    int rowid = 0;
+%>
+<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Accounts" type="accounts.accounts" object="SearchSiteAccountInfo" params="<%=paramSearchText%>" />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="100%">
@@ -226,7 +307,9 @@ if (i.hasNext()) {
 		</td>
     <dhv:include name="sitesearch-account-email" none="true">
 		<td valign="center" nowrap>
-      <a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a>
+      <dhv:evaluate if="<%= !"".equals(thisOrg.getEmailAddressList().getPrimaryEmailAddress()) %>">
+        <a href="mailto:<%= toHtml(thisOrg.getEmailAddressList().getPrimaryEmailAddress()) %>"><%= toHtml(thisOrg.getEmailAddressList().getPrimaryEmailAddress()) %></a>
+      </dhv:evaluate>&nbsp;
     </td>
     </dhv:include>
 		<td valign="center" nowrap>
@@ -244,27 +327,24 @@ if (i.hasNext()) {
 <%
     }
 %>
-</table><br>
+</table>
+  <% if (SearchSiteAccountInfo.getExpandedSelection()) {%>
+<br>
+  <dhv:pagedListControl object="SearchSiteAccountInfo" tdClass="row1"/>
 <%
-  } else {
-%>
-	<br>&nbsp;<br>
-<%}%>
+      }
+    }
+ }%>
 </dhv:permission>
 <dhv:permission name="pipeline-opportunities-view">
-<% if(OpportunityList.size() < SearchSiteOppInfo.getMaxRecords()){ 
-      String temp_oppSize = "OppSize="+OpportunityList.size()+"|TotalOpps="+SearchSiteOppInfo.getMaxRecords();
-%>
-<dhv:label name="search.showingNumberOfOpportunities.text" param="<%= temp_oppSize %>">Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSiteOppInfo.getMaxRecords() %> in <strong>Opportunities</strong>.</dhv:label>
-<% }else{ 
-      String temp_oppSize = "OppSize="+OpportunityList.size();
-%> 
-<dhv:label name="search.totalResultsInOpportunities.text" param="<%= temp_oppSize %>"><strong><%= OpportunityList.size() %></strong> result(s) in <strong>Opportunities</strong>.</dhv:label>
-<% } 
+<%
   Iterator m = OpportunityList.iterator();
   if (m.hasNext()) {
+    if ((request.getParameter("pagedListSectionId") == null && !(SearchSiteTicketInfo.getExpandedSelection()) &&!(SearchSiteAccountInfo.getExpandedSelection()) && !(SearchSiteLeadInfo.getExpandedSelection()) && !(SearchSiteEmployeeInfo.getExpandedSelection()) && !(SearchSiteContactInfo.getExpandedSelection())) || SearchSiteOppInfo.getExpandedSelection()) {
     int rowid = 0;
 %>
+<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Opportunities" type="accounts.accounts_contacts_oppcomponent_add.Opportunities" object="SearchSiteOppInfo" params="<%=paramSearchText%>" />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
@@ -272,6 +352,9 @@ if (i.hasNext()) {
     </th>
     <th width="175" valign="center">
       <strong><dhv:label name="documents.details.organization">Organization</dhv:label></strong>
+    </th>
+    <th width="175" valign="center">
+      <strong><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></strong>
     </th>
     <th width="100" valign="center">
       <strong><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></strong>
@@ -284,18 +367,29 @@ if (i.hasNext()) {
     while (m.hasNext()) {
 			rowid = (rowid != 1?1:2);
       OpportunityBean thisOpp = (OpportunityBean) m.next();
-%>      
+%>
 	<tr class="row<%= rowid %>">
       <td valign="center">
-        <%if(thisOpp.getHeader().getContactLink() > 0){ %>
-        <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>&contactId=<%= thisOpp.getHeader().getContactLink() %>">
-        <%= toHtml(thisOpp.getHeader().getDescription()) %>: <%= toHtml(thisOpp.getComponent().getDescription()) %></a>
-        <%
-        } else { %>
-        <a href="Leads.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>">
-        <%= toHtml(thisOpp.getHeader().getDescription()) %>: <%= toHtml(thisOpp.getComponent().getDescription()) %></a>
-        <%
-        }%>
+        <dhv:evaluate if="<%= thisOpp.getHeader().getContactLink() > 0 %>">
+          <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>&contactId=<%= thisOpp.getHeader().getContactLink() %>">
+          <dhv:evaluate if="<%= allowMultiple %>">
+            <%= toHtml(thisOpp.getHeader().getDescription()) %>: <%= toHtml(thisOpp.getComponent().getDescription()) %>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= !allowMultiple %>">
+            <%= toHtml(thisOpp.getHeader().getDescription()) %>
+          </dhv:evaluate>
+          </a>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= thisOpp.getHeader().getContactLink() <= 0 %>">
+          <a href="Leads.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>">
+          <dhv:evaluate if="<%= allowMultiple %>">
+            <%= toHtml(thisOpp.getHeader().getDescription()) %>: <%= toHtml(thisOpp.getComponent().getDescription()) %>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= !allowMultiple %>">
+            <%= toHtml(thisOpp.getHeader().getDescription()) %>
+          </dhv:evaluate>
+          </a>
+        </dhv:evaluate>
       </td>
       <td valign="center">
 <%
@@ -314,6 +408,23 @@ if (i.hasNext()) {
       }
 %>        
       </td>
+      <td valign="center">
+<%
+      if (thisOpp.getHeader().getContactLink() > -1) {
+%>        
+        <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>&contactId=<%= thisOpp.getHeader().getContactLink() %>">
+<%
+      }
+%>        
+        <%= toHtml(thisOpp.getHeader().getDisplayName()) %>
+<%
+      if (thisOpp.getHeader().getContactLink() > -1) {
+%>     
+        </a>
+<%
+      }
+%>        
+      </td>
       <td valign="center" nowrap>
         <zeroio:currency value="<%= thisOpp.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
@@ -323,24 +434,23 @@ if (i.hasNext()) {
     </tr>
 <%}%>
 </table>
+  <% if (SearchSiteOppInfo.getExpandedSelection()) {%>
 <br>
-<%} else {%>
-  <br>&nbsp;<br> 
-<%}%>
+  <dhv:pagedListControl object="SearchSiteOppInfo" tdClass="row1"/>
+<%
+    }
+  }
+ }%>
 </dhv:permission>
 <dhv:permission name="tickets-tickets-view">
 <%
-  String paramTicketCount = "ticketList.count=" + TicketList.size();
-  String paramTicketMaxRecords = "ticketListInfo.maxRecords=" + SearchSiteTicketInfo.getMaxRecords();
-  if (TicketList.size() < SearchSiteTicketInfo.getMaxRecords()) { %>
-<dhv:label name="search.results.tickets.multiPagecount" param="<%= paramTicketCount + "|" + paramTicketMaxRecords %>">Showing <strong><%= TicketList.size() %></strong> result(s) of <%= SearchSiteTicketInfo.getMaxRecords() %> in <strong>Tickets</strong>.</dhv:label>
-<% }else{ %>
-<dhv:label name="search.results.tickets.count" param="<%= paramTicketCount %>"><strong><%= TicketList.size() %></strong> result(s) in <strong>Tickets</strong>.</dhv:label>
-<% }
   Iterator n = TicketList.iterator();
   if (n.hasNext()) {
+    if ((request.getParameter("pagedListSectionId") == null && !(SearchSiteOppInfo.getExpandedSelection()) &&!(SearchSiteAccountInfo.getExpandedSelection()) && !(SearchSiteLeadInfo.getExpandedSelection()) && !(SearchSiteEmployeeInfo.getExpandedSelection()) && !(SearchSiteContactInfo.getExpandedSelection())) || SearchSiteTicketInfo.getExpandedSelection()) {
     int rowid = 0;
 %>
+<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets" type="tickets.tickets" object="SearchSiteTicketInfo" params="<%=paramSearchText%>" />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
@@ -355,7 +465,7 @@ if (i.hasNext()) {
   	while (n.hasNext()) {
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket) n.next();
-%>   
+%>
   <tr class="row<%= rowid %>">
 		<td rowspan="2" width="15" valign="top" nowrap>
       <a href="TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
@@ -380,8 +490,11 @@ if (i.hasNext()) {
   </tr>
 <%}%>
 </table>
+  <% if (SearchSiteTicketInfo.getExpandedSelection()) {%>
 <br>
-<%} else {%>
-  <br>&nbsp;<br> 
-<%}%>
+  <dhv:pagedListControl object="SearchSiteTicketInfo" tdClass="row1"/>
+<%
+  }
+ }
+}%>
 </dhv:permission>

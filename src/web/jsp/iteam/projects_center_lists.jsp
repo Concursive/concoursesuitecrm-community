@@ -53,7 +53,7 @@
 <br>
 <dhv:evaluate if="<%= !Project.isTrashed() %>" >
   <zeroio:permission name="project-lists-modify">
-    <a href="ProjectManagementLists.do?command=Add&pid=<%= Project.getId() %>&cid=<%= category.getId() %>">Add an Item to this List</a><br>
+    <a href="ProjectManagementLists.do?command=Add&pid=<%= Project.getId() %>&cid=<%= category.getId() %>"><dhv:label name="project.addAnItemtothisList">Add an Item to this List</dhv:label></a><br>
     <br />
   </zeroio:permission>
 </dhv:evaluate>
@@ -63,9 +63,9 @@
     <td align="left">
       <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle">
       <select name="listView" onChange="javascript:document.forms['pagedListView'].submit();">
-        <option <%= projectListsInfo.getOptionValue("open") %>>Incomplete Items</option>
-        <option <%= projectListsInfo.getOptionValue("closed") %>>Completed Items</option>
-        <option <%= projectListsInfo.getOptionValue("all") %>>All Items</option>
+        <option <%= projectListsInfo.getOptionValue("open") %>><dhv:label name="project.incompleteItems">Incomplete Items</dhv:label></option>
+        <option <%= projectListsInfo.getOptionValue("closed") %>><dhv:label name="project.completedItems">Completed Items</dhv:label></option>
+        <option <%= projectListsInfo.getOptionValue("all") %>><dhv:label name="project.allItems">All Items</dhv:label></option>
       </select>
     </td>
     <td>
@@ -85,9 +85,9 @@
   </tr>
 <%
   if (outlineList.size() == 0) {
-%>  
+%>
   <tr class="row2">
-    <td colspan="6">No items to display.</td>
+    <td colspan="6"><dhv:label name="project.noItemstoDisplay">No items to display.</dhv:label></td>
   </tr>
 <%
   }
@@ -98,12 +98,12 @@
     ++count;
     rowid = (rowid != 1?1:2);
     Task thisTask = (Task)i.next();
-%>    
+%>
   <tr class="row<%= rowid %>">
     <td valign="top" nowrap>
       <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuListItem', <%= thisTask.getId() %>,'<%= Project.isTrashed() %>');"
          onMouseOver="over(0, <%= count %>)"
-         onmouseout="out(0, <%= count %>); hideMenu('menuListItem');"><img 
+         onmouseout="out(0, <%= count %>); hideMenu('menuListItem');"><img
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td align="center" valign="top" nowrap>
@@ -142,8 +142,7 @@
       <zeroio:tz timestamp="<%= thisTask.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
-<%    
+<%
   }
 %>
 </table>
-

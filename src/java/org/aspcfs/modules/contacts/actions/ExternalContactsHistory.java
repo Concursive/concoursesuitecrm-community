@@ -78,6 +78,9 @@ public final class ExternalContactsHistory extends CFSModule {
 
       db = this.getConnection(context);
       newContact = new Contact(db, Integer.parseInt(contactId));
+      if (!isRecordAccessPermitted(context, newContact)){
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", newContact);
       historyList.setContactId(newContact.getId());
       if (contactHistoryListInfo.getSavedCriteria().size() == 0) {
@@ -119,6 +122,9 @@ public final class ExternalContactsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newContact = new Contact(db, Integer.parseInt(contactId));
+      if (!isRecordAccessPermitted(context, newContact)){
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", newContact);
       history = new ContactHistory();
       context.getRequest().setAttribute("contactHistory", history);
@@ -164,6 +170,9 @@ public final class ExternalContactsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newContact = new Contact(db, Integer.parseInt(contactId));
+      if (!isRecordAccessPermitted(context, newContact)){
+        return ("PermissionError");
+      }
       contactHistory.setEnteredBy(this.getUserId(context));
       contactHistory.setModifiedBy(this.getUserId(context));
       isValid = this.validateObject(context, db, contactHistory);
@@ -216,6 +225,9 @@ public final class ExternalContactsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newContact = new Contact(db, Integer.parseInt(contactId));
+      if (!isRecordAccessPermitted(context, newContact)){
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", newContact);
       contactHistory = new ContactHistory(db, Integer.parseInt(id));
       context.getRequest().setAttribute("contactHistory", contactHistory);
@@ -257,6 +269,9 @@ public final class ExternalContactsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newContact = new Contact(db, Integer.parseInt(contactId));
+      if (!isRecordAccessPermitted(context, newContact)){
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", newContact);
       contactHistory = new ContactHistory(db, Integer.parseInt(id));
       result = contactHistory.delete(db);

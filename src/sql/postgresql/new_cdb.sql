@@ -4,10 +4,19 @@
  *@version    $Id$
  */
 
+CREATE TABLE lookup_site_id (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  short_description VARCHAR(300),
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
 CREATE SEQUENCE access_user_id_seq MINVALUE 0 START 0;
 CREATE TABLE access (
   user_id INTEGER DEFAULT nextval('access_user_id_seq') NOT NULL PRIMARY KEY,
-  username VARCHAR(80) NOT NULL, 
+  username VARCHAR(80) NOT NULL,
   password VARCHAR(80),
   contact_id INT DEFAULT -1,
   role_id INT DEFAULT -1,
@@ -29,7 +38,10 @@ CREATE TABLE access (
   currency VARCHAR(5),
   language VARCHAR(20),
   webdav_password VARCHAR(80),
-  hidden BOOLEAN DEFAULT false
+  hidden BOOLEAN DEFAULT false,
+  site_id INT REFERENCES lookup_site_id(code),
+  allow_webdav_access BOOLEAN DEFAULT true NOT NULL,
+  allow_httpapi_access BOOLEAN DEFAULT true NOT NULL
 );
 
 CREATE TABLE lookup_industry (
@@ -106,8 +118,7 @@ CREATE TABLE lookup_orgemail_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE TABLE lookup_orgphone_types (
   code SERIAL PRIMARY KEY,
@@ -115,8 +126,7 @@ CREATE TABLE lookup_orgphone_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE TABLE lookup_im_types (
   code SERIAL PRIMARY KEY,
@@ -186,8 +196,7 @@ CREATE TABLE lookup_contactaddress_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE SEQUENCE lookup_contactemail_ty_code_seq;
 CREATE TABLE lookup_contactemail_types (
@@ -196,8 +205,7 @@ CREATE TABLE lookup_contactemail_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE SEQUENCE lookup_contactphone_ty_code_seq;
 CREATE TABLE lookup_contactphone_types (
@@ -206,17 +214,49 @@ CREATE TABLE lookup_contactphone_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE TABLE lookup_access_types (
   code SERIAL PRIMARY KEY,
   link_module_id INT NOT NULL,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
-  level INTEGER, 
+  level INTEGER,
   enabled BOOLEAN DEFAULT true,
   rule_id INT NOT NULL
+);
+
+CREATE TABLE lookup_account_size (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
+CREATE TABLE lookup_segments (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
+CREATE TABLE lookup_sub_segment (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  segment_id  INT REFERENCES lookup_segments(code),
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
+CREATE TABLE lookup_title (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
 );
 
 CREATE SEQUENCE organization_org_id_seq MINVALUE 0 START 0;
@@ -230,10 +270,10 @@ CREATE TABLE organization (
   employees INT,
   notes TEXT,
   sic_code VARCHAR(40),
-  ticker_symbol VARCHAR(10) DEFAULT NULL,
+  ticker_symbol VARCHAR(10),
   taxid CHAR(80),
   lead VARCHAR(40),
-  sales_rep int NOT NULL DEFAULT 0, 
+  sales_rep int NOT NULL DEFAULT 0,
   miner_only BOOLEAN NOT NULL DEFAULT false,
   defaultlocale INT,
   fiscalmonth INT,
@@ -247,9 +287,9 @@ CREATE TABLE organization (
   duplicate_id int default -1,
   custom1 int default -1,
   custom2 int default -1,
-  contract_end TIMESTAMP(3) default null,
-  alertdate TIMESTAMP(3) default null,
-  alert varchar(100) default null,
+  contract_end TIMESTAMP(3),
+  alertdate TIMESTAMP(3),
+  alert varchar(100),
   custom_data TEXT,
   namesalutation varchar(80),
   namelast varchar(80),
@@ -260,7 +300,15 @@ CREATE TABLE organization (
   status_id INT,
   alertdate_timezone VARCHAR(255),
   contract_end_timezone VARCHAR(255),
-  trashed_date TIMESTAMP(3)
+  trashed_date TIMESTAMP(3),
+  source INTEGER REFERENCES lookup_contact_source(code),
+  rating INTEGER REFERENCES lookup_contact_rating(code),
+  potential FLOAT,
+  segment_id INT REFERENCES lookup_segments(code),
+  sub_segment_id INT REFERENCES lookup_sub_segment(code),
+  direct_bill BOOLEAN DEFAULT false,
+  account_size INT REFERENCES lookup_account_size(code),
+  site_id INT REFERENCES lookup_site_id(code)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -306,18 +354,33 @@ CREATE TABLE contact (
   lead_status INT NULL,
   source INT REFERENCES lookup_contact_source(code),
   rating INT REFERENCES lookup_contact_rating(code),
-  comments VARCHAR(255) NULL,
+  comments VARCHAR(255),
   conversion_date TIMESTAMP(3) NULL,
   additional_names VARCHAR(255),
   nickname VARCHAR(80),
   role VARCHAR(255),
-  trashed_date TIMESTAMP(3)
+  trashed_date TIMESTAMP(3),
+  secret_word VARCHAR(255),
+  account_number VARCHAR(50),
+  revenue FLOAT,
+  industry_temp_code INTEGER REFERENCES lookup_industry(code),
+  potential FLOAT,
+  no_email BOOLEAN DEFAULT false,
+  no_mail BOOLEAN DEFAULT false,
+  no_phone BOOLEAN DEFAULT false,
+  no_textmessage BOOLEAN DEFAULT false,
+  no_im BOOLEAN DEFAULT false,
+  no_fax BOOLEAN DEFAULT false,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");
 CREATE INDEX "contactlist_namecompany" ON "contact" (namelast, namefirst, company);
 CREATE INDEX "contactlist_company" ON "contact" (company, namelast, namefirst);
 CREATE INDEX "contact_import_id_idx" ON "contact" ("import_id");
+CREATE INDEX contact_org_id_idx ON contact(org_id) WHERE org_id IS NOT NULL AND org_id > 0;
+CREATE INDEX contact_islead_idx ON contact(lead) WHERE lead = true;
+
 
 CREATE TABLE contact_lead_skipped_map (
   map_id SERIAL PRIMARY KEY,
@@ -325,11 +388,18 @@ CREATE TABLE contact_lead_skipped_map (
   contact_id INT NOT NULL REFERENCES contact(contact_id)
 );
 
+CREATE INDEX contact_lead_skip_u_idx ON contact_lead_skipped_map(user_id);
+
+
 CREATE TABLE contact_lead_read_map (
   map_id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
   contact_id INT NOT NULL REFERENCES contact(contact_id)
 );
+
+CREATE INDEX contact_lead_read_u_idx ON contact_lead_read_map(user_id);
+CREATE INDEX contact_lead_read_c_idx ON contact_lead_read_map(contact_id);
+
 
 CREATE TABLE role (
   role_id SERIAL PRIMARY KEY,
@@ -361,7 +431,9 @@ CREATE TABLE permission_category (
   products BOOLEAN NOT NULL DEFAULT false,
   webdav BOOLEAN NOT NULL DEFAULT false,
 	logos BOOLEAN NOT NULL DEFAULT false,
-  constant INT NOT NULL
+  constant INT NOT NULL,
+  action_plans BOOLEAN NOT NULL DEFAULT false,
+  custom_list_views BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE permission (
@@ -397,18 +469,16 @@ CREATE TABLE lookup_stage (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE SEQUENCE lookup_delivery_option_code_seq;
 CREATE TABLE lookup_delivery_options (
   code INTEGER DEFAULT nextval('lookup_delivery_option_code_seq') NOT NULL PRIMARY KEY,
-  description VARCHAR(50) NOT NULL,
+  description VARCHAR(100) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE TABLE news (
   rec_id SERIAL PRIMARY KEY,
@@ -438,9 +508,12 @@ CREATE TABLE organization_address (
   enteredby INT NOT NULL references access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
-  primary_address BOOLEAN NOT NULL DEFAULT false
-)
-;
+  primary_address BOOLEAN NOT NULL DEFAULT false,
+  addrline4 VARCHAR(80)
+);
+
+CREATE INDEX organization_address_postalcode_idx ON organization_address(postalcode);
+
 
 CREATE SEQUENCE organization__emailaddress__seq;
 CREATE TABLE organization_emailaddress (
@@ -453,8 +526,7 @@ CREATE TABLE organization_emailaddress (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_email BOOLEAN NOT NULL DEFAULT false
-)
-;
+);
 
 CREATE SEQUENCE organization_phone_phone_id_seq;
 CREATE TABLE organization_phone (
@@ -468,8 +540,7 @@ CREATE TABLE organization_phone (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_number BOOLEAN NOT NULL DEFAULT false
-)
-;
+);
 
 CREATE TABLE contact_address (
   address_id SERIAL PRIMARY KEY,
@@ -486,11 +557,15 @@ CREATE TABLE contact_address (
   enteredby INT NOT NULL references access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
-  primary_address BOOLEAN NOT NULL DEFAULT false
-)
-;
+  primary_address BOOLEAN NOT NULL DEFAULT false,
+  addrline4 VARCHAR(80)
+);
 
 CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
+CREATE INDEX contact_address_postalcode_idx ON contact_address(postalcode);
+CREATE INDEX "contact_city_idx" on contact_address(city);
+CREATE INDEX contact_address_prim_idx ON contact_address(primary_address);
+
 
 CREATE SEQUENCE contact_email_emailaddress__seq;
 CREATE TABLE contact_emailaddress (
@@ -503,10 +578,11 @@ CREATE TABLE contact_emailaddress (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_email BOOLEAN NOT NULL DEFAULT false
-)
-;
+);
 
 CREATE INDEX "contact_email_contact_id_idx" ON "contact_emailaddress" (contact_id);
+CREATE INDEX contact_email_prim_idx ON contact_emailaddress(primary_email);
+
 
 CREATE TABLE contact_phone (
   phone_id SERIAL PRIMARY KEY,
@@ -519,8 +595,7 @@ CREATE TABLE contact_phone (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_number BOOLEAN NOT NULL DEFAULT false
-)
-;
+);
 
 CREATE INDEX "contact_phone_contact_id_idx" ON "contact_phone" (contact_id);
 
@@ -541,15 +616,14 @@ CREATE TABLE contact_imaddress (
 CREATE TABLE contact_textmessageaddress (
   address_id SERIAL PRIMARY KEY,
   contact_id INT REFERENCES contact(contact_id),
-  textmessageaddress_type INT references lookup_im_types(code),
   textmessageaddress VARCHAR(256),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
-  primary_textmessage_address BOOLEAN NOT NULL DEFAULT false
+  primary_textmessage_address BOOLEAN NOT NULL DEFAULT false,
+  textmessageaddress_type INT references lookup_textmessage_types(code)
 );
-
 
 CREATE SEQUENCE notification_notification_i_seq;
 CREATE TABLE notification (
@@ -639,7 +713,6 @@ CREATE TABLE category_editor_lookup (
   max_levels INT NOT NULL
 );
 
-/* Viewpoints */
 CREATE TABLE viewpoint(
   viewpoint_id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
@@ -662,7 +735,6 @@ CREATE TABLE viewpoint_permission (
   viewpoint_delete BOOLEAN NOT NULL DEFAULT false
 );
 
-/* Reports */
 CREATE TABLE report (
   report_id SERIAL PRIMARY KEY,
   category_id INT NOT NULL REFERENCES permission_category(category_id),
@@ -717,7 +789,6 @@ CREATE TABLE report_queue_criteria (
   value TEXT
 );
 
-/* Action Lists */
 CREATE SEQUENCE action_list_code_seq;
 CREATE TABLE action_list (
   action_id INTEGER DEFAULT nextval('action_list_code_seq') NOT NULL PRIMARY KEY,
@@ -775,7 +846,10 @@ CREATE TABLE import(
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  site_id INT REFERENCES lookup_site_id(code),
+  rating INT REFERENCES lookup_contact_rating(code),
+  comments TEXT
 );
 
 CREATE INDEX "import_entered_idx" ON "import" (entered);
@@ -812,4 +886,54 @@ CREATE TABLE relationship (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,
   trashed_date TIMESTAMP(3)
+);
+
+-- Create a new table to group users
+CREATE TABLE user_group (
+  group_id SERIAL PRIMARY KEY,
+  group_name VARCHAR(255) NOT NULL,
+  description text,
+  enabled BOOLEAN NOT NULL DEFAULT true,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  enteredby INTEGER NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  site_id INTEGER REFERENCES lookup_site_id(code)
+);
+
+-- Create the user group map table
+CREATE TABLE user_group_map (
+  group_map_id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES access(user_id),
+  group_id INTEGER NOT NULL REFERENCES user_group(group_id),
+  level INTEGER NOT NULL DEFAULT 10,
+  enabled BOOLEAN NOT NULL DEFAULT true,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Custom List Views Editor
+CREATE TABLE custom_list_view_editor (
+  editor_id SERIAL PRIMARY KEY,
+  module_id INT NOT NULL REFERENCES permission_category(category_id),
+  constant_id INT NOT NULL,
+  description TEXT,
+  level INT default 0,
+  category_id INT NOT NULL
+);
+
+-- Custom List View
+CREATE TABLE custom_list_view (
+  view_id SERIAL PRIMARY KEY,
+  editor_id INT NOT NULL REFERENCES custom_list_view_editor(editor_id),
+  name VARCHAR(80) NOT NULL,
+  description TEXT,
+  is_default BOOLEAN DEFAULT FALSE,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Custom List View Field
+CREATE TABLE custom_list_view_field (
+  field_id SERIAL PRIMARY KEY,
+  view_id INT NOT NULL REFERENCES custom_list_view(view_id),
+  name VARCHAR(80) NOT NULL
 );

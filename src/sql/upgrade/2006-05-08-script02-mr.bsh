@@ -1,0 +1,44 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
+
+int categoryId = PermissionCategory.lookupId(db, 1);
+
+if (categoryId != -1) {
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator");
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+  print("Inserting new lookup table entry into lookup_lists_lookup table...");
+  LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_ACCOUNTS_SUBSEGMENT);
+  if (element.getId() < 0) {
+    element = new LookupListElement();
+    element.setModuleId(categoryId);
+    element.setCategoryId(PermissionCategory.PERMISSION_CAT_ACCOUNTS);
+    element.setLookupId(PermissionCategory.LOOKUP_ACCOUNTS_SUBSEGMENT);
+    element.setTableName("lookup_sub_segment");
+    element.setClassName("lookupList");
+    element.setLevel(71);
+    element.setDescription(dictionary.getTerm("system.fields.label", "accounts.accounts_add.subSegment", "value"));
+    element.insert(db);
+    print("lookup_sub_segment entry inserted");
+  } else {
+    print("The lookup_sub_segment element already exists");
+  }
+} else {
+  print("The category Id has not been found");
+}
+

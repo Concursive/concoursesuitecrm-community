@@ -61,9 +61,12 @@ function setField(formField,thisValue,thisForm) {
   %>
   <tr>
     <input type="hidden" name="product_<%= i %>" value="<%= product.getId() %>"/>
+    <input type="hidden" name="qty_<%= i %>" value="<%= quoteProduct.getQuantity() %>"/>
+    <input type="hidden" name="price_<%= i %>" value="<%= quoteProduct.getPriceAmount() %>"/>
+    <input type="hidden" id="comment_<%= i %>" name="comment_<%= i %>"  value="<%=(quoteProduct.getComment() == null || "".equals(quoteProduct.getComment())) ? "" : toHtml(quoteProduct.getComment()) %>" />
     <td><b><%= product.getName() %></b></td>
-    <td align="center"><b><%= quoteProduct.getQuantity() %></b><input type="hidden" name="qty_<%= i %>" value="<%= quoteProduct.getQuantity() %>"/></td>
-    <td align="right"><b><zeroio:currency value="<%= quoteProduct.getQuantity() * price.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></b></td>
+    <td align="center"><b><%= quoteProduct.getQuantity() %></b></td>
+    <td align="right"><b><zeroio:currency value="<%= quoteProduct.getQuantity() * quoteProduct.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></b></td>
   </tr>
   <tr>
     <td colspan="3" class="empty">

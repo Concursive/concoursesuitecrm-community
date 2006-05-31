@@ -23,11 +23,15 @@
   var thisHeaderId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, compId, headerId, trashed) {
+  function displayMenu(loc, id, orgId, compId, headerId, trashed, hasPermission) {
     thisOrgId = orgId;
     thisCompId = compId;
     thisHeaderId = headerId;
-    updateMenu(trashed);
+    if (hasPermission) {
+      updateMenu(trashed);
+    } else {
+      updateMenu('true');
+    }
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
@@ -45,7 +49,11 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='OpportunitiesComponents.do?command=DetailsComponent&orgId=' + thisOrgId + '&id=' + thisCompId;
+    window.location.href='OpportunitiesComponents.do?command=DetailsComponent&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId;
+  }
+
+  function log() {
+    window.location.href='OpportunitiesComponents.do?command=ComponentHistory&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId;
   }
 
   function modify() {
@@ -66,6 +74,16 @@
         </th>
         <td width="100%">
           <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-opportunities-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="log()">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="accounts.accounts_contacts_oppcomponent.viewComponentLog">View Component Log</dhv:label>
         </td>
       </tr>
       </dhv:permission>

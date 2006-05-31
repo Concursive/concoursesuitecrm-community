@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
@@ -59,13 +59,15 @@
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAsset');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="15%" nowrap>
-      <a href="AccountsAssets.do?command=View&orgId=<%=request.getParameter("orgId")%>&id=<%= thisAsset.getId()%>"><%= toHtml(thisAsset.getSerialNumber()) %></a>
+      <a href="AccountsAssets.do?command=View&id=<%= thisAsset.getId()%>"><%= toHtml(thisAsset.getSerialNumber()) %></a>
 		</td>
     <td width="15%" nowrap>
       <%= toHtml(thisAsset.getServiceContractNumber()) %>
 		</td>
 		<td width="15%" nowrap>
-      <%= toHtml(thisAsset.getManufacturer()) %>
+      <dhv:evaluate if="<%= thisAsset.getManufacturerCode() > 0 %>">
+        <%= toHtml(assetManufacturerList.getSelectedValue(thisAsset.getManufacturerCode())) %>
+      </dhv:evaluate>&nbsp;
     </td>
 		<td width="15%" nowrap>
       <%= toHtml(thisAsset.getModelVersion()) %>
@@ -94,4 +96,3 @@
     <%
     }
     %></table>
-

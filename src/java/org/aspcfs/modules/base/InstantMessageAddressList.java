@@ -33,7 +33,7 @@ public class InstantMessageAddressList extends Vector {
   protected int type = -1;
   protected int service = -1;
   protected int contactId = -1;
-
+  protected String serviceName = null;
 
   /**
    * Gets the pagedListInfo attribute of the InstantMessageAddressList object
@@ -114,6 +114,9 @@ public class InstantMessageAddressList extends Vector {
     this.service = Integer.parseInt(tmp);
   }
 
+  public void setServiceName(String serviceName) {
+    this.serviceName = serviceName;
+  }
 
   /**
    * Gets the contactId attribute of the InstantMessageAddressList object
@@ -205,14 +208,15 @@ public class InstantMessageAddressList extends Vector {
    * @return The primaryInstantMessageAddress value
    */
   public String getPrimaryInstantMessageAddress() {
+    InstantMessageAddress thisAddress = null;
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      InstantMessageAddress thisAddress = (InstantMessageAddress) i.next();
+      thisAddress = (InstantMessageAddress) i.next();
       if (thisAddress.getPrimaryIM()) {
         return thisAddress.getAddressIM();
       }
     }
-    return "";
+    return ((thisAddress == null) ? "" : thisAddress.getAddressIM());
   }
 
 
@@ -236,6 +240,10 @@ public class InstantMessageAddressList extends Vector {
 
     if (contactId != -1) {
       sqlFilter.append("AND contact_id = ? ");
+    }
+
+    if (serviceName != null) {
+      sqlFilter.append("AND lims.description = ? ");
     }
   }
 
@@ -262,6 +270,9 @@ public class InstantMessageAddressList extends Vector {
       pst.setInt(++i, contactId);
     }
 
+    if (serviceName != null) {
+      pst.setString(++i, serviceName);
+    }
     return i;
   }
 }

@@ -44,7 +44,7 @@ function page_init() {
   <%
     }
   }else{%>
-    list.options[list.length] = newOpt(label("option.none","--None--"), "-1");
+    list.options[list.length] = newOpt(label("option.none","-- None --"), "-1");
  <%}%>
 }
 </script>

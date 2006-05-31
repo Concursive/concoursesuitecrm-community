@@ -45,3 +45,7 @@ function deleteOptions(optionListId){
       divToChange.innerHTML = divContents;
 		}
 	}
+  
+  function resetNumericFieldValue(fieldId){
+    document.getElementById(fieldId).value = -1;
+  }

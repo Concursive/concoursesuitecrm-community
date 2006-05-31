@@ -1,0 +1,117 @@
+# Run Dataline_Upgrade_2005-11-03.sql using the SQL Query Analyzer before running
+# this script
+
+#
+# These scripts bring dataline from 2.9+ to 3.0
+#
+
+# Structural change to seaerch_criteria element
+2005-11-07-script01-kailash.sql
+
+# Permission Category Constants
+2005-03-10-script01.sql
+
+# Product Catalog Editor
+2004-09-24-script02.sql
+2004-10-15.sql
+
+# WebDAV feature / Permission Category changes
+
+# Add Permission Category (Some already have this, so a check is made)
+
+# Quote Management 
+2004-11-29-script07.sql
+
+# Additional Adjustments
+
+# Document Management
+
+# Merge f-improvements-20041201
+####2004-12-08gk.sql
+
+# Merge f-contact_request-20041216
+
+
+# Merge bug-version29_20050114
+2005-01-14.sql
+
+# Merge f-contact_request-20050103
+
+# Merge f-folders-20050120
+2005-01-20-script01.sql
+
+# Merge f-contact_request-20050119
+
+# Merge Project Management
+2005-03-28-script01.sql
+
+# Merge bug-version3-20050210
+
+# Industry list
+
+# Account Project permissions and Project permissions
+
+# Employee projects
+
+# Lookup list changes
+
+# Product Catalog Editor v2
+
+# Leads Module
+
+# Leads Module (merge4)
+
+# Product
+
+# Product catalog permissions
+
+# Missing leads lookup editors
+
+#
+# End of scripts to bring dataline from 2.9+ to 3.0
+#
+
+#
+# For scripts to bring dataline from 3.0 to 3.1, refer to updgrade_v30-31.txt
+#
+
+# Relationships (Only for systems that don't have a relationship table)
+
+# Instant Messaging fields
+####2005-06-22gk.sql
+
+# Lookups
+
+# History and deleting updates
+
+# Activity - Opportunity relationship
+
+# Permissions
+
+# Template files
+
+# Locale adjustments
+####2005-06-28gk.sql
+
+#
+# End of scripts to bring dataline from 3.0 to 3.1
+#
+
+#
+# Scripts to bring dataline from 3.1 to current (more to come here)
+#
+2005-08-18-script01-mr.sql
+2005-09-12-script01-partha.sql
+2005-09-12-script04-partha.sql
+
+# sites related structural updates
+2005-11-03-script05-mr.sql
+
+#
+# End of scripts to bring dataline from 3.1 to current
+#
+
+# 
+# update and insert statements included in other sql upgrade files
+#
+dataline-data-upgrade-2005-11-04-script01-kailash.sql

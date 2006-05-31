@@ -400,9 +400,16 @@ public class Crontab {
         Connection db = null;
         org.aspcfs.controller.SystemStatus thisSystem = null;
         try {
+          String language = null;
+          // Based on CE, find the corresponding vhost
+          org.aspcfs.modules.system.base.Site thisSite = org.aspcfs.controller.SecurityHook.retrieveSite(servletContext, ce);
+          if (thisSite != null) {
+            language = thisSite.getLanguage();
+            System.out.println("Language found: " + thisSite.getVirtualHost() + " / " + thisSite.getLanguage());
+          }
           db = cp.getConnection(ce);
           thisSystem = org.aspcfs.controller.SecurityHook.retrieveSystemStatus(
-              servletContext, db, ce);
+              servletContext, db, ce, language);
         } catch (Exception e) {
         } finally {
           if (db != null) {
@@ -584,4 +591,3 @@ public class Crontab {
     }
   }
 }
-

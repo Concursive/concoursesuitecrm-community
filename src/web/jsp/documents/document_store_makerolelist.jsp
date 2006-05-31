@@ -21,6 +21,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.utils.web.*,org.aspcfs.utils.StringUtils , org.aspcfs.modules.admin.base.*, org.aspcfs.modules.documents.base.* " %>
 <jsp:useBean id="roles" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="siteId" class="java.lang.String" scope="request"/>
 <body onload='page_init();'>
 <script language='Javascript'>
 function page_init() {
@@ -32,19 +34,19 @@ function page_init() {
     Role element = (Role) i.next();
     if ("group".equals(request.getAttribute("memberType"))){
 %>
-      if ( !(inArray(parent.document.forms['documentStoreMemberForm'].elements['selRoleList'], <%= element.getId() %> + '-R')) ) {
+      if ( !(inArray(parent.document.forms['documentStoreMemberForm'].elements['selRoleList'], <%= element.getId() %> + '-R<%= siteId.trim() %>')) ) {
         var newOpt = parent.document.createElement("OPTION");
-        newOpt.text='<%= StringUtils.jsStringEscape(element.getRole()) %>';
-        newOpt.value='<%= element.getId()%>' + '-R';
+        newOpt.text="<%= StringUtils.jsStringEscape(element.getRole()) %><%= siteId != null && !"".equals(siteId.trim()) && !"-1".equals(siteId.trim()) ?" ("+StringUtils.jsStringEscape(SiteIdList.getSelectedValue(Integer.parseInt(siteId)))+")":"" %>";
+        newOpt.value='<%= element.getId()%>' + '-R<%= (siteId != null && !"".equals(siteId.trim())? siteId:"-1") %>';
         list.options[list.length] = newOpt;
       }
-      parent.initList('<%= element.getId()%>' + '-R');
+      parent.initList('<%= element.getId()%>' + '-R<%= (siteId != null && !"".equals(siteId.trim())? siteId:"-1") %>');
       parent.setGroupType('<%=DocumentStoreTeamMemberList.ROLE%>');
 <%
     }else{
 %>
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<%= StringUtils.jsStringEscape(element.getRole()) %>';
+    newOpt.text="<%= StringUtils.jsStringEscape(element.getRole()) %>";
     newOpt.value='<%= element.getId() %>';
     list.options[list.length] = newOpt;
 <%

@@ -43,6 +43,7 @@ public class CFSHttpXMLWriter implements DataWriter {
   private String code = null;
   private int systemId = -1;
   private int clientId = -1;
+  private String username = null;
 
   private ArrayList transaction = new ArrayList();
   private boolean autoCommit = true;
@@ -50,6 +51,26 @@ public class CFSHttpXMLWriter implements DataWriter {
   private String lastResponse = null;
 
   private boolean ignoreClientId = false;
+
+
+  /**
+   * Gets the username attribute of the CFSHttpXMLWriter object
+   *
+   * @return The username value
+   */
+  public String getUsername() {
+    return username;
+  }
+
+
+  /**
+   * Sets the username attribute of the CFSHttpXMLWriter object
+   *
+   * @param tmp The new username value
+   */
+  public void setUsername(String tmp) {
+    this.username = tmp;
+  }
 
 
   /**
@@ -284,6 +305,12 @@ public class CFSHttpXMLWriter implements DataWriter {
     return true;
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Return Value
+   */
   public int retrieveNewClientId() {
     ignoreClientId = false;
     if (!isConfigured()) {
@@ -346,6 +373,12 @@ public class CFSHttpXMLWriter implements DataWriter {
       Element authId = document.createElement("id");
       authId.appendChild(document.createTextNode(id));
       auth.appendChild(authId);
+
+      if (username != null) {
+        Element authUsername = document.createElement("username");
+        authUsername.appendChild(document.createTextNode(username));
+        auth.appendChild(authUsername);
+      }
 
       Element authCode = document.createElement("code");
       authCode.appendChild(document.createTextNode(code));

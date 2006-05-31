@@ -45,6 +45,7 @@ public class ReportRunnerJob implements StatefulJob {
     SchedulerContext schedulerContext = null;
     ConnectionPool cp = null;
     Connection db = null;
+    Connection scriptdb = null;
     try {
       // Prepare items from context
       schedulerContext = context.getScheduler().getContext();
@@ -59,17 +60,23 @@ public class ReportRunnerJob implements StatefulJob {
       while (i.hasNext()) {
         Site thisSite = (Site) i.next();
         db = cp.getConnection(thisSite.getConnectionElement());
+        scriptdb = cp.getConnection(thisSite.getConnectionElement());
         ProcessJasperReports reportRunner = new ProcessJasperReports(
-            db, thisSite, prefs.getPrefs(), prefs.getLocalizationPrefs());
+            db, scriptdb, thisSite, prefs.getPrefs(), prefs.getLocalizationPrefs(thisSite.getLanguage()));
         reportRunner = null;
         cp.free(db);
+        cp.free(scriptdb);
         db = null;
+        scriptdb = null;
       }
     } catch (Exception e) {
       throw new JobExecutionException(e.getMessage());
     } finally {
-      if (cp != null && db != null) {
-        cp.free(db);
+      if (cp != null) {
+        if (db != null) 
+          cp.free(db);
+        if (scriptdb != null) 
+          cp.free(scriptdb);
       }
     }
   }

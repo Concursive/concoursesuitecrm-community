@@ -230,7 +230,7 @@ public class ProductOptionConfigurator extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT conf.* " +
-        "FROM product_option_configurator AS conf " +
+        "FROM product_option_configurator conf " +
         "WHERE conf.configurator_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -335,14 +335,12 @@ public class ProductOptionConfigurator extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
     StringBuffer sql = new StringBuffer();
-    boolean commit = true;
+    boolean commit = db.getAutoCommit();
     try {
-      commit = db.getAutoCommit();
       if (commit) {
         db.setAutoCommit(false);
       }
-      id = DatabaseUtils.getCurrVal(
-          db, "product_option_configurator_configurator_id_seq", id);
+      id = DatabaseUtils.getNextSeq(db, "product_option_configurator_configurator_id_seq");
       sql.append(
           "INSERT INTO product_option_configurator(" +
           (id > -1 ? "configurator_id, " : "") + "configurator_name, short_description, long_description, class_name, result_type ) ");
@@ -394,11 +392,10 @@ public class ProductOptionConfigurator extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE product_option_configurator SET " +
-        " configurator_name = ?, short_description = ?, long_description = ?, class_name = ?, " +
-        " result_type = ? ");
-    sql.append(" WHERE configurator_id = ? ");
-
+        "UPDATE product_option_configurator " +
+        "SET configurator_name = ?, short_description = ?, long_description = ?, class_name = ?, " +
+        "result_type = ? " +
+        "WHERE configurator_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getConfiguratorName());
@@ -448,8 +445,8 @@ public class ProductOptionConfigurator extends GenericBean {
     try {
       i = 0;
       pst = db.prepareStatement(
-          "SELECT count(*) as parentcount " +
-          " FROM product_option " +
+          "SELECT count(*) AS parentcount " +
+          "FROM product_option " +
           "WHERE configurator_id = ?");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();

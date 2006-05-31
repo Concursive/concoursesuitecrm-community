@@ -86,6 +86,10 @@ public class User extends GenericBean {
   protected int enteredBy = -1;
   protected int modifiedBy = -1;
   protected boolean enabled = true;
+  protected boolean hasWebdavAccess = false;
+  protected boolean hasHttpApiAccess = false;
+  private int siteId = -1;
+  private String siteIdName = null;
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
   protected java.sql.Timestamp lastLogin = null;
@@ -212,6 +216,66 @@ public class User extends GenericBean {
    */
   public GraphSummaryList getRevenue() {
     return revenue;
+  }
+
+
+  /**
+   * Gets the hasWebdavAccess attribute of the User object
+   *
+   * @return The hasWebdavAccess value
+   */
+  public boolean getHasWebdavAccess() {
+    return hasWebdavAccess;
+  }
+
+
+  /**
+   * Sets the hasWebdavAccess attribute of the User object
+   *
+   * @param tmp The new hasWebdavAccess value
+   */
+  public void setHasWebdavAccess(boolean tmp) {
+    this.hasWebdavAccess = tmp;
+  }
+
+
+  /**
+   * Sets the hasWebdavAccess attribute of the User object
+   *
+   * @param tmp The new hasWebdavAccess value
+   */
+  public void setHasWebdavAccess(String tmp) {
+    this.hasWebdavAccess = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the hasHttpApiAccess attribute of the User object
+   *
+   * @return The hasHttpApiAccess value
+   */
+  public boolean getHasHttpApiAccess() {
+    return hasHttpApiAccess;
+  }
+
+
+  /**
+   * Sets the hasHttpApiAccess attribute of the User object
+   *
+   * @param tmp The new hasHttpApiAccess value
+   */
+  public void setHasHttpApiAccess(boolean tmp) {
+    this.hasHttpApiAccess = tmp;
+  }
+
+
+  /**
+   * Sets the hasHttpApiAccess attribute of the User object
+   *
+   * @param tmp The new hasHttpApiAccess value
+   */
+  public void setHasHttpApiAccess(String tmp) {
+    this.hasHttpApiAccess = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -567,8 +631,8 @@ public class User extends GenericBean {
       targetContact = new Contact(db, this.getContactId());
       SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
           "SystemStatus")).get(
-              ((ConnectionElement) context.getSession().getAttribute(
-                  "ConnectionElement")).getUrl());
+          ((ConnectionElement) context.getSession().getAttribute(
+              "ConnectionElement")).getUrl());
 
       //send email
       SMTPMessage mail = new SMTPMessage();
@@ -599,31 +663,31 @@ public class User extends GenericBean {
         } else {
           mail.setBody(
               "This message details information about your Centric CRM account.<br />" +
-              "<br />" +
-              "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
-              "<br />" +
-              "Please login with the following information:<br />" +
-              "<br />" +
-              "User Name: " + this.username + "<br />" +
-              "Password: " + newPassword + "<br />" +
-              "<br />" +
-              "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
-              "<br />");
+                  "<br />" +
+                  "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
+                  "<br />" +
+                  "Please login with the following information:<br />" +
+                  "<br />" +
+                  "User Name: " + this.username + "<br />" +
+                  "Password: " + newPassword + "<br />" +
+                  "<br />" +
+                  "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
+                  "<br />");
         }
       } else {
         mail.setSubject("Centric CRM Account Information");
         mail.setBody(
             "This message details information about your Centric CRM account.<br />" +
-            "<br />" +
-            "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
-            "<br />" +
-            "Please login with the following information:<br />" +
-            "<br />" +
-            "User Name: " + this.username + "<br />" +
-            "Password: " + newPassword + "<br />" +
-            "<br />" +
-            "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
-            "<br />");
+                "<br />" +
+                "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
+                "<br />" +
+                "Please login with the following information:<br />" +
+                "<br />" +
+                "User Name: " + this.username + "<br />" +
+                "Password: " + newPassword + "<br />" +
+                "<br />" +
+                "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
+                "<br />");
       }
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
@@ -1060,6 +1124,26 @@ public class User extends GenericBean {
 
 
   /**
+   * Sets the siteId attribute of the User object
+   *
+   * @param tmp The new siteId value
+   */
+  public void setSiteId(int tmp) {
+    siteId = tmp;
+  }
+
+
+  /**
+   * Sets the siteId attribute of the User object
+   *
+   * @param tmp The new siteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Sets the pipelineValue attribute of the User object
    *
    * @param pipelineValue The new pipelineValue value
@@ -1426,6 +1510,26 @@ public class User extends GenericBean {
 
 
   /**
+   * Gets the siteId attribute of the User object
+   *
+   * @return The siteId value
+   */
+  public int getSiteId() {
+    return siteId;
+  }
+
+
+  /**
+   * Gets the siteIdName attribute of the User object
+   *
+   * @return The siteIdName value
+   */
+  public String getSiteIdName() {
+    return siteIdName;
+  }
+
+
+  /**
    * Gets the Alias attribute of the User object
    *
    * @return The Alias value
@@ -1729,7 +1833,7 @@ public class User extends GenericBean {
           // fr_FR_EURO
           locale = new Locale(
               language.substring(0, 2), language.substring(3, 5), language.substring(
-                  6));
+              6));
           break;
         default:
           locale = Locale.getDefault();
@@ -1958,9 +2062,9 @@ public class User extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
-          "UPDATE access " +
-          "SET password = ?, webdav_password = ?, hidden = ? " +
-          "WHERE user_id = ? ");
+          "UPDATE \"access\" " +
+              "SET \"password\" = ?, webdav_password = ?, hidden = ? " +
+              "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, encryptPassword(password1));
@@ -1997,9 +2101,9 @@ public class User extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
-          "UPDATE access " +
-          "SET webdav_password = ?, hidden = ? " +
-          "WHERE user_id = ? ");
+          "UPDATE \"access\" " +
+              "SET webdav_password = ?, hidden = ? " +
+              "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, tmpPwd);
@@ -2072,9 +2176,9 @@ public class User extends GenericBean {
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "access_user_id_seq");
       sql.append(
-          "INSERT INTO access " +
-          "(username, password, contact_id, alias, " +
-          "manager_id, role_id, expires, ");
+          "INSERT INTO \"access\" " +
+              "(username, \"password\", contact_id, alias, " +
+              "manager_id, role_id, expires, ");
       if (id > -1) {
         sql.append("user_id, ");
       }
@@ -2087,6 +2191,7 @@ public class User extends GenericBean {
       if (lastLogin != null) {
         sql.append("last_login, ");
       }
+      sql.append("site_id, ");
       if (timeZone != null) {
         sql.append("timezone, ");
       }
@@ -2096,7 +2201,7 @@ public class User extends GenericBean {
       if (language != null) {
         sql.append("\"language\", ");
       }
-      sql.append("enteredBy, modifiedBy, webdav_password, hidden ) ");
+      sql.append("enteredBy, modifiedBy, webdav_password, hidden, allow_webdav_access, allow_httpapi_access ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
         sql.append("?, ");
@@ -2110,6 +2215,7 @@ public class User extends GenericBean {
       if (lastLogin != null) {
         sql.append("?, ");
       }
+      sql.append("?, ");
       if (timeZone != null) {
         sql.append("?, ");
       }
@@ -2119,7 +2225,7 @@ public class User extends GenericBean {
       if (language != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?) ");
+      sql.append("?, ?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getUsername());
@@ -2131,7 +2237,7 @@ public class User extends GenericBean {
       pst.setInt(++i, contact.getId());
       pst.setInt(++i, getAlias());
       if (getAlias() > -1) {
-        pst.setInt(++i, -1);
+        DatabaseUtils.setInt(pst, ++i, -1);
       } else {
         pst.setInt(++i, getManagerId());
       }
@@ -2149,6 +2255,7 @@ public class User extends GenericBean {
       if (lastLogin != null) {
         pst.setTimestamp(++i, lastLogin);
       }
+      DatabaseUtils.setInt(pst, ++i, getSiteId());
       if (timeZone != null) {
         pst.setString(++i, timeZone);
       }
@@ -2162,6 +2269,8 @@ public class User extends GenericBean {
       pst.setInt(++i, getModifiedBy());
       pst.setString(++i, encryptWebdavPassword(username, password1));
       pst.setBoolean(++i, this.getHidden());
+      pst.setBoolean(++i, this.getHasWebdavAccess());
+      pst.setBoolean(++i, this.getHasHttpApiAccess());
       pst.execute();
       pst.close();
       if (System.getProperty("DEBUG") != null) {
@@ -2174,8 +2283,8 @@ public class User extends GenericBean {
       //Update the backwards pointer
       pst = db.prepareStatement(
           "UPDATE contact " +
-          "SET user_id = ? " +
-          "WHERE contact_id = ? ");
+              "SET user_id = ? " +
+              "WHERE contact_id = ? ");
       pst.setInt(1, id);
       pst.setInt(2, contact.getId());
       pst.executeUpdate();
@@ -2220,19 +2329,19 @@ public class User extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE access " +
-        "SET expires = ?, ");
+        "UPDATE \"access\" " +
+            "SET expires = ?, ");
 
     if (password1 != null) {
-      sql.append("password = ?,");
+      sql.append("\"password\" = ?,");
     }
 
     sql.append(
         "role_id = ?, hidden = ?, " +
-        "modifiedBy = ?, " +
-        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
-        "WHERE username = ? " +
-        "AND modified = ? ");
+            "modifiedBy = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "WHERE username = ? " +
+            "AND modified = ? ");
 
     pst = db.prepareStatement(sql.toString());
 
@@ -2287,9 +2396,9 @@ public class User extends GenericBean {
     checkHidden(false);
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
-        "UPDATE access " +
-        "SET enabled = ?, hidden = ? " +
-        "WHERE user_id = ? ");
+        "UPDATE \"access\" " +
+            "SET enabled = ?, hidden = ? " +
+            "WHERE user_id = ? ");
     pst.setBoolean(1, false);
     pst.setBoolean(2, this.getHidden());
     pst.setInt(3, this.getId());
@@ -2319,9 +2428,9 @@ public class User extends GenericBean {
     checkHidden(true);
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
-        "UPDATE access " +
-        "SET enabled = ? , hidden = ? " +
-        "WHERE user_id = ? ");
+        "UPDATE \"access\" " +
+            "SET enabled = ? , hidden = ? " +
+            "WHERE user_id = ? ");
     pst.setBoolean(1, true);
     pst.setBoolean(2, this.getHidden());
     pst.setInt(3, this.getId());
@@ -2370,10 +2479,10 @@ public class User extends GenericBean {
     if (this.id > -1) {
       checkHidden();
       String sql =
-          "UPDATE access " +
-          "SET last_login = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-          "last_ip = ?, hidden = ? " +
-          "WHERE user_id = ? ";
+          "UPDATE \"access\" " +
+              "SET last_login = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+              "last_ip = ?, hidden = ? " +
+              "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.ip);
       pst.setBoolean(2, this.getHidden());
@@ -2382,6 +2491,56 @@ public class User extends GenericBean {
       pst.close();
     }
     insertLogRecord(db);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param access Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void updateHttpApiAccess(Connection db, boolean access) throws SQLException {
+    if (this.id > -1) {
+      checkHidden();
+      String sql =
+          "UPDATE \"access\" " +
+              "SET allow_httpapi_access = ?, " +
+              "hidden = ? " +
+              "WHERE user_id = ? ";
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setBoolean(1, access);
+      pst.setBoolean(2, this.getHidden());
+      pst.setInt(3, this.id);
+      pst.executeUpdate();
+      pst.close();
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param access Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void updateWebdavAccess(Connection db, boolean access) throws SQLException {
+    if (this.id > -1) {
+      checkHidden();
+      String sql =
+          "UPDATE \"access\" " +
+              "SET allow_webdav_access = ?, " +
+              "hidden = ? " +
+              "WHERE user_id = ? ";
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setBoolean(1, access);
+      pst.setBoolean(2, this.getHidden());
+      pst.setInt(3, this.id);
+      pst.executeUpdate();
+      pst.close();
+    }
   }
 
 
@@ -2410,9 +2569,9 @@ public class User extends GenericBean {
     if (this.id > -1) {
       checkHidden();
       String sql =
-          "UPDATE access " +
-          "SET timezone = ?, currency = ?, \"language\" = ?, hidden = ? " +
-          "WHERE user_id = ? ";
+          "UPDATE \"access\" " +
+              "SET timezone = ?, currency = ?, \"language\" = ?, hidden = ? " +
+              "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.timeZone);
       pst.setString(2, this.currency);
@@ -2439,32 +2598,45 @@ public class User extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, " +
-        "a.last_ip, a.timezone, a.startofday as access_startofday, " +
-        "a.endofday as access_endofday, a.expires, a.alias, " +
-        "a.contact_id as contact_id_link, a.user_id as access_user_id, " +
-        "a.enabled as access_enabled, a.assistant, " +
-        "a.entered as access_entered, a.enteredby as access_enteredby, " +
-        "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
-        "a.currency, a.\"language\", a.webdav_password, a.hidden as hidden, " +
-        "r.\"role\" AS systemrole, r.role_type, " +
-        "m_usr.enabled as mgr_enabled, " +
-        "c.* " +
-        "FROM access a " +
-        "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
-        "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
-        "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
-        "WHERE a.user_id > -1 ");
+        "SELECT a.username, a.\"password\", a.role_id, a.last_login, a.manager_id, " +
+            "a.site_id AS siteid, " +
+            "a.last_ip, a.timezone, a.startofday AS access_startofday, " +
+            "a.endofday AS access_endofday, a.expires, a.alias, " +
+            "a.contact_id AS contact_id_link, a.user_id AS access_user_id, " +
+            "a.enabled AS access_enabled, a.assistant, " +
+            "a.entered AS access_entered, a.enteredby AS access_enteredby, " +
+            "a.modified AS access_modified, a.modifiedby AS access_modifiedby, " +
+            "a.currency, a.\"language\", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
+            "r.\"role\" AS systemrole, r.role_type, " +
+            "m_usr.enabled AS mgr_enabled, " +
+            "c.*, d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
+            "b.description AS site_id_name, " +
+            "o.name AS org_name, o.enabled AS orgenabled " +
+            "FROM \"access\" a " +
+            "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
+            "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
+            "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+            "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+            "LEFT JOIN \"access\" m_usr ON (a.manager_id = m_usr.user_id) " +
+            "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
+            "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
+            "WHERE a.user_id > -1 " +
+            "AND (ca.address_id IS NULL OR ca.address_id IN ( " +
+            "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
+            "OR ca.address_id IN (SELECT MIN(ctadd.address_id) FROM contact_address ctadd WHERE ctadd.contact_id = c.contact_id AND " +
+            " ctadd.contact_id NOT IN (SELECT contact_id FROM contact_address WHERE contact_address.primary_address = ?))) ");
     if (userId > -1) {
       sql.append("AND a.user_id = ? ");
     } else {
       sql.append(
           "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
-          "AND a.password = ? " +
-          "AND a.enabled = ? ");
+              "AND a.\"password\" = ? " +
+              "AND a.enabled = ? ");
     }
     pst = db.prepareStatement(sql.toString());
     int i = 0;
+    pst.setBoolean(++i, true);
+    pst.setBoolean(++i, true);
     if (userId > -1) {
       pst.setInt(++i, userId);
     } else {
@@ -2497,8 +2669,8 @@ public class User extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT sum(rv.amount) as s " +
-        "FROM revenue rv " +
-        "WHERE rv.owner IN (" + this.getIdRange() + ") AND rv.year = ? ");
+            "FROM revenue rv " +
+            "WHERE rv.owner IN (" + this.getIdRange() + ") AND rv.year = ? ");
     if (type > 0) {
       sql.append("AND rv.type = ? ");
     }
@@ -2524,7 +2696,7 @@ public class User extends GenericBean {
    * @return The grossPipelineCurrency value
    */
   public double getGrossPipeline(int divisor) {
-    return (java.lang.Math.round(pipelineValue) / divisor);
+    return (java.lang.Math.round(pipelineValue) / (double) divisor);
   }
 
 
@@ -2536,14 +2708,14 @@ public class User extends GenericBean {
    */
   public void buildGrossPipelineValue(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT SUM(oc.guessvalue) AS sum " +
-        "FROM opportunity_component oc " +
-        "WHERE oc.owner IN (" + this.getIdRange() + ") " +
-        "AND oc.enabled = ? AND oc.closed IS NULL ");
+        "SELECT SUM(oc.guessvalue) AS thesum " +
+            "FROM opportunity_component oc " +
+            "WHERE oc.owner IN (" + this.getIdRange() + ") " +
+            "AND oc.enabled = ? AND oc.closed IS NULL AND oc.trashed_date IS NULL ");
     pst.setBoolean(1, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      this.setPipelineValue(rs.getDouble("sum"));
+      this.setPipelineValue(rs.getDouble("thesum"));
     }
     rs.close();
     pst.close();
@@ -2552,10 +2724,9 @@ public class User extends GenericBean {
 
 
   /**
-   * Method added in for SSS and other ASP customers newPassword: Updates the
-   * User's password with a new one. Does not verify the current one since this
-   * method is intended for those who have forgotten their password and need a
-   * new one.
+   * Updates the User's password with a new one. Does not verify the current one
+   * since this method is intended for those who have forgotten their password
+   * and need a new one.
    *
    * @param db      Description of Parameter
    * @param context Description of Parameter
@@ -2573,8 +2744,8 @@ public class User extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE access " +
-        "SET password = ?, hidden = ? ");
+        "UPDATE \"access\" " +
+            "SET \"password\" = ?, hidden = ? ");
     if (modifiedBy > -1) {
       sql.append(
           ", modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(
@@ -2757,6 +2928,7 @@ public class User extends GenericBean {
     this.setRoleId(rs.getInt("role_id"));
     lastLogin = rs.getTimestamp("last_login");
     this.setManagerId(rs.getInt("manager_id"));
+    this.setSiteId(DatabaseUtils.getInt(rs, "siteid"));
     ip = rs.getString("last_ip");
     timeZone = rs.getString("timezone");
     startOfDay = rs.getInt("access_startofday");
@@ -2775,6 +2947,8 @@ public class User extends GenericBean {
     language = rs.getString("language");
     this.setWebdavPassword(rs.getString("webdav_password"));
     hidden = rs.getBoolean("hidden");
+    hasWebdavAccess = rs.getBoolean("allow_webdav_access");
+    hasHttpApiAccess = rs.getBoolean("allow_httpapi_access");
     //role table
     this.setRole(rs.getString("systemrole"));
     roleType = DatabaseUtils.getInt(rs, "role_type");
@@ -2784,6 +2958,8 @@ public class User extends GenericBean {
     } else {
       managerUserEnabled = false;
     }
+    //lookup site_id table
+    siteIdName = rs.getString("site_id_name");
   }
 
 
@@ -2799,15 +2975,14 @@ public class User extends GenericBean {
     boolean duplicate = false;
     if (previousUsername != null && previousUsername.equals(username)) {
       return false;
-    }    
+    }
     //finding if an enabled user exists
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM access " +
-        "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = " + DatabaseUtils.toLowerCase(
-            db) + "(?) " +
-        "AND enabled = ? ");
-    pst.setString(1, getUsername());
+            "FROM \"access\" " +
+            "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = ? " +
+            "AND enabled = ? ");
+    pst.setString(1, getUsername().toLowerCase());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -2815,19 +2990,18 @@ public class User extends GenericBean {
     }
     rs.close();
     pst.close();
-    
+
     //finding if a disabled user exists whose contact is enabled
     //  return true if exists as such a user can be enabled
     pst = db.prepareStatement(
         "SELECT * " +
-        "FROM access, contact " +
-        "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = " + DatabaseUtils.toLowerCase(
-            db) + "(?) " +
-        "AND access.enabled = ? " +
-        "AND contact.user_id = access.user_id " +
-        "AND contact.enabled = ? ");
+            "FROM \"access\", contact " +
+            "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = ? " +
+            "AND \"access\".enabled = ? " +
+            "AND contact.user_id = \"access\".user_id " +
+            "AND contact.enabled = ? ");
     int i = 0;
-    pst.setString(++i, getUsername());
+    pst.setString(++i, getUsername().toLowerCase());
     pst.setBoolean(++i, false);
     pst.setBoolean(++i, true);
     rs = pst.executeQuery();
@@ -2857,8 +3031,8 @@ public class User extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT contact_id " +
-        "FROM access " +
-        "WHERE user_id = ? ");
+            "FROM \"access\" " +
+            "WHERE user_id = ? ");
     pst.setInt(1, userId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -2939,10 +3113,10 @@ public class User extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE access " +
-        "SET username = ?, manager_id = ?, role_id = ?, expires = ?, ");
+        "UPDATE \"access\" " +
+            "SET username = ?, manager_id = ?, role_id = ?, expires = ?, site_id = ?, ");
     if (password1 != null) {
-      sql.append("password = ?, ");
+      sql.append("\"password\" = ?, ");
       sql.append("webdav_password = ?, ");
     }
     if (enteredBy > -1) {
@@ -2957,7 +3131,7 @@ public class User extends GenericBean {
     if (assistant > -1) {
       sql.append("assistant = ?, ");
     }
-    sql.append("alias = ?, hidden = ? ");
+    sql.append("alias = ?, hidden = ?, allow_webdav_access = ?, allow_httpapi_access = ? ");
     sql.append("WHERE user_id = ? ");
 
     int i = 0;
@@ -2974,6 +3148,7 @@ public class User extends GenericBean {
     } else {
       pst.setTimestamp(++i, this.getExpires());
     }
+    DatabaseUtils.setInt(pst, ++i, getSiteId());
     if (password1 != null) {
       pst.setString(++i, encryptPassword(password1));
       pst.setString(++i, encryptWebdavPassword(username, password1));
@@ -2992,6 +3167,8 @@ public class User extends GenericBean {
     }
     pst.setInt(++i, alias);
     pst.setBoolean(++i, hidden);
+    pst.setBoolean(++i, hasWebdavAccess);
+    pst.setBoolean(++i, hasHttpApiAccess);
     pst.setInt(++i, getId());
     resultCount = pst.executeUpdate();
     pst.close();
@@ -3066,8 +3243,8 @@ public class User extends GenericBean {
     ResultSet rs = null;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) as recordcount " +
-        "FROM access " +
-        "WHERE username LIKE (?)");
+            "FROM \"access\" " +
+            "WHERE username LIKE (?)");
     int i = 0;
     pst.setString(++i, tmpUsername + "%");
     rs = pst.executeQuery();
@@ -3105,11 +3282,11 @@ public class User extends GenericBean {
     int userId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT user_id " +
-        "FROM contact c, contact_emailaddress e " +
-        "WHERE " + DatabaseUtils.toLowerCase(db) + "(e.email) = ? " +
-        "AND c.contact_id = e.contact_id " +
-        "AND user_id IS NOT NULL " +
-        "AND user_id > 0 ");
+            "FROM contact c, contact_emailaddress e " +
+            "WHERE " + DatabaseUtils.toLowerCase(db) + "(e.email) = ? " +
+            "AND c.contact_id = e.contact_id " +
+            "AND user_id IS NOT NULL " +
+            "AND user_id > 0 ");
     pst.setString(1, email.toLowerCase());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -3127,7 +3304,8 @@ public class User extends GenericBean {
   private void checkHidden() {
     Timestamp currentTime = new Timestamp(
         Calendar.getInstance().getTimeInMillis());
-    if (this.getExpires() != null && currentTime.before(this.getExpires()) && this.getEnabled()) {
+    if (this.getExpires() != null && currentTime.before(this.getExpires()) && this.getEnabled())
+    {
       this.setHidden(false);
     } else if (this.getExpires() == null && this.getEnabled()) {
       this.setHidden(false);
@@ -3143,11 +3321,21 @@ public class User extends GenericBean {
   private void checkHidden(boolean enabledValue) {
     Timestamp currentTime = new Timestamp(
         Calendar.getInstance().getTimeInMillis());
-    if (this.getExpires() != null && currentTime.before(this.getExpires()) && enabledValue) {
+    if (this.getExpires() != null && currentTime.before(this.getExpires()) && enabledValue)
+    {
       this.setHidden(false);
     } else if (this.getExpires() == null && enabledValue) {
       this.setHidden(false);
     }
   }
-}
 
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Return Value
+   */
+  public String toString() {
+    return this.getUsername();
+  }
+}

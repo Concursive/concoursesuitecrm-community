@@ -236,7 +236,7 @@ public class LibraryComponentParameter {
   public void insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "business_process_pa_lib_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO business_process_parameter_library " +
+        "INSERT INTO " + DatabaseUtils.getTableName(db, "business_process_parameter_library") + " " +
         "(" + (id > -1 ? "parameter_id, " : "") + "component_id, param_name, description, default_value, enabled) VALUES " +
         "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
     int i = 0;
@@ -262,7 +262,7 @@ public class LibraryComponentParameter {
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM business_process_parameter_library " +
+        "DELETE FROM " + DatabaseUtils.getTableName(db, "business_process_parameter_library") + " " +
         "WHERE component_id = ? ");
 
     pst.setInt(1, this.componentId);
@@ -272,4 +272,3 @@ public class LibraryComponentParameter {
 
   }
 }
-

@@ -562,8 +562,11 @@ public class SurveyAnswer {
     }
     int i = 0;
     PreparedStatement pst = null;
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       //delete any item dependency first
       pst = db.prepareStatement(
           "DELETE FROM active_survey_answer_items " +
@@ -578,12 +581,18 @@ public class SurveyAnswer {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }

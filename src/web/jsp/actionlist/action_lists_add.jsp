@@ -25,7 +25,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
+<%-- <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script> --%>
 <SCRIPT LANGUAGE="JavaScript">
 function checkForm(form) {
     formTest = true;
@@ -57,7 +57,7 @@ function checkForm(form) {
   }
   cancelURL = cancelURL + "&linkModuleId=" + Constants.ACTIONLISTS_CONTACTS;
 %>
-<body onLoad="javascript:document.searchForm.description.focus()">
+<body onLoad="javascript:document.searchForm.description.focus();javascript:updateOperators()">
 <form name="searchForm" method="post" action="MyActionLists.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">

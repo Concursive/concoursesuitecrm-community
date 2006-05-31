@@ -17,12 +17,22 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.admin.base.User, org.aspcfs.modules.contacts.base.Contact" %>
-<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/><html>
+<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.admin.base.User, org.aspcfs.modules.contacts.base.Contact, org.aspcfs.utils.web.HtmlOption" %>
+<jsp:useBean id="resourceAssignedList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="resolvedByList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="resourceAssignedSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="resolvedBySelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<html>
 <body onload="page_init();">
 <script language="JavaScript">
 <%
-  String departmentCode = request.getParameter("departmentCode");
+  String populateResourceAssigned = request.getParameter("populateResourceAssigned");
+  String resourceAssignedDepartmentCode = request.getParameter("resourceAssignedDepartmentCode");
+
+  String populateResolvedBy = request.getParameter("populateResolvedBy");
+  String resolvedByDepartmentCode = request.getParameter("resolvedByDepartmentCode");
+
+  String dept = request.getParameter("dept");
   String form = request.getParameter("form");
 %>
 function newOpt(param, value) {
@@ -32,22 +42,45 @@ function newOpt(param, value) {
   return newOpt;
 }
 function page_init() {
-<dhv:evaluate if="<%= ((UserList.size() > 0) || (departmentCode != null)) %>">
-  var list = parent.document.<%= form %>.assignedTo;
-  list.options.length = 0;
-  list.options[list.length] = newOpt(label("option.none","-- None --"), "0");
-<%
-  Iterator list1 = UserList.iterator();
-  while (list1.hasNext()) {
-    User thisUser = (User)list1.next();
-    if (thisUser.getId() != 0) {
-%>
-  list.options[list.length] = newOpt("<%= thisUser.getContact().getValidName() %>", "<%= thisUser.getId() %>");
-<%
+<dhv:evaluate if="<%= "true".equals(populateResourceAssigned) %>">
+  <dhv:evaluate if="<%= ((resourceAssignedList.size() > 0) || (resourceAssignedDepartmentCode != null)) %>">
+    var resourceAssignedWidget = parent.document.<%= form %>.assignedTo;
+    resourceAssignedWidget.options.length = 0;
+  <%
+    Iterator resourceAssignedIterator = resourceAssignedSelect.iterator();
+    while (resourceAssignedIterator.hasNext()) {
+      HtmlOption option = (HtmlOption) resourceAssignedIterator.next();
+      int value = Integer.parseInt(option.getValue());
+      String text = option.getText();
+      if (!"".equals(text.trim())){
+  %>
+        resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= text %>", "<%= value %>");
+  <%
+      }
     }
-  }
-%>
+  %>
+  </dhv:evaluate>
+</dhv:evaluate>
+<dhv:evaluate if="<%= "true".equals(populateResolvedBy) %>">
+  <dhv:evaluate if="<%= ((resolvedByList.size() > 0) || (resolvedByDepartmentCode != null)) %>">
+    var resolvedByWidget = parent.document.<%= form %>.resolvedBy;
+    resolvedByWidget.options.length = 0;
+  <%
+    Iterator resolvedByIterator = resolvedBySelect.iterator();
+    while (resolvedByIterator.hasNext()) {
+      HtmlOption option = (HtmlOption) resolvedByIterator.next();
+      int value = Integer.parseInt(option.getValue());
+      String text = option.getText();
+      if (!"".equals(text.trim())){
+  %>
+          resolvedByWidget.options[resolvedByWidget.length] = newOpt("<%= text%>", "<%= value %>");
+  <%
+      }
+    }
+  %>
+  </dhv:evaluate>
 </dhv:evaluate>
 }
 </script>
 </body>
+</html>

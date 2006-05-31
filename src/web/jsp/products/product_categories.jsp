@@ -136,8 +136,13 @@
   <tr class="containerBody">
     <td align="left"><%= toHtml(product.getSku()) %></td>
     <td align="left"><%= toHtml(product.getName()) %><input type="hidden" name="product_<%= i %>" value="<%= product.getId() %>"/></td>
-    <td align="left"><%=(product.getShortDescription() == null || "".equals(product.getShortDescription())) ? "" : toHtml(product.getShortDescription()) %>&nbsp;</td>
-    <td align="right"><zeroio:currency value="<%= product.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td align="left">
+      <input type="text" id="comment_<%= i %>" name="comment_<%= i %>"  value="<%=(product.getShortDescription() == null || "".equals(product.getShortDescription())) ? "" : toHtml(product.getShortDescription()) %>" />
+    </td>
+    <td align="right">
+      <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+      <input type="text" id="price_<%= i %>" name="price_<%= i %>" value="<zeroio:number value="<%= product.getActivePrice().getPriceAmount() %>" locale="<%= User.getLocale() %>" />" size="10"/>
+    </td>
     <td><input type="text" id="qty_<%= i %>" name="qty_<%= i %>" size="6"/></td>
   </tr>
 <% } %>

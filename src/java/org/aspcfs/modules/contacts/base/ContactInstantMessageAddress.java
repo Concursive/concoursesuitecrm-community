@@ -88,7 +88,7 @@ public class ContactInstantMessageAddress extends InstantMessageAddress {
           "Valid Instant Message Address ID not specified.");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT *, lims.description AS service_description, limt.description AS type_description " +
+        "SELECT cim.*, lims.description AS service_description, limt.description AS type_description " +
         "FROM contact_imaddress cim " +
         "LEFT JOIN lookup_im_services lims ON (cim.imaddress_service = lims.code) " +
         "LEFT JOIN lookup_im_types limt ON (cim.imaddress_type = limt.code) " +

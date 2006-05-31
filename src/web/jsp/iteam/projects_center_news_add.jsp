@@ -172,19 +172,19 @@
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top">
-        Category
+        <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
       </td>
       <td>
         <%= newsArticleCategoryList.getHtmlSelect(systemStatus, "categoryId", newsArticle.getCategoryId()) %>
         <zeroio:permission name="project-news-add">
-          <a href="javascript:popURL('ProjectManagementNews.do?command=EditCategoryList&pid=<%= Project.getId() %>&form=inputForm&field=categoryId&previousId=' + document.inputForm.categoryId.options[document.inputForm.categoryId.selectedIndex].value + '&popup=true','EditList','600','300','yes','yes');">edit list</a>
+          <a href="javascript:popURL('ProjectManagementNews.do?command=EditCategoryList&pid=<%= Project.getId() %>&form=inputForm&field=categoryId&previousId=' + document.inputForm.categoryId.options[document.inputForm.categoryId.selectedIndex].value + '&popup=true','EditList','600','300','yes','yes');"><dhv:label name="project.editList">edit list</dhv:label></a>
         </zeroio:permission>
         <%= showAttribute(request, "categoryIdError") %>
       </td>
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top">
-        Link to List
+        <dhv:label name="project.linktoList">Link to List</dhv:label>
       </td>
       <td>
         <%= taskCategoryList.getHtmlSelect(systemStatus, "taskCategoryId", newsArticle.getTaskCategoryId()) %>

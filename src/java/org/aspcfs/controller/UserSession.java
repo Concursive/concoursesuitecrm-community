@@ -44,7 +44,7 @@ public class UserSession {
   long creationTime = -1;
   String ipAddress = null;
   HashMap viewpoints = null;
-
+  int userId = -1;
 
   /**
    * Constructor for the UserSession object
@@ -213,6 +213,13 @@ public class UserSession {
     viewpoints = null;
   }
 
+  public int getUserId() {
+    return userId;
+  }
+
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
 
   /**
    * Builds Viewpoints for a single permission

@@ -29,7 +29,7 @@ import java.util.LinkedHashMap;
 /**
  * Validates the import data against the properties
  *
- * @author Mathur
+ * @author     Mathur
  * @version $id:exp$
  * @created April 6, 2004
  */
@@ -52,7 +52,7 @@ public class ContactImportValidate {
   /**
    * Sets the propertyMapList attribute of the ContactImportValidate object
    *
-   * @param tmp The new propertyMapList value
+   * @param  tmp  The new propertyMapList value
    */
   public void setPropertyMap(PropertyMap tmp) {
     this.propertyMap = tmp;
@@ -62,7 +62,7 @@ public class ContactImportValidate {
   /**
    * Sets the filePath attribute of the ContactImportValidate object
    *
-   * @param tmp The new filePath value
+   * @param  tmp  The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -72,7 +72,7 @@ public class ContactImportValidate {
   /**
    * Sets the fieldMappings attribute of the ContactImportValidate object
    *
-   * @param tmp The new fieldMappings value
+   * @param  tmp  The new fieldMappings value
    */
   public void setFieldMappings(LinkedHashMap tmp) {
     this.fieldMappings = tmp;
@@ -82,7 +82,7 @@ public class ContactImportValidate {
   /**
    * Gets the fieldMappings attribute of the ContactImportValidate object
    *
-   * @return The fieldMappings value
+   * @return    The fieldMappings value
    */
   public LinkedHashMap getFieldMappings() {
     return fieldMappings;
@@ -92,7 +92,7 @@ public class ContactImportValidate {
   /**
    * Sets the contactImport attribute of the ContactImportValidate object
    *
-   * @param tmp The new contactImport value
+   * @param  tmp  The new contactImport value
    */
   public void setContactImport(ContactImport tmp) {
     this.contactImport = tmp;
@@ -102,7 +102,7 @@ public class ContactImportValidate {
   /**
    * Sets the sampleRecords attribute of the ContactImportValidate object
    *
-   * @param tmp The new sampleRecords value
+   * @param  tmp  The new sampleRecords value
    */
   public void setSampleRecords(ArrayList tmp) {
     this.sampleRecords = tmp;
@@ -112,7 +112,7 @@ public class ContactImportValidate {
   /**
    * Sets the errors attribute of the ContactImportValidate object
    *
-   * @param tmp The new errors value
+   * @param  tmp  The new errors value
    */
   public void setErrors(HashMap tmp) {
     this.errors = tmp;
@@ -122,7 +122,7 @@ public class ContactImportValidate {
   /**
    * Gets the errors attribute of the ContactImportValidate object
    *
-   * @return The errors value
+   * @return    The errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -132,7 +132,7 @@ public class ContactImportValidate {
   /**
    * Gets the generalErrors attribute of the ContactImportValidate object
    *
-   * @return The generalErrors value
+   * @return    The generalErrors value
    */
   public ArrayList getGeneralErrors() {
     if (errors.containsKey("generalErrors")) {
@@ -145,7 +145,7 @@ public class ContactImportValidate {
   /**
    * Gets the fieldErrors attribute of the ContactImportValidate object
    *
-   * @return The fieldErrors value
+   * @return    The fieldErrors value
    */
   public HashMap getFieldErrors() {
     if (errors.containsKey("fieldErrors")) {
@@ -158,7 +158,7 @@ public class ContactImportValidate {
   /**
    * Gets the sampleRecords attribute of the ContactImportValidate object
    *
-   * @return The sampleRecords value
+   * @return    The sampleRecords value
    */
   public ArrayList getSampleRecords() {
     return sampleRecords;
@@ -168,7 +168,7 @@ public class ContactImportValidate {
   /**
    * Gets the contactImport attribute of the ContactImportValidate object
    *
-   * @return The contactImport value
+   * @return    The contactImport value
    */
   public ContactImport getContactImport() {
     return contactImport;
@@ -178,7 +178,7 @@ public class ContactImportValidate {
   /**
    * Gets the propertyMap attribute of the ContactImportValidate object
    *
-   * @return The propertyMap value
+   * @return    The propertyMap value
    */
   public PropertyMap getPropertyMap() {
     return propertyMap;
@@ -188,7 +188,7 @@ public class ContactImportValidate {
   /**
    * Gets the filePath attribute of the ContactImportValidate object
    *
-   * @return The filePath value
+   * @return    The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -261,7 +261,7 @@ public class ContactImportValidate {
   /**
    * Retrieves first "n" lines from the import file
    *
-   * @param count Description of the Parameter
+   * @param  count  Description of the Parameter
    */
   public void buildImportSample(int count) {
     try {
@@ -269,7 +269,10 @@ public class ContactImportValidate {
           filePath, contactImport.getFileType());
       CFSFileReader.Record record = null;
       ArrayList header = null;
-      while ((record = fileReader.nextLine()) != null && count-- > 0) {
+      while ((record = fileReader.nextLine()) != null && count > 0) {
+        if (record.isEmpty()) {
+          continue;
+        }
         sampleRecords.add(record.line);
         if (sampleRecords.size() == 1) {
           header = record.data;
@@ -280,6 +283,7 @@ public class ContactImportValidate {
                 "Insufficient Data: Count of columns in header and data do not match");
           }
         }
+        count--;
       }
     } catch (java.io.FileNotFoundException e) {
       addGeneralError("File Not Found: Import file does not exist");
@@ -292,7 +296,7 @@ public class ContactImportValidate {
   /**
    * Run the validation
    *
-   * @param request Description of the Parameter
+   * @param  request  Description of the Parameter
    */
   public void validate(HttpServletRequest request) {
     //get field mappings from file
@@ -405,17 +409,18 @@ public class ContactImportValidate {
       while (i.hasNext()) {
         Property p = (Property) i.next();
         if (p.getMappedColumn() < 0) {
-          //check to see if there are any substitute properties
-          if (!"".equals(StringUtils.toString(p.getSubstitute()))) {
-            String substitute = p.getSubstitute();
-            Property thisProp = propertyMap.getProperty(substitute);
-            if (thisProp.getMappedColumn() < 0) {
-              addGeneralError(
-                  "Required Property: The property " + p.getDisplayName() + " or " + thisProp.getDisplayName() + " is required");
+          //check to see if this property is required
+          if (p.checkIsRequired(fieldMappings)) {
+            //check to see if there are any substitute properties
+            if (!"".equals(StringUtils.toString(p.getSubstitute()))) {
+              String substitute = p.getSubstitute();
+              Property thisProp = propertyMap.getProperty(substitute);
+              if (thisProp.getMappedColumn() < 0) {
+                addGeneralError("Required Property: The property " + p.getDisplayName() + " or " + thisProp.getDisplayName() + " is required");
+              }
+            } else {
+              addGeneralError("Required Property: The property " + p.getDisplayName() + " is required");
             }
-          } else {
-            addGeneralError(
-                "Required Property: The property " + p.getDisplayName() + " is required");
           }
         }
       }
@@ -426,7 +431,7 @@ public class ContactImportValidate {
   /**
    * Adds a general error
    *
-   * @param error The feature to be added to the FileError attribute
+   * @param  error  The feature to be added to the FileError attribute
    */
   public void addGeneralError(String error) {
     if (!errors.containsKey("generalErrors")) {

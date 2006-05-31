@@ -21,6 +21,8 @@ import com.darkhorseventures.database.ConnectionPool;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.aspcfs.modules.system.base.DatabaseVersion;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 
@@ -56,11 +58,11 @@ public class UpgradeDatabaseTask extends Task {
   private String password = null;
   private String baseFile = null;
   private String servletJar = null;
-  private String webPath = null;
+  private String fileLibraryPath = null;
   private String specificDatabase = null;
-  private boolean processSpecifiedDatabaseOnly = false;
   private String locale = "";
   private String params = null;
+  private String languagePath = null;
 
 
   /**
@@ -134,12 +136,12 @@ public class UpgradeDatabaseTask extends Task {
 
 
   /**
-   * Sets the webPath attribute of the UpgradeDatabaseTask object
+   * Sets the fileLibraryPath attribute of the UpgradeDatabaseTask object
    *
-   * @param tmp The new webPath value
+   * @param tmp The new fileLibraryPath value
    */
-  public void setWebPath(String tmp) {
-    this.webPath = tmp;
+  public void setFileLibraryPath(String tmp) {
+    this.fileLibraryPath = tmp;
   }
 
 
@@ -153,22 +155,16 @@ public class UpgradeDatabaseTask extends Task {
   }
 
 
-  /**
-   * Sets the processSpecifiedDatabaseOnly attribute of the UpgradeDatabaseTask
-   * object
-   *
-   * @param tmp The new processSpecifiedDatabaseOnly value
-   */
-  public void setProcessSpecifiedDatabaseOnly(String tmp) {
-    processSpecifiedDatabaseOnly = "true".equals(tmp);
-  }
-
   public void setLocale(String locale) {
     this.locale = locale;
   }
 
   public void setParams(String params) {
     this.params = params;
+  }
+
+  public void setLanguagePath(String languagePath) {
+    this.languagePath = languagePath;
   }
 
   /**
@@ -181,7 +177,8 @@ public class UpgradeDatabaseTask extends Task {
     if ("\\".equals(fsEval)) {
       fsEval = "\\\\";
       servletJar = StringUtils.replace(servletJar, "\\", "\\\\");
-      webPath = StringUtils.replace(webPath, "\\", "\\\\");
+      fileLibraryPath = StringUtils.replace(fileLibraryPath, "\\", "\\\\");
+      languagePath = StringUtils.replace(languagePath, "\\", "\\\\");
     }
     System.out.println("Checking databases to process...");
     try {
@@ -209,10 +206,9 @@ public class UpgradeDatabaseTask extends Task {
       ce.setAllowCloseOnIdle(false);
       Connection dbGk = sqlDriver.getConnection(ce);
       ArrayList siteList = new ArrayList();
-      //Build list of sites
-      if (processSpecifiedDatabaseOnly && specificDatabase != null && !"".equals(
-          specificDatabase)) {
-        //Run just the specified database
+
+      if (params == null || params.indexOf("mode=upgrade") == -1) {
+        // Installing a new database
         HashMap siteInfo = new HashMap();
         siteInfo.put("url", url);
         siteInfo.put("dbName", specificDatabase);
@@ -221,29 +217,58 @@ public class UpgradeDatabaseTask extends Task {
         siteInfo.put("driver", driver);
         siteList.add(siteInfo);
       } else {
-        //Run the rest of the databases
-        PreparedStatement pst = dbGk.prepareStatement(
-            "SELECT DISTINCT dbhost, dbname, dbuser, dbpw, driver " +
-            "FROM sites " +
-            "WHERE sitecode = ? AND enabled = ? ");
-        pst.setString(1, sitecode);
-        pst.setBoolean(2, true);
-        ResultSet rs = pst.executeQuery();
-        while (rs.next()) {
-          HashMap siteInfo = new HashMap();
-          siteInfo.put("url", rs.getString("dbhost"));
-          siteInfo.put("dbName", rs.getString("dbname"));
-          siteInfo.put("user", rs.getString("dbuser"));
-          siteInfo.put("password", rs.getString("dbpw"));
-          siteInfo.put("driver", rs.getString("driver"));
-          if ((specificDatabase == null || "".equals(specificDatabase)) ||
-              (specificDatabase.equals((String) siteInfo.get("dbName")))) {
+        // Upgrading an existing database
+        if (specificDatabase != null && !"".equals(specificDatabase)) {
+          //Build list of sites
+          SiteList dbList = new SiteList();
+          dbList.setSiteCode(sitecode);
+          dbList.setDatabaseName(specificDatabase);
+          dbList.buildList(dbGk);
+          if (dbList.size() > 0) {
+            Site thisSite = (Site) dbList.get(0);
+            HashMap siteInfo = new HashMap();
+            siteInfo.put("url", thisSite.getDatabaseUrl());
+            siteInfo.put("dbName", thisSite.getDatabaseName());
+            siteInfo.put("user", thisSite.getDatabaseUsername());
+            siteInfo.put("password", thisSite.getDatabasePassword());
+            siteInfo.put("driver", thisSite.getDatabaseDriver());
+            siteList.add(siteInfo);
+          } else {
+            //Run just the specified database
+            HashMap siteInfo = new HashMap();
+            siteInfo.put("url", url);
+            siteInfo.put("dbName", specificDatabase);
+            siteInfo.put("user", user);
+            siteInfo.put("password", password);
+            siteInfo.put("driver", driver);
             siteList.add(siteInfo);
           }
+        } else {
+          //Run the rest of the databases
+          PreparedStatement pst = dbGk.prepareStatement(
+              "SELECT DISTINCT dbhost, dbname, dbuser, dbpw, driver " +
+                  "FROM sites " +
+                  "WHERE sitecode = ? AND enabled = ? ");
+          pst.setString(1, sitecode);
+          pst.setBoolean(2, true);
+          ResultSet rs = pst.executeQuery();
+          while (rs.next()) {
+            HashMap siteInfo = new HashMap();
+            siteInfo.put("url", rs.getString("dbhost"));
+            siteInfo.put("dbName", rs.getString("dbname"));
+            siteInfo.put("user", rs.getString("dbuser"));
+            siteInfo.put("password", rs.getString("dbpw"));
+            siteInfo.put("driver", rs.getString("driver"));
+            if ((specificDatabase == null || "".equals(specificDatabase)) ||
+                (specificDatabase.equals((String) siteInfo.get("dbName")))) {
+              siteList.add(siteInfo);
+            }
+          }
+          rs.close();
+          pst.close();
         }
-        rs.close();
-        pst.close();
       }
+
       // Execute the scripts
       File baseFilePath = new File(baseFile);
       Iterator fileIterator = files.iterator();
@@ -258,6 +283,9 @@ public class UpgradeDatabaseTask extends Task {
           executeScript(dbGk, thisFile, fsEval, null);
           executeSql(dbGk, thisFile, fsEval);
         } else {
+          if (siteList.size() == 0) {
+            throw new BuildException("ERROR: Database not found");
+          }
           //Iterate over the databases to upgrade and run the correct
           //sql code and bean shell scripts
           Iterator i = siteList.iterator();
@@ -269,7 +297,6 @@ public class UpgradeDatabaseTask extends Task {
                 (String) siteInfo.get("password"));
             ce.setDriver((String) siteInfo.get("driver"));
             ce.setAllowCloseOnIdle(false);
-            System.out.println("");
             Connection db = sqlDriver.getConnection(ce);
             //Try to run a specified bean shell script if found
             executeScript(
@@ -284,8 +311,8 @@ public class UpgradeDatabaseTask extends Task {
       }
       sqlDriver.closeAllConnections();
     } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("Script error");
+      e.printStackTrace(System.out);
+      throw new BuildException("Script Error: " + e.getMessage());
     }
   }
 
@@ -293,14 +320,23 @@ public class UpgradeDatabaseTask extends Task {
   /**
    * Executes the specified BeanShell script on the given database connection
    *
-   * @param db         Description of the Parameter
-   * @param scriptFile Description of the Parameter
-   * @param fsEval     Description of the Parameter
-   * @param dbName     Description of the Parameter
+   * @param db             Description of the Parameter
+   * @param thisScriptFile Description of the Parameter
+   * @param fsEval         Description of the Parameter
+   * @param dbName         Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  private void executeScript(Connection db, String scriptFile, String fsEval, String dbName) throws Exception {
-    if (scriptFile.endsWith(".bsh") && new File(scriptFile).exists()) {
+  private void executeScript(Connection db, String thisScriptFile, String fsEval, String dbName) throws Exception {
+    String scriptFile = thisScriptFile;
+    if (scriptFile.endsWith(".bsh")) {
+      if (!(new File(scriptFile).exists())) {
+        // look for script stored in a common "upgrade" directory
+        scriptFile = (new File(scriptFile)).getParentFile().getParentFile().getParentFile().getPath() + fs +
+            "upgrade" + fs + (new File(scriptFile)).getName();
+      }
+      if (!(new File(scriptFile).exists())) {
+        throw new Exception("BSH FILE NOT FOUND: " + thisScriptFile);
+      }
       Interpreter script = new Interpreter();
       script.eval(
           "addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
@@ -312,10 +348,18 @@ public class UpgradeDatabaseTask extends Task {
           "addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "jcrontab.jar\")");
       script.eval("addClassPath(\"" + servletJar + "\")");
       script.set("db", db);
-      script.set("fileLibraryPath", webPath + fs);
+      script.set("fileLibraryPath", fileLibraryPath + fs);
+      script.set("languagePath", languagePath + fs);
       script.set("locale", locale);
-      script.set(
-          "dbFileLibraryPath", webPath + fs + "WEB-INF" + fs + "fileLibrary" + fs + dbName + fs);
+      // Determine if fileLibrary is part of WEB-INF path
+      File directory = new File(fileLibraryPath + fs + dbName);
+      if (directory.exists()) {
+        script.set(
+            "dbFileLibraryPath", fileLibraryPath + fs + dbName + fs);
+      } else {
+        script.set(
+            "dbFileLibraryPath", fileLibraryPath + fs + "WEB-INF" + fs + "fileLibrary" + fs + dbName + fs);
+      }
       script.set("params", params);
       System.out.println("Executing: " + scriptFile);
       script.source(scriptFile);
@@ -332,7 +376,10 @@ public class UpgradeDatabaseTask extends Task {
    * @throws Exception Description of the Exception
    */
   private void executeSql(Connection db, String sqlFile, String fsEval) throws Exception {
-    if (sqlFile.endsWith(".sql") && new File(sqlFile).exists()) {
+    if (sqlFile.endsWith(".sql")) {
+      if (!(new File(sqlFile).exists())) {
+        throw new Exception("SQL FILE NOT FOUND: " + sqlFile);
+      }
       try {
         db.setAutoCommit(false);
         System.out.println("SQL Script executing: " + sqlFile);
@@ -366,8 +413,8 @@ public class UpgradeDatabaseTask extends Task {
         String fileName = baseFile.substring(baseFile.indexOf("upgrade") + 8);
         PreparedStatement pst = db.prepareStatement(
             "SELECT version_id " +
-            "FROM database_version " +
-            "WHERE script_filename = ? ");
+                "FROM database_version " +
+                "WHERE script_filename = ? ");
         pst.setString(1, fileName);
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
@@ -394,4 +441,3 @@ public class UpgradeDatabaseTask extends Task {
     }
   }
 }
-

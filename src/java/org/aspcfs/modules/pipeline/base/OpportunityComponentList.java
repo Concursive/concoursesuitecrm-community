@@ -54,6 +54,8 @@ public class OpportunityComponentList extends ArrayList {
   protected boolean hasAlertDate = false;
   protected java.sql.Timestamp alertDate = null;
   protected int owner = -1;
+  private int contactId = -1;
+  private int orgId = -1;
   protected String ownerIdRange = null;
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
@@ -64,9 +66,15 @@ public class OpportunityComponentList extends ArrayList {
   protected int competitors = -1;
   protected int compellingEvent = -1;
   protected int budget = -1;
-
+  protected int controlledHierarchyOnly = Constants.UNDEFINED;
+  protected int accessType = -1;
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
+  private double defaultTerms = 1.0;
+  private String defaultUnits = null;
+  // for the graph
+  private String units = null;
+  private boolean includeOnlyForGraph = false;
 
 
   /**
@@ -376,6 +384,31 @@ public class OpportunityComponentList extends ArrayList {
   }
 
 
+  public double getDefaultTerms() {
+    return defaultTerms;
+  }
+
+
+  public void setDefaultTerms(double tmp) {
+    this.defaultTerms = tmp;
+  }
+
+
+  public void setDefaultTerms(String tmp) {
+    this.defaultTerms = Double.parseDouble(tmp);
+  }
+
+
+  public String getDefaultUnits() {
+    return defaultUnits;
+  }
+
+
+  public void setDefaultUnits(String tmp) {
+    this.defaultUnits = tmp;
+  }
+
+
   /**
    * Sets the closeDateStart attribute of the OpportunityComponentList object
    *
@@ -427,6 +460,16 @@ public class OpportunityComponentList extends ArrayList {
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
+  }
+
+
+  public void setContactId(int tmp) {
+    this.contactId = tmp;
+  }
+
+
+  public void setOrgId(int tmp) {
+    this.orgId = tmp;
   }
 
 
@@ -554,6 +597,135 @@ public class OpportunityComponentList extends ArrayList {
 
 
   /**
+   * Gets the controlledHierarchyOnly attribute of the OpportunityComponentList
+   * object
+   *
+   * @return The controlledHierarchyOnly value
+   */
+  public int getControlledHierarchyOnly() {
+    return controlledHierarchyOnly;
+  }
+
+
+  /**
+   * Sets the controlledHierarchyOnly attribute of the OpportunityComponentList
+   * object
+   *
+   * @param tmp The new controlledHierarchyOnly value
+   */
+  public void setControlledHierarchyOnly(int tmp) {
+    this.controlledHierarchyOnly = tmp;
+  }
+
+
+  /**
+   * Sets the controlledHierarchyOnly attribute of the OpportunityComponentList
+   * object
+   *
+   * @param tmp The new controlledHierarchyOnly value
+   */
+  public void setControlledHierarchyOnly(String tmp) {
+    this.controlledHierarchyOnly = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the controlledHierarchy attribute of the OpportunityComponentList
+   * object
+   *
+   * @param hierarchy The new controlledHierarchy value
+   * @param tmp       The new controlledHierarchy value
+   */
+  public void setControlledHierarchy(int hierarchy, String tmp) {
+    this.controlledHierarchyOnly = hierarchy;
+    this.ownerIdRange = tmp;
+  }
+
+
+  /**
+   * Gets the accessType attribute of the OpportunityComponentList object
+   *
+   * @return The accessType value
+   */
+  public int getAccessType() {
+    return accessType;
+  }
+
+
+  /**
+   * Sets the accessType attribute of the OpportunityComponentList object
+   *
+   * @param tmp The new accessType value
+   */
+  public void setAccessType(int tmp) {
+    this.accessType = tmp;
+  }
+
+
+  /**
+   * Sets the accessType attribute of the OpportunityComponentList object
+   *
+   * @param tmp The new accessType value
+   */
+  public void setAccessType(String tmp) {
+    this.accessType = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the units attribute of the OpportunityComponentList object
+   *
+   * @param tmp The new units value
+   */
+  public void setUnits(String tmp) {
+    this.units = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyForGraph attribute of the OpportunityComponentList
+   * object
+   *
+   * @param tmp The new includeOnlyForGraph value
+   */
+  public void setIncludeOnlyForGraph(boolean tmp) {
+    this.includeOnlyForGraph = tmp;
+  }
+
+
+  /**
+   * Sets the includeOnlyForGraph attribute of the OpportunityComponentList
+   * object
+   *
+   * @param tmp The new includeOnlyForGraph value
+   */
+  public void setIncludeOnlyForGraph(String tmp) {
+    this.includeOnlyForGraph = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the units attribute of the OpportunityComponentList object
+   *
+   * @return The units value
+   */
+  public String getUnits() {
+    return units;
+  }
+
+
+  /**
+   * Gets the includeOnlyForGraph attribute of the OpportunityComponentList
+   * object
+   *
+   * @return The includeOnlyForGraph value
+   */
+  public boolean getIncludeOnlyForGraph() {
+    return includeOnlyForGraph;
+  }
+
+
+  /**
    * Description of the Method
    *
    * @param db       Description of the Parameter
@@ -569,11 +741,11 @@ public class OpportunityComponentList extends ArrayList {
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     sqlSelect.append(
         "SELECT alertdate, count(*) as nocols " +
-        "FROM opportunity_component oc " +
-        "WHERE oc.opp_id > -1 ");
+            "FROM opportunity_component oc " +
+            "WHERE oc.opp_id > -1 ");
     sqlTail.append("GROUP BY alertdate ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
@@ -601,13 +773,13 @@ public class OpportunityComponentList extends ArrayList {
   public void buildShortList(Connection db) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     sqlSelect.append(
         "SELECT oc.opp_id, oc.id, oc.description, oc.alertdate, oc.alert, oc.closedate, oc.guessvalue " +
-        "FROM opportunity_component oc  " +
-        "LEFT JOIN opportunity_header oh ON (oc.opp_id = oh.opp_id) " +
-        "LEFT JOIN organization org ON (oh.acctlink = org.org_id) " +
-        "WHERE oc.opp_id > -1 ");
+            "FROM opportunity_component oc  " +
+            "LEFT JOIN opportunity_header oh ON (oc.opp_id = oh.opp_id) " +
+            "LEFT JOIN organization org ON (oh.acctlink = org.org_id) " +
+            "WHERE oc.opp_id > -1 ");
     PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
@@ -650,16 +822,17 @@ public class OpportunityComponentList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM opportunity_component oc " +
-        "WHERE oc.id > -1 ");
+            "FROM opportunity_component oc " +
+            "LEFT JOIN lookup_stage y ON (oc.stage = y.code) " +
+            "WHERE oc.id > -1 ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -673,8 +846,8 @@ public class OpportunityComponentList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(oc.description) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(oc.description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -700,15 +873,15 @@ public class OpportunityComponentList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "oc.*, y.description as stagename " +
-        "FROM opportunity_component oc, " +
-        "lookup_stage y " +
-        "WHERE y.code = oc.stage " +
-        "AND oc.opp_id > -1 ");
+        "oc.*, y.description AS stagename " +
+            "FROM opportunity_component oc " +
+            "LEFT JOIN lookup_stage y ON (oc.stage = y.code) " +
+            "WHERE y.code = oc.stage " +
+            "AND oc.opp_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() +
-        sqlFilter.toString() +
-        sqlOrder.toString());
+            sqlFilter.toString() +
+            sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -728,7 +901,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -738,7 +911,7 @@ public class OpportunityComponentList extends ArrayList {
     if (enteredBy != -1) {
       sqlFilter.append("AND oc.enteredby = ? ");
     }
-    if (hasAlertDate == true) {
+    if (hasAlertDate) {
       sqlFilter.append("AND oc.alertdate IS NOT NULL ");
     }
     if (alertDate != null) {
@@ -756,11 +929,22 @@ public class OpportunityComponentList extends ArrayList {
     if (closeDateEnd != null) {
       sqlFilter.append("AND oc.closedate <= ? ");
     }
-    if (owner != -1) {
-      sqlFilter.append("AND oc.owner = ? ");
-    }
-    if (ownerIdRange != null) {
-      sqlFilter.append("AND oc.owner in (" + this.ownerIdRange + ") ");
+    if (controlledHierarchyOnly != Constants.UNDEFINED) {
+      if (controlledHierarchyOnly == Constants.FALSE) {
+        sqlFilter.append(
+            "AND (oc.owner IN (" + ownerIdRange + ") " +
+                "OR oc.opp_id IN (SELECT opp_id from opportunity_header x " +
+                "WHERE x.access_type = ?)) ");
+      } else {
+        sqlFilter.append("AND oc.owner IN (" + ownerIdRange + ") ");
+      }
+    } else {
+      if (owner != -1) {
+        sqlFilter.append("AND oc.owner = ? ");
+      }
+      if (ownerIdRange != null) {
+        sqlFilter.append("AND oc.owner in (" + this.ownerIdRange + ") ");
+      }
     }
     if (queryOpenOnly) {
       sqlFilter.append("AND oc.closed IS NULL ");
@@ -784,6 +968,41 @@ public class OpportunityComponentList extends ArrayList {
     if (budget != -1) {
       sqlFilter.append("AND oc.budget = ? ");
     }
+    if (units != null) {
+      sqlFilter.append("AND oc.units = ? ");
+    }
+    /*if (includeOnlyForGraph) {
+      sqlFilter.append(
+          "AND " + DatabaseUtils.addTimestampInterval(db, DatabaseUtils.MONTH, "terms", "closedate")
+          + " > " + DatabaseUtils.getCurrentTimestamp(db) + " ) ");
+    }*/
+    if (includeOnlyForGraph) {
+      if (defaultUnits == null || "".equals(defaultUnits)) {
+        sqlFilter.append(
+          "AND ((oc.units = ? AND oc.id IN ( SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
+              db, DatabaseUtils.MONTH, "terms", "closedate") + " > " + DatabaseUtils.getCurrentTimestamp(
+              db) + " )) OR ( oc.units = ? AND oc.id IN (  " +
+              "SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
+              db, DatabaseUtils.WEEK, "terms", "closedate") + " > " + DatabaseUtils.getCurrentTimestamp(
+              db) + " ))) ");
+      } else {
+        sqlFilter.append(
+          "AND oc.id IN ( SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
+              db, DatabaseUtils.WEEK, "terms", "closedate", defaultUnits, java.lang.Math.round(defaultTerms)) + " > " + DatabaseUtils.getCurrentTimestamp(
+              db) + " ) ");
+      }
+    }
+    if (contactId != -1) {
+      sqlFilter.append(
+            "AND oc.opp_id IN (SELECT opp_id from opportunity_header x " +
+                "WHERE x.contactlink = ?) ");
+    }
+    if (orgId != -1) {
+      sqlFilter.append(
+            "AND oc.opp_id IN (SELECT opp_id from opportunity_header x " +
+                "WHERE x.acctlink = ?) ");
+    }
+
   }
 
 
@@ -863,8 +1082,14 @@ public class OpportunityComponentList extends ArrayList {
     if (closeDateEnd != null) {
       pst.setTimestamp(++i, closeDateEnd);
     }
-    if (owner != -1) {
-      pst.setInt(++i, owner);
+    if (controlledHierarchyOnly != Constants.UNDEFINED) {
+      if (controlledHierarchyOnly == Constants.FALSE) {
+        pst.setInt(++i, this.getAccessType());
+      }
+    } else {
+      if (owner != -1) {
+        pst.setInt(++i, owner);
+      }
     }
     if (includeOnlyTrashed) {
       // do nothing
@@ -885,6 +1110,19 @@ public class OpportunityComponentList extends ArrayList {
     if (budget != -1) {
       DatabaseUtils.setInt(pst, ++i, this.getBudget());
     }
+    if (units != null) {
+      pst.setString(++i, units);
+    }
+    if (includeOnlyForGraph && (defaultUnits == null || "".equals(defaultUnits))) {
+      pst.setString(++i, "M");
+      pst.setString(++i, "W");
+    }
+    if (contactId != -1) {
+      pst.setInt(++i, contactId);
+    }
+    if (orgId != -1) {
+      pst.setInt(++i, orgId);
+    }
     return i;
   }
 
@@ -903,8 +1141,8 @@ public class OpportunityComponentList extends ArrayList {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT COUNT(*) as itemcount " +
-        "FROM opportunity_component oc " +
-        "WHERE opp_id > 0 ");
+            "FROM opportunity_component oc " +
+            "WHERE opp_id > 0 ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -925,11 +1163,11 @@ public class OpportunityComponentList extends ArrayList {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
+  public boolean updateStatus(Connection db, ActionContext context, boolean toTrash, int tmpUserId) throws SQLException {
     Iterator itr = this.iterator();
     while (itr.hasNext()) {
       OpportunityComponent tmpOpportunityComponent = (OpportunityComponent) itr.next();
-      tmpOpportunityComponent.updateStatus(db, toTrash, tmpUserId);
+      tmpOpportunityComponent.updateStatus(db, context, toTrash, tmpUserId);
     }
     return true;
   }
@@ -947,6 +1185,16 @@ public class OpportunityComponentList extends ArrayList {
       OpportunityComponent tmpOpportunityComponent = (OpportunityComponent) itr.next();
       tmpOpportunityComponent.invalidateUserData(context);
     }
+  }
+
+  public double getGuessSum() {
+    double sum = 0d;
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      OpportunityComponent component = (OpportunityComponent) itr.next();
+      sum += component.getGuess();
+    }
+    return sum;
   }
 }
 

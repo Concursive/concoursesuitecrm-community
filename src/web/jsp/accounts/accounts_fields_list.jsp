@@ -34,6 +34,7 @@
 <script language="JavaScript" type="text/javascript">
   loadImages('select');
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -47,7 +48,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>">
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
       <td>
@@ -68,7 +70,7 @@
   <br />
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
     <dhv:permission name="accounts-accounts-folders-add">
-      <a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">
+      <a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&popup=<%= isPopup(request) %>&catId=<%= (String)request.getAttribute("catId") %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>">
         <dhv:label name="accounts.accounts_fields_list.AddRecordToFolder">Add a record to this folder</dhv:label></a>
       <br>&nbsp;<br>
     </dhv:permission>
@@ -113,7 +115,7 @@
         </td>
       </dhv:evaluate>
       <td align="left" width="100%" nowrap class="row<%= rowid %>">
-        <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
+        <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&popup=<%= isPopup(request) %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
       </td>
       <td nowrap class="row<%= rowid %>">
       <zeroio:tz timestamp="<%= thisRecord.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />

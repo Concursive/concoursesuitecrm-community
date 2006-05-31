@@ -633,6 +633,13 @@ if (1==1) {
 if (1==1) {
   SyncTable thisTable = new SyncTable();
   thisTable.setSystemId(systemId);
+  thisTable.setName("customFieldDataList");
+  thisTable.setMappedClassName("org.aspcfs.modules.base.CustomFieldDataList");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
   thisTable.setName("lookupProjectActivity");
   thisTable.setMappedClassName("org.aspcfs.utils.web.CustomLookupElement");
   thisTable.insert(db);
@@ -901,6 +908,7 @@ if (1==1) {
   thisTable.setSystemId(systemId);
   thisTable.setName("message");
   thisTable.setMappedClassName("org.aspcfs.modules.communications.base.Message");
+  thisTable.setKey("id");
   thisTable.insert(db);
 }
 if (1==1) {
@@ -964,6 +972,7 @@ if (1==1) {
   thisTable.setSystemId(systemId);
   thisTable.setName("campaign");
   thisTable.setMappedClassName("org.aspcfs.modules.communications.base.Campaign");
+  thisTable.setKey("id");
   thisTable.insert(db);
 }
 if (1==1) {
@@ -978,6 +987,7 @@ if (1==1) {
   thisTable.setSystemId(systemId);
   thisTable.setName("scheduledRecipient");
   thisTable.setMappedClassName("org.aspcfs.modules.communications.base.ScheduledRecipient");
+  thisTable.setKey("id");
   thisTable.insert(db);
 }
 if (1==1) {
@@ -1048,6 +1058,21 @@ if (1==1) {
   thisTable.setSystemId(systemId);
   thisTable.setName("campaignListGroups");
   thisTable.setMappedClassName("org.aspcfs.modules.communications.base.CampaignListGroup");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("task");
+  thisTable.setMappedClassName("org.aspcfs.modules.tasks.base.Task");
+  thisTable.setKey("id");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("contactMessage");
+  thisTable.setMappedClassName("org.aspcfs.modules.communications.base.ContactMessage");
   thisTable.insert(db);
 }
 print("Finished sync API.");

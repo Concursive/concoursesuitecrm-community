@@ -15,12 +15,10 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import org.aspcfs.utils.DatabaseUtils;
-
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -50,17 +48,34 @@ public class SearchFieldList extends ArrayList {
    * @since 1.1
    */
   public void buildFieldList(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM search_fields " +
-        "WHERE searchable = " + DatabaseUtils.getTrue(db) + " ");
+        "WHERE searchable = ? ");
+    pst.setBoolean(1, true);
+    ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       SearchField thisSearchField = new SearchField(rs);
       this.add(thisSearchField);
     }
     rs.close();
-    st.close();
+    pst.close();
+  }
+
+  public static int queryField(Connection db, String fieldName) throws SQLException {
+    int id = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT id " +
+        "FROM search_fields " +
+        "WHERE field = ? ");
+    pst.setString(1, fieldName);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      id = rs.getInt("id");
+    }
+    rs.close();
+    pst.close();
+    return id;
   }
 }
 

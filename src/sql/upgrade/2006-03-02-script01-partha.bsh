@@ -1,0 +1,34 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import java.util.*;
+import org.aspcfs.util.web.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.modules.actionplans.base.LookupStepAction;
+
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator");
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+LookupStepAction element = null;
+if (1 == 1) {
+  element = new LookupStepAction();
+  element.setConstantId(302061653);
+  element.setEnabled(true);
+  element.setDescription(dictionary.getTerm("system.fields.label", "admin.actionPlan.addRecipient.text", "value"));
+  element.setLevel(110);
+  element.insert(db);
+}

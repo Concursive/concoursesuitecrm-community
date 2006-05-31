@@ -269,6 +269,24 @@ CREATE TABLE saved_criteriaelement (
   operatorid INTEGER NOT NULL references field_types(id),
   value VARCHAR(80) NOT NULL,
   source INT NOT NULL DEFAULT -1,
-  value_id INT NULL
+  value_id INT NULL,
+  site_id INT NULL
+);
+
+-- Messages received by an user, from a specific contact
+CREATE TABLE contact_message (
+  id INT IDENTITY PRIMARY KEY,
+  message_id INTEGER NOT NULL REFERENCES message(id),
+  received_date DATETIME NOT NULL,
+  received_from INT NOT NULL REFERENCES contact(contact_id),
+  received_by INT NOT NULL REFERENCES access(user_id)
+);
+
+-- Each campaign can be associated with several user groups.
+-- The users belonging to the user groups will have access to the campaign results.
+CREATE TABLE campaign_group_map (
+  map_id INT IDENTITY PRIMARY KEY,
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
+  user_group_id INT NOT NULL REFERENCES user_group(group_id)
 );
 

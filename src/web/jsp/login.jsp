@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -21,11 +21,10 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.system.base.ApplicationVersion" %>
 <jsp:useBean id="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
-<%-- BEGIN DHV CODE ONLY --%>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="APP_VERSION" class="java.lang.String" scope="application"/>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
 <jsp:useBean id="APP_ORGANIZATION" class="java.lang.String" scope="application"/>
-<%-- END DHV CODE ONLY --%>
 <%!
   public static String getLongDate(java.util.Date tmp) {
     java.text.SimpleDateFormat formatter1 = new java.text.SimpleDateFormat ("MMMMM d, yyyy");
@@ -79,22 +78,35 @@
           <form name="login" method="POST" action="Login.do?command=Login&auto-populate=true">
             <table width="100%" cellspacing="1" cellpadding="3" border="0">
               <tr>
-                <td colspan="4" align="center"><img src="images/centric/logo-centric.gif" width="295" height="66" alt="" border="0" /></td>
+                <td colspan="4" align="center">
+                  <dhv:evaluate if="<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>">
+                    <img src="images/centric/logo-centric.gif" width="295" height="66" alt="" border="0" />
+                  </dhv:evaluate>
+                  <dhv:evaluate if="<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>">
+                    <%= applicationPrefs.get("LAYOUT.JSP.LOGIN.LOGO") %>
+                  </dhv:evaluate>
+                </td>
               </tr>
               <tr>
                 <td align="center" valign="center" colspan="4">
                 <table style="border:1px #EFEFEF solid;background: #EFEFEF" align="center" width="50%">
                 <tr><td align="center">
-                  <font size="2"><strong><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label> 
+                  <font size="2"><strong>
+                    <dhv:evaluate if="<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.TEXT") %>">
+                      Centric CRM
+                    </dhv:evaluate>
+                    <dhv:evaluate if="<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.TEXT") %>">
+                      <%= toHtml(applicationPrefs.get("LAYOUT.JSP.LOGIN.TEXT")) %>
+                    </dhv:evaluate>
                     <% if("https".equals(request.getScheme())) {%>
                       <dhv:label name="calendar.secureLogin">Secure Login</dhv:label>
                     <%} else {%>
                       <dhv:label name="calendar.login">Login</dhv:label>
                     <%}%></strong>
-<%-- BEGIN DHV CODE ONLY --%>
-                  <br /><%= toHtml(APP_TEXT) %>
-                  <dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br /><dhv:label name="calendar.licensedTo.colon" param="<%= "organization="+toHtml(APP_ORGANIZATION) %>">Licensed to: <%= toHtml(APP_ORGANIZATION) %></dhv:label></dhv:evaluate>
-<%-- END DHV CODE ONLY --%>
+                  <dhv:evaluate if="<%= hasText(APP_TEXT) %>">
+                    <br /><%= toHtml(APP_TEXT) %>
+                    <dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br /><dhv:label name="calendar.licensedTo.colon" param="<%= "organization="+toHtml(APP_ORGANIZATION) %>">Licensed to: <%= toHtml(APP_ORGANIZATION) %></dhv:label></dhv:evaluate>
+                  </dhv:evaluate>
                   </font>
                 </td></tr>
                 </table>
@@ -168,10 +180,8 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td align="center">
-<%-- BEGIN DHV CODE ONLY --%>
-            <%= toHtml(APP_VERSION) %><br />
-<%-- END DHV CODE ONLY --%>
-            &#169; Copyright 2000-2005 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
+            <%= toHtml(applicationPrefs.get("VERSION")) %><br />
+            &#169; Copyright 2000-2006 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
           </td>
         </tr>
       </table>

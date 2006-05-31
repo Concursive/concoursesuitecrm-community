@@ -150,7 +150,7 @@
           <strong><%= toHtml(thisReply.getSubject()) %></strong>&nbsp;
         </td>
         <td valign="top" align="right" nowrap>
-          <dhv:label name="project.replyNumberofTotal" param="<%= "number="+ replyCount +"|total="+ replyList.size() %>">Reply <%= replyCount %> of <%= replyList.size() %></dhv:label>&nbsp;
+          <dhv:label name="project.replyNumberofTotal" param="<%= "number="+ (projectIssueRepliesInfo.getCurrentOffset()+replyCount) +"|total="+ projectIssueRepliesInfo.getMaxRecords() %>">Reply <%= replyCount %> of <%= replyList.size() %></dhv:label>&nbsp;
         </td>
       </table>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">

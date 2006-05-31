@@ -1,0 +1,42 @@
+/*
+  This is a beanshell script that adds data to the database 
+  connection (db) from ant upgradedb
+  
+  Update all the previous "Action Plan Item Work" records with an existing opportunity attachment with
+  the new link_module_id
+*/
+import java.sql.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.actionplans.base.*;
+import java.util.*;
+
+print("Determine steps with attach opportunity action that already have an attachment");
+
+int oppCompObj = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.PIPELINE_COMPONENT);
+
+pst = db.prepareStatement(
+    "SELECT item_work_id " +
+    "FROM action_item_work aiw " +
+    "LEFT JOIN action_step step ON (aiw.action_step_id = step.step_id) " +
+    "WHERE step.action_id = ? " +
+    "AND link_module_id IS NOT NULL " +
+    "AND link_item_id IS NOT NULL ");
+pst.setInt(1, ActionStep.ATTACH_OPPORTUNITY);
+rs = pst.executeQuery();
+int itemWorkId = -1;
+PreparedStatement pst1 = null;
+while (rs.next()) {
+  itemWorkId = rs.getInt("item_work_id");
+  pst1 = db.prepareStatement(
+      "UPDATE action_item_work " +
+      "SET link_module_id = ? " +
+      "WHERE item_work_id = ? ");
+  pst1.setInt(1, oppCompObj);
+  pst1.setInt(2, itemWorkId);
+  pst1.executeUpdate();
+  print("Updated step " + itemWorkId + " to have ActionPlan.PIPELINE_COMPONENT as the link_module_id..");
+}
+if (pst1 != null) {
+  pst1.close();
+}
+pst.close();

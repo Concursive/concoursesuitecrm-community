@@ -39,12 +39,12 @@ CREATE UNIQUE INDEX idx_pr_opt_val ON product_option_values (value_id, option_id
 -- Product Option Map
 ALTER TABLE product_option_map DROP COLUMN value_id;
 
-ALTER TABLE product_option_boolean ADD COLUMN id INTEGER;
+ALTER TABLE product_option_boolean ADD id INTEGER;
 
-ALTER TABLE product_option_float ADD COLUMN id INTEGER;
+ALTER TABLE product_option_float ADD id INTEGER;
 
-ALTER TABLE product_option_timestamp ADD COLUMN id INTEGER;
+ALTER TABLE product_option_timestamp ADD id INTEGER;
 
-ALTER TABLE product_option_integer ADD COLUMN id INTEGER;
+ALTER TABLE product_option_integer ADD id INTEGER;
 
-ALTER TABLE product_option_text ADD COLUMN id INTEGER;
+ALTER TABLE product_option_text ADD id INTEGER;

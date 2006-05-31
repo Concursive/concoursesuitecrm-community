@@ -17,6 +17,7 @@ package org.aspcfs.modules.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.actionplans.base.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -468,8 +469,18 @@ public class CustomFieldRecord {
    * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
+    int i = 0;
     StringBuffer sql = new StringBuffer();
+    int accountMapId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS);
+    //Delete the action item work data.
+    sql.append("UPDATE action_item_work SET link_item_id = NULL WHERE link_item_id = ? AND link_module_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, accountMapId);
+    pst.executeUpdate();
+    pst.close();
     //Delete the related data
+    sql.setLength(0);
     sql.append(
         "DELETE FROM custom_field_data " +
         "WHERE record_id IN (SELECT record_id FROM custom_field_record WHERE link_module_id = ? ");
@@ -483,8 +494,8 @@ public class CustomFieldRecord {
       sql.append("AND record_id = ? ");
     }
     sql.append(") ");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    i = 0;
     pst.setInt(++i, linkModuleId);
     if (categoryId > -1) {
       pst.setInt(++i, categoryId);
@@ -576,15 +587,17 @@ public class CustomFieldRecord {
         "    group_id " +
         "  FROM custom_field_group " +
         "  WHERE category_id = ? " +
-        "  AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "  AND enabled = ? " +
         "  ORDER BY \"level\", group_id, group_name " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
         " ) " +
-        "AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "AND enabled = ? " +
         "ORDER BY \"level\", field_id, field_name " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "");
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, thisCategory.getId());
+    pst.setBoolean(2, true);
+    pst.setBoolean(3, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       fieldData = new CustomField(rs);

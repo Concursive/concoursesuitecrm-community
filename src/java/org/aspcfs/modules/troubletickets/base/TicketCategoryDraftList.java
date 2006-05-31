@@ -16,6 +16,7 @@
 package org.aspcfs.modules.troubletickets.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -32,7 +33,7 @@ import java.util.Iterator;
  * on drafts for Category objects.
  *
  * @author akhi_m
- * @version $id: exp$
+ * @version $Id$
  * @created May 23, 2003
  */
 public class TicketCategoryDraftList extends ArrayList {
@@ -44,13 +45,15 @@ public class TicketCategoryDraftList extends ArrayList {
   private int enabledState = -1;
   private boolean topLevelOnly = false;
   private boolean buildHierarchy = false;
+  private String noneLabel = null;
+  private int siteId = -1;
+  private boolean exclusiveToSite = false;
 
 
   /**
    * Constructor for the TicketCategoryDraftList object
    */
-  public TicketCategoryDraftList() {
-  }
+  public TicketCategoryDraftList() { }
 
 
   /**
@@ -245,6 +248,86 @@ public class TicketCategoryDraftList extends ArrayList {
 
 
   /**
+   * Gets the noneLabel attribute of the TicketCategoryDraftList object
+   *
+   * @return The noneLabel value
+   */
+  public String getNoneLabel() {
+    return noneLabel;
+  }
+
+
+  /**
+   * Sets the noneLabel attribute of the TicketCategoryDraftList object
+   *
+   * @param tmp The new noneLabel value
+   */
+  public void setNoneLabel(String tmp) {
+    this.noneLabel = tmp;
+  }
+
+
+  /**
+   * Gets the siteId attribute of the TicketCategoryDraftList object
+   *
+   * @return The siteId value
+   */
+  public int getSiteId() {
+    return siteId;
+  }
+
+
+  /**
+   * Sets the siteId attribute of the TicketCategoryDraftList object
+   *
+   * @param tmp The new siteId value
+   */
+  public void setSiteId(int tmp) {
+    this.siteId = tmp;
+  }
+
+
+  /**
+   * Sets the siteId attribute of the TicketCategoryDraftList object
+   *
+   * @param tmp The new siteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the exclusiveToSite attribute of the TicketCategoryDraftList object
+   *
+   * @return The exclusiveToSite value
+   */
+  public boolean getExclusiveToSite() {
+    return exclusiveToSite;
+  }
+
+
+  /**
+   * Sets the exclusiveToSite attribute of the TicketCategoryDraftList object
+   *
+   * @param tmp The new exclusiveToSite value
+   */
+  public void setExclusiveToSite(boolean tmp) {
+    this.exclusiveToSite = tmp;
+  }
+
+
+  /**
+   * Sets the exclusiveToSite attribute of the TicketCategoryDraftList object
+   *
+   * @param tmp The new exclusiveToSite value
+   */
+  public void setExclusiveToSite(String tmp) {
+    this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    * Gets the HtmlSelect attribute of the TicketCategoryDraftList object
    *
    * @param selectName Description of Parameter
@@ -271,7 +354,11 @@ public class TicketCategoryDraftList extends ArrayList {
             elementText, colorAttribute);
       }
     } else {
-      catListSelect.addItem(-1, "---------None---------");
+      if (noneLabel != null && !"".equals(noneLabel.trim())) {
+        catListSelect.addItem(-1, noneLabel);
+      } else {
+        catListSelect.addItem(-1, "---------None---------");
+      }
     }
 
     catListSelect.setJsEvent(this.getHtmlJsEvent());
@@ -298,8 +385,8 @@ public class TicketCategoryDraftList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM " + tableName + "_draft tc " +
-        "WHERE tc.id > -1 ");
+            "FROM " + DatabaseUtils.getTableName(db, tableName + "_draft") + " tc " +
+            "WHERE tc.id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -307,7 +394,7 @@ public class TicketCategoryDraftList extends ArrayList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -321,8 +408,8 @@ public class TicketCategoryDraftList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND tc.id < ? ");
+                sqlFilter.toString() +
+                "AND tc.id < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -349,8 +436,8 @@ public class TicketCategoryDraftList extends ArrayList {
     }
     sqlSelect.append(
         "tc.* " +
-        "FROM " + tableName + "_draft tc " +
-        "WHERE tc.id > -1 ");
+            "FROM " + DatabaseUtils.getTableName(db, tableName + "_draft") + " tc " +
+            "WHERE tc.id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -385,7 +472,15 @@ public class TicketCategoryDraftList extends ArrayList {
     if (catLevel != -1) {
       sqlFilter.append("AND tc.cat_level = ? ");
     }
-
+    if (siteId > -1) {
+      sqlFilter.append("AND (tc.site_id = ? ");
+      if (!exclusiveToSite) {
+        sqlFilter.append("OR tc.site_id IS NULL ");
+      }
+      sqlFilter.append(") ");
+    } else {
+      sqlFilter.append("AND tc.site_id IS NULL ");
+    }
     if (topLevelOnly) {
       sqlFilter.append("AND tc.parent_cat_code = 0 ");
     }
@@ -410,6 +505,9 @@ public class TicketCategoryDraftList extends ArrayList {
     if (catLevel != -1) {
       pst.setInt(++i, catLevel);
     }
+    if (siteId > -1) {
+      pst.setInt(++i, this.getSiteId());
+    }
     return i;
   }
 
@@ -422,19 +520,54 @@ public class TicketCategoryDraftList extends ArrayList {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public static boolean deleteDraft(Connection db, String baseTableName) throws SQLException {
+  public static boolean deleteDraft(Connection db, String baseTableName, int siteId) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
-      PreparedStatement pst = db.prepareStatement(
-          "DELETE from " + baseTableName + "_draft ");
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      PreparedStatement pst = null;
+      if (baseTableName.equals("ticket_category")) {
+        pst = db.prepareStatement(
+            "DELETE FROM ticket_category_draft_plan_map " +
+                "WHERE category_id IN (SELECT id FROM ticket_category_draft WHERE " + (siteId == -1 ? "site_id IS NULL" : "site_id = ?") + ") ");
+        if (siteId > -1) {
+          pst.setInt(1, siteId);
+        }
+        pst.execute();
+        pst.close();
+        // delete from draft assignment table contents
+        pst = db.prepareStatement(
+            "DELETE FROM " + DatabaseUtils.getTableName(db, "ticket_category_draft_assignment") + " " +
+                "WHERE category_id IN (SELECT id FROM ticket_category_draft WHERE " + (siteId == -1 ? "site_id IS NULL" : "site_id = ?") + ") ");
+        if (siteId > -1) {
+          pst.setInt(1, siteId);
+        }
+        pst.execute();
+        pst.close();
+      }
+
+      pst = db.prepareStatement(
+          "DELETE from " + DatabaseUtils.getTableName(db, baseTableName + "_draft") + " " +
+              "WHERE " + (siteId == -1 ? "site_id IS NULL" : "site_id = ?"));
+      if (siteId > -1) {
+        pst.setInt(1, siteId);
+      }
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      e.printStackTrace();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }

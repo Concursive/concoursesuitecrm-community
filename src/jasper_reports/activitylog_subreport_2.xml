@@ -62,8 +62,7 @@ where sch.link_contract_id = $P{service_contract_id}]]></queryString>
 		</pageFooter>
 		<summary>
 			<band height="15"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="0"
 						y="0"
@@ -82,7 +81,7 @@ where sch.link_contract_id = $P{service_contract_id}]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{total_hrs_left}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(com.darkhorseventures.framework.beans.GenericBean.round($V{total_hrs_left}.doubleValue(),2))]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>

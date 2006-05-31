@@ -262,6 +262,8 @@ public class QueueCriteriaList extends ArrayList {
         //do nothing
       } else if (classValue.getName().equals("java.util.Map")) {
         //do nothing
+      } else if (classValue.getName().equals("java.sql.Connection")) {
+        //do nothing
       } else if (!classValue.getName().equals("java.lang.String")) {
         Class[] argTypes = new Class[]{String.class};
         Method method = classValue.getMethod("valueOf", argTypes);

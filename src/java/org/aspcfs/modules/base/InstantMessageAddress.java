@@ -440,8 +440,6 @@ public class InstantMessageAddress {
     if (rs.wasNull()) {
       this.setAddressIMService(-1);
     }
-    this.setAddressIMTypeName(rs.getString("type_description"));
-    this.setAddressIMServiceName(rs.getString("service_description"));
     this.setAddressIM(rs.getString("imaddress"));
     this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
@@ -455,6 +453,8 @@ public class InstantMessageAddress {
     if (isContact) {
       this.setPrimaryIM(rs.getBoolean("primary_im"));
     }
+    this.setAddressIMServiceName(rs.getString("service_description"));
+    this.setAddressIMTypeName(rs.getString("type_description"));
 
     if (modifiedBy == -1) {
       this.setModifiedBy(0);

@@ -1,0 +1,63 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
+
+int categoryId = PermissionCategory.lookupId(db, 8);
+
+if (categoryId != -1) {
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator");
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+  print("Inserting new lookup tables entries into the lookup_lists_lookup table...");
+  if (1==1) {
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_TICKET_CAUSE);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_TICKETS);
+      element.setLookupId(PermissionCategory.LOOKUP_TICKET_CAUSE);
+      element.setTableName("lookup_ticket_cause");
+      element.setClassName("lookupList");
+      element.setLevel(10);
+      element.setDescription(dictionary.getTerm("system.fields.label", "tickets.cause", "value"));
+      element.insert(db);
+      print(" Ticket Cause entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element already exists");
+    }
+  }
+  if (1==1){
+    LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_TICKET_RESOLUTION);
+    if (element.getId() < 0) {
+      element = new LookupListElement();
+      element.setModuleId(categoryId);
+      element.setCategoryId(PermissionCategory.PERMISSION_CAT_TICKETS);
+      element.setLookupId(PermissionCategory.LOOKUP_TICKET_RESOLUTION);
+      element.setTableName("lookup_ticket_resolution");
+      element.setClassName("lookupList");
+      element.setLevel(20);
+      element.setDescription(dictionary.getTerm("system.fields.label", "tickets.resolution", "value"));
+      element.insert(db);
+      print("Ticket Resolution entry inserted into the lookup_lists_lookup table");
+    } else {
+      print("The lookup_lists_lookup element for lookup_ticket_cause already exists");
+    }
+  }
+} else {
+  print("The category Id has not been found");
+}
+

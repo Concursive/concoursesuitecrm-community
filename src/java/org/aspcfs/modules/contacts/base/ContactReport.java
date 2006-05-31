@@ -53,26 +53,55 @@ public class ContactReport extends ContactList {
   protected int modifiedBy = -1;
   protected int limitId = -1;
   protected ArrayList criteria = null;
-  protected String[] params = new String[]{"id", "nameLast", "nameFirst", "company", "type", "nameMiddle", "title", "department", "entered", "enteredBy", "modified", "modifiedBy", "owner", "businessEmail", "businessPhone", "businessAddress", "city", "state", "zip", "country", "notes"};
+  protected String[] params = new String[]{"id", "nameLast", "nameFirst", "company", "type", "nameMiddle", "title", "department", "entered", "enteredBy", "modified", "modifiedBy", "owner", "businessEmail", "businessPhone", "businessAddress", "city", "state", "zip", "country", "notes", "status", "source", "rating", "industry", "potential"};
 
   protected OrganizationReport orgReportJoin = new OrganizationReport();
   protected boolean joinOrgs = false;
-
   protected boolean includeFolders = false;
   protected int folderId = -1;
 
+  protected int type = -1; //defaults to contacts
 
   /**
-   * Constructor for the ContactReport object
+   *  Constructor for the ContactReport object
    */
-  public ContactReport() {
+  public ContactReport() { }
+
+
+  /**
+   *  Gets the type attribute of the ContactReport object
+   *
+   *@return    The type value
+   */
+  public int getType() {
+    return type;
   }
 
 
   /**
-   * Sets the rep attribute of the ContactReport object
+   *  Sets the type attribute of the ContactReport object
    *
-   * @param tmp The new rep value
+   *@param  tmp  The new type value
+   */
+  public void setType(int tmp) {
+    this.type = tmp;
+  }
+
+
+  /**
+   *  Sets the type attribute of the ContactReport object
+   *
+   *@param  tmp  The new type value
+   */
+  public void setType(String tmp) {
+    this.type = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the rep attribute of the ContactReport object
+   *
+   *@param  tmp  The new rep value
    */
   public void setRep(Report tmp) {
     this.rep = tmp;
@@ -80,9 +109,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the delimiter attribute of the ContactReport object
+   *  Sets the delimiter attribute of the ContactReport object
    *
-   * @param tmp The new delimiter value
+   *@param  tmp  The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
@@ -90,9 +119,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the header attribute of the ContactReport object
+   *  Sets the header attribute of the ContactReport object
    *
-   * @param tmp The new header value
+   *@param  tmp  The new header value
    */
   public void setHeader(String tmp) {
     this.header = tmp;
@@ -100,9 +129,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the tdFormat attribute of the ContactReport object
+   *  Sets the tdFormat attribute of the ContactReport object
    *
-   * @param tmp The new tdFormat value
+   *@param  tmp  The new tdFormat value
    */
   public void setTdFormat(String tmp) {
     this.tdFormat = tmp;
@@ -110,9 +139,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the includeFolders attribute of the ContactReport object
+   *  Sets the includeFolders attribute of the ContactReport object
    *
-   * @param includeFolders The new includeFolders value
+   *@param  includeFolders  The new includeFolders value
    */
   public void setIncludeFolders(boolean includeFolders) {
     this.includeFolders = includeFolders;
@@ -120,9 +149,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the folderId attribute of the ContactReport object
+   *  Sets the folderId attribute of the ContactReport object
    *
-   * @param folderId The new folderId value
+   *@param  folderId  The new folderId value
    */
   public void setFolderId(int folderId) {
     this.folderId = folderId;
@@ -130,9 +159,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the includeFolders attribute of the ContactReport object
+   *  Gets the includeFolders attribute of the ContactReport object
    *
-   * @return The includeFolders value
+   *@return    The includeFolders value
    */
   public boolean getIncludeFolders() {
     return includeFolders;
@@ -140,9 +169,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the folderId attribute of the ContactReport object
+   *  Gets the folderId attribute of the ContactReport object
    *
-   * @return The folderId value
+   *@return    The folderId value
    */
   public int getFolderId() {
     return folderId;
@@ -150,9 +179,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the rep attribute of the ContactReport object
+   *  Gets the rep attribute of the ContactReport object
    *
-   * @return The rep value
+   *@return    The rep value
    */
   public Report getRep() {
     return rep;
@@ -160,9 +189,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the delimiter attribute of the ContactReport object
+   *  Gets the delimiter attribute of the ContactReport object
    *
-   * @return The delimiter value
+   *@return    The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
@@ -170,9 +199,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the header attribute of the ContactReport object
+   *  Gets the header attribute of the ContactReport object
    *
-   * @return The header value
+   *@return    The header value
    */
   public String getHeader() {
     return header;
@@ -180,9 +209,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the tdFormat attribute of the ContactReport object
+   *  Gets the tdFormat attribute of the ContactReport object
    *
-   * @return The tdFormat value
+   *@return    The tdFormat value
    */
   public String getTdFormat() {
     return tdFormat;
@@ -190,9 +219,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the filePath attribute of the ContactReport object
+   *  Gets the filePath attribute of the ContactReport object
    *
-   * @return The filePath value
+   *@return    The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -200,9 +229,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the thisItem attribute of the ContactReport object
+   *  Gets the thisItem attribute of the ContactReport object
    *
-   * @return The thisItem value
+   *@return    The thisItem value
    */
   public FileItem getThisItem() {
     return thisItem;
@@ -210,9 +239,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the filePath attribute of the ContactReport object
+   *  Sets the filePath attribute of the ContactReport object
    *
-   * @param tmp The new filePath value
+   *@param  tmp  The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -220,9 +249,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the thisItem attribute of the ContactReport object
+   *  Sets the thisItem attribute of the ContactReport object
    *
-   * @param tmp The new thisItem value
+   *@param  tmp  The new thisItem value
    */
   public void setThisItem(FileItem tmp) {
     this.thisItem = tmp;
@@ -230,9 +259,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the subject attribute of the ContactReport object
+   *  Gets the subject attribute of the ContactReport object
    *
-   * @return The subject value
+   *@return    The subject value
    */
   public String getSubject() {
     return subject;
@@ -240,9 +269,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the enteredBy attribute of the ContactReport object
+   *  Gets the enteredBy attribute of the ContactReport object
    *
-   * @return The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -250,9 +279,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the modifiedBy attribute of the ContactReport object
+   *  Gets the modifiedBy attribute of the ContactReport object
    *
-   * @return The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -260,9 +289,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the subject attribute of the ContactReport object
+   *  Sets the subject attribute of the ContactReport object
    *
-   * @param tmp The new subject value
+   *@param  tmp  The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -270,9 +299,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the enteredBy attribute of the ContactReport object
+   *  Sets the enteredBy attribute of the ContactReport object
    *
-   * @param tmp The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -280,9 +309,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the modifiedBy attribute of the ContactReport object
+   *  Sets the modifiedBy attribute of the ContactReport object
    *
-   * @param tmp The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -290,9 +319,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the orgReportJoin attribute of the ContactReport object
+   *  Gets the orgReportJoin attribute of the ContactReport object
    *
-   * @return The orgReportJoin value
+   *@return    The orgReportJoin value
    */
   public OrganizationReport getOrgReportJoin() {
     return orgReportJoin;
@@ -300,9 +329,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the joinOrgs attribute of the ContactReport object
+   *  Gets the joinOrgs attribute of the ContactReport object
    *
-   * @return The joinOrgs value
+   *@return    The joinOrgs value
    */
   public boolean getJoinOrgs() {
     return joinOrgs;
@@ -310,9 +339,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the orgReportJoin attribute of the ContactReport object
+   *  Sets the orgReportJoin attribute of the ContactReport object
    *
-   * @param tmp The new orgReportJoin value
+   *@param  tmp  The new orgReportJoin value
    */
   public void setOrgReportJoin(OrganizationReport tmp) {
     this.orgReportJoin = tmp;
@@ -320,9 +349,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the joinOrgs attribute of the ContactReport object
+   *  Sets the joinOrgs attribute of the ContactReport object
    *
-   * @param tmp The new joinOrgs value
+   *@param  tmp  The new joinOrgs value
    */
   public void setJoinOrgs(boolean tmp) {
     this.joinOrgs = tmp;
@@ -330,9 +359,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the limitId attribute of the ContactReport object
+   *  Gets the limitId attribute of the ContactReport object
    *
-   * @return The limitId value
+   *@return    The limitId value
    */
   public int getLimitId() {
     return limitId;
@@ -340,9 +369,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the limitId attribute of the ContactReport object
+   *  Sets the limitId attribute of the ContactReport object
    *
-   * @param limitId The new limitId value
+   *@param  limitId  The new limitId value
    */
   public void setLimitId(int limitId) {
     this.limitId = limitId;
@@ -350,9 +379,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the criteria attribute of the ContactReport object
+   *  Gets the criteria attribute of the ContactReport object
    *
-   * @return The criteria value
+   *@return    The criteria value
    */
   public ArrayList getCriteria() {
     return criteria;
@@ -360,9 +389,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the criteria attribute of the ContactReport object
+   *  Sets the criteria attribute of the ContactReport object
    *
-   * @param criteriaString The new criteria value
+   *@param  criteriaString  The new criteria value
    */
   public void setCriteria(String[] criteriaString) {
     if (criteriaString != null) {
@@ -373,9 +402,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the params attribute of the ContactReport object
+   *  Gets the params attribute of the ContactReport object
    *
-   * @return The params value
+   *@return    The params value
    */
   public String[] getParams() {
     return params;
@@ -383,9 +412,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the params attribute of the ContactReport object
+   *  Sets the params attribute of the ContactReport object
    *
-   * @param params The new params value
+   *@param  params  The new params value
    */
   public void setParams(String[] params) {
     this.params = params;
@@ -393,9 +422,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Gets the filenameToUse attribute of the ContactReport object
+   *  Gets the filenameToUse attribute of the ContactReport object
    *
-   * @return The filenameToUse value
+   *@return    The filenameToUse value
    */
   public String getFilenameToUse() {
     return filenameToUse;
@@ -403,9 +432,9 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Sets the filenameToUse attribute of the ContactReport object
+   *  Sets the filenameToUse attribute of the ContactReport object
    *
-   * @param filenameToUse The new filenameToUse value
+   *@param  filenameToUse  The new filenameToUse value
    */
   public void setFilenameToUse(String filenameToUse) {
     this.filenameToUse = filenameToUse;
@@ -413,7 +442,7 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    */
   public void buildReportBaseInfo() {
     rep.setDelimitedCharacter(delimiter);
@@ -425,7 +454,7 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    */
   public void buildReportHeaders() {
     if (joinOrgs) {
@@ -437,7 +466,13 @@ public class ContactReport extends ContactList {
       String param = (String) y.next();
 
       if (param.equals("id")) {
-        rep.addColumn("Contact Id");
+        if (type == Contact.LEAD_TYPE) {
+          rep.addColumn("Lead Id");
+        } else if (type == Contact.EMPLOYEE_TYPE) {
+          rep.addColumn("Employee Id");
+        } else {
+          rep.addColumn("Contact Id");
+        }
       }
       if (param.equals("type")) {
         rep.addColumn("Type");
@@ -501,6 +536,23 @@ public class ContactReport extends ContactList {
       if (param.equals("notes")) {
         rep.addColumn("Notes");
       }
+      if (type == Contact.LEAD_TYPE) {
+        if (param.equals("status")) {
+          rep.addColumn("Status");
+        }
+        if (param.equals("source")) {
+          rep.addColumn("Source");
+        }
+        if (param.equals("rating")) {
+          rep.addColumn("Rating");
+        }
+        if (param.equals("industry")) {
+          rep.addColumn("Industry");
+        }
+        if (param.equals("potential")) {
+          rep.addColumn("Potential");
+        }
+      }
     }
 
     if (includeFolders) {
@@ -516,11 +568,11 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param userTable Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  db             Description of the Parameter
+   *@param  userTable      Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   public void buildData(Connection db, Hashtable userTable) throws SQLException {
     this.buildList(db);
@@ -529,10 +581,10 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  db             Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   public void buildData(Connection db) throws SQLException {
     this.buildData(db, null);
@@ -540,10 +592,10 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  db             Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   public void buildReportData(Connection db) throws SQLException {
     buildReportData(db, null);
@@ -551,11 +603,11 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param userTable Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  db             Description of the Parameter
+   *@param  userTable      Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   public void buildReportData(Connection db, Hashtable userTable) throws SQLException {
     boolean writeOut = false;
@@ -691,11 +743,11 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param userId    Description of the Parameter
-   * @param userTable Description of the Parameter
-   * @return Description of the Return Value
+   *@param  userId     Description of the Parameter
+   *@param  userTable  Description of the Parameter
+   *@return            Description of the Return Value
    */
   private String lookupName(int userId, Hashtable userTable) {
     User thisUser = (User) userTable.get(new Integer(userId));
@@ -710,11 +762,11 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Adds a feature to the DataRow attribute of the ContactReport object
+   *  Adds a feature to the DataRow attribute of the ContactReport object
    *
-   * @param thisRow     The feature to be added to the DataRow attribute
-   * @param thisContact The feature to be added to the DataRow attribute
-   * @throws SQLException Description of the Exception
+   *@param  thisRow        The feature to be added to the DataRow attribute
+   *@param  thisContact    The feature to be added to the DataRow attribute
+   *@throws  SQLException  Description of the Exception
    */
   public void addDataRow(ReportRow thisRow, Contact thisContact) throws SQLException {
     Iterator y = criteria.iterator();
@@ -789,16 +841,34 @@ public class ContactReport extends ContactList {
       if (param.equals("notes")) {
         thisRow.addCell(thisContact.getNotes());
       }
+
+      if (type == Contact.LEAD_TYPE) {
+        if (param.equals("status")) {
+          thisRow.addCell(thisContact.getLeadStatusString());
+        }
+        if (param.equals("source")) {
+          thisRow.addCell(thisContact.getSourceName());
+        }
+        if (param.equals("rating")) {
+          thisRow.addCell(thisContact.getRatingName());
+        }
+        if (param.equals("industry")) {
+          thisRow.addCell(thisContact.getIndustryName());
+        }
+        if (param.equals("potential")) {
+          thisRow.addCell(String.valueOf(thisContact.getPotential()));
+        }
+      }
     }
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param userTable Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  db             Description of the Parameter
+   *@param  userTable      Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   public void buildReportFull(Connection db, Hashtable userTable) throws SQLException {
     buildReportBaseInfo();
@@ -808,10 +878,10 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  db             Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   public void buildReportFull(Connection db) throws SQLException {
     buildReportFull(db, null);
@@ -819,24 +889,32 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws Exception Description of the Exception
+   *@param  db          Description of the Parameter
+   *@return             Description of the Return Value
+   *@throws  Exception  Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
     int fileSize = save();
     if (joinOrgs) {
       thisItem.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS_REPORTS);
     } else {
-      thisItem.setLinkModuleId(Constants.DOCUMENTS_CONTACTS_REPORTS);
+      if (type == Contact.LEAD_TYPE) {
+        thisItem.setLinkModuleId(Constants.DOCUMENTS_SALES_REPORTS);
+      } else {
+        thisItem.setLinkModuleId(Constants.DOCUMENTS_CONTACTS_REPORTS);
+      }
     }
     thisItem.setLinkItemId(0);
     thisItem.setEnteredBy(enteredBy);
     thisItem.setModifiedBy(modifiedBy);
     thisItem.setSubject(subject);
-    thisItem.setClientFilename("contactreport-" + filenameToUse + ".csv");
+    if (type == Contact.LEAD_TYPE) {
+      thisItem.setClientFilename("leadreport-" + filenameToUse + ".csv");
+    } else {
+      thisItem.setClientFilename("contactreport-" + filenameToUse + ".csv");
+    }
     thisItem.setFilename(filenameToUse);
     thisItem.setSize(fileSize);
     thisItem.insert(db);
@@ -845,10 +923,10 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
-   * @throws Exception Description of the Exception
+   *@return             Description of the Return Value
+   *@throws  Exception  Description of the Exception
    */
   public int save() throws Exception {
     this.generateFilename();
@@ -864,10 +942,10 @@ public class ContactReport extends ContactList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
-   * @throws Exception Description of the Exception
+   *@return             Description of the Return Value
+   *@throws  Exception  Description of the Exception
    */
   public String generateFilename() throws Exception {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

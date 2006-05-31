@@ -37,32 +37,30 @@
 
   //Update menu for this Contact based on permissions
   function updateMenu(trashed){
-    if(thisView == 'pending'){
-      showSpan('menuComplete');
-      showSpan('menuCancel');
-      showSpan('menuReschedule');
-      hideSpan('menuModify');
-    }else{
-      hideSpan('menuComplete');
-      hideSpan('menuCancel');
-      hideSpan('menuReschedule');
-      if(thisView != 'cancel'){
-        showSpan('menuModify');
-      }else{
-        hideSpan('menuModify');
-       }
-      }
     if (trashed == 'true'){
       hideSpan('menuModify');
       hideSpan('menuComplete');
       hideSpan('menuCancel');
+      hideSpan('menuForward');
       hideSpan('menuReschedule');
     } else {
-      showSpan('menuModify');
-      showSpan('menuComplete');
-      showSpan('menuCancel');
-      showSpan('menuReschedule');
-    }
+      showSpan('menuForward');
+      if(thisView == 'pending'){
+        showSpan('menuComplete');
+        showSpan('menuCancel');
+        showSpan('menuReschedule');
+        hideSpan('menuModify');
+      }else{
+        hideSpan('menuComplete');
+        hideSpan('menuCancel');
+        hideSpan('menuReschedule');
+        if(thisView != 'cancel'){
+          showSpan('menuModify');
+        }else{
+          hideSpan('menuModify');
+         }
+        }
+      }
   }
 
   //Menu link functions

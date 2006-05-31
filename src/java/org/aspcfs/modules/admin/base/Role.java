@@ -498,7 +498,7 @@ public class Role extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS user_count " +
-        "FROM access " +
+        "FROM \"access\" " +
         "WHERE role_id = ? " +
         "AND user_id <> 0 " +
         "AND enabled = ? ");
@@ -609,14 +609,17 @@ public class Role extends GenericBean {
       if (buildUserCount(db, false)) {
         pst = db.prepareStatement(
             "UPDATE \"role\" " +
-            "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-            "WHERE role_id = " + id + " ");
+            "SET enabled = ? " +
+            "WHERE role_id = ? ");
+        pst.setBoolean(1, false);
+        pst.setInt(2, id);
         recordCount = pst.executeUpdate();
       } else {
         deletePermissions(db);
         pst = db.prepareStatement(
             "DELETE FROM \"role\" " +
-            "WHERE role_id = " + id + " ");
+            "WHERE role_id = ? ");
+        pst.setInt(1, id);
         recordCount = pst.executeUpdate();
       }
       pst.close();
@@ -733,8 +736,7 @@ public class Role extends GenericBean {
     sql.append(
         "SELECT * " +
         "FROM \"role\" " +
-        "WHERE " + DatabaseUtils.toLowerCase(db) + "(\"role\") = " + DatabaseUtils.toLowerCase(
-            db) + "(?)  " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(\"role\") = ? " +
         "AND enabled = ? ");
     if (id > -1) {
       sql.append("AND role_id <> ? ");
@@ -743,7 +745,7 @@ public class Role extends GenericBean {
       sql.append("AND role_type = ? ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setString(++i, getRole());
+    pst.setString(++i, getRole().toLowerCase());
     pst.setBoolean(++i, true);
     if (id > -1) {
       pst.setInt(++i, id);
@@ -772,8 +774,8 @@ public class Role extends GenericBean {
   public boolean buildUserCount(Connection db, boolean activeUsersOnly) throws SQLException {
     int resultCount = -1;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT count(*) AS count " +
-        "FROM access " +
+        "SELECT count(*) AS thecount " +
+        "FROM \"access\" " +
         "WHERE role_id = ? " +
         "AND contact_id > 0 " +
         "AND (alias = -1 OR alias IS NULL) " +
@@ -784,7 +786,7 @@ public class Role extends GenericBean {
     }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      resultCount = rs.getInt("count");
+      resultCount = rs.getInt("thecount");
     }
     rs.close();
     pst.close();

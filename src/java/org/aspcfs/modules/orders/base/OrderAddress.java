@@ -17,6 +17,7 @@ package org.aspcfs.modules.orders.base;
 
 import org.aspcfs.modules.base.Address;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.StateSelect;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -197,12 +198,7 @@ public class OrderAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
-        this.getCountry())) {
-      pst.setString(++i, this.getState());
-    } else {
-      pst.setString(++i, this.getOtherState());
-    }
+    pst.setString(++i, this.getState());
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -302,12 +298,7 @@ public class OrderAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
-        this.getCountry())) {
-      pst.setString(++i, this.getState());
-    } else {
-      pst.setString(++i, this.getOtherState());
-    }
+    pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
     pst.setInt(++i, modifiedBy);

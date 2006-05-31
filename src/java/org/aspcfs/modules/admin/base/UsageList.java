@@ -226,7 +226,7 @@ public class UsageList {
       sqlFilter = new StringBuffer();
     }
     if (action > -1) {
-      sqlFilter.append("AND action = ? ");
+      sqlFilter.append("AND \"action\" = ? ");
     }
     if (enteredRangeStart != null) {
       sqlFilter.append("AND entered >= ? ");
@@ -259,4 +259,3 @@ public class UsageList {
   }
 
 }
-

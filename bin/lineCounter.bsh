@@ -1,0 +1,61 @@
+#!/bin/sh
+//usr/bin/true; exec java -classpath .:lib/bsh-2.0b2.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.FileUtils;
+
+String CRLF = System.getProperty("line.separator");
+String fs = System.getProperty("file.separator");
+
+long lineCount = 0;
+
+void countLines(File entriesFile) {
+  if (entriesFile.toString().endsWith(".jar") ||
+      entriesFile.toString().endsWith(".gif") ||
+      entriesFile.toString().endsWith(".jpg")) {
+    return;
+  }
+  //Read the file
+  BufferedReader in = new BufferedReader(new FileReader(entriesFile));
+  String line = null;
+  while ((line = in.readLine()) != null) {
+    ++lineCount;
+  }
+  in.close();
+}
+
+void processDirectory(File dir) {
+  if (dir.isDirectory()) {
+    if (!dir.getPath().endsWith(".svn") &&
+        !dir.getPath().endsWith("build") &&
+        !dir.getPath().endsWith("dist") &&
+        !dir.getPath().endsWith("lib") &&
+        !dir.getPath().endsWith("CVS")) {
+      print("Checking: " + dir.getPath());
+      String[] children = dir.list();
+      for (int i = 0; i < children.length; i++) {
+        File thisFile = (new File(dir, children[i]));
+        if (thisFile.isDirectory()) {
+          processDirectory(thisFile);
+        } else {
+          countLines(thisFile);
+        }
+      }
+    }
+  }
+}
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  lineCounter <file or directory>");
+  print("");
+  System.exit(0);
+}
+
+// Recursively get a list of files to count
+String directory = bsh.args[0];
+File dir = new File(directory);
+processDirectory(dir);
+print("Line count: " + lineCount);
+

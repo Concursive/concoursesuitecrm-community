@@ -15,6 +15,7 @@
  */
 package org.aspcfs.controller;
 
+import com.zeroio.iteam.scheduler.IndexerJob;
 import org.aspcfs.modules.admin.jobs.DeleteTrashJob;
 import org.aspcfs.modules.admin.jobs.NotifierJob;
 import org.aspcfs.modules.admin.jobs.UserCleanupJob;
@@ -126,5 +127,23 @@ public class ScheduledJobs {
       scheduler.scheduleJob(job, trigger);
     }
 
+    // Indexer
+    if (1 == 1) {
+      JobDetail job = new JobDetail(
+          "indexer",
+          Scheduler.DEFAULT_GROUP,
+          IndexerJob.class);
+      //scheduler.addJob(job, true);
+      // Update every 24 hours, starting in 5 minutes
+      long startTime = System.currentTimeMillis() + (5L * 60L * 1000L);
+      SimpleTrigger trigger = new SimpleTrigger(
+          "indexer",
+          Scheduler.DEFAULT_GROUP,
+          new Date(startTime),
+          null,
+          SimpleTrigger.REPEAT_INDEFINITELY,
+          24L * 60L * 60L * 1000L);
+      scheduler.scheduleJob(job, trigger);
+    }
   }
 }

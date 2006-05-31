@@ -114,31 +114,11 @@ public class ItemList extends ArrayList {
    * @throws SQLException Description of the Exception
    */
   public static boolean delete(Connection db, int questionId) throws SQLException {
-    boolean commit = true;
-    ResultSet rs = null;
-    try {
-      commit = db.getAutoCommit();
-      if (commit) {
-        db.setAutoCommit(false);
-      }
-      PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM survey_items WHERE question_id = ?");
-      pst.setInt(1, questionId);
-      pst.execute();
-      pst.close();
-      if (commit) {
-        db.commit();
-      }
-    } catch (SQLException e) {
-      if (commit) {
-        db.rollback();
-      }
-      throw new SQLException(e.toString());
-    } finally {
-      if (commit) {
-        db.setAutoCommit(true);
-      }
-    }
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM survey_items WHERE question_id = ?");
+    pst.setInt(1, questionId);
+    pst.execute();
+    pst.close();
     return true;
   }
 
@@ -174,8 +154,8 @@ public class ItemList extends ArrayList {
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     String sql =
         "SELECT sq.* " +
-        "FROM survey_items sq " +
-        "WHERE question_id = ? ";
+            "FROM survey_items sq " +
+            "WHERE question_id = ? ";
     pst = db.prepareStatement(sql);
     int i = 0;
     pst.setInt(++i, questionId);

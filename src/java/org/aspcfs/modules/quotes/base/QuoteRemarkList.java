@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.quotes.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -173,11 +174,11 @@ public class QuoteRemarkList extends ArrayList {
     StringBuffer sqlOrder = new StringBuffer();
     //Build a base SQL statement for counting records
     sqlCount.append(
-        " SELECT COUNT(*) AS recordcount " +
-        " FROM quote_remark AS qr " +
-        " LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
-        " LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
-        " WHERE qr.map_id > -1 ");
+        "SELECT COUNT(*) AS recordcount " +
+            "FROM quote_remark qr " +
+            "LEFT JOIN quote_entry qe ON (qr.quote_id = qe.quote_id) " +
+            "LEFT JOIN lookup_quote_remarks lqr ON (qr.remark_id = lqr.code) " +
+            "WHERE qr.map_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -190,7 +191,22 @@ public class QuoteRemarkList extends ArrayList {
       }
       rs.close();
       pst.close();
-
+      //Determine the offset, based on the filter, for the first record to show
+      if (!pagedListInfo.getCurrentLetter().equals("")) {
+        pst = db.prepareStatement(
+            sqlCount.toString() +
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(lqr.description) < ? ");
+        items = prepareFilter(pst);
+        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          int offsetCount = rs.getInt("recordcount");
+          pagedListInfo.setCurrentOffset(offsetCount);
+        }
+        rs.close();
+        pst.close();
+      }
       //Determine column to sort by
       pagedListInfo.setDefaultSort("qr.map_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -205,11 +221,11 @@ public class QuoteRemarkList extends ArrayList {
     }
     sqlSelect.append(
         "qr.*, " +
-        "lqr.description AS remark_name " +
-        "FROM quote_remark AS qr " +
-        "LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
-        "LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
-        " WHERE qr.map_id > -1 ");
+            "lqr.description AS remark_name " +
+            "FROM quote_remark qr " +
+            "LEFT JOIN quote_entry qe ON (qr.quote_id = qe.quote_id) " +
+            "LEFT JOIN lookup_quote_remarks lqr ON (qr.remark_id = lqr.code) " +
+            "WHERE qr.map_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -240,7 +256,7 @@ public class QuoteRemarkList extends ArrayList {
       sqlFilter.append("AND qr.map_id = ? ");
     }
     if (quoteId > -1) {
-      sqlFilter.append(" AND qr.quote_id = ? ");
+      sqlFilter.append("AND qr.quote_id = ? ");
     }
     if (remarkId > -1) {
       sqlFilter.append("AND qr.remark_id = ? ");

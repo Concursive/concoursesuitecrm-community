@@ -87,16 +87,17 @@ public class SearchCriteriaGroup extends ArrayList {
    */
   public void buildFieldData(Connection db) throws SQLException {
     Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT * " +
-        "FROM search_fields " +
-        "WHERE id = " + groupField.getId());
-    if (rs.next()) {
-      groupField.buildRecord(rs);
+    if (groupField != null && groupField.getId() > -1) {
+      ResultSet rs = st.executeQuery(
+          "SELECT * " +
+          "FROM search_fields " +
+          "WHERE id = " + groupField.getId());
+      if (rs.next()) {
+        groupField.buildRecord(rs);
+      }
+      rs.close();
+      st.close();
     }
-    rs.close();
-    st.close();
   }
-
 }
 

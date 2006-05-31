@@ -24,6 +24,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%@ include file="leads_documents_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script type="text/javascript">
 function reopenOpportunity(id) {
   if (id == '<%= opportunityHeader.getId() %>') {
@@ -73,6 +74,10 @@ function reopenOpportunity(id) {
     String documentFileDetails = "LeadsDocuments.do?command=Details&headerId="+ opportunityHeader.getId() + addLinkParams(request, "viewSource");
     String documentModule = "Pipeline";
     String specialID = ""+opportunityHeader.getId();
+    boolean hasPermission = false;
   %>
+  <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
+    <% hasPermission = true; %>
+  </dhv:hasAuthority>
   <%@ include file="../accounts/documents_list_include.jsp" %>
 </dhv:container>

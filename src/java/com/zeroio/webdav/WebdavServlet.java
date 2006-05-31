@@ -41,6 +41,7 @@ import org.apache.naming.resources.Resource;
 import org.apache.tomcat.util.http.FastHttpDateFormat;
 import org.aspcfs.controller.SecurityHook;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.system.base.Site;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -267,9 +268,10 @@ public class WebdavServlet
     Connection db = null;
     String serverName = context.getRequest().getServerName();
     try {
+      Site thisSite = SecurityHook.retrieveSite(context.getServletContext(), context.getRequest());
       ConnectionElement ce = this.retrieveConnectionElement(context);
       db = this.getConnection(context);
-      SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
+      SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce, thisSite.getLanguage());
       systemsInitialized.put(serverName, new Boolean(true));
     } catch (SQLException e) {
       e.printStackTrace(System.out);
@@ -334,7 +336,7 @@ public class WebdavServlet
       }
       // Get encoded user and password, comes after "BASIC "
       String userpassEncoded = argHeader.substring(6);
-  
+
       // Decode it, using any base 64 decoder (we use com.oreilly.servlet)
       sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
       String userpassDecoded = new String(dec.decodeBuffer(userpassEncoded));
@@ -402,7 +404,7 @@ public class WebdavServlet
                       (manager.getWebdavPassword(db, username) + ":" +
               (String) params.get("nonce") + ":" +
               getA2(context, params)).getBytes()));
-  
+
           //System.out.println("server digest : " + digest);
           String nonce = (String) params.get("nonce");
           if (digest.equals((String) params.get("response"))) {
@@ -964,7 +966,7 @@ public class WebdavServlet
     }
 
     String path = getRelativePath(context.getRequest());
-    
+
     //Fix for MACOSX finder. Do not allow requests for files starting with a period
     if (path.indexOf("/.") > -1 || path.indexOf(".DS_Store") > -1) {
       return;
@@ -1026,7 +1028,7 @@ public class WebdavServlet
     if (!created) {
       //Litmus test reports the following warning. But this warning is because of the read only property of top level folders in Centric's
       //Webdav implementation. Hence SC_FORBIDDEN is sent!
-      
+
       //mkcol_no_parent....... WARNING: MKCOL with missing intermediate gave 403, should be 409 ......... pass (with 1 warning)
       context.getResponse().sendError(WebdavStatus.SC_FORBIDDEN);
       return;
@@ -1203,8 +1205,7 @@ public class WebdavServlet
   /**
    * LOCK Method.
    *
-   * @param req  Description of the Parameter
-   * @param resp Description of the Parameter
+   * @param context Description of the Parameter
    * @throws ServletException Description of the Exception
    * @throws IOException      Description of the Exception
    */
@@ -1711,8 +1712,7 @@ public class WebdavServlet
   /**
    * UNLOCK Method.
    *
-   * @param req  Description of the Parameter
-   * @param resp Description of the Parameter
+   * @param context  Description of the Parameter
    * @throws ServletException Description of the Exception
    * @throws IOException      Description of the Exception
    */
@@ -2297,7 +2297,7 @@ public class WebdavServlet
     if (destinationPath != null) {
       System.out.println("DELETION DUE TO COPY OR MOVE ACTION....");
     }
-    
+
     // Retrieve the resources
     ModuleContext resources = getCFSResources(db, context);
     SystemStatus thisSystem = this.getSystemStatus(context);
@@ -3685,4 +3685,3 @@ class WebdavStatus {
   }
 
 }
-

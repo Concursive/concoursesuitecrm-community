@@ -442,7 +442,6 @@ public class EmailAddress {
     if (rs.wasNull()) {
       this.setType(-1);
     }
-    this.setTypeName(rs.getString("description"));
     this.setEmail(rs.getString("email"));
     this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
@@ -454,6 +453,7 @@ public class EmailAddress {
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
     this.setPrimaryEmail(rs.getBoolean("primary_email"));
+    this.setTypeName(rs.getString("description"));
 
     if (modifiedBy == -1) {
       this.setModifiedBy(0);

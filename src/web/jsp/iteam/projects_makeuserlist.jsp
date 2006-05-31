@@ -41,7 +41,7 @@ function page_init() {
 %>
   if ( !(inArray(parent.document.forms['projectMemberForm'].elements['selProjectList'], <%= thisUser.getId() %>)) ) {
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<%= StringUtils.jsStringEscape(thisUser.getContact().getNameFirstLast()+tempString) %>';
+    newOpt.text="<%= StringUtils.jsStringEscape(thisUser.getContact().getNameFirstLast()+tempString) %>";
     newOpt.value='<%= thisUser.getId() %>';
     if (newOpt.value != '0') {
       list.options[list.length] = newOpt;

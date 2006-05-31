@@ -86,12 +86,13 @@ CREATE TABLE document_store_user_member (
   document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
   item_id INTEGER NOT NULL REFERENCES access(user_id),
   userlevel INTEGER NOT NULL REFERENCES lookup_document_store_role(code),
-  status INTEGER NULL,
+  status INTEGER,
   last_accessed DATETIME,
   entered DATETIME DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 --
@@ -101,12 +102,13 @@ CREATE TABLE document_store_role_member (
   document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
   item_id INTEGER NOT NULL REFERENCES role(role_id),
   userlevel INTEGER NOT NULL REFERENCES lookup_document_store_role(code),
-  status INTEGER NULL,
+  status INTEGER,
   last_accessed DATETIME,
   entered DATETIME DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 --
@@ -116,11 +118,12 @@ CREATE TABLE document_store_department_member (
   document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
   item_id INTEGER NOT NULL REFERENCES lookup_department(code),
   userlevel INTEGER NOT NULL REFERENCES lookup_document_store_role(code),
-  status INTEGER NULL,
+  status INTEGER,
   last_accessed DATETIME,
   entered DATETIME DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 

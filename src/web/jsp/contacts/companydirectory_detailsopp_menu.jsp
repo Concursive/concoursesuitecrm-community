@@ -23,11 +23,15 @@
   var thisCompId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, headerId, compId, editPermission, deletePermission, trashed) {
+  function displayMenu(loc, id, contactId, headerId, compId, editPermission, deletePermission, trashed, hasPermission) {
     thisContactId = contactId;
     thisHeaderId = headerId;
     thisCompId = compId;
-    updateMenu(editPermission, deletePermission, trashed);
+    if (hasPermission == 'true') {
+      updateMenu(editPermission, deletePermission, trashed);
+    } else {
+      updateMenu(0,0,'true');
+    }
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
@@ -59,6 +63,10 @@
     window.location.href='ExternalContactsOppComponents.do?command=DetailsComponent&contactId=' + thisContactId +  '&id=' + thisCompId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
+  function log() {
+    window.location.href='ExternalContactsOppComponents.do?command=ComponentHistory&contactId=' + thisContactId + '&headerId=' + thisHeaderId + '&id=' + thisCompId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
+  }
+  
   function modify() {
       window.location.href = 'ExternalContactsOppComponents.do?command=ModifyComponent&headerId=' + thisHeaderId + '&id=' + thisCompId + '&contactId=' + thisContactId + '&return=list&actionSource=ExternalContactsOppComponents<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
@@ -78,6 +86,16 @@
         </th>
         <td width="100%">
           <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="contacts-external_contacts-opportunities-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="log()">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="accounts.accounts_contacts_oppcomponent.viewComponentLog">View Component Log</dhv:label>
         </td>
       </tr>
       </dhv:permission>

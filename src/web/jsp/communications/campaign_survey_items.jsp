@@ -61,7 +61,7 @@
 	} else{ 
  %>
     <tr>
-      <td align="center" nowrap>
+      <td align="center" colspan="3" nowrap>
         <dhv:label name="myitems.noItems">No Items Found</dhv:label>
       </td>
     </tr>

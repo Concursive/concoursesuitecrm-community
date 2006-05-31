@@ -27,10 +27,10 @@ import java.sql.SQLException;
  * Represents a module category that has capabilities (lists, reports, etc.)
  * and contains permissions for various actions
  *
- * @author Mathur
- * @version $Id: PermissionCategory.java,v 1.9 2003/03/07 14:05:30 mrajkowski
- *          Exp $
- * @created January 13, 2003
+ * @author     Mathur
+ * @created    January 13, 2003
+ * @version    $Id: PermissionCategory.java,v 1.9 2003/03/07 14:05:30 mrajkowski
+ *      Exp $
  */
 public class PermissionCategory extends GenericBean {
 
@@ -51,7 +51,19 @@ public class PermissionCategory extends GenericBean {
   private boolean products = false;
   private boolean webdav = false;
   private boolean logos = false;
+  private boolean actionPlans = false;
+  private boolean customListViews = false;
+
   private int constant = -1;
+
+  //Permission types to view/add/edit/delete records Constants
+  //Always the following holds. Any new permission types must conform to the following rule
+  //Delete permission > Edit permisison > Add permission > View permission > None
+  public final static int NONE = -1;
+  public final static int VIEW = 1;
+  public final static int ADD = 2;
+  public final static int EDIT = 3;
+  public final static int DELETE = 4;
 
   //Constants for working with lookup lists
   //NOTE: currently all editable lookup lists need to be defined here
@@ -63,6 +75,7 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_OPPORTUNITY_COMPETITORS = 707050230;
   public final static int LOOKUP_OPPORTUNITY_COMPELLING_EVENT = 707050231;
   public final static int LOOKUP_OPPORTUNITY_BUDGET = 707050232;
+  public final static int LOOKUP_CALL_TYPES = 206061500;
 
   //Accounts
   public final static int PERMISSION_CAT_ACCOUNTS = 1;
@@ -73,6 +86,16 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_ACCOUNTS_ADDRESS = 819041649;
   public final static int LOOKUP_ACCOUNTS_PHONE = 819041650;
   public final static int LOOKUP_ACCOUNTS_INDUSTRY = 302051030;
+  public final static int LOOKUP_ACCOUNTS_SEGMENT = 128051430;
+  public final static int LOOKUP_ACCOUNTS_SUBSEGMENT = 128051431;
+  public final static int LOOKUP_ACCOUNTS_SITE = 128051432;
+  public final static int LOOKUP_ACCOUNTS_SIZE = 158051538;
+  public final static int LOOKUP_SITE_ID = 813200314;
+  public final static int LOOKUP_ACCOUNT_SIZE = 819200310;
+  public final static int LOOKUP_TITLE = 904200315;
+  public final static int LOOKUP_CONTACT_SOURCE = 904200316;
+  public final static int LOOKUP_SEGMENTS = 722031447;
+  public final static int LOOKUP_SUB_SEGMENT = 909200314;
 
   // Service Contracts
   public final static int PERMISSION_CAT_SERVICE_CONTRACTS = 130041100;
@@ -87,7 +110,10 @@ public class PermissionCategory extends GenericBean {
   // Assets
   public final static int PERMISSION_CAT_ASSETS = 130041000;
   public final static int LOOKUP_ASSET_STATUS = 130041304;
+  public final static int LOOKUP_ASSET_MATERIALS = 928051135;
   public final static int MULTIPLE_CATEGORY_ASSET = 202041400;
+  public final static int LOOKUP_ASSET_VENDOR = 910040914;
+  public final static int LOOKUP_ASSET_MANUFACTURER = 910040915;
 
   //Contacts
   public final static int PERMISSION_CAT_CONTACTS = 2;
@@ -98,6 +124,7 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_CONTACTS_IMTYPES = 111051308;
   public final static int LOOKUP_CONTACTS_IMSERVICES = 111051352;
   public final static int LOOKUP_CONTACTS_TEXT = 111051354;
+  public final static int LOOKUP_ACCOUNTS_TITLE = 128051433;
 
   //Employees
   public final static int PERMISSION_CAT_EMPLOYEES = 1111031131;
@@ -109,7 +136,13 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_TICKETS_SEVERITY = 2;
   public final static int LOOKUP_TICKETS_PRIORITY = 3;
   public final static int LOOKUP_TICKET_FORM = 127041246;
+  public final static int LOOKUP_TICKET_CAUSE = 922051718;
+  public final static int LOOKUP_TICKET_RESOLUTION = 922051719;
+  public final static int LOOKUP_TICKET_TASK_CATEGORY = 101705190;
   public final static int MULTIPLE_CATEGORY_TICKET = 202041401;
+  public final static int LOOKUP_TICKET_ESCALATION = 910040913;
+  public final static int LOOKUP_TICKET_STATE = 112205113;
+  public final static int CUSTOM_LIST_VIEWS_TICKET = 113051436;
 
   //product catalog
   public final static int PERMISSION_CAT_PRODUCT_CATALOG = 330041409;
@@ -142,6 +175,14 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_CONTACTS_RATING = 228051102;
   public final static int LOOKUP_CONTACTS_SOURCE = 228051103;
 
+  //NetApp
+  public final static int PERMISSION_NET_APP = 1021051129;
+
+  //Admin
+  public final static int PERMISSION_CAT_ADMIN = 9;
+  public final static int MULTIPLE_CATEGORY_ACTIONPLAN = 907051127;
+
+
   /**
    * Constructor for the PermissionCategory object
    */
@@ -152,8 +193,9 @@ public class PermissionCategory extends GenericBean {
   /**
    * Constructor for the PermissionCategory object
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public PermissionCategory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -163,9 +205,10 @@ public class PermissionCategory extends GenericBean {
   /**
    * Constructor for the PermissionCategory object
    *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public PermissionCategory(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -175,9 +218,9 @@ public class PermissionCategory extends GenericBean {
   /**
    * Populates the permission category from the database with the specified id
    *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  id             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   private void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -204,10 +247,10 @@ public class PermissionCategory extends GenericBean {
    * Returns a permission category id for the specified category name by lookup
    * up the value in the database and returning the first id found.
    *
-   * @param db   Description of the Parameter
-   * @param name Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  name           Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static int lookupId(Connection db, String name) throws SQLException {
     if (name == null) {
@@ -230,13 +273,13 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
-   * Returns a permission category id for the specified constant by lookup
-   * up the value in the database and returning the first id found.
+   *  Returns a permission category id for the specified constant by lookup up
+   *  the value in the database and returning the first id found.
    *
-   * @param db         Description of the Parameter
-   * @param constantId Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  constantId     Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static int lookupId(Connection db, int constantId) throws SQLException {
     if (constantId == -1) {
@@ -259,9 +302,39 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
-   * Sets the webdav attribute of the PermissionCategory object
+   *  Gets the customListViews attribute of the PermissionCategory object
    *
-   * @param tmp The new webdav value
+   * @return    The customListViews value
+   */
+  public boolean getCustomListViews() {
+    return customListViews;
+  }
+
+
+  /**
+   *  Sets the customListViews attribute of the PermissionCategory object
+   *
+   * @param  tmp  The new customListViews value
+   */
+  public void setCustomListViews(boolean tmp) {
+    this.customListViews = tmp;
+  }
+
+
+  /**
+   *  Sets the customListViews attribute of the PermissionCategory object
+   *
+   * @param  tmp  The new customListViews value
+   */
+  public void setCustomListViews(String tmp) {
+    this.customListViews = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the webdav attribute of the PermissionCategory object
+   *
+   * @param  tmp  The new webdav value
    */
   public void setWebdav(boolean tmp) {
     this.webdav = tmp;
@@ -271,7 +344,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the webdav attribute of the PermissionCategory object
    *
-   * @param tmp The new webdav value
+   * @param  tmp  The new webdav value
    */
   public void setWebdav(String tmp) {
     this.webdav = DatabaseUtils.parseBoolean(tmp);
@@ -281,7 +354,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the webdav attribute of the PermissionCategory object
    *
-   * @return The webdav value
+   * @return    The webdav value
    */
   public boolean getWebdav() {
     return webdav;
@@ -291,7 +364,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the logos attribute of the PermissionCategory object
    *
-   * @param tmp The new logos value
+   * @param  tmp  The new logos value
    */
   public void setLogos(boolean tmp) {
     this.logos = tmp;
@@ -301,7 +374,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the logos attribute of the PermissionCategory object
    *
-   * @param tmp The new logos value
+   * @param  tmp  The new logos value
    */
   public void setLogos(String tmp) {
     this.logos = DatabaseUtils.parseBoolean(tmp);
@@ -311,7 +384,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the logos attribute of the PermissionCategory object
    *
-   * @return The logos value
+   * @return    The logos value
    */
   public boolean getLogos() {
     return logos;
@@ -321,7 +394,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the constant attribute of the PermissionCategory object
    *
-   * @param tmp The new constant value
+   * @param  tmp  The new constant value
    */
   public void setConstant(int tmp) {
     this.constant = tmp;
@@ -331,7 +404,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the constant attribute of the PermissionCategory object
    *
-   * @param tmp The new constant value
+   * @param  tmp  The new constant value
    */
   public void setConstant(String tmp) {
     this.constant = Integer.parseInt(tmp);
@@ -341,7 +414,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the constant attribute of the PermissionCategory object
    *
-   * @return The constant value
+   * @return    The constant value
    */
   public int getConstant() {
     return constant;
@@ -351,7 +424,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the id attribute of the PermissionCategory object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -361,7 +434,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the id attribute of the PermissionCategory object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -371,7 +444,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the category attribute of the PermissionCategory object
    *
-   * @param tmp The new category value
+   * @param  tmp  The new category value
    */
   public void setCategory(String tmp) {
     this.category = tmp;
@@ -381,7 +454,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the description attribute of the PermissionCategory object
    *
-   * @param tmp The new description value
+   * @param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -391,7 +464,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the level attribute of the PermissionCategory object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -401,7 +474,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the level attribute of the PermissionCategory object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -411,7 +484,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the enabled attribute of the PermissionCategory object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -421,7 +494,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the enabled attribute of the PermissionCategory object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -431,7 +504,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the active attribute of the PermissionCategory object
    *
-   * @param tmp The new active value
+   * @param  tmp  The new active value
    */
   public void setActive(boolean tmp) {
     this.active = tmp;
@@ -441,7 +514,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the active attribute of the PermissionCategory object
    *
-   * @param tmp The new active value
+   * @param  tmp  The new active value
    */
   public void setActive(String tmp) {
     this.active = DatabaseUtils.parseBoolean(tmp);
@@ -451,7 +524,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the categories attribute of the PermissionCategory object
    *
-   * @param categories The new categories value
+   * @param  categories  The new categories value
    */
   public void setCategories(boolean categories) {
     this.categories = categories;
@@ -461,7 +534,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the categories attribute of the PermissionCategory object
    *
-   * @param categories The new categories value
+   * @param  categories  The new categories value
    */
   public void setCategories(String categories) {
     this.categories = DatabaseUtils.parseBoolean(categories);
@@ -471,7 +544,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the categories attribute of the PermissionCategory object
    *
-   * @return The categories value
+   * @return    The categories value
    */
   public boolean getCategories() {
     return categories;
@@ -481,7 +554,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the id attribute of the PermissionCategory object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -491,7 +564,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the category attribute of the PermissionCategory object
    *
-   * @return The category value
+   * @return    The category value
    */
   public String getCategory() {
     return category;
@@ -501,7 +574,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the description attribute of the PermissionCategory object
    *
-   * @return The description value
+   * @return    The description value
    */
   public String getDescription() {
     return description;
@@ -511,7 +584,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the level attribute of the PermissionCategory object
    *
-   * @return The level value
+   * @return    The level value
    */
   public int getLevel() {
     return level;
@@ -521,7 +594,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the enabled attribute of the PermissionCategory object
    *
-   * @return The enabled value
+   * @return    The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -531,7 +604,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the active attribute of the PermissionCategory object
    *
-   * @return The active value
+   * @return    The active value
    */
   public boolean getActive() {
     return active;
@@ -541,7 +614,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the lookups attribute of the PermissionCategory object
    *
-   * @return The lookups value
+   * @return    The lookups value
    */
   public boolean getLookups() {
     return lookups;
@@ -551,7 +624,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the folders attribute of the PermissionCategory object
    *
-   * @return The folders value
+   * @return    The folders value
    */
   public boolean getFolders() {
     return folders;
@@ -561,7 +634,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the viewpoints attribute of the PermissionCategory object
    *
-   * @return The viewpoints value
+   * @return    The viewpoints value
    */
   public boolean getViewpoints() {
     return viewpoints;
@@ -571,7 +644,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the reports attribute of the PermissionCategory object
    *
-   * @return The reports value
+   * @return    The reports value
    */
   public boolean getReports() {
     return reports;
@@ -581,7 +654,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the products attribute of the PermissionCategory object
    *
-   * @return The products value
+   * @return    The products value
    */
   public boolean getProducts() {
     return products;
@@ -591,7 +664,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the products attribute of the PermissionCategory object
    *
-   * @param tmp The new products value
+   * @param  tmp  The new products value
    */
   public void setProducts(boolean tmp) {
     this.products = tmp;
@@ -601,7 +674,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the products attribute of the PermissionCategory object
    *
-   * @param tmp The new products value
+   * @param  tmp  The new products value
    */
   public void setProducts(String tmp) {
     this.products = DatabaseUtils.parseBoolean(tmp);
@@ -611,7 +684,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the scheduledEvents attribute of the PermissionCategory object
    *
-   * @return The scheduledEvents value
+   * @return    The scheduledEvents value
    */
   public boolean getScheduledEvents() {
     return scheduledEvents;
@@ -621,7 +694,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Gets the objectEvents attribute of the PermissionCategory object
    *
-   * @return The objectEvents value
+   * @return    The objectEvents value
    */
   public boolean getObjectEvents() {
     return objectEvents;
@@ -631,7 +704,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the lookups attribute of the PermissionCategory object
    *
-   * @param tmp The new lookups value
+   * @param  tmp  The new lookups value
    */
   public void setLookups(boolean tmp) {
     this.lookups = tmp;
@@ -641,7 +714,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the lookups attribute of the PermissionCategory object
    *
-   * @param tmp The new lookups value
+   * @param  tmp  The new lookups value
    */
   public void setLookups(String tmp) {
     this.lookups = DatabaseUtils.parseBoolean(tmp);
@@ -651,7 +724,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the folders attribute of the PermissionCategory object
    *
-   * @param tmp The new folders value
+   * @param  tmp  The new folders value
    */
   public void setFolders(boolean tmp) {
     this.folders = tmp;
@@ -661,7 +734,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the folders attribute of the PermissionCategory object
    *
-   * @param tmp The new folders value
+   * @param  tmp  The new folders value
    */
   public void setFolders(String tmp) {
     this.folders = DatabaseUtils.parseBoolean(tmp);
@@ -671,7 +744,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the viewpoints attribute of the PermissionCategory object
    *
-   * @param tmp The new viewpoints value
+   * @param  tmp  The new viewpoints value
    */
   public void setViewpoints(boolean tmp) {
     this.viewpoints = tmp;
@@ -681,7 +754,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the viewpoints attribute of the PermissionCategory object
    *
-   * @param tmp The new viewpoints value
+   * @param  tmp  The new viewpoints value
    */
   public void setViewpoints(String tmp) {
     this.viewpoints = DatabaseUtils.parseBoolean(tmp);
@@ -691,7 +764,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the reports attribute of the PermissionCategory object
    *
-   * @param tmp The new reports value
+   * @param  tmp  The new reports value
    */
   public void setReports(boolean tmp) {
     this.reports = tmp;
@@ -701,7 +774,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the reports attribute of the PermissionCategory object
    *
-   * @param tmp The new reports value
+   * @param  tmp  The new reports value
    */
   public void setReports(String tmp) {
     this.reports = DatabaseUtils.parseBoolean(tmp);
@@ -711,7 +784,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the scheduledEvents attribute of the PermissionCategory object
    *
-   * @param tmp The new scheduledEvents value
+   * @param  tmp  The new scheduledEvents value
    */
   public void setScheduledEvents(boolean tmp) {
     this.scheduledEvents = tmp;
@@ -721,7 +794,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the scheduledEvents attribute of the PermissionCategory object
    *
-   * @param tmp The new scheduledEvents value
+   * @param  tmp  The new scheduledEvents value
    */
   public void setScheduledEvents(String tmp) {
     this.scheduledEvents = DatabaseUtils.parseBoolean(tmp);
@@ -731,7 +804,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the objectEvents attribute of the PermissionCategory object
    *
-   * @param tmp The new objectEvents value
+   * @param  tmp  The new objectEvents value
    */
   public void setObjectEvents(boolean tmp) {
     this.objectEvents = tmp;
@@ -741,7 +814,7 @@ public class PermissionCategory extends GenericBean {
   /**
    * Sets the objectEvents attribute of the PermissionCategory object
    *
-   * @param tmp The new objectEvents value
+   * @param  tmp  The new objectEvents value
    */
   public void setObjectEvents(String tmp) {
     this.objectEvents = DatabaseUtils.parseBoolean(tmp);
@@ -749,19 +822,52 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
-   * Inserts a permission category object into the database
+   *  Gets the actionPlans attribute of the PermissionCategory object
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @return    The actionPlans value
+   */
+  public boolean getActionPlans() {
+    return actionPlans;
+  }
+
+
+  /**
+   *  Sets the actionPlans attribute of the PermissionCategory object
+   *
+   * @param  tmp  The new actionPlans value
+   */
+  public void setActionPlans(boolean tmp) {
+    this.actionPlans = tmp;
+  }
+
+
+  /**
+   *  Sets the actionPlans attribute of the PermissionCategory object
+   *
+   * @param  tmp  The new actionPlans value
+   */
+  public void setActionPlans(String tmp) {
+    this.actionPlans = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Inserts a permission category object into the database
+   *
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    if (constant == -1) {
+      throw new SQLException("PermissionCategory constantId cannot be -1");
+    }
     id = DatabaseUtils.getNextSeq(db, "permission_cate_category_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (" + (id > -1 ? "category_id, " : "") + "category, description, " +
-        "\"level\", enabled, active, lookups, folders, viewpoints, categories, scheduled_events, " +
-        "object_events, reports, products, webdav, logos, constant) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "\"level\", enabled, \"active\", lookups, folders, viewpoints, categories, scheduled_events, " +
+        "object_events, reports, products, webdav, logos, constant, action_plans, custom_list_views) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -782,6 +888,8 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, webdav);
     pst.setBoolean(++i, logos);
     pst.setInt(++i, constant);
+    pst.setBoolean(++i, actionPlans);
+    pst.setBoolean(++i, customListViews);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq", id);
@@ -792,8 +900,8 @@ public class PermissionCategory extends GenericBean {
   /**
    * Populates a permission category object from a database resultset
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("category_id");
@@ -813,6 +921,8 @@ public class PermissionCategory extends GenericBean {
     webdav = rs.getBoolean("webdav");
     logos = rs.getBoolean("logos");
     constant = rs.getInt("constant");
+    actionPlans = rs.getBoolean("action_plans");
+    customListViews = rs.getBoolean("custom_list_views");
   }
 
 
@@ -820,10 +930,10 @@ public class PermissionCategory extends GenericBean {
    * Enables or disables the permission report attribute based on the specified
    * information
    *
-   * @param db         Description of the Parameter
-   * @param categoryId Description of the Parameter
-   * @param enabled    Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  categoryId     Description of the Parameter
+   * @param  enabled        Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public static void updateReportAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -840,10 +950,10 @@ public class PermissionCategory extends GenericBean {
   /**
    * Description of the Method
    *
-   * @param db         Description of the Parameter
-   * @param categoryId Description of the Parameter
-   * @param enabled    Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  categoryId     Description of the Parameter
+   * @param  enabled        Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public static void updateWebdavAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -860,10 +970,10 @@ public class PermissionCategory extends GenericBean {
   /**
    * Description of the Method
    *
-   * @param db         Description of the Parameter
-   * @param categoryId Description of the Parameter
-   * @param enabled    Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  categoryId     Description of the Parameter
+   * @param  enabled        Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public static void updateLogosAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -876,6 +986,15 @@ public class PermissionCategory extends GenericBean {
     pst.close();
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  categoryId        Description of the Parameter
+   * @param  enabled           Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public static void updateFoldersAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
@@ -887,5 +1006,43 @@ public class PermissionCategory extends GenericBean {
     pst.close();
   }
 
-}
 
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  categoryId        Description of the Parameter
+   * @param  enabled           Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public static void updateActionPlansAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+        "SET action_plans = ? " +
+        "WHERE category_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  categoryId        Description of the Parameter
+   * @param  enabled           Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public static void updateCustomListViewsAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+        "SET custom_list_views = ? " +
+        "WHERE category_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
+  }
+}

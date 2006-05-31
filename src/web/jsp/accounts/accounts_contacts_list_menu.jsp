@@ -41,11 +41,17 @@
       hideSpan('menuClone');
       hideSpan('menuDelete');
       hideSpan('menuAddressRequest');
+      hideSpan('menuMove');
+      hideSpan('menuViewActivityList');
+      hideSpan('menuAddActivity');
     } else {
       showSpan('menuModify');
       showSpan('menuClone');
       showSpan('menuDelete');
       showSpan('menuAddressRequest');
+      showSpan('menuMove');
+      showSpan('menuViewActivityList');
+      showSpan('menuAddActivity');
     }
   }
   //Menu link functions
@@ -68,6 +74,15 @@
   function deleteContact() {
     popURLReturn('Contacts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContactId + '&popup=true','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');
   }
+  
+  function addActivity(){
+    window.location.href='AccountContactsCalls.do?command=Add&contactId=' + thisContactId + '&return=list';
+  }
+  
+  function viewActivityList(){
+    window.location.href='AccountContactsCalls.do?command=View&contactId=' + thisContactId;
+  }
+
   function moveTheContact() {
     popURLReturn('Contacts.do?command=MoveToAccount&orgId='+ thisOrgId + '&id='+ thisContactId + '&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','no');
   }
@@ -93,15 +108,37 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-edit">
-      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
-           onclick="modify()">
-        <th>
-          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </th>
-        <td width="100%">
-          <dhv:label name="global.button.modify">Modify</dhv:label>
-        </td>
-      </tr>
+        <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+             onclick="modify()">
+          <th>
+            <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          </th>
+          <td width="100%">
+            <dhv:label name="global.button.modify">Modify</dhv:label>
+          </td>
+        </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-calls-add">
+        <tr id="menuAddActivity" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+             onclick="addActivity()">
+          <th>
+            <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          </th>
+          <td width="100%">
+            <dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label>
+          </td>
+        </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-calls-view">
+        <tr id="menuViewActivityList" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+            onclick="viewActivityList()">
+          <th>
+            <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          </th>
+          <td width="100%">
+            <dhv:label name="accounts.viewActivities">View Activities</dhv:label>
+          </td>
+        </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-move-view">
       <tr id="menuMove" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
@@ -147,7 +184,7 @@
       </dhv:permission>
 
       <dhv:permission name="accounts-accounts-contacts-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
            onclick="deleteContact()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>

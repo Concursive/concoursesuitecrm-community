@@ -17,7 +17,6 @@ package org.aspcfs.modules.pipeline.beans;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
-import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.modules.pipeline.base.OpportunityComponent;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 
@@ -165,11 +164,6 @@ public class OpportunityBean extends GenericBean {
   public boolean insert(Connection db, ActionContext context) throws Exception {
     boolean headerInserted = false;
     boolean componentInserted = false;
-    boolean isComponentValid = ObjectValidator.validate(null, db, component);
-    boolean isHeaderValid = ObjectValidator.validate(null, db, header);
-    if (!isComponentValid || !isHeaderValid) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       headerInserted = header.insert(db, context);

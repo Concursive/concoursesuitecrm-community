@@ -16,6 +16,7 @@
 package org.aspcfs.apps.workFlowManager;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -117,10 +118,11 @@ public class ComponentParameterList extends ArrayList {
     StringBuffer sqlOrder = new StringBuffer();
     sqlSelect.append(
         "SELECT p.id, p.component_id, p.parameter_id, p.param_value, " +
-        "p.enabled, pl.param_name " +
-        "FROM business_process_component_parameter p, business_process_parameter_library pl " +
-        "WHERE p.id > 0 " +
-        "AND p.parameter_id = pl.parameter_id ");
+            "p.enabled, pl.param_name " +
+            "FROM " + DatabaseUtils.getTableName(db, "business_process_component_parameter") + " p, " +
+            DatabaseUtils.getTableName(db, "business_process_parameter_library") + " pl " +
+            "WHERE p.id > 0 " +
+            "AND p.parameter_id = pl.parameter_id ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY id ");
     PreparedStatement pst = db.prepareStatement(
@@ -204,4 +206,3 @@ public class ComponentParameterList extends ArrayList {
   }
 
 }
-

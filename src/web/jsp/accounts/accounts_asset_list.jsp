@@ -14,13 +14,15 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="assetList" class="org.aspcfs.modules.assets.base.AssetList" scope="request"/>
+<jsp:useBean id="parent" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
+<jsp:useBean id="assetManufacturerList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AssetListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="categoryList1" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList2" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
@@ -42,15 +44,30 @@
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<dhv:label name="accounts.Assets">Assets</dhv:label>
+<dhv:evaluate if="<%= parent != null && parent.getId() != -1%>">
+  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.Assets">Assets</dhv:label></a> >
+  <dhv:label name="accounts.subAssets">Sub-Assets</dhv:label>
+</dhv:evaluate>
+<dhv:evaluate if="<%= parent == null || parent.getId() == -1 %>">
+  <dhv:label name="accounts.Assets">Assets</dhv:label>
+</dhv:evaluate>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="sidetabs">
+<%
+  if (parent != null && parent.getId() != -1 && parent.getParentList() != null && parent.getParentList().size() > 0) {
+    Iterator iter = (Iterator) parent.getParentList().iterator();
+    while (iter.hasNext()) {
+      Asset parentAsset = (Asset) iter.next(); 
+      String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
+%>
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" />
+<% }} %>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
     <dhv:permission name="accounts-assets-add">
-      <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
+      <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null?parent.getId():-1) %>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
     </dhv:permission>
   </dhv:evaluate>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo"/>

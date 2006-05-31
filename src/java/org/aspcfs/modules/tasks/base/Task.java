@@ -19,10 +19,7 @@ import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.webdav.utils.ICalendar;
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
-import org.aspcfs.modules.actionlist.base.ActionItemLogList;
-import org.aspcfs.modules.actionlist.base.ActionList;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactHistory;
@@ -70,6 +67,7 @@ public class Task extends GenericBean {
   private java.sql.Timestamp completeDate = null;
   private String dueDateTimeZone = null;
   private java.sql.Timestamp trashedDate = null;
+  private int ticketTaskCategoryId = -1;
 
   //other
   private int contactId = -1;
@@ -92,8 +90,7 @@ public class Task extends GenericBean {
   /**
    * Description of the Method
    */
-  public Task() {
-  }
+  public Task() { }
 
 
   /**
@@ -101,6 +98,7 @@ public class Task extends GenericBean {
    *
    * @param db     Description of the Parameter
    * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public Task(Connection db, int thisId) throws SQLException {
@@ -110,11 +108,11 @@ public class Task extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
-        "t.estimatedloetype, t.type, t.owner, t.completedate, t.modified, " +
-        "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date " +
-        "FROM task t " +
-        "WHERE task_id = ? ");
+            "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
+            "t.estimatedloetype, t.\"type\", t.owner, t.completedate, t.modified, " +
+            "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date, t.ticket_task_category_id " +
+            "FROM task t " +
+            "WHERE task_id = ? ");
     int i = 0;
     pst.setInt(++i, thisId);
     ResultSet rs = pst.executeQuery();
@@ -134,6 +132,7 @@ public class Task extends GenericBean {
    * Description of the Method
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public Task(ResultSet rs) throws SQLException {
@@ -874,8 +873,8 @@ public class Task extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM access " +
-        "WHERE user_id = ? AND enabled = ? ");
+            "FROM \"access\" " +
+            "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -902,8 +901,8 @@ public class Task extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM access " +
-        "WHERE user_id = ? AND enabled = ? ");
+            "FROM \"access\" " +
+            "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getContactId());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -1089,6 +1088,36 @@ public class Task extends GenericBean {
 
 
   /**
+   * Gets the ticketTaskCategoryId attribute of the Task object
+   *
+   * @return The ticketTaskCategoryId value
+   */
+  public int getTicketTaskCategoryId() {
+    return ticketTaskCategoryId;
+  }
+
+
+  /**
+   * Sets the ticketTaskCategoryId attribute of the Task object
+   *
+   * @param tmp The new ticketTaskCategoryId value
+   */
+  public void setTicketTaskCategoryId(int tmp) {
+    this.ticketTaskCategoryId = tmp;
+  }
+
+
+  /**
+   * Sets the ticketTaskCategoryId attribute of the Task object
+   *
+   * @param tmp The new ticketTaskCategoryId value
+   */
+  public void setTicketTaskCategoryId(String tmp) {
+    this.ticketTaskCategoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Description of the Method
    *
    * @param db Description of the Parameter
@@ -1105,14 +1134,14 @@ public class Task extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "task_task_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO task " +
-          "(" + (id > -1 ? "task_id, " : "") + "enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, duedate_timezone, estimatedloe, " +
-          (estimatedLOEType == -1 ? "" : "estimatedLOEType, ") +
-          (type == -1 ? "" : "type, ") +
-          "complete, completedate, category_id, trashed_date) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-          (estimatedLOEType == -1 ? "" : "?, ") +
-          (type == -1 ? "" : "?, ") +
-          "?, ?, ?, ? ) ");
+              "(" + (id > -1 ? "task_id, " : "") + "enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, duedate_timezone, estimatedloe, " +
+              (estimatedLOEType == -1 ? "" : "estimatedLOEType, ") +
+              (type == -1 ? "" : "\"type\", ") +
+              "complete, completedate, category_id, trashed_date, ticket_task_category_id) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+              (estimatedLOEType == -1 ? "" : "?, ") +
+              (type == -1 ? "" : "?, ") +
+              "?, ?, ?, ?, ?) ");
       int i = 0;
       if (id > -1) {
         pst.setInt(++i, id);
@@ -1141,6 +1170,7 @@ public class Task extends GenericBean {
       }
       DatabaseUtils.setInt(pst, ++i, categoryId);
       DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
+      DatabaseUtils.setInt(pst, ++i, this.getTicketTaskCategoryId());
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "task_task_id_seq", id);
       pst.close();
@@ -1224,7 +1254,8 @@ public class Task extends GenericBean {
           "SET modifiedby = ?, priority = ?, description = ?, notes = ?, " +
           "sharing = ?, owner = ?, duedate = ?, duedate_timezone = ?, estimatedloe = ?, " +
           (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
-          "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, category_id = ?, trashed_date = ? " +
+          "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, " +
+          "category_id = ?, trashed_date = ?, ticket_task_category_id = ? " +
           "WHERE task_id = ? AND modified = ? ";
       int i = 0;
       pst = db.prepareStatement(sql);
@@ -1246,10 +1277,11 @@ public class Task extends GenericBean {
       } else if (this.getComplete() && !previousTask.getComplete()) {
         pst.setTimestamp(++i, new Timestamp(System.currentTimeMillis()));
       } else {
-        pst.setTimestamp(++i, null);
+        DatabaseUtils.setTimestamp(pst, ++i, (Timestamp) null);
       }
       DatabaseUtils.setInt(pst, ++i, categoryId);
       DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
+      DatabaseUtils.setInt(pst, ++i, this.getTicketTaskCategoryId());
       pst.setInt(++i, id);
       pst.setTimestamp(++i, this.getModified());
       count = pst.executeUpdate();
@@ -1336,7 +1368,7 @@ public class Task extends GenericBean {
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
-    try {
+    /* Commenting this check as it is a relationship not a dependency
       ActionList actionList = ActionItemLogList.isItemLinked(
           db, this.getId(), Constants.TASK_OBJECT);
       if (actionList != null) {
@@ -1346,9 +1378,7 @@ public class Task extends GenericBean {
         thisDependency.setCanDelete(true);
         dependencyList.add(thisDependency);
       }
-    } catch (SQLException e) {
-      throw new SQLException(e.getMessage());
-    }
+    */
     return dependencyList;
   }
 
@@ -1373,7 +1403,7 @@ public class Task extends GenericBean {
       ContactHistory.deleteObject(db, OrganizationHistory.TASK, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "DELETE from task " +
-          "WHERE task_id = ? ");
+              "WHERE task_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -1411,21 +1441,21 @@ public class Task extends GenericBean {
       //Delete contact link
       PreparedStatement pst = db.prepareStatement(
           "DELETE from tasklink_contact " +
-          "WHERE task_id = ? ");
+              "WHERE task_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
       //Delete ticket link
       pst = db.prepareStatement(
           "DELETE from tasklink_ticket " +
-          "WHERE task_id = ? ");
+              "WHERE task_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
       //Delete project link
       pst = db.prepareStatement(
           "DELETE from tasklink_project " +
-          "WHERE task_id = ? ");
+              "WHERE task_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -1477,7 +1507,7 @@ public class Task extends GenericBean {
       }
       if (contactId > 0) {
         contact = new Contact(db, contactId);
-        contactName = contact.getValidName();
+        contactName = contact.getNameFull();
       }
       //build the linked ticket info
       sql = "SELECT ticket_id " +
@@ -1543,6 +1573,7 @@ public class Task extends GenericBean {
     categoryId = DatabaseUtils.getInt(rs, "category_id");
     dueDateTimeZone = rs.getString("duedate_timezone");
     trashedDate = rs.getTimestamp("trashed_date");
+    ticketTaskCategoryId = DatabaseUtils.getInt(rs, "ticket_task_category_id");
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       age = java.lang.Math.round(ageCheck);
@@ -1581,7 +1612,7 @@ public class Task extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM tasklink_project " +
-        "WHERE task_id = ? AND project_id = ?");
+            "WHERE task_id = ? AND project_id = ?");
     pst.setInt(++i, this.getId());
     pst.setInt(++i, projectId);
     pst.execute();
@@ -1600,8 +1631,8 @@ public class Task extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE task " +
-        "SET category_id = ? " +
-        "WHERE task_id = ? ");
+            "SET category_id = ? " +
+            "WHERE task_id = ? ");
     pst.setInt(++i, newCategoryId);
     pst.setInt(++i, id);
     pst.execute();
@@ -1619,8 +1650,8 @@ public class Task extends GenericBean {
   public static void markComplete(Connection db, int taskId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE task " +
-        "SET complete = ?, completedate = ? " +
-        "WHERE task_id = ? ");
+            "SET complete = ?, completedate = ? " +
+            "WHERE task_id = ? ");
     pst.setBoolean(1, true);
     pst.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
     pst.setInt(3, taskId);
@@ -1639,13 +1670,27 @@ public class Task extends GenericBean {
   public static void markIncomplete(Connection db, int taskId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE task " +
-        "SET complete = ?, completedate = ? " +
-        "WHERE task_id = ? ");
+            "SET complete = ?, completedate = ? " +
+            "WHERE task_id = ? ");
     pst.setBoolean(1, false);
     pst.setNull(2, java.sql.Types.TIMESTAMP);
     pst.setInt(3, taskId);
     pst.execute();
     pst.close();
+  }
+
+
+  /**
+   * Gets the userIdParams attribute of the Task class
+   *
+   * @return The userIdParams value
+   */
+  public static ArrayList getUserIdParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("enteredBy");
+    thisList.add("modifiedBy");
+    thisList.add("owner");
+    return thisList;
   }
 
 
@@ -1690,10 +1735,10 @@ public class Task extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE task " +
-        "SET trashed_date = ? , " +
-        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
-        "modifiedby = ? " +
-        "WHERE task_id = ? ");
+            "SET trashed_date = ? , " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+            "modifiedby = ? " +
+            "WHERE task_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     if (toTrash) {
@@ -1713,6 +1758,26 @@ public class Task extends GenericBean {
     return (resultCount == 1);
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setOwner(newOwner);
+    result = this.update(db);
+    if (result == -1) {
+      return false;
+    }
+    return true;
+  }
+
+
   /**
    * Description of the Method
    *
@@ -1729,7 +1794,7 @@ public class Task extends GenericBean {
     if (description != null) {
       summary += description;
     }
-    
+
     //write the event
     webcal.append("BEGIN:VTODO" + CRLF);
     webcal.append(

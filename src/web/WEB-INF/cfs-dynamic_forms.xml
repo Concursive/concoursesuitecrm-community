@@ -5,7 +5,7 @@
         scripts="survey.js^popURL.js"> 
     <button text="${button.save}" link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true"/>
     <tab id="0" name="Page 1" defaultField="name"
-         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;${campaign.communicationsManager}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;${communications.campaign.CreateAttachments}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;${campaign.surveys}&lt;/a&gt; &gt; ${campaign.surveyDetails}">
+         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;${communications.campaign.Communications}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;${communications.campaign.CreateAttachments}&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;${campaign.surveys}&lt;/a&gt; &gt; ${campaign.surveyDetails}">
       <buttonGroup> <!-- TODO: add header & footer attribs !-->
         <button type="2" name="prev" display="${button.backL}" enabled="no"/>
         <button type="2" name="Next" display="${button.nextR}" onclick="javascript:this.form.clickFrom.value='next';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=1';"/>

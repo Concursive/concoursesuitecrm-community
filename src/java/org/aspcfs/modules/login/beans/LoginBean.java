@@ -31,15 +31,25 @@ public class LoginBean extends GenericBean {
   private String username = "";
   private String password = "";
   private String webdavPassword = "";
+  private String ldapPassword = "";
 
+  /** Field names of this bean, used in place of hard-coded strings in ObjectValidator and /setup/configure_authentication_validate.jsp
+   They are set in static {} block, so that their string values are not compiled into class files of jasper-processed JSP.
+   Otherwise if these field names were changed in future, Tomcat's work subdirectory would need to be purged, so that JSPs got recompiled.
+   */
+  //public static final String USERNAME, PASSWORD, UNENCRYPTED_PASSWORD;
+  //static {
+  //  USERNAME= "username";
+  //  PASSWORD="password";
+  //  UNENCRYPTED_PASSWORD="unencryptedPassword";
+  //}
 
   /**
    * Default constructor.
    *
    * @since 1.0
    */
-  public LoginBean() {
-  }
+  public LoginBean() { }
 
 
   /**
@@ -66,9 +76,9 @@ public class LoginBean extends GenericBean {
     //Enrypt the webdav password. 'username' should be already set for a valid webdav password
     this.webdavPassword = PasswordHash.encrypt(
         username + ":" +
-        WebdavServlet.CFS_USER_REALM + ":" + tmp);
+            WebdavServlet.CFS_USER_REALM + ":" + tmp);
+    this.ldapPassword = tmp;
   }
-
 
   /**
    * Sets the Message attribute of the LoginBean object
@@ -124,5 +134,8 @@ public class LoginBean extends GenericBean {
   public String getWebdavPassword() {
     return webdavPassword;
   }
-}
 
+  public String getLdapPassword() {
+    return ldapPassword;
+  }
+}

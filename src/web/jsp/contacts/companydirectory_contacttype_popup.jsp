@@ -115,7 +115,7 @@
       String value = st.toString();
 %>
   <script>
-    selectedValues[<%= count %>] = '<%= StringUtils.jsStringEscape(value) %>';
+    selectedValues[<%= count %>] = "<%= StringUtils.jsStringEscape(value) %>";
     selectedIds[<%= count %>] = '<%= id %>';
   </script>
 <%

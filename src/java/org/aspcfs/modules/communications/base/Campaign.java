@@ -17,11 +17,15 @@ package org.aspcfs.modules.communications.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
+import org.aspcfs.modules.actionplans.base.ActionStepList;
+import org.aspcfs.modules.actionplans.base.ActionStep;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
@@ -34,12 +38,12 @@ import java.text.DateFormat;
 import java.util.*;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author Wesley_S_Gillette
- * @version $Id: Campaign.java,v 1.58.12.1 2004/11/12 19:55:24 mrajkowski Exp
- *          $
- * @created November 16, 2001
+ * @author     Wesley_S_Gillette
+ * @created    November 16, 2001
+ * @version    $Id: Campaign.java,v 1.58.12.1 2004/11/12 19:55:24 mrajkowski Exp
+ *      $
  */
 public class Campaign extends GenericBean {
 
@@ -85,7 +89,10 @@ public class Campaign extends GenericBean {
   private int type = GENERAL;
   private String activeDateTimeZone = null;
   private java.sql.Timestamp trashedDate = null;
+  private boolean partComplete = false;
 
+  private boolean buildGroupMaps = false;
+  private CampaignUserGroupMapList userGroupMaps = new CampaignUserGroupMapList();
   private int files = 0;
   private String deliveryName = null;
   private int deliveryType = -1;
@@ -113,20 +120,21 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Constructor for the Campaign object
+   *  Constructor for the Campaign object
    *
-   * @since 1.1
+   * @since    1.1
    */
-  public Campaign() {
-  }
+  public Campaign() { }
 
 
   /**
-   * Constructor for the Campaign object
+   *  Constructor for the Campaign object
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  rs                Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
+   * @throws  SQLException     Description of Exception
+   * @since                    1.1
    */
   public Campaign(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -134,9 +142,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the activeDateTimeZone attribute of the Campaign object
+   *  Sets the activeDateTimeZone attribute of the Campaign object
    *
-   * @param tmp The new activeDateTimeZone value
+   * @param  tmp  The new activeDateTimeZone value
    */
   public void setActiveDateTimeZone(String tmp) {
     this.activeDateTimeZone = tmp;
@@ -144,9 +152,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the activeDateTimeZone attribute of the Campaign object
+   *  Gets the activeDateTimeZone attribute of the Campaign object
    *
-   * @return The activeDateTimeZone value
+   * @return    The activeDateTimeZone value
    */
   public String getActiveDateTimeZone() {
     return activeDateTimeZone;
@@ -154,9 +162,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the trashedDate attribute of the Campaign object
+   *  Sets the trashedDate attribute of the Campaign object
    *
-   * @param tmp The new trashedDate value
+   * @param  tmp  The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -164,9 +172,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the trashedDate attribute of the Campaign object
+   *  Sets the trashedDate attribute of the Campaign object
    *
-   * @param tmp The new trashedDate value
+   * @param  tmp  The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -174,9 +182,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the trashedDate attribute of the Campaign object
+   *  Gets the trashedDate attribute of the Campaign object
    *
-   * @return The trashedDate value
+   * @return    The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -184,9 +192,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the surveyId attribute of the Campaign object
+   *  Gets the surveyId attribute of the Campaign object
    *
-   * @return The surveyId value
+   * @return    The surveyId value
    */
   public int getSurveyId() {
     return surveyId;
@@ -194,9 +202,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the activeSurveyId attribute of the Campaign object
+   *  Gets the activeSurveyId attribute of the Campaign object
    *
-   * @return The activeSurveyId value
+   * @return    The activeSurveyId value
    */
   public int getActiveSurveyId() {
     if (active) {
@@ -208,9 +216,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the surveyId attribute of the Campaign object
+   *  Sets the surveyId attribute of the Campaign object
    *
-   * @param surveyId The new surveyId value
+   * @param  surveyId  The new surveyId value
    */
   public void setSurveyId(int surveyId) {
     this.surveyId = surveyId;
@@ -218,9 +226,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the surveyId attribute of the Campaign object
+   *  Sets the surveyId attribute of the Campaign object
    *
-   * @param surveyId The new surveyId value
+   * @param  surveyId  The new surveyId value
    */
   public void setSurveyId(String surveyId) {
     this.surveyId = Integer.parseInt(surveyId);
@@ -228,9 +236,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the groups attribute of the Campaign object
+   *  Sets the groups attribute of the Campaign object
    *
-   * @param groups The new groups value
+   * @param  groups  The new groups value
    */
   public void setGroups(LinkedHashMap groups) {
     this.groups = groups;
@@ -238,9 +246,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the responseCount attribute of the Campaign object
+   *  Sets the responseCount attribute of the Campaign object
    *
-   * @param responseCount The new responseCount value
+   * @param  responseCount  The new responseCount value
    */
   public void setResponseCount(int responseCount) {
     this.responseCount = responseCount;
@@ -248,9 +256,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the lastResponse attribute of the Campaign object
+   *  Sets the lastResponse attribute of the Campaign object
    *
-   * @param lastResponse The new lastResponse value
+   * @param  lastResponse  The new lastResponse value
    */
   public void setLastResponse(java.sql.Timestamp lastResponse) {
     this.lastResponse = lastResponse;
@@ -258,9 +266,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the type attribute of the Campaign object
+   *  Sets the type attribute of the Campaign object
    *
-   * @param type The new type value
+   * @param  type  The new type value
    */
   public void setType(int type) {
     this.type = type;
@@ -268,9 +276,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the type attribute of the Campaign object
+   *  Sets the type attribute of the Campaign object
    *
-   * @param type The new type value
+   * @param  type  The new type value
    */
   public void setType(String type) {
     this.type = Integer.parseInt(type);
@@ -278,9 +286,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the messageSubject attribute of the Campaign object
+   *  Sets the messageSubject attribute of the Campaign object
    *
-   * @param tmp The new messageSubject value
+   * @param  tmp  The new messageSubject value
    */
   public void setMessageSubject(String tmp) {
     this.messageSubject = tmp;
@@ -288,9 +296,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the hasAddressRequest attribute of the Campaign object
+   *  Sets the hasAddressRequest attribute of the Campaign object
    *
-   * @param tmp The new hasAddressRequest value
+   * @param  tmp  The new hasAddressRequest value
    */
   public void setHasAddressRequest(boolean tmp) {
     this.hasAddressRequest = tmp;
@@ -298,9 +306,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the hasAddressRequest attribute of the Campaign object
+   *  Sets the hasAddressRequest attribute of the Campaign object
    *
-   * @param tmp The new hasAddressRequest value
+   * @param  tmp  The new hasAddressRequest value
    */
   public void setHasAddressRequest(String tmp) {
     this.hasAddressRequest = DatabaseUtils.parseBoolean(tmp);
@@ -308,9 +316,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the addressSurveyId attribute of the Campaign object
+   *  Sets the addressSurveyId attribute of the Campaign object
    *
-   * @param tmp The new addressSurveyId value
+   * @param  tmp  The new addressSurveyId value
    */
   public void setAddressSurveyId(int tmp) {
     this.addressSurveyId = tmp;
@@ -318,9 +326,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the addressSurveyId attribute of the Campaign object
+   *  Sets the addressSurveyId attribute of the Campaign object
    *
-   * @param tmp The new addressSurveyId value
+   * @param  tmp  The new addressSurveyId value
    */
   public void setAddressSurveyId(String tmp) {
     this.addressSurveyId = Integer.parseInt(tmp);
@@ -328,9 +336,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the addressResponseCount attribute of the Campaign object
+   *  Sets the addressResponseCount attribute of the Campaign object
    *
-   * @param tmp The new addressResponseCount value
+   * @param  tmp  The new addressResponseCount value
    */
   public void setAddressResponseCount(int tmp) {
     this.addressResponseCount = tmp;
@@ -338,9 +346,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the addressResponseCount attribute of the Campaign object
+   *  Sets the addressResponseCount attribute of the Campaign object
    *
-   * @param tmp The new addressResponseCount value
+   * @param  tmp  The new addressResponseCount value
    */
   public void setAddressResponseCount(String tmp) {
     this.addressResponseCount = Integer.parseInt(tmp);
@@ -348,9 +356,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the lastAddressResponse attribute of the Campaign object
+   *  Sets the lastAddressResponse attribute of the Campaign object
    *
-   * @param tmp The new lastAddressResponse value
+   * @param  tmp  The new lastAddressResponse value
    */
   public void setLastAddressResponse(java.sql.Timestamp tmp) {
     this.lastAddressResponse = tmp;
@@ -358,9 +366,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the lastAddressResponse attribute of the Campaign object
+   *  Sets the lastAddressResponse attribute of the Campaign object
    *
-   * @param tmp The new lastAddressResponse value
+   * @param  tmp  The new lastAddressResponse value
    */
   public void setLastAddressResponse(String tmp) {
     this.lastAddressResponse = DatabaseUtils.parseTimestamp(tmp);
@@ -368,9 +376,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the hasSurvey attribute of the Campaign object
+   *  Sets the hasSurvey attribute of the Campaign object
    *
-   * @param tmp The new hasSurvey value
+   * @param  tmp  The new hasSurvey value
    */
   public void setHasSurvey(boolean tmp) {
     this.hasSurvey = tmp;
@@ -378,9 +386,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the hasSurvey attribute of the Campaign object
+   *  Sets the hasSurvey attribute of the Campaign object
    *
-   * @param tmp The new hasSurvey value
+   * @param  tmp  The new hasSurvey value
    */
   public void setHasSurvey(String tmp) {
     this.hasSurvey = DatabaseUtils.parseBoolean(tmp);
@@ -388,9 +396,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the messageSubject attribute of the Campaign object
+   *  Gets the messageSubject attribute of the Campaign object
    *
-   * @return The messageSubject value
+   * @return    The messageSubject value
    */
   public String getMessageSubject() {
     return messageSubject;
@@ -398,9 +406,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the hasAddressRequest attribute of the Campaign object
+   *  Gets the hasAddressRequest attribute of the Campaign object
    *
-   * @return The hasAddressRequest value
+   * @return    The hasAddressRequest value
    */
   public boolean getHasAddressRequest() {
     return hasAddressRequest;
@@ -408,9 +416,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the addressSurveyId attribute of the Campaign object
+   *  Gets the addressSurveyId attribute of the Campaign object
    *
-   * @return The addressSurveyId value
+   * @return    The addressSurveyId value
    */
   public int getAddressSurveyId() {
     return addressSurveyId;
@@ -418,9 +426,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the addressResponseCount attribute of the Campaign object
+   *  Gets the addressResponseCount attribute of the Campaign object
    *
-   * @return The addressResponseCount value
+   * @return    The addressResponseCount value
    */
   public int getAddressResponseCount() {
     return addressResponseCount;
@@ -428,9 +436,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the lastAddressResponse attribute of the Campaign object
+   *  Gets the lastAddressResponse attribute of the Campaign object
    *
-   * @return The lastAddressResponse value
+   * @return    The lastAddressResponse value
    */
   public java.sql.Timestamp getLastAddressResponse() {
     return lastAddressResponse;
@@ -438,9 +446,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the hasSurvey attribute of the Campaign object
+   *  Gets the hasSurvey attribute of the Campaign object
    *
-   * @return The hasSurvey value
+   * @return    The hasSurvey value
    */
   public boolean getHasSurvey() {
     return hasSurvey;
@@ -448,9 +456,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the type attribute of the Campaign object
+   *  Gets the type attribute of the Campaign object
    *
-   * @return The type value
+   * @return    The type value
    */
   public int getType() {
     return type;
@@ -458,9 +466,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the lastResponse attribute of the Campaign object
+   *  Gets the lastResponse attribute of the Campaign object
    *
-   * @return The lastResponse value
+   * @return    The lastResponse value
    */
   public java.sql.Timestamp getLastResponse() {
     return lastResponse;
@@ -468,9 +476,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the lastResponseString attribute of the Campaign object
+   *  Gets the lastResponseString attribute of the Campaign object
    *
-   * @return The lastResponseString value
+   * @return    The lastResponseString value
    */
   public String getLastResponseString() {
     String tmp = "";
@@ -484,9 +492,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the lastAddressResponseString attribute of the Campaign object
+   *  Gets the lastAddressResponseString attribute of the Campaign object
    *
-   * @return The lastAddressResponseString value
+   * @return    The lastAddressResponseString value
    */
   public String getLastAddressResponseString() {
     String tmp = "";
@@ -500,9 +508,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the responseCount attribute of the Campaign object
+   *  Gets the responseCount attribute of the Campaign object
    *
-   * @return The responseCount value
+   * @return    The responseCount value
    */
   public int getResponseCount() {
     return responseCount;
@@ -510,9 +518,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the groups attribute of the Campaign object
+   *  Gets the groups attribute of the Campaign object
    *
-   * @return The groups value
+   * @return    The groups value
    */
   public LinkedHashMap getGroups() {
     return groups;
@@ -520,9 +528,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the bcc attribute of the Campaign object
+   *  Gets the bcc attribute of the Campaign object
    *
-   * @return The bcc value
+   * @return    The bcc value
    */
   public String getBcc() {
     return bcc;
@@ -530,9 +538,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the bcc attribute of the Campaign object
+   *  Sets the bcc attribute of the Campaign object
    *
-   * @param tmp The new bcc value
+   * @param  tmp  The new bcc value
    */
   public void setBcc(String tmp) {
     this.bcc = tmp;
@@ -540,9 +548,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the cc attribute of the Campaign object
+   *  Gets the cc attribute of the Campaign object
    *
-   * @return The cc value
+   * @return    The cc value
    */
   public String getCc() {
     return cc;
@@ -550,9 +558,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the cc attribute of the Campaign object
+   *  Sets the cc attribute of the Campaign object
    *
-   * @param tmp The new cc value
+   * @param  tmp  The new cc value
    */
   public void setCc(String tmp) {
     this.cc = tmp;
@@ -560,12 +568,13 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Constructor for the Campaign object
+   *  Constructor for the Campaign object
    *
-   * @param db         Description of Parameter
-   * @param campaignId Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  db                Description of Parameter
+   * @param  campaignId        Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of Exception
+   * @since                    1.1
    */
   public Campaign(Connection db, String campaignId) throws SQLException {
     queryRecord(db, Integer.parseInt(campaignId));
@@ -573,11 +582,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Constructor for the Campaign object
+   *  Constructor for the Campaign object
    *
-   * @param db         Description of the Parameter
-   * @param campaignId Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  campaignId        Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public Campaign(Connection db, int campaignId) throws SQLException {
     queryRecord(db, campaignId);
@@ -585,11 +595,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db         Description of the Parameter
-   * @param campaignId Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  campaignId     Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int campaignId) throws SQLException {
     if (campaignId <= 0) {
@@ -601,7 +611,7 @@ public class Campaign extends GenericBean {
     String sql =
         "SELECT c.*, msg.name AS messageName, msg.subject AS messageSubject, dt.code AS deliveryType, dt.description AS deliveryTypeName " +
         "FROM campaign c " +
-        "LEFT JOIN message msg ON (c.message_id = msg.id) " +
+        "LEFT JOIN \"message\" msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.campaign_id = ? ";
     pst = db.prepareStatement(sql);
@@ -626,14 +636,32 @@ public class Campaign extends GenericBean {
     setGroupList(db);
     buildFileCount(db);
     buildGroups(db);
+    buildUserGroupMaps(db);
   }
 
 
   /**
-   * Sets the ContactList attribute of the Campaign object
+   *  Description of the Method
    *
-   * @param contactList The new ContactList value
-   * @since 1.10
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void buildUserGroupMaps(Connection db) throws SQLException {
+    if (this.getBuildGroupMaps()) {
+      if (userGroupMaps == null) {
+        userGroupMaps = new CampaignUserGroupMapList();
+      }
+      userGroupMaps.setCampaignId(this.getId());
+      userGroupMaps.buildList(db);
+    }
+  }
+
+
+  /**
+   *  Sets the ContactList attribute of the Campaign object
+   *
+   * @param  contactList  The new ContactList value
+   * @since               1.10
    */
   public void setContactList(ContactList contactList) {
     this.contactList = contactList;
@@ -641,10 +669,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the RecipientCount attribute of the Campaign object
+   *  Sets the RecipientCount attribute of the Campaign object
    *
-   * @param recipientCount The new RecipientCount value
-   * @since 1.17
+   * @param  recipientCount  The new RecipientCount value
+   * @since                  1.17
    */
   public void setRecipientCount(int recipientCount) {
     this.recipientCount = recipientCount;
@@ -652,10 +680,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the RecipientCount attribute of the Campaign object
+   *  Sets the RecipientCount attribute of the Campaign object
    *
-   * @param recipientCount The new RecipientCount value
-   * @since 1.17
+   * @param  recipientCount  The new RecipientCount value
+   * @since                  1.17
    */
   public void setRecipientCount(String recipientCount) {
     this.recipientCount = Integer.parseInt(recipientCount);
@@ -663,10 +691,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the SentCount attribute of the Campaign object
+   *  Sets the SentCount attribute of the Campaign object
    *
-   * @param tmp The new SentCount value
-   * @since 1.17
+   * @param  tmp  The new SentCount value
+   * @since       1.17
    */
   public void setSentCount(int tmp) {
     this.sentCount = tmp;
@@ -674,10 +702,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the MessageName attribute of the Campaign object
+   *  Sets the MessageName attribute of the Campaign object
    *
-   * @param messageName The new MessageName value
-   * @since 1.10
+   * @param  messageName  The new MessageName value
+   * @since               1.10
    */
   public void setMessageName(String messageName) {
     this.messageName = messageName;
@@ -685,9 +713,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the serverName attribute of the Campaign object
+   *  Gets the serverName attribute of the Campaign object
    *
-   * @return The serverName value
+   * @return    The serverName value
    */
   public String getServerName() {
     return serverName;
@@ -695,9 +723,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the serverName attribute of the Campaign object
+   *  Sets the serverName attribute of the Campaign object
    *
-   * @param serverName The new serverName value
+   * @param  serverName  The new serverName value
    */
   public void setServerName(String serverName) {
     this.serverName = serverName;
@@ -705,10 +733,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the GroupList attribute of the Campaign object
+   *  Sets the GroupList attribute of the Campaign object
    *
-   * @param groupList The new GroupList value
-   * @since 1.10
+   * @param  groupList  The new GroupList value
+   * @since             1.10
    */
   public void setGroupList(String groupList) {
     this.groupList = groupList;
@@ -716,9 +744,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the approvedBy attribute of the Campaign object
+   *  Gets the approvedBy attribute of the Campaign object
    *
-   * @return The approvedBy value
+   * @return    The approvedBy value
    */
   public int getApprovedBy() {
     return approvedBy;
@@ -726,9 +754,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the approvedBy attribute of the Campaign object
+   *  Sets the approvedBy attribute of the Campaign object
    *
-   * @param approvedBy The new approvedBy value
+   * @param  approvedBy  The new approvedBy value
    */
   public void setApprovedBy(int approvedBy) {
     this.approvedBy = approvedBy;
@@ -736,9 +764,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the approvedBy attribute of the Campaign object
+   *  Sets the approvedBy attribute of the Campaign object
    *
-   * @param approvedBy The new approvedBy value
+   * @param  approvedBy  The new approvedBy value
    */
   public void setApprovedBy(String approvedBy) {
     this.approvedBy = Integer.parseInt(approvedBy);
@@ -746,10 +774,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the Campaign object
+   *  Sets the id attribute of the Campaign object
    *
-   * @param tmp The new id value
-   * @since 1.1
+   * @param  tmp  The new id value
+   * @since       1.1
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -757,10 +785,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the Campaign object
+   *  Sets the id attribute of the Campaign object
    *
-   * @param tmp The new id value
-   * @since 1.1
+   * @param  tmp  The new id value
+   * @since       1.1
    */
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
@@ -768,10 +796,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the Active attribute of the Campaign object
+   *  Sets the Active attribute of the Campaign object
    *
-   * @param active The new Active value
-   * @since 1.1
+   * @param  active  The new Active value
+   * @since          1.1
    */
   public void setActive(boolean active) {
     this.active = active;
@@ -779,10 +807,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the Active attribute of the Campaign object
+   *  Sets the Active attribute of the Campaign object
    *
-   * @param tmp The new Active value
-   * @since 1.1
+   * @param  tmp  The new Active value
+   * @since       1.1
    */
   public void setActive(String tmp) {
     active = DatabaseUtils.parseBoolean(tmp);
@@ -791,9 +819,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the replyTo attribute of the Campaign object
+   *  Sets the replyTo attribute of the Campaign object
    *
-   * @param tmp The new replyTo value
+   * @param  tmp  The new replyTo value
    */
   public void setReplyTo(String tmp) {
     this.replyTo = tmp;
@@ -801,9 +829,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the subject attribute of the Campaign object
+   *  Sets the subject attribute of the Campaign object
    *
-   * @param tmp The new subject value
+   * @param  tmp  The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -811,9 +839,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the message attribute of the Campaign object
+   *  Sets the message attribute of the Campaign object
    *
-   * @param tmp The new message value
+   * @param  tmp  The new message value
    */
   public void setMessage(String tmp) {
     this.message = tmp;
@@ -821,9 +849,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the sendMethodId attribute of the Campaign object
+   *  Sets the sendMethodId attribute of the Campaign object
    *
-   * @param tmp The new sendMethodId value
+   * @param  tmp  The new sendMethodId value
    */
   public void setSendMethodId(int tmp) {
     this.sendMethodId = tmp;
@@ -831,9 +859,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the sendMethodId attribute of the Campaign object
+   *  Sets the sendMethodId attribute of the Campaign object
    *
-   * @param tmp The new sendMethodId value
+   * @param  tmp  The new sendMethodId value
    */
   public void setSendMethodId(String tmp) {
     this.sendMethodId = Integer.parseInt(tmp);
@@ -841,10 +869,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the name attribute of the Campaign object
+   *  Sets the name attribute of the Campaign object
    *
-   * @param tmp The new name value
-   * @since 1.1
+   * @param  tmp  The new name value
+   * @since       1.1
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -852,10 +880,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the description attribute of the Campaign object
+   *  Sets the description attribute of the Campaign object
    *
-   * @param tmp The new description value
-   * @since 1.1
+   * @param  tmp  The new description value
+   * @since       1.1
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -863,10 +891,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the Status attribute of the Campaign object
+   *  Sets the Status attribute of the Campaign object
    *
-   * @param status The new Status value
-   * @since 1.17
+   * @param  status  The new Status value
+   * @since          1.17
    */
   public void setStatus(String status) {
     this.status = status;
@@ -874,10 +902,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the messageId attribute of the Campaign object
+   *  Sets the messageId attribute of the Campaign object
    *
-   * @param tmp The new messageId value
-   * @since 1.10
+   * @param  tmp  The new messageId value
+   * @since       1.10
    */
   public void setMessageId(int tmp) {
     this.messageId = tmp;
@@ -885,10 +913,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the MessageId attribute of the Campaign object
+   *  Sets the MessageId attribute of the Campaign object
    *
-   * @param tmp The new MessageId value
-   * @since 1.10
+   * @param  tmp  The new MessageId value
+   * @since       1.10
    */
   public void setMessageId(String tmp) {
     this.messageId = Integer.parseInt(tmp);
@@ -896,10 +924,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the groupId attribute of the Campaign object
+   *  Sets the groupId attribute of the Campaign object
    *
-   * @param tmp The new groupId value
-   * @since 1.10
+   * @param  tmp  The new groupId value
+   * @since       1.10
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -907,9 +935,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the groupId attribute of the Campaign object
+   *  Sets the groupId attribute of the Campaign object
    *
-   * @param tmp The new groupId value
+   * @param  tmp  The new groupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -917,10 +945,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the runId attribute of the Campaign object
+   *  Sets the runId attribute of the Campaign object
    *
-   * @param tmp The new runId value
-   * @since 1.10
+   * @param  tmp  The new runId value
+   * @since       1.10
    */
   public void setRunId(int tmp) {
     this.runId = tmp;
@@ -928,9 +956,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the runId attribute of the Campaign object
+   *  Sets the runId attribute of the Campaign object
    *
-   * @param tmp The new runId value
+   * @param  tmp  The new runId value
    */
   public void setRunId(String tmp) {
     this.runId = Integer.parseInt(tmp);
@@ -938,10 +966,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the statusId attribute of the Campaign object
+   *  Sets the statusId attribute of the Campaign object
    *
-   * @param tmp The new statusId value
-   * @since 1.17
+   * @param  tmp  The new statusId value
+   * @since       1.17
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -969,9 +997,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the statusId attribute of the Campaign object
+   *  Sets the statusId attribute of the Campaign object
    *
-   * @param tmp The new statusId value
+   * @param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.setStatusId(Integer.parseInt(tmp));
@@ -979,10 +1007,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the owner attribute of the Campaign object
+   *  Sets the owner attribute of the Campaign object
    *
-   * @param tmp The new owner value
-   * @since 1.10
+   * @param  tmp  The new owner value
+   * @since       1.10
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -990,9 +1018,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the owner attribute of the Campaign object
+   *  Sets the owner attribute of the Campaign object
    *
-   * @param tmp The new owner value
+   * @param  tmp  The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -1000,10 +1028,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the ActiveDate attribute of the Campaign object
+   *  Sets the ActiveDate attribute of the Campaign object
    *
-   * @param tmp The new ActiveDate value
-   * @since 1.10
+   * @param  tmp  The new ActiveDate value
+   * @since       1.10
    */
   public void setActiveDate(java.sql.Timestamp tmp) {
     this.activeDate = tmp;
@@ -1011,9 +1039,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the entered attribute of the Ticket object
+   *  Sets the entered attribute of the Ticket object
    *
-   * @param tmp The new entered value
+   * @param  tmp  The new entered value
    */
   public void setActiveDate(String tmp) {
     this.activeDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -1021,9 +1049,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the inactiveDate attribute of the Campaign object
+   *  Sets the inactiveDate attribute of the Campaign object
    *
-   * @param tmp The new inactiveDate value
+   * @param  tmp  The new inactiveDate value
    */
   public void setInactiveDate(java.sql.Timestamp tmp) {
     this.inactiveDate = tmp;
@@ -1031,9 +1059,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the inactiveDate attribute of the Campaign object
+   *  Sets the inactiveDate attribute of the Campaign object
    *
-   * @param tmp The new inactiveDate value
+   * @param  tmp  The new inactiveDate value
    */
   public void setInactiveDate(String tmp) {
     this.inactiveDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -1041,10 +1069,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the Entered attribute of the Campaign object
+   *  Sets the Entered attribute of the Campaign object
    *
-   * @param tmp The new Entered value
-   * @since 1.17
+   * @param  tmp  The new Entered value
+   * @since       1.17
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -1052,9 +1080,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the entered attribute of the Ticket object
+   *  Sets the entered attribute of the Ticket object
    *
-   * @param tmp The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -1062,9 +1090,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the modified attribute of the Ticket object
+   *  Sets the modified attribute of the Ticket object
    *
-   * @param tmp The new modified value
+   * @param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -1072,10 +1100,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the enteredBy attribute of the Campaign object
+   *  Sets the enteredBy attribute of the Campaign object
    *
-   * @param tmp The new enteredBy value
-   * @since 1.17
+   * @param  tmp  The new enteredBy value
+   * @since       1.17
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -1083,9 +1111,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the enteredBy attribute of the Campaign object
+   *  Sets the enteredBy attribute of the Campaign object
    *
-   * @param tmp The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -1093,10 +1121,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the Modified attribute of the Campaign object
+   *  Sets the Modified attribute of the Campaign object
    *
-   * @param tmp The new Modified value
-   * @since 1.17
+   * @param  tmp  The new Modified value
+   * @since       1.17
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -1104,10 +1132,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the modifiedBy attribute of the Campaign object
+   *  Sets the modifiedBy attribute of the Campaign object
    *
-   * @param tmp The new modifiedBy value
-   * @since 1.17
+   * @param  tmp  The new modifiedBy value
+   * @since       1.17
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -1115,9 +1143,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the modifiedBy attribute of the Campaign object
+   *  Sets the modifiedBy attribute of the Campaign object
    *
-   * @param tmp The new modifiedBy value
+   * @param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -1125,10 +1153,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the enabled attribute of the Campaign object
+   *  Sets the enabled attribute of the Campaign object
    *
-   * @param tmp The new enabled value
-   * @since 1.1
+   * @param  tmp  The new enabled value
+   * @since       1.1
    */
   public void setEnabled(boolean tmp) {
     enabled = tmp;
@@ -1136,10 +1164,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the enabled attribute of the Campaign object
+   *  Sets the enabled attribute of the Campaign object
    *
-   * @param tmp The new enabled value
-   * @since 1.1
+   * @param  tmp  The new enabled value
+   * @since       1.1
    */
   public void setEnabled(String tmp) {
     enabled = DatabaseUtils.parseBoolean(tmp);
@@ -1147,9 +1175,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the deliveryName attribute of the Campaign object
+   *  Sets the deliveryName attribute of the Campaign object
    *
-   * @param deliveryName The new deliveryName value
+   * @param  deliveryName  The new deliveryName value
    */
   public void setDeliveryName(String deliveryName) {
     this.deliveryName = deliveryName;
@@ -1157,9 +1185,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the deliveryType attribute of the Campaign object
+   *  Sets the deliveryType attribute of the Campaign object
    *
-   * @param tmp The new deliveryType value
+   * @param  tmp  The new deliveryType value
    */
   public void setDeliveryType(int tmp) {
     this.deliveryType = tmp;
@@ -1167,9 +1195,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the deliveryType attribute of the Campaign object
+   *  Sets the deliveryType attribute of the Campaign object
    *
-   * @param tmp The new deliveryType value
+   * @param  tmp  The new deliveryType value
    */
   public void setDeliveryType(String tmp) {
     this.deliveryType = Integer.parseInt(tmp);
@@ -1177,10 +1205,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the Groups attribute of the Campaign object
+   *  Sets the Groups attribute of the Campaign object
    *
-   * @param request The new Groups value
-   * @since 1.10
+   * @param  request  The new Groups value
+   * @since           1.10
    */
   public void setGroups(HttpServletRequest request) {
     StringBuffer sb = new StringBuffer();
@@ -1200,11 +1228,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the GroupList attribute of the Campaign object
+   *  Sets the GroupList attribute of the Campaign object
    *
-   * @param db The new GroupList value
-   * @throws SQLException Description of Exception
-   * @since 1.10
+   * @param  db             The new GroupList value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.10
    */
   public void setGroupList(Connection db) throws SQLException {
     this.groupCount = 0;
@@ -1233,9 +1261,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the modified attribute of the Campaign object
+   *  Gets the modified attribute of the Campaign object
    *
-   * @return The modified value
+   * @return    The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1243,9 +1271,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the sendMethodId attribute of the Campaign object
+   *  Gets the sendMethodId attribute of the Campaign object
    *
-   * @return The sendMethodId value
+   * @return    The sendMethodId value
    */
   public int getSendMethodId() {
     return sendMethodId;
@@ -1253,9 +1281,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the deliveryName attribute of the Campaign object
+   *  Gets the deliveryName attribute of the Campaign object
    *
-   * @return The deliveryName value
+   * @return    The deliveryName value
    */
   public String getDeliveryName() {
     return deliveryName;
@@ -1263,9 +1291,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the deliveryType attribute of the Campaign object
+   *  Gets the deliveryType attribute of the Campaign object
    *
-   * @return The deliveryType value
+   * @return    The deliveryType value
    */
   public int getDeliveryType() {
     return deliveryType;
@@ -1273,10 +1301,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the RecipientCount attribute of the Campaign object
+   *  Gets the RecipientCount attribute of the Campaign object
    *
-   * @return The RecipientCount value
-   * @since 1.10
+   * @return    The RecipientCount value
+   * @since     1.10
    */
   public int getRecipientCount() {
     return recipientCount;
@@ -1284,10 +1312,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the SentCount attribute of the Campaign object
+   *  Gets the SentCount attribute of the Campaign object
    *
-   * @return The SentCount value
-   * @since 1.10
+   * @return    The SentCount value
+   * @since     1.10
    */
   public int getSentCount() {
     return sentCount;
@@ -1295,10 +1323,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the ContactList attribute of the Campaign object
+   *  Gets the ContactList attribute of the Campaign object
    *
-   * @return The ContactList value
-   * @since 1.10
+   * @return    The ContactList value
+   * @since     1.10
    */
   public ContactList getContactList() {
     if (contactList == null) {
@@ -1309,10 +1337,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the MessageName attribute of the Campaign object
+   *  Gets the MessageName attribute of the Campaign object
    *
-   * @return The MessageName value
-   * @since 1.10
+   * @return    The MessageName value
+   * @since     1.10
    */
   public String getMessageName() {
     return messageName;
@@ -1320,10 +1348,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the Active attribute of the Campaign object
+   *  Gets the Active attribute of the Campaign object
    *
-   * @return The Active value
-   * @since 1.10
+   * @return    The Active value
+   * @since     1.10
    */
   public boolean getActive() {
     return active;
@@ -1331,10 +1359,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the ActiveYesNo attribute of the Campaign object
+   *  Gets the ActiveYesNo attribute of the Campaign object
    *
-   * @return The ActiveYesNo value
-   * @since 1.10
+   * @return    The ActiveYesNo value
+   * @since     1.10
    */
   public String getActiveYesNo() {
     if (active == true) {
@@ -1346,11 +1374,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the Active attribute of the Campaign object
+   *  Gets the Active attribute of the Campaign object
    *
-   * @param tmp Description of Parameter
-   * @return The Active value
-   * @since 1.10
+   * @param  tmp  Description of Parameter
+   * @return      The Active value
+   * @since       1.10
    */
   public String getActive(String tmp) {
     if (active == true) {
@@ -1362,10 +1390,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the ActiveDate attribute of the Campaign object
+   *  Gets the ActiveDate attribute of the Campaign object
    *
-   * @return The ActiveDate value
-   * @since 1.10
+   * @return    The ActiveDate value
+   * @since     1.10
    */
   public java.sql.Timestamp getActiveDate() {
     return activeDate;
@@ -1373,10 +1401,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the ActiveDateString attribute of the Campaign object
+   *  Gets the ActiveDateString attribute of the Campaign object
    *
-   * @return The ActiveDateString value
-   * @since 1.10
+   * @return    The ActiveDateString value
+   * @since     1.10
    */
   public String getActiveDateString() {
     String tmp = "";
@@ -1389,10 +1417,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the Status attribute of the Campaign object
+   *  Gets the Status attribute of the Campaign object
    *
-   * @return The Status value
-   * @since 1.17
+   * @return    The Status value
+   * @since     1.17
    */
   public String getStatus() {
     return status;
@@ -1400,10 +1428,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the GroupList attribute of the Campaign object
+   *  Gets the GroupList attribute of the Campaign object
    *
-   * @return The GroupList value
-   * @since 1.10
+   * @return    The GroupList value
+   * @since     1.10
    */
   public String getGroupList() {
     return groupList;
@@ -1411,10 +1439,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the GroupCount attribute of the Campaign object
+   *  Gets the GroupCount attribute of the Campaign object
    *
-   * @return The GroupCount value
-   * @since 1.10
+   * @return    The GroupCount value
+   * @since     1.10
    */
   public int getGroupCount() {
     return groupCount;
@@ -1422,10 +1450,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the id attribute of the Campaign object
+   *  Gets the id attribute of the Campaign object
    *
-   * @return The id value
-   * @since 1.1
+   * @return    The id value
+   * @since     1.1
    */
   public int getId() {
     return id;
@@ -1433,10 +1461,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the name attribute of the Campaign object
+   *  Gets the name attribute of the Campaign object
    *
-   * @return The name value
-   * @since 1.1
+   * @return    The name value
+   * @since     1.1
    */
   public String getName() {
     return name;
@@ -1444,10 +1472,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the description attribute of the Campaign object
+   *  Gets the description attribute of the Campaign object
    *
-   * @return The description value
-   * @since 1.1
+   * @return    The description value
+   * @since     1.1
    */
   public String getDescription() {
     return description;
@@ -1455,10 +1483,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the messageId attribute of the Campaign object
+   *  Gets the messageId attribute of the Campaign object
    *
-   * @return The messageId value
-   * @since 1.1
+   * @return    The messageId value
+   * @since     1.1
    */
   public int getMessageId() {
     return messageId;
@@ -1466,9 +1494,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the replyTo attribute of the Campaign object
+   *  Gets the replyTo attribute of the Campaign object
    *
-   * @return The replyTo value
+   * @return    The replyTo value
    */
   public String getReplyTo() {
     return replyTo;
@@ -1476,9 +1504,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the message attribute of the Campaign object
+   *  Gets the message attribute of the Campaign object
    *
-   * @return The message value
+   * @return    The message value
    */
   public String getMessage() {
     return message;
@@ -1486,9 +1514,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the subject attribute of the Campaign object
+   *  Gets the subject attribute of the Campaign object
    *
-   * @return The subject value
+   * @return    The subject value
    */
   public String getSubject() {
     return subject;
@@ -1496,10 +1524,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the groupId attribute of the Campaign object
+   *  Gets the groupId attribute of the Campaign object
    *
-   * @return The groupId value
-   * @since 1.1
+   * @return    The groupId value
+   * @since     1.1
    */
   public int getGroupId() {
     return groupId;
@@ -1507,10 +1535,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the runId attribute of the Campaign object
+   *  Gets the runId attribute of the Campaign object
    *
-   * @return The runId value
-   * @since 1.1
+   * @return    The runId value
+   * @since     1.1
    */
   public int getRunId() {
     return runId;
@@ -1518,10 +1546,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the statusId attribute of the Campaign object
+   *  Gets the statusId attribute of the Campaign object
    *
-   * @return The statusId value
-   * @since 1.17
+   * @return    The statusId value
+   * @since     1.17
    */
   public int getStatusId() {
     return statusId;
@@ -1529,10 +1557,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the owner attribute of the Campaign object
+   *  Gets the owner attribute of the Campaign object
    *
-   * @return The owner value
-   * @since 1.10
+   * @return    The owner value
+   * @since     1.10
    */
   public int getOwner() {
     return owner;
@@ -1540,10 +1568,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the enteredBy attribute of the Campaign object
+   *  Gets the enteredBy attribute of the Campaign object
    *
-   * @return The enteredBy value
-   * @since 1.1
+   * @return    The enteredBy value
+   * @since     1.1
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1551,10 +1579,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the modifiedBy attribute of the Campaign object
+   *  Gets the modifiedBy attribute of the Campaign object
    *
-   * @return The modifiedBy value
-   * @since 1.1
+   * @return    The modifiedBy value
+   * @since     1.1
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1562,10 +1590,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the ModifiedString attribute of the Campaign object
+   *  Gets the ModifiedString attribute of the Campaign object
    *
-   * @return The ModifiedString value
-   * @since 1.17
+   * @return    The ModifiedString value
+   * @since     1.17
    */
   public String getModifiedString() {
     String tmp = "";
@@ -1579,10 +1607,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the Entered attribute of the Campaign object
+   *  Gets the Entered attribute of the Campaign object
    *
-   * @return The Entered value
-   * @since 1.17
+   * @return    The Entered value
+   * @since     1.17
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1590,10 +1618,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the EnteredString attribute of the Campaign object
+   *  Gets the EnteredString attribute of the Campaign object
    *
-   * @return The EnteredString value
-   * @since 1.17
+   * @return    The EnteredString value
+   * @since     1.17
    */
   public String getEnteredString() {
     String tmp = "";
@@ -1607,10 +1635,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the enabled attribute of the Campaign object
+   *  Gets the enabled attribute of the Campaign object
    *
-   * @return The enabled value
-   * @since 1.1
+   * @return    The enabled value
+   * @since     1.1
    */
   public boolean getEnabled() {
     return enabled;
@@ -1618,10 +1646,90 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the Range attribute of the Campaign object
+   *  Gets the partComplete attribute of the Campaign object
    *
-   * @return The Range value
-   * @since 1.10
+   * @return    The partComplete value
+   */
+  public boolean getPartComplete() {
+    return partComplete;
+  }
+
+
+  /**
+   *  Sets the partComplete attribute of the Campaign object
+   *
+   * @param  tmp  The new partComplete value
+   */
+  public void setPartComplete(boolean tmp) {
+    this.partComplete = tmp;
+  }
+
+
+  /**
+   *  Sets the partComplete attribute of the Campaign object
+   *
+   * @param  tmp  The new partComplete value
+   */
+  public void setPartComplete(String tmp) {
+    this.partComplete = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the userGroupMaps attribute of the Campaign object
+   *
+   * @return    The userGroupMaps value
+   */
+  public CampaignUserGroupMapList getUserGroupMaps() {
+    return userGroupMaps;
+  }
+
+
+  /**
+   *  Sets the userGroupMaps attribute of the Campaign object
+   *
+   * @param  tmp  The new userGroupMaps value
+   */
+  public void setUserGroupMaps(CampaignUserGroupMapList tmp) {
+    this.userGroupMaps = tmp;
+  }
+
+
+  /**
+   *  Gets the buildGroupMaps attribute of the Campaign object
+   *
+   * @return    The buildGroupMaps value
+   */
+  public boolean getBuildGroupMaps() {
+    return buildGroupMaps;
+  }
+
+
+  /**
+   *  Sets the buildGroupMaps attribute of the Campaign object
+   *
+   * @param  tmp  The new buildGroupMaps value
+   */
+  public void setBuildGroupMaps(boolean tmp) {
+    this.buildGroupMaps = tmp;
+  }
+
+
+  /**
+   *  Sets the buildGroupMaps attribute of the Campaign object
+   *
+   * @param  tmp  The new buildGroupMaps value
+   */
+  public void setBuildGroupMaps(String tmp) {
+    this.buildGroupMaps = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the Range attribute of the Campaign object
+   *
+   * @return    The Range value
+   * @since     1.10
    */
   public String getRange() {
     StringTokenizer strt = new StringTokenizer(this.getGroupList(), "*");
@@ -1644,11 +1752,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the MessageChecked attribute of the Campaign object
+   *  Gets the MessageChecked attribute of the Campaign object
    *
-   * @param tmp Description of Parameter
-   * @return The MessageChecked value
-   * @since 1.17
+   * @param  tmp  Description of Parameter
+   * @return      The MessageChecked value
+   * @since       1.17
    */
   public String getMessageChecked(int tmp) {
     if (messageId == tmp) {
@@ -1660,11 +1768,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the GroupChecked attribute of the Campaign object
+   *  Gets the GroupChecked attribute of the Campaign object
    *
-   * @param tmp Description of Parameter
-   * @return The GroupChecked value
-   * @since 1.17
+   * @param  tmp  Description of Parameter
+   * @return      The GroupChecked value
+   * @since       1.17
    */
   public String getGroupChecked(int tmp) {
     if (groupList != null || groupList.length() > 0) {
@@ -1682,10 +1790,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the ReadyToActivate attribute of the Campaign object
+   *  Gets the ReadyToActivate attribute of the Campaign object
    *
-   * @return The ReadyToActivate value
-   * @since 1.17
+   * @return    The ReadyToActivate value
+   * @since     1.17
    */
   public boolean isReadyToActivate() {
     return (hasGroups() && hasMessage() && hasDetails());
@@ -1693,10 +1801,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
-   * @since 1.17
+   * @return    Description of the Returned Value
+   * @since     1.17
    */
   public boolean hasGroups() {
     return (groupList != null && !groupList.equals(""));
@@ -1704,10 +1812,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
-   * @since 1.17
+   * @return    Description of the Returned Value
+   * @since     1.17
    */
   public boolean hasMessage() {
     return (messageId > 0);
@@ -1715,9 +1823,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean hasSurvey() {
     return (surveyId > 0);
@@ -1725,10 +1833,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
-   * @since 1.17
+   * @return    Description of the Returned Value
+   * @since     1.17
    */
   public boolean hasDetails() {
     return (activeDate != null);
@@ -1736,10 +1844,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
-   * @since 1.17
+   * @return    Description of the Returned Value
+   * @since     1.17
    */
   public boolean hasRun() {
     return (statusId == FINISHED);
@@ -1747,9 +1855,9 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
+   * @return    Description of the Returned Value
    */
   public boolean hasFiles() {
     return (files > 0);
@@ -1757,11 +1865,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.10
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.10
    */
   public void buildRecipientCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1779,11 +1887,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Builds the total number of people who responded to the survey Note :
-   * counts a person only once.
+   *  Builds the total number of people who responded to the survey Note :
+   *  counts a person only once.
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildResponseCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1791,7 +1899,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.type = ? ");
+        "AND sa.\"type\" = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_REGULAR);
     ResultSet rs = pst.executeQuery();
@@ -1804,11 +1912,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Builds the total number of people who responded to the address update
-   * request : counts a person only once.
+   *  Builds the total number of people who responded to the address update
+   *  request : counts a person only once.
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildAddressResponseCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1816,7 +1924,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.type = ? ");
+        "AND sa.\"type\" = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_ADDRESS_REQUEST);
     ResultSet rs = pst.executeQuery();
@@ -1829,10 +1937,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Fetches the time at which the last response for a survey was recieved
+   *  Fetches the time at which the last response for a survey was recieved
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildLastResponse(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1840,7 +1948,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.type = ? ");
+        "AND sa.\"type\" = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_REGULAR);
     ResultSet rs = pst.executeQuery();
@@ -1853,11 +1961,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Fetches the time at which the last response to an address update request
-   * was recieved
+   *  Fetches the time at which the last response to an address update request
+   *  was recieved
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildLastAddressResponse(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -1865,7 +1973,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.type = ? ");
+        "AND sa.\"type\" = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_ADDRESS_REQUEST);
     ResultSet rs = pst.executeQuery();
@@ -1878,13 +1986,13 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Retrieves the file id for this campaign. A file will exist if a campaign
-   * gets executed and is configured to output a file. For example, when the
-   * "letter" option is selected, a .zip file gets created in which the user
-   * can download.
+   *  Retrieves the file id for this campaign. A file will exist if a campaign
+   *  gets executed and is configured to output a file. For example, when the
+   *  "letter" option is selected, a .zip file gets created in which the user
+   *  can download.
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
    */
   public void buildFileCount(Connection db) throws SQLException {
     //All internal documents for a campaign
@@ -1894,10 +2002,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Builds all groups associated with the campaign.
+   *  Builds all groups associated with the campaign.
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildGroups(Connection db) throws SQLException {
     ArrayList criteriaList = null;
@@ -1924,10 +2032,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildSurveyId(Connection db) throws SQLException {
     if (active) {
@@ -1939,10 +2047,10 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Determines whether an address update request is attached with the campaign
+   *  Determines whether an address update request is attached with the campaign
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildHasAddressRequest(Connection db) throws SQLException {
     if (Survey.getId(db, this.id, Constants.SURVEY_ADDRESS_REQUEST) != -1) {
@@ -1957,15 +2065,16 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildHasSurvey(Connection db) throws SQLException {
     if (Survey.getId(db, this.id, Constants.SURVEY_REGULAR) != -1) {
       this.setHasSurvey(true);
-    } else if (ActiveSurvey.getId(db, this.id, Constants.SURVEY_REGULAR) != -1) {
+    } else
+        if (ActiveSurvey.getId(db, this.id, Constants.SURVEY_REGULAR) != -1) {
       this.setHasSurvey(true);
     } else {
       this.setHasSurvey(false);
@@ -1974,11 +2083,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the ContactList attribute of the Campaign object
+   *  Gets the ContactList attribute of the Campaign object
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.10
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.10
    */
   public void insertContactList(Connection db) throws SQLException {
     Iterator j = contactList.iterator();
@@ -1993,12 +2102,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db          Description of Parameter
-   * @param userId      Description of the Parameter
-   * @param userRangeId Description of the Parameter
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @param  userId         Description of the Parameter
+   * @param  userRangeId    Description of the Parameter
+   * @throws  SQLException  Description of Exception
    */
   public void insertRecipients(Connection db, int userId, String userRangeId) throws SQLException {
     ContactList dummyList = this.getContactList();
@@ -2038,12 +2147,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Sets the contacts attribute of the Campaign object
+   *  Sets the contacts attribute of the Campaign object
    *
-   * @param db          The new contacts value
-   * @param userId      The new contacts value
-   * @param userRangeId The new contacts value
-   * @throws SQLException Description of the Exception
+   * @param  db             The new contacts value
+   * @param  userId         The new contacts value
+   * @param  userRangeId    The new contacts value
+   * @throws  SQLException  Description of the Exception
    */
   public void setContacts(Connection db, int userId, String userRangeId) throws SQLException {
     ContactList dummyList = this.getContactList();
@@ -2080,12 +2189,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.5
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.5
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -2099,8 +2208,8 @@ public class Campaign extends GenericBean {
       sql.append(
           "INSERT INTO campaign " +
           "(enteredby, modifiedby, name, message_id, " +
-          "reply_addr, subject, message, send_method_id, " +
-          "inactive_date, approval_date, type, ");
+          "reply_addr, subject, \"message\", send_method_id, " +
+          "inactive_date, approval_date, \"type\", ");
       if (id > -1) {
         sql.append("campaign_id, ");
       }
@@ -2162,6 +2271,7 @@ public class Campaign extends GenericBean {
           pstx.close();
         }
       }
+      parseUserGroups(db);
       if (commit) {
         db.commit();
       }
@@ -2180,12 +2290,61 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public boolean parseUserGroups(Connection db) throws SQLException {
+    CampaignUserGroupMapList oldList = new CampaignUserGroupMapList();
+    oldList.setCampaignId(this.getId());
+    oldList.buildList(db);
+    if (oldList.size() > 0) {
+      HashMap oldMap = oldList.createMapOfElements();
+      HashMap mapOfElements = oldList.createMapOfElements();
+      Iterator iter = null;
+      if (userGroupMaps != null) {
+        iter = (Iterator) userGroupMaps.iterator();
+        while (iter.hasNext()) {
+          CampaignUserGroupMap groupMap = (CampaignUserGroupMap) iter.next();
+          // check if the mapping exists
+          if (mapOfElements.get(new Integer(groupMap.getUserGroupId())) != null) {
+            //remove from the userGroupMaps so that nothing is changed
+            iter.remove();
+            // remove it from oldMap so that the groupMap is not deleted
+            Object tmp = oldMap.remove(new Integer(groupMap.getUserGroupId()));
+          }
+        }
+      }
+      //delete the rest of the userGroupMaps in the oldMap as they are not supposed to exist
+      iter = (Iterator) oldMap.keySet().iterator();
+      while (iter.hasNext()) {
+        CampaignUserGroupMap toRemove = (CampaignUserGroupMap) oldMap.get((Integer) iter.next());
+        toRemove.delete(db);
+      }
+    }
+    // insert new mappings
+    if (userGroupMaps != null) {
+      userGroupMaps.setCampaignId(this.getId());
+      userGroupMaps.insert(db);
+    }
+
+    //build a new list of userGroupMaps to include unchanged elements
+    userGroupMaps = new CampaignUserGroupMapList();
+    userGroupMaps.setCampaignId(this.getId());
+    userGroupMaps.buildList(db);
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public boolean insertGroups(Connection db) throws SQLException {
     try {
@@ -2232,11 +2391,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean deleteAllGroups(Connection db) throws SQLException {
     PreparedStatement pstx = null;
@@ -2253,12 +2412,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public boolean deleteGroups(Connection db) throws SQLException {
     try {
@@ -2301,12 +2460,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.5
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.5
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -2326,11 +2485,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -2339,7 +2498,7 @@ public class Campaign extends GenericBean {
     int activeSurveyId = (ActiveSurvey.getId(db, id, Constants.SURVEY_REGULAR));
     if (activeSurveyId > -1) {
       Dependency dependency = new Dependency();
-      dependency.setName("survey");
+      dependency.setName("activeSurvey");
       dependency.setCount(1);
       dependency.setCanDelete(false);
       dependencyList.add(dependency);
@@ -2360,13 +2519,13 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db           Description of Parameter
-   * @param baseFilePath Description of the Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.5
+   * @param  db             Description of Parameter
+   * @param  baseFilePath   Description of the Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.5
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
     PreparedStatement pst = null;
@@ -2378,6 +2537,11 @@ public class Campaign extends GenericBean {
       }
       //make sure there arent any  for instant action campaigns
       ActionItemLog.deleteLink(db, this.getId(), Constants.CAMPAIGN_OBJECT);
+
+      //Delete the user group mappings for the campaign
+      this.setBuildGroupMaps(true);
+      this.buildUserGroupMaps(db);
+      this.getUserGroupMaps().delete(db);
 
       pst = db.prepareStatement(
           "DELETE FROM campaign_list_groups WHERE campaign_id = ? ");
@@ -2441,6 +2605,13 @@ public class Campaign extends GenericBean {
       docList.delete(db, baseFilePath + "campaign" + Constants.fs);
       docList = null;
 
+      ActionStepList stepList = new ActionStepList();
+      stepList.setCampaignId(this.getId());
+      stepList.buildList(db);
+      stepList.resetCampaignInformation(db);
+
+      ContactHistory.deleteObject(db, OrganizationHistory.CAMPAIGN, this.getId());
+      
       //Deleting Active Campaign Groups
       pst = db.prepareStatement(
           "DELETE FROM active_campaign_groups WHERE campaign_id = ? ");
@@ -2473,12 +2644,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public int cancel(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2486,6 +2657,7 @@ public class Campaign extends GenericBean {
     }
     boolean commit = true;
     int resultCount = 0;
+    int activeRecipients = 0;
     PreparedStatement pst = null;
     try {
       commit = db.getAutoCommit();
@@ -2493,22 +2665,36 @@ public class Campaign extends GenericBean {
         db.setAutoCommit(false);
       }
       pst = db.prepareStatement(
-          "UPDATE campaign " +
-          "SET status_id = ?, " +
-          "status = ?, " +
-          "active = ?, " +
-          "modifiedby = ?, " +
-          "modified = CURRENT_TIMESTAMP " +
+          "SELECT count(*) AS activecount " +
+          "FROM scheduled_recipient " +
           "WHERE campaign_id = ? " +
-          "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
-      int i = 0;
-      pst.setInt(++i, CANCELED);
-      pst.setString(++i, CANCELED_TEXT);
-      pst.setBoolean(++i, false);
-      pst.setInt(++i, modifiedBy);
-      pst.setInt(++i, id);
-      resultCount = pst.executeUpdate();
-
+          "AND sent_date IS NOT NULL ");
+      pst.setInt(1, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        activeRecipients = rs.getInt("activecount");
+      }
+      rs.close();
+      pst.close();
+      if (activeRecipients <= 0) {
+        pst = db.prepareStatement(
+            "UPDATE campaign " +
+            "SET status_id = ?, " +
+            "status = ?, " +
+            "\"active\" = ?, " +
+            "modifiedby = ?, " +
+            "modified = CURRENT_TIMESTAMP " +
+            "WHERE campaign_id = ? " +
+            "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
+        int i = 0;
+        pst.setInt(++i, CANCELED);
+        pst.setString(++i, CANCELED_TEXT);
+        pst.setBoolean(++i, false);
+        pst.setInt(++i, modifiedBy);
+        pst.setInt(++i, id);
+        resultCount = pst.executeUpdate();
+        pst.close();
+      }
       if (resultCount == 1) {
         pst = db.prepareStatement(
             "DELETE FROM scheduled_recipient " +
@@ -2560,14 +2746,14 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db          Description of Parameter
-   * @param userId      Description of the Parameter
-   * @param userRangeId Description of the Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db             Description of Parameter
+   * @param  userId         Description of the Parameter
+   * @param  userRangeId    Description of the Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public int activate(Connection db, int userId, String userRangeId) throws SQLException {
     int resultCount = 0;
@@ -2598,9 +2784,9 @@ public class Campaign extends GenericBean {
           "modifiedby = ?, " +
           "modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = ? " +
-          //"WHERE id = ? " +
+      //"WHERE id = ? " +
           "AND modified = ? " +
-          "AND active = ? ");
+          "AND \"active\" = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setInt(++i, QUEUE);
@@ -2679,15 +2865,19 @@ public class Campaign extends GenericBean {
           template.setText(thisMessage.getMessageText());
         }
         if ((this.surveyId == -1) && (!this.hasAddressRequest)) {
+          template.addParseElement(
+              "${received_confirmation_url}", "<a href=\"http://" + this.getServerName() + "/ProcessCampaignConfirmation.do?id=${campaignId=" + this.getId() + "}\">here</a>");
+          thisMessage.setMessageText(
+              thisMessage.getMessageText() + "<br><br>Please click ${received_confirmation_url} to confirm that you have received the message!");
           template.setText(thisMessage.getMessageText());
         }
         //Finalize the campaign activation
         pst = db.prepareStatement(
             "UPDATE campaign " +
-            "SET active = ?, " +
+            "SET \"active\" = ?, " +
             "reply_addr = ?, " +
             "subject = ?, " +
-            "message = ?, " +
+            "\"message\" = ?, " +
             "modifiedby = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE campaign_id = ? ");
@@ -2725,11 +2915,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Makes a copy of the groups associated with this Campaign.
+   *  Makes a copy of the groups associated with this Campaign.
    *
-   * @param groups Description of the Parameter
-   * @param db     Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  groups         Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void lockGroupCriteria(SearchCriteriaListList groups, Connection db) throws SQLException {
     Iterator i = groups.iterator();
@@ -2744,7 +2934,7 @@ public class Campaign extends GenericBean {
             db, "active_campaign_groups_id_seq");
         PreparedStatement pst =
             db.prepareStatement(
-                "INSERT INTO active_campaign_groups " +
+            "INSERT INTO active_campaign_groups " +
             "(" + (seqId > -1 ? "id, " : "") + "campaign_id, groupname, groupcriteria )" +
             "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
         if (seqId > -1) {
@@ -2761,12 +2951,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public int insertRun(Connection db) throws SQLException {
     CampaignRun thisRun = new CampaignRun();
@@ -2779,18 +2969,17 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public int updateDetails(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-
     int resultCount = 0;
 
     PreparedStatement pst = null;
@@ -2808,18 +2997,18 @@ public class Campaign extends GenericBean {
     pst.setInt(++i, modifiedBy);
     resultCount = pst.executeUpdate();
     pst.close();
-
+    this.parseUserGroups(db);
     return resultCount;
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public int updateMessage(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2835,7 +3024,7 @@ public class Campaign extends GenericBean {
         "SET message_id = ?, " +
         "reply_addr = null, " +
         "subject = null, " +
-        "message = null, " +
+        "\"message\" = null, " +
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE campaign_id = ? ");
@@ -2851,11 +3040,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int updateSurvey(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2906,11 +3095,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int updateAddressRequest(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2965,12 +3154,12 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.17
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.17
    */
   public int updateSchedule(Connection db) throws SQLException {
     int resultCount = 0;
@@ -2998,13 +3187,13 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db       Description of Parameter
-   * @param override Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.5
+   * @param  db             Description of Parameter
+   * @param  override       Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.5
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -3040,7 +3229,7 @@ public class Campaign extends GenericBean {
     }
     sql.append(
         "modifiedby = ?, " +
-        "active = ?, status_id = ?, status = ?, message_id = ? " +
+        "\"active\" = ?, status_id = ?, status = ?, message_id = ? " +
         "WHERE campaign_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -3070,18 +3259,19 @@ public class Campaign extends GenericBean {
     if (statusId == FINISHED) {
       Survey.removeLink(db, this.id);
     }
+    parseUserGroups(db);
     return resultCount;
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param toTrash   Description of the Parameter
-   * @param tmpUserId Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  toTrash        Description of the Parameter
+   * @param  tmpUserId      Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
     PreparedStatement pst = null;
@@ -3103,16 +3293,30 @@ public class Campaign extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, tmpUserId);
     pst.setInt(++i, this.getId());
     pst.executeUpdate();
+    pst.close();
+
+    //Delete the user group mappings for the campaign
+    this.setBuildGroupMaps(true);
+    this.buildUserGroupMaps(db);
+    this.getUserGroupMaps().delete(db);
+
+    ActionStepList stepList = new ActionStepList();
+    stepList.setCampaignId(this.getId());
+    stepList.buildList(db);
+    stepList.resetCampaignInformation(db);
+
+    ContactHistory.deleteObject(db, OrganizationHistory.CAMPAIGN, this.getId());
+
     return true;
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.5
+   * @param  rs             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.5
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //campaign table
@@ -3137,6 +3341,7 @@ public class Campaign extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    type = rs.getInt("type");
     activeDateTimeZone = rs.getString("active_date_timezone");
     cc = rs.getString("cc");
     bcc = rs.getString("bcc");
@@ -3151,15 +3356,15 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * This method is called when the notifier begins processing a campaign. If
-   * lockProcess returns a 1, then it was successful and this instance of the
-   * notifier can execute the campaign. If lockProcess is not successful then
-   * the notifier should skip this campaign because another instance may have
-   * processed this one already.
+   *  This method is called when the notifier begins processing a campaign. If
+   *  lockProcess returns a 1, then it was successful and this instance of the
+   *  notifier can execute the campaign. If lockProcess is not successful then
+   *  the notifier should skip this campaign because another instance may have
+   *  processed this one already.
    *
-   * @param db Description of the Parameter
-   * @return 1 if successfully locked
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                1 if successfully locked
+   * @throws  SQLException  Description of the Exception
    */
   public int lockProcess(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -3177,13 +3382,13 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Returns the user who entered a campaign, useful for checking the authority
-   * of a campaign record
+   *  Returns the user who entered a campaign, useful for checking the authority
+   *  of a campaign record
    *
-   * @param db         Description of the Parameter
-   * @param campaignId Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  campaignId     Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public final static int queryEnteredBy(Connection db, int campaignId) throws SQLException {
     int enteredBy = -1;
@@ -3203,9 +3408,23 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Gets the properties that are TimeZone sensitive for a Call
+   *  Gets the userIdParams attribute of the Campaign class
    *
-   * @return The timeZoneParams value
+   * @return    The userIdParams value
+   */
+  public static ArrayList getUserIdParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("enteredBy");
+    thisList.add("modifiedBy");
+    thisList.add("owner");
+    return thisList;
+  }
+
+
+  /**
+   *  Gets the properties that are TimeZone sensitive for a Call
+   *
+   * @return    The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -3216,20 +3435,20 @@ public class Campaign extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param tmpUserId Description of the Parameter
-   * @param password  Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  tmpUserId      Description of the Parameter
+   * @param  password       Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static boolean authenticateForBroadcast(Connection db, int tmpUserId, String password) throws SQLException {
     String pw = "";
     String encryptedPassword = PasswordHash.encrypt(password);
     PreparedStatement pst = db.prepareStatement(
         "SELECT a.password " +
-        "FROM access a " +
+        "FROM \"access\" a " +
         "WHERE user_id = ? " +
         "AND a.enabled = ? ");
     pst.setInt(1, tmpUserId);
@@ -3243,6 +3462,33 @@ public class Campaign extends GenericBean {
     if (pw == null || pw.trim().equals("") || !pw.equals(encryptedPassword)) {
       return false;
     }
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public boolean restartCampaign(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Campaign ID required to restart the campaign");
+    }
+    String currentTimestamp = DatabaseUtils.getCurrentTimestamp(db);
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE campaign SET " +
+        "status_id = ?, " +
+        "status = ?, " +
+        "active_date = " + currentTimestamp + " " +
+        "WHERE campaign_id = ? ");
+    pst.setInt(1, Campaign.QUEUE);
+    pst.setString(2, Campaign.QUEUE_TEXT);
+    pst.setInt(3, this.getId());
+    pst.executeUpdate();
+    pst.close();
     return true;
   }
 }

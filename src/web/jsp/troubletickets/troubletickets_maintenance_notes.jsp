@@ -14,13 +14,15 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.* " %>
 <jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="assetVendorList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="assetManufacturerList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="maintenanceList" class="org.aspcfs.modules.troubletickets.base.TicketMaintenanceNoteList" scope="request"/>
 <jsp:useBean id="SunListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -57,61 +59,63 @@
 <% String param1 = "id=" + ticketDetails.getId(); %>
 <dhv:container name="tickets" selected="maintenancenotes" object="ticketDetails" param="<%= param1 %>">
   <%@ include file="ticket_header_include.jsp" %>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" >
-    <tr>
-      <td width="20%" nowrap>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td width="20%" nowrap>
         <b><dhv:label name="ticket.serialNumber.colon">Serial No:</dhv:label></b>
-        <%= toHtml(ticketDetails.getAssetSerialNumber()) %>
-      </td>
-      <td width="20%" nowrap>
+      <%= toHtml(ticketDetails.getAssetSerialNumber()) %>
+    </td>
+    <td width="20%" nowrap>
         <b><dhv:label name="ticket.vendor.colon">Vendor:</dhv:label></b>
-        <%= toHtml(ticketDetails.getAssetVendor()) %>
-      </td>
-      <td width="20%" nowrap>
+      <dhv:evaluate if="<%= ticketDetails.getAssetVendorCode() > 0 %>">
+        <%=toHtml(assetManufacturerList.getSelectedValue(ticketDetails.getAssetVendorCode())) %>    
+      </dhv:evaluate>&nbsp;
+    </td>
+    <td width="20%" nowrap>
         <b><dhv:label name="ticket.modelNumber.colon">Model:</dhv:label></b>
-        <%= toHtml(ticketDetails.getAssetModelVersion()) %>
-      </td>
-      <td width="20%" nowrap>
+      <%= toHtml(ticketDetails.getAssetModelVersion()) %>
+    </td>
+    <td width="20%" nowrap>
         <b><dhv:label name="reports.helpdesk.ticket.location.colon">Location:</dhv:label></b>
         <% if(ticketDetails.getAssetLocation().trim().equals("")) {%>
           <dhv:label name="account.notSpecified.label">Not Specified</dhv:label>
         <%} else {%>
           <%= toHtml(ticketDetails.getAssetLocation()) %>
         <%}%>
-      </td>
-    </tr>
-    <tr valign="top" class="underlineSection">
-      <td width="20%" nowrap>
+    </td>
+  </tr>
+  <tr valign="top" class="underlineSection">
+    <td width="20%" nowrap>
         <b><dhv:label name="ticket.serviceContractNumber.colon">Service Contract No.:</dhv:label></b>
-        <%= toHtml(ticketDetails.getServiceContractNumber()) %>
-      </td>
-      <td width="20%" nowrap>
+      <%= toHtml(ticketDetails.getServiceContractNumber()) %>
+    </td>
+    <td width="20%" nowrap>
         <b><dhv:label name="ticket.onsiteServiceModel.colon">Onsite Service Model:</dhv:label></b>
-        <%= toHtml((ticketDetails.getAssetOnsiteResponseModel() == -1) ? onsiteModelList.getSelectedValue(ticketDetails.getContractOnsiteResponseModel()) : onsiteModelList.getSelectedValue(ticketDetails.getAssetOnsiteResponseModel()))%>
-      </td>
-      <td width="20%" nowrap>
+      <%= toHtml((ticketDetails.getAssetOnsiteResponseModel() == -1) ? onsiteModelList.getSelectedValue(ticketDetails.getContractOnsiteResponseModel()) : onsiteModelList.getSelectedValue(ticketDetails.getAssetOnsiteResponseModel()))%>
+    </td>
+    <td width="20%" nowrap>
         <b><dhv:label name="project.startDate.colon">Start Date:</dhv:label></b>
-        <zeroio:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-      </td>
-      <td nowrap>
+      <zeroio:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+    </td>
+    <td nowrap>
         <b><dhv:label name="product.endDate">End Date</dhv:label>:</b>
-        <zeroio:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-      </td>
-    </tr>
-  </table>
-  <table cellspacing="0" border="0" width="100%">
-    <tr>
-      <td>
-        <dhv:permission name="tickets-maintenance-report-add">
+      <zeroio:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+    </td>
+  </tr>
+</table>
+<table cellspacing="0" border="0" width="100%">
+  <tr>
+    <td>
+      <dhv:permission name="tickets-maintenance-report-add">
           <a href="TroubleTicketMaintenanceNotes.do?command=Add&id=<%=ticketDetails.getId()%>"><dhv:label name="ticket.addMaintenanceNote">Add Maintenance Note</dhv:label></a>
-        </dhv:permission>
-      </td>
-    </tr>
-  </table>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SunListInfo"/>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-    <tr>
-      <th>
+      </dhv:permission>
+    </td>
+  </tr>
+</table>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SunListInfo"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th>
         &nbsp;
       </th>
       <th width="15%" nowrap>

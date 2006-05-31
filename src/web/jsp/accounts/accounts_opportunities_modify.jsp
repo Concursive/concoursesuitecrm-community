@@ -21,6 +21,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="contacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="hasQuotes" class="java.lang.String" scope="request" />
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
@@ -142,7 +143,7 @@
           </td>
           <td>
             <input type="hidden" name="contactLink" id="contactLink" value="<%= opportunityHeader.getContactLink() %>">
-            &nbsp;[<a href=<%= "\"javascript:document.forms['modifyOpp'].type[1].checked='t';popContactsListSingle('contactLink','changecontact','reset=true&filters="+ ("true".equals(hasQuotes) ? "":"mycontacts|") +"accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href=<%= "\"javascript:document.forms['modifyOpp'].type[1].checked='t';popContactsListSingle('contactLink','changecontact','"+(User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId())+"&reset=true&filters="+ ("true".equals(hasQuotes) ? "":"mycontacts|") +"accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>

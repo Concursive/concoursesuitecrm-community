@@ -1,4 +1,3 @@
-
 CREATE SEQUENCE lookup_call_types_code_seq;
 CREATE TABLE lookup_call_types (
   code INT PRIMARY KEY,
@@ -100,8 +99,18 @@ CREATE TABLE opportunity_header (
   enteredby INT REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   modifiedby INT REFERENCES access(user_id) NOT NULL,
-  trashed_date TIMESTAMP
+  trashed_date TIMESTAMP,
+  access_type INT REFERENCES lookup_access_types(code) NOT NULL,
+  manager INT REFERENCES access(user_id) NOT NULL,
+  lock boolean DEFAULT false,
+  contact_org_id INTEGER REFERENCES organization(org_id),
+  custom1_integer INTEGER,
+  site_id INT REFERENCES lookup_site_id(code)
 );
+
+CREATE INDEX "opp_contactlink_idx" ON "opportunity_header" (contactlink);
+CREATE INDEX "opp_header_contact_org_id_idx" ON "opportunity_header" (contact_org_id);
+CREATE INDEX "oppheader_description_idx" ON "opportunity_header" (description);
 
 CREATE SEQUENCE opportunity_component_id_seq;
 CREATE TABLE opportunity_component (
@@ -124,7 +133,7 @@ CREATE TABLE opportunity_component (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   enteredby INT REFERENCES access(user_id) NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-  modifiedby INT REFERENCES access(user_id) NOT NULL ,  
+  modifiedby INT REFERENCES access(user_id) NOT NULL ,
   closed TIMESTAMP,
   alert VARCHAR(100) DEFAULT NULL,
   enabled boolean DEFAULT true NOT NULL ,
@@ -135,9 +144,11 @@ CREATE TABLE opportunity_component (
   environment INT REFERENCES lookup_opportunity_environment(code),
   competitors INT REFERENCES lookup_opportunity_competitors(code),
   compelling_event INT REFERENCES lookup_opportunity_event_compelling(code),
-  budget INT REFERENCES lookup_opportunity_budget(code)
+  budget INT REFERENCES lookup_opportunity_budget(code),
+  status_id INT
 );
 
+CREATE INDEX "oppcomplist_header_idx" ON "opportunity_component" (opp_id);
 CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);
 CREATE INDEX "oppcomplist_description" ON "opportunity_component" (description);
 
@@ -146,7 +157,7 @@ CREATE TABLE opportunity_component_levels (
   type_id INT REFERENCES lookup_opportunity_types(code) NOT NULL ,
   "level" INTEGER NOT NULL,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL 
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE SEQUENCE call_log_call_id_seq;
@@ -189,4 +200,26 @@ CREATE INDEX "call_contact_id_idx" ON "call_log" (contact_id);
 CREATE INDEX "call_org_id_idx" ON "call_log" (org_id);
 CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
 
-ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id); 
+ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id);
+
+CREATE SEQUENCE opportunity_component_log_id_seq;
+CREATE TABLE opportunity_component_log(
+  id INT PRIMARY KEY,
+  component_id INT REFERENCES opportunity_component(id),
+  header_id INT REFERENCES opportunity_header(opp_id),
+  description VARCHAR(80),
+  closeprob FLOAT,
+  closedate TIMESTAMP NOT NULL,
+  terms FLOAT,
+  units CHAR(1),
+  lowvalue FLOAT,
+  guessvalue FLOAT,
+  highvalue FLOAT,
+  stage INT REFERENCES lookup_stage(code),
+  owner INT NOT NULL REFERENCES access(user_id),
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  closedate_timezone VARCHAR(255),
+  closed TIMESTAMP
+);
+

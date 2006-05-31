@@ -1,0 +1,493 @@
+----------------------------------------------------------------------------
+Centric CRM 4.0.1 beta
+Copyright (C) 2006 Dark Horse Ventures, LLC
+Change Log
+May 9, 2006
+----------------------------------------------------------------------------
+
+The maintenance release is still in progress and has not been finalized.
+
+This is a maintenance release to address issues reported since 4.0.
+
+This release includes the following additions:
+- Australian states/territories have been added
+
+This release includes the following fixes:
+- When using a default country that does not have corresponding "States"
+  the address state drop-down would default to a drop-down list with the
+  option being "-- None --"; this now defaults to a text field as intended
+- Currency locale entries with spaces between numbers did not work correctly
+- An error was reported when trying to access an email that was not sent or
+  received by the current user
+- Fixed a javascript exception some browsers reported when working with
+  opportunities
+- Fixed the Leads dashboard from displaying a "graph not found error" when
+  the maintenance task did not invalidate the graph properly overnight
+- Updating from source did not change the Centric CRM version listed on the
+  login page due to a cache problem
+- The following locales were missing features: de_DE, es_VE, fr_FR, it_IT,
+  nl_NL, pt_BR, ro_RO, ru_RU, sl_SL
+- Leads could not be assigned to Account Contacts when the Account was
+  associated with a SiteId
+- Added a script to update existing Template files to contain email
+  notification for Action Plans, required for source install
+- User groups could not be created using Firebird, DaffodilDB, or Oracle DB
+- Added UTF-8 to styleContainer and styleNoSession
+
+
+----------------------------------------------------------------------------
+Centric CRM 4.0
+Copyright (C) 2006 Dark Horse Ventures, LLC
+Change Log
+April 18, 2006
+----------------------------------------------------------------------------
+
+** New Installs **
+
+The Centric CRM Group edition can be used to install PostgreSQL, MS SQL, and
+DaffodilDB from the web-based installer.
+
+The Centric CRM Source Code edition can be used to install PostgreSQL, MS SQL,
+DaffodilDB, Firebird DB, and Oracle DB from the command-line installer.
+
+
+** Upgrading **
+
+This version can be used to upgrade PostgreSQL and MS SQL installations from
+Centric Crm 3.1 (Group and Source editions) to Centric CRM 4.0.
+DaffodilDB has not been finalized for upgrading.
+If upgrading from a version prior to 3.1, you will need to upgrade to 3.1 first.
+
+
+This release includes over 70 new features!
+
+General Improvements/Overview
+- 100% compatibility with Internet Explorer 5.0, 5.5, and 6.0
+- 100% compatibility with Mozilla and Mozilla Firefox
+- 100% compatibility with Mac OS Safari
+- "Add an Account" added to the global "Quick Actions" menu
+- "Add an Activity" added to the global "Quick Actions" menu
+- "Add a Contact" added to the global "Quick Actions" menu
+- A Microsoft Outlook add-in is now available for users to interact with
+  Centric CRM from within Outlook
+- Available in 10 languages
+- PostgreSQL 8.1 database is now supported
+- Firebird SQL database is now supported, thanks to John Moore for developing
+  and testing
+- Oracle 10g database is now supported
+- One$DB 4.1 database is now supported
+- LDAP integration added to authenticate users against an LDAP server
+- Integration with Asterisk added allowing Centric CRM to monitor Asterisk
+  events; Asterisk is a complete PBX in software
+- Integration with XMPP servers which allows Centric CRM to track user presence;
+  we suggest the Wildfire XMPP server http://www.jivesoftware.org/wildfire
+- Inbound screen pops when user receives a call through Asterisk, the caller Id
+  is found in Contacts or Accounts module, and the user is logged into an XMPP
+  instant messenger
+- Outbound dialing when user has an Asterisk extenstion and clicks "Dial" icon
+  in Centric CRM
+
+My Home Page Module
+- New capability called "Action Plans" allows for working on workflows that
+  have been designed by an administrator.  Workflows are sophisticated
+  checklists that define a series of ordered or random steps to be completed
+  against a Lead, Account, or Help Desk ticket.  Each step can require the
+  user to perform an action, with notifications generated to each user that
+  can complete the step.
+- Required actions for an Action Plan step include the capabilities to:
+  review the account,
+  create or attach contacts,
+  add a contact to an existing campaign,
+  create a relationship between accounts,
+  update an account folder
+- An Action Plan Dashboard allows for users to see their assigned action plans,
+  and for managers to see action plans for users in their hierarchy
+
+Leads Module
+- Action Plans can be created at the same time that a lead is assigned to be
+  worked on
+- Leads can be exported to a .csv file
+- Additional criteria added for searching leads
+- Additional contact information moves from Leads to Accounts module when
+  Lead has been selected to be worked on
+
+Contacts Module
+- Added several new contact fields:
+  - Contact "Salutation" field added
+  - Contact "No Email" field added
+  - Contact "No Phone" field added
+  - Contact "No Fax" field added
+  - Contact "No Mail" field added
+  - Contact "No Text Message" field added
+  - Contact "No Instant Message" field added
+  - Contact Address Line 4 field added
+
+Pipeline Module
+- Opportunities now have an access type designation of Public or Controlled-
+  Hierarchy; Public opportunities can be seen by any Pipeline user, Controlled-
+  Hiearchy can only be seen by user or user's managers
+- Quotes can now be generated directly from an Opportunity
+- Opportunity component history tab details the changes to an opportunity over
+  time
+
+Accounts Module
+- Action Plans specific to an Account can be viewed, added, and worked on from
+  the Account "Action Plans" tab
+- New capability "Accounts > Contacts > Folders"
+- New capability "Accounts > Contacts > Opportunities > Details"
+- New capability "Accounts > Contacts > Opportunities > Quotes"
+- New capability "Accounts > Contacts > Opportunities > Folders"
+- When searching accounts, contacts can now be returned in the results instead
+  of just the accounts
+- When searching accounts, contact search criteria has been added
+- When adding an account, the email, phone and postal address data will be
+  copied if the user chooses to immediately add a contact record after the
+  account is saved
+- Added several new account fields:
+  - Account "Site" field added for tracking which site the account should appear
+    (editable in Admin)
+  - Account "Size" field added (editable in Admin)
+  - Account "Segment" field added (editable in Admin)
+  - Account "Subsegment" field added (editable in Admin)
+  - Account "Direct Bill" field added
+  - Account Address Line 4 field added
+- When importing accounts, contacts without a company name can now be imported
+- Assets now have an unlimited number of parent/child relationships; enabling
+  assets to now have a "Bill of Materials"
+- Added several new asset fields:
+  - Asset "Manufacturer" drop-down field (editable in Admin)
+  - Asset "Vendor" drop-down field (editable in Admin)
+
+Quotes Module
+- When adding products from the product catalog popup, some fields are now
+  modifiable before the product is added to the quote
+
+Communications Module
+- Additional contacts can be added to an already running active campaign,
+  enabling on-going campaigns
+- Campaigns can be continued if the campaign was interrupted by technical
+  failure or user intervention
+- Running campaigns now have an "Access" tab which allows for the Campaign
+  owner to provide access to the campaign results to others
+- If a contact has the "do not email" field checked, that contact will not be
+  included as a recipient for email campaigns
+
+Help Desk Module
+- Implemented a Help Desk Defect Tracking to associate similar tickets to a
+  defect
+- Implemented a Help Desk Knowledge Base to search and categorize text and file
+  attachments; can be reviewed by Help Desk users
+- The Knowledge Base can now be viewed directly from the ticket
+  details, add, and modify pages, based on the ticket categories selected;
+  This feature allows the user to review the Knowledge Base from ticket entry
+  screens before saving the ticket
+- Added several new ticket fields:
+  - "Ticket State" field has been added to tickets to track ticket status
+    (editable in Admin)
+  - Help Desk "Ticket Escalation Level" field has been added (editable in Admin)
+- Based on Ticket categorization, an Action Plan can optionally be activated
+  during ticket creation
+- Tickets now have an "Action Plans" tab for managing any number of Action
+  Plans against a ticket
+- Added an "Assignment Group" which allows for a group of users to work on a
+  ticket and be notified of ticket changes
+
+Documents Module
+- The Documents module now keeps track of "SiteId" of user added to the
+  document store; This allows for document stores to be made up of users from
+  multiple sites, but only a user without a site (site administrator) can add
+  users from various sites
+- Document indexing is now queued and performed in the background
+
+Admin Module
+- Action Plans can be created for Accounts and Help Desk tickets in
+  "Configure Modules"
+- Granting access to external 3rd party XML-HTTP clients can now be managed
+  from the "Configure System" Admin page
+- Outlook connectivity with Centric CRM can be enabled/disabled per user in
+  "Configure Users"
+- Users can now be associated with a site or territory; a user associated
+  with a site cannot see data from other sites; a user without a site can
+  see data in any site
+- Users can now be grouped by a name, allowing for teams to be assigned in
+  modules
+- In the user list page, several batch operations have been added to perform
+  an action on multiple users at the same time
+
+Network Appliance Information Module
+- This is a new specialized module that is used for managing Network Appliance
+  accounts; this module is disabled in [permission_category] by default and
+  must be enabled by a database administrator
+- Capability to import NetApp contact/contract files
+- Generate contract renewal reports
+
+Developer Improvements
+- Web Services API has been implemented using Apache Axis (separate download)
+- The SystemStatus object now contains the URL field for easy access by Jobs
+- The SessionManager now records a user's lastAccessed time
+- Capability to disable multiple quotes per opportunity in system.xml
+- Capability to disable multiple quote versions per quote in system.xml
+- Capability to change opportunity terms in build.properties
+- Unused fields can be hidden in system.xml, this feature has always existed
+  but now includes opportunity fields
+- Added a batch handler that allows batch operations to be performed on a list
+  of items
+
+Fixes
+- Bug fixes as reported
+- Fixed campaign timeout when sending lots of messages
+- Custom validator object has been added for installs that require custom
+  object validations
+- Logout under Tomcat 5.5 did not reset the user, causing a prompt to appear
+  during Login stating that the user was already logged in
+
+
+----------------------------------------------------------------------------
+Centric CRM 3.1
+Copyright (C) 2005 Dark Horse Ventures
+Change Log
+August 4, 2005
+----------------------------------------------------------------------------
+
+- Account History: a complete chronological record of account interaction
+  in one integrated and efficient view
+- Contact History: a complete chronological record of contact interaction
+  in one integrated and efficient view
+- Folders added to the Pipeline module (submitted by Louis Zezeran)
+- In Pipeline, when you drill down to opportunities or components, the
+  associated account and contact are shown
+- Adds additional drop-downs for Pipeline, must be configured in Admin to
+  appear
+- Integrated the Quartz scheduler for optimal connection pooling, instance
+  control, and immediate execution of background application maintenance jobs
+- Reports now process immediately when added to queue due to Quartz scheduler
+- Outbound email for any contact, with messages saved with contact record
+- Smart Deleting: deleting of Accounts, Contacts and Users, with careful
+  attention to related data
+- Business process events for over 10 classes of data: Contacts, Activities,
+  Emails, Communications, Tasks, Quotes, Opportunities, Tickets, Service
+  Contracts, Assets, Documents, and Relationships
+- By customizing workflow.xml you can alter how your Centric CRM behaves when
+  objects are updated, inserted, or deleted, in real-time, by inspecting
+  data contents, checking conditions, and performing actions
+- Workflow.xml now includes Scheduler configuration for executing business
+  processes at a recurring interval
+- Admin capability to upload one or more custom workflow.xml files
+- Improvements to the Leads module include an additional "Continue to next
+  Lead" step when updating a lead and optimized duplication checking
+- Updated supported languages
+- Updated areas to use dictionary in a few places English was still being used
+- Documents can now be copied into Accounts, Documents and Projects modules
+  using WebDAV
+- vCards can be exported from contact lists and details pages in Accounts,
+  Contacts, and Employees modules
+- vCards can be copied from WebDAV's Synchronization > Contacts folder
+- vCards can be imported by saving and copying vcard files into WebDAV's
+  Synchronization > Contacts folder
+- Instant Messaging and Text Messaging contact fields have been added
+- Additional contact fields have been added to map to vCard fields
+- Accounts can be searched by Postal Code or Account Asset Serial #
+- Importing contacts into Accounts module without a company name will now store
+  the contact as an Individual
+- iCalendar priority field added to tasks
+- The complete set of scripts required to upgrade a system from v2.8, v2.9,
+  and v3.0 have been included
+- Daffodil DB/One$DB Embedded database now included which allows running
+  Centric CRM without a database server
+- New database abstraction features: supports sequences and reserved words
+- New source code ant targets: "upgradedb" and "copy"
+- Additional and updated translations included:
+  - Deutsch, thanks to Reinhold Müller, menta AG
+  - Español, thanks to Tamer Muyale
+  - Portuguese, thanks to Emerson Cançado, Oriens Tecnologia
+
+Fixes:
+
+- All locales now have language and country specified
+- Excel files with numeric and date cells now import into project plans
+- HTTPUtils class correctly uses UTF8 for HTTP-XML API
+- Some reports using addresses and phone numbers did not generate depending
+  on data
+- Includes missing workflow install/replace scripts
+- Ticket history displayed "Department" changed instead of "Priority" or
+  "Severity"
+- Project ticket Id now displays on calendar correctly
+- Activities started with an Opportunity stay linked with Opportunity when
+  additional Activities are added; existing Activities are upgraded with
+  this link
+
+
+----------------------------------------------------------------------------
+Centric CRM 3.0.1
+Copyright (C) 2005 Dark Horse Ventures
+Change Log
+May 2, 2005
+----------------------------------------------------------------------------
+
+This is a maintenance release to address issues generated since 3.0.
+
+- Under Admin, lookup list items can be renamed
+- German translation expanded
+- Quotes did not print with configured Currency
+- A count of project tickets now shows under "My Items"
+- Home Page calendar did not show project tickets
+- Quote history log improvements
+- Quote remarks with special characters could cause an error message
+- Addresses always defaulted to United States, causing a problem
+- Language encoding issue resolved
+- HTML Message Editor improvement
+- Fixed WebDAV calendar issue found under iCal 2.0
+- Various changes as reported in the Centric CRM Community Site
+
+
+----------------------------------------------------------------------------
+Centric CRM 3.0
+Copyright (C) 2005 Dark Horse Ventures
+Change Log
+April 15, 2005
+----------------------------------------------------------------------------
+
+This release includes over 75 new features!
+
+General Improvements
+- Centric CRM has been updated with a simple look and feel to promote productivity and usability
+- The global toolbar can now be hidden for systems using a smaller screen resolution or for those users that prefer to use a smaller browser window -- we recognize that some businesses still use 800x600
+- 100% compatibility with Internet Explorer 5.0, 5.5, and 6.0
+- 100% compatibility with Mozilla and Mozilla Firefox
+- 100% compatibility with Mac OS Safari
+My Home Page
+- Managers can now view action lists for users in their hierarchy
+- Action lists can be reassigned to other users by a manager
+- Additional capability to reassign pending activities and document stores
+- Calendars can be subscribed to via iCalendar applications for offline access to calendar data, such as Apple iCal and Mozilla Sunbird -- managers can subscribe to other users in hierarchy
+Lead Management Module
+- Brand new module for managing leads, from lead transfer, to lead qualification, to lead closure
+- Users can manually add contacts as leads
+- Leads can be imported from a .csv file
+- Leads can be inserted from the HTTP-XML API
+- Users can review the latest leads
+- Users can work leads using round-robin lead assignment automation
+- Leads can be assigned, skipped, trashed, or deleted
+- Duplicate leads appear with a duplicate warning
+- Contact links are provided to Google, Yahoo, MSN, and Ask Jeeves
+- Lead dashboard shows lead-to-contact conversion rate
+- Leads are worked using all of the tools from the contact module
+Pipeline Module
+- Integrated with quote management module providing access to quotes and quote functionality
+Contacts Module
+- New fields have been added to indicate primary address, primary telephone number, and primary email address
+- Additional fields include: contact source, contact rating, and text messaging addresses
+- Capability to send contacts an email with directions for updating his or her own contact information
+Accounts Module
+- Custom fields and folders have been upgraded for quickly modifying and viewing custom fields
+- Integrated with quote management module providing access to quotes and quote functionality
+- Bi-directional account relationships have been added
+- Integrated with project management module to allow viewing of associated projects
+- Using the "move contact" wizard, contacts and contact data can be moved to other accounts
+- New fields have been added to indicate primary address, primary telephone number, and primary email address
+- Account documents can be accessed by a WebDAV client
+Product Catalog Module
+- New capability for accessing company product and services information
+- Products and services can be categorized
+- Products and services have pricing information
+- Each product can be further customized with various options and option pricing
+Quote Management Module
+- Brand new module for creating and managing quotes
+- Create quotes for contacts and accounts
+- Track the life of a quote by adding notes, adjusting the status and versioning
+- Email a well-formed PDF quote to the customer
+- Print quotes for faxing or review
+- Clone an existing quote to be used for the same account or for another account
+- Add products and services to the quote directly from the product catalog
+- Create products during the quote process for organizations that require ad-hoc products and services
+- Add terms and conditions from a reusable library
+- Add remarks from a reusable library
+- Personalize each quote with a company logo or brand logo
+- Link quotes to opportunities
+Project Management Module
+- Dashboard quickly shows the latest project data from the last 24 or 48 hours, the last 2 weeks, or even the last 30 days
+- Project progress indicator shows status of a project at a glance
+- Team members can now include account contacts
+- Users receive an email when invited to a project
+- News articles can be assigned a category
+- News articles can be emailed to team members or to yourself
+- Projects can now be linked to organizations in the Accounts module
+- Users can record notes on project activities, which are indexed and searchable
+- Project plan indicator shows status of the plan, overdue activities appear in red, other activities appear in green
+- Project plans can be imported from Excel documents and OmniOutliner XML documents
+- Additional filters have been added to the project plan for incomplete/complete and priority
+- All project data is indexed and searchable including uploaded document content
+- Project documents can be accessed by a WebDAV client
+Communications Module
+- Capability to send campaign recipients an email with directions for updating his or her own contact information
+- Broadcast capability to send a communication to a campaign recipient's email and text messaging address
+Help Desk Module
+- Custom fields and folders have been upgraded for quickly modifying and viewing custom fields
+Documents Module
+- Brand new module for sharing documents
+- Users can create multiple document stores, each with a specific purpose
+- Access to each document store can be provided to specific employees, account contacts, departments or roles
+- Permissions can be assigned for guests, contributors, and managers
+- Documents and versions can be uploaded to the store
+- Documents are immediately indexed with content indexers for Microsoft Word, Microsoft Excel, Microsoft Powerpoint, PDF, Open Office and HTML documents
+- Documents can be quickly searched for based on document content
+- Documents can be accessed by a WebDAV client
+Employees Module
+- Custom fields and folders have been upgraded for quickly modifying and viewing custom fields
+- Managers can review projects associated with each employee
+Admin Module
+- Administrator can modify the industry lookup list
+- Multiple logos can be uploaded for use in the quotes module
+- Company information can be modified, which appears on quotes
+Internationalization Support
+- Application accepts UTF-8 data for required languages
+- Added a dictionary for translating terms, phrases, lookup lists, and reports
+- Calendar holidays for Canada, Germany, United Kingdom, and United States
+- German language translation provided
+Report Module
+- All reports upgraded to new version of JasperReports for added features and to support more reporting tools
+- Custom reports can include images using the "path_report_images" which looks in the fileLibrary "report_images" path
+Developer Improvements
+- Compiles and executes with Java 1.5 and Tomcat 5.5
+- Added CRMConnection Class to allow Java applications to easily exchange data with Centric CRM, including all CRM data
+- Object validation is now centralized for making changes and extending Centric CRM
+- All graphs now use new version of jFreechart for easy, professional graphing
+- All HTML "containers" are now drawn programatically
+Enhancements
+- Exporting data now only has a single header row with the column names, which provides for easier importing
+Fixes
+- CPU intensive documents no longer timeout during indexing
+- Project issues and issue replies are now properly indexed
+
+
+----------------------------------------------------------------------------
+Centric CRM 2.9
+Change Log
+September 17, 2004
+----------------------------------------------------------------------------
+
+Summary:
+- This release introduces several new features, including:
+  - Project Management module
+  - Contact activities
+  - Account contact importing from CSV files
+  - "Live" home page calendar that allows editing of data
+  - Internationalization of dates, times, currencies, and reports
+  - "Select" menu upgraded to new look
+  - Document folders added in every module's "Documents" tab
+  - HTML editor upgraded for Mozilla and IE 5.5+, a new HTML applet has been
+    added for IE 5.0 and Safari
+  - Account importer added (similar to Contact importer)
+  - Assigned tickets with an estimated resolution date now show on calendar
+  - More MIME-type graphics added
+
+Fixes:
+  - The alphabet searching failed on several database configurations
+
+Developer Changes:
+  - Refactored the formMessage tag for displaying action errors on a page
+
+----------------------------------------------------------------------------
+For additional information, support, or training, visit
+http://www.centriccrm.com for details. You can also find product FAQs and
+announcements.

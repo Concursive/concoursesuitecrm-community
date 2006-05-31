@@ -22,12 +22,14 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 	<parameter name="contact_id" isForPrompting="false" class="java.lang.Integer"/>
-	<queryString><![CDATA[SELECT 
-c_addr.*,
-lat.description as addr_type
-FROM contact_address c_addr, lookup_contactaddress_types lat
-WHERE c_addr.address_type = lat.code
-AND c_addr.contact_id = $P{contact_id}]]></queryString>
+	<queryString><![CDATA[
+    SELECT 
+    c_addr.*,
+    lat.description as addr_type
+    FROM contact_address c_addr, lookup_contactaddress_types lat
+    WHERE c_addr.address_type = lat.code
+    AND c_addr.contact_id = $P{contact_id}
+  ]]></queryString>
 	<field name="addr_type" class="java.lang.String"/>
 	<field name="addrline1" class="java.lang.String"/>
 	<field name="addrline2" class="java.lang.String"/>

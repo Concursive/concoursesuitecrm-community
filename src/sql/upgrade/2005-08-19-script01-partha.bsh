@@ -1,0 +1,329 @@
+/*
+  This is a beanshell script that adds data to the database
+  connection (db) from ant upgradedb
+
+  Adds the sample action plan.
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.actionplans.base.*;
+import org.aspcfs.utils.Dictionary;
+
+  ActionStepLookup stepLookup = null;
+  ActionStepLookupList stepLookupList = null;
+
+  print("Inserting the new action plan \"Individual Prospect\"");
+  ActionPlan plan = new ActionPlan();
+  plan.setName("Individual Prospect");
+  plan.setEnabled(true);
+  plan.setJustApproved(true);
+  plan.setLinkObjectId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS));
+  plan.setEnteredBy(0);
+  plan.setModifiedBy(0);
+  plan.insert(db);
+
+  int parentPhaseId = -1;
+  //Stage 1
+  ActionPhase phase = new ActionPhase();
+  phase.setPlanId(plan.getId());
+  phase.setName("Stage 1");
+  phase.setDescription("Pre-Planning");
+  phase.insert(db);
+  parentPhaseId = phase.getId();
+  print("Added Stage 1 with phaseId = "+ parentPhaseId);
+
+  int parentStepId = -1;
+  ActionStep step = new ActionStep();
+  step.setDescription("Prospect Data Accurate");
+  step.setActionId(ActionStep.VIEW_ACCOUNT);
+  step.setPhaseId(parentPhaseId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Primary Supplier");
+  step.setActionId(ActionStep.ATTACH_LOOKUPLIST_MULTIPLE);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  stepLookupList = new ActionStepLookupList();
+  stepLookupList.setStepId(step.getId());
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Competitor 1");
+  stepLookupList.add(stepLookup);
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Competitor 2");
+  stepLookupList.add(stepLookup);
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Competitor 3");
+  stepLookupList.add(stepLookup);
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Competitor 4");
+  stepLookupList.add(stepLookup);
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Competitor 5");
+  stepLookupList.add(stepLookup);
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Competitor 6");
+  stepLookupList.add(stepLookup);
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Competitor 7");
+  stepLookupList.add(stepLookup);
+
+  stepLookup = new ActionStepLookup();
+  stepLookup.setDescription("Other");
+  stepLookupList.add(stepLookup);
+
+  stepLookupList.insert(db);
+
+  step = new ActionStep();
+  step.setDescription("Decision Maker Identified");
+  step.setActionId(ActionStep.ATTACH_ACCOUNT_CONTACT);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Stage Complete (Salesperson)");
+  step.setActionId(ActionStep.ATTACH_DOCUMENT);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+
+  step = new ActionStep();
+  step.setDescription("Stage Complete (Manager)");
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.MANAGER);
+  step.insert(db);
+
+  parentStepId = -1;
+
+  //Stage 2
+  phase = new ActionPhase();
+  phase.setPlanId(plan.getId());
+  phase.setName("Stage 2");
+  phase.setDescription("Needs Assessment");
+  phase.setParentId(parentPhaseId);
+  phase.insert(db);
+  parentPhaseId = phase.getId();
+  print("Added Stage 2 with phaseId = "+ parentPhaseId);
+
+  parentStepId = -1;
+  step = new ActionStep();
+  step.setDescription("Interview Scheduled");
+  step.setActionId(ActionStep.ATTACH_NOTE_SINGLE);
+  step.setLabel("Attach Interview Date");
+  step.setPhaseId(parentPhaseId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Benefits Presentation Prepared");
+  step.setActionId(ActionStep.ATTACH_DOCUMENT);
+  step.setParentId(parentStepId);
+  step.setPhaseId(parentPhaseId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Stage Complete (Salesperson)");
+  step.setActionId(ActionStep.ATTACH_DOCUMENT);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+
+  step = new ActionStep();
+  step.setDescription("Stage Complete (Manager)");
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.MANAGER);
+  step.insert(db);
+
+  parentStepId = -1;
+
+  //Stage 3
+  phase = new ActionPhase();
+  phase.setPlanId(plan.getId());
+  phase.setName("Stage 3");
+  phase.setDescription("1st Benefits Presentation");
+  phase.setParentId(parentPhaseId);
+  phase.insert(db);
+  parentPhaseId = phase.getId();
+  print("Added Stage 3 with phaseId = "+ parentPhaseId);
+
+  parentStepId = -1;
+  step = new ActionStep();
+  step.setDescription("Benefits Presentation Scheduled");
+  step.setActionId(ActionStep.ATTACH_NOTE_SINGLE);
+  step.setLabel("Attach Presentation Date");
+  step.setPhaseId(parentPhaseId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Validate Opportunity");
+  step.setActionId(ActionStep.ATTACH_OPPORTUNITY);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Stage Complete (Salesperson)");
+  step.setActionId(ActionStep.ATTACH_DOCUMENT);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+
+  step = new ActionStep();
+  step.setDescription("Stage Complete (Manager)");
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.MANAGER);
+  step.insert(db);
+
+  parentStepId = -1;
+
+
+  //Stage 4
+  phase = new ActionPhase();
+  phase.setPlanId(plan.getId());
+  phase.setName("Stage 4");
+  phase.setDescription("Feedback and Follow-up");
+  phase.setParentId(parentPhaseId);
+  phase.insert(db);
+  parentPhaseId = phase.getId();
+  print("Added Stage 4 with phaseId = "+ parentPhaseId);
+
+  parentStepId = -1;
+
+  step = new ActionStep();
+  step.setDescription("Prospect Priority");
+  step.setActionId(ActionStep.UPDATE_RATING);
+  step.setPhaseId(parentPhaseId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.MANAGER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Follow-up Notes");
+  step.setActionId(ActionStep.ATTACH_NOTE_MULTIPLE);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  parentStepId = -1;
+
+
+  //Stage 5
+  phase = new ActionPhase();
+  phase.setPlanId(plan.getId());
+  phase.setName("Stage 5");
+  phase.setDescription("New Customer");
+  phase.setParentId(parentPhaseId);
+  phase.insert(db);
+  parentPhaseId = phase.getId();
+  print("Added Stage 5 with phaseId = "+ parentPhaseId);
+
+  parentStepId = -1;
+  step = new ActionStep();
+  step.setDescription("Order Requested and Credit Application Received");
+  step.setActionId(ActionStep.ATTACH_DOCUMENT);
+  step.setPhaseId(parentPhaseId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.setAllowSkipToHere(true);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Customer Master Detail Complete and Accurate");
+  step.setActionId(ActionStep.ATTACH_DOCUMENT);
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("Payment Terms Finalized");
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("First Order Placed for Delivery");
+  step.setActionId(ActionStep.ATTACH_NOTE_SINGLE);
+  step.setLabel("Attach Delivery Date");
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.insert(db);
+  parentStepId = step.getId();
+
+  step = new ActionStep();
+  step.setDescription("New Customer Stopped Ordering Before 6 Consecutive Weeks");
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.ASSIGNED_USER);
+  step.setAllowSkipToHere(true);
+  step.insert(db);
+
+  step = new ActionStep();
+  step.setDescription("Active Customer");
+  step.setPhaseId(parentPhaseId);
+  step.setParentId(parentStepId);
+  step.setEnabled(true);
+  step.setPermissionType(ActionStep.MANAGER);
+  step.setAllowSkipToHere(true);
+  step.insert(db);
+
+  parentStepId = -1;
+
+print("Insertion of the action plan is complete");

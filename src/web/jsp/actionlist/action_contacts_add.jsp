@@ -25,8 +25,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
-
-function checkForm(form) {
+  function checkForm(form) {
     formTest = true;
     message = "";
     saveValues();
@@ -39,9 +38,7 @@ function checkForm(form) {
       return false;
     }
     return true;
-}
-</SCRIPT>
-
+  }
 </SCRIPT>
 <%
   String returnURL = "MyActionLists.do?command=List&linkModuleId=" + Constants.ACTIONLISTS_CONTACTS;

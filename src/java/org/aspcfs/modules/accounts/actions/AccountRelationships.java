@@ -53,7 +53,11 @@ public final class AccountRelationships extends CFSModule {
 
       //add account to the request
       Organization thisOrg = addFormElements(context, db);
-      
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
+
       //build the relationship list(both from and to mappings)
       RelationshipList thisList = new RelationshipList();
       thisList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
@@ -85,10 +89,13 @@ public final class AccountRelationships extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
-      //add account to the request
-      addFormElements(context, db);
 
+      //add account to the request
+      Organization thisOrg = addFormElements(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       RelationshipTypeList typeList = new RelationshipTypeList();
       typeList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
       typeList.buildList(db);
@@ -117,9 +124,13 @@ public final class AccountRelationships extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
+
       //add account to the request
-      addFormElements(context, db);
+      Organization thisOrg = addFormElements(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -161,6 +172,10 @@ public final class AccountRelationships extends CFSModule {
       }
       //add account to the request
       Organization thisOrg = addFormElements(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
 
       thisRelationship.setModifiedBy(getUserId(context));
       if (relTypeId.endsWith("_reciprocal")) {
@@ -199,7 +214,7 @@ public final class AccountRelationships extends CFSModule {
             SystemStatus systemStatus = this.getSystemStatus(context);
             errors.put(
                 "actionError", systemStatus.getLabel(
-                    "object.validation.actionError.relationshipDuplicate"));
+                "object.validation.actionError.relationshipDuplicate"));
           }
         } else {
           thisRelationship.setEnteredBy(this.getUserId(context));
@@ -215,7 +230,7 @@ public final class AccountRelationships extends CFSModule {
             SystemStatus systemStatus = this.getSystemStatus(context);
             errors.put(
                 "actionError", systemStatus.getLabel(
-                    "object.validation.actionError.relationshipDuplicate"));
+                "object.validation.actionError.relationshipDuplicate"));
           }
         }
       }
@@ -276,9 +291,13 @@ public final class AccountRelationships extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
+
       //add account to the request
-      addFormElements(context, db);
+      Organization thisOrg = addFormElements(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
 
       Relationship thisRelation = new Relationship(
           db, Integer.parseInt(relId));
@@ -286,7 +305,7 @@ public final class AccountRelationships extends CFSModule {
       if (!recordDeleted) {
         thisRelation.getErrors().put(
             "actionError", systemStatus.getLabel(
-                "object.validation.actionError.relationshipDeletion"));
+            "object.validation.actionError.relationshipDeletion"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

@@ -45,10 +45,13 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
+  <dhv:include name="opportunity.lowEstimateCanNotBeZero" none="true">
   if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
     message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
   if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
     message += label("specify.alert.date", "- Please specify an alert date\r\n");
     formTest = false;
@@ -57,18 +60,27 @@ function checkForm(form) {
     message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
   if (!checkNumber(form.commission.value)) { 
       message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
     }
+  </dhv:include>
   if (formTest == false) {
     alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
   } else {
-    var test = document.opportunityForm.selectedList;
-    if (test != null) {
-      return selectAllOptions(document.opportunityForm.selectedList);
+  <dhv:include name="opportunity.componentTypes" none="true">
+    if(alertMessage != "") {
+      return confirmAction(alertMessage);
+    } else {
+      var test = document.opportunityForm.selectedList;
+      if (test != null) {
+        return selectAllOptions(document.opportunityForm.selectedList);
+      }
     }
+  </dhv:include>
   }
 }
 </SCRIPT>
@@ -87,8 +99,10 @@ function reopenOpportunity(id) {
    if(request.getParameter("popup")!=null){
      popUp = true;
    }
+   boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
 %>
 <form name="opportunityForm" action="OpportunitiesComponents.do?command=SaveComponent&orgId=<%= OrgDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -110,7 +124,8 @@ function reopenOpportunity(id) {
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>">
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -155,6 +170,8 @@ function reopenOpportunity(id) {
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();" />
   </dhv:evaluate>
   <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
+  <input type="hidden" name="actionStepWork" value="<%= toHtmlValue(request.getParameter("actionStepWork")) %>">
 </dhv:container>
 </form>
 

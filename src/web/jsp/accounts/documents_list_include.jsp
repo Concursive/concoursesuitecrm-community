@@ -39,6 +39,7 @@
 </table>
 <%-- END Document folder trails--%>
 <br />
+<dhv:evaluate if="<%= hasPermission %>">
 <dhv:permission name="<%= permission_doc_folders_add %>">
 <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle"/>
 <a href="<%= documentFolderAdd %>&parentId=<%= fileItemList.getFolderId() %>&folderId=<%= fileItemList.getFolderId() %>"><dhv:label name="documents.documents.newFolder">New Folder</dhv:label></a>
@@ -58,6 +59,7 @@
 <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle">
 <a href="<%= documentFolderModify %>&folderId=<%= fileItemList.getFolderId() %>&id=<%= fileItemList.getFolderId() %>&parentId=<%= fileItemList.getFolderId() %>"><dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label></a>
 </dhv:permission>
+</dhv:evaluate>
 </dhv:evaluate>
 <dhv:permission name="<%= permission_doc_folders_add +","+ permission_doc_files_upload +","+ permission_doc_folders_edit %>" all="false">
 <br>
@@ -87,10 +89,17 @@
 %>
   <tr>
     <td class="row<%= rowid %>" align="center" nowrap>
+    <% if (documentModule.equals("Pipeline")) { %>
+      <a href="javascript:displayMenu('selectfo<%= thisFolder.getId() %>', 'menuFolder', '<%= thisFolder.getId() %>','<%= thisFolder.getParentId() %>', '<%= specialID %>', '<%= hasPermission %>')"
+         onMouseOver="over(0, 'fo<%= thisFolder.getId() %>')"
+         onMouseOut="out(0, 'fo<%= thisFolder.getId() %>'); hideMenu('menuFolder');">
+         <img src="images/select.gif" name="selectfo<%= thisFolder.getId() %>" id="selectfo<%= thisFolder.getId() %>" align="absmiddle" border="0"></a>
+    <% } else { %>
       <a href="javascript:displayMenu('selectfo<%= thisFolder.getId() %>', 'menuFolder', '<%= thisFolder.getId() %>','<%= thisFolder.getParentId() %>', '<%= specialID %>')"
          onMouseOver="over(0, 'fo<%= thisFolder.getId() %>')"
          onMouseOut="out(0, 'fo<%= thisFolder.getId() %>'); hideMenu('menuFolder');">
          <img src="images/select.gif" name="selectfo<%= thisFolder.getId() %>" id="selectfo<%= thisFolder.getId() %>" align="absmiddle" border="0"></a>
+    <% } %>
     </td>
     <td class="row<%= rowid %>" width="100%">
       <img src="images/stock_folder-23.gif" border="0" align="absmiddle">
@@ -126,10 +135,18 @@
 %>    
   <tr>
     <td class="row<%= rowid %>" align="center" nowrap>
+    <% if (documentModule.equals("Pipeline")) { %>
+      <zeroio:debug value="<%= "JSP:: the value of hasPermission is "+hasPermission %>"/>
+      <a href="javascript:displayMenu('selectfi<%= thisFile.getId() %>', 'menuFile', '<%= thisFile.getFolderId() %>', '<%= thisFile.getId() %>','<%= specialID %>', '<%= hasPermission %>')"
+         onMouseOver="over(0, 'fi<%= thisFile.getId() %>')"
+         onmouseout="out(0, 'fi<%= thisFile.getId() %>'); hideMenu('menuFile');">
+         <img src="images/select.gif" name="selectfi<%= thisFile.getId() %>" id="selectfi<%= thisFile.getId() %>" align="absmiddle" border="0"></a>
+   <% } else { %>
       <a href="javascript:displayMenu('selectfi<%= thisFile.getId() %>', 'menuFile', '<%= thisFile.getFolderId() %>', '<%= thisFile.getId() %>','<%= specialID %>')"
          onMouseOver="over(0, 'fi<%= thisFile.getId() %>')"
          onmouseout="out(0, 'fi<%= thisFile.getId() %>'); hideMenu('menuFile');">
          <img src="images/select.gif" name="selectfi<%= thisFile.getId() %>" id="selectfi<%= thisFile.getId() %>" align="absmiddle" border="0"></a>
+   <% } %>
      </td>
     <td class="row<%= rowid %>" width="100%">
       <%= thisFile.getImageTag("-23") %>

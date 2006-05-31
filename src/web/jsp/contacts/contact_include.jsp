@@ -25,8 +25,8 @@
 <jsp:useBean id="ContactInstantMessageAddressServiceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
-<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
+<dhv:include name="contact.phoneNumbers" none="true">
 <div align="center" style="padding:3px;"><dhv:label name="contact.internationalNumbers.note">Note: All international phone numbers must be preceded by a "+" symbol.</dhv:label></div>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -44,7 +44,7 @@
 %>    
   <tr class="containerBody">
     <td class="formLabel">
-      <%= icount %>
+      <dhv:label name="account.phone">Phone</dhv:label><%= icount %>
     </td>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
@@ -65,7 +65,7 @@
 %>
   <tr class="containerBody">
     <td class="formLabel">
-       <%= icount %>
+       <dhv:label name="account.phone">Phone</dhv:label><%= icount %>
     </td>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone"+icount+"type", "") %>
@@ -80,7 +80,7 @@
 %>
   <tr class="containerBody">
     <td class="formLabel">
-       <%= icount %>
+       <dhv:label name="account.phone">Phone</dhv:label><%= icount %>
     </td>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone"+icount+"type", "") %>
@@ -90,8 +90,26 @@
     </td>
   </tr>
 <%}%>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_contacts.noPhonePlease">No Phone Calls Please</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="noPhone" <%= ContactDetails.getNoPhone()? "DEFAULT CHECKED":"" %> />
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_contacts.noFaxPlease">No Faxes Please</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="noFax" <%= ContactDetails.getNoFax()? "DEFAULT CHECKED":"" %> />
+    </td>
+  </tr>
 </table>
 &nbsp;<br />
+</dhv:include>
+<dhv:include name="contact.emailAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -154,8 +172,18 @@
 <%
   }
 %>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+    <dhv:label name="accounts.accounts_contacts.noEmailPlease">No Email Please</dhv:label>
+  </td>
+  <td>
+    <input type="checkbox" name="noEmail" <%= ContactDetails.getNoEmail()? "DEFAULT CHECKED":"" %> />
+  </td>
+ </tr>
 </table>
 &nbsp;<br />
+</dhv:include>
+<dhv:include name="contact.instantMessageAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -217,8 +245,18 @@
     </td>
   </tr>
 <%}%>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_contacts.noInstantMessagePlease">No IM Please</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="noInstantMessage" <%= ContactDetails.getNoInstantMessage()? "DEFAULT CHECKED":"" %> />
+    </td>
+  </tr>
 </table>
 &nbsp;<br />
+</dhv:include>
+<dhv:include name="contact.textMessageAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -277,8 +315,18 @@
     </td>
   </tr>
 <%}%>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_contacts.noTextMessagePlease">No Text Messages Please</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="noTextMessage" <%= ContactDetails.getNoTextMessage()? "DEFAULT CHECKED":"" %> />
+    </td>
+  </tr>
 </table>
 &nbsp;<br />
+</dhv:include>
+<dhv:include name="contact.addresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -301,6 +349,7 @@
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
       <input type="radio" name="primaryAddress" value="<%=acount%>" <%= thisAddress.getPrimaryAddress() ? " checked" : ""%>><dhv:label name="contact.primary">Primary</dhv:label>
+      <input type="checkbox" name="address<%= acount %>delete" value="on">mark to remove
     </td>
   </tr>
   <tr class="containerBody">
@@ -329,6 +378,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+    <dhv:label name="accounts.accounts_add.AddressLine4">Address Line 4</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line4" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine4()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
@@ -340,14 +397,13 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
-        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry())? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -363,11 +419,11 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "', '"+ thisAddress.getState()+"');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <script type="text/javascript">
+<%--      <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
-      </script>
+      </script> --%>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
@@ -417,6 +473,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine4">Address Line 4</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line4" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
@@ -429,13 +493,12 @@
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtml("address" + acount + "state") %>
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -451,11 +514,11 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <script type="text/javascript">
+<%--      <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
-      </script>
+      </script> --%>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
@@ -505,6 +568,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine4">Address Line 4</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line4" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
@@ -517,13 +588,12 @@
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtml("address" + acount + "state") %>
+        <%= StateSelect.getHtmlSelect("address" + acount + "state",applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -539,11 +609,11 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <script type="text/javascript">
+<%--      <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
-      </script>
+      </script> --%>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
@@ -555,14 +625,24 @@
   </tr>
   </dhv:evaluate>
 <%}%>  
-
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_contacts.noMailPlease">No Mail Please</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="noMail" <%= ContactDetails.getNoMail()?"DEFAULT CHECKED":"" %> />
+    </td>
+  </tr>
 </table>
-&nbsp;<br>
+&nbsp;<br />
+</dhv:include>
+<dhv:include name="contact.additionalDetails" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
       <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
     </th>
+  </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
@@ -572,9 +652,8 @@
     </td>
   </tr>
 </table>
+</dhv:include>
 <input type="hidden" name="saveAndClone" value="false"/>
 <input type="hidden" name="saveAndNew" value="false"/>
 <input type="hidden" name="enabled" value="<%=ContactDetails.getEnabled()%>"/>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
-
-

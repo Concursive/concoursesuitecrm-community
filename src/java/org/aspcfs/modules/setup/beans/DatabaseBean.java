@@ -165,12 +165,18 @@ public class DatabaseBean extends GenericBean {
       if ("MSSQL".equals(type)) {
         driver = "net.sourceforge.jtds.jdbc.Driver";
       }
+      if ("Oracle".equals(type)) {
+        driver = "oracle.jdbc.driver.OracleDriver";
+      }
+      if ("Firebird".equals(type)) {
+        driver = "org.firebirdsql.jdbc.FBDriver";
+      }
     }
     return driver;
   }
 
   public boolean isEmbedded() {
-    return "DaffodilDB".equals(type);
+    return ("DaffodilDB".equals(type) || "Firebird".equals(type));
   }
 
 
@@ -239,9 +245,15 @@ public class DatabaseBean extends GenericBean {
     if ("net.sourceforge.jtds.jdbc.Driver".equals(this.getDriver())) {
       return "jdbc:jtds:sqlserver://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
-    if ("com.microsoft.jdbc.sqlserver.SQLServerDriver".equals(
-        this.getDriver())) {
+    if ("com.microsoft.jdbc.sqlserver.SQLServerDriver".equals(this.getDriver())) {
       return "jdbc:microsoft:sqlserver://" + this.getIp() + ":" + this.getPort() + ";SelectMethod=cursor;DatabaseName=" + this.getName();
+    }
+    if ("org.firebirdsql.jdbc.FBDriver".equals(this.getDriver())) {
+      return "jdbc:firebirdsql:" + this.getIp() + "/" + this.getPort() + ":" + path + this.getName();
+    }
+    if ("oracle.jdbc.driver.OracleDriver".equals(this.getDriver())) {
+      // jdbc:oracle:thin:@//127.0.0.1:1521/XE
+      return "jdbc:oracle:thin:@//" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
     return "";
   }
@@ -261,6 +273,9 @@ public class DatabaseBean extends GenericBean {
     name = st.nextToken();
     user = st.nextToken();
     password = st.nextToken();
+    if (st.hasMoreTokens()) {
+      path = st.nextToken();
+    }
   }
 
 
@@ -276,7 +291,8 @@ public class DatabaseBean extends GenericBean {
         port + "|" +
         name + "|" +
         user + "|" +
-        password;
+        password + "|" +
+        path;
   }
 
   public void setPath(String path) {
@@ -297,6 +313,12 @@ public class DatabaseBean extends GenericBean {
     }
     if ("MSSQL".equals(type)) {
       return "mssql";
+    }
+    if ("Oracle".equals(type)) {
+      return "oracle";
+    }
+    if ("Firebird".equals(type)) {
+      return "firebird";
     }
     return null;
   }

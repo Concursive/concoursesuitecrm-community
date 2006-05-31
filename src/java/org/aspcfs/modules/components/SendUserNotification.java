@@ -18,10 +18,14 @@ package org.aspcfs.modules.components;
 import org.aspcfs.apps.workFlowManager.ComponentContext;
 import org.aspcfs.apps.workFlowManager.ComponentInterface;
 import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Notification;
 import org.aspcfs.utils.StringUtils;
 
 import java.sql.Connection;
+import java.util.Iterator;
 
 /**
  * Description of the Class
@@ -41,6 +45,7 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
   public final static String FROM = "notification.from";
   public final static String REPLY_TO = "notification.replyTo";
   public final static String BODY = "notification.body";
+  public final static String SKIP_USERS = "notification.skipUsers";
   //Comma-separated email addresses
   public final static String EMAIL_TO = "notification.to";
   //Comma-separated user ids
@@ -49,6 +54,9 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
   public final static String CONTACT_TO = "notification.contacts.to";
   //Comma-separated department ids
   public final static String DEPARTMENT_TO = "notification.departments.to";
+  public final static String GROUP_TO = "notification.userGroupToNotify";
+  public final static String EMAIL_TO_USER_AND_GROUP = "notification.emailBothUserAndGroup";
+  public final static String ROLE_TO = "notification.roleTo";
 
 
   /**
@@ -69,9 +77,16 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
    */
   public boolean execute(ComponentContext context) {
     boolean result = false;
+    boolean both = false;
     Connection db = null;
     try {
       db = this.getConnection(context);
+      String groupId = context.getParameter(SendUserNotification.GROUP_TO);
+      String bothString = context.getParameter(SendUserNotification.EMAIL_TO_USER_AND_GROUP);
+      if (bothString != null && "true".equals(bothString.trim())) {
+        both = true;
+      }
+      String skipUser = context.getParameter(SendUserNotification.SKIP_USERS);
       Notification thisNotification = new Notification();
       thisNotification.setUserToNotify(
           context.getParameterAsInt(SendUserNotification.USER_TO_NOTIFY));
@@ -91,8 +106,7 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
       } else {
         thisNotification.setFrom(context.getParameter("EMAILADDRESS"));
       }
-      thisNotification.setMessageToSend(
-          StringUtils.toHtml(context.getParameter(SendUserNotification.BODY)));
+      thisNotification.setMessageToSend(context.getParameter(SendUserNotification.BODY));
       thisNotification.setType(Notification.EMAIL);
       String host = context.getParameter(HOST);
       if (host != null && !"".equals(host)) {
@@ -100,7 +114,35 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
       } else {
         thisNotification.setHost(context.getParameter("MAILSERVER"));
       }
-      thisNotification.notifyUser(db);
+      boolean userInGroup = false;
+      if (groupId != null && !"".equals(groupId) && !"-1".equals(groupId)) {
+        UserList users = new UserList();
+        users.setUserGroupId(groupId);
+        users.setEnabled(Constants.TRUE);
+        users.setExpired(Constants.FALSE);
+        users.setBuildContact(true);
+        users.setBuildContactDetails(true);
+        users.buildList(db);
+        Iterator iter = (Iterator) users.iterator();
+        while (iter.hasNext()) {
+          User user = (User) iter.next();
+          if (user.getId() == context.getParameterAsInt(SendUserNotification.USER_TO_NOTIFY)) {
+            userInGroup = true;
+          } else {
+            if (user.getEnabled()) {
+              thisNotification.setUserToNotify(user.getId());
+              thisNotification.notifyUser(db);
+            }
+          }
+        }
+      }
+      // check that the groupId exists and the user is not in the group
+      // then check that the notification is for both user and group
+      // then check that the skipUser is false
+      if (((!userInGroup && groupId != null && !"".equals(groupId) && !"-1".equals(groupId)) || both)
+          && !(skipUser != null && "true".equals(skipUser))) {
+        thisNotification.notifyUser(db);
+      }
       result = true;
     } catch (Exception e) {
       e.printStackTrace(System.out);

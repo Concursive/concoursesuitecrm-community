@@ -40,7 +40,10 @@ ALTER TABLE product_catalog ADD trashed_date DATETIME;
 ALTER TABLE product_catalog ADD active BIT;
 UPDATE product_catalog SET active = enabled;
 UPDATE product_catalog SET enabled = 1;
-ALTER TABLE product_catalog ALTER COLUMN active BIT NOT NULL DEFAULT 1;
+ALTER TABLE product_catalog ALTER COLUMN active BIT NOT NULL;
+ALTER TABLE [product_catalog] WITH NOCHECK ADD
+	CONSTRAINT [DF__product_c__activ__216BEC9A] DEFAULT (1) FOR [active]
+GO
 ALTER TABLE task ADD trashed_date DATETIME;
 ALTER TABLE relationship ADD trashed_date DATETIME;
 
@@ -52,5 +55,7 @@ ALTER TABLE campaign ADD trashed_date DATETIME;
 --Code to add level and application fields into the business_process_hook table
 ALTER TABLE business_process_hook ADD priority INTEGER;
 UPDATE business_process_hook SET priority = 1 WHERE priority IS NULL;
-ALTER TABLE business_process_hook ALTER COLUMN priority INTEGER NOT NULL DEFAULT 0;
-
+ALTER TABLE business_process_hook ALTER COLUMN priority INTEGER NOT NULL;
+ALTER TABLE [business_process_hook] WITH NOCHECK ADD
+	CONSTRAINT [DF__business___prior__4218B34E] DEFAULT (0) FOR [priority]
+GO

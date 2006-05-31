@@ -20,7 +20,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.OpportunityComponent,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
-<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="ComponentList" class="org.aspcfs.modules.pipeline.base.OpportunityComponentList" scope="request"/>
 <jsp:useBean id="AccountsComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -37,15 +37,18 @@
   loadImages('select');
 
   function reopenOpportunity(id) {
-    if (id == '<%= opportunityHeader.getId() %>') {
+    if (id == '<%= OpportunityHeader.getId() %>') {
       scrollReload('Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= isPopup(request)?"&popup=true":"" %>');
       return id;
     } else {
-      return '<%= opportunityHeader.getId() %>';
+      return '<%= OpportunityHeader.getId() %>';
     }
   }
 </script>
 <%-- Trails --%>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
@@ -60,18 +63,24 @@
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
-  <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+  <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
-  <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+  <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
     <%= thisFile.getImageTag("-23") %>
   </dhv:evaluate>
   <br>
-  <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>" >
-    <dhv:permission name="accounts-accounts-opportunities-add">
-      <br />
-      <a href="OpportunitiesComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br>
-    </dhv:permission>
-  </dhv:evaluate>
+  <dhv:hasAuthority owner="<%= OpportunityHeader.getManager() %>">
+    <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
+      <dhv:evaluate if="<%= !OpportunityHeader.isTrashed() %>" >
+        <dhv:permission name="accounts-accounts-opportunities-add">
+          <dhv:evaluate if="<%=allowMultiple || (!allowMultiple && (ComponentList.size() == 0))%>" >
+            <br />
+            <a href="OpportunitiesComponents.do?command=Prepare&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br>
+          </dhv:evaluate>
+        </dhv:permission>
+      </dhv:evaluate>
+    </dhv:evaluate>
+  </dhv:hasAuthority>
  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
    <tr>
@@ -79,23 +88,23 @@
       &nbsp;
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.description") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.closed") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue"><dhv:label name="accounts.accounts_contacts_opps_details.GuessAmount">Guess Amount</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue"><dhv:label name="accounts.accounts_contacts_opps_details.GuessAmount">Guess Amount</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.guessvalue") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.closedate") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename"><dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename"><dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("stagename") %>
     </th>
     <th>
@@ -111,16 +120,26 @@
           i++;
           rowid = (rowid != 1?1:2);
           OpportunityComponent oppComponent = (OpportunityComponent)j.next();
+          boolean hasPermission = false;
   %>
+  <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+","+oppComponent.getOwner()) %>">
+    <% hasPermission = true; %>
+  </dhv:hasAuthority>
   <tr class="row<%= rowid %>">
       <td width="8" valign="top" align="center" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-        <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppComponent.getId() %>', '<%= opportunityHeader.getId() %>','<%= opportunityHeader.isTrashed() || oppComponent.isTrashed() %>');" onMouseOver="over(0, <%=i%>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppComponent.getId() %>', '<%= OpportunityHeader.getId() %>','<%= (OpportunityHeader.isTrashed() || oppComponent.isTrashed()) %>','<%= hasPermission %>');" onMouseOver="over(0, <%=i%>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td width="100%" valign="top">
-        <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&id=<%=oppComponent.getId()%>">
-        <%= toHtml(oppComponent.getDescription()) %></a>
+        <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&headerId=<%=oppComponent.getHeaderId()%>&id=<%=oppComponent.getId()%>">
+        <dhv:evaluate if="<%=allowMultiple%>" >
+          <%= toHtml(oppComponent.getDescription()) %>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%=!allowMultiple%>" >
+          <%= toHtml(OpportunityHeader.getDescription()) %>
+        </dhv:evaluate>
+        </a>
       </td>
       <td valign="top" align="center" nowrap>
         <% if(oppComponent.getClosed() != null) {%>
@@ -157,9 +176,11 @@
   </table>
   <br />
   <dhv:pagedListControl object="AccountsComponentListInfo"/>
-  <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>" >
-    <br />
-    <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='Opportunities.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';"></dhv:permission>
-    <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>&popup=true','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+  <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
+    <dhv:evaluate if="<%= !OpportunityHeader.isTrashed() %>" >
+      <br />
+      <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='Opportunities.do?command=Modify&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';"></dhv:permission>
+      <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= OpportunityHeader.getId() %>&popup=true','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+    </dhv:evaluate>
   </dhv:evaluate>
 </dhv:container>

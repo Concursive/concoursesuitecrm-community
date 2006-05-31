@@ -22,6 +22,17 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+  <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
+  <parameter name="siteid" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[accounts.site]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(-1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siteid_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND o.site_id = $P{siteid}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="country" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
@@ -32,17 +43,20 @@
 		<defaultValueExpression ><![CDATA["USD"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[select sc.type,
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<queryString><![CDATA[SELECT sc.type,
 o.name,
 sc.current_start_date,
 sc.current_end_date,
 sc.contract_value,
 lst.description
-from service_contract sc
-left join organization o ON (sc.account_id=o.org_id)
-left join lookup_sc_type lst ON (sc.type=lst.code)
-and sc.trashed_date IS NULL
-order by sc.type,o.name,sc.current_end_date]]></queryString>
+FROM service_contract sc
+LEFT JOIN organization o ON (sc.account_id=o.org_id)
+LEFT JOIN lookup_sc_type lst ON (sc."type"=lst.code)
+WHERE sc.trashed_date IS NULL
+AND o.enabled = $P{TRUE}
+$P!{siteid_where}
+ORDER BY sc."type",o.name,sc.current_end_date]]></queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="current_start_date" class="java.sql.Timestamp"/>
 	<field name="current_end_date" class="java.sql.Timestamp"/>

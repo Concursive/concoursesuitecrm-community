@@ -71,6 +71,56 @@
       <%= toHtml(ContactDetails.getCompany()) %>
     </td>
   </tr>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getAdditionalNames()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getAdditionalNames()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getNickname()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getNickname()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getBirthDate() != null %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
+    </td>
+    <td>
+      <zeroio:tz timestamp="<%= ContactDetails.getBirthDate() %>" dateOnly="true"/>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getTitle()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getRole()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.role">Role</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getRole()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
 </table>
 <br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

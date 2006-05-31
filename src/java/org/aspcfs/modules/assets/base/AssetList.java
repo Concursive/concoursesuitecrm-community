@@ -27,17 +27,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author kbhoopal
- * @version $Id: AssetList.java,v 1.1.6.1.2.3 2004/02/04 19:38:31 mrajkowski
- *          Exp $
- * @created January 8, 2004
+ * @author     kbhoopal
+ * @created    January 8, 2004
+ * @version    $Id: AssetList.java,v 1.1.6.1.2.3 2004/02/04 19:38:31 mrajkowski
+ *      Exp $
  */
 public class AssetList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
+  private int parentId = -1;
   private int orgId = -1;
   private int contactId = -1;
   private int serviceContractId = -1;
@@ -45,32 +46,33 @@ public class AssetList extends ArrayList {
   private int enteredBy = -1;
   private String serialNumber = null;
   private boolean allAssets = true;
+  private boolean skipParentIdRequirement = false;
 
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
+  private boolean buildCompleteHierarchy = false;
 
 
   /**
-   * Constructor for the AssetList object
+   *  Constructor for the AssetList object
    */
-  public AssetList() {
-  }
+  public AssetList() { }
 
 
   /**
-   * Constructor for the AssetList object
+   *  Constructor for the AssetList object
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
-  public AssetList(Connection db) throws SQLException {
-  }
+  public AssetList(Connection db) throws SQLException { }
 
 
   /**
-   * Sets the pagedListInfo attribute of the AssetList object
+   *  Sets the pagedListInfo attribute of the AssetList object
    *
-   * @param tmp The new pagedListInfo value
+   * @param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -78,9 +80,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the id attribute of the AssetList object
+   *  Sets the id attribute of the AssetList object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -88,9 +90,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the id attribute of the AssetList object
+   *  Sets the id attribute of the AssetList object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -98,9 +100,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the orgId attribute of the AssetList object
+   *  Sets the orgId attribute of the AssetList object
    *
-   * @param tmp The new orgId value
+   * @param  tmp  The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -108,9 +110,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the orgId attribute of the AssetList object
+   *  Sets the orgId attribute of the AssetList object
    *
-   * @param tmp The new orgId value
+   * @param  tmp  The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -118,9 +120,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the contactId attribute of the AssetList object
+   *  Sets the contactId attribute of the AssetList object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -128,9 +130,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the contactId attribute of the AssetList object
+   *  Sets the contactId attribute of the AssetList object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -138,9 +140,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the serviceContractId attribute of the AssetList object
+   *  Sets the serviceContractId attribute of the AssetList object
    *
-   * @param tmp The new serviceContractId value
+   * @param  tmp  The new serviceContractId value
    */
   public void setServiceContractId(int tmp) {
     this.serviceContractId = tmp;
@@ -148,9 +150,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the serviceContractId attribute of the AssetList object
+   *  Sets the serviceContractId attribute of the AssetList object
    *
-   * @param tmp The new serviceContractId value
+   * @param  tmp  The new serviceContractId value
    */
   public void setServiceContractId(String tmp) {
     this.serviceContractId = Integer.parseInt(tmp);
@@ -158,9 +160,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the serviceContractNumber attribute of the AssetList object
+   *  Sets the serviceContractNumber attribute of the AssetList object
    *
-   * @param tmp The new serviceContractNumber value
+   * @param  tmp  The new serviceContractNumber value
    */
   public void setServiceContractNumber(String tmp) {
     this.serviceContractNumber = tmp;
@@ -168,9 +170,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the serialNumber attribute of the AssetList object
+   *  Sets the serialNumber attribute of the AssetList object
    *
-   * @param tmp The new serialNumber value
+   * @param  tmp  The new serialNumber value
    */
   public void setSerialNumber(String tmp) {
     this.serialNumber = tmp;
@@ -178,9 +180,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the allAssets attribute of the AssetList object
+   *  Sets the allAssets attribute of the AssetList object
    *
-   * @param tmp The new allAssets value
+   * @param  tmp  The new allAssets value
    */
   public void setAllAssets(boolean tmp) {
     this.allAssets = tmp;
@@ -188,9 +190,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the enteredBy attribute of the AssetList object
+   *  Sets the enteredBy attribute of the AssetList object
    *
-   * @param tmp The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -198,9 +200,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the enteredBy attribute of the AssetList object
+   *  Sets the enteredBy attribute of the AssetList object
    *
-   * @param tmp The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -208,9 +210,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the trashedDate attribute of the AssetList object
+   *  Sets the trashedDate attribute of the AssetList object
    *
-   * @param tmp The new trashedDate value
+   * @param  tmp  The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -218,9 +220,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the trashedDate attribute of the AssetList object
+   *  Sets the trashedDate attribute of the AssetList object
    *
-   * @param tmp The new trashedDate value
+   * @param  tmp  The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -228,9 +230,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the includeOnlyTrashed attribute of the AssetList object
+   *  Sets the includeOnlyTrashed attribute of the AssetList object
    *
-   * @param tmp The new includeOnlyTrashed value
+   * @param  tmp  The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(boolean tmp) {
     this.includeOnlyTrashed = tmp;
@@ -238,9 +240,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Sets the includeOnlyTrashed attribute of the AssetList object
+   *  Sets the includeOnlyTrashed attribute of the AssetList object
    *
-   * @param tmp The new includeOnlyTrashed value
+   * @param  tmp  The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(String tmp) {
     this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
@@ -248,9 +250,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the pagedListInfo attribute of the AssetList object
+   *  Gets the pagedListInfo attribute of the AssetList object
    *
-   * @return The pagedListInfo value
+   * @return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -258,9 +260,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the id attribute of the AssetList object
+   *  Gets the id attribute of the AssetList object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -268,9 +270,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the orgId attribute of the AssetList object
+   *  Gets the orgId attribute of the AssetList object
    *
-   * @return The orgId value
+   * @return    The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -278,9 +280,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the contactId attribute of the AssetList object
+   *  Gets the contactId attribute of the AssetList object
    *
-   * @return The contactId value
+   * @return    The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -288,9 +290,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the serviceContractId attribute of the AssetList object
+   *  Gets the serviceContractId attribute of the AssetList object
    *
-   * @return The serviceContractId value
+   * @return    The serviceContractId value
    */
   public int getServiceContractId() {
     return serviceContractId;
@@ -298,9 +300,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the serviceContractNumber attribute of the AssetList object
+   *  Gets the serviceContractNumber attribute of the AssetList object
    *
-   * @return The serviceContractNumber value
+   * @return    The serviceContractNumber value
    */
   public String getServiceContractNumber() {
     return serviceContractNumber;
@@ -308,9 +310,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the serialNumber attribute of the AssetList object
+   *  Gets the serialNumber attribute of the AssetList object
    *
-   * @return The serialNumber value
+   * @return    The serialNumber value
    */
   public String getSerialNumber() {
     return serialNumber;
@@ -318,9 +320,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the allAssets attribute of the AssetList object
+   *  Gets the allAssets attribute of the AssetList object
    *
-   * @return The allAssets value
+   * @return    The allAssets value
    */
   public boolean getAllAssets() {
     return allAssets;
@@ -328,9 +330,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the trashedDate attribute of the AssetList object
+   *  Gets the trashedDate attribute of the AssetList object
    *
-   * @return The trashedDate value
+   * @return    The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -338,9 +340,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the includeOnlyTrashed attribute of the AssetList object
+   *  Gets the includeOnlyTrashed attribute of the AssetList object
    *
-   * @return The includeOnlyTrashed value
+   * @return    The includeOnlyTrashed value
    */
   public boolean getIncludeOnlyTrashed() {
     return includeOnlyTrashed;
@@ -348,9 +350,9 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the enteredBy attribute of the AssetList object
+   *  Gets the enteredBy attribute of the AssetList object
    *
-   * @return The enteredBy value
+   * @return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -358,10 +360,100 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Gets the parentId attribute of the AssetList object
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @return    The parentId value
+   */
+  public int getParentId() {
+    return parentId;
+  }
+
+
+  /**
+   *  Sets the parentId attribute of the AssetList object
+   *
+   * @param  tmp  The new parentId value
+   */
+  public void setParentId(int tmp) {
+    this.parentId = tmp;
+  }
+
+
+  /**
+   *  Sets the parentId attribute of the AssetList object
+   *
+   * @param  tmp  The new parentId value
+   */
+  public void setParentId(String tmp) {
+    this.parentId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the buildCompleteHierarchy attribute of the AssetList object
+   *
+   * @return    The buildCompleteHierarchy value
+   */
+  public boolean getBuildCompleteHierarchy() {
+    return buildCompleteHierarchy;
+  }
+
+
+  /**
+   *  Sets the buildCompleteHierarchy attribute of the AssetList object
+   *
+   * @param  tmp  The new buildCompleteHierarchy value
+   */
+  public void setBuildCompleteHierarchy(boolean tmp) {
+    this.buildCompleteHierarchy = tmp;
+  }
+
+
+  /**
+   *  Sets the buildCompleteHierarchy attribute of the AssetList object
+   *
+   * @param  tmp  The new buildCompleteHierarchy value
+   */
+  public void setBuildCompleteHierarchy(String tmp) {
+    this.buildCompleteHierarchy = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the skipParentIdRequirement attribute of the AssetList object
+   *
+   * @return    The skipParentIdRequirement value
+   */
+  public boolean getSkipParentIdRequirement() {
+    return skipParentIdRequirement;
+  }
+
+
+  /**
+   *  Sets the skipParentIdRequirement attribute of the AssetList object
+   *
+   * @param  tmp  The new skipParentIdRequirement value
+   */
+  public void setSkipParentIdRequirement(boolean tmp) {
+    this.skipParentIdRequirement = tmp;
+  }
+
+
+  /**
+   *  Sets the skipParentIdRequirement attribute of the AssetList object
+   *
+   * @param  tmp  The new skipParentIdRequirement value
+   */
+  public void setSkipParentIdRequirement(String tmp) {
+    this.skipParentIdRequirement = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -374,16 +466,27 @@ public class AssetList extends ArrayList {
     if (pst != null) {
       pst.close();
     }
+    if (buildCompleteHierarchy) {
+      Iterator iter = (Iterator) this.iterator();
+      while (iter.hasNext()) {
+        Asset asset = (Asset) iter.next();
+        asset.setBuildCompleteHierarchy(true);
+        asset.buildCompleteHierarchy(db);
+        if (asset.getChildList() != null) {
+          this.addAll(asset.getChildList());
+        }
+      }
+    }
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -443,13 +546,23 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param sqlFilter Description of the Parameter
-   * @param db        Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  sqlFilter      Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) throws SQLException {
+    if (sqlFilter == null) {
+      sqlFilter = new StringBuffer();
+    }
+    if (parentId > -1) {
+      sqlFilter.append("AND a.parent_id = ? ");
+    } else {
+      if (!skipParentIdRequirement) {
+        sqlFilter.append("AND a.parent_id IS NULL ");
+      }
+    }
     if (enteredBy > -1) {
       sqlFilter.append("AND a.enteredby = ? ");
     }
@@ -471,24 +584,20 @@ public class AssetList extends ArrayList {
     if (serialNumber != null) {
       if (serialNumber.indexOf("%") >= 0) {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(a.serial_number) LIKE " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(a.serial_number) LIKE ? ");
       } else {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(a.serial_number) = " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(a.serial_number) = ? ");
       }
     }
 
     if (serviceContractNumber != null) {
       if (serviceContractNumber.indexOf("%") >= 0) {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(sc.contract_number) LIKE " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(sc.contract_number) LIKE ? ");
       } else {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(sc.contract_number) = " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(sc.contract_number) = ? ");
       }
     }
 
@@ -499,19 +608,21 @@ public class AssetList extends ArrayList {
     } else {
       sqlFilter.append("AND a.trashed_date IS NULL ");
     }
-
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    if (parentId > -1) {
+      DatabaseUtils.setInt(pst, ++i, parentId);
+    }
     if (enteredBy > -1) {
       pst.setInt(++i, enteredBy);
     }
@@ -528,10 +639,10 @@ public class AssetList extends ArrayList {
       pst.setInt(++i, serviceContractId);
     }
     if (serialNumber != null) {
-      pst.setString(++i, serialNumber);
+      pst.setString(++i, serialNumber.toLowerCase());
     }
     if (serviceContractNumber != null) {
-      pst.setString(++i, serviceContractNumber);
+      pst.setString(++i, serviceContractNumber.toLowerCase());
     }
     if (includeOnlyTrashed) {
       // do nothing
@@ -545,11 +656,11 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Gets the object attribute of the AssetList object
+   *  Gets the object attribute of the AssetList object
    *
-   * @param rs Description of the Parameter
-   * @return The object value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @return                The object value
+   * @throws  SQLException  Description of the Exception
    */
   public Asset getObject(ResultSet rs) throws SQLException {
     Asset thisAsset = new Asset(rs);
@@ -558,13 +669,13 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Used for determing the count of related items
+   *  Used for determing the count of related items
    *
-   * @param db       Description of the Parameter
-   * @param moduleId Description of the Parameter
-   * @param itemId   Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  moduleId       Description of the Parameter
+   * @param  itemId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;
@@ -572,7 +683,8 @@ public class AssetList extends ArrayList {
     sql.append(
         "SELECT COUNT(*) as itemcount " +
         "FROM asset a " +
-        "WHERE asset_id > 0 ");
+        "WHERE asset_id > 0 " +
+        "AND trashed_date IS NULL ");
     if (moduleId == Constants.ACCOUNTS) {
       sql.append("AND a.account_id = ?");
     }
@@ -597,13 +709,13 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param toTrash   Description of the Parameter
-   * @param tmpUserId Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  toTrash        Description of the Parameter
+   * @param  tmpUserId      Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
     Iterator itr = this.iterator();
@@ -616,16 +728,20 @@ public class AssetList extends ArrayList {
 
 
   /**
-   * Deletes the list of assets in this object
+   *  Deletes the list of assets in this object
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  baseFilePath   Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void delete(Connection db, String baseFilePath) throws SQLException {
     Iterator assets = this.iterator();
     while (assets.hasNext()) {
       Asset thisAsset = (Asset) assets.next();
-      thisAsset.delete(db, baseFilePath);
+      thisAsset = new Asset(db, String.valueOf(thisAsset.getId()));
+      if (this.getId() != -1) {
+        thisAsset.delete(db, baseFilePath);
+      }
     }
   }
 }

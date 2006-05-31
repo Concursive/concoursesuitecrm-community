@@ -33,7 +33,7 @@ function newOpt(param, value) {
 function page_init() {
   var list = parent.document.<%= form %>.elements['surveyId'];
   list.options.length = 0;
-  list.options[list.length] = newOpt(label("option.none","--None--"), "-1");
+  list.options[list.length] = newOpt(label("option.none","-- None --"), "-1");
 <%
   Iterator list1 = surveyList.iterator();
   while (list1.hasNext()) {

@@ -16,8 +16,12 @@
 package org.aspcfs.modules.service.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.controller.objectHookManager.ObjectHookAction;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.UserCentric;
+import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -28,12 +32,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 /**
  * Every Transaction can be made of many TransactionItems. TransactionItems
  * represent objects in which a method will be called upon.<p>
+ * <p/>
+ * <p/>
  * <p/>
  * Example:<br>
  * The TransactionItem is to insert an Organization. So, the object is
@@ -79,8 +86,7 @@ public class TransactionItem {
   /**
    * Constructor for the TransactionItem object
    */
-  public TransactionItem() {
-  }
+  public TransactionItem() { }
 
 
   /**
@@ -89,12 +95,16 @@ public class TransactionItem {
    *
    * @param objectElement Description of Parameter
    * @param mapping       Description of Parameter
+   * @param thisUser      Description of the Parameter
    */
-  public TransactionItem(Element objectElement, HashMap mapping) {
+  public TransactionItem(Element objectElement, HashMap mapping, UserBean thisUser) {
     try {
       this.setAction(objectElement);
       this.setObject(objectElement, mapping);
       ignoredProperties = XMLUtils.populateObject(object, objectElement);
+      
+      //populate the object's user fields using the user that was authenticated 
+      this.populateUserData(thisUser);
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println(
@@ -102,6 +112,42 @@ public class TransactionItem {
         e.printStackTrace(System.out);
       }
       appendErrorMessage("Invalid element: " + objectElement.getTagName());
+    }
+  }
+
+
+  /**
+   * When user logs in through an external client, populate the object's user
+   * related fields (record keeping fields, ownership fields etc).
+   *
+   * @param thisUser The new userData value
+   */
+  public void populateUserData(UserBean thisUser) {
+    try {
+      if (thisUser != null) {
+        ArrayList userIdParams = (ArrayList) ObjectUtils.getObject(object, "UserIdParams");
+        if (userIdParams != null) {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("TransactionItem-> Found userId params");
+          }
+          Iterator params = userIdParams.iterator();
+          while (params.hasNext()) {
+            String param = (String) params.next();
+            String value = String.valueOf(thisUser.getUserId());
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("TransactionItem-> userIdParams trying to set: " + param + "=" + value);
+            }
+            ObjectUtils.setParam(object, param, value);
+          }
+        }
+      } 
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "TransactionItem-> Cannot populate User related data: " + object.getClass().getName());
+        e.printStackTrace(System.out);
+      }
+      appendErrorMessage("Cannot populate User related data: " + object.getClass().getName());
     }
   }
 
@@ -388,9 +434,45 @@ public class TransactionItem {
 
 
   /**
+   * Gets the objectValid attribute of the TransactionItem object
+   *
+   * @param db Description of the Parameter
+   * @return The objectValid value
+   * @throws Exception Description of the Exception
+   */
+  public boolean isObjectValid(Connection db) throws Exception {
+    if (action == INSERT || action == UPDATE) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("TransactionItem-> Validating Object");
+      }
+      ObjectValidator.validate(packetContext.getSystemStatus(), db, object);
+      HashMap errors = (HashMap) ObjectUtils.getObject(object, "errors");
+      //TODO: determine course of action when warnings exist
+      //HashMap warnings = (HashMap) ObjectUtils.getObject(object, "warnings");
+      if (errors != null && errors.size() > 0) {
+        Iterator i = errors.keySet().iterator();
+        while (i.hasNext()) {
+          String errorKey = (String) i.next();
+          String errorMsg = (String) errors.get(errorKey);
+          appendErrorMessage(errorMsg);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println(
+                " Object Validation Error-> " + errorKey + "=" + errorMsg);
+          }
+        }
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  /**
    * Assumes that the Object has already been built and populated, now the
    * specified action will be executed. A database connection is passed along
    * since the Object will need it.<p>
+   * <p/>
+   * <p/>
    * <p/>
    * Data can be selected, inserted, updated, deleted, and synchronized with
    * client systems.
@@ -407,6 +489,15 @@ public class TransactionItem {
     if ((object == null || name == null) && !"system".equals(name)) {
       appendErrorMessage("Unsupported object specified");
       return;
+    }
+    if (packetContext.getAuthenticationItem().getType() == AuthenticationItem.CENTRIC_USER)
+    {
+      //Verify if user has permission to perform the action on this object
+      String permission = ObjectUtils.getParam(object, "permission");
+      if (!hasPermission(permission)) {
+        appendErrorMessage("User denied permission to perform action on the object");
+        return;
+      }
     }
     //Prepare the SyncClientMap to handle mapping client and server data
     syncClientMap = new SyncClientMap();
@@ -427,12 +518,12 @@ public class TransactionItem {
       Record thisRecord = new Record("info");
       thisRecord.put(
           "dateTime", String.valueOf(
-              new java.sql.Timestamp(new java.util.Date().getTime())));
+          new java.sql.Timestamp(new java.util.Date().getTime())));
       recordList.add(thisRecord);
     } else if (action == SYNC_START) {
       ObjectUtils.setParam(
           object, "id", String.valueOf(
-              packetContext.getAuthenticationItem().getClientId()));
+          packetContext.getAuthenticationItem().getClientId()));
       ObjectUtils.setParam(
           object, "anchor", packetContext.getAuthenticationItem().getLastAnchor());
       if (!((SyncClient) object).checkNormalSync(db)) {
@@ -441,14 +532,14 @@ public class TransactionItem {
     } else if (action == SYNC_END) {
       ObjectUtils.setParam(
           object, "id", String.valueOf(
-              packetContext.getAuthenticationItem().getClientId()));
+          packetContext.getAuthenticationItem().getClientId()));
       ObjectUtils.setParam(
           object, "anchor", packetContext.getAuthenticationItem().getNextAnchor());
       ((SyncClient) object).updateSyncAnchor(db);
       Record thisRecord = new Record("syncEnd");
       thisRecord.put(
           "endDateTime", String.valueOf(
-              new java.sql.Timestamp(new java.util.Date().getTime())));
+          new java.sql.Timestamp(new java.util.Date().getTime())));
       recordList.add(thisRecord);
     } else if (action == SYNC) {
       ObjectUtils.setParam(
@@ -539,7 +630,7 @@ public class TransactionItem {
           //Populate any items from the TransactionContext
           setContextParameters();
         }
-        if (action == DELETE) {
+        if (action == DELETE && ignoredProperties.containsKey("guid")) {
           //Set the object's id to be deleted, based on the client guid
           this.setObjectId(db);
           syncClientMap.setRecordId(
@@ -547,7 +638,7 @@ public class TransactionItem {
           syncClientMap.setClientUniqueId(
               (String) ignoredProperties.get("guid"));
         }
-        if (action == UPDATE) {
+        if (action == UPDATE && ignoredProperties.containsKey("guid")) {
           //Set the object's id to be updated, based on the client guid
           this.setObjectId(db);
           //Retrieve the previous modified date to ensure integrity of update
@@ -582,21 +673,21 @@ public class TransactionItem {
             //Reload the newly inserted object to get its insert/modified date
             Object insertedObject = ObjectUtils.constructObject(
                 object.getClass(), db, Integer.parseInt(
-                    ObjectUtils.getParam(object, "id")));
+                ObjectUtils.getParam(object, "id")));
             if (insertedObject == null) {
               //Might be a lookupElement
               insertedObject = ObjectUtils.constructObject(
                   object.getClass(), db, Integer.parseInt(
-                      ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(
-                          object, "tableName"));
+                  ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(
+                  object, "tableName"));
             }
             if (insertedObject == null) {
               //Might be a customLookupElement
               insertedObject = ObjectUtils.constructObject(
                   object.getClass(), db, Integer.parseInt(
-                      ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(
-                          object, "tableName"), ObjectUtils.getParam(
-                              object, "uniqueField"));
+                  ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(
+                  object, "tableName"), ObjectUtils.getParam(
+                  object, "uniqueField"));
             }
             if (insertedObject == null) {
               if (System.getProperty("DEBUG") != null) {
@@ -617,7 +708,7 @@ public class TransactionItem {
                 "guid")) {
               Object updatedObject = ObjectUtils.constructObject(
                   object.getClass(), db, Integer.parseInt(
-                      ObjectUtils.getParam(object, "id")));
+                  ObjectUtils.getParam(object, "id")));
               syncClientMap.updateStatusDate(
                   db, ObjectUtils.getParam(updatedObject, "modified"));
             }
@@ -815,7 +906,14 @@ public class TransactionItem {
       if (action == UPDATE || action == DELETE) {
         previousObject = ObjectUtils.constructObject(
             object.getClass(), db, Integer.parseInt(
-                ObjectUtils.getParam(object, "id")));
+            ObjectUtils.getParam(object, "id")));
+      }
+    }
+    //Check to see if object needs to return user records only
+    if (object instanceof UserCentric) {
+      if (packetContext.getUserBean() != null) {
+        ((UserCentric) object).accessedBy(
+            packetContext.getUserBean().getUserId());
       }
     }
     //Execute
@@ -927,7 +1025,7 @@ public class TransactionItem {
         //Check to see if the client already has this record...
         if (syncClientMap.lookupClientId(
             packetContext.getClientManager(), syncClientMap.getTableId(), ObjectUtils.getParam(
-                thisObject, "id")) == -1) {
+            thisObject, "id")) == -1) {
           Record thisRecord = addRecords(thisObject, recordList, recordAction);
           this.insertClientMapping(dbLookup, thisRecord);
         }
@@ -1051,8 +1149,8 @@ public class TransactionItem {
             //Sending an update back to client, get the correct guid
             thisRecord.put(
                 "guid", syncClientMap.lookupClientId(
-                    packetContext.getClientManager(), syncClientMap.getTableId(), ObjectUtils.getParam(
-                        thisObject, "id")));
+                packetContext.getClientManager(), syncClientMap.getTableId(), ObjectUtils.getParam(
+                thisObject, "id")));
           } else if (thisRecord.getAction().equals("delete")) {
             //Let the client know that its record was deleted
             thisRecord.put("guid", ignoredProperties.get("guid"));
@@ -1085,5 +1183,31 @@ public class TransactionItem {
     return false;
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Return Value
+   */
+  protected boolean hasPermission(String permission) {
+    if (permission != null && !"".equals(permission.trim())) {
+      if (action == this.SELECT) {
+        permission += "-view";
+      } else if (action == this.INSERT) {
+        permission += "-add";
+      } else if (action == this.UPDATE) {
+        permission += "-edit";
+      } else if (action == this.DELETE) {
+        permission += "-delete";
+      }
+
+      if (packetContext.getSystemStatus() != null && packetContext.getUserBean() != null)
+      {
+        return (packetContext.getSystemStatus().hasPermission(
+            packetContext.getUserBean().getUserId(), permission));
+      }
+    }
+    return true;
+  }
 }
 

@@ -310,7 +310,7 @@ public class LeadUtils {
 
     pst = db.prepareStatement(
         "UPDATE contact SET owner = ? WHERE contact_id = ?");
-    pst.setInt(1, userId);
+    pst.setInt(1, ownerId);
     pst.setInt(2, contactId);
     int result = pst.executeUpdate();
     pst.close();
@@ -346,7 +346,7 @@ public class LeadUtils {
    * @return The nextLead value
    * @throws SQLException Description of the Exception
    */
-  public static synchronized int getNextLead(Connection db, int contactId, ContactList criteria) throws SQLException {
+  public static synchronized int getNextLead(Connection db, int contactId, ContactList criteria, int siteId, boolean includeContactsAllSites) throws SQLException {
     int nextContactId = -1;
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -382,14 +382,14 @@ public class LeadUtils {
     }
     sql.append("FROM contact c ");
     if (criteria.getOldestFirst() != Constants.FALSE) {
-      sql.append("WHERE c.contact_id > ? ");
+      sql.append("WHERE c.contact_id > ? AND c.trashed_date IS NULL ");
     } else {
-      sql.append("WHERE c.contact_id < ? ");
+      sql.append("WHERE c.contact_id < ? AND c.trashed_date IS NULL ");
     }
-    createFilter(db, sql, criteria);
+    createFilter(db, sql, criteria, siteId, includeContactsAllSites);
     pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, 1, contactId);
-    prepareFilter(pst, criteria);
+    prepareFilter(pst, criteria, siteId, includeContactsAllSites);
     rs = pst.executeQuery();
     if (rs.next()) {
       /**
@@ -412,7 +412,8 @@ public class LeadUtils {
    * @param criteria  Description of the Parameter
    * @throws SQLException Description of the Exception
    */
-  private static void createFilter(Connection db, StringBuffer sqlFilter, ContactList criteria) throws SQLException {
+  private static void createFilter(Connection db, StringBuffer sqlFilter, ContactList criteria, int siteId, boolean includeContactsAllSites) throws SQLException {
+    // NOTE: Unfortunately this must be kept up to date with the ContactList code and would best be merged
     int owner = criteria.getOwner();
     int leadStatus = criteria.getLeadStatus();
     int leadsOnly = criteria.getLeadsOnly();
@@ -420,7 +421,7 @@ public class LeadUtils {
     int source = criteria.getSource();
     int rating = criteria.getRating();
     int leadStatusExists = criteria.getLeadStatusExists();
-    int postalCode = criteria.getPostalCode();
+    String postalCode = criteria.getPostalCode();
     int employeesOnly = criteria.getEmployeesOnly();
     boolean ownerOrReader = criteria.getOwnerOrReader();
     int hasConversionDate = criteria.getHasConversionDate();
@@ -430,6 +431,9 @@ public class LeadUtils {
     Timestamp enteredEnd = criteria.getEnteredEnd();
     Timestamp conversionDateStart = criteria.getConversionDateStart();
     Timestamp conversionDateEnd = criteria.getConversionDateEnd();
+    String company = criteria.getCompany();
+    String firstName = criteria.getFirstName();
+    String lastName = criteria.getLastName();
 
     sqlFilter.append("AND c.lead = ? ");
 
@@ -497,7 +501,7 @@ public class LeadUtils {
           "WHERE cc.contact_id = c.contact_id AND ce.email = ? )");
     }
 
-    if (postalCode != -1) {
+    if (postalCode != null) {
       sqlFilter.append(
           "AND c.contact_id IN (" +
           "SELECT cc.contact_id FROM contact cc LEFT JOIN contact_address ca " +
@@ -525,6 +529,42 @@ public class LeadUtils {
           "AND (c.owner = ? OR c.contact_id IN (SELECT cr.contact_id AS contact_id " +
           "FROM contact_lead_read_map cr WHERE cr.user_id = ?)) ");
     }
+
+    if (siteId != -1){
+      sqlFilter.append("AND c.site_id = ? ");
+    } else if (!includeContactsAllSites) {
+      sqlFilter.append("AND c.site_id IS NULL ");
+    }
+
+    if (company != null) {
+      if (company.indexOf("%") >= 0) {
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(c.org_name) LIKE ? ");
+      } else {
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(c.org_name) = ? ");
+      }
+    }
+
+    if (firstName != null) {
+      if (firstName.indexOf("%") >= 0) {
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(c.namefirst) LIKE ? ");
+      } else {
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(c.namefirst) = ? ");
+      }
+    }
+
+    if (lastName != null) {
+      if (lastName.indexOf("%") >= 0) {
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(c.namelast) LIKE ? ");
+      } else {
+        sqlFilter.append(
+            "AND " + DatabaseUtils.toLowerCase(db) + "(c.namelast) = ? ");
+      }
+    }
   }
 
 
@@ -536,7 +576,7 @@ public class LeadUtils {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private static int prepareFilter(PreparedStatement pst, ContactList criteria) throws SQLException {
+  private static int prepareFilter(PreparedStatement pst, ContactList criteria, int siteId, boolean includeContactsAllSites) throws SQLException {
     int i = 1;
     int owner = criteria.getOwner();
     int leadStatus = criteria.getLeadStatus();
@@ -545,7 +585,7 @@ public class LeadUtils {
     int source = criteria.getSource();
     int rating = criteria.getRating();
     int leadStatusExists = criteria.getLeadStatusExists();
-    int postalCode = criteria.getPostalCode();
+    String postalCode = criteria.getPostalCode();
     int userId = criteria.getUserId();
     int employeesOnly = criteria.getEmployeesOnly();
     boolean ownerOrReader = criteria.getOwnerOrReader();
@@ -556,6 +596,9 @@ public class LeadUtils {
     Timestamp enteredEnd = criteria.getEnteredEnd();
     Timestamp conversionDateStart = criteria.getConversionDateStart();
     Timestamp conversionDateEnd = criteria.getConversionDateEnd();
+    String company = criteria.getCompany();
+    String firstName = criteria.getFirstName();
+    String lastName = criteria.getLastName();
 
     pst.setBoolean(++i, true);
 
@@ -606,8 +649,8 @@ public class LeadUtils {
       pst.setString(++i, emailAddress);
     }
 
-    if (postalCode != -1) {
-      pst.setInt(++i, postalCode);
+    if (postalCode != null) {
+      pst.setString(++i, postalCode);
     }
 
     if (country != null && !"-1".equals(country)) {
@@ -619,6 +662,23 @@ public class LeadUtils {
       pst.setInt(++i, owner);
       pst.setInt(++i, readBy);
     }
+
+    if (siteId != -1){
+      pst.setInt(++i, siteId);
+    }
+
+    if (company != null) {
+      pst.setString(++i, company.toLowerCase());
+    }
+
+    if (firstName != null) {
+      pst.setString(++i, firstName.toLowerCase());
+    }
+
+    if (lastName != null) {
+      pst.setString(++i, lastName.toLowerCase());
+    }
+
     return i;
   }
 }

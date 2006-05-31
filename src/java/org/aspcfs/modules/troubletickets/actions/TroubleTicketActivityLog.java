@@ -56,6 +56,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Build activity list
       TicketActivityLogList thisList = new TicketActivityLogList();
@@ -93,6 +97,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
       db = this.getConnection(context);
       // Load the specified ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       // Load form elements
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
       onsiteModelList.addItem(
@@ -155,6 +163,14 @@ public final class TroubleTicketActivityLog extends CFSModule {
         // Load the activity log elements
         TicketActivityLog thisMaintenance = new TicketActivityLog();
         thisMaintenance.queryRecord(db, Integer.parseInt(formId));
+        //Check access permission to organization record
+        if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+          if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+            return ("PermissionError");
+          }
+        } else {
+            return ("PermissionError");
+        }
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
       }
       return ("ModifyOK");
@@ -185,6 +201,10 @@ public final class TroubleTicketActivityLog extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       // Save the base data
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.setModifiedBy(getUserId(context));
@@ -277,7 +297,15 @@ public final class TroubleTicketActivityLog extends CFSModule {
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       // Save the base data
       TicketActivityLog thisMaintenance = new TicketActivityLog();
-      thisMaintenance.setId(Integer.parseInt(formId));
+      thisMaintenance.queryRecord(db, Integer.parseInt(formId));
+      //Check access permission to organization record
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setLinkTicketId(thisTicket.getId());
       thisMaintenance.setTravelTowardsServiceContract(
@@ -384,6 +412,15 @@ public final class TroubleTicketActivityLog extends CFSModule {
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, Integer.parseInt(formId));
       context.getRequest().setAttribute("activityDetails", thisMaintenance);
+      thisMaintenance.queryRecord(db, Integer.parseInt(formId));
+      //Check access permission to organization record
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       return ("ViewOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -419,6 +456,14 @@ public final class TroubleTicketActivityLog extends CFSModule {
       // Prepare the HTML Dialog
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, Integer.parseInt(formId));
+      //Check access permission to organization record
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       DependencyList dependencies = new DependencyList();
       dependencies = thisMaintenance.processDependencies();
       dependencies.setSystemStatus(systemStatus);
@@ -465,6 +510,14 @@ public final class TroubleTicketActivityLog extends CFSModule {
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, formId);
+      //Check access permission to organization record
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       recordDeleted = thisMaintenance.delete(db);

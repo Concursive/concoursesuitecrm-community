@@ -175,14 +175,14 @@ public class QuoteLogList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM quotelog q " +
-        "WHERE q.id > 0 ");
+            "FROM quotelog q " +
+            "WHERE q.id > 0 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -195,8 +195,8 @@ public class QuoteLogList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND q.notes < ? ");
+                sqlFilter.toString() +
+                "AND q.notes < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -224,20 +224,20 @@ public class QuoteLogList extends ArrayList {
     }
     sqlSelect.append(
         "q.*, " +
-        "lqso.description AS source_name, " +
-        "lqst.description AS status_name, " +
-        "lqtm.description AS terms_name, " +
-        "lqty.description AS type_name, " +
-        "lqd.description AS delivery_name," +
-        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst " +
-        "FROM quotelog AS q " +
-        "LEFT JOIN contact ct_eb ON (q.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN lookup_quote_status AS lqst ON (q.status_id = lqst.code) " +
-        "LEFT JOIN lookup_quote_source AS lqso ON (q.source_id = lqso.code) " +
-        "LEFT JOIN lookup_quote_terms AS lqtm ON (q.terms_id = lqtm.code) " +
-        "LEFT JOIN lookup_quote_type AS lqty ON (q.type_id = lqty.code) " +
-        "LEFT JOIN lookup_quote_delivery AS lqd ON (q.delivery_id = lqd.code) " +
-        "WHERE q.id > 0 ");
+            "lqso.description AS source_name, " +
+            "lqst.description AS status_name, " +
+            "lqtm.description AS terms_name, " +
+            "lqty.description AS type_name, " +
+            "lqd.description AS delivery_name," +
+            "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst " +
+            "FROM quotelog q " +
+            "LEFT JOIN contact ct_eb ON (q.enteredby = ct_eb.user_id) " +
+            "LEFT JOIN lookup_quote_status lqst ON (q.status_id = lqst.code) " +
+            "LEFT JOIN lookup_quote_source lqso ON (q.source_id = lqso.code) " +
+            "LEFT JOIN lookup_quote_terms lqtm ON (q.terms_id = lqtm.code) " +
+            "LEFT JOIN lookup_quote_type lqty ON (q.type_id = lqty.code) " +
+            "LEFT JOIN lookup_quote_delivery lqd ON (q.delivery_id = lqd.code) " +
+            "WHERE q.id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

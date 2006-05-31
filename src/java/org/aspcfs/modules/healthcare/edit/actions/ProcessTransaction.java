@@ -23,6 +23,7 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.healthcare.edit.base.TransactionRecord;
 import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.modules.service.base.TransactionStatus;
+import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
@@ -71,8 +72,9 @@ public final class ProcessTransaction extends CFSModule {
       thisSystem = this.getSystemStatus(context, ce);
       if (thisSystem == null) {
         //Since typical login was bypassed, make sure the system status is in memory
+        Site thisSite = SecurityHook.retrieveSite(context.getServletContext(), context.getRequest());
         thisSystem = SecurityHook.retrieveSystemStatus(
-            context.getServletContext(), db, ce);
+            context.getServletContext(), db, ce, thisSite.getLanguage());
       }
 
       //Insert the record

@@ -262,7 +262,9 @@ public class WorkflowManager {
    * @param context Description of the Parameter
    */
   private void saveAnchors(ComponentContext context) {
-    System.out.println("WorkflowManager-> saveAnchors");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("WorkflowManager-> saveAnchors: " + context.getProcess().getName());
+    }
     Connection db = null;
     try {
       db = ObjectHookComponent.getConnection(context);

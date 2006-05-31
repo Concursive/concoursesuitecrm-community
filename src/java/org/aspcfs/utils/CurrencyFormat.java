@@ -20,14 +20,15 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Currency;
 
 /**
- * Format utility to work with currency.  Found in public domain.
+ *  Format utility to work with currency. Found in public domain.
  *
- * @author mrajkowski
- * @version $Id: CurrencyFormat.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
- *          Exp $
- * @created September 25, 2001
+ * @author     mrajkowski
+ * @created    September 25, 2001
+ * @version    $Id: CurrencyFormat.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
+ *      Exp $
  */
 public class CurrencyFormat {
 
@@ -37,17 +38,16 @@ public class CurrencyFormat {
 
 
   /**
-   * The main program for the CurrencyFormat class
+   *  The main program for the CurrencyFormat class
    */
-  public CurrencyFormat() {
-  }
+  public CurrencyFormat() { }
 
 
   /**
-   * Gets the currency attribute of the CurrencyFormat object
+   *  Gets the currency attribute of the CurrencyFormat object
    *
-   * @param dollarAmount Description of the Parameter
-   * @return The currency value
+   * @param  dollarAmount  Description of the Parameter
+   * @return               The currency value
    */
   public String getCurrency(double dollarAmount) {
     return formatCurrency(dollarAmount, currencySymbols, Locale.US);
@@ -55,16 +55,16 @@ public class CurrencyFormat {
 
 
   /**
-   * Format a currency amount in a designated denomination locale but displays
-   * in according to the displayLocal Just a kludge to show it can be done.
+   *  Format a currency amount in a designated denomination locale but displays
+   *  in according to the displayLocal Just a kludge to show it can be done.
    *
-   * @param value           Description of Parameter
-   * @param currencySymbols Description of Parameter
-   * @param displayLocale   Description of Parameter
-   * @return Description of the Returned Value
+   * @param  value            Description of Parameter
+   * @param  currencySymbols  Description of Parameter
+   * @param  displayLocale    Description of Parameter
+   * @return                  Description of the Returned Value
    */
   private static String formatCurrency(double value,
-                                       DecimalFormatSymbols currencySymbols, Locale displayLocale) {
+      DecimalFormatSymbols currencySymbols, Locale displayLocale) {
     // this is the only way I can find to get the locale specfic
     // currency pattern.
     ResourceBundle resource = ResourceBundle.getBundle
@@ -93,10 +93,10 @@ public class CurrencyFormat {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param s Description of Parameter
-   * @return Description of the Returned Value
+   * @param  s  Description of Parameter
+   * @return    Description of the Returned Value
    */
   private static String justify(String s) {
     StringBuffer buf = new StringBuffer(s);
@@ -108,10 +108,11 @@ public class CurrencyFormat {
 
 
   /**
-   * Gets the currencyString attribute of the CurrencyFormat class
+   *  Gets the currencyString attribute of the CurrencyFormat class
    *
-   * @param value Description of the Parameter
-   * @return The currencyString value
+   * @param  value   Description of the Parameter
+   * @param  locale  Description of the Parameter
+   * @return         The currencyString value
    */
   public static String getCurrencyString(Double value, Locale locale) {
     String currencyAsString = "";
@@ -121,6 +122,25 @@ public class CurrencyFormat {
     } catch (Exception e) {
     }
     return currencyAsString;
+  }
+
+
+  /**
+   *  Gets the currencyString attribute of the CurrencyFormat class
+   *
+   * @param  value     Description of the Parameter
+   * @param  locale    Description of the Parameter
+   * @param  currency  Description of the Parameter
+   * @return           The currencyString value
+   */
+  public static String getCurrencyString(double value, Locale locale, String code) {
+    NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+    formatter.setMaximumFractionDigits(4);
+    if (code != null) {
+      Currency currency = Currency.getInstance(code);
+      formatter.setCurrency(currency);
+    }
+    return formatter.format(value);
   }
 
 }

@@ -44,6 +44,8 @@ public final class LookupSelector extends CFSModule {
     LookupList selectList = new LookupList();
     boolean listDone = false;
     String displayFieldId = null;
+    String hiddenFieldId = null;
+    String listType = context.getRequest().getParameter("listType");
     PagedListInfo lookupSelectorInfo = this.getPagedListInfo(
         context, "LookupSelectorInfo");
     String tableName = context.getRequest().getParameter("table");
@@ -68,6 +70,9 @@ public final class LookupSelector extends CFSModule {
     if (context.getRequest().getParameter("displayFieldId") != null) {
       displayFieldId = context.getRequest().getParameter("displayFieldId");
     }
+    if (context.getRequest().getParameter("hiddenFieldId") != null) {
+      hiddenFieldId = context.getRequest().getParameter("hiddenFieldId");
+    }
     //Flush the selectedList if its a new selection
     if (context.getRequest().getParameter("flushtemplist") != null) {
       if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase(
@@ -80,30 +85,45 @@ public final class LookupSelector extends CFSModule {
       }
     }
     int rowCount = 1;
-    while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
-      int elementId = 0;
-      String elementValue = "";
-      elementId = Integer.parseInt(
-          context.getRequest().getParameter("hiddenelementid" + rowCount));
-      if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
-        if (context.getRequest().getParameter("elementvalue" + rowCount) != null) {
-          elementValue = context.getRequest().getParameter(
-              "elementvalue" + rowCount);
-        }
-        if (selectedList.get(new Integer(elementId)) == null) {
-          selectedList.put(new Integer(elementId), elementValue);
+    if ("list".equals(listType)) {
+      while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
+        int elementId = 0;
+        String elementValue = "";
+        elementId = Integer.parseInt(
+            context.getRequest().getParameter("hiddenelementid" + rowCount));
+        if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
+          if (context.getRequest().getParameter("elementvalue" + rowCount) != null) {
+            elementValue = context.getRequest().getParameter(
+                "elementvalue" + rowCount);
+          }
+          if (selectedList.get(new Integer(elementId)) == null) {
+            selectedList.put(new Integer(elementId), elementValue);
+          } else {
+            selectedList.remove(new Integer(elementId));
+            selectedList.put(new Integer(elementId), elementValue);
+          }
         } else {
           selectedList.remove(new Integer(elementId));
-          selectedList.put(new Integer(elementId), elementValue);
         }
-      } else {
-        selectedList.remove(new Integer(elementId));
+        rowCount++;
       }
-      rowCount++;
     }
+    
     if (context.getRequest().getParameter("finalsubmit") != null) {
       if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase(
           "true")) {
+        //Handle single selection case
+        if ("single".equals(listType)) {
+          rowCount = Integer.parseInt(
+              context.getRequest().getParameter("rowcount"));
+          int siteId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenelementid" + rowCount));
+          String siteValue = context.getRequest().getParameter(
+                "elementvalue" + rowCount);
+          selectedList.clear();
+          selectedList.put(new Integer(siteId), siteValue);
+        }
+        
         finalElementList = (HashMap) selectedList.clone();
         context.getSession().setAttribute("finalElements", finalElementList);
       }
@@ -123,6 +143,7 @@ public final class LookupSelector extends CFSModule {
     }
     context.getSession().setAttribute("selectedElements", selectedList);
     context.getRequest().setAttribute("DisplayFieldId", displayFieldId);
+    context.getRequest().setAttribute("hiddenFieldId", hiddenFieldId);
     context.getRequest().setAttribute("Table", tableName);
     return ("PopLookupOK");
   }

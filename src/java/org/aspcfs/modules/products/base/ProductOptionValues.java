@@ -598,9 +598,9 @@ public class ProductOptionValues extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT " +
-        " poptvalues.* " +
-        " FROM product_option_values AS poptvalues " +
-        " WHERE poptvalues.value_id = ? ");
+        "poptvalues.* " +
+        "FROM product_option_values poptvalues " +
+        "WHERE poptvalues.value_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -660,7 +660,7 @@ public class ProductOptionValues extends GenericBean {
         "INSERT INTO product_option_values (" + (id > -1 ? "value_id, " : "") + "option_id, " +
         "result_id, description, msrp_currency, msrp_amount, " +
         "price_currency, price_amount, " +
-        "recurring_currency, recurring_amount, recurring_type, value, multiplier, range_min, range_max, cost_currency, cost_amount ) ");
+        "recurring_currency, recurring_amount, recurring_type, \"value\", multiplier, range_min, range_max, cost_currency, cost_amount ) ");
     sql.append(
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     int i = 0;
@@ -711,7 +711,7 @@ public class ProductOptionValues extends GenericBean {
         "UPDATE product_option_values SET option_id = ?, result_id = ?, " +
         "description = ?, msrp_currency = ?, mspr_amount = ? " +
         "price_currency = ?, price_amount = ?, recurring_currency = ?, " +
-        "recurring_amount = ?, recurring_type = ?, value = ?, multiplier = ?, " +
+        "recurring_amount = ?, recurring_type = ?, \"value\" = ?, multiplier = ?, " +
         "range_min = ?, range_max = ?, cost_currency=?, cost_amount = ? ");
     sql.append("WHERE value_id = ? ");
 

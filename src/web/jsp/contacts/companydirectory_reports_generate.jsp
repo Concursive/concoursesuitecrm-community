@@ -121,7 +121,7 @@
         <option value="c.namelast"><dhv:label name="accounts.accounts_add.LastName">Last Name</dhv:label></option>
         <option value="c.contact_id"><dhv:label name="contact.contactId">Contact ID</dhv:label></option>
         <option value="c.namefirst"><dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label></option>
-        <option value="c.company"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></option>
+        <option value="c.org_name"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></option>
         <option value="c.title"><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></option>
         <option value="departmentname"><dhv:label name="project.department">Department</dhv:label></option>
         <option value="c.entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></option>

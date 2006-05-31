@@ -19,12 +19,14 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.troubletickets.base.TicketTask;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.LookupList;
 
 import java.sql.Connection;
 
@@ -39,7 +41,7 @@ import java.sql.Connection;
 public final class TroubleTicketTasks extends CFSModule {
 
   /**
-   * Description of the Method
+   * Lists the tasks for the specified ticket
    *
    * @param context Description of the Parameter
    * @return Description of the Return Value
@@ -48,21 +50,27 @@ public final class TroubleTicketTasks extends CFSModule {
     if (!hasPermission(context, "tickets-tickets-tasks-view")) {
       return ("PermissionError");
     }
+    // Parameters
     String ticketId = context.getRequest().getParameter("ticketId");
     Connection db = null;
     TaskList taskList = new TaskList();
-
+    // Paged List
     PagedListInfo ticTaskListInfo = this.getPagedListInfo(
         context, "TicketTaskListInfo");
     ticTaskListInfo.setItemsPerPage(0);
     try {
       db = this.getConnection(context);
+      //Load the task list
       taskList.setTicketId(Integer.parseInt(ticketId));
       taskList.setPagedListInfo(ticTaskListInfo);
       taskList.buildList(db);
-
-      //get the ticket
+      context.getRequest().setAttribute("TaskList", taskList);
+      //Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -70,7 +78,6 @@ public final class TroubleTicketTasks extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("TaskList", taskList);
     addModuleBean(context, "ViewTickets", "List Tasks");
     return getReturn(context, "ListTasks");
   }
@@ -89,10 +96,17 @@ public final class TroubleTicketTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, Integer.parseInt(id));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTask.getTicket().getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Task", thisTask);
+      LookupList list = systemStatus.getLookupList(db, "lookup_ticket_task_category");
+      context.getRequest().setAttribute("ticketTaskCategoryList", list);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -119,17 +133,22 @@ public final class TroubleTicketTasks extends CFSModule {
     String ticketId = context.getRequest().getParameter("ticketId");
     TicketTask thisTask = (TicketTask) context.getFormBean();
     String action = (thisTask.getId() > 0 ? "modify" : "insert");
-
     if ("insert".equals(action)) {
       permission = "tickets-tickets-tasks-add";
     }
-    if (!(hasPermission(context, permission))) {
+    if (!hasPermission(context, permission)) {
       return ("PermissionError");
     }
     thisTask.setModifiedBy(getUserId(context));
     try {
       db = this.getConnection(context);
       if ("insert".equals(action)) {
+        //Load the ticket
+        Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+        //Check access permission to organization record
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
         thisTask.setEnteredBy(getUserId(context));
         thisTask.setTicketId(Integer.parseInt(ticketId));
         isValid = this.validateObject(context, db, thisTask);
@@ -150,6 +169,14 @@ public final class TroubleTicketTasks extends CFSModule {
         }
         if (resultCount == 1) {
           this.processUpdateHook(context, oldTask, thisTask);
+        }
+      }
+      if (!isValid || !(recordInserted || resultCount == 1)) {
+        if (thisTask.getContactId() > -1) {
+          thisTask.checkEnabledLinkAccount(db);
+          Contact contact = new Contact(db, thisTask.getContactId());
+          thisTask.setContactName(contact.getNameFull());
+          context.getRequest().setAttribute("Task", thisTask);
         }
       }
     } catch (Exception e) {
@@ -180,11 +207,34 @@ public final class TroubleTicketTasks extends CFSModule {
     if (!hasPermission(context, "tickets-tickets-tasks-add")) {
       return ("PermissionError");
     }
+    Connection db = null;
 
-    TicketTask thisTicketTask = (TicketTask) context.getFormBean();
-    if (thisTicketTask.getEnteredBy() != -1) {
+    try {
+      db = this.getConnection(context);
+      // Load the ticket
+      Ticket thisTicket = new Ticket(db, Integer.parseInt(context.getRequest().getParameter("ticketId")));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
+  
+      TicketTask thisTicketTask = (TicketTask) context.getFormBean();
+      if (thisTicketTask.getEnteredBy() == -1) {
+        thisTicketTask = new TicketTask();
+        thisTicketTask.setTicketId(thisTicket.getId());
+      }
       Task thisTask = thisTicketTask;
       context.getRequest().setAttribute("Task", thisTask);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_ticket_task_category");
+      list.addItem(-1,systemStatus.getLabel("calendar.none.4dashes","-- None --"));
+      context.getRequest().setAttribute("ticketTaskCategoryList", list);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
 
     addModuleBean(context, "View Tickets", "Add Ticket");
@@ -206,16 +256,34 @@ public final class TroubleTicketTasks extends CFSModule {
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
     addModuleBean(context, "View Tickets", "Add Ticket");
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    String ticketId = context.getRequest().getParameter("ticketId");
+    Ticket thisTicket = null;
     try {
       db = this.getConnection(context);
       thisTask = (Task) context.getFormBean();
       if (thisTask.getId() == -1) {
         thisTask = new Task(db, Integer.parseInt(id));
       }
+      // Load the ticket
+      if (ticketId != null && !"".equals(ticketId)) {
+        thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      } else {
+        thisTicket = new Ticket(db, thisTask.getTicketId());
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       thisTask.checkEnabledOwnerAccount(db);
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
+        Contact contact = new Contact(db, thisTask.getContactId());
+        thisTask.setContactName(contact.getNameFull());
       }
+      LookupList list = systemStatus.getLookupList(db, "lookup_ticket_task_category");
+      list.addItem(-1,systemStatus.getLabel("calendar.none.4dashes","-- None --"));
+      context.getRequest().setAttribute("ticketTaskCategoryList", list);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -255,6 +323,7 @@ public final class TroubleTicketTasks extends CFSModule {
         return ("PermissionError");
       }
       thisTask.delete(db);
+      this.deleteRecentItem(context, thisTask);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

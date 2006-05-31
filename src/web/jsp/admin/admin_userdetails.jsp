@@ -78,10 +78,18 @@
       <td><%= toHtml(UserRecord.getRole()) %></td>
     </tr>
     <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="admin.user.site">Site</dhv:label>
+    </td>
+    <td><%= toHtml(UserRecord.getSiteIdName()) %></td>
+  </tr>
+  <tr class="containerBody">
       <td nowrap class="formLabel"><dhv:label name="admin.reportsTo">Reports To</dhv:label></td>
       <td>
         <dhv:username id="<%= UserRecord.getManagerId() %>"/>
-        <dhv:evaluate if="<%= !(UserRecord.getManagerUserEnabled()) %>"><font color="red">*</font></dhv:evaluate>
+        <dhv:evaluate if="<%=UserRecord.getManagerId() != -1 %>">
+          <dhv:evaluate if="<%= !(UserRecord.getManagerUserEnabled()) %>"><font color="red">*</font></dhv:evaluate>
+        </dhv:evaluate>
       </td>
     </tr>
   <dhv:evaluate if="<%= UserRecord.getAlias() != -1 %>">

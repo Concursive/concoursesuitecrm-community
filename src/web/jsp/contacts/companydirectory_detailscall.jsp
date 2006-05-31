@@ -44,7 +44,7 @@ function reopenContact(id) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="module-general-contacts">General Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <a href="ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
@@ -71,7 +71,7 @@ function reopenContact(id) {
       <dhv:permission name="contacts-external_contacts-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward"></dhv:label>" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %>&forwardType=<%= Constants.TASKS %><%= addLinkParams(request, "popup|popupType|actionId|view") %>'"></dhv:permission>
     </dhv:evaluate>
   </dhv:evaluate>
-  <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br>&nbsp;</dhv:permission>
+  <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete,contacts-external_contacts-calls-view"><br>&nbsp;</dhv:permission>
   <% if("pending".equals(request.getParameter("view"))){ %>
     <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
     <%-- include follow up activity details --%>

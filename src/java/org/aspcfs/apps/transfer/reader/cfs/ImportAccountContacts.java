@@ -43,6 +43,8 @@ import java.util.Map;
  */
 public class ImportAccountContacts extends CSVReader {
 
+  private int KEY_CONTACT = 0;
+  private int KEY_COMPANY = 0;
   private int OWNER = 0;
   private int NAME_SALUTATION = 0;
   private int CONTACT_NAME = 0;
@@ -80,6 +82,16 @@ public class ImportAccountContacts extends CSVReader {
   private int PERSONAL_EMAIL = 0;
   private int OTHER_EMAIL = 0;
   private int NOTES = 0;
+  private int MODIFIED = 0;
+  private int ENTERED = 0;
+  private int LIST_SALUTATION = 0;
+  private int SITE_ID = 0;
+  private int NO_EMAIL = 0;
+  private int NO_MAIL = 0;
+  private int CONTACT_SOURCE = 0;
+  private int TYPE_ID = 0;
+  private int CLIENT_ID = 0;
+  private int DEPARTMENT = 0;
   private int EMPLOYEES = 0;
 
 
@@ -249,6 +261,16 @@ public class ImportAccountContacts extends CSVReader {
           NOTES = findColumn(thisRecord, new String[]{"NOTES", "Notes"});
           EMPLOYEES = findColumn(
               thisRecord, new String[]{"EMPLOYEES", "Employees"});
+          MODIFIED = findColumn(thisRecord, new String[]{"DATE_MODIFIED", "Modified"});
+          ENTERED = findColumn(thisRecord, new String[]{"DATE_ENTERED", "DATE_CREATED", "Entered"});
+          LIST_SALUTATION = findColumn(thisRecord, new String[]{"LIST_SALUTATION"});
+          SITE_ID = findColumn(thisRecord, new String[]{"SITE_ID"});
+          NO_EMAIL = findColumn(thisRecord, new String[]{"NO_EMAIL"});
+          NO_MAIL = findColumn(thisRecord, new String[]{"NO_MAIL"});
+          CONTACT_SOURCE = findColumn(thisRecord, new String[]{"CONTACT_SOURCE"});
+          TYPE_ID = findColumn(thisRecord, new String[]{"TYPE_ID","CONTACT_TYPE"});
+          CLIENT_ID = findColumn(thisRecord, new String[]{"CLIENT_ID", "MARESA_CODE"});
+          DEPARTMENT = findColumn(thisRecord, new String[]{"DEPARTMENT"});
           continue;
         }
         ++contactId;
@@ -262,12 +284,19 @@ public class ImportAccountContacts extends CSVReader {
 
         thisContact.setAccessType(2);
         thisContact.setId(contactId);
+        if (getValue(thisRecord, KEY_CONTACT) != null) {
+           thisContact.setId(getValue(thisRecord, KEY_CONTACT));
+        } else {
+           thisContact.setId(contactId);
+        }
         thisContact.setEnteredBy(userId);
         if (OWNER > 0) {
           thisContact.setOwner(getValue(thisRecord, OWNER));
         } else {
           thisContact.setOwner(userId);
         }
+        thisContact.setModified(getValue(thisRecord, MODIFIED));
+        thisContact.setEntered(getValue(thisRecord, ENTERED));
         thisContact.setModifiedBy(userId);
         //Contact Fields
         thisContact.setNameSalutation(getValue(thisRecord, NAME_SALUTATION));
@@ -285,6 +314,31 @@ public class ImportAccountContacts extends CSVReader {
         thisContact.setCompany(getValue(thisRecord, COMPANY_NAME));
         thisContact.setOrgName(getValue(thisRecord, COMPANY_NAME));
         thisContact.setTitle(getValue(thisRecord, TITLE));
+        String listSalutation = getValue(thisRecord, LIST_SALUTATION);
+        if (listSalutation != null && !"".equals(listSalutation)) {
+          thisContact.setListSalutation(listSalutation);
+        }
+        thisContact.setNoEmail(getValue(thisRecord, NO_EMAIL));
+        thisContact.setNoMail(getValue(thisRecord, NO_MAIL));
+        String source = getValue(thisRecord, CONTACT_SOURCE);
+        if (source != null && !"".equals(source.trim())) {
+          thisContact.setSource(source);
+        }
+        String type = getValue(thisRecord, TYPE_ID);
+        if (type != null && !"".equals(type.trim())) {
+          String[] types = new String [1];
+          types[0] = type;
+          thisContact.setTypeList(types);
+        }
+        String clientId = getValue(thisRecord, CLIENT_ID);
+        if (clientId != null && !"".equals(clientId.trim())) {
+          thisContact.setClientId(getValue(thisRecord, CLIENT_ID));
+        }
+        //thisContact.setTitle(getValue(thisRecord, DEPARTMENT));
+        String site = getValue(thisRecord, SITE_ID);
+        if (site != null && !"".equals(site.trim())) {
+          thisContact.setSite(site);
+        }          
 
         //ContactAddress Record Fields
         ContactAddress businessAddress = new ContactAddress();

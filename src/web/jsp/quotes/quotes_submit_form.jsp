@@ -58,7 +58,7 @@
 	}
 </script>
 <form name="submitQuote" action="Quotes.do?command=Modify&quoteId=<%= quote.getId() %>&auto-populate=true&popup=true&return=submit" onSubmit="return checkForm(this);" method="post">
-<%= showError(request, "actionError") %>
+<dhv:formMessage />
 <br />
 <%-- Insert the quote product form here --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -104,22 +104,24 @@
 		</td>
 	</tr>
 </table>
-&nbsp;<br />
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th>
-      <strong><dhv:label name="accounts.accounts_quotes_list.QuoteStatus">Quote Status</dhv:label></strong>
-    </th>
-  </tr>
-	<tr class="containerBody">
-		<td>
-      <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
-      </td><td valign="top" nowrap><%= quoteStatusList.getHtmlSelect("statusId", quote.getStatusId()) %> &nbsp;
-        <%= showAttribute(request, "nameError") %>
-      </td></tr></table>
-		</td>
-	</tr>
-</table>
+<dhv:evaluate if="<%=(!quote.getLock())%>" >
+  &nbsp;<br />
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th>
+        <strong><dhv:label name="accounts.accounts_quotes_list.QuoteStatus">Quote Status</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td>
+        <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+        </td><td valign="top" nowrap><%= quoteStatusList.getHtmlSelect("statusId", quote.getStatusId()) %> &nbsp;
+          <%= showAttribute(request, "nameError") %>
+        </td></tr></table>
+      </td>
+    </tr>
+  </table>
+</dhv:evaluate>
 <br />
 <input type="hidden" name="contactId" value="<%= quote.getContactId() %>"/>
 <input type="hidden" name="orgId" value="<%= quote.getOrgId() %>"/>

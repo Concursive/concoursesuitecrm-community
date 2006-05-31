@@ -424,9 +424,9 @@ CREATE TABLE lookup_project_permission_category (
   code INT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item boolean DEFAULT false,
-  "level" INTEGER DEFAULT false,
+  "level" INTEGER DEFAULT 0,
   enabled boolean DEFAULT true,
-  group_id INTEGER  DEFAULT false NOT NULL
+  group_id INTEGER DEFAULT 0 NOT NULL
 );
 
 CREATE SEQUENCE lookup_project_permission_code_seq;
@@ -435,7 +435,7 @@ CREATE TABLE lookup_project_permission (
   category_id INTEGER REFERENCES lookup_project_permission_category(code),
   permission VARCHAR(300) UNIQUE NOT NULL,
   description VARCHAR(300) NOT NULL,
-  default_item boolean DEFAULT true,
+  default_item boolean DEFAULT false,
   "level" INTEGER DEFAULT 0,
   enabled boolean DEFAULT true,
   group_id INTEGER  DEFAULT 0 NOT NULL,

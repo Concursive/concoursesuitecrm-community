@@ -36,6 +36,10 @@ import java.sql.SQLException;
  * @created November 11, 2002
  */
 public class AuthenticationItem {
+  //HTTP-XML API Authentication Header Types
+  public final static int ASPMODE = 1;
+  public final static int SYNC_CLIENT = 2;
+  public final static int CENTRIC_USER = 3;
 
   private String id = null;
   private String code = null;
@@ -45,13 +49,13 @@ public class AuthenticationItem {
   private java.sql.Timestamp nextAnchor = null;
   private String authCode = "unset";
   private String encoding = "UTF-8";
+  private String username = null;
 
 
   /**
    * Constructor for the AuthenticationItem object
    */
-  public AuthenticationItem() {
-  }
+  public AuthenticationItem() { }
 
 
   /**
@@ -177,6 +181,26 @@ public class AuthenticationItem {
 
 
   /**
+   * Gets the username attribute of the AuthenticationItem object
+   *
+   * @return The username value
+   */
+  public String getUsername() {
+    return username;
+  }
+
+
+  /**
+   * Sets the username attribute of the AuthenticationItem object
+   *
+   * @param tmp The new username value
+   */
+  public void setUsername(String tmp) {
+    this.username = tmp;
+  }
+
+
+  /**
    * Gets the id attribute of the AuthenticationItem object
    *
    * @return The id value
@@ -258,6 +282,27 @@ public class AuthenticationItem {
 
 
   /**
+   * Determines if the HTTP-XML API authentication header contains regular centric
+   * user information or a sync client's information. More user types can be added
+   *
+   * @return The type value
+   */
+  public int getType() {
+    if (username != null && clientId > -1) {
+      return -1; //can't determine if it is a user or a sync client
+    }
+    if (username != null) {
+      return this.CENTRIC_USER;
+    }
+    if (clientId > -1) {
+      return this.SYNC_CLIENT;
+    }
+
+    return -1;
+  }
+
+
+  /**
    * Gets the connection attribute of the AuthenticationItem object using the
    * context to validate
    *
@@ -300,7 +345,8 @@ public class AuthenticationItem {
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     gk.setDriver(gkDriver);
     if (!"true".equals(
-        (String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE"))) {
+        (String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE")))
+    {
       // This system is not configured with the sites table, must be a binary version
       gk.setDbName(prefs.get("GATEKEEPER.DATABASE"));
       if (System.getProperty("DEBUG") != null) {
@@ -314,9 +360,9 @@ public class AuthenticationItem {
       db = sqlDriver.getConnection(gk);
       PreparedStatement pst = db.prepareStatement(
           "SELECT * " +
-          "FROM sites " +
-          "WHERE sitecode = ? " +
-          "AND vhost = ? ");
+              "FROM sites " +
+              "WHERE sitecode = ? " +
+              "AND vhost = ? ");
       pst.setString(1, siteCode);
       pst.setString(2, serverName);
       ResultSet rs = pst.executeQuery();

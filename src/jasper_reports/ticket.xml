@@ -38,10 +38,11 @@
 		<defaultValueExpression ><![CDATA["USD"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[SELECT t.ticketid, 
-t.problem AS issue, t.location, 
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<queryString><![CDATA[SELECT t.ticketid,
+t.problem AS issue, t.location,
 t.assigned_date, t.est_resolution_date,
-t.cause, t.solution, t.resolution_date, 
+t.cause, t.solution, t.resolution_date,
 t.entered, t.modified, t.closed, t.expectation,
 tp.description AS ticpri,
 ts.description AS ticsev,
@@ -69,11 +70,11 @@ LEFT JOIN contact c ON (t.contact_id = c.contact_id)
 LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code)
 LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id)
 LEFT JOIN asset a ON (t.link_asset_id = a.asset_id)
-LEFT JOIN access ent ON (t.enteredby = ent.user_id)
+LEFT JOIN "access" ent ON (t.enteredby = ent.user_id)
 LEFT JOIN contact ctent ON (ent.contact_id = ctent.contact_id)
-LEFT JOIN access mod ON (t.modifiedby = mod.user_id)
+LEFT JOIN "access" mod ON (t.modifiedby = mod.user_id)
 LEFT JOIN contact ctmod ON (mod.contact_id = ctmod.contact_id)
-LEFT JOIN access assg ON (t.assigned_to = assg.user_id)
+LEFT JOIN "access" assg ON (t.assigned_to = assg.user_id)
 LEFT JOIN contact ctassg ON (assg.contact_id = ctassg.contact_id)
 LEFT JOIN lookup_department ld ON (t.department_code = ld.code)
 LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id)
@@ -1877,6 +1878,9 @@ AND t.trashed_date IS NULL]]></queryString>
 					<subreportParameter  name="CENTRIC_DICTIONARY">
 						<subreportParameterExpression><![CDATA[$P{CENTRIC_DICTIONARY}]]></subreportParameterExpression>
 					</subreportParameter>
+          <subreportParameter  name="SCRIPT_DB_CONNECTION">
+						<subreportParameterExpression><![CDATA[$P{SCRIPT_DB_CONNECTION}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_activity_log_subreport.jasper"]]></subreportExpression>
 				</subreport>
@@ -1923,6 +1927,9 @@ AND t.trashed_date IS NULL]]></queryString>
 					</subreportParameter>
 					<subreportParameter  name="CENTRIC_DICTIONARY">
 						<subreportParameterExpression><![CDATA[$P{CENTRIC_DICTIONARY}]]></subreportParameterExpression>
+					</subreportParameter>
+          <subreportParameter  name="SCRIPT_DB_CONNECTION">
+						<subreportParameterExpression><![CDATA[$P{SCRIPT_DB_CONNECTION}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_maintenance_log_subreport.jasper"]]></subreportExpression>
@@ -2368,7 +2375,7 @@ AND t.trashed_date IS NULL]]></queryString>
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[($F{closed} != null ?
-((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.helpdesk.closed", "Closed") : 
+((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.helpdesk.closed", "Closed") :
 ((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.helpdesk.ticket.open", "Open"))]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >

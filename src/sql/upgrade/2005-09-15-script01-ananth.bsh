@@ -1,0 +1,31 @@
+/*
+  This is a beanshell script that adds data to the database 
+  connection (db) from ant upgradedb
+  
+  Update all the previous "Action Plan Work" records with the current_phase
+*/
+import java.sql.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.actionplans.base.*;
+
+ActionPlanWorkList planWorkList = new ActionPlanWorkList();
+planWorkList.setHasCurrentPhase(Constants.FALSE);
+planWorkList.setBuildPhaseWork(true);
+planWorkList.setBuildStepWork(true);
+planWorkList.buildList(db);
+print("Build a list of Action Plan Work Items which do not have a 'Current Phase'");
+
+Iterator i = planWorkList.iterator();
+while (i.hasNext()) {
+  ActionPlanWork planWork = (ActionPlanWork) i.next();
+  ActionPhaseWork currentPhase = planWork.getCurrentPhase();
+  if (currentPhase != null) {
+    print("Action Plan Word ID: " + planWork.getId());
+    planWork.setCurrentPhaseId(currentPhase.getActionPhaseId());
+    planWork.update(db);
+    print("Update Curret Phase");
+    print("-----------------------------------");
+  }
+}
+
+print("Current Phase Updation Complete...");

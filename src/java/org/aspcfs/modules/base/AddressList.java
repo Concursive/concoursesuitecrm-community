@@ -21,16 +21,18 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.HashMap;
 
 /**
- * Contains a list of addresses... currently used to build the list from the
- * database with any of the parameters to limit the results. This is a base
- * class that should not be called directly -- use ContactAddressList or
- * OrganizationAddressList to define the database query.
+ *  Contains a list of addresses... currently used to build the list from the
+ *  database with any of the parameters to limit the results. This is a base
+ *  class that should not be called directly -- use ContactAddressList or
+ *  OrganizationAddressList to define the database query.
  *
- * @author mrajkowski
- * @version $Id$
- * @created August 31, 2001
+ * @author     mrajkowski
+ * @created    August 31, 2001
+ * @version    $Id: AddressList.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05
+ *      Aug 2005) mrajkowski $
  */
 public class AddressList extends Vector {
 
@@ -42,10 +44,10 @@ public class AddressList extends Vector {
 
 
   /**
-   * Sets the PagedListInfo attribute of the AddressList object
+   *  Sets the PagedListInfo attribute of the AddressList object
    *
-   * @param tmp The new PagedListInfo value
-   * @since 1.1
+   * @param  tmp  The new PagedListInfo value
+   * @since       1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -53,10 +55,10 @@ public class AddressList extends Vector {
 
 
   /**
-   * Sets the OrgId attribute of the AddressList object
+   *  Sets the OrgId attribute of the AddressList object
    *
-   * @param tmp The new OrgId value
-   * @since 1.1
+   * @param  tmp  The new OrgId value
+   * @since       1.1
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -64,9 +66,9 @@ public class AddressList extends Vector {
 
 
   /**
-   * Sets the contactId attribute of the AddressList object
+   *  Sets the contactId attribute of the AddressList object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -74,9 +76,9 @@ public class AddressList extends Vector {
 
 
   /**
-   * Sets the orderId attribute of the AddressList object
+   *  Sets the orderId attribute of the AddressList object
    *
-   * @param tmp The new orderId value
+   * @param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -84,10 +86,10 @@ public class AddressList extends Vector {
 
 
   /**
-   * Sets the Type attribute of the AddressList object
+   *  Sets the Type attribute of the AddressList object
    *
-   * @param tmp The new Type value
-   * @since 1.1
+   * @param  tmp  The new Type value
+   * @since       1.1
    */
   public void setType(int tmp) {
     this.type = tmp;
@@ -95,10 +97,10 @@ public class AddressList extends Vector {
 
 
   /**
-   * Gets the address attribute of the AddressList object
+   *  Gets the address attribute of the AddressList object
    *
-   * @param thisType Description of the Parameter
-   * @return The address value
+   * @param  thisType  Description of the Parameter
+   * @return           The address value
    */
   public Address getAddress(String thisType) {
     Iterator i = this.iterator();
@@ -113,10 +115,10 @@ public class AddressList extends Vector {
 
 
   /**
-   * Returns the address that is marked as primary or
-   * returns the only (or last) address in the list.
+   *  Returns the address that is marked as primary or returns the only (or
+   *  last) address in the list.
    *
-   * @return The primaryAddress value
+   * @return    The primaryAddress value
    */
   public Address getPrimaryAddress() {
     Iterator i = this.iterator();
@@ -132,11 +134,11 @@ public class AddressList extends Vector {
 
 
   /**
-   * Builds a base SQL where statement for filtering records to be used by
-   * sqlSelect and sqlCount
+   *  Builds a base SQL where statement for filtering records to be used by
+   *  sqlSelect and sqlCount
    *
-   * @param sqlFilter Description of Parameter
-   * @since 1.1
+   * @param  sqlFilter  Description of Parameter
+   * @since             1.1
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -162,13 +164,13 @@ public class AddressList extends Vector {
 
 
   /**
-   * Sets the parameters for the preparedStatement - these items must
-   * correspond with the createFilter statement
+   *  Sets the parameters for the preparedStatement - these items must
+   *  correspond with the createFilter statement
    *
-   * @param pst Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  pst            Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -191,5 +193,34 @@ public class AddressList extends Vector {
     return i;
   }
 
+
+  /**
+   *  Gets the countries attribute of the AddressList object
+   *
+   * @return    The countries value
+   */
+  public String getCountries() {
+    StringBuffer result = new StringBuffer();
+    Iterator iter = this.iterator();
+    while (iter.hasNext()) {
+      Address thisAddress = (Address) iter.next();
+      if (thisAddress.getCountry() != null) {
+        result.append(thisAddress.getCountry() + (iter.hasNext()?",":""));
+      }
+    }
+    return result.toString();
+  }
+  
+  public HashMap getSelectedStatesHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = this.iterator();
+    while (iter.hasNext()) {
+      Address thisAddress = (Address) iter.next();
+      if (thisAddress.getCountry() != null) {
+        map.put(thisAddress.getCountry(), thisAddress.getState());
+      }
+    }
+    return map;
+  }
 }
 

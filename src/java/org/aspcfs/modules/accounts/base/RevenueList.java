@@ -79,7 +79,7 @@ public class RevenueList extends Vector {
         "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
-        "LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
+        "LEFT JOIN lookup_revenue_types rt ON (r.\"type\" = rt.code) " +
         "LEFT JOIN organization o ON (r.org_id = o.org_id) " +
         "WHERE r.id > -1 ");
     createFilter(sqlFilter);
@@ -113,7 +113,7 @@ public class RevenueList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("r.year,r.month", "desc");
+      pagedListInfo.setDefaultSort("r.\"year\",r.\"month\"", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY r.\"year\" desc,r.\"month\" desc ");
@@ -135,7 +135,7 @@ public class RevenueList extends Vector {
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
         "LEFT JOIN organization o ON (r.org_id = o.org_id) " +
-        "LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
+        "LEFT JOIN lookup_revenue_types rt ON (r.\"type\" = rt.code) " +
         "WHERE r.id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -425,13 +425,13 @@ public class RevenueList extends Vector {
       sqlFilter.append("AND r.org_id = ? ");
     }
     if (type > 0) {
-      sqlFilter.append("AND r.type = ? ");
+      sqlFilter.append("AND r.\"type\" = ? ");
     }
     if (owner > -1) {
       sqlFilter.append("AND r.owner = ? ");
     }
     if (year > -1) {
-      sqlFilter.append("AND r.year = ? ");
+      sqlFilter.append("AND r.\"year\" = ? ");
     }
     if (ownerIdRange != null) {
       sqlFilter.append("AND r.owner in (" + this.ownerIdRange + ") ");

@@ -15,15 +15,15 @@
  */
 package org.aspcfs.modules.contacts.base;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Represents a ContactType -- every contact has a type. <br>
- * 0 is an Employee <br>
- * 1 is Not Specified
+ * Represents a ContactType
  *
  * @author mrajkowski
  * @version $Id: ContactType.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski Exp
@@ -64,10 +64,7 @@ public class ContactType {
     description = rs.getString("description");
     enabled = rs.getBoolean("enabled");
     category = rs.getInt("category");
-    userId = rs.getInt("user_id");
-    if (rs.wasNull()) {
-      userId = -1;
-    }
+    userId = DatabaseUtils.getInt(rs, "user_id");
   }
 
 
@@ -243,8 +240,8 @@ public class ContactType {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE lookup_contact_types " +
-          "SET enabled = ? " +
-          "WHERE code = ? ");
+              "SET enabled = ? " +
+              "WHERE code = ? ");
       int i = 0;
       pst.setBoolean(++i, tmp);
       pst.setInt(++i, this.getId());
@@ -268,31 +265,26 @@ public class ContactType {
    * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    String sql = null;
-
-    try {
-      db.setAutoCommit(false);
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(
-          "INSERT INTO lookup_contact_types " +
-          "(description, \"level\", enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
-          "VALUES (?, ?, ?, ?" + (userId > -1 ? ", ?" : "") + ") ");
-      pst.setString(++i, this.getDescription());
-      pst.setInt(++i, this.getLevel());
-      pst.setBoolean(++i, true);
-      pst.setInt(++i, category);
-      if (userId > -1) {
-        pst.setInt(++i, userId);
-      }
-      pst.execute();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
+    int i = 0;
+    id = DatabaseUtils.getNextSeq(db, "lookup_contact_types_code_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO lookup_contact_types " +
+            "(" + (id > -1 ? "code, " : "") +
+            "description, \"level\", enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?" + (userId > -1 ? ", ?" : "") + ") ");
+    if (id > -1) {
+      pst.setInt(++i, id);
     }
+    pst.setString(++i, this.getDescription());
+    pst.setInt(++i, this.getLevel());
+    pst.setBoolean(++i, true);
+    pst.setInt(++i, category);
+    if (userId > -1) {
+      pst.setInt(++i, userId);
+    }
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "lookup_contact_types_code_seq", id);
     return true;
   }
 
@@ -306,24 +298,19 @@ public class ContactType {
    */
   public int setNewOrder(Connection db) throws SQLException {
     int resultCount = 0;
-
     if (this.getId() == 0) {
       throw new SQLException("ContactType Id not specified.");
     }
-
     PreparedStatement pst = null;
     int i = 0;
-
     pst = db.prepareStatement(
         "UPDATE lookup_contact_types " +
-        "SET \"level\" = ? " +
-        "WHERE code = ? ");
+            "SET \"level\" = ? " +
+            "WHERE code = ? ");
     pst.setInt(++i, this.getLevel());
     pst.setInt(++i, this.getId());
-
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 

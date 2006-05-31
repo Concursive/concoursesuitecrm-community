@@ -180,7 +180,7 @@ CREATE TABLE product_catalog_pricing (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   start_date TIMESTAMP DEFAULT NULL,
   expiration_date TIMESTAMP DEFAULT NULL,
-  enabled boolean DEFAULT true,
+  enabled boolean DEFAULT false,
   cost_currency INTEGER REFERENCES lookup_currency(code),
   cost_amount FLOAT DEFAULT 0 NOT NULL
 );

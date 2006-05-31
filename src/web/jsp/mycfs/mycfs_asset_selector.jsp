@@ -14,12 +14,13 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.utils.web.*,java.util.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat, org.aspcfs.modules.base.Filter" %>
 <jsp:useBean id="assetList" class="org.aspcfs.modules.assets.base.AssetList" scope="request"/>
 <jsp:useBean id="finalAssets" class="org.aspcfs.modules.assets.base.AssetList" scope="request"/>
+<jsp:useBean id="assetManufacturerList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AssetListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="selectedAssets" class="java.util.ArrayList" scope="session"/>
@@ -154,7 +155,9 @@
         <%= toHtml(thisAsset.getServiceContractNumber()) %>
       </td>
       <td width="15%" valign="center" nowrap>
-        <%=toHtml(thisAsset.getManufacturer())%>
+        <dhv:evaluate if="<%= thisAsset.getManufacturerCode() > 0 %>">
+          <%=toHtml(assetManufacturerList.getSelectedValue(thisAsset.getManufacturerCode())) %>    
+        </dhv:evaluate>&nbsp;      
       </td>
       <td width="15%">
         <%= toHtml(thisAsset.getModelVersion()) %>
@@ -233,4 +236,3 @@
 <%	
   }
 %>
-

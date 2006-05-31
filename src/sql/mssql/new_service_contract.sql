@@ -70,6 +70,22 @@ CREATE TABLE lookup_hours_reason(
  enabled BIT DEFAULT 1
 );
 
+CREATE TABLE lookup_asset_manufacturer(
+ code INT IDENTITY PRIMARY KEY,
+ description VARCHAR(300),
+ default_item BIT DEFAULT 0,
+ level INTEGER,
+ enabled BIT DEFAULT 1
+);
+
+CREATE TABLE lookup_asset_vendor(
+ code INT IDENTITY PRIMARY KEY,
+ description VARCHAR(300),
+ default_item BIT DEFAULT 0,
+ level INTEGER,
+ enabled BIT DEFAULT 1
+);
+
 CREATE TABLE service_contract (
   contract_id INT IDENTITY PRIMARY KEY,
   contract_number VARCHAR(30),
@@ -126,7 +142,8 @@ CREATE TABLE asset_category (
   full_description text NOT NULL DEFAULT '',
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE TABLE asset_category_draft (
@@ -138,7 +155,8 @@ CREATE TABLE asset_category_draft (
   full_description text NOT NULL DEFAULT '',
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE TABLE asset (
@@ -152,8 +170,6 @@ CREATE TABLE asset (
   level1 INT REFERENCES asset_category(id),
   level2 INT REFERENCES asset_category(id),
   level3 INT REFERENCES asset_category(id),
-  vendor VARCHAR(30),
-  manufacturer VARCHAR(30),
   serial_number VARCHAR(30),
   model_version VARCHAR(30),
   description TEXT,
@@ -178,5 +194,25 @@ CREATE TABLE asset (
   date_listed_timezone VARCHAR(255),
   expiration_date_timezone VARCHAR(255),
   purchase_date_timezone VARCHAR(255),
-  trashed_date DATETIME
+  trashed_date DATETIME,
+  parent_id INTEGER REFERENCES asset(asset_id),
+  vendor_code INT REFERENCES lookup_asset_vendor(code),
+  manufacturer_code INT REFERENCES lookup_asset_manufacturer(code)
 );
+
+CREATE TABLE lookup_asset_materials(
+ code INT IDENTITY PRIMARY KEY,
+ description VARCHAR(300),
+ default_item BIT DEFAULT 0,
+ level INTEGER,
+ enabled BIT DEFAULT 1
+);
+
+CREATE TABLE asset_materials_map (
+  map_id INT IDENTITY PRIMARY KEY,
+  asset_id INTEGER NOT NULL REFERENCES asset(asset_id),
+  code INTEGER NOT NULL REFERENCES lookup_asset_materials(code),
+  quantity FLOAT,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+

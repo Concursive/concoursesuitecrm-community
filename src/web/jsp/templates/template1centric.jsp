@@ -26,7 +26,7 @@
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
   response.setHeader("Expires", "-1");
 %>
-<!-- (C) 2000-2005 Dark Horse Ventures, LLC -->
+<!-- (C) 2000-2006 Dark Horse Ventures, LLC -->
 <html>
 <head>
 <title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label><%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
@@ -74,7 +74,7 @@
       <br />
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="center">&#169; Copyright 2000-2005 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved</dhv:label> &#149; <dhv:label name="templates.variousTrademarksHeldByTheirRespectiveOwners">Various trademarks held by their respective owners.</dhv:label></td>
+          <td align="center">&#169; Copyright 2000-2006 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved</dhv:label> &#149; <dhv:label name="templates.variousTrademarksHeldByTheirRespectiveOwners">Various trademarks held by their respective owners.</dhv:label></td>
         </tr>
       </table>
       <br />

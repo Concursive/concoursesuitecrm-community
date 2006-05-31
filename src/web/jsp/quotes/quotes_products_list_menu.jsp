@@ -2,12 +2,12 @@
 <script language="javascript">
   var thisItemId = -1;
   var thisQuoteId = -1;
-  var thisOtherId = -1;
+  var thisOrgId = -1;
   var thisLocation = '';
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, quoteId, itemId, otherId, location) {
-    thisOtherId = otherId;
+  function displayMenu(loc, id, quoteId, itemId, location, otherId) {
+    thisOrgId = otherId;
     thisItemId = itemId;
     thisQuoteId = quoteId;
     thisLocation = location;
@@ -37,10 +37,12 @@
       if(thisLocation == 'quotes') {
         scrollReload('Quotes.do?command=RemoveProduct&quoteId=' + thisQuoteId+ '&productId='+thisItemId);
       } else if (thisLocation == 'accountsQuotes') {
-        scrollReload('AccountQuotes.do?command=RemoveProduct&quoteId=' + thisQuoteId+ '&productId='+thisItemId+'&orgId='+thisOtherId);
+        scrollReload('AccountQuotes.do?command=RemoveProduct&quoteId=' + thisQuoteId+ '&productId='+thisItemId+'&orgId='+thisOrgId);
       } else if (thisLocation == 'opportunitiesQuotes') {
-        scrollReload('LeadsQuotes.do?command=RemoveProduct&quoteId=' + thisQuoteId+ '&productId='+thisItemId+'&orgId='+thisOtherId+'<%= addLinkParams(request, "viewSource") %>');
-      } else {
+        scrollReload('LeadsQuotes.do?command=RemoveProduct&quoteId=' + thisQuoteId+ '&productId='+thisItemId+'&orgId='+thisOrgId+'<%= addLinkParams(request, "viewSource") %>');
+      } else if (thisLocation == 'accountsContactsOppsQuotes') {
+        scrollReload('AccountContactsOppQuotes.do?command=RemoveProduct&quoteId=' + thisQuoteId+ '&productId='+thisItemId+'&orgId='+thisOrgId);
+      }else {
         alert('Programming Error: the location/module has to be set correctly');
       }
     }

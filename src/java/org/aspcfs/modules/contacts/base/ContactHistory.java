@@ -630,7 +630,7 @@ public class ContactHistory extends GenericBean {
         "INSERT INTO history ( " +
         (id > -1 ? "history_id, " : "") +
         "contact_id, org_id, link_object_id, link_item_id, \"level\", " +
-        "status, type, description, enabled, ");
+        "status, \"type\", description, enabled, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -692,7 +692,7 @@ public class ContactHistory extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE history " +
-        "SET description = ?, enabled = ?, \"level\" = ?, type = ?, ");
+        "SET description = ?, enabled = ?, \"level\" = ?, \"type\" = ?, ");
     if (reset) {
       sql.append(" contact_id = ?, ");
     }

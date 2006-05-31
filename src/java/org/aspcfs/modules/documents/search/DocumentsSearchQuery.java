@@ -20,6 +20,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.documents.base.DocumentStorePermissionList;
 import org.aspcfs.modules.documents.beans.DocumentsSearchBean;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -105,7 +106,7 @@ public class DocumentsSearchQuery {
     int tmpDepartmentId = tmpContact.getDepartment();
     pst = db.prepareStatement(
         "SELECT document_store_id, userlevel " +
-        "FROM document_store_department_member " +
+        "FROM " + DatabaseUtils.getTableName(db, "document_store_department_member") + " " +
         "WHERE item_id = ? " +
         (specificDocumentStoreId > -1 ? "AND document_store_id = ? " : ""));
     pst.setInt(1, tmpDepartmentId);

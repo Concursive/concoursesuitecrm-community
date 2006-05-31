@@ -10,11 +10,17 @@
         <action type="insert" process="dhv.ticket.insert" enabled="true"/>
       </actions>
     </hook>
+    <hook class="org.aspcfs.modules.actionplans.base.ActionItemWork" module="8">
+      <actions>
+        <action type="update" process="dhv.actionitemwork.update" enabled="true"/>
+      </actions>
+    </hook>
   </hooks>
 
   <schedules>
     <schedule>
       <events>
+        <event process="dhv.update.account.employees" second="0" minute="0" hour="*/2" dayOfMonth="*" month="*" dayOfWeek="*" year="*" extraInfo="" businessDays="true" enabled="true"/>
         <event process="dhv.report.ticketList.overdue" second="0" minute="*/10" hour="8-18" dayOfMonth="*" month="*" dayOfWeek="*" year="*" extraInfo="" businessDays="true" enabled="false"/>
       </events>
     </schedule>
@@ -27,56 +33,224 @@
       <components>
         <component id="2" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed"/>
         <component id="3" parent="2" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned"/>
-        <component id="4" parent="2" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+        <component id="4" parent="2" if="true" class="org.aspcfs.modules.components.SendEmailNotification">
           <parameters>
             <!-- Component parameters override the global process parameters -->
             <parameter name="notification.module" value="Tickets"/>
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
-            <parameter name="notification.subject">Centric CRM Ticket Closed: ${this.paddedId}</parameter>
-<parameter name="notification.body"><![CDATA[The following ticket in Centric CRM has been closed:
-
---- Ticket Details ---
-
-Ticket # ${this.paddedId}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Comment: ${this.comment}
-
-Closed by: ${ticketModifiedByContact.nameFirstLast}
-
-Solution: ${this.solution}
+            <parameter name="notification.userGroupToNotify" value="${previous.userGroupId}"/>
+            <parameter name="notification.subject">Centric CRM Ticket Closed: ${this.paddedTicketId}</parameter>
+<parameter name="notification.body"><![CDATA[
+<strong>The following ticket in Centric CRM has been closed:</strong>
+<br />
+--- Ticket Details ---<br />
+<br />
+<strong>Ticket #</strong> ${this.paddedTicketId}<br />
+Priority: ${ticketPriorityLookup.description}<br />
+Severity: ${ticketSeverityLookup.description}<br />
+Issue: ${this.problem}<br />
+<br />
+Comment: ${this.comment}<br />
+<br />
+Closed by: ${ticketModifiedByContact.nameFirstLast}<br />
+<br />
+Solution: ${this.solution}<br />
 ]]></parameter>
           </parameters>
         </component>
-        <component id="5" parent="3" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+        <component id="5" parent="3" if="true" class="org.aspcfs.modules.components.SendEmailNotification">
           <parameters>
             <parameter name="notification.module" value="Tickets"/>
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedId}</parameter>
-            <parameter name="notification.body"><![CDATA[The following ticket in Centric CRM has been assigned to you:
-
---- Ticket Details ---
-
-Ticket # ${this.paddedId}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Assigned By: ${ticketModifiedByContact.nameFirstLast}
-Comment: ${this.comment}
+            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.body"><![CDATA[
+<strong>The following ticket in Centric CRM has been assigned to you:</strong>
+<br /><br />
+--- Ticket Details ---<br />
+<br />
+<strong>Ticket #</strong> ${this.paddedTicketId}<br />
+Priority: ${ticketPriorityLookup.description}<br />
+Severity: ${ticketSeverityLookup.description}<br />
+Issue: ${this.problem}<br />
+<br />
+Assigned By: ${ticketModifiedByContact.nameFirstLast}<br />
+Comment: ${this.comment}<br />
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="7" parent="5" if="true" class="org.aspcfs.modules.components.SendEmailNotification">
+          <parameters>
+            <parameter name="notification.module" value="Tickets"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userGroupToNotify" value="${this.userGroupId}"/>
+            <parameter name="notification.skipUsers" value="${this.assignedTo}"/>
+            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.body"><![CDATA[
+<strong>The following ticket in Centric CRM has been assigned to: ${ticketAssignedToContact.nameFirstLast}</strong>
+<br />
+--- Ticket Details ---<br />
+<br />
+<strong>Ticket #</strong> ${this.paddedTicketId}<br />
+Priority: ${ticketPriorityLookup.description}<br />
+Severity: ${ticketSeverityLookup.description}<br />
+Issue: ${this.problem}<br />
+<br />
+Assigned By: ${ticketModifiedByContact.nameFirstLast}<br />
+Comment: ${this.comment}<br />
 ]]></parameter>
           </parameters>
         </component>
         <component id="6" parent="2" if="true" class="org.aspcfs.modules.troubletickets.components.SendTicketSurvey" enabled="false"/>
       </components>
     </process>
-    
+
+    <!-- Action Step Alert Notifications -->
+    <process name="dhv.actionitemwork.update" description="Action Step Alert Notifications" startId="1" type="OBJECT_EVENT" module="8">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" class="org.aspcfs.modules.actionplans.components.LoadStepDetails">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="linkedTicketObjectName" value="Ticket"/>
+            <parameter name="linkedAccountObjectName" value="Account"/>
+        </parameters>
+        </component>
+        <component id="2" parent="1" if="true" class="org.aspcfs.modules.actionplans.components.QueryStepJustCompleted"/>
+        <component id="3" parent="2" if="true" class="org.aspcfs.modules.components.SendEmailNotification">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="notification.module" value="Action Steps"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.from" value="noreply@127.0.0.1"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${this.ownerId}"/>
+            <parameter name="notification.roleTo" value="${step.roleId}"/>
+            <parameter name="notification.departments.to" value="${step.departmentId}"/>
+            <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
+            <parameter name="notification.subject">Centric CRM: Action Step Completion Alert</parameter>
+<parameter name="notification.body"><![CDATA[
+<strong>The following Action Step has been completed</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">${linkedObject.name}:</td>
+    <td>${linkedObject.description}</td>
+  </tr>
+  <tr>
+    <td align="right">Step:</td>
+    <td>${stepDescription}</td>
+  </tr>
+  <tr>
+    <td align="right">Owner:</td>
+    <td>${stepAssignedToContact.nameFull}</td>
+  </tr>
+</table>
+<br />
+<br />
+Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to view the Action Plan
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="4" parent="2" if="false" class="org.aspcfs.modules.actionplans.components.QueryStepJustStarted"/>
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.actionplans.components.QueryStepOwnerChanged"/>
+        <component id="6" parent="5" if="true" class="org.aspcfs.modules.components.SendEmailNotification">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="notification.module" value="Ticket Action Steps"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.from" value="noreply@127.0.0.1"/>
+            <parameter name="notification.userToNotify" value="${this.ownerId}"/>
+            <parameter name="notification.roleTo" value="${step.roleId}"/>
+            <parameter name="notification.departments.to" value="${step.departmentId}"/>
+            <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
+            <parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+<parameter name="notification.body"><![CDATA[
+<strong>The following Action Step requires your attention</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">${linkedObject.name}:</td>
+    <td>${linkedObject.description}</td>
+  </tr>
+  <tr>
+    <td align="right">Step:</td>
+    <td>${stepDescription}</td>
+  </tr>
+  <tr>
+    <td align="right">Owner:</td>
+    <td>${stepAssignedToContact.nameFull}</td>
+  </tr>
+</table>
+<br />
+<br />
+Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to view the Action Plan
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="7" parent="5" if="false" class="org.aspcfs.modules.components.SendEmailNotification">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="notification.module" value="Ticket Action Steps"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.from" value="noreply@127.0.0.1"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.skipUsers" value="${this.ownerId}"/>
+            <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId}"/>
+            <parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+<parameter name="notification.body"><![CDATA[
+<strong>The following Action Step requires your attention</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">${linkedObject.name}:</td>
+    <td>${linkedObject.description}</td>
+  </tr>
+  <tr>
+    <td align="right">Step:</td>
+    <td>${stepDescription}</td>
+  </tr>
+  <tr>
+    <td align="right">Owner:</td>
+    <td>${stepAssignedToContact.nameFull}</td>
+  </tr>
+</table>
+<br />
+<br />
+Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to view the Action Plan
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+]]></parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+
+	<!-- Process to add up employees for all hierarchial organizations -->
+    <process name="dhv.update.account.employees" description="Update Number of Employees" startId="1" type="SCHEDULED_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.accounts.components.UpdateAccountEmployees" enabled="true"/>
+      </components>
+    </process>
+
     <!-- Example of a Scheduled Event -->
     <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="8">
       <parameters>
@@ -103,22 +277,24 @@ Comment: ${this.comment}
             <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
             -->
             <parameter name="notification.subject">Centric CRM Unassigned Ticket Report (${objects.size})</parameter>
-            <parameter name="notification.body"><![CDATA[** This is an automated message **
-
-The following tickets in Centric CRM are unassigned and need attention:
+            <parameter name="notification.body"><![CDATA[
+** This is an automated message **
+<br />
+The following tickets in Centric CRM are unassigned and need attention:<br />
 
 ]]></parameter>
-            <parameter name="report.ticket.content"><![CDATA[----- Ticket Details -----
-Ticket # ${this.paddedId}
-Created: ${this.enteredString}
-Organization: ${ticketOrganization.name}
-Priority: ${ticketPriorityLookup.description}
-Severity: ${ticketSeverityLookup.description}
-Issue: ${this.problem}
-
-Last Modified By: ${ticketModifiedByContact.nameFirstLast}
-Comment: ${this.comment}
-
+            <parameter name="report.ticket.content"><![CDATA[
+----- Ticket Details -----<br />
+Ticket # ${this.paddedTicketId}<br />
+Created: ${this.enteredString}<br />
+Organization: ${ticketOrganization.name}<br />
+Priority: ${ticketPriorityLookup.description}<br />
+Severity: ${ticketSeverityLookup.description}<br />
+Issue: ${this.problem}<br />
+<br />
+Last Modified By: ${ticketModifiedByContact.nameFirstLast}<br />
+Comment: ${this.comment}<br />
+<br />
 
 ]]></parameter>
           </parameters>

@@ -113,7 +113,7 @@
               <td nowrap>
                 <input type="hidden" name="objectIdMapsTo" id="objectIdMapsTo" value="<%=  (secondOrganization.getOrgId() != -1 && relationship.getObjectIdMapsFrom()==secondOrganization.getOrgId()?relationship.getObjectIdMapsFrom():relationship.getObjectIdMapsTo()) %>">
                 &nbsp;<font color="red">-</font>
-                [<a href="javascript:popAccountsListSingle('objectIdMapsTo','changeaccount', 'showMyCompany=false&filters=all|my');"><dhv:label name="accounts.accounts_relationships_add.SelectAccount">Select Account</dhv:label></a>]
+                [<a href="javascript:popAccountsListSingle('objectIdMapsTo','changeaccount', 'showMyCompany=false&siteId=<%=OrgDetails.getSiteId()%>&thisSiteIdOnly=true&filters=all|my');"><dhv:label name="accounts.accounts_relationships_add.SelectAccount">Select Account</dhv:label></a>]
               </td>
               <td nowrap>
                 <%= showAttribute(request, "objectIdMapsToError") %>

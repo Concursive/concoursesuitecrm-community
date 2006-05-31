@@ -85,7 +85,7 @@
 
 </script>
 <body onLoad="javascript:document.addQuote.expirationDate.focus();">
-<form method="post" name="addQuote" action="Quotes.do?command=Clone&auto-populate=true&quoteId=<%= quote.getId() %>&versionId=<%= version %>&return=clone" onSubmit="return checkForm(this);">
+<form method="post" name="addQuote" action="Quotes.do?command=Clone&auto-populate=true&quoteId=<%= quote.getId() %>&versionId=<%= version %>" onSubmit="return checkForm(this);">
 <%= showError(request, "actionError", false) %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>

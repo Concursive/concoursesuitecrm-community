@@ -206,7 +206,7 @@ public class FileItemVersionList extends ArrayList {
       pagedListInfo.setDefaultSort("version", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY version DESC ");
+      sqlOrder.append("ORDER BY \"version\" DESC ");
     }
 
     //Need to build a base SQL statement for returning records

@@ -77,11 +77,22 @@
 		</tr>
 	</table>
 	&nbsp;<br>
+  <dhv:evaluate if="<%= "true".equals(request.getParameter("addNewContact")) %>">
+    <a href="javascript:window.location.href='Contacts.do?command=Prepare&popup=true&hiddensource=<%= request.getParameter("hiddensource") %>&actionStepWork=<%= request.getParameter("actionStepWork") %>&orgId=<%= request.getParameter("orgId") %>';">Create New Contact</a>
+  </dhv:evaluate>
+  &nbsp;<br>
 	<center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
   <input type="hidden" name="letter">
-  
+  <input type="hidden" name="leads" value="<%= (String) request.getAttribute("leads") %>"/>
+  <input type="hidden" name="type" value="<%= (request.getAttribute("type") != null? (String) request.getAttribute("type"):"") %>"/>
+  <input type="hidden" name="hiddensource" value="<%= (request.getAttribute("hiddensource") != null? (String) request.getAttribute("hiddensource"):"") %>"/>
+  <input type="hidden" name="ticketId" value="<%=request.getAttribute("ticketId")%>"/>
+  <input type="hidden" name="departmentId" value="<%= request.getAttribute("departmentId") %>"/>
+  <input type="hidden" name="actionItemId" value="<%= (request.getAttribute("actionItemId") != null? (String) request.getAttribute("actionItemId"):"") %>"/>
+  <input type="hidden" name="recipient" value="<%= (request.getAttribute("recipient") != null? (String) request.getAttribute("recipient"):"") %>"/>
+  <input type="hidden" name="allowDuplicateRecipient" value="<%= (request.getAttribute("allowDuplicateRecipient") != null? (String) request.getAttribute("allowDuplicateRecipient"):"") %>"/>
   <%@ include file="contactlist_include.jsp" %>
-  
+
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
@@ -93,10 +104,17 @@
 <%}%>
   &nbsp;<br>
 </form>
+</body>
 <%} else {%>
 <%-- The final submit --%>
-  <% if ("true".equals((String) request.getParameter("campaign"))) { %>
+  <% if ("true".equals((String) request.getParameter("campaign"))) {%>
   <body onLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%=User.getBrowserId()%>');window.close()">
+  <%} else if ("true".equals((String) request.getAttribute("recipient"))) {%>
+  <body onLoad="javascript:setParentListRecipients(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getAttribute("hiddensource") %>','<%= request.getParameter("allowDuplicateRecipient") %>','<%= (request.getAttribute("actionItemId") != null? (String)request.getAttribute("actionItemId"):"-1") %>');window.close()">
+  <%} else if ("true".equals((String) request.getParameter("actionplan"))) {%>
+  <body onLoad="javascript:setParentListActionPlan(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("hiddensource") %>','<%= request.getParameter("actionPlanWork") %>','<%= request.getParameter("actionStepWork") %>','<%=User.getBrowserId()%>');window.close()">
+  <%} else if ("true".equals((String) request.getAttribute("leads"))) {%>
+  <body onLoad="javascript:setParentListLead(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("source") %>','<%= request.getParameter("from") %>','<%= request.getParameter("last") %>','<%=User.getBrowserId()%>');window.close();">
   <%} else {%>
   <body onLoad="javascript:setParentList(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
   <%}%>
@@ -115,7 +133,7 @@
     }
 %>
   <script>
-    recipientEmails[<%= count %>] = '<%= toJavaScript(email) %>';
+    recipientEmails[<%= count %>] = "<%= toJavaScript(email) %>";
     recipientIds[<%= count %>] = '<%=id%>';
   </script>
 <%	
@@ -130,5 +148,4 @@
     }
   }
 %>
-
 

@@ -180,12 +180,12 @@ public class QuoteRemark extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT " +
-        "qr.*, " +
-        "lqr.description AS remark_name " +
-        "FROM quote_remark AS qr " +
-        "LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
-        "LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
-        "WHERE qr.map_id = ? ");
+            "qr.*, " +
+            "lqr.description AS remark_name " +
+            "FROM quote_remark qr " +
+            "LEFT JOIN quote_entry qe ON (qr.quote_id = qe.quote_id) " +
+            "LEFT JOIN lookup_quote_remarks lqr ON (qr.remark_id = lqr.code) " +
+            "WHERE qr.map_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, id);
@@ -208,13 +208,13 @@ public class QuoteRemark extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT " +
-        "qr.*, " +
-        "lqr.description AS remark_name " +
-        "FROM quote_remark AS qr " +
-        "LEFT JOIN quote_entry AS qe ON (qr.quote_id = qe.quote_id) " +
-        "LEFT JOIN lookup_quote_remarks AS lqr ON (qr.remark_id = lqr.code) " +
-        "WHERE qr.remark_id = ? " +
-        "AND qr.quote_id = ? ");
+            "qr.*, " +
+            "lqr.description AS remark_name " +
+            "FROM quote_remark qr " +
+            "LEFT JOIN quote_entry qe ON (qr.quote_id = qe.quote_id) " +
+            "LEFT JOIN lookup_quote_remarks lqr ON (qr.remark_id = lqr.code) " +
+            "WHERE qr.remark_id = ? " +
+            "AND qr.quote_id = ? ");
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, cId);
@@ -263,8 +263,8 @@ public class QuoteRemark extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "quote_remark_map_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO quote_remark " +
-        "(" + (id > -1 ? "map_id, " : "") + "quote_id, remark_id ) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
+            "(" + (id > -1 ? "map_id, " : "") + "quote_id, remark_id ) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
     if (id > -1) {
       pst.setInt(++i, id);
     }
@@ -329,8 +329,8 @@ public class QuoteRemark extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO lookup_quote_remarks " +
-        "(" + (tempId > -1 ? "code, " : "") + "description) " +
-        "VALUES (" + (tempId > -1 ? "?," : "") + "?)");
+            "(" + (tempId > -1 ? "code, " : "") + "description) " +
+            "VALUES (" + (tempId > -1 ? "?," : "") + "?)");
     if (tempId > -1) {
       pst.setInt(++i, tempId);
     }

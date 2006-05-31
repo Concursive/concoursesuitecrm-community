@@ -81,6 +81,10 @@
   }
 
 </script>
+<%
+  boolean allowMultipleQuote = allowMultipleQuote(pageContext);
+  boolean allowMultipleVersion = allowMultipleVersion(pageContext);
+%>
 <form method="post" name="addProduct" action="AccountQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %>">
 <%   int showAction = quote.getClosed() == null?1:0; %>
 <%-- Trails --%>
@@ -106,15 +110,25 @@
     <dhv:evaluate if="<%= !quote.isTrashed() %>" >
       <dhv:evaluate if="<%= (quote.getClosed() == null) %>" >
         <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.submit">Submit</dhv:label>" onClick="javascript:popURL('AccountQuotes.do?command=Submit&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
-        <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= quote.getOrgId() %>';"/></dhv:permission>
+        <dhv:evaluate if="<%=(!quote.getLock())%>" >
+         <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= quote.getOrgId() %>';"/></dhv:permission>
+        </dhv:evaluate>
+     </dhv:evaluate>
+    <dhv:evaluate if="<%=(!quote.getLock())%>" >
+      <dhv:evaluate if="<%= !(!allowMultipleQuote && (quote.getHeaderId() != -1))%>" >    
+        <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
       </dhv:evaluate>
-      <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
-      <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
-      <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
+      <dhv:evaluate if="<%= !(!allowMultipleVersion && (quote.getHeaderId() != -1))%>" >    
+        <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
+      </dhv:evaluate>
+    </dhv:evaluate>
+    <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
+    <dhv:evaluate if="<%=(!quote.getLock())%>" >
       <dhv:permission name="accounts-quotes-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&popup=true','AccountQuotes.do?command=View', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
       <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:closeQuote();"/></dhv:permission>
       <dhv:permission name="accounts-quotes-edit" none="true"><% showAction = 0; %></dhv:permission>
-      <br /> <br />
+    </dhv:evaluate>
+    <br /> <br />
     </dhv:evaluate>
 <%
 // set the Permissions
@@ -130,22 +144,35 @@ String orderLink = "AccountOrders.do?command=Details&id="+ order.getId();
 String opportunityLink = "Opportunities.do?command=Details&headerId="+ quote.getHeaderId() +"&orgId="+ OrgDetails.getOrgId() +"&reset=true";
 String contactLink = "Contacts.do?command=Details&id="+ quote.getContactId();
 // set the other items
-String secondId = ""+OrgDetails.getOrgId();
+String orgId = ""+OrgDetails.getOrgId();
+String contactId = ""+quote.getContactId();
+String headerId = ""+quote.getHeaderId();
 String location = "accountsQuotes";
 %>
     <%@ include file="../quotes/quotes_details_include.jsp" %>
     <dhv:evaluate if="<%= !quote.isTrashed() %>" >
       <dhv:evaluate if="<%= !quote.isClosed() %>" >
-        <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.submit">Submit</dhv:label>" onClick="javascript:popURL('AccountQuotes.do?command=Submit&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
+    <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.submit">Submit</dhv:label>" onClick="javascript:popURL('AccountQuotes.do?command=Submit&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
+      <dhv:evaluate if="<%=(!quote.getLock())%>" >
         <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= quote.getOrgId() %>';"/></dhv:permission>
       </dhv:evaluate>
-      <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
-      <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
-      <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
+      </dhv:evaluate>
+    <dhv:evaluate if="<%=(!quote.getLock())%>" >
+      <dhv:evaluate if="<%= !(!allowMultipleQuote && (quote.getHeaderId() != -1))%>" >    
+        <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= !(!allowMultipleVersion && (quote.getHeaderId() != -1))%>" >    
+        <dhv:permission name="accounts-quotes-add"><input type="button" value="<dhv:label name="button.addVersion">Add Version</dhv:label>" onClick="generateVersion();"/></dhv:permission>
+      </dhv:evaluate>
+    </dhv:evaluate>
+    <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
+    <dhv:evaluate if="<%=(!quote.getLock())%>" >
       <dhv:permission name="accounts-quotes-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&popup=true','AccountQuotes.do?command=View', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
       <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:closeQuote();"/></dhv:permission>
+    </dhv:evaluate>
     </dhv:evaluate>
   </dhv:container>
 </dhv:container>
 <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>
+</body>

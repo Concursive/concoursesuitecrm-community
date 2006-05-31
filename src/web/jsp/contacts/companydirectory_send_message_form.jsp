@@ -113,7 +113,7 @@ boolean showCc = true;
 if(!"new".equals(request.getParameter("listView"))){ %>
 <% 
    messageList.setJsEvent("onChange=\"javascript:updateMessage();\""); 
-   messageList.addItem(0, "--None--");
+   messageList.addItem(0, "-- None --");
 %>
 <%= messageList.getHtmlSelect("messageId", (request.getParameter("messageId") != null ? Integer.parseInt(request.getParameter("messageId")) : -1)) %>
 <% }else{ %>

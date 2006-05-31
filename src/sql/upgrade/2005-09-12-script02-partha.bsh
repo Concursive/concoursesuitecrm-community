@@ -1,0 +1,68 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+*/
+import java.util.*;
+import java.sql.*;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.modules.actionplans.base.PlanEditor;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.modules.admin.base.CategoryEditor;
+
+int categoryId = PermissionCategory.lookupId(db, 1);
+
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator") ;
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+
+if (categoryId != -1) {
+  // Load permission category for later use
+  CategoryEditor categoryEditor = new CategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_ACTIONPLAN);
+
+  PlanEditor editor = new PlanEditor(db, ActionPlan.ACCOUNTS);
+  if (editor.getId() == -1) {
+    editor.setModuleId(PermissionCategory.PERMISSION_CAT_ACCOUNTS);
+    editor.setConstantId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS));
+    editor.setLevel(10);
+    editor.setDescription(dictionary.getTerm("system.fields.label", "actionPlan.relatedToAccounts.text", "value"));
+    editor.setCategoryId(categoryId);
+    editor.insert(db);
+    print("added plan editor for accounts with an id "+ editor.getId());
+  } else {
+    print("Action Plan Editor already exists for Accounts");
+  }
+} else {
+  print("Category id could not be found");
+}
+
+categoryId = PermissionCategory.lookupId(db, 8);
+if (categoryId != -1) {
+  // Load permission category for later use
+  CategoryEditor categoryEditor = new CategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_ACTIONPLAN);
+  PlanEditor editor = new PlanEditor(db, ActionPlan.TICKETS);
+  if (editor.getId() == -1) {
+    editor = new PlanEditor();
+    editor.setModuleId(PermissionCategory.PERMISSION_CAT_TICKETS);
+    editor.setConstantId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS));
+    editor.setLevel(10);
+    editor.setDescription(dictionary.getTerm("system.fields.label", "actionPlan.relatedToTickets.text", "value"));
+    editor.setCategoryId(categoryId);
+    editor.insert(db);
+    print("added plan editor for tickets with an id "+ editor.getId());
+  } else {
+    print("Action Plan Editor already exists for Tickets");
+  }
+} else {
+  print("Category id could not be found");
+}

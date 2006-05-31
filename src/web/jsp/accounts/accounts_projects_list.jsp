@@ -50,9 +50,9 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="8">&nbsp;</th>
-      <th nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=p.entered">Start Date</a><%= AccountProjectInfo.getSortIcon("p.entered") %></th>
-      <th width="100%" nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=title">Project Title</a><%= AccountProjectInfo.getSortIcon("title") %></th>
-      <th nowrap>Overall Progress</th>
+      <th nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=p.entered"><dhv:label name="project.startDate">Start Date</dhv:label></a><%= AccountProjectInfo.getSortIcon("p.entered") %></th>
+      <th width="100%" nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=title"><dhv:label name="project.projectTitle">Project Title</dhv:label></a><%= AccountProjectInfo.getSortIcon("title") %></th>
+      <th nowrap><dhv:label name="project.overallProgress">Overall Progress</dhv:label></th>
       <%--
       <th width="118">Category</th>
       --%>
@@ -61,7 +61,7 @@
     if (projectList.size() == 0) {
   %>
     <tr class="row2">
-      <td colspan="4">No projects to display.</td>
+      <td colspan="4"><dhv:label name="project.noProjectsToDisplay">No projects to display.</dhv:label></td>
     </tr>
   <%
     }

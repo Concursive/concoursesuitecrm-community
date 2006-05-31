@@ -34,13 +34,7 @@ import java.util.Calendar;
  */
 public class ProductCatalogPricingList extends ArrayList implements SyncableList {
   //sync api
-  /**
-   * Description of the Field
-   */
   public final static String tableName = "product_catalog_pricing";
-  /**
-   * Description of the Field
-   */
   public final static String uniqueField = "price_id";
   private int syncType = Constants.NO_SYNC;
   private Timestamp lastAnchor = null;
@@ -382,19 +376,17 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
     StringBuffer sqlOrder = new StringBuffer();
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        "SELECT COUNT(poptconfig.*) AS recordcount " +
+        "SELECT COUNT(*) AS recordcount " +
         "FROM product_catalog_pricing pctlgprice " +
-        "LEFT JOIN product_catalog AS pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
-        "LEFT JOIN lookup_product_tax AS lpt ON (pctlgprice.tax_id = lpt.code) " +
-        "LEFT JOIN lookup_currency AS lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
-        "LEFT JOIN lookup_currency AS lcpc ON (pctlgprice.price_currency = lcpc.code) " +
-        "LEFT JOIN lookup_currency AS lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
-        "LEFT JOIN lookup_recurring_type AS lrt ON (pctlgprice.recurring_type = lrt.code) " +
-        "LEFT JOIN lookup_currency AS lccc ON (pctlgprice.cost_currency = lccc.code) " +
+        "LEFT JOIN product_catalog pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
+        "LEFT JOIN lookup_product_tax lpt ON (pctlgprice.tax_id = lpt.code) " +
+        "LEFT JOIN lookup_currency lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+        "LEFT JOIN lookup_currency lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+        "LEFT JOIN lookup_currency lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+        "LEFT JOIN lookup_recurring_type lrt ON (pctlgprice.recurring_type = lrt.code) " +
+        "LEFT JOIN lookup_currency lccc ON (pctlgprice.cost_currency = lccc.code) " +
         "WHERE pctlgprice.price_id > 0 ");
-
     createFilter(sqlFilter, db);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -423,13 +415,13 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
         "lrt.description AS recurring_type_name, " +
         "lccc.description AS cost_currency_name " +
         "FROM product_catalog_pricing pctlgprice " +
-        "LEFT JOIN product_catalog AS pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
-        "LEFT JOIN lookup_product_tax AS lpt ON (pctlgprice.tax_id = lpt.code) " +
-        "LEFT JOIN lookup_currency AS lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
-        "LEFT JOIN lookup_currency AS lcpc ON (pctlgprice.price_currency = lcpc.code) " +
-        "LEFT JOIN lookup_currency AS lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
-        "LEFT JOIN lookup_recurring_type AS lrt ON (pctlgprice.recurring_type = lrt.code) " +
-        "LEFT JOIN lookup_currency AS lccc ON (pctlgprice.cost_currency = lccc.code) " +
+        "LEFT JOIN product_catalog pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
+        "LEFT JOIN lookup_product_tax lpt ON (pctlgprice.tax_id = lpt.code) " +
+        "LEFT JOIN lookup_currency lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+        "LEFT JOIN lookup_currency lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+        "LEFT JOIN lookup_currency lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+        "LEFT JOIN lookup_recurring_type lrt ON (pctlgprice.recurring_type = lrt.code) " +
+        "LEFT JOIN lookup_currency lccc ON (pctlgprice.cost_currency = lccc.code) " +
         "WHERE pctlgprice.price_id > 0 ");
     sqlOrder.append("ORDER BY pctlgprice.price_amount ");
     pst = db.prepareStatement(

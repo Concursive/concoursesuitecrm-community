@@ -54,7 +54,7 @@ public class PhoneNumberFormatter {
    * @param thisNumber Description of the Parameter
    * @param locale     Description of the Parameter
    */
-  public void format(PhoneNumber thisNumber, Locale locale) {
+  public static void format(PhoneNumber thisNumber, Locale locale) {
     if (locale != null) {
       if (locale == Locale.US || locale == Locale.CANADA) {
         format(thisNumber);
@@ -70,7 +70,7 @@ public class PhoneNumberFormatter {
    *
    * @param thisNumber Description of the Parameter
    */
-  public void format(PhoneNumber thisNumber) {
+  public static void format(PhoneNumber thisNumber) {
     String[] number = new String[]{thisNumber.getNumber(), null};
     if (number[0] != null && number[0].length() > 0) {
       number[0] = number[0].trim();
@@ -99,7 +99,7 @@ public class PhoneNumberFormatter {
    * @param number Description of the Parameter
    * @return Description of the Return Value
    */
-  private String formatNumber(String number) {
+  private static String formatNumber(String number) {
     String tmpNum = extractNumbers(number);
     if (tmpNum.length() == 11 && tmpNum.charAt(0) == '1') {
       tmpNum = tmpNum.substring(1);
@@ -131,7 +131,7 @@ public class PhoneNumberFormatter {
    *
    * @param thisNumber Description of the Parameter
    */
-  public void formatInternational(PhoneNumber thisNumber) {
+  public static void formatInternational(PhoneNumber thisNumber) {
     String[] number = new String[]{thisNumber.getNumber(), null};
     if (number[0] != null && number[0].length() > 0) {
       number[0] = number[0].trim();
@@ -158,7 +158,7 @@ public class PhoneNumberFormatter {
    * @param number Description of the Parameter
    * @return The mostlyNumbers value
    */
-  private boolean isMostlyNumbers(String number) {
+  private static boolean isMostlyNumbers(String number) {
     boolean result = true;
     for (int i = 0; i < number.length(); i++) {
       if (validChars.indexOf(number.charAt(i)) == -1) {
@@ -194,7 +194,7 @@ public class PhoneNumberFormatter {
    * @param number Description of the Parameter
    * @param check  Description of the Parameter
    */
-  private void extractExtension(String[] number, String check) {
+  private static void extractExtension(String[] number, String check) {
     if (number[0].toLowerCase().indexOf(check) > -1) {
       number[1] = number[0].substring(
           number[0].toLowerCase().indexOf(check) + check.length()).trim();

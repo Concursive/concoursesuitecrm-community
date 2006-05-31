@@ -71,7 +71,7 @@ public class ActiveSurveyQuestionItem {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        "SELECT si.item_id, si.question_id, si.type, si.description " +
+        "SELECT si.item_id, si.question_id, si.\"type\", si.description " +
         "FROM active_survey_items si " +
         "WHERE item_id = ? ");
     int i = 0;
@@ -234,13 +234,16 @@ public class ActiveSurveyQuestionItem {
    * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int qid) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
       id = DatabaseUtils.getNextSeq(db, "active_survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey_items " +
-          "(" + (id > -1 ? "item_id, " : "") + "question_id, type, description ) " +
+          "(" + (id > -1 ? "item_id, " : "") + "question_id, \"type\", description ) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
       if (id > -1) {
         pst.setInt(++i, id);
@@ -268,12 +271,18 @@ public class ActiveSurveyQuestionItem {
       pst.setInt(++i, 0);
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 
@@ -288,24 +297,15 @@ public class ActiveSurveyQuestionItem {
    */
   public int update(Connection db, int qId) throws SQLException {
     int count = 0;
-    try {
-      db.setAutoCommit(false);
-      PreparedStatement pst = db.prepareStatement(
-          "UPDATE active_survey_items " +
-          "SET description = ? " +
-          "WHERE question_id = ? ");
-      int i = 0;
-      pst.setString(++i, description);
-      pst.setInt(++i, qId);
-      count = pst.executeUpdate();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE active_survey_items " +
+        "SET description = ? " +
+        "WHERE question_id = ? ");
+    int i = 0;
+    pst.setString(++i, description);
+    pst.setInt(++i, qId);
+    count = pst.executeUpdate();
+    pst.close();
     return count;
   }
 

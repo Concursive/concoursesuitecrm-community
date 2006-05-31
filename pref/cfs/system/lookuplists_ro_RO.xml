@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+- we assume enabled=true
+
+- we assume level = the order listed
+
+- we assume default_item=false, unless...
+
+- if a default, then specify the default_item as an attribute
+
+- use CDATA for each XML record
+
+- Some lookup table records have custom attributes/data columns that need
+  if attributes other than 'enabled' and 'default_item', specify its datatype in the attribute element.
+  For e.g., if an attribute link_id exists of type integer, specify its datatype
+  as follows 
+  <attribute name="link_id" type="integer"/>
+  if the attribute is not defined its data type is assumed to be a string
+
+- In certain lookup tables, a column value may refer to another column value in another lookup table
+   (i.e., a foreign key constraint on the column of a lookup table)
+   Consider the following example
+
+    <lookup table="lookup_l1">
+      <record LUID="2005022510"><![CDATA[1a-1]]></record>
+      <record LUID="2005022511"><![CDATA[1b-1]]></record>
+      <record LUID="2005022512"><![CDATA[1c-1]]></record>
+      <record LUID="2005022513"><![CDATA[1d-1]]></record>
+      <record LUID="2005022514"><![CDATA[1e-1]]></record>
+    </lookup>                              
+    <lookup table="lookup_l11">
+      <attribute name="link_id" type="look_upl1.LUID"/>
+      <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record>
+      <record link_id="lookup_l1.2005022511"><![CDATA[11b-1]]></record>
+      <record link_id="lookup_l1.2005022512"><![CDATA[11c-1]]></record>
+      <record link_id="lookup_l1.2005022513"><![CDATA[11d-1]]></record>
+    </lookup>
+
+  The values of attribute 'link_id' (lookup_l1.NUM) of table 'lookup_l11' refers to the value
+  of the attribute 'LUID' (Locally Unique Identifier) attribute of 'lookup_l1'. 
+  
+  In the element <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record> the 
+  attribute value "lookup_l1.2005022510" refers to  value "2005022510" of attribute "LUID" in
+  lookup table 'lookup_l1'
+
+  Note that the datatype of 'link_id' is defined as 'look_upl1.LUID', more generically it is 
+  '<referring tablename>.LUID' 
+
+- The primary key of lookup tables is assumed to be 'code'. If the primary key differs specify the 
+   primary key as an attribute 'key' in the 'lookup' element and the value of the attribute as the name 
+   of the primary key. For example if the primary key of a table is 'type_id' specify as follows 
+    <lookup table="lookup_l1" key="type_id">
+      <record><![CDATA[A]]></record>
+      <record><![CDATA[B]]></record>
+      <record><![CDATA[C]]></record>
+    </lookup>
+     
+- To be specified and added to the insert query, lookup_lists_xx_XX.xml will reside in the system directory.
+
+- Most tables have a single description column, which is represented as a CDATA for each 'record' element, however
+  if more than one field exists that are similar to description, the following method can be used to specify the 
+  values of those columns
+
+ <lookup table="lookup_l4">
+  <record>
+    <item1><![CDATA[4a-1-1]]></item1>
+    <item2><![CDATA[4a-2-1]]></item2>
+  </record>
+  <record>
+    <item1><![CDATA[4b-1-1]]></item1>
+    <item2><![CDATA[4b-2-1]]></item2>
+  </record>             
+  <record>
+    <item1><![CDATA[4c-1-1]]></item1>
+    <item2><![CDATA[4c-2-1]]></item2>
+  </record>             
+ </lookup>
+
+  In this example it is assumed that the table lookup_l4 has two columns 'item1' and 'item2' which 
+  are equivalent to description (and hence required translation)
+
+- As and when other variations are required for a lookup table , they may be included, 
+  but a custom handler needs to be implemented for this lookup list
+  
+- Some lookup lists may be preceded by an explanation or comment. They should be read and
+  understood before their values are changed                               
+-->
+<lookupLists>
+    <lookup table="asset_category_draft" key="id">
+      <attribute name="parent_cat_code" type="asset_category_draft.LUID"/>
+      <attribute name="cat_level" type="integer"/>
+      <record LUID="2005022711"><![CDATA[Soft]]></record>
+      <record LUID="2005022712"><![CDATA[Componente]]></record>
+      <record LUID="2005022714" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[Sisteme de operare]]></record>
+      <record LUID="2005022715" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[Aplicatii]]></record>
+      <record LUID="2005022717" cat_level="1" parent_cat_code="asset_category_draft.2005022712"><![CDATA[Desktopuri]]></record>
+      <record LUID="2005022718" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[Serverul de mail]]></record>
+      <record LUID="2005022719" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[CRM]]></record>
+      <record LUID="2005022720" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Linux]]></record>
+      <record LUID="2005022721" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Unix]]></record>
+      <record LUID="2005022722" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Windows 2003]]></record>
+    </lookup>            
+    <!-- 
+      The CDATA for the operator element SHOULD NOT be changed
+      The CDATA for the display_text may be changed for the chosen language
+    -->
+    <lookup table="field_types" key="id">
+      <attribute name="data_typeid" type="integer" />
+      <attribute name="data_type" type="string" />
+      <record data_typeid="0" data_type="string">
+        <operator><![CDATA[=]]></operator>
+        <display_text><![CDATA[este]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string">
+        <operator><![CDATA[!=]]></operator>
+        <display_text><![CDATA[nu este]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[= | or field_name is null]]></operator>
+        <display_text><![CDATA[este gol]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[!= | and field_name is not null]]></operator>
+        <display_text><![CDATA[nu este gol]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[like %search_value%]]></operator>
+        <display_text><![CDATA[contine]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[not like %search_value%]]></operator>
+        <display_text><![CDATA[nu contine]]></display_text>
+      </record>
+
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[<]]></operator>
+        <display_text><![CDATA[inainte]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[>]]></operator>
+        <display_text><![CDATA[dupa]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date" enabled="false">
+        <operator><![CDATA[between]]></operator>
+        <display_text><![CDATA[intre]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[<=]]></operator>
+        <display_text><![CDATA[pe sau inainte]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[>=]]></operator>
+        <display_text><![CDATA[pe sau dupa]]></display_text>
+      </record>
+
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[>]]></operator>
+        <display_text><![CDATA[mai mare decat]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[<]]></operator>
+        <display_text><![CDATA[mai mic decat]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[=]]></operator>
+        <display_text><![CDATA[este egal]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[>=]]></operator>
+        <display_text><![CDATA[mai mare sau egal cu]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[<=]]></operator>
+        <display_text><![CDATA[mai mic sau egal cu]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[is not null]]></operator>
+        <display_text><![CDATA[exista]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[is null]]></operator>
+        <display_text><![CDATA[nu exista]]></display_text>
+      </record>
+    </lookup>
+    <lookup table="lookup_access_types">
+      <attribute name="link_module_id" type="integer" />
+      <attribute name="rule_id" type="integer" />
+      <record link_module_id="626030330" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>
+      <record link_module_id="626030330" rule_id="626030334">Public</record>
+      <record link_module_id="626030330" rule_id="626030333">Personal</record>
+      <record link_module_id="626030331" default_item="true" rule_id="626030334">Public</record>
+      <record link_module_id="626030332" default_item="true" rule_id="626030334">Public</record>
+      <record link_module_id="707031028" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>
+      <record link_module_id="707031028" rule_id="626030334">Public</record>
+      <record link_module_id="707031028" rule_id="626030333">Personal</record>
+    </lookup>
+    <lookup table="lookup_account_types">
+      <record><![CDATA[Mic]></record>
+      <record><![CDATA[Mediu]]></record>
+      <record><![CDATA[Mare]]></record>
+      <record><![CDATA[Contract]]></record>
+      <record><![CDATA[Non-contract]]></record>
+      <record><![CDATA[Teritoriul 1: Nord-est]]></record>
+      <record><![CDATA[Teritoriul 2: Sud-est]]></record>
+      <record><![CDATA[Teritoriul 3: Vest]]></record>
+      <record><![CDATA[Teritoriul 4: Nord-vest]]></record>
+      <record><![CDATA[Teritoriul 5: Sud-vest]]></record>
+    </lookup>
+    <lookup table="lookup_asset_status">
+      <record default_item="true"><![CDATA[In uz]]></record>
+      <record><![CDATA[Nu e in uz]]></record>
+      <record><![CDATA[Necesita mentenanta]]></record>
+      <record><![CDATA[Retras]]></record>
+    </lookup>
+    <lookup table="lookup_call_priority">
+      <attribute name="weight" type="integer" />
+      <record default_item="true" weight="10"><![CDATA[Jos]]></record>
+      <record weight="20"><![CDATA[Mediu]]></record>
+      <record weight="30"><![CDATA[Ridicat]]></record>
+    </lookup>
+    <!-- 
+      The value for the attribute base_value of the record element 
+      denotes seconds equivalent of whatever is specified in the CDATA
+      for the record element. For e.g., A 'Minute' has 60 seconds, hence the attribute
+      value is "60"
+    -->
+    <lookup table="lookup_call_reminder">
+      <attribute name="base_value" type="integer" />
+      <record base_value="60" default_item="true"><![CDATA[Minut(e)]]></record>
+      <record base_value="3600"><![CDATA[Ora(e)]]></record>
+      <record base_value="86400"><![CDATA[Zi(le)]]></record>
+      <record base_value="604800"><![CDATA[Saptamana(i)]]></record>
+      <record base_value="18144000"><![CDATA[Luna(i)]]></record>
+    </lookup>
+    <lookup table="lookup_call_result" key="result_id">
+        <attribute name="next_required" type="boolean"/>
+        <attribute name="next_days" type="integer"/>
+        <attribute name="canceled_type" type="boolean"/>
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[Da - Proceseaza afacere]]></record>
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[Nu - Nu procesa acum]]></record>
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[Nesigur - Nesigur sau niciun contact facut]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Castigat de competitor]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Niciun alt interes]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Eveniment amanat/anulat ]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Inca o actiune in asteptare]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Inca un eveniment de manevrare a contactelor]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Contactul nu mai este in companie]]></record>
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[In service]]></record>
+    </lookup>
+    <lookup table="lookup_call_types">
+      <record default_item="true"><![CDATA[Telefon primit]]></record>
+      <record><![CDATA[Telefon apelat]]></record>
+      <record><![CDATA[Telefon determinat]]></record>
+      <record><![CDATA[Intalnire birou]]></record>
+      <record><![CDATA[Programare afara]]></record>
+      <record><![CDATA[Intalnire determinata]]></record>
+      <record><![CDATA[Serviciul email]]></record>
+      <record><![CDATA[Email determinat]]></record>
+      <record><![CDATA[Serviciul fax]]></record>
+      <record><![CDATA[Fax determinat]]></record>
+    </lookup>
+    <lookup table="lookup_contactaddress_types">
+      <record><![CDATA[Afacere]]></record>
+      <record><![CDATA[Acasa]]></record>
+      <record><![CDATA[Altul]]></record>
+    </lookup>
+    <lookup table="lookup_contactemail_types">
+      <record><![CDATA[Afacere]]></record>
+      <record><![CDATA[Personal]]></record>
+      <record><![CDATA[Altul]]></record>
+    </lookup>
+    <lookup table="lookup_contactphone_types">
+      <record><![CDATA[Afacere]]></record>
+      <record><![CDATA[Afacere2]]></record>
+      <record><![CDATA[Afacere Fax]]></record>
+      <record><![CDATA[Acasa]]></record>
+      <record><![CDATA[Acasa2]]></record>
+      <record><![CDATA[Acasa Fax]]></record>
+      <record><![CDATA[Mobil]]></record>
+      <record><![CDATA[Pager]]></record>
+      <record><![CDATA[Altul]]></record>
+    </lookup>
+    <lookup table="lookup_contact_types">
+      <attribute name="category" type="integer"/>
+      <record category="0"><![CDATA[Cunostinta]]></record>
+      <record category="0"><![CDATA[Competitor]]></record>
+      <record category="0"><![CDATA[Clien]]></record>
+      <record category="0"><![CDATA[Prieten]]></record>
+      <record category="0"><![CDATA[Prospect]]></record>
+      <record category="0"><![CDATA[Actionar]]></record>
+      <record category="0"><![CDATA[Vanzator]]></record>
+      <record category="1"><![CDATA[Contabilitate]]></record>
+      <record category="1"><![CDATA[Administrativ]]></record>
+      <record category="1"><![CDATA[Dezvoltarea Afacerii]]></record>
+      <record category="1"><![CDATA[Serviciul Clienti]]></record>
+      <record category="1"><![CDATA[Inginerie]]></record>
+      <record category="1"><![CDATA[Executiv]]></record>
+      <record category="1"><![CDATA[Finante]]></record>
+      <record category="1"><![CDATA[Marketing]]></record>
+      <record category="1"><![CDATA[Operatiuni]]></record>
+      <record category="1"><![CDATA[Procurement]]></record>
+      <record category="1"><![CDATA[Vanzari]]></record>
+      <record category="1"><![CDATA[Transmiteri/Primiri]]></record>
+      <record category="1"><![CDATA[Tehnologie]]></record>
+    </lookup>
+    <lookup table="lookup_contact_source">
+      <record><![CDATA[Reclama]]></record>
+      <record><![CDATA[Referinte angajati]]></record>
+      <record><![CDATA[REferinte externe]]></record>
+      <record><![CDATA[Partener]]></record>
+      <record><![CDATA[Public Relations]]></record>
+      <record><![CDATA[Trade Show]]></record>
+      <record><![CDATA[Internet]]></record>
+      <record><![CDATA[Word of Mouth]]></record>
+      <record><![CDATA[Altele]]></record>
+    </lookup>
+    <lookup table="lookup_creditcard_types">
+      <record><![CDATA[Visa]]></record>
+      <record><![CDATA[Master Card]]></record>
+      <record><![CDATA[American Express]]></record>
+      <record><![CDATA[Discover]]></record>
+    </lookup>
+    <lookup table="lookup_currency">
+    </lookup>
+    <lookup table="lookup_delivery_options">
+      <record><![CDATA[Email doar]]></record>
+      <record><![CDATA[Fax doar]]></record>
+      <record><![CDATA[Scrisoare doar]]></record>
+      <record><![CDATA[Email apoi Fax]]></record>
+      <record><![CDATA[Email apoi Scrisoare]]></record>
+      <record><![CDATA[Email, Fax, apoi Scrisoare]]></record>
+      <record><![CDATA[Transmite]]></record>
+      <record enabled="false"><![CDATA[Mesaj instant]]></record>
+      <record enabled="false"><![CDATA[Socket sigur]]></record>
+    </lookup>
+    <lookup table="lookup_department">
+      <record><![CDATA[Contabilitate]]></record>
+      <record><![CDATA[Administratie]]></record>
+      <record><![CDATA[Facturare]]></record>
+      <record><![CDATA[Relatii Clienti]]></record>
+      <record><![CDATA[Inginerie]]></record>
+      <record><![CDATA[Finante]]></record>
+      <record><![CDATA[Resurse umane]]></record>
+      <record><![CDATA[Legal]]></record>
+      <record><![CDATA[Marketing]]></record>
+      <record><![CDATA[Operatiuni]]></record>
+      <record><![CDATA[Cumparari]]></record>
+      <record><![CDATA[Vanzari]]></record>
+      <record><![CDATA[Trimiteri/Primiri]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_permission_category">
+      <record LUID="2251509"><![CDATA[Document Detalii Magazin]]></record>
+      <record LUID="2251510"><![CDATA[Membrii Echipei]]></record>
+      <record LUID="2251511"><![CDATA[Biblioteca Documentelor]]></record>
+      <record LUID="2251512"><![CDATA[Setup]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_role">
+      <attribute name="group_id" type="integer" />
+      <record group_id="1" level="1" LUID="2251509"><![CDATA[Manager]]></record>
+      <record group_id="1" level="2" LUID="2251510"><![CDATA[Contribuitor level 3]]></record>
+      <record group_id="1" level="3" LUID="2251511"><![CDATA[Contribuitor level 2]]></record>
+      <record group_id="1" level="4" LUID="2251512"><![CDATA[Contribuitor level 1]]></record>
+      <record group_id="1" level="5" LUID="2251513"><![CDATA[Vizitator]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_permission">
+      <attribute name="group_id" type="integer" />
+      <attribute name="category_id" type="lookup_document_store_permission_category.LUID" />
+      <attribute name="default_role" type="lookup_document_store_role.LUID" />
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251513" permission="documentcenter-details-view"><![CDATA[Vezi detaliile documententului de detalii de magazin ]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-edit"><![CDATA[Modifica documentul de detalii de magazin]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-delete"><![CDATA[Sterge documentul de magazin]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251513" permission="documentcenter-team-view"><![CDATA[Vezi membrii echipei]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251512" permission="documentcenter-team-view-email"><![CDATA[Vezi adresa de email a membrului echipei]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit"><![CDATA[Modifica echipa]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit-role"><![CDATA[Modifica rolul membrului]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-view"><![CDATA[Vezi documente]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-add"><![CDATA[Creaza foldere]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-folders-edit"><![CDATA[Modifica foldere]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-delete"><![CDATA[Sterge foldere]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251512" permission="documentcenter-documents-files-upload"><![CDATA[Upload fisiere]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-files-download"><![CDATA[Download fisiere]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-files-rename"><![CDATA[Renumeste fisiere]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-files-delete"><![CDATA[Vezi detaliile documentului de magazin]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251512" default_role="lookup_document_store_role.2251509" permission="documentcenter-setup-permissions"><![CDATA[Configureaza permisiunile pentru documentul de magazin]]></record>
+    </lookup>
+    <lookup table="lookup_email_model">
+      <record><![CDATA[Nu are suport email]]></record>
+      <record><![CDATA[2 ore]]></record>
+      <record><![CDATA[4 ore]]></record>
+      <record><![CDATA[Aceeasi zi]]></record>
+      <record><![CDATA[Urmatoarea zi]]></record>
+    </lookup>
+    <lookup table="lookup_employment_types">
+    </lookup>
+    <lookup table="lookup_help_features">
+    </lookup>
+    <lookup table="lookup_hours_reason">
+      <record><![CDATA[Cumpara]]></record>
+      <record><![CDATA[Renoveaza]]></record>
+      <record><![CDATA[Corecteaza]]></record>
+    </lookup>
+    <lookup table="lookup_im_types">
+      <record><![CDATA[Afacere]]></record>
+      <record><![CDATA[Personal]]></record>
+      <record><![CDATA[Altul]]></record>
+    </lookup>
+    <lookup table="lookup_im_services">
+      <record><![CDATA[AIM]]></record>
+      <record><![CDATA[Jabber]]></record>
+      <record><![CDATA[MSN]]></record>
+      <record><![CDATA[ICQ]]></record>
+      <record><![CDATA[Yahoo]]></record>
+    </lookup>
+    <lookup table="lookup_industry">
+      <record><![CDATA[Automoto]]></record>
+      <record><![CDATA[Biotechnologie]]></record>
+      <record><![CDATA[Broadcasting si Cablu]]></record>
+      <record><![CDATA[Computer]]></record>
+      <record><![CDATA[Consulting]]></record>
+      <record><![CDATA[Aparare]]></record>
+      <record><![CDATA[Energie]]></record>
+      <record><![CDATA[Educatie]]></record>
+      <record><![CDATA[Servicii Financiare]]></record>
+      <record><![CDATA[Mancare]]></record>
+      <record><![CDATA[Sanatate]]></record>
+      <record><![CDATA[Ospitalitate]]></record>
+      <record><![CDATA[Asigurare]]></record>
+      <record><![CDATA[Internet]]></record>
+      <record><![CDATA[Firma de avocatura]]></record>
+      <record><![CDATA[Media]]></record>
+      <record><![CDATA[Farmaceutice]]></record>
+      <record><![CDATA[Companie Imobiliara]]></record>
+      <record><![CDATA[Vanzari]]></record>
+      <record><![CDATA[Telecomunicatii]]></record>
+      <record><![CDATA[Transport]]></record>
+    </lookup>
+    <lookup table="lookup_locale">
+    </lookup>
+    <lookup table="lookup_onsite_model">
+      <record><![CDATA[Nu este serviciul pe site]]></record>
+      <record><![CDATA[M-F 7AM-4PM]]></record>
+      <record><![CDATA[M-F 8AM-5PM]]></record>
+      <record><![CDATA[M-F 8AM-8PM]]></record>
+      <record><![CDATA[24x7]]></record>
+    </lookup>
+    <lookup table="lookup_opportunity_types">
+      <attribute name="order_id" type="integer" />
+      <record><![CDATA[Anuitate]]></record>
+      <record><![CDATA[Consultatie]]></record>
+      <record><![CDATA[Dezvoltare]]></record>
+      <record><![CDATA[Mentenanta]]></record>
+      <record><![CDATA[Vanzari Produse]]></record>
+      <record><![CDATA[Servicii]]></record>
+    </lookup>
+    <lookup table="lookup_orderaddress_types">
+      <record><![CDATA[Facturari]]></record>
+      <record><![CDATA[Trimiteri]]></record>
+    </lookup>
+    <lookup table="lookup_order_source">
+    </lookup>
+    <lookup table="lookup_order_status">
+      <record><![CDATA[In asteptare]]></record>
+      <record><![CDATA[In Progres]]></record>
+      <record><![CDATA[Anulate]]></record>
+      <record><![CDATA[Respinse]]></record>
+      <record><![CDATA[Complete]]></record>
+      <record><![CDATA[Inchise]]></record>
+    </lookup>
+    <lookup table="lookup_order_terms">
+    </lookup>
+    <lookup table="lookup_order_type">
+      <record><![CDATA[Nou]]></record>
+      <record><![CDATA[Shimba]]></record>
+      <record><![CDATA[Upgradeaza]]></record>
+      <record><![CDATA[Downgradeaza]]></record>
+      <record><![CDATA[Deconecteaza]]></record>
+      <record><![CDATA[Muta]]></record>
+      <record><![CDATA[Intoarce]]></record>
+      <record><![CDATA[Suspenda]]></record>
+      <record><![CDATA[Desuspenda]]></record>
+    </lookup>
+    <lookup table="lookup_orgaddress_types">
+      <record><![CDATA[Primar]]></record>
+      <record><![CDATA[Auxiliar]]></record>
+      <record><![CDATA[Facturari]]></record>
+      <record><![CDATA[Trimiteri]]></record>
+    </lookup>
+    <lookup table="lookup_orgemail_types">
+      <record><![CDATA[Primar]]></record>
+      <record><![CDATA[Auxiliar]]></record>
+    </lookup>
+    <lookup table="lookup_orgphone_types">
+      <record><![CDATA[Principal]]></record>
+      <record><![CDATA[Fax]]></record>
+    </lookup>
+    <lookup table="lookup_payment_methods">
+      <record><![CDATA[Bani]]></record>
+      <record><![CDATA[Credit Card]]></record>
+      <record><![CDATA[Cec Personal]]></record>
+      <record><![CDATA[Ordin Monetar]]></record>
+      <record><![CDATA[Cec garantat]]></record>
+    </lookup>
+    <lookup table="lookup_payment_status">
+      <record><![CDATA[In Asteptare]]></record>
+      <record><![CDATA[In Progres]]></record>
+      <record><![CDATA[Aprobat]]></record>
+      <record><![CDATA[Respins]]></record>
+    </lookup>
+    <lookup table="lookup_phone_model">
+      <record><![CDATA[Nu are suport pentru telefon]]></record>
+      <record><![CDATA[< 15 minutes]]></record>
+      <record><![CDATA[< 5 minutes]]></record>
+      <record><![CDATA[M-F 7AM-4PM]]></record>
+      <record><![CDATA[M-F 8AM-5PM]]></record>
+      <record><![CDATA[M-F 8AM-8PM]]></record>
+      <record><![CDATA[24x7]]></record>
+    </lookup>
+    <lookup table="lookup_product_category_type">
+    </lookup>
+    <lookup table="lookup_product_conf_result">
+      <record><![CDATA[integer]]></record>
+      <record><![CDATA[float]]></record>
+      <record><![CDATA[boolean]]></record>
+      <record><![CDATA[timestamp]]></record>
+      <record><![CDATA[string]]></record>
+    </lookup>
+    <lookup table="lookup_product_format">
+      <record><![CDATA[Fizic]]></record>
+      <record><![CDATA[Electronic]]></record>
+    </lookup>
+    <lookup table="lookup_product_keyword">
+    </lookup>
+    <lookup table="lookup_product_manufacturer">
+    </lookup>
+    <lookup table="lookup_product_shipping">
+      <record><![CDATA[DHL]]></record>
+      <record><![CDATA[FEDEX]]></record>
+      <record><![CDATA[UPS]]></record>
+      <record><![CDATA[USPS]]></record>
+    </lookup>
+    <lookup table="lookup_product_ship_time">
+      <record><![CDATA[24 Ore]]></record>
+      <record><![CDATA[2 Zile]]></record>
+      <record><![CDATA[1 Saptamana]]></record>
+    </lookup>
+    <lookup table="lookup_product_tax">
+      <record><![CDATA[Taxa de stat]]></record>
+      <record><![CDATA[Taxa de vanzari]]></record>
+    </lookup>
+    <lookup table="lookup_product_type">
+    </lookup>
+    <lookup table="lookup_project_activity">
+    </lookup>
+    <lookup table="lookup_project_category">
+    </lookup>
+    <lookup table="lookup_project_loe">
+      <attribute name="base_value" type="integer"/>
+      <record default_item="true" base_value="60"><![CDATA[Minute(s)]]></record>
+      <record base_value="3600"><![CDATA[Ora(e)]]></record>
+      <record base_value="86400"><![CDATA[Zi(e)]]></record>
+      <record base_value="604800"><![CDATA[Saptamana(e)]]></record>
+      <record base_value="18144000"><![CDATA[Luni(e)]]></record>
+    </lookup>
+    <lookup table="lookup_project_role">
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" level="10" LUID="2251509"><![CDATA[Conducatorul Priectului]]></record>
+      <record group_id="1" level="20" LUID="2251510"><![CDATA[Contribuitor]]></record>
+      <record group_id="1" level="30" LUID="2251511"><![CDATA[Observator]]></record>
+      <record group_id="1" level="100" LUID="2251512"><![CDATA[Invitat]]></record>
+    </lookup>
+    <lookup table="lookup_project_permission_category">
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" LUID="2251509"><![CDATA[Detalii proiect]]></record>
+      <record group_id="1" LUID="2251510"><![CDATA[Membrii Echipei]]></record>
+      <record group_id="1" LUID="2251511"><![CDATA[Stiri]]></record>
+      <record group_id="1" LUID="2251512"><![CDATA[Plan/Trasaturi]]></record>
+      <record group_id="1" LUID="2251513"><![CDATA[Liste]]></record>
+      <record group_id="1" LUID="2251514"><![CDATA[Discustie]]></record>
+      <record group_id="1" LUID="2251515"><![CDATA[Tichete]]></record>
+      <record group_id="1" LUID="2251516"><![CDATA[Biblioteca de Documente]]></record>
+      <record group_id="1" LUID="2251520"><![CDATA[Conturi]]></record>
+      <record group_id="1" LUID="2251517"><![CDATA[Setup]]></record>
+    </lookup>
+    <lookup table="lookup_project_permission">
+      <attribute name="group_id" type="integer" />
+      <attribute name="category_id" type="lookup_project_permission_category.LUID" />
+      <attribute name="default_role" type="lookup_project_role.LUID" />
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251512" permission="project-details-view"><![CDATA[Vezi detalii proiect]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-edit"><![CDATA[Modifica detalii proiect]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-delete"><![CDATA[Sterge proiect]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251512" permission="project-team-view"><![CDATA[Vezi membri echipa]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251511" permission="project-team-view-email"><![CDATA[Vezi adresa de email a membrului de echipa]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit"><![CDATA[Modifica echipa]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit-role"><![CDATA[Modifica rolul membrului]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-view"><![CDATA[Vezi stiri curente]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-view-unreleased"><![CDATA[Vezi stiri nedistribuite]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251511" permission="project-news-view-archived"><![CDATA[Vezi stiri arhivate]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-add"><![CDATA[Adauga stiri]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-edit"><![CDATA[Editeaza stiri]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-delete"><![CDATA[Sterge stiri]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251512" permission="project-plan-view"><![CDATA[Vezi trasaturi]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-add"><![CDATA[Adauga o trasatura]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-edit"><![CDATA[Modifica detaliile unei trasaturi deja existente]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-delete"><![CDATA[Sterge o trasatura]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-modify"><![CDATA[Modifica o trasatura]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-activities-assign"><![CDATA[Re-atribuie activitati]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251512" permission="project-lists-view"><![CDATA[Vezi liste]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-add"><![CDATA[Adauga o lista]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-edit"><![CDATA[Modifica detaliile unei liste existente]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251509" permission="project-lists-delete"><![CDATA[Sterge o lista]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-modify"><![CDATA[Modifica elemente din lista]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-forums-view"><![CDATA[Vezi forumuri de discutie]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-add"><![CDATA[Adauga discutie pe forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-edit"><![CDATA[Modifica discutie pe forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-delete"><![CDATA[Sterge discutie din forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-topics-view"><![CDATA[Vezi topicurile forumului]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-add"><![CDATA[Adauga Topic in forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-edit"><![CDATA[Modifica Topicurile forumului]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-delete"><![CDATA[Sterge Topicul de pe forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-add"><![CDATA[Posteaza mesaje]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-reply"><![CDATA[Raspunde la mesaje]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-edit"><![CDATA[Modifica mesaje existente]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-delete"><![CDATA[Sterge mesaje]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251512" permission="project-tickets-view"><![CDATA[Vezi tichete]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251511" permission="project-tickets-add"><![CDATA[Adauga un tichet]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251510" permission="project-tickets-edit"><![CDATA[Modifica tichetul existent]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-delete"><![CDATA[Sterge tichete]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-assign"><![CDATA[Assign tickets]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-view"><![CDATA[Vezi documente]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-add"><![CDATA[Creaza foldere]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-edit"><![CDATA[Modifica foldere]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-delete"><![CDATA[Sterge foldere]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-upload"><![CDATA[Upload fisiere]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-files-download"><![CDATA[Download fisiere]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-rename"><![CDATA[Renumeste fisiere]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-files-delete"><![CDATA[Sterge fisiere]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251511" permission="project-accounts-view"><![CDATA[Vezi linkurile contului]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251509" permission="project-accounts-manage"><![CDATA[Modifica linkurile contului]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-customize"><![CDATA[Customizeaza optiunile proiectului]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-permissions"><![CDATA[Configureaza permisiunile proiectului]]></record>
+    </lookup>
+    <lookup table="lookup_project_priority">
+      <attribute name="type" type="integer"/>
+      <attribute name="graphic" type="integer"/>
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" type="10"><![CDATA[Jos]]></record>
+      <record group_id="1" type="20" default_item="true"><![CDATA[Normal]]></record>
+      <record group_id="1" type="30"><![CDATA[Inalt]]></record>
+    </lookup>
+    <lookup table="lookup_project_status">
+      <attribute name="group_id" type="integer"/>
+      <attribute name="type" type="integer"/>      
+      <record group_id="1" graphic="box.gif" type="1"><![CDATA[Neinceput]]></record>
+      <record group_id="1" graphic="box.gif" type="2"><![CDATA[In Progres]]></record>
+      <record group_id="1" graphic="box-checked.gif" type="3"><![CDATA[Complet]]></record>
+      <record group_id="1" graphic="box-closed.gif" type="4"><![CDATA[Inchis]]></record>
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[In Asteptare]]></record>
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[Astepta Cereri]]></record>
+    </lookup>
+    <!--
+    <lookup table="lookup_news_template">
+      <attribute name="group_id" type="integer"/>
+      <attribute name="load_article" type="integer"/>
+      <record group_id="1" mapped_jsp="templateArticle.jsp" load_article="true"><![CDATA[Article]]></record>
+    </lookup>
+    -->
+    <lookup table="lookup_quote_condition">
+    </lookup>
+    <lookup table="lookup_quote_delivery">
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Fax]]></record>
+      <record><![CDATA[In Persoana]]></record>
+      <record><![CDATA[DHL]]></record>
+      <record><![CDATA[FEDEX]]></record>
+      <record><![CDATA[UPS]]></record>
+      <record><![CDATA[USPS]]></record>
+    </lookup>
+    <lookup table="lookup_quote_remarks">
+    </lookup>
+    <lookup table="lookup_quote_source">
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Fax]]></record>
+      <record><![CDATA[Telefon primit]]></record>
+      <record><![CDATA[Telefon apelat]]></record>
+      <record><![CDATA[In Persoana]]></record>
+      <record><![CDATA[Mail]]></record>
+      <record><![CDATA[Cerere agent]]></record>
+    </lookup>
+    <lookup table="lookup_quote_status">
+      <record><![CDATA[Incomplet]]></record>
+      <record><![CDATA[Asteapta aprobare interna]]></record>
+      <record><![CDATA[Aprobat intern]]></record>
+      <record><![CDATA[Neaprobat intern]]></record>
+      <record><![CDATA[Asteapta acceptare clientului]]></record>
+      <record><![CDATA[Aceptat de client]]></record>
+      <record><![CDATA[Respins de client]]></record>
+      <record><![CDATA[Modificari cerute de client]]></record>
+      <record><![CDATA[Anulat]]></record>
+      <record><![CDATA[Complet]]></record>
+    </lookup>
+    <lookup table="lookup_quote_terms">
+    </lookup>
+    <lookup table="lookup_quote_type">
+      <record><![CDATA[Nou]]></record>
+      <record><![CDATA[Modifica]]></record>
+      <record><![CDATA[Upgradeaza/Downgradeaza]]></record>
+      <record><![CDATA[Deconecteaza]]></record>
+      <record><![CDATA[Muta]]></record>
+    </lookup>
+    <lookup table="lookup_recurring_type">
+      <record><![CDATA[Saptamanal]]></record>
+      <record><![CDATA[Lunar]]></record>
+      <record><![CDATA[Anual]]></record>
+    </lookup>
+    <lookup table="lookup_relationship_types" key="type_id">
+      <attribute name="category_id_maps_from" type="integer" />
+      <attribute name="category_id_maps_to" type="integer" />
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Subsidiara a]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Parinte al]]></reciprocal_name_2>
+      </record>
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Client al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Aprovizionar pentru]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Partener al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Partener al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Competitor al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Competitor al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Angajat al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Angajator al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Departament al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organizatie alcatuita din]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Grup de]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organizatie alcatuita din]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Membru al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organizatie alcatuita din]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Consultant la]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Consultant al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Influencer al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Influenced de]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Inamic al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Inamic al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Propunator al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Semnat de]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Aliat al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Aliat al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Sponsor al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Sponsorizat de]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Relativ al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Relativ al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Afiliat cu]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Afiliat cu]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Coleg de echipa al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Coleg de echipa al]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Finantator al]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Finantat de]]></reciprocal_name_2>
+      </record>             
+    </lookup>
+    <lookup table="lookup_response_model">
+      <record><![CDATA[Fara timp de raspuns garantat]]></record>
+      <record><![CDATA[M-F 8AM-5PM 8 ore]]></record>
+      <record><![CDATA[M-F 8AM-5PM 6 ore]]></record>
+      <record><![CDATA[M-F 8AM-5PM 4 ore]]></record>
+      <record><![CDATA[M-F 8AM-5PM aceeasi zi]]></record>
+      <record><![CDATA[M-F 8AM-5PM urmatoarea zi de lucru]]></record>
+      <record><![CDATA[M-F 8AM-8PM 4 ore]]></record>
+      <record><![CDATA[M-F 8AM-8PM 2 pre]]></record>
+      <record><![CDATA[24x7 8 ore]]></record>
+      <record><![CDATA[24x7 4 ore]]></record>
+      <record><![CDATA[24x7 2 ore]]></record>
+    </lookup>
+    <lookup table="lookup_revenuedetail_types">
+    </lookup>
+    <lookup table="lookup_revenue_types">
+    </lookup>
+    <lookup table="lookup_sc_category">
+      <record><![CDATA[Consulare]]></record>
+      <record><![CDATA[Mentenanta Hardware]]></record>
+      <record><![CDATA[Mententanta de la producator]]></record>
+      <record><![CDATA[Monitorizare]]></record>
+      <record><![CDATA[Timp si Materiale]]></record>
+      <record><![CDATA[Garantie]]></record>
+    </lookup>
+    <lookup table="lookup_sc_type">
+    </lookup>
+    <lookup table="lookup_stage">
+      <record><![CDATA[Prospect]]></record>
+      <record><![CDATA[Calificare]]></record>
+      <record><![CDATA[Necesita Analiza]]></record>
+      <record><![CDATA[Propozitie Valoroasa]]></record>
+      <record><![CDATA[Analiza perpceptiei]]></record>
+      <record><![CDATA[Propunere/Pret]]></record>
+      <record><![CDATA[Negociatie/Revizuire]]></record>
+      <record><![CDATA[Inchise Castigate]]></record>
+      <record><![CDATA[Inchise Pierdute]]></record>
+    </lookup>
+    <lookup table="lookup_survey_types">
+      <record><![CDATA[Deschide-Sfarsit]]></record>
+      <record><![CDATA[Cantitativ (fara comentarii)]]></record>
+      <record><![CDATA[Cantitativ (cu comentarii)]]></record>
+      <record><![CDATA[Lista elementelor]]></record>
+    </lookup>
+    <lookup table="lookup_task_category">
+    </lookup>
+    <lookup table="lookup_task_loe">
+      <record><![CDATA[Minut(e)]]></record>
+      <record><![CDATA[Ora(e)]]></record>
+      <record><![CDATA[Zi(le)]]></record>
+      <record><![CDATA[Saptamana(e)]]></record>
+      <record><![CDATA[Luna(e)]]></record>
+    </lookup>
+    <lookup table="lookup_task_priority">
+      <record default_item="true"><![CDATA[1]]></record>
+      <record><![CDATA[2]]></record>
+      <record><![CDATA[3]]></record>
+      <record><![CDATA[4]]></record>
+      <record><![CDATA[5]]></record>
+    </lookup>
+    <lookup table="lookup_textmessage_types">
+      <record><![CDATA[Afacere]]></record>
+      <record><![CDATA[Personal]]></record>
+      <record><![CDATA[Altul]]></record>
+    </lookup>
+    <lookup table="lookup_ticketsource">
+      <record><![CDATA[Telefon]]></record>
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Internet]]></record>
+      <record><![CDATA[Scrisoare]]></record>
+      <record><![CDATA[Altul]]></record>
+    </lookup>
+    <lookup table="lookup_ticket_status" />
+    <lookup table="product_option_configurator" key="configurator_id">
+      <attribute name="result_type" type="integer" />
+      <attribute name="class_name" type="string" />
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.StringConfigurator">
+        <configurator_name><![CDATA[Text]]></configurator_name>
+        <short_description><![CDATA[Un camp de text pentru informatii adtionale]]></short_description>
+        <long_description><![CDATA[String Configurator]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.CheckboxConfigurator">
+        <configurator_name><![CDATA[Check Box]]></configurator_name>
+        <short_description><![CDATA[Casuta de bifat pentru raspunsuri Da/Nu]]></short_description>
+        <long_description><![CDATA[Checkbox Configurator]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.LookupListConfigurator">
+        <configurator_name><![CDATA[Lookup List]]></configurator_name>
+        <short_description><![CDATA[O lista de optiuni valabile ce pot fi selectate]]></short_description>
+        <long_description><![CDATA[LookupList Configurator]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.NumericalConfigurator">
+        <configurator_name><![CDATA[Number]]></configurator_name>
+        <short_description><![CDATA[Un camp care accepta doar numere]]></short_description>
+        <long_description><![CDATA[Numerical Configurator]]></long_description>
+      </record>
+    </lookup>
+    <lookup table="search_fields" key="id">
+      <attribute name="field" type="string" />
+      <attribute name="searchable" type="boolean" />
+      <attribute name="field_typeid" type="integer" />
+      <attribute name="table_name" type="string" />
+      <attribute name="object_class" type="string" />
+      <record field="company" searchable="true" field_typeid="0"><![CDATA[Numele companiei]]></record>
+      <record field="namefirst" searchable="true" field_typeid="0"><![CDATA[Prenumele Contactului]]></record>
+      <record field="namelast" searchable="true" field_typeid="0"><![CDATA[CNumele Contactului]]></record>
+      <record field="entered" searchable="true" field_typeid="1"><![CDATA[Data intrarii]]></record>
+      <record field="zip" searchable="true" field_typeid="0"><![CDATA[Codul]]></record>
+      <record field="areacode" searchable="true" field_typeid="0"><![CDATA[Codul judetului]]></record>
+      <record field="city" searchable="true" field_typeid="0"><![CDATA[Orasul]]></record>
+      <record field="typeId" searchable="true" field_typeid="0"><![CDATA[Tipul contactului]]></record>
+      <record field="contactId" searchable="false" field_typeid="0"><![CDATA[CI Contactului]]></record>
+      <record field="title" searchable="false" field_typeid="0"><![CDATA[Titlul Contactului]]></record>
+      <record field="accountTypeId" searchable="true" field_typeid="0"><![CDATA[Tipul Contului]]></record>
+      <record field="siteId" searchable="true" field_typeid="0"><![CDATA[Site]]></record>
+    </lookup>
+    <lookup table="survey" key="survey_id">
+      <attribute name="type" type="integer" />
+      <attribute name="enteredby" type="integer" />
+      <attribute name="modifiedby" type="integer" />
+      <record type="2" enteredby="0" modifiedby="0">
+        <name>Address Update Request</name>
+      </record>
+    </lookup>
+    <lookup table="ticket_level">
+      <record><![CDATA[Nivel de inceput]]></record>
+      <record><![CDATA[Primul nivel]]></record>
+      <record><![CDATA[Al doilea nivel]]></record>
+      <record><![CDATA[Al treilea nivel]]></record>
+      <record><![CDATA[Ultimul nivel]]></record>
+    </lookup>
+    <lookup table="ticket_priority">
+      <record><![CDATA[Urmatorul]]></record>
+      <record style="background-color:lightgreen;color:black;"><![CDATA[Ca Programat]]></record>
+      <record style="background-color:yellow;color:black;"><![CDATA[Urgent]]></record>
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[Critic]]></record>
+    </lookup>
+    <lookup table="ticket_severity">
+      <record style="background-color:lightgreen;color:black;"><![CDATA[Normal]]></record>
+      <record style="background-color:yellow;color:black;"><![CDATA[Important]]></record>
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[Critic]]></record>
+    </lookup>
+    <lookup table="ticket_category_draft" key="id">       
+      <attribute name="parent_cat_code" type="ticket_category_draft.LUID"/>
+      <attribute name="cat_level" type="integer"/>
+      <record LUID="2005022711"><![CDATA[Vanzari]]></record>
+      <record LUID="2005022712"><![CDATA[Facturari]]></record>
+      <record LUID="2005022714"><![CDATA[Technic]]></record>
+      <record LUID="2005022715"><![CDATA[Comenzi]]></record>
+      <record LUID="2005022717"><![CDATA[Altul]]></record>
+    </lookup>
+    <lookup table="lookup_opportunity_environment">
+    </lookup>
+    <lookup table="lookup_opportunity_competitors">
+    </lookup>
+    <lookup table="lookup_opportunity_event_compelling">
+    </lookup>
+    <lookup table="lookup_opportunity_budget">
+    </lookup>
+    <lookup table="lookup_duration_type">
+      <record><![CDATA[minutes]]></record>
+      <record><![CDATA[hours]]></record>
+      <record><![CDATA[days]]></record>
+      <record><![CDATA[weeks]]></record>
+      <record><![CDATA[months]]></record>
+      <record><![CDATA[years]]></record>
+    </lookup>
+    <lookup table="lookup_step_actions">
+      <attribute name="constant_id" type="integer" />
+      <record constant_id="110061030"><![CDATA[Require user to attach or create an opportunity]]></record>
+      <record constant_id="110061031"><![CDATA[Require user to attach or upload a document]]></record>
+<!--      <record constant_id="110061032"><![CDATA[Require user to attach or create an activity]]></record> -->
+      <record constant_id="110061033"><![CDATA[Require user to update a specific action plan folder]]></record>
+      <record constant_id="110061034"><![CDATA[Require user to update the rating]]></record>
+      <record constant_id="110061035"><![CDATA[Require user to attach or create a single note]]></record>
+      <record constant_id="110061036"><![CDATA[Require user to attach or create multiple notes]]></record>
+<!--      <record constant_id="110061037"><![CDATA[Require user to attach or create a lookup list]]></record> -->
+      <record constant_id="110061038"><![CDATA[Allow user to view the account]]></record>
+      <record constant_id="110061039"><![CDATA[Require user to attach or create an account contact]]></record>
+      <record constant_id="110061040"><![CDATA[Require user to create account relationships]]></record>
+      <record constant_id="302061653"><![CDATA[Require user to add a recipient to the active campaign]]></record>
+    </lookup>
+    <lookup table="lookup_asset_materials">
+    </lookup>
+    <lookup table="lookup_ticket_cause">
+    </lookup>
+    <lookup table="lookup_ticket_resolution">
+    </lookup>
+    <lookup table="action_plan_constants" key="map_id">
+      <attribute name="constant_id" type="integer"/>
+      <record LUID="2005101901" constant_id="42420034"><![CDATA[accounts]]></record>
+      <record LUID="2005101902" constant_id="912051329"><![CDATA[tickets]]></record>
+      <record LUID="2005101903" constant_id="2"><![CDATA[contacts]]></record>
+      <record LUID="2005101904" constant_id="912051328"><![CDATA[quotes]]></record>
+      <record LUID="2005101905" constant_id="3"><![CDATA[pipeline]]></record>
+      <record LUID="2005101906" constant_id="912051330"><![CDATA[projects]]></record>
+      <record LUID="2005101907" constant_id="912051331"><![CDATA[communications]]></record>
+      <record LUID="2005101908" constant_id="912051332"><![CDATA[admin]]></record>
+      <record LUID="2005101909" constant_id="912051333"><![CDATA[calls]]></record>
+      <record LUID="2005101910" constant_id="912051334"><![CDATA[cfsnote]]></record>
+      <record LUID="2005101911" constant_id="912051335"><![CDATA[pipeline_calls]]></record>
+      <record LUID="2005101912" constant_id="912051336"><![CDATA[myhomepage]]></record>
+      <record LUID="2005101913" constant_id="831200519"><![CDATA[note]]></record>
+      <record LUID="2005101914" constant_id="831200520"><![CDATA[selection]]></record>
+      <record LUID="2005101915" constant_id="1011200517"><![CDATA[pipeline_component]]></record>
+      <record LUID="2005101916" constant_id="110061020"><![CDATA[relationship]]></record>
+    </lookup>
+    <lookup table="step_action_map" key="map_id">
+      <attribute name="constant_id" type="action_plan_constants.LUID"/>
+      <attribute name="action_constant_id" type="integer"/>
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061030" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061031" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061032" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061033" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061034" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061039" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061040" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="302061653" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="302061653" />
+    </lookup>
+    <lookup table="lookup_ticket_task_category">
+    </lookup>
+    <lookup table="lookup_account_size">
+      <record><![CDATA[1-10]]></record>
+      <record><![CDATA[11-100]]></record>
+      <record><![CDATA[101-1000]]></record>
+      <record><![CDATA[>1000]]></record>
+    </lookup>
+    <lookup table="lookup_segments">
+    </lookup>
+    <lookup table="lookup_sub_segment">
+    </lookup>
+    <lookup table="lookup_site_id">
+    </lookup>
+    <lookup table="lookup_title">
+      <record><![CDATA[Mr.]]></record>
+      <record><![CDATA[Mrs.]]></record>
+      <record><![CDATA[Ms.]]></record>
+      <record><![CDATA[Miss]]></record>
+      <record><![CDATA[Dr.]]></record>
+      <record><![CDATA[Prof.]]></record>
+    </lookup>
+    <lookup table="lookup_ticket_state">
+      <record><![CDATA[Under review]]></record>
+      <record><![CDATA[In progress]]></record>
+      <record><![CDATA[Solution is being tested]]></record>
+      <record><![CDATA[Solution is being verified]]></record>
+      <record><![CDATA[Solution complete]]></record>
+      <record><![CDATA[Cannot resolve]]></record>
+      <record><![CDATA[Duplicate]]></record>
+    </lookup>
+</lookupLists>

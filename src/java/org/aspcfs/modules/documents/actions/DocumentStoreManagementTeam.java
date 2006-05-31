@@ -17,6 +17,7 @@
 package org.aspcfs.modules.documents.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.Role;
@@ -52,10 +53,14 @@ public final class DocumentStoreManagementTeam extends CFSModule {
     String documentStoreId = (String) context.getRequest().getParameter(
         "documentStoreId");
     String type = context.getRequest().getParameter("modifyTeam");
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = getConnection(context);
       //Load the document store
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
       DocumentStore thisDocumentStore = new DocumentStore(
           db, Integer.parseInt(documentStoreId));
       if (thisDocumentStore.getId() == -1) {
@@ -131,8 +136,8 @@ public final class DocumentStoreManagementTeam extends CFSModule {
             DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) iTeam.next();
             Role role = new Role(db, thisMember.getItemId());
             selCurrentTeam.addItem(
-                thisMember.getItemId() + "-R", role.getRole() + " " + "(Role)");
-            vectorUserId.append(thisMember.getItemId() + "-R");
+                thisMember.getItemId() + "-R"+thisMember.getSiteId(), role.getRole() + " " + "(Role)"+(thisMember.getSiteId() != -1 ?" ("+siteList.getSelectedValue(thisMember.getSiteId())+")":""));
+            vectorUserId.append(thisMember.getItemId() + "-R"+thisMember.getSiteId());
             vectorState.append(DocumentStoreTeamMemberList.ROLE);
             if (iTeam.hasNext()) {
               vectorUserId.append("|");
@@ -149,9 +154,9 @@ public final class DocumentStoreManagementTeam extends CFSModule {
             LookupList departmentList = new LookupList(
                 db, "lookup_department");
             selCurrentTeam.addItem(
-                thisMember.getItemId() + "-D", departmentList.getValueFromId(
-                    thisMember.getItemId()) + " " + "(Dept)");
-            vectorUserId.append(thisMember.getItemId() + "-D");
+                thisMember.getItemId() + "-D"+thisMember.getSiteId(), departmentList.getValueFromId(
+                    thisMember.getItemId()) + " " + "(Dept)"+(thisMember.getSiteId() != -1 ?" ("+siteList.getSelectedValue(thisMember.getSiteId())+")":""));
+            vectorUserId.append(thisMember.getItemId() + "-D"+thisMember.getSiteId());
             vectorState.append(DocumentStoreTeamMemberList.DEPARTMENT);
             if (iTeam.hasNext()) {
               vectorUserId.append("|");
@@ -241,6 +246,7 @@ public final class DocumentStoreManagementTeam extends CFSModule {
       thisTeam.setEnteredBy(getUserId(context));
       thisTeam.setModifiedBy(getUserId(context));
       if ("user".equals(memberType)) {
+        thisTeam.setSiteIdForMembers(this.getSystemStatus(context));
         recordInserted = thisTeam.updateUserMembership(db);
       } else {
         recordInserted = thisTeam.updateGroupMembership(db);
@@ -273,6 +279,7 @@ public final class DocumentStoreManagementTeam extends CFSModule {
     String itemId = context.getRequest().getParameter("id");
     String newRole = context.getRequest().getParameter("role");
     String memberType = context.getRequest().getParameter("memberType");
+    String siteId = context.getRequest().getParameter("siteId");
     try {
       db = this.getConnection(context);
       //Load the document store
@@ -295,14 +302,14 @@ public final class DocumentStoreManagementTeam extends CFSModule {
       int tmpDepartmentId = tmpContact.getDepartment();
 
       DocumentStoreTeamMember currentMember = new DocumentStoreTeamMember(
-          db, thisDocumentStore.getId(), tmpUserId, tmpUserRoleId, tmpDepartmentId);
+          db, thisDocumentStore.getId(), tmpUserId, tmpUserRoleId, tmpDepartmentId, tmpUser.getSiteId());
       //Allow role change only if the "role to change" is less privileged than the users role
       //e.g., if the current member (user's) role is 'contributor level 1' he would not be allowed 
       //to change members roles to any higher that of 'contributor level 1' 
       if (currentMember.getRoleId() <= Integer.parseInt(newRole)) {
         boolean changed = DocumentStoreTeamMember.changeRole(
             db, thisDocumentStore.getId(), Integer.parseInt(itemId), Integer.parseInt(
-                newRole), memberType);
+                newRole), memberType, Integer.parseInt(siteId));
         if (!changed) {
           return ("ChangeRoleERROR");
         }

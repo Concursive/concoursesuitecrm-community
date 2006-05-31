@@ -26,6 +26,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * Responsible for initialization and cleanup when the web-app is
@@ -135,6 +136,11 @@ public class ContextListener implements ServletContextListener {
     Hashtable systemStatusList = (Hashtable) context.getAttribute(
         "SystemStatus");
     if (systemStatusList != null) {
+      Iterator i = systemStatusList.values().iterator();
+      while (i.hasNext()) {
+        SystemStatus thisSystem = (SystemStatus) i.next();
+        thisSystem.stopServers();
+      }
       systemStatusList.clear();
     }
     context.removeAttribute("SystemStatus");
@@ -143,6 +149,7 @@ public class ContextListener implements ServletContextListener {
     context.removeAttribute("DynamicFormConfig");
     context.removeAttribute("ContainerMenu");
     context.removeAttribute("ContainerMenuConfig");
+
     //Unload the connection pool
     ConnectionPool cp = (ConnectionPool) context.getAttribute(
         "ConnectionPool");

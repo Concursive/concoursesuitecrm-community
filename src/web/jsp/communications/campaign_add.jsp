@@ -17,12 +17,72 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ page import="java.io.*, java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.*,java.text.DateFormat" %>
+<%@ page import="org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
+  var userGroups = '';
+  var currentUserGroupNames = '';
+  var currentUserGroupIds = '';
+<%
+  Iterator iter = (Iterator) Campaign.getUserGroupMaps().iterator();
+  while (iter.hasNext()) {
+    CampaignUserGroupMap groupMap = (CampaignUserGroupMap) iter.next();
+%>
+    userGroups = userGroups + '<%= groupMap.getUserGroupId() +","+ StringUtils.jsStringEscape(groupMap.getGroupName()) %>|';
+    currentUserGroupIds = currentUserGroupIds +'<%= groupMap.getUserGroupId() %>|';
+    currentUserGroupNames = currentUserGroupNames + '<%= StringUtils.jsStringEscape(groupMap.getGroupName()) %>|';
+<%}%>
+
+  function resetUserGroups(groups) {
+    var url = 'CampaignUserGroups.do?command=ListGroups&groups='+groups;
+    document.forms['addForm'].userGroupMaps_elements.value=groups;
+    userGroups = groups;
+    currentUserGroupIds = '';
+    currentUserGroupNames = '';
+    var entry = groups.split("|");
+    for (i=0;i<entry.length;i++) {
+      if (entry[i] != '') {
+        var values = entry[i].split(",");
+        if (values[0] != '') {
+          currentUserGroupIds = currentUserGroupIds + values[0]+'|';
+          currentUserGroupNames = currentUserGroupNames + values[1]+'|';
+        }
+      }
+    }
+    window.frames['server_list'].location.href = url;
+  }
+
+  function removeGroup(code) {
+    var copyGroups = '';
+    var entry = userGroups.split("|");
+    for (i=0;i<entry.length;i++) {
+      if (entry[i] != '') {
+        var values = entry[i].split(",");
+        if (values[0] != '' && values[0] != code) {
+          copyGroups = copyGroups+ entry[i]+"|";
+        }
+      }
+    }
+    resetUserGroups(copyGroups);
+  }
+
+  function refreshUserGroups() {
+    var url = 'CampaignUserGroups.do?command=ListGroups&groups='+userGroups+'&id=<%= Campaign.getId() %>';
+    document.forms['addForm'].userGroupMaps_elements.value=userGroups;
+    window.frames['server_list'].location.href = url;
+  }
+  
+  function resetNumericFieldValue(fieldId){
+    document.getElementById(fieldId).value = -1;
+  }
+
   function checkForm(form) {
     if (form.dosubmit.value == "false") {
       return true;
@@ -81,6 +141,16 @@
         <TEXTAREA NAME="description" ROWS="3" COLS="50"><%= toString(Campaign.getDescription()) %></TEXTAREA>
       </td>
     </tr>
+    <tr class="containerBody">
+      <td valign="top" class="formLabel">
+         <dhv:label name="campaigns.accessToActiveCampaigns">Access to Active Campaigns</dhv:label>
+      </td>
+      <td>
+        <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popUserGroupsSelectMultiple('campaign','1','lookup_quote_remarks','<%= Campaign.getId() %>',currentUserGroupIds, currentUserGroupNames,'UserGroups');"/><br />
+        <iframe src="../empty.html" name="server_list" id="server_list" border="0" frameborder="0" width="100%" height="0"></iframe>
+        <input type="hidden" name="userGroupMaps_elements" id="userGroupMaps_elements" value="" />
+      </td>
+    </tr>
   </table>
   <br>
   <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save">
@@ -88,3 +158,6 @@
   <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>
+<script type="text/javascript">
+  refreshUserGroups();
+</script>

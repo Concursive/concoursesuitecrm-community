@@ -43,6 +43,7 @@
 		<defaultValueExpression ><![CDATA["en"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT
 o.org_id AS org_id, 
 o.name AS name,

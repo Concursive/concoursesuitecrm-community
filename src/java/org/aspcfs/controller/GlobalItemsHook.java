@@ -20,6 +20,7 @@ import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.servlets.ControllerGlobalItemsHook;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.tasks.base.TaskList;
+import org.aspcfs.modules.actionplans.base.ActionStep;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
@@ -84,13 +85,14 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "<tr>" +
           "<td nowrap>" +
           "<img src=\"images/icons/stock_zoom-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-          "<input type='text' size='10' name='search'>" +
+          "<input type='text' size='10' name='searchSearchText'>" +
           "<input type='submit' value='" + systemStatus.getLabel("search.go") + "' name='Search'>" +
           "</td>" +
           "</tr>" +
           "</form>" +
           "</table>");
     }
+    //<input type="search" name="q" placeholder="Search Apple.com" autosave="Apple Downloads" results=5 class="sbox" id="q">
 
     //Quick Items
     if (!systemStatus.hasField("global.quickactions")) {
@@ -110,15 +112,25 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
             "<option value='0'>" + systemStatus.getLabel(
                 "quickactions.select") + "</option>");
         /*
-         *  if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
-         *  items.append("<option value='call'>Add a Call</option>");
-         *  }
-         */
-        /*
          *  if (systemStatus.hasPermission(userId, "pipeline-opportunities-add")) {
          *  items.append("<option value='opportunity'>Add an Opportunity</option>");
          *  }
          */
+        if (systemStatus.hasPermission(userId, "accounts-accounts-add")) {
+          items.append(
+              "<option value='account'>" + systemStatus.getLabel(
+                  "quickactions.addAccount") + "</option>");
+        } 
+        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
+          items.append(
+              "<option value='call'>" + systemStatus.getLabel(
+                  "quickactions.addActivity") + "</option>");
+        }         
+        if (systemStatus.hasPermission(userId, "contacts-external_contacts-add")) {
+          items.append(
+              "<option value='contact'>" + systemStatus.getLabel(
+                  "quickactions.addContact") + "</option>");
+        }
         if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
           items.append(
               "<option value='task'>" + systemStatus.getLabel(
@@ -245,6 +257,56 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
             items.append(
                 "<a href='TroubleTickets.do?command=Home' class='s'>" + systemStatus.getLabel(
                     "myitems.assignedTickets") + "</a> (" + paint(ticketCount) + ")<br>");
+            ++myItems;
+          }
+        }
+        
+        //Action Plans
+        if (systemStatus.hasPermission(userId, "myhomepage-action-plans-view")) {
+          int i = 0;
+          int planCount = 0;
+          sql =
+              "SELECT count(*) AS plancount " +
+              "FROM action_plan_work apw " +
+              "WHERE apw.enabled = ? " +
+              "AND apw.plan_work_id IN (SELECT aphw.plan_work_id FROM action_phase_work aphw " +
+              "WHERE aphw.phase_work_id IN (SELECT phase_work_id FROM action_item_work aiw " +
+              "WHERE aiw.start_date IS NOT NULL " +
+              "AND aiw.end_date IS NULL " +
+              "AND (aiw.owner = ? " +
+              "OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
+              "WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM \"access\" WHERE user_id = ? ))) " +
+              "OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
+              "WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
+              "OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
+              "WHERE s.permission_type = ? AND s.group_id IN (SELECT group_id from user_group_map WHERE user_id = ? )) " +
+              ")) " +
+              "AND aphw.start_date IS NOT NULL AND aphw.end_date IS NULL AND aphw.status_id IS NULL ) ";
+
+          pst = db.prepareStatement(sql);
+          pst.setBoolean(++i,true);
+          pst.setInt(++i, userId);
+          pst.setInt(++i, ActionStep.ROLE);
+          pst.setInt(++i, userId);
+          pst.setInt(++i, ActionStep.DEPARTMENT);
+          pst.setInt(++i, userId);
+          pst.setInt(++i, ActionStep.SPECIFIC_USER_GROUP);
+          pst.setInt(++i, userId);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            planCount = rs.getInt("plancount");
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println(
+                  "GlobalItemsHook-> Action Plans: " + planCount);
+            }
+          }
+          rs.close();
+          pst.close();
+          if (planCount > 0) {
+            items.append(
+                "<a href='MyActionPlans.do?command=View' class='s'>" + systemStatus.getLabel(
+                    "actionPlan.myWaitingActionPlans") + "</a> (" + paint(
+                        planCount) + ")<br>");
             ++myItems;
           }
         }

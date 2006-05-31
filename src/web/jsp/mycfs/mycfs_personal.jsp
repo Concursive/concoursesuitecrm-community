@@ -69,25 +69,32 @@
       return true;
     }
   }
-  function update(countryObj, stateObj) {
-  var country = document.forms['addContact'].elements[countryObj].value;
-   if(country == "UNITED STATES" || country == "CANADA"){
-      hideSpan('state2' + stateObj);
-      showSpan('state1' + stateObj);
-   }else{
+
+  function update(countryObj, stateObj, selectedValue) {
+    var country = document.forms['addContact'].elements[countryObj].value;
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=addContact&stateObj=address"+stateObj+"state";
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueUpdateState(stateObj, showText) {
+    if(showText == 'true'){
       hideSpan('state1' + stateObj);
       showSpan('state2' + stateObj);
+    } else {
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
     }
   }
-  
+
+
 </script>
 <form name="addContact" action="MyCFSProfile.do?command=UpdateProfile&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
-<a href="MyCFS.do?command=MyProfile"><dhv:label name="Settings">Settings</dhv:label></a> >
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage" mainMenuItem="true">My Home Page</dhv:label></a> >
+<a href="MyCFS.do?command=MyProfile"><dhv:label name="myitems.settings">Settings</dhv:label></a> >
 <dhv:label name="calendar.personalInformation">Personal Information</dhv:label>
 </td>
 </tr>
@@ -137,7 +144,7 @@
     <td><input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>"></td>
   </tr>
 </table>
-&nbsp;<br>  
+&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -145,13 +152,13 @@
 	  </th>
   </tr>
   <tr>
-<%  
+<%
   int ecount = 0;
   Iterator enumber = EmployeeBean.getEmailAddressList().iterator();
   while (enumber.hasNext()) {
     ++ecount;
     ContactEmailAddress thisEmailAddress = (ContactEmailAddress) enumber.next();
-%>    
+%>
   <tr>
     <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Email">Email</dhv:label> <%= ecount %>
@@ -163,7 +170,7 @@
       <dhv:permission name="myhomepage-profile-personal-edit"><input type="checkbox" name="email<%= ecount %>delete" value="on"><dhv:label name="accounts.accounts_modify.MarkToRemove">mark to remove</dhv:label></dhv:permission>
     </td>
   </tr>
-<%    
+<%
   }
   ++ecount;
 %>
@@ -184,13 +191,13 @@
 	    <strong><dhv:label name="accounts.accounts_add.PhoneNumbers">Phone Numbers</dhv:label></strong>
 	  </th>
   </tr>
-<%  
+<%
   int icount = 0;
   Iterator inumber = EmployeeBean.getPhoneNumberList().iterator();
   while (inumber.hasNext()) {
     ++icount;
     ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
-%>    
+%>
   <tr>
     <td class="formLabel">
       <dhv:label name="reports.accounts.contacts.phone">Phone</dhv:label> <%= icount %>
@@ -202,8 +209,8 @@
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
       <dhv:permission name="myhomepage-profile-personal-edit"><input type="checkbox" name="phone<%= icount %>delete" value="on"><dhv:label name="accounts.accounts_modify.MarkToRemove">mark to remove</dhv:label></dhv:permission>
     </td>
-  </tr>    
-<%    
+  </tr>
+<%
   }
   ++icount;
 %>
@@ -218,20 +225,20 @@
     </td>
   </tr>
 </table>
-&nbsp;<br>  
+&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
       <strong><dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label></strong>
     </th>
   </tr>
-<%  
+<%
   int acount = 0;
   Iterator anumber = EmployeeBean.getAddressList().iterator();
   while (anumber.hasNext()) {
     ++acount;
     ContactAddress thisAddress = (ContactAddress)anumber.next();
-%>    
+%>
   <tr>
     <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
@@ -271,14 +278,13 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
-        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry())? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr>
@@ -294,18 +300,15 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-    <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
+    <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
   <tr>
     <td colspan="2">&nbsp;</td>
   </tr>
-<%    
+<%
   }
   ++acount;
 %>
@@ -347,7 +350,7 @@
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtml("address" + acount + "state") %>
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
@@ -368,11 +371,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
     </td>
   </tr>
 </table>
@@ -383,4 +383,5 @@
 <input type="hidden" name="dosubmit" value="true">
 </dhv:permission>
 <input type="hidden" name="accessType" value="<%= EmployeeBean.getAccessType() %>">
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>

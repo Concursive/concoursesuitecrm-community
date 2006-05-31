@@ -52,6 +52,10 @@ function reopenOpportunity(id) {
 }
 </script>
 <%-- Trails --%>
+<%
+  boolean allowMultipleQuote = allowMultipleQuote(pageContext);
+  boolean allowMultipleVersion = allowMultipleVersion(pageContext);
+%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
@@ -72,11 +76,15 @@ function reopenOpportunity(id) {
   &nbsp;<br>
 </dhv:evaluate>
 <dhv:container name="opportunities" selected="quotes" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+  <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
   <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>" >
     <dhv:permission name="pipeline-opportunities-add">
+    <dhv:evaluate if="<%= (allowMultipleQuote) || (quoteList.size() == 0)%>" >    
       <a href="LeadsQuotes.do?command=AddQuoteForm&headerId=<%= opportunityHeader.getId()%><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a>
+    </dhv:evaluate>
     </dhv:permission>
   </dhv:evaluate>
+  </dhv:hasAuthority>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsQuoteListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
@@ -121,19 +129,27 @@ function reopenOpportunity(id) {
           i++;
           rowid = (rowid != 1?1:2);
           Quote thisQuote = (Quote) j.next();
+          boolean hasPermission = false;
   %>
+  <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
+    <% hasPermission = true; %>
+  </dhv:hasAuthority>
     <tr class="row<%= rowid %>">
       <td valign="center" nowrap class="row<%= rowid %>">
-        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuQuote', '<%= thisQuote.getId() %>', '&headerId=<%= thisQuote.getHeaderId() %><%= addLinkParams(request, "viewSource") %>' , '<%= (thisQuote.getClosed() == null) ? "true" : "false" %>','<%= thisQuote.isTrashed() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
-         <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        <% if(!thisQuote.getLock()){%>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+           <a href="javascript:displayMenu('select<%= i %>','menuQuote', '<%= thisQuote.getId() %>', '&headerId=<%= thisQuote.getHeaderId() %><%= addLinkParams(request, "viewSource") %>' , '<%= (thisQuote.getClosed() == null) ? "true" : "false" %>','<%= thisQuote.isTrashed() %>','<%= hasPermission %>','<%=allowMultipleQuote%>','<%=allowMultipleVersion%>');"
+           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
+           <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+       <% }else{ %>
+          <font color="red"><dhv:label name="pipeline.locked">Locked</dhv:label></font>
+       <% } %>
       </td>
       <td valign="center" width="10%">
-      <dhv:permission name="pipeline-opportunities-view">
+      <dhv:permission name="pipeline-quotes-view">
         <a href="LeadsQuotes.do?command=Details&quoteId=<%= thisQuote.getId() %><%= addLinkParams(request, "viewSource") %>">
           <%= thisQuote.getPaddedGroupId() %></a>
-      </dhv:permission><dhv:permission name="quotes-view" none="true">
+      </dhv:permission><dhv:permission name="pipeline-quotes-view" none="true">
         <%= thisQuote.getPaddedGroupId() %>
       </dhv:permission>
       </td>

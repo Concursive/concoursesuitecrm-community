@@ -89,7 +89,7 @@
             Iterator emailItr = thisContact.getEmailAddressList().iterator();
             while (emailItr.hasNext()) {
               EmailAddress email = (EmailAddress) emailItr.next(); %>
-              <%= email.getEmail() %>(<%= email.getTypeName() %>)
+              <%= toHtml(email.getEmail()) %>(<%= email.getTypeName() %>)
               <%= (emailItr.hasNext()?"<br />":"") %>
            <%}%>&nbsp;
           </td>

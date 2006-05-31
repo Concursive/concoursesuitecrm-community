@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="APP_VERSION" class="java.lang.String" scope="application"/>
 <jsp:useBean id="database" class="org.aspcfs.modules.setup.beans.DatabaseBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -37,33 +38,39 @@
       showSpan("span-ip-no");
       hideSpan("span-port");
       showSpan("span-port-no");
-<%-- BEGIN DHV CODE ONLY --%>
-      hideSpan("span-name");
-      showSpan("span-name-no");
-      hideSpan("span-user");
-      showSpan("span-user-no");
-      hideSpan("span-password");
-      showSpan("span-password-no");
-<%-- END DHV CODE ONLY --%>
+      <dhv:evaluate if="<%= hasText(APP_VERSION) %>">
+        hideSpan("span-name");
+        showSpan("span-name-no");
+        hideSpan("span-user");
+        showSpan("span-user-no");
+        hideSpan("span-password");
+        showSpan("span-password-no");
+      </dhv:evaluate>
       document.configure.port.value = "";
     } else {
       hideSpan("span-ip-no");
       showSpan("span-ip");
       hideSpan("span-port-no");
       showSpan("span-port");
-<%-- BEGIN DHV CODE ONLY --%>
-      hideSpan("span-name-no");
-      showSpan("span-name");
-      hideSpan("span-user-no");
-      showSpan("span-user");
-      hideSpan("span-password-no");
-      showSpan("span-password");
-<%-- END DHV CODE ONLY --%>
+      <dhv:evaluate if="<%= hasText(APP_VERSION) %>">
+        hideSpan("span-name-no");
+        showSpan("span-name");
+        hideSpan("span-user-no");
+        showSpan("span-user");
+        hideSpan("span-password-no");
+        showSpan("span-password");
+      </dhv:evaluate>
       if (document.configure.type.value == "PostgreSQL") {
         document.configure.port.value = "5432";
       }
       if (document.configure.type.value == "MSSQL") {
         document.configure.port.value = "1433";
+      }
+      if (document.configure.type.value == "Oracle") {
+        document.configure.port.value = "1521";
+      }
+      if (document.configure.type.value == "Firebird") {
+        document.configure.port.value = "3050";
       }
     }
   }
@@ -102,6 +109,10 @@
               <option value="PostgreSQL"<%= "PostgreSQL".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.postgreSQL">PostgreSQL</dhv:label></option>
               <option value="MSSQL"<%= "MSSQL".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.sqlServer">Microsoft SQL Server</dhv:label></option>
               <option value="DaffodilDB"<%= "DaffodilDB".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.DaffodilDB">DaffodilDB/One$DB (Embedded)</dhv:label></option>
+            <dhv:evaluate if="<%= !hasText(APP_VERSION) %>">
+              <option value="Firebird"<%= "Firebird".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.firebird">Firebird SQL Server</dhv:label></option>
+              <option value="Oracle"<%= "Oracle".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.oracle">Oracle Server</dhv:label></option>
+            </dhv:evaluate>
             </select>
             <font color="red">*</font>
           </td>

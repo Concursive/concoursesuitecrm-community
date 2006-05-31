@@ -1053,6 +1053,15 @@ public class TicketReport extends TicketList {
       if (param.equals("category")) {
         rep.addColumn("Category");
       }
+      if (param.equals("subcategory1")) {
+        rep.addColumn("Subcategory 1");
+      }
+      if (param.equals("subcategory2")) {
+        rep.addColumn("Subcategory 2");
+      }
+      if (param.equals("subcategory3")) {
+        rep.addColumn("Subcategory 3");
+      }
       if (param.equals("department")) {
         rep.addColumn("Department");
       }
@@ -1061,7 +1070,7 @@ public class TicketReport extends TicketList {
         rep.addColumn("Solution");
       }
       if (param.equals("closed")) {
-        rep.addColumn("Closed");
+        rep.addColumn("Closed Date");
       }
       if (param.equals("entered")) {
         rep.addColumn("Entered");
@@ -1132,6 +1141,15 @@ public class TicketReport extends TicketList {
       if (param.equals("category")) {
         passedReport.addColumn("Category");
       }
+      if (param.equals("subcategory1")) {
+        passedReport.addColumn("Subcategory 1");
+      }
+      if (param.equals("subcategory2")) {
+        passedReport.addColumn("Subcategory 2");
+      }
+      if (param.equals("subcategory3")) {
+        passedReport.addColumn("Subcategory 3");
+      }
       if (param.equals("department")) {
         passedReport.addColumn("Department");
       }
@@ -1140,7 +1158,7 @@ public class TicketReport extends TicketList {
         passedReport.addColumn("Solution");
       }
       if (param.equals("closed")) {
-        passedReport.addColumn("Closed");
+        passedReport.addColumn("Closed Date");
       }
       if (param.equals("entered")) {
         passedReport.addColumn("Entered");
@@ -1187,6 +1205,11 @@ public class TicketReport extends TicketList {
    * @throws SQLException Description of the Exception
    */
   public void buildReportData(Connection db, ActionContext context) throws SQLException {
+    TicketCategoryList categoryList = new TicketCategoryList();
+    categoryList.setSiteId(this.getSiteId());
+    categoryList.setExclusiveToSite(true);
+    categoryList.buildList(db);
+
     this.buildList(db);
 
     boolean writeOut = false;
@@ -1247,7 +1270,16 @@ public class TicketReport extends TicketList {
             thisRow.addCell(thisTic.getPriorityName());
           }
           if (param.equals("category")) {
-            thisRow.addCell(thisTic.getCategoryName());
+            thisRow.addCell(categoryList.getValueFromId(thisTic.getCatCode()));
+          }
+          if (param.equals("subcategory1")) {
+            thisRow.addCell(categoryList.getValueFromId(thisTic.getSubCat1()));
+          }
+          if (param.equals("subcategory2")) {
+            thisRow.addCell(categoryList.getValueFromId(thisTic.getSubCat2()));
+          }
+          if (param.equals("subcategory3")) {
+            thisRow.addCell(categoryList.getValueFromId(thisTic.getSubCat3()));
           }
           if (param.equals("department")) {
             thisRow.addCell(thisTic.getDepartmentName());

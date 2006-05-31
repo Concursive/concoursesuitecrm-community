@@ -35,8 +35,8 @@ CREATE TABLE lookup_opportunity_budget (
   enabled BIT DEFAULT 1
 );
 
-ALTER TABLE opportunity_component ADD environment INT REFERENCES lookup_opportunity_environment(code),
-ALTER TABLE opportunity_component ADD competitors INT REFERENCES lookup_opportunity_competitors(code),
-ALTER TABLE opportunity_component ADD compelling_event INT REFERENCES lookup_opportunity_event_compelling(code),
-ALTER TABLE opportunity_component ADD budget INT REFERENCES lookup_opportunity_budget(code)
+ALTER TABLE opportunity_component ADD environment INT REFERENCES lookup_opportunity_environment(code);
+ALTER TABLE opportunity_component ADD competitors INT REFERENCES lookup_opportunity_competitors(code);
+ALTER TABLE opportunity_component ADD compelling_event INT REFERENCES lookup_opportunity_event_compelling(code);
+ALTER TABLE opportunity_component ADD budget INT REFERENCES lookup_opportunity_budget(code);
 

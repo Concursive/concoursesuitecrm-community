@@ -44,18 +44,18 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Constructor for the OrganizationAddressList object
+   *  Constructor for the OrganizationAddressList object
    *
-   * @since 1.1
+   * @since    1.1
    */
   public OrganizationAddressList() {
   }
 
 
   /**
-   * Constructor for the OrganizationAddressList object
+   *  Constructor for the OrganizationAddressList object
    *
-   * @param request Description of the Parameter
+   * @param  request  Description of the Parameter
    */
   public OrganizationAddressList(HttpServletRequest request) {
     int i = 0;
@@ -78,9 +78,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Gets the tableName attribute of the OrganizationAddressList object
+   *  Gets the tableName attribute of the OrganizationAddressList object
    *
-   * @return The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -88,9 +88,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Gets the uniqueField attribute of the OrganizationAddressList object
+   *  Gets the uniqueField attribute of the OrganizationAddressList object
    *
-   * @return The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -98,9 +98,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Gets the lastAnchor attribute of the OrganizationAddressList object
+   *  Gets the lastAnchor attribute of the OrganizationAddressList object
    *
-   * @return The lastAnchor value
+   * @return    The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -108,9 +108,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Gets the nextAnchor attribute of the OrganizationAddressList object
+   *  Gets the nextAnchor attribute of the OrganizationAddressList object
    *
-   * @return The nextAnchor value
+   * @return    The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -118,9 +118,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Gets the syncType attribute of the OrganizationAddressList object
+   *  Gets the syncType attribute of the OrganizationAddressList object
    *
-   * @return The syncType value
+   * @return    The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -128,9 +128,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Sets the lastAnchor attribute of the OrganizationAddressList object
+   *  Sets the lastAnchor attribute of the OrganizationAddressList object
    *
-   * @param tmp The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -138,9 +138,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Sets the nextAnchor attribute of the OrganizationAddressList object
+   *  Sets the nextAnchor attribute of the OrganizationAddressList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -148,9 +148,9 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Sets the syncType attribute of the OrganizationAddressList object
+   *  Sets the syncType attribute of the OrganizationAddressList object
    *
-   * @param tmp The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -158,13 +158,13 @@ public class OrganizationAddressList extends AddressList {
 
 
   /**
-   * Builds a list of addresses based on several parameters. The parameters are
-   * set after this object is constructed, then the buildList method is called
-   * to generate the list.
+   *  Builds a list of addresses based on several parameters. The parameters are
+   *  set after this object is constructed, then the buildList method is called
+   *  to generate the list.
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -255,5 +255,14 @@ public class OrganizationAddressList extends AddressList {
     pst.close();
   }
 
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 

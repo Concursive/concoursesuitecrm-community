@@ -21,6 +21,7 @@ import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.assets.base.Asset;
 import org.aspcfs.modules.assets.base.AssetList;
+import org.aspcfs.modules.assets.base.AssetMaterialList;
 import org.aspcfs.modules.base.CategoryList;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
@@ -33,6 +34,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  * Action handler to list, view, add, update and delete assets
@@ -66,24 +68,33 @@ public class AccountsAssets extends CFSModule {
     if (!hasPermission(context, "accounts-assets-view")) {
       return ("PermissionError");
     }
+    String parentId = context.getRequest().getParameter("parentId");
     AssetList assetList = new AssetList();
     String orgId = context.getRequest().getParameter("orgId");
 
-    //find record permissions for portal users
-    if (!isRecordAccessPermitted(context, Integer.parseInt(orgId))) {
-      return ("PermissionError");
-    }
     //Prepare pagedListInfo
     PagedListInfo assetListInfo = this.getPagedListInfo(
         context, "AssetListInfo");
-    assetListInfo.setLink("AccountsAssets.do?command=List&orgId=" + orgId);
+    assetListInfo.setLink("AccountsAssets.do?command=List&orgId=" + orgId+"&parentId="+(parentId != null?parentId:""));
     Connection db = null;
     try {
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       setOrganization(context, db);
       // Build the asset list
       assetList.setPagedListInfo(assetListInfo);
       assetList.setOrgId(Integer.parseInt(orgId));
+      if (parentId != null && !"".equals(parentId.trim()) && !"-1".equals(parentId.trim())) {
+        assetList.setParentId(parentId);
+        Asset parent = new Asset();
+        parent.setBuildCompleteParentList(true);
+        parent.setIncludeMe(true);
+        parent.queryRecord(db, Integer.parseInt(parentId));
+        context.getRequest().setAttribute("parent", parent);
+      }
       Organization tmpOrganization = (Organization) context.getRequest().getAttribute(
           "OrgDetails");
       if (tmpOrganization.isTrashed()) {
@@ -113,19 +124,34 @@ public class AccountsAssets extends CFSModule {
     if (!hasPermission(context, "accounts-assets-add")) {
       return ("PermissionError");
     }
+    String parentId = context.getRequest().getParameter("parentId");
     Connection db = null;
+    String orgId = context.getRequest().getParameter("orgId");
     try {
       //Get a connection from the connection pool for this user
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       setOrganization(context, db);
 
       Asset thisAsset = (Asset) context.getFormBean();
       buildFormElements(context, db);
       buildCategories(context, db, thisAsset);
-
+      if (parentId != null && !"".equals(parentId.trim()) && !"-1".equals(parentId.trim())) {
+        if (thisAsset.getParentId() == -1) {
+          thisAsset.setParentId(parentId);
+        }
+        Asset parent = new Asset();
+        parent.setBuildCompleteParentList(true);
+        parent.setIncludeMe(true);
+        parent.queryRecord(db, Integer.parseInt(parentId));
+        context.getRequest().setAttribute("parent", parent);
+      }
+      Organization orgDetails = (Organization) context.getRequest().getAttribute("OrgDetails");
       ContactList contactList = new ContactList();
-      contactList.setOrgId(
-          Integer.parseInt(context.getRequest().getParameter("orgId")));
+      contactList.setOrgId(orgId);
       contactList.buildList(db);
       contactList.setEmptyHtmlSelectRecord(
           this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
@@ -133,7 +159,7 @@ public class AccountsAssets extends CFSModule {
 
       String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
-
+      context.getRequest().setAttribute("asset", thisAsset);
       return ("AccountsAssetsAddOK");
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
@@ -166,6 +192,10 @@ public class AccountsAssets extends CFSModule {
       setOrganization(context, db);
 
       Asset thisAsset = (Asset) context.getFormBean();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
+        return ("PermissionError");
+      }
       thisAsset.setEnteredBy(getUserId(context));
       thisAsset.setModifiedBy(getUserId(context));
       isValid = this.validateObject(context, db, thisAsset);
@@ -222,22 +252,28 @@ public class AccountsAssets extends CFSModule {
           (context.getRequest().getParameter("id")));
       Asset thisAsset = (Asset) context.getFormBean();
       if (thisAsset.getId() == -1) {
+        thisAsset.setBuildMaterials(true);
         thisAsset.queryRecord(db, assetId);
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
+        return ("PermissionError");
       }
       buildFormElements(context, db);
       buildCategories(context, db, thisAsset);
+      thisAsset.buildCompleteParentList(db);
       context.getRequest().setAttribute(
           "return", context.getRequest().getParameter("return"));
 
+      Organization orgDetails = (Organization) context.getRequest().getAttribute("OrgDetails");
       ContactList contactList = new ContactList();
-      if (orgId != null && !"".equals(orgId)) {
-        contactList.setOrgId(orgId);
-      }
+      contactList.setOrgId(orgDetails.getOrgId());
       contactList.setDefaultContactId(thisAsset.getContactId());
       contactList.buildList(db);
       contactList.setEmptyHtmlSelectRecord(
           this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("contactList", contactList);
+      context.getRequest().setAttribute("asset", thisAsset);
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", errorMessage);
@@ -269,8 +305,13 @@ public class AccountsAssets extends CFSModule {
       db = this.getConnection(context);
       setOrganization(context, db);
       Asset thisAsset = (Asset) context.getFormBean();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
+        return ("PermissionError");
+      }
       Asset previousAsset = new Asset(db, "" + thisAsset.getId());
       thisAsset.setModifiedBy(getUserId(context));
+      thisAsset.buildCompleteParentList(db);
       isValid = this.validateObject(context, db, thisAsset);
       if (isValid) {
         resultCount = thisAsset.update(db);
@@ -328,9 +369,13 @@ public class AccountsAssets extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      SystemStatus systemStatus = this.getSystemStatus(context);
       Asset thisAsset = new Asset(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
+        return ("PermissionError");
+      }
 
+      SystemStatus systemStatus = this.getSystemStatus(context);
       DependencyList dependencies = thisAsset.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.addMessage(
@@ -339,14 +384,14 @@ public class AccountsAssets extends CFSModule {
       if (dependencies.canDelete()) {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
         htmlDialog.addButton(
-            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsAssets.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsAssets.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id + "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
         htmlDialog.setHeader(
             systemStatus.getLabel("confirmdelete.unableHeader"));
         htmlDialog.addButton(
-            systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountsAssets.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "&forceDelete=true" + "'");
+            systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountsAssets.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id + "&forceDelete=true" + "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
@@ -362,6 +407,48 @@ public class AccountsAssets extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+
+
+  public String executeCommandTrash(ActionContext context) {
+    if (!hasPermission(context, "accounts-assets-delete")) {
+      return ("PermissionError");
+    }
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    boolean recordUpdated = false;
+    Connection db = null;
+    Asset thisAsset = null;
+    try {
+
+      //Get a connection from the connection pool for this user
+      db = this.getConnection(context);
+      setOrganization(context, db);
+
+      thisAsset = new Asset();
+      thisAsset.setId(context.getRequest().getParameter("id"));
+      recordUpdated = thisAsset.updateStatus(db, true, this.getUserId(context));
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (recordUpdated) {
+      context.getRequest().setAttribute(
+          "refreshUrl", "AccountsAssets.do?command=List&orgId=" + context.getRequest().getParameter(
+              "orgId"));
+      //return (executeCommandList(context));
+      return getReturn(context, "Delete");
+    }
+    processErrors(context, thisAsset.getErrors());
+    context.getRequest().setAttribute(
+        "actionError", systemStatus.getLabel(
+            "object.validation.actionError.assetDeletion"));
+    context.getRequest().setAttribute(
+        "refreshUrl", "AccountsAssets.do?command=View&orgId=" + context.getRequest().getParameter(
+            "orgId"));
+    //return executeCommandView(context);
+    return getReturn(context, "Delete");
   }
 
 
@@ -385,8 +472,11 @@ public class AccountsAssets extends CFSModule {
       db = this.getConnection(context);
       setOrganization(context, db);
 
-      thisAsset = new Asset();
-      thisAsset.setId(context.getRequest().getParameter("id"));
+      thisAsset = new Asset(db, context.getRequest().getParameter("id"));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
+        return ("PermissionError");
+      }
       recordDeleted = thisAsset.delete(db, getDbNamePath(context));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -434,7 +524,14 @@ public class AccountsAssets extends CFSModule {
       if (id == null || "".equals(id)) {
         id = (String) context.getRequest().getAttribute("id");
       }
-      Asset thisAsset = new Asset(db, id);
+      Asset thisAsset = new Asset();
+      thisAsset.setBuildMaterials(true);
+      thisAsset.setBuildCompleteParentList(true);
+      thisAsset.queryRecord(db, Integer.parseInt(id));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
+        return ("PermissionError");
+      }
 
       //Set Organization -- do seperately as orgId is not available as parameter
       Organization thisOrganization = new Organization(
@@ -445,7 +542,7 @@ public class AccountsAssets extends CFSModule {
       thisContract.queryRecord(db, thisAsset.getContractId());
 
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context, thisAsset.getOrgId())) {
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
         return ("PermissionError");
       }
 
@@ -488,6 +585,10 @@ public class AccountsAssets extends CFSModule {
 
       String id = context.getRequest().getParameter("id");
       Asset thisAsset = new Asset(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisAsset.getOrgId())) {
+        return ("PermissionError");
+      }
 
       //Set Organization -- do seperately as orgId is not available as parameter
       Organization thisOrganization = new Organization(
@@ -504,7 +605,7 @@ public class AccountsAssets extends CFSModule {
       ticketList.setAssetId(thisAsset.getId());
       ticketList.buildList(db);
       context.getRequest().setAttribute("ticketList", ticketList);
-
+      thisAsset.buildCompleteParentList(db);
       context.getRequest().setAttribute("asset", thisAsset);
       return ("AccountsAssetsHistoryOK");
     } catch (Exception errorMessage) {
@@ -532,6 +633,14 @@ public class AccountsAssets extends CFSModule {
     assetStatusList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("assetStatusList", assetStatusList);
 
+    LookupList assetVendorList = new LookupList(db, "lookup_asset_vendor");
+    assetVendorList.addItem(-1, "-- None --");
+    context.getRequest().setAttribute("assetVendorList", assetVendorList);
+
+    LookupList assetManufacturerList = new LookupList(db, "lookup_asset_manufacturer");
+    assetManufacturerList.addItem(-1, "-- None --");
+    context.getRequest().setAttribute("assetManufacturerList", assetManufacturerList);
+
     LookupList responseModelList = new LookupList(db, "lookup_response_model");
     responseModelList.addItem(
         -1, thisSystem.getLabel("accounts.assets.contractDefault"));
@@ -546,6 +655,9 @@ public class AccountsAssets extends CFSModule {
     onsiteModelList.addItem(
         -1, thisSystem.getLabel("accounts.assets.contractDefault"));
     context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
+
+    LookupList assetMaterialList = new LookupList(db, "lookup_asset_materials");
+    context.getRequest().setAttribute("assetMaterialList", assetMaterialList);
 
     LookupList emailModelList = new LookupList(db, "lookup_email_model");
     emailModelList.addItem(
@@ -566,9 +678,13 @@ public class AccountsAssets extends CFSModule {
    * @throws SQLException Description of the Exception
    */
   public void buildCategories(ActionContext context, Connection db, Asset thisAsset) throws SQLException {
+    Organization orgDetails = (Organization) context.getRequest().getAttribute(
+        "OrgDetails");
     CategoryList categoryList1 = new CategoryList("asset_category");
     categoryList1.setCatLevel(0);
     categoryList1.setParentCode(0);
+    categoryList1.setSiteId(orgDetails.getSiteId());
+    categoryList1.setExclusiveToSite(true);
     categoryList1.buildList(db);
     categoryList1.setHtmlJsEvent(
         "onChange=\"javascript:updateCategoryList('1');\"");
@@ -577,12 +693,15 @@ public class AccountsAssets extends CFSModule {
 
     CategoryList categoryList2 = new CategoryList("asset_category");
     categoryList2.setCatLevel(1);
+    categoryList2.setSiteId(orgDetails.getSiteId());
     if (thisAsset == null) {
       categoryList2.buildList(db);
     } else if (thisAsset.getLevel1() > -1) {
       categoryList2.setParentCode(thisAsset.getLevel1());
       categoryList2.buildList(db);
     }
+    categoryList2.setSiteId(orgDetails.getSiteId());
+    categoryList2.setExclusiveToSite(true);
     categoryList2.setHtmlJsEvent(
         "onChange=\"javascript:updateCategoryList('2');\"");
     categoryList2.getCatListSelect().addItem(-1, "Undetermined");
@@ -590,12 +709,15 @@ public class AccountsAssets extends CFSModule {
 
     CategoryList categoryList3 = new CategoryList("asset_category");
     categoryList3.setCatLevel(2);
+    categoryList3.setSiteId(orgDetails.getSiteId());
     if (thisAsset == null) {
       categoryList3.buildList(db);
     } else if (thisAsset.getLevel2() > -1) {
       categoryList3.setParentCode(thisAsset.getLevel2());
       categoryList3.buildList(db);
     }
+    categoryList3.setSiteId(orgDetails.getSiteId());
+    categoryList3.setExclusiveToSite(true);
     categoryList3.getCatListSelect().addItem(-1, "Undetermined");
     context.getRequest().setAttribute("categoryList3", categoryList3);
   }
@@ -633,8 +755,14 @@ public class AccountsAssets extends CFSModule {
     try {
       int level = Integer.parseInt(context.getRequest().getParameter("level"));
       int code = Integer.parseInt(context.getRequest().getParameter("code"));
+      int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
+      //Get a connection from the connection pool for this user
+      db = this.getConnection(context);
+      Organization orgDetails = new Organization(db, orgId);
       CategoryList categoryList = new CategoryList("asset_category");
       categoryList.setCatLevel(level);
+      categoryList.setSiteId(orgDetails.getSiteId());
+      categoryList.setExclusiveToSite(true);
       categoryList.setParentCode(code);
       if (code > 0) {
         db = this.getConnection(context);
@@ -643,12 +771,39 @@ public class AccountsAssets extends CFSModule {
         categoryList.buildList(db);
       }
       context.getRequest().setAttribute("categoryList", categoryList);
-    } catch (Exception errorMessage) {
-
+    } catch (Exception e) {
+      // This is in an iframe which the user doesn't see
+      e.printStackTrace();
     } finally {
       this.freeConnection(context, db);
     }
     return ("CategoryJSListOK");
   }
-}
 
+  public String executeCommandViewMaterials(ActionContext context) {
+    Connection db = null;
+    HashMap map = new HashMap();
+    LookupList list = new LookupList();
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    try {
+      String assetId = context.getRequest().getParameter("assetId");
+      if (assetId == null || "".equals(assetId)) {
+        assetId = (String) context.getRequest().getAttribute("assetId");
+      }
+      String materials = context.getRequest().getParameter("materials");
+      db = this.getConnection(context);
+      if (materials != null && !"".equals(materials)) {
+        list = systemStatus.getLookupList(db, "lookup_asset_materials");
+        map = AssetMaterialList.getQuantityMap(materials);
+      }
+      context.getRequest().setAttribute("materialTypeList", list);
+      context.getRequest().setAttribute("materialMap", map);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ViewMaterialsOK");
+  }
+}

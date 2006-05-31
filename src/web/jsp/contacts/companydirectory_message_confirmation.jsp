@@ -46,7 +46,7 @@
   </tr>
   <tr class="row2">
     <td>
-      <%= ContactDetails.getNameLastFirst() %> (<%= ContactDetails.getPrimaryEmailAddress() %>)
+      <%= ContactDetails.getNameFull() %> (<%= ContactDetails.getPrimaryEmailAddress() %>)
     </td>
   </tr>
   <dhv:evaluate if="<%= cc != null && !"".equals(cc) %>">

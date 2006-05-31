@@ -70,7 +70,7 @@
             <input type="hidden" name="neworgId" id="neworgId" value="<%= ContactDetails.getOrgId() %>"/>
             <font color="red">*</font>
             <%= showAttribute(request, "orgIdError") %>
-            [<a href="javascript:popAccountsListSingle('neworgId','changeaccount', 'showMyCompany=false&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            [<a href="javascript:popAccountsListSingle('neworgId','changeaccount', 'showMyCompany=false&siteId=<%=ContactDetails.getSiteId()%>&thisSiteIdOnly=true&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>

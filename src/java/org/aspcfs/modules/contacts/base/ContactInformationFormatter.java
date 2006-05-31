@@ -15,10 +15,8 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import org.aspcfs.modules.base.Address;
-import org.aspcfs.modules.base.EmailAddress;
-import org.aspcfs.modules.base.PhoneNumber;
-import org.aspcfs.modules.base.TextMessageAddress;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
@@ -38,8 +36,7 @@ public class ContactInformationFormatter {
   /**
    * Constructor for the ContactInformationFormatter object
    */
-  public ContactInformationFormatter() {
-  }
+  public ContactInformationFormatter() { }
 
 
   /**
@@ -57,6 +54,7 @@ public class ContactInformationFormatter {
     Element mappings = xml.getFirstChild("mappings");
 
     ContactEmailAddressList tmpContactEmailAddressList = contact.getEmailAddressList();
+    ContactInstantMessageAddressList tmpContactInstantMessageAddressList = contact.getInstantMessageAddressList();
     ContactTextMessageAddressList tmpContactTextMessageAddressList = contact.getTextMessageAddressList();
     ContactPhoneNumberList tmpContactPhoneNumberList = contact.getPhoneNumberList();
     ContactAddressList tmpContactAddressList = contact.getAddressList();
@@ -67,8 +65,26 @@ public class ContactInformationFormatter {
             XMLUtils.getElement(
                 mappings, "map", "id", "contactInformation.details")));
 
+    //Add system info
+    addSystemInfo(template, contact);
+
     //Adding contact name
     template.addParseElement("${name}", contact.getNameFull());
+
+    //Adding contact additional names
+    template.addParseElement("${additionalNames}", contact.getAdditionalNames());
+
+    //Adding contact nickname
+    template.addParseElement("${nickname}", contact.getNickname());
+
+    //Adding contact date of birth
+    template.addParseElement("${birthDate}", StringUtils.toDateString(contact.getBirthDate()));
+
+    //Adding contact title
+    template.addParseElement("${title}", contact.getTitle());
+
+    //Adding contact role
+    template.addParseElement("${role}", contact.getRole());
 
     //Adding email addresses
     StringBuffer infoString = new StringBuffer();
@@ -88,6 +104,26 @@ public class ContactInformationFormatter {
       template.addParseElement("${emailAddresses}", "");
       template.addParseElement(
           "${noEmailAddresses=" + noInformationString + "}", noInformationString);
+    }
+
+    //Adding instant message addresses
+    infoString = new StringBuffer();
+    itr = tmpContactInstantMessageAddressList.iterator();
+    noInformationString = template.getValue("noInstantMessageAddresses");
+    if (itr.hasNext()) {
+      while (itr.hasNext()) {
+        InstantMessageAddress tmpInstantMessageAddress = (InstantMessageAddress) itr.next();
+        infoString.append(
+            "<b>" + tmpInstantMessageAddress.getAddressIMServiceName() + " (" + tmpInstantMessageAddress.getAddressIMTypeName() + "):</b> " + tmpInstantMessageAddress.getAddressIM() + "<br />");
+      }
+      template.addParseElement(
+          "${instantMessageAddresses}", infoString.toString());
+      template.addParseElement(
+          "${noInstantMessageAddresses=" + noInformationString + "}", "");
+    } else {
+      template.addParseElement("${instantMessageAddresses}", "");
+      template.addParseElement(
+          "${noInstantMessageAddresses=" + noInformationString + "}", noInformationString);
     }
 
     //Adding text message addresses
@@ -138,7 +174,7 @@ public class ContactInformationFormatter {
         Address tmpAddress = (Address) itr.next();
         infoString.append(
             "<b>" + tmpAddress.getTypeName() + ":</b><br />" +
-            tmpAddress.toString() + "<br /><br />");
+                tmpAddress.toString() + "<br /><br />");
       }
       template.addParseElement("${postalAddresses}", infoString.toString());
       template.addParseElement(
@@ -149,6 +185,26 @@ public class ContactInformationFormatter {
           "${noPostalAddresses=" + noInformationString + "}", noInformationString);
     }
     return template.getParsedText();
+  }
+
+
+  /**
+   * Adds a feature to the SystemInfo attribute of the
+   * ContactInformationFormatter class
+   *
+   * @param template The feature to be added to the SystemInfo attribute
+   * @param contact  The feature to be added to the SystemInfo attribute
+   * @throws Exception Description of the Exception
+   */
+  private static void addSystemInfo(Template template, Contact contact) throws Exception {
+    //Adding contact secret word based on ignore preference
+    if (StringUtils.hasText(contact.getSecretWord())) {
+      //Append ${secret_word} at the begining. If "Your Secret Word" needs to be translated, then
+      //move it to templates-en_US.xml' with the rest of contact information
+      String text = "<b>Your Secret Word:</b> ${secret_word}" + template.getText();
+      template.addParseElement("${secret_word}", StringUtils.toString(contact.getSecretWord()) + "<br /><br />");
+      template.setText(text);
+    }
   }
 }
 

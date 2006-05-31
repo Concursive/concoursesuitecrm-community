@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -52,7 +52,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="module-general-contacts">General Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> >
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label>
@@ -68,7 +68,7 @@
   </dhv:evaluate>
   <% if ((request.getParameter("pagedListSectionId") == null && !CompletedCallsListInfo.getExpandedSelection()) || CallsListInfo.getExpandedSelection()) { %>
   <%-- Pending list --%>
-  <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" object="CallsListInfo"/>
+  <dhv:pagedListStatus showExpandLink="true" title="<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.PendingActivities", "Pending Activities") %>" object="CallsListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th width="8">&nbsp;</th>
@@ -148,7 +148,7 @@
 <%}%>
 <% if ((request.getParameter("pagedListSectionId") == null && !CallsListInfo.getExpandedSelection()) || CompletedCallsListInfo.getExpandedSelection()) { %>
  <%-- Completed/Canceled list --%>
-  <dhv:pagedListStatus showExpandLink="true" title="Completed/Canceled Activities" object="CompletedCallsListInfo"/>
+  <dhv:pagedListStatus showExpandLink="true" title="<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.CompletedCanceledActivities", "Completed/Canceled Activities") %>" object="CompletedCallsListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th>

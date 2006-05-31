@@ -256,7 +256,7 @@ public class ComponentResult {
     PreparedStatement pst;
     pst = db.prepareStatement(
         "SELECT result_id " +
-        "FROM business_process_component_result_lookup " +
+        "FROM " + DatabaseUtils.getTableName(db, "business_process_component_result_lookup") + " " +
         "WHERE component_id = ? " +
         "AND return_id = ?");
     pst.setInt(1, componentId);
@@ -271,7 +271,7 @@ public class ComponentResult {
     if (id == -1) {
       id = DatabaseUtils.getNextSeq(db, "business_process_comp_re_id_seq");
       pst = db.prepareStatement(
-          "INSERT INTO business_process_component_result_lookup " +
+          "INSERT INTO " + DatabaseUtils.getTableName(db, "business_process_component_result_lookup") + " " +
           "(" + (id > -1 ? "result_id, " : "") + "component_id, return_id, description, \"level\", enabled) " +
           "VALUES " +
           "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?)");
@@ -290,4 +290,3 @@ public class ComponentResult {
     }
   }
 }
-

@@ -28,7 +28,7 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_new-bcard-16.gif" border="0" align="absmiddle">
-      <dhv:label name="documents.team.long_html">Team</dhv:label>
+      <dhv:label name="project.team">Team</dhv:label>
     </td>
   </tr>
 </table>
@@ -131,7 +131,7 @@
 %>
 </table>
 <br />
-<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="false" title="Account Contacts" object="projectAccountContactTeamInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="false" title="AccountContacts" object="projectAccountContactTeamInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th nowrap><dhv:label name="project.role">Role</dhv:label></th>

@@ -382,6 +382,7 @@ public final class ProjectManagement extends CFSModule {
     fileItemList.setForProjectUser(getUserId(context));
     fileItemList.setAlertRangeStart(alertRangeStart);
     ticketList.setForProjectUser(getUserId(context));
+    ticketList.setIncludeAllSites(true);
     ticketList.setAssignedTo(getUserId(context));
     ticketList.setOnlyOpen(true);
     try {
@@ -740,7 +741,7 @@ public final class ProjectManagement extends CFSModule {
     Project thisProject = (Project) context.getFormBean();
     //thisProject.setRequestItems(context.getRequest());
     Connection db = null;
-    int resultCount = 0;
+    int resultCount = -1;
     boolean isValid = false;
     try {
       db = this.getConnection(context);
@@ -761,6 +762,9 @@ public final class ProjectManagement extends CFSModule {
             -1, this.getSystemStatus(context).getLabel(
                 "calendar.none.4dashes"));
         context.getRequest().setAttribute("categoryList", categoryList);
+        context.getRequest().setAttribute("Project", thisProject);
+        context.getRequest().setAttribute(
+            "IncludeSection", ("modifyproject").toLowerCase());
       } else if (resultCount == 1) {
         updateProjectCache(
             context, thisProject.getId(), thisProject.getTitle());
@@ -774,8 +778,7 @@ public final class ProjectManagement extends CFSModule {
     }
     //Results
     if (resultCount == -1) {
-      context.getRequest().setAttribute("Project", thisProject);
-      return ("ModifyProjectOK");
+      return ("ProjectCenterOK");
     } else if (resultCount == 1) {
       context.getRequest().setAttribute(
           "pid", String.valueOf(thisProject.getId()));
@@ -1353,7 +1356,7 @@ public final class ProjectManagement extends CFSModule {
         processErrors(context, thisProject.getErrors());
       } else {
         updateProjectCache(context, thisProject.getId(), null);
-        indexAddItem(context, thisProject);
+        indexDeleteItem(context, thisProject);
       }
       return "DeleteProjectOK";
     } catch (Exception errorMessage) {

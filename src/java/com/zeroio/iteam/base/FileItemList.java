@@ -493,7 +493,7 @@ public class FileItemList extends ArrayList {
     sqlSelect.append(
         "f.*, t.filename AS thumbnail " +
         "FROM project_files f " +
-        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f.version = t.version) " +
+        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f.\"version\" = t.\"version\") " +
         "WHERE f.item_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

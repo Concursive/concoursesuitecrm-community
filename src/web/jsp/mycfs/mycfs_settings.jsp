@@ -28,7 +28,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
-<a href="MyCFS.do?command=MyProfile"><dhv:label name="Settings">Settings</dhv:label></a> >
+<a href="MyCFS.do?command=MyProfile"><dhv:label name="myitems.settings">Settings</dhv:label></a> >
 <dhv:label name="accounts.accountasset_include.Location">Location</dhv:label>
 </td>
 </tr>

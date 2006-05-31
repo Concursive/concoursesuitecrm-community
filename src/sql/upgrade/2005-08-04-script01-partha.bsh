@@ -1,0 +1,37 @@
+// Upgrade script to upgrade the database table opportunity_component
+
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import java.sql.*;
+import java.util.*;
+
+
+// Load the default terms from one of the installed lookup lists
+
+AccessTypeList accessTypeList = new AccessTypeList();
+accessTypeList.setLinkModuleId(626030330);
+accessTypeList.buildList(db);
+
+if (!AccessTypeList.exists(db, 804051057, 626030334)) {
+  AccessType accessType = new AccessType();
+  accessType.setLinkModuleId(804051057);
+  accessType.setDescription(accessTypeList.getDescriptionFromRuleId(626030334));
+  accessType.setDefaultItem(true);
+  accessType.setLevel(10);
+  accessType.setRuleId(626030334);
+  accessType.insert(db);
+  System.out.println("Opportunity AccessTypes added");
+}
+
+if (!AccessTypeList.exists(db, 804051057, 626030335)) {
+  AccessType accessType = new AccessType();
+  accessType.setLinkModuleId(804051057);
+  accessType.setDescription(accessTypeList.getDescriptionFromRuleId(626030335));
+  accessType.setDefaultItem(false);
+  accessType.setLevel(20);
+  accessType.setRuleId(626030335);
+  accessType.insert(db);
+  System.out.println("Opportunity AccessTypes added");
+}
+
+System.out.println("Script finished");

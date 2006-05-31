@@ -22,6 +22,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -64,6 +65,7 @@ public class SearchCriteriaList extends HashMap {
   public final static int SOURCE_EMPLOYEES = 4;
   public final static int CONTACT_SOURCE_ELEMENTS = 4;
   private int inactiveCount = -1;
+  private LookupList siteList = new LookupList();
 
 
   /**
@@ -384,6 +386,26 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
+   * Sets the siteList attribute of the SearchCriteriaList object
+   *
+   * @param tmp The new siteList value
+   */
+   public void setSiteList(LookupList tmp) {
+    this.siteList = tmp;
+   }
+
+
+  /**
+   * Gets the siteList attribute of the SearchCriteriaList object
+   *
+   * @return The siteList value
+   */
+   public LookupList getSiteList() {
+    return siteList;
+   }
+
+
+  /**
    * Gets the warnings attribute of the SearchCriteriaList object
    *
    * @return The warnings value
@@ -617,38 +639,45 @@ public class SearchCriteriaList extends HashMap {
 
         if (thisElt.getSourceId() > -1) {
           keyString += "*" + thisElt.getSourceId();
+          keyString += "*" + thisElt.getSiteId();
         }
 
         //String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText();
 
         switch (thisElt.getSourceId()) {
           case SearchCriteriaList.SOURCE_MY_CONTACTS:
-            fromString = " [My Contacts]";
+            fromString = "My Contacts";
             break;
           case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-            fromString = " [All Contacts]";
+            fromString = "All Contacts";
             break;
           case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-            fromString = " [Account Contacts]";
+            fromString = "Account Contacts";
             break;
           case SearchCriteriaList.SOURCE_EMPLOYEES:
-            fromString = " [Employees]";
+            fromString = "Employees";
             break;
           default:
             break;
         }
-
+        String site = "";
+        if (siteList.size() > 0) {
+          site = ", " + siteList.getValueFromId(thisElt.getSiteId());
+        }
         if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
-          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName() + fromString;
+          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName() + " [" + fromString + site + "]";
         } else if (thisGroup.getGroupField().getDescription().equals(
             "Account Type") && thisElt.getAccountTypeName() != null) {
-          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getAccountTypeName() + fromString;
+          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getAccountTypeName() + " [" + fromString + site + "]";
         } else if (thisGroup.getGroupField().getDescription().equals(
             "Contact ID") && thisElt.getContactNameLast() != null) {
-          valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameLastFirst(
-              thisElt.getContactNameLast(), thisElt.getContactNameFirst());
+          valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameFirstLastOrCompany(
+              thisElt.getContactNameLast(), thisElt.getContactNameFirst(), thisElt.getContactCompany());
+        } else if (thisGroup.getGroupField().getDescription().equals("Site")){
+          String siteAsFieldValue = siteList.getValueFromId(Integer.parseInt(thisElt.getText()));
+          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + siteAsFieldValue + " [" + fromString + "]";
         } else {
-          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + fromString;
+          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + " [" + fromString + site + "]";
         }
 
         criteriaList.put(keyString, valueString);
@@ -694,7 +723,7 @@ public class SearchCriteriaList extends HashMap {
   public void buildResources(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT s.*, t.description as ctype, t2.description as atype, " +
-        "c.namefirst as cnamefirst, c.namelast as cnamelast " +
+        "c.namefirst as cnamefirst, c.namelast as cnamelast, c.company as ccompany " +
         "FROM saved_criteriaelement s " +
         "LEFT JOIN lookup_contact_types t ON (s.value_id = t.code) " +
         "LEFT JOIN lookup_account_types t2 ON (s.value_id = t2.code) " +
@@ -960,24 +989,26 @@ public class SearchCriteriaList extends HashMap {
     if (this.getId() == -1) {
       throw new SQLException("GroupID not specified.");
     }
-    Statement st = null;
+    PreparedStatement pst = null;
     ResultSet rs = null;
     try {
       commit = db.getAutoCommit();
       //Check to see if the group is being used by any unfinished campaigns
       //If so, the group can't be deleted
       inactiveCount = 0;
-      st = db.createStatement();
-      rs = st.executeQuery(
+      pst = db.prepareStatement(
           "SELECT COUNT(*) AS group_count " +
           "FROM campaign " +
-          "WHERE status_id <> " + Campaign.FINISHED + " " +
-          "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
+          "WHERE status_id <> ? " +
+          "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?) ");
+      pst.setInt(1, Campaign.FINISHED);
+      pst.setInt(2, this.getId());
+      rs = pst.executeQuery();
       rs.next();
       inactiveCount = rs.getInt("group_count");
       rs.close();
+      pst.close();
       if (inactiveCount > 0) {
-        st.close();
         return false;
       }
       //TODO: A group's criteria should be copied when a Campaign is executed for later review
@@ -985,32 +1016,51 @@ public class SearchCriteriaList extends HashMap {
       //Executed campaigns will want to know the group info, so if there are
       //executed campaigns, then hide the group... otherwise delete it
       int activeCount = 0;
-      rs = st.executeQuery(
+      pst = db.prepareStatement(
           "SELECT COUNT(*) AS group_count " +
           "FROM campaign " +
-          "WHERE active = " + DatabaseUtils.getTrue(db) + " " +
-          "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
+          "WHERE \"active\" = ? " +
+          "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?) ");
+      pst.setBoolean(1, true);
+      pst.setInt(2, this.getId());
+      rs = pst.executeQuery();
       rs.next();
       activeCount = rs.getInt("group_count");
       rs.close();
+      pst.close();
       if (commit) {
         db.setAutoCommit(false);
       }
       if (activeCount > 0) {
-        st.executeUpdate(
+        pst = db.prepareStatement(
             "UPDATE saved_criterialist " +
-            "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-            "WHERE id = " + this.getId() + " " +
-            "AND enabled = " + DatabaseUtils.getTrue(db));
+            "SET enabled = ? " +
+            "WHERE id = ? " +
+            "AND enabled = ? ");
+        pst.setBoolean(1, false);
+        pst.setInt(2, this.getId());
+        pst.setBoolean(3, true);
+        pst.executeUpdate();
+        pst.close();
       } else {
-        st.executeUpdate(
-            "DELETE FROM saved_criteriaelement WHERE id = " + this.getId() + " ");
-        st.executeUpdate(
-            "DELETE FROM campaign_list_groups WHERE group_id = " + this.getId());
-        st.executeUpdate(
-            "DELETE FROM saved_criterialist WHERE id = " + this.getId());
+        pst = db.prepareStatement(
+            "DELETE FROM saved_criteriaelement WHERE id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+
+        pst = db.prepareStatement(
+            "DELETE FROM campaign_list_groups WHERE group_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+
+        pst = db.prepareStatement(
+            "DELETE FROM saved_criterialist WHERE id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
       }
-      st.close();
       if (commit) {
         db.commit();
       }

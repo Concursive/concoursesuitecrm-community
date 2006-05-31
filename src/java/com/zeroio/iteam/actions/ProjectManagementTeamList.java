@@ -129,6 +129,7 @@ public final class ProjectManagementTeamList extends CFSModule {
         UserList users = new UserList();
         users.setDepartment(Integer.parseInt(id));
         users.setRoleType(Constants.ROLETYPE_REGULAR); //fetch only regular users
+        users.setSiteId(this.getUserSiteId(context));
         users.buildList(db);
         users = UserList.sortEnabledUsers(users, new UserList());
         context.getRequest().setAttribute("UserList", users);
@@ -149,6 +150,14 @@ public final class ProjectManagementTeamList extends CFSModule {
           Organization organization = new Organization(
               db, thisUser.getContact().getOrgId());
           
+          //remove account contacts whose siteId is different from the
+          //the siteId of the user.
+          if (this.getUserSiteId(context) != -1){
+            if (organization.getSiteId() != this.getUserSiteId(context)){
+              itr.remove();
+              continue;
+            }
+          }
           //Append organization name if this user is not a primary contact of this organization
           if (organization.getPrimaryContact() != null) {
             if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()) {

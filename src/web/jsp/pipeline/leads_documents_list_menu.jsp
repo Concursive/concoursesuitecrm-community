@@ -23,16 +23,37 @@
   var thisFileId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, folderId, fileId, headerId ) {
+  function displayMenu(loc, id, folderId, fileId, headerId, hasPermission) {
     thisFolderId = folderId
     thisHeaderId = headerId;
     thisFileId = fileId;
+    updateMenu(hasPermission);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuFolder", "down", 0, 0, 170, getHeight("menuFolderTable"));
       new ypSlideOutMenu("menuFile", "down", 0, 0, 170, getHeight("menuFileTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
+  }
+  
+  function updateMenu(show) {
+    if (show == 'false') {
+      hideSpan("modifyFile");
+      hideSpan("addVersion");
+      hideSpan("moveFile");
+      hideSpan("deleteFile");
+      hideSpan("renameFolder");
+      hideSpan("moveFolder");
+      hideSpan("deleteFolder");
+    } else {
+      showSpan("modifyFile");
+      showSpan("addVersion");
+      showSpan("moveFile");
+      showSpan("deleteFile");
+      showSpan("renameFolder");
+      showSpan("moveFolder");
+      showSpan("deleteFolder");
+    }
   }
   
   //Menu link functions
@@ -115,7 +136,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-documents-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify();">
+      <tr id="modifyFile"onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify();">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -125,7 +146,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-documents-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="addVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addVersion()">
         <th>
           <img src="images/icons/stock_insert-file-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -136,7 +157,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-documents-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="moveFile" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="moveFile()">
         <th>
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -147,7 +168,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-documents-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteFile();">
+      <tr id="deleteFile" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteFile();">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -174,7 +195,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="pipeline-opportunities-documents-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="renameFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="editFolder();">
         <th>
           <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -185,7 +206,7 @@
       </tr>
     </dhv:permission>
       <dhv:permission name="pipeline-opportunities-documents-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="moveFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="moveFolder();">
         <th>
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -196,7 +217,7 @@
       </tr>
     </dhv:permission>
       <dhv:permission name="pipeline-opportunities-documents-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="deleteFolder" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteFolder();">
         <th valign="top">
           <img src="images/icons/stock_left-with-subpoints-16.gif" border="0" align="absmiddle" height="16" width="16"/>

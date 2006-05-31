@@ -141,7 +141,7 @@ public class ImportHelp {
    * @throws SQLException Description of the Exception
    */
   public boolean insertHelpRecords(Connection db) throws SQLException {
-    // Inserting a records correspoding to a permission category
+    // Inserting records corresponding to a permission category
     Iterator itr = helpModules.iterator();
     while (itr.hasNext()) {
       HelpModule tempHelpModule = (HelpModule) itr.next();
@@ -150,8 +150,7 @@ public class ImportHelp {
       }
       // Verifying if the permission category exists in the new database
       int categoryId = -1;
-      if ((categoryId = existPermissionCategory(
-          Integer.parseInt(tempHelpModule.getCategory()))) != -1) {
+      if ((categoryId = existPermissionCategory(tempHelpModule.getConstantForCategory())) != -1) {
         tempHelpModule.setId(categoryId);
         tempHelpModule.setCategoryId(categoryId);
 
@@ -275,7 +274,9 @@ public class ImportHelp {
 
       HelpModule helpModule = new HelpModule();
       helpModule.setCategory(
-          moduleNMP.getNamedItem("constant").getNodeValue());
+          moduleNMP.getNamedItem("name").getNodeValue());
+      helpModule.setConstantForCategory(
+          Integer.parseInt(moduleNMP.getNamedItem("constant").getNodeValue()));
       helpModule.setContentLevel(
           moduleNMP.getNamedItem("contentLevel").getNodeValue());
 

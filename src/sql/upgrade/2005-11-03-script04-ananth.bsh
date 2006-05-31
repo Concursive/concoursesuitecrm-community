@@ -1,0 +1,29 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Adds Custom List View Editor for Tickets module
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.admin.base.CustomListViewEditor;
+
+// Using the constant categoryId from permissions.xml, get the database id for
+// tickets module. 
+
+int categoryId = PermissionCategory.lookupId(db, 8);
+
+if (categoryId != -1) {
+  CustomListViewEditor listViewEditor = new CustomListViewEditor();
+  listViewEditor.setModuleId(categoryId);
+  listViewEditor.setConstantId(PermissionCategory.CUSTOM_LIST_VIEWS_TICKET);
+  listViewEditor.setDescription("Ticket Custom List Views");
+  listViewEditor.setCategoryId(PermissionCategory.PERMISSION_CAT_TICKETS);
+  listViewEditor.insert(db);
+  print("Custom List View Editor added...");
+} else {
+  print("Custom List View Editor NOT Added...");
+}
+

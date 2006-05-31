@@ -26,6 +26,7 @@ import org.aspcfs.modules.healthcare.edit.base.FolderInsertRecord;
 import org.aspcfs.modules.healthcare.edit.base.TransactionRecord;
 import org.aspcfs.modules.healthcare.edit.base.TransactionRecordList;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.SMTPMessage;
 import org.aspcfs.utils.Template;
@@ -58,7 +59,6 @@ public final class ProcessCalculation extends CFSModule {
   public String executeCommandDefault(ActionContext context) {
     String test = context.getRequest().getParameter("test");
     //Declare the typical action objects
-    Exception errorMessage = null;
     Connection db = null;
     HashMap errors = new HashMap();
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -111,8 +111,9 @@ public final class ProcessCalculation extends CFSModule {
       SystemStatus thisSystem = this.getSystemStatus(context, ce);
       if (thisSystem == null) {
         //Since typical login was bypassed, make sure the system status is in memory
+        Site thisSite = SecurityHook.retrieveSite(context.getServletContext(), context.getRequest());
         thisSystem = SecurityHook.retrieveSystemStatus(
-            context.getServletContext(), db, ce);
+            context.getServletContext(), db, ce, thisSite.getLanguage());
       }
       //get connections to the remote production database
       sqlDriver = new ConnectionPool();
@@ -429,8 +430,6 @@ public final class ProcessCalculation extends CFSModule {
       //Insert all of today's transactions into the database
       Iterator it = providerTransactions.keySet().iterator();
       while (it.hasNext()) {
-        boolean hasErrors = false;
-        boolean payorIsValid = false;
         String key = (String) it.next();
         FolderInsertRecord val = (FolderInsertRecord) providerTransactions.get(
             key);
@@ -514,7 +513,6 @@ public final class ProcessCalculation extends CFSModule {
       }
       prodDb.close();
     } catch (Exception e) {
-      errorMessage = e;
       e.printStackTrace();
     } finally {
       if (sqlDriver != null) {
@@ -609,4 +607,3 @@ public final class ProcessCalculation extends CFSModule {
     return template.getParsedText();
   }
 }
-

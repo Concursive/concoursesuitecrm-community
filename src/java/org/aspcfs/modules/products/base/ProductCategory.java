@@ -933,10 +933,10 @@ public class ProductCategory extends GenericBean {
         " pctgy.*, " +
         " pctgy2.category_name AS parent_name, " +
         " pctgytype.description AS type_name " +
-        " FROM product_category AS pctgy " +
-        " LEFT JOIN product_category AS pctgy2 " +
+        " FROM product_category pctgy " +
+        " LEFT JOIN product_category pctgy2 " +
         " ON ( pctgy.parent_id = pctgy2.category_id ) " +
-        " LEFT JOIN lookup_product_category_type AS pctgytype " +
+        " LEFT JOIN lookup_product_category_type pctgytype " +
         " ON ( pctgy.type_id = pctgytype.code ) " +
         " WHERE pctgy.category_id = ? " +
         " ORDER BY pctgy.category_name ");
@@ -1498,7 +1498,7 @@ public class ProductCategory extends GenericBean {
      *  i = 0;
      *  pst = db.prepareStatement(
      *  "SELECT count(*) AS categorycount " +
-     *  "FROM product_catalog_category_map AS map " +
+     *  "FROM product_catalog_category_map map " +
      *  "WHERE map.category_id = ? " +
      *  "AND map.product_id NOT IN ( " +
      *  " SELECT product_id " +
@@ -1570,10 +1570,11 @@ public class ProductCategory extends GenericBean {
      *  pst.close();
      */
     //Check for product catalogs linked to this category
+    /*
     i = 0;
     pst = db.prepareStatement(
         "SELECT count(*) as productcount " +
-        " FROM product_catalog_category_map " +
+        "FROM product_catalog_category_map " +
         "WHERE category_id = ?");
     pst.setInt(++i, this.getId());
     rs = pst.executeQuery();
@@ -1589,6 +1590,7 @@ public class ProductCategory extends GenericBean {
     }
     rs.close();
     pst.close();
+    */
     return dependencyList;
   }
 

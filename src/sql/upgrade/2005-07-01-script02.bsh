@@ -20,7 +20,6 @@ if (categoryId != -1) {
 
   // Load the dictionary for localization
   String fs = System.getProperty("file.separator") ;
-  String languagePath = fileLibraryPath + "WEB-INF" + fs + "languages" + fs;
   Dictionary dictionary = new Dictionary(languagePath, "en_US");
   if (systemLanguage != null) {
     if (!"en_US".equals(locale)) {

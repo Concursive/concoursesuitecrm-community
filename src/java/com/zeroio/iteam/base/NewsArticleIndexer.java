@@ -53,7 +53,7 @@ public class NewsArticleIndexer implements Indexer {
     int count = 0;
     // TODO: Take into account the various status codes for news, as well as date ranges
     PreparedStatement pst = db.prepareStatement(
-        "SELECT news_id, project_id, subject, intro, message, start_date, status " +
+        "SELECT news_id, project_id, subject, intro, \"message\", start_date, status " +
         "FROM project_news " +
         "WHERE project_id > -1 ");
     ResultSet rs = pst.executeQuery();

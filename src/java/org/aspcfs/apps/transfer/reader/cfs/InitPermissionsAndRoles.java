@@ -173,7 +173,7 @@ public class InitPermissionsAndRoles implements DataReader {
             "reports", (String) category.getAttribute("reports"));
         thisRecord.addField(
             "scheduledEvents", (String) category.getAttribute(
-                "scheduledEvents"));
+            "scheduledEvents"));
         thisRecord.addField(
             "objectEvents", (String) category.getAttribute("objectEvents"));
         thisRecord.addField(
@@ -183,6 +183,7 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.addField(
             "webdav", (String) category.getAttribute("webdav"));
         thisRecord.addField("logos", (String) category.getAttribute("logos"));
+        thisRecord.addField("actionPlans", (String) category.getAttribute("actionPlans"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
 
@@ -230,7 +231,7 @@ public class InitPermissionsAndRoles implements DataReader {
           int permissionId = Integer.parseInt(writer.getLastResponse());
           permissionIds.put(
               (String) permission.getAttribute("name"), new Integer(
-                  permissionId));
+              permissionId));
         }
 
         //Insert any folders under this category
@@ -251,6 +252,25 @@ public class InitPermissionsAndRoles implements DataReader {
           folderRecord.addField(
               "description", (String) folder.getAttribute("description"));
           writer.save(folderRecord);
+        }
+
+        //Insert any action plan editors under this category
+        ArrayList actionPlanEditorList = new ArrayList();
+        XMLUtils.getAllChildren(category, "actionPlanEditor", actionPlanEditorList);
+        Iterator planEditorItems = actionPlanEditorList.iterator();
+        int editorLevel = 0;
+        while (planEditorItems.hasNext()) {
+          editorLevel = editorLevel + 10;
+          Element planEditor = (Element) planEditorItems.next();
+          DataRecord planEditorRecord = new DataRecord();
+          planEditorRecord.setName("planEditor");
+          planEditorRecord.setAction("insert");
+          planEditorRecord.addField("moduleId", String.valueOf(categoryId));
+          planEditorRecord.addField("categoryId", uniqueCategoryId);
+          planEditorRecord.addField("constantId", (String) planEditor.getAttribute("constantId"));
+          planEditorRecord.addField("level", String.valueOf(editorLevel));
+          planEditorRecord.addField("description", (String) planEditor.getAttribute("description"));
+          writer.save(planEditorRecord);
         }
 
         //Insert any lookups under this category
@@ -290,7 +310,7 @@ public class InitPermissionsAndRoles implements DataReader {
           reportRecord.addField("categoryId", String.valueOf(categoryId));
           reportRecord.addField(
               "permissionId", ((Integer) permissionIds.get(
-                  report.getAttribute("permission"))).intValue());
+              report.getAttribute("permission"))).intValue());
           reportRecord.addField("file", (String) report.getAttribute("file"));
           String type = report.getAttribute("type");
           if ("admin".equals(type)) {
@@ -364,8 +384,8 @@ public class InitPermissionsAndRoles implements DataReader {
             "description", (String) role.getAttribute("description"));
         thisRecord.addField(
             "type", (((role.getAttribute("type") == null) || ("".equals(
-                role.getAttribute("type")))) ? "0" : (String) role.getAttribute(
-                    "type")));
+            role.getAttribute("type")))) ? "0" : (String) role.getAttribute(
+            "type")));
         if ("false".equals((String) role.getAttribute("enabled"))) {
           thisRecord.addField("enabled", "false");
         } else {
@@ -386,7 +406,7 @@ public class InitPermissionsAndRoles implements DataReader {
           rolePermissionRecord.addField("roleId", String.valueOf(roleId));
           rolePermissionRecord.addField(
               "permissionId", ((Integer) permissionIds.get(
-                  (String) rolePermission.getAttribute("name"))).intValue());
+              (String) rolePermission.getAttribute("name"))).intValue());
           String attributes = (String) rolePermission.getAttribute(
               "attributes");
           rolePermissionRecord.addField(

@@ -88,6 +88,7 @@ public class SessionManager {
     thisSession.setId(session.getId());
     thisSession.setIpAddress(request.getRemoteAddr());
     thisSession.setCreationTime(session.getCreationTime());
+    thisSession.setUserId(userId);
     if (sessions.get(new Integer(userId)) == null) {
       synchUpdate(thisSession, userId, ADD);
     } else {

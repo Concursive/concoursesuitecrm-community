@@ -18,22 +18,31 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.controller.*,org.aspcfs.utils.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.controller.SystemStatus"%>
+<%@ page import="org.aspcfs.controller.*,org.aspcfs.utils.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
+<jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
+<jsp:useBean id="AccountSizeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SegmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
+<jsp:useBean id="SalutationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
-<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%@ include file="../initPageIsManagerOf.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -41,11 +50,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/setSalutation.js"></script>
 <script language="JavaScript">
   indSelected = 0;
   orgSelected = 0; 
@@ -57,10 +68,10 @@
     }
   }
   function initializeClassification() {
-  <% if (OrgDetails.getPrimaryContact() != null) { %>
+  <% if (OrgDetails.getIsIndividual()) { %>
       indSelected = 1;
       updateFormElements(1);
-  <%} else if (OrgDetails.getPrimaryContact() == null) {%>
+  <%} else {%>
       orgSelected = 1;
       updateFormElements(0);
   <%}%>
@@ -72,35 +83,67 @@
       elm3 = document.getElementById("nameLast1");
       elm4 = document.getElementById("orgname1");
       elm5 = document.getElementById("ticker1");
+      elm6 = document.getElementById("accountSize1");
+      elm7 = document.getElementById("listSalutation1");
+      elm8 = document.getElementById("primarycontact1");
       if (elm1) {
         elm1.style.color = "#000000";
         document.addAccount.nameFirst.style.background = "#ffffff";
+        document.addAccount.nameFirst.disabled = false;
       }
       if (elm2) {
         elm2.style.color = "#000000";
         document.addAccount.nameMiddle.style.background = "#ffffff";
+        document.addAccount.nameMiddle.disabled = false;
       }
       if (elm3) {
         elm3.style.color = "#000000";
         document.addAccount.nameLast.style.background = "#ffffff";
+        document.addAccount.nameLast.disabled = false;
       }
       if (elm4) {
         elm4.style.color = "#000000";
         document.addAccount.name.style.background = "#ffffff";
+        document.addAccount.name.disabled = false;
       }
       if (elm5) {
         elm5.style.color = "#000000";
         document.addAccount.ticker.style.background = "#ffffff";
+        document.addAccount.ticker.disabled = false;
+      }
+      if (elm6) {
+        elm6.style.color = "#000000";
+        document.addAccount.accountSize.style.background = "#ffffff";
+        document.addAccount.accountSize.disabled = false;
+      }
+      if (elm7) {
+        elm7.style.color = "#000000";
+        document.addAccount.listSalutation.style.background = "#ffffff";
+        document.addAccount.listSalutation.disabled = false;
+      }
+      if (elm8) {
+        elm8.style.color = "#000000";
+        document.addAccount.primaryContactId.style.background = "#ffffff";
+        document.addAccount.primaryContactId.disabled = false;
       }
     }
   }
   function updateFormElements(index) {
     if (document.getElementById) {
-      elm1 = document.getElementById("nameFirst1");
-      elm2 = document.getElementById("nameMiddle1");
-      elm3 = document.getElementById("nameLast1");
+      <dhv:include name="accounts-firstname" none="true">
+        elm1 = document.getElementById("nameFirst1");
+      </dhv:include>
+      <dhv:include name="accounts-middlename" none="true">
+        elm2 = document.getElementById("nameMiddle1");
+      </dhv:include>
+      <dhv:include name="accounts-lastname" none="true">
+        elm3 = document.getElementById("nameLast1");
+      </dhv:include>
       elm4 = document.getElementById("orgname1");
       elm5 = document.getElementById("ticker1");
+      elm6 = document.getElementById("accountSize1");
+      elm7 = document.getElementById("listSalutation1");
+      elm8 = document.getElementById("primarycontact1");
       if (index == 1) {
         indSelected = 1;
         orgSelected = 0;        
@@ -109,11 +152,19 @@
           elm4.style.color="#cccccc";
           document.addAccount.name.style.background = "#cccccc";
           document.addAccount.name.value = "";
+          document.addAccount.name.disabled = true;
         }
         if (elm5) {
           elm5.style.color="#cccccc";
           document.addAccount.ticker.style.background = "#cccccc";
           document.addAccount.ticker.value = "";
+          document.addAccount.ticker.disabled = true;
+        }
+        if (elm6) {
+          elm6.style.color="#cccccc";
+          document.addAccount.accountSize.style.background = "#cccccc";
+          document.addAccount.accountSize.value = "";
+          document.addAccount.accountSize.disabled = true;
         }
       } else {
         indSelected = 0;
@@ -123,16 +174,31 @@
           elm1.style.color = "#cccccc";
           document.addAccount.nameFirst.style.background = "#cccccc";
           document.addAccount.nameFirst.value = "";
+          document.addAccount.nameFirst.disabled = true;
         }
         if (elm2) {
           elm2.style.color = "#cccccc";  
           document.addAccount.nameMiddle.style.background = "#cccccc";
           document.addAccount.nameMiddle.value = "";
+          document.addAccount.nameMiddle.disabled = true;
         }
         if (elm3) {
           elm3.style.color = "#cccccc";      
           document.addAccount.nameLast.style.background = "#cccccc";
           document.addAccount.nameLast.value = "";
+          document.addAccount.nameLast.disabled = true;
+        }
+        if (elm7) {
+          elm7.style.color = "#cccccc";
+          document.addAccount.listSalutation.style.background = "#cccccc";
+          document.addAccount.listSalutation.value = -1;     
+          document.addAccount.listSalutation.disabled = true;
+        }
+        if (elm8) {
+          elm8.style.color = "#cccccc";
+          document.addAccount.primaryContactId.style.background = "#cccccc";
+          document.addAccount.primaryContactId.selectedIndex = 0;
+          document.addAccount.primaryContactId.disabled = true;
         }
       }
     }
@@ -257,23 +323,37 @@
     }
   }
   
-  function update(countryObj, stateObj) {
-  var country = document.forms['addAccount'].elements[countryObj].value;
-   if(country == "UNITED STATES" || country == "CANADA"){
-      hideSpan('state2' + stateObj);
-      showSpan('state1' + stateObj);
-   }else{
+  function update(countryObj, stateObj, selectedValue) {
+    var country = document.forms['addAccount'].elements[countryObj].value;
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=addAccount&stateObj=address"+stateObj+"state";
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueUpdateState(stateObj, showText) {
+    if(showText == 'true'){
       hideSpan('state1' + stateObj);
       showSpan('state2' + stateObj);
+    } else {
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
     }
+  }
+
+  function updateOwnerList(){
+    var sel = document.forms['addAccount'].elements['siteId'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "Accounts.do?command=OwnerJSList&form=addAccount&widget=owner&allowBlank=false&siteId=" + escape(value);
+    window.frames['server_commands'].location.href=url;
   }
 </script>
 <body onLoad="javascript:initializeClassification();">
 <form name="addAccount" action="Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
-<%boolean popUp = false;
+<%
+  boolean popUp = false;
   if(request.getParameter("popup")!=null){
     popUp = true;
-  }%>
+  }
+%>
 <dhv:evaluate if="<%= !popUp %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -296,22 +376,19 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>">
       <input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
 <% if (request.getParameter("return") != null) {%>
       <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';" />
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';" />
-	<%}%>
-<%} else {%>
-      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';" />
-<%}%>
-<dhv:evaluate if="<%= popUp %>">
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();" />
-</dhv:evaluate>
+<% if (request.getParameter("return") != null && "list".equals(request.getParameter("return"))) {%>
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';" />
+<% } else if (isPopup(request)) { %>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();" />
+<% } else { %>
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';" />
+<% } %>
 <br />
 <dhv:formMessage />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
@@ -321,6 +398,17 @@
       <strong><dhv:label name="accounts.accounts_modify.ModifyPrimaryInformation">Modify Primary Information</dhv:label></strong>
     </th>     
   </tr>
+<dhv:include name="accounts-sites" none="true">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </td>
+    <td>
+      <%= SiteList.getSelectedValue(OrgDetails.getSiteId()) %>
+      <input type="hidden" name="siteId" value="<%=OrgDetails.getSiteId()%>" >
+    </td>
+  </tr>
+</dhv:include>
 <dhv:evaluate if="<%= OrgDetails.getOwner() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), OrgDetails.getOwner()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -370,84 +458,145 @@
       <dhv:label name="accounts.accounts_add.Classification">Classification</dhv:label>
     </td>
     <td>
-      <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() != null) %>">
-        <dhv:label name="accounts.accounts_add.Individual">Individual</dhv:label>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() == null) %>">
-        <dhv:label name="accounts.accounts_add.Organization">Organization</dhv:label>
-      </dhv:evaluate>
+      <input type="radio" name="form_type" value="organization" onClick="javascript:updateFormElements(0);" <%= !OrgDetails.getIsIndividual() ? " checked" : "" %>>
+      <dhv:label name="accounts.accounts_add.Organization">Organization</dhv:label>
+      <input type="radio" name="form_type" value="individual" onClick="javascript:updateFormElements(1);" <%= OrgDetails.getIsIndividual() ? " checked" : "" %>>
+      <dhv:label name="accounts.accounts_add.Individual">Individual</dhv:label>
     </td>
   </tr>
 </dhv:include>
-  <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() != null) %>">
-    <input type="hidden" name="form_type" value="individual">
-  </dhv:evaluate>
-  <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() == null) %>">
-    <input type="hidden" name="form_type" value="organization">
-  </dhv:evaluate>        
   <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() == null %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel" name="orgname1" id="orgname1">
-      <dhv:label name="accounts.accounts_add.OrganizationName">Organization Name</dhv:label>
-    </td>
-    <td>
-      <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" maxlength="80" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
-    </td>
-  </tr>
+    <dhv:include name="accounts-name" none="true">
+      <tr class="containerBody">
+        <td nowrap class="formLabel" name="orgname1" id="orgname1">
+          <dhv:label name="accounts.accounts_add.OrganizationName">Organization Name</dhv:label>
+        </td>
+        <td>
+          <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" maxlength="80" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+       </td>
+      </tr>
+    </dhv:include>
+    <dhv:include name="accounts-select-primary-contact" none="true">
+        <tr class="containerBody">
+          <td nowrap class="formLabel" name="primarycontact1" id="primarycontact1">
+            <dhv:label name="ticket.primaryContact">Primary Contact</dhv:label>
+          </td>
+          <td>
+            <dhv:evaluate if="<%= contactList != null && contactList.size() > 0 %>">
+              <%  HtmlSelect contactSelect = contactList.getHtmlSelectObj();
+                  contactSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"),0); %>
+              <%= contactSelect.getHtml("primaryContactId") %>
+            </dhv:evaluate><dhv:evaluate if="<%= contactList == null || contactList.size() == 0 %>">
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+              <input type="hidden" name="primaryContactId" id="primaryContactId" value="-1"/>
+            </dhv:evaluate>  <%= showAttribute(request, "primaryContactIdError") %>
+          </td>
+        </tr>
+    </dhv:include>
   </dhv:evaluate>
   <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() != null %>">
-  <tr class="containerBody">
-    <td name="nameFirst1" id="nameFirst1" nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
-    </td>
-    <td>
-      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameFirst" value="<%= toHtmlValue(OrgDetails.getNameFirst()) %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td name="nameMiddle1" id="nameMiddle1" nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.MiddleName">Middle Name</dhv:label>
-    </td>
-    <td>
-      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameMiddle" value="<%= toHtmlValue(OrgDetails.getNameMiddle()) %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td name="nameLast1" id="nameLast1" nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.LastName">Last Name</dhv:label>
-    </td>
-    <td>
-      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
-    </td>
-  </tr>
+    <dhv:include name="accounts-name" none="true">
+      <tr class="containerBody">
+        <td nowrap class="formLabel" name="orgname1" id="orgname1">
+          <dhv:label name="accounts.accounts_add.OrganizationName">Organization Name</dhv:label>
+        </td>
+        <td>
+          <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" maxlength="80" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+       </td>
+      </tr>
+    </dhv:include>
+    <dhv:include name="account-salutation" none="true">
+       <tr class="containerBody">
+        <td id="listSalutation1" name="listSalutation1" nowrap class="formLabel">
+          <dhv:label name="accounts.accounts_contacts_add.Salutation">Salutation</dhv:label>
+        </td>
+        <td>
+          <% SalutationList.setJsEvent("onchange=\"javascript:fillSalutation('addAccount');\"");%>
+          <%= SalutationList.getHtmlSelect("listSalutation",OrgDetails.getNameSalutation()) %>
+          <input type="hidden" size="35" name="nameSalutation" value="<%= toHtmlValue(OrgDetails.getNameSalutation()) %>">
+        </td>
+      </tr>
+    </dhv:include>
+    <dhv:include name="accounts-firstname" none="true">
+      <tr class="containerBody">
+        <td name="nameFirst1" id="nameFirst1" nowrap class="formLabel">
+          <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
+        </td>
+        <td>
+          <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameFirst" value="<%= toHtmlValue(OrgDetails.getNameFirst()) %>">
+        </td>
+      </tr>
+    </dhv:include>
+    <dhv:include name="accounts-middlename" none="true">
+      <tr class="containerBody">
+        <td name="nameMiddle1" id="nameMiddle1" nowrap class="formLabel">
+          <dhv:label name="accounts.accounts_add.MiddleName">Middle Name</dhv:label>
+        </td>
+        <td>
+          <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameMiddle" value="<%= toHtmlValue(OrgDetails.getNameMiddle()) %>">
+        </td>
+      </tr>
+    </dhv:include>
+    <dhv:include name="accounts-lastname" none="true">
+      <tr class="containerBody">
+        <td name="nameLast1" id="nameLast1" nowrap class="formLabel">
+          <dhv:label name="accounts.accounts_add.LastName">Last Name</dhv:label>
+        </td>
+        <td>
+          <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
+        </td>
+      </tr>
+    </dhv:include>
   </dhv:evaluate>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="organization.accountNumber">Account Number</dhv:label>
-    </td>
-    <td>
-      <input type="text" size="50" name="accountNumber" maxlength="50" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
-    </td>
-  </tr>
+  <dhv:include name="organization.source" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="contact.Source">Source</dhv:label>
+      </td>
+      <td>
+        <%= SourceList.getHtmlSelect("source",OrgDetails.getSource()) %>
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.rating" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="sales.rating">Rating</dhv:label>
+      </td>
+      <td>
+        <%= RatingList.getHtmlSelect("rating",OrgDetails.getRating()) %>
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="accounts-number" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="organization.accountNumber">Account Number</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="accountNumber" maxlength="50" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
+      </td>
+    </tr>
+  </dhv:include>
   <dhv:include name="organization.url" none="true">
-  <tr class="containerBody">
-    <td class="formLabel">
-      <dhv:label name="accounts.accounts_add.WebSiteURL">Web Site URL</dhv:label>
-    </td>
-    <td>
-      <input type="text" size="50" name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
-    </td>
-  </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_add.WebSiteURL">Web Site URL</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
+      </td>
+    </tr>
   </dhv:include>
   <dhv:include name="organization.industry" none="true">
-  <tr class="containerBody">
-    <td class="formLabel">
-      <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
-    </td>
-    <td>
-      <%= IndustryList.getHtmlSelect("industry",OrgDetails.getIndustry()) %>
-    </td>
-  </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
+      </td>
+      <td>
+        <%= IndustryList.getHtmlSelect("industry",OrgDetails.getIndustry()) %>
+      </td>
+    </tr>
   </dhv:include>
   <dhv:include name="organization.employees" none="true">
   <tr class="containerBody">
@@ -470,45 +619,100 @@
     </td>
   </tr>
   </dhv:include>
-  <dhv:include name="organization.ticker" none="true">
-  <tr class="containerBody">
-    <td name="ticker1" id="ticker1" nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.TickerSymbol">Ticker Symbol</dhv:label>
-    </td>
-    <td>
-      <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="10" maxlength="10" name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
-    </td>
-  </tr>
+  <dhv:include name="organization.potential" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.Potential">Potential</dhv:label>
+      </td>
+      <td>
+        <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+        <input type="text" name="potential" size="15" value="<zeroio:number value="<%= OrgDetails.getPotential() %>" locale="<%= User.getLocale() %>" />">
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() == null %>">
+    <dhv:include name="organization.ticker" none="true">
+      <tr class="containerBody">
+        <td name="ticker1" id="ticker1" nowrap class="formLabel">
+          <dhv:label name="accounts.accounts_add.TickerSymbol">Ticker Symbol</dhv:label>
+        </td>
+        <td>
+          <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="10" maxlength="10" name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
+      </td>
+      </tr>
+    </dhv:include>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() == null %>">
+    <dhv:include name="accounts-size" none="true"> 
+      <tr class="containerBody">
+        <td name="accountSize1" id="accountSize1" nowrap class="formLabel">
+          <dhv:label name="accounts.accounts_add.accountSize">Account Size</dhv:label>
+        </td>
+        <td>
+          <%= AccountSizeList.getHtmlSelect("accountSize",OrgDetails.getAccountSize()) %>
+        </td>
+      </tr>
+    </dhv:include>
+  </dhv:evaluate>
+  <dhv:include name="accounts-segment" none="true"> 
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.segment">Segment</dhv:label>
+      </td>
+      <td>
+        <%= SegmentList.getHtmlSelect("segmentId",OrgDetails.getSegmentId()) %>
+        </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="accounts-directbill" none="true">
+    <dhv:permission name="accounts-directbill-view">
+      <tr class="containerBody">
+          <td nowrap class="formLabel">
+          <dhv:label name="accounts.accounts_add.directBill">Direct Bill</dhv:label>
+        </td>
+        <td>
+          <dhv:permission name="accounts-directbill-edit">
+            <input type="checkbox" name="directBill" <%=(OrgDetails.getDirectBill()? "CHECKED" : "") %> />
+          </dhv:permission>
+          <dhv:permission name="accounts-directbill-edit" none="true">
+            <dhv:permission name="accounts-directbill-view">
+                <input type="checkbox" name="directBill1" <%=OrgDetails.getDirectBill()?"CHECKED":""%> DISABLED />
+            </dhv:permission>
+            <input type="hidden" name="directBill" value="<%=OrgDetails.getDirectBill()%>" />
+          </dhv:permission>
+         </td>
+        </tr>
+      </dhv:permission>
   </dhv:include>
   <dhv:include name="organization.contractEndDate" none="true">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.ContractEndDate">Contract End Date</dhv:label>
-    </td>
-    <td>
-      <zeroio:dateSelect form="addAccount" field="contractEndDate" timestamp="<%= OrgDetails.getContractEndDate() %>" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="true" />
-      <%= showAttribute(request, "contractEndDateError") %>
-    </td>
-  </tr>
-  </dhv:include>
-  <dhv:include name="organization.alert" none="true">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.AlertDescription">Alert Description</dhv:label>
-    </td>
-    <td>
-      <input type="text" size="50" name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
-    </td>
-    <td>
-      <zeroio:dateSelect form="addAccount" field="alertDate" timestamp="<%= OrgDetails.getAlertDate() %>" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="true" />
-      <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
-    </td>
-  </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.ContractEndDate">Contract End Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:dateSelect form="addAccount" field="contractEndDate" timestamp="<%= OrgDetails.getContractEndDate() %>" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="true" />
+        <%= showAttribute(request, "contractEndDateError") %>
+      </td>
+    </tr>
+    </dhv:include>
+    <dhv:include name="organization.alert" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.AlertDescription">Alert Description</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:dateSelect form="addAccount" field="alertDate" timestamp="<%= OrgDetails.getAlertDate() %>" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="true" />
+        <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
+      </td>
+    </tr>
   </dhv:include>
 </table>
 <br>
@@ -650,6 +854,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine4">Address Line 4</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line4" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine4()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
@@ -660,15 +872,14 @@
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
-    <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
-        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+    <td>                                                        
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -684,11 +895,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
       <%
         CountrySelect = new CountrySelect(systemStatus);
        %>
@@ -738,6 +946,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine4">Address Line 4</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line4" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
@@ -750,13 +966,12 @@
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtml("address" + acount + "state") %>
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -772,11 +987,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
       <%
         CountrySelect = new CountrySelect(systemStatus);
        %>
@@ -828,6 +1040,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine4">Address Line 4</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line4" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine4()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
@@ -839,14 +1059,13 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
-        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -862,11 +1081,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
       <%
         CountrySelect = new CountrySelect(systemStatus);
        %>
@@ -916,6 +1132,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine4">Address Line 4</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line4" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
@@ -928,13 +1152,12 @@
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtml("address" + acount + "state") %>
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -950,11 +1173,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
       <%
         CountrySelect = new CountrySelect(systemStatus);
        %>
@@ -1061,18 +1281,18 @@
   <br />
   <input type="hidden" name="onlyWarnings" value=<%=(OrgDetails.getOnlyWarnings()?"on":"off")%> />
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';" />
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';" />
-	<%}%>
-<%} else {%>
+<% if (request.getParameter("return") != null && "list".equals(request.getParameter("return"))) {%>
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';" />
+<% } else if (isPopup(request)) { %>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();" />
+<% } else { %>
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';" />
-  <%}%>
-  <dhv:evaluate if="<%= popUp %>">
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();" />
-  </dhv:evaluate>
+<% } %>
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="statusId" value="<%=OrgDetails.getStatusId()%>">
   <input type="hidden" name="trashedDate" value="<%=OrgDetails.getTrashedDate()%>">
+<% if (request.getParameter("actionplan") != null) { %>
+<input type="hidden" name="actionplan" value="<%=request.getParameter("actionplan")%>">
+<%}%>
 </dhv:container>
 </form>

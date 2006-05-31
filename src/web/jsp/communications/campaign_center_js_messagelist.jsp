@@ -33,7 +33,7 @@ function newOpt(param, value) {
 function page_init() {
   var list = parent.document.<%= form %>.elements['messageId'];
   list.options.length = 0;
-  list.options[list.length] = newOpt(label("option.none","--None--"), "0");
+  list.options[list.length] = newOpt(label("option.none","-- None --"), "0");
 <%
   Iterator list1 = messageList.iterator();
   while (list1.hasNext()) {

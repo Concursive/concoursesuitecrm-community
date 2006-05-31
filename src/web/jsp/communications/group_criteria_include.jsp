@@ -26,10 +26,56 @@
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactSource" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="SiteValueList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteCriteriaList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
+function checkOwnerSite(item) {
+  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+  try {
+    var ownerid = document.getElementById('ownerid').value;
+    var url = 'MyActionLists.do?command=GetSiteForUser&userId='+ownerid+'&item='+item;
+    window.frames['server_commands'].location.href=url;
+  } catch (oException) {
+    if (item == 'contactspopup') {
+      popContactsListMultipleCampaign('listViewId','1','<%= User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %><%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>');
+    }
+  }
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
+    popContactsListMultipleCampaign('listViewId','1','mySiteOnly=true&siteId=<%= User.getUserRecord().getSiteId() %><%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>');
+  </dhv:evaluate>
+}
+
+function continueSetSite(value, item) {
+  if (item == 'siteId') {
+    var siteElement = document.getElementById('siteId2');
+    var siteId = siteElement.options[siteElement.options.selectedIndex].value;
+    if (value == '-1' || value == siteId) {
+      return;
+    }
+    alert(label('','Site restricted for the selected owner'));
+    var i = 0;
+    for (i = 0;i< siteElement.options.length; i++) {
+      siteId = siteElement.options[i].value;
+      if (siteId == value) {
+        siteElement.options.selectedIndex = i;
+        return;
+      }
+    }
+  } else if (item == 'contactspopup') {
+    var site = '';
+    if (value == '-1') {
+      site = 'includeAllSites=true&siteId=-1';
+    } else {
+      site = 'mySiteOnly=true&siteId='+value;
+    }
+    popContactsListMultipleCampaign('listViewId','1',site+'<%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>');
+    return;
+  }
+}
 
 function checkValue() {
   if (document.getElementById("searchValue").value.indexOf("[") != -1 ||
@@ -66,7 +112,8 @@ function checkValue() {
       }
     }
   } else if (!(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 8) && 
-      !(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11))  {
+      !(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11) &&
+      !(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 12))  {
     if (checkNullString(document.getElementById("searchValue").value)) {
       alert(label("check.valid.input","Please enter a valid input"));
       return false;
@@ -74,7 +121,6 @@ function checkValue() {
   }
   return true;
 }
-<!-- 
 //updateOperators has to be defined in each file because it uses bean
 //information to populate selects
 function updateOperators(){
@@ -90,10 +136,10 @@ function updateOperators(){
       if (thisContactType.isGroup()) {
 %>
         // option group
-        insertOptionGroup('<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>',  "idSelect");
+        insertOptionGroup("<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>",  "idSelect");
     <%} else {
         if (thisContactType.getEnabled() || (!thisContactType.getEnabled() && !ContactTypeList.getExcludeDisabledIfUnselected())) {%>
-          insertOption('<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>', '<%= thisContactType.getCode() %>', "idSelect");
+          insertOption("<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>", '<%= thisContactType.getCode() %>', "idSelect");
       <%}
       }
     }
@@ -104,6 +150,9 @@ function updateOperators(){
     javascript:hideSpan('searchText2');    
     javascript:hideSpan('new1');
     javascript:hideSpan('new1a');
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
 	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
 		javascript:hideSpan('new0');
@@ -112,6 +161,9 @@ function updateOperators(){
     javascript:showSpan('new1a');
     javascript:showSpan('searchText1');
     javascript:showSpan('searchText2');
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = "";
 	} else if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11) {
     javascript:hideSpan('new1');
@@ -124,23 +176,43 @@ function updateOperators(){
       while (z.hasNext()) {
         LookupElement thisElt = (LookupElement)z.next();
         if (thisElt.getEnabled() || (!thisElt.getEnabled() && !AccountTypeList.getExcludeDisabledIfUnselected())) {%>
-          insertOption('<%= StringUtils.jsStringEscape(thisElt.getDescription()) %>', '<%= thisElt.getCode() %>', "idSelect");
+          insertOption("<%= StringUtils.jsStringEscape(thisElt.getDescription()) %>", '<%= thisElt.getCode() %>', 'idSelect');
       <%}
       }
-    }
-    %>
+    }%>
 		javascript:showSpan('new0');
     javascript:showSpan('new0a');
     javascript:hideSpan('searchText1');
     javascript:hideSpan('searchText2');    
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
-	} else {
+	} else if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 12) {
+		javascript:hideSpan('new0');
+    javascript:hideSpan('new0a');
+    javascript:hideSpan('new1');
+    javascript:hideSpan('new1a');
+    javascript:hideSpan('searchText1');
+    javascript:hideSpan('searchText2');    
+    javascript:showSpan('searchSite1');
+    javascript:hideSpan('searchSite2a');
+    javascript:hideSpan('searchSite2b');
+    if (document.searchForm.allSites){
+		  document.searchForm.searchValue.value = document.searchForm.siteId1.options[document.searchForm.siteId1.selectedIndex].text;
+    } else {
+		  document.searchForm.searchValue.value = document.searchForm.siteName1.value;
+    }
+  } else {
 		javascript:hideSpan('new0');
     javascript:hideSpan('new0a');
     javascript:hideSpan('new1');
     javascript:hideSpan('new1a');
     javascript:showSpan('searchText1');
-    javascript:showSpan('searchText2');    
+    javascript:showSpan('searchText2');
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = "";
 	}
 	// empty the operator list
@@ -151,13 +223,41 @@ function updateOperators(){
 		operatorList.options[i] = new Option(listOfOperators[fieldSelectIndex][i].displayText, listOfOperators[fieldSelectIndex][i].id)
 	}
 } // end updateOperators
-//  End -->
+  function deleteOptions(optionListId){
+    var frm = document.getElementById(optionListId);
+    frm.innerHTML="";
+    while (frm.options.length>0){
+      deleteIndex=frm.options.length-1;
+      frm.options[deleteIndex]=null;
+    }
+  }
+  
+  
+  function insertOption(text,value,optionListId){
+    var frm = document.getElementById(optionListId);
+    if (frm.selectedIndex>0){
+      insertIndex=frm.selectedIndex;
+    }else{
+      insertIndex= frm.options.length;
+    }
+    frm.options[insertIndex] = new Option(text,value);
+  }
+  
+  
+  function insertOptionGroup(text, optionListId) {
+    var frm = document.getElementById(optionListId);
+    var optGroup = document.createElement('optgroup');
+    optGroup.label = text;
+    frm.appendChild(optGroup);
+  }
+  function resetNumericFieldValue(fieldId){
+    document.getElementById(fieldId).value = -1;
+  }  
 </SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/searchForm.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
 searchField = new Array();
@@ -169,7 +269,7 @@ searchField = new Array();
 			fieldArrayID ++;
 			SearchField thisSearchField = (SearchField)f.next();
 %> 
-searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, '<%= StringUtils.jsStringEscape(thisSearchField.getDescription()) %>', <%= thisSearchField.getFieldTypeId() %>);
+searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%= StringUtils.jsStringEscape(thisSearchField.getDescription()) %>", <%= thisSearchField.getFieldTypeId() %>);
 <% } } %>
 stringOperators = new Array();
 <%
@@ -180,7 +280,7 @@ stringOperators = new Array();
 			stringArrayID ++;
 			SearchOperator thisStringOperator = (SearchOperator)s.next();
 %> 
-stringOperators[<%= stringArrayID %>] = new operator(<%= thisStringOperator.getId() %>, '<%= StringUtils.jsStringEscape(thisStringOperator.getOperator()) %>', '<%= StringUtils.jsStringEscape(thisStringOperator.getDisplayText()) %>');
+stringOperators[<%= stringArrayID %>] = new operator(<%= thisStringOperator.getId() %>, "<%= StringUtils.jsStringEscape(thisStringOperator.getOperator()) %>", "<%= StringUtils.jsStringEscape(thisStringOperator.getDisplayText()) %>");
 <% } } %>
 dateOperators = new Array();
 <%
@@ -191,7 +291,7 @@ dateOperators = new Array();
 		dateArrayID ++;
 		SearchOperator thisDateOperator = (SearchOperator)d.next();
 %> 
-dateOperators[<%= dateArrayID %>] = new operator(<%= thisDateOperator.getId() %>, '<%= StringUtils.jsStringEscape(thisDateOperator.getOperator()) %>', '<%= StringUtils.jsStringEscape(thisDateOperator.getDisplayText()) %>');
+dateOperators[<%= dateArrayID %>] = new operator(<%= thisDateOperator.getId() %>, "<%= StringUtils.jsStringEscape(thisDateOperator.getOperator()) %>", "<%= StringUtils.jsStringEscape(thisDateOperator.getDisplayText()) %>");
 <% } } %>
 numberOperators = new Array();
 <%
@@ -202,7 +302,7 @@ numberOperators = new Array();
 		numberArrayID ++;
 		SearchOperator thisNumberOperator = (SearchOperator)n.next();
 %> 
-numberOperators[<%= numberArrayID %>] = new operator(<%= thisNumberOperator.getId() %>, '<%= StringUtils.jsStringEscape(thisNumberOperator.getOperator()) %>', '<%= StringUtils.jsStringEscape(thisNumberOperator.getDisplayText()) %>');
+numberOperators[<%= numberArrayID %>] = new operator(<%= thisNumberOperator.getId() %>, "<%= StringUtils.jsStringEscape(thisNumberOperator.getOperator()) %>", "<%= StringUtils.jsStringEscape(thisNumberOperator.getDisplayText()) %>");
 <% } } %>
 listOfOperators = new Array()
 listOfOperators[0] = stringOperators
@@ -225,7 +325,7 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1'<%= request.getParameter("params") != null ?  ",'" + request.getParameter("params") + "'" : ""%>);"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
+            [<a href="javascript:checkOwnerSite('contactspopup');"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
           </td>
         </tr>
         <tr>
@@ -305,7 +405,19 @@ listOfOperators[2] = numberOperators
           </td>
           <td valign="center">
             <span name="new0" ID="new0" style="display:none"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select></span>
-          </td>
+            <span name="searchSite1" ID="searchSite1"  style="display:none">
+                <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+                  <% SiteValueList.setJsEvent("onChange=\"javascript:setText(document.searchForm.siteId1);\""); %>
+                  <%= SiteValueList.getHtmlSelect("siteId1",-1) %>
+                  <input type="hidden" name="allSites" value="true" >
+                </dhv:evaluate>
+                <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+                   <%= SiteValueList.getSelectedValue(User.getSiteId()) %>
+                  <input type="hidden" name="siteId1" value="<%=User.getSiteId()%>" >
+                  <input type="hidden" name="siteName1" value="<%= SiteValueList.getSelectedValue(User.getSiteId()) %>" >
+                </dhv:evaluate>
+          </span>
+         </td>
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
@@ -313,6 +425,26 @@ listOfOperators[2] = numberOperators
           </td>
           <td width="100%" valign="center">
             <%= ContactSource.getHtml("contactSource", -1) %>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: right;" nowrap>
+            <span name="searchSite2a" ID="searchSite2a">
+              <dhv:label name="campaign.at">At</dhv:label>
+            </span>
+          </td>
+          <td width="100%" valign="center">
+            <span name="searchSite2b" ID="searchSite2b">
+              <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+                <% SiteCriteriaList.setJsEvent("id=\"siteId2\" onChange=\"checkOwnerSite('siteId');\""); %>
+                <%= SiteCriteriaList.getHtmlSelect("siteId2",-1) %>
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+                 <%= SiteCriteriaList.getSelectedValue(User.getSiteId()) %>
+                <input type="hidden" name="siteId2" value="<%=User.getSiteId()%>" >
+                <input type="hidden" name="siteName2" value="<%= SiteCriteriaList.getSelectedValue(User.getSiteId()) %>" >
+              </dhv:evaluate>
+            </span>
           </td>
         </tr>
         <tr>
@@ -337,6 +469,8 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td style="text-align: center;">
+      <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
+        <tr><td align="center">
 		<% if (SCL.size() > 0) {%>
       <% SCL.setHtmlSelectIdName("listViewId"); %>
 			<%= SCL.getHtmlSelect("searchCriteria") %>
@@ -345,10 +479,17 @@ listOfOperators[2] = numberOperators
         <option value="-1"><dhv:label name="campaign.searchCriteria.label">----------------Search Criteria----------------</dhv:label></option>
 			</select>
 		<%}%>
+    </td><td valign="top" align="left">
+      <%= showAttribute(request,"textError") %>
+    </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
       <br>
       &nbsp;<br>
-      <input type="hidden" name="previousSelection" value="">
-      <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="removeValues()">
+      <input type="hidden" name="previousSelection" value="" />
+      <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="removeValues()" />
+      </td></tr></table>
           </td>
         </tr>
       </table>
@@ -356,3 +497,4 @@ listOfOperators[2] = numberOperators
 	</tr>
 </table>
 <input type="hidden" name="searchCriteriaText" value="">
+<iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

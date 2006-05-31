@@ -235,7 +235,7 @@ public class LibraryComponent {
     PreparedStatement pst;
     pst = db.prepareStatement(
         "SELECT component_id " +
-        "FROM business_process_component_library " +
+        "FROM " + DatabaseUtils.getTableName(db, "business_process_component_library") + " " +
         "WHERE component_name = ? " +
         "AND type_id = ?");
     pst.setString(1, name);
@@ -250,7 +250,7 @@ public class LibraryComponent {
     if (id == -1) {
       id = DatabaseUtils.getNextSeq(db, "business_process_com_lb_id_seq");
       pst = db.prepareStatement(
-          "INSERT INTO business_process_component_library " +
+          "INSERT INTO " + DatabaseUtils.getTableName(db, "business_process_component_library") + " " +
           "(" + (id > -1 ? "component_id, " : "") + "component_name, type_id, class_name, description, enabled) " +
           "VALUES " +
           "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?)");
@@ -269,4 +269,3 @@ public class LibraryComponent {
     }
   }
 }
-

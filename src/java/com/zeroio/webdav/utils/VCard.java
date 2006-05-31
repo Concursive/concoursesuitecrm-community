@@ -683,17 +683,19 @@ public class VCard {
   public int getTypeCode(Connection db, String tableName, String typeName) throws SQLException {
     int code = -1;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT code FROM " + tableName + " " +
-        "WHERE " + DatabaseUtils.toLowerCase(db) + "(description) = " + DatabaseUtils.toLowerCase(
-            db) + "(?) ");
-    pst.setString(1, typeName);
+        "SELECT code " +
+        "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(description) = ? ");
+    pst.setString(1, typeName.toLowerCase());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       code = rs.getInt("code");
     } else {
       //typeName does not exist. Determine the default item
+      rs.close();
       pst = db.prepareStatement(
-          "SELECT code FROM " + tableName + " " +
+          "SELECT code " +
+          "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
           "WHERE default_item = ? ");
       pst.setBoolean(1, true);
       rs = pst.executeQuery();
@@ -701,13 +703,15 @@ public class VCard {
         code = rs.getInt("code");
       } else {
         //Default Item does not exist
-        pst = db.prepareStatement("SELECT code FROM " + tableName);
+        rs.close();
+        pst = db.prepareStatement("SELECT code FROM " + DatabaseUtils.getTableName(db, tableName));
         rs = pst.executeQuery();
         if (rs.next()) {
           code = rs.getInt("code");
         }
       }
     }
+    rs.close();
     pst.close();
     return code;
   }

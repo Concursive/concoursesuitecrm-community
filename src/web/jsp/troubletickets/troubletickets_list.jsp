@@ -27,6 +27,8 @@
 <jsp:useBean id="OpenInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="AllTicketsList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="AllTicketsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="UserGroupTicketList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
+<jsp:useBean id="UserGroupTicketInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -49,7 +51,7 @@
 </table>
 <%-- End Trails --%>
 <% int count = 0;
-if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
+if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection()) && !(UserGroupTicketInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" type="tickets.assigned.to.me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -144,7 +146,7 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 	<%}%>
 <br>
 <%}%>
-<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection()) && !(UserGroupTicketInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Other Tickets in My Department" type="tickets.other" object="OpenInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -246,7 +248,7 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <br>
 <%}%>
 <dhv:include name="ticketList.ticketsCreatedByMe" none="true">
-<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection()) && !(UserGroupTicketInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Created by Me" type="tickets.created.by.me" object="CreatedByMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -349,7 +351,7 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <%}%>
 </dhv:include>
 <dhv:include name="ticketList.allTickets" none="true">
-<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AllTicketsInfo.getExpandedSelection()) { %>
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(UserGroupTicketInfo.getExpandedSelection())) || AllTicketsInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="All Tickets" type="tickets.all" object="AllTicketsInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -439,6 +441,109 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
   <% if (AllTicketsInfo.getExpandedSelection()) {%>
 <br>
 <dhv:pagedListControl object="AllTicketsInfo" tdClass="row1"/>
+  <%}%>
+	<%} else {%>
+		<tr class="containerBody">
+      <td colspan="7">
+        <dhv:label name="tickets.search.notFound">No tickets found</dhv:label>
+      </td>
+    </tr>
+  </table>
+	<%}%>
+<%}%>
+</dhv:include>
+<dhv:include name="ticketList.userGroup" none="true">
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) &&  !(AllTicketsInfo.getExpandedSelection())) || UserGroupTicketInfo.getExpandedSelection() ) { %>
+<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Assigned to one of my Groups" type="tickets.userGroupTickets" object="UserGroupTicketInfo"/>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+		<th width="8">
+      &nbsp;
+    </th>
+    <th valign="center" align="left">
+      <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
+    </th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.estResolutionDate">Est. Resolution Date</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.age">Age</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></b></th>
+	<th><b><dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label></b></th>
+  </tr>
+<%
+	Iterator j = UserGroupTicketList.iterator();
+	if ( j.hasNext() ) {
+		int rowid = 0;
+		while (j.hasNext()) {
+      ++count;
+      rowid = (rowid != 1?1:2);
+      Ticket thisTic = (Ticket)j.next();
+%>   
+	<tr class="row<%= rowid %>">
+    <td rowspan="2" width="8" valign="top" nowrap>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('select<%= count %>','menuTicket','<%= thisTic.getId() %>');" 
+          onMouseOver="over(0, <%= count %>)" 
+          onmouseout="out(0, <%= count %>); hideMenu('menuTicket');"><img 
+          src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+    </td>
+		<td width="10%" valign="top" nowrap>
+			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
+		</td>
+		<td width="12%" valign="top" nowrap>
+			<%= toHtml(thisTic.getPriorityName()) %>
+		</td>
+		<td width="15%" valign="top" class="row<%= rowid %>">
+      <% if(!User.getTimeZone().equals(thisTic.getEstimatedResolutionDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+      <% } %>
+		</td>
+		<td width="6%" align="right" valign="top" nowrap>
+			<%= thisTic.getAgeOf() %>
+		</td>
+		<td width="45%" valign="top">
+			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate if="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+		</td>
+		<td width="20%" nowrap valign="top">
+      <dhv:evaluate if="<%= thisTic.isAssigned() %>">
+        <dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= !(thisTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate if="<%= (!thisTic.isAssigned()) %>">
+        <font color="red"><dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/></font>
+      </dhv:evaluate>
+		</td>
+	</tr>
+  <tr class="row<%= rowid %>">
+    <td colspan="7" valign="top">
+<%
+  if (1==1) {
+    Iterator files = thisTic.getFiles().iterator();
+    while (files.hasNext()) {
+      FileItem thisFile = (FileItem)files.next();
+      if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
+%>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= thisTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+<%
+      }
+    }
+  }
+%>
+      <%= toHtml(thisTic.getProblemHeader()) %>
+      <% if (thisTic.getClosed() == null) { %>
+        [<font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>]
+      <%} else {%>
+        [<font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>]
+      <%}%>
+    </td>
+  </tr>
+	<%}%>
+</table>
+  <% if (UserGroupTicketInfo.getExpandedSelection()) {%>
+<br>
+<dhv:pagedListControl object="UserGroupTicketInfo" tdClass="row1"/>
   <%}%>
 	<%} else {%>
 		<tr class="containerBody">

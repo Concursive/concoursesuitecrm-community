@@ -45,10 +45,13 @@
     formTest = true;
     message = "";
     alertMessage = "";
+  <dhv:include name="opportunity.lowEstimateCanNotBeZero" none="true">
     if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
       message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
       formTest = false;
     }
+  </dhv:include>
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate" none="true" all="true">
     if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
       message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
@@ -57,10 +60,13 @@
       message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
     if (!checkNumber(form.commission.value)) { 
       message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
     }
+  </dhv:include>
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -68,10 +74,12 @@
       if(alertMessage != ""){
          return confirmAction(alertMessage);
       }else{
+  <dhv:include name="opportunity.componentTypes" none="true">
       var test = document.opportunityForm.selectedList;
       if (test != null) {
         return selectAllOptions(document.opportunityForm.selectedList);
       }
+  </dhv:include>
     }
   }
 }
@@ -85,6 +93,9 @@ function reopenOpportunity(id) {
   }
 }
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <form name="opportunityForm" action="OpportunitiesComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">

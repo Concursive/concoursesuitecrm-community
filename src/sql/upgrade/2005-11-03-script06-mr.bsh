@@ -1,0 +1,91 @@
+// Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+// Database upgrade v3.2 (2005-10-21)
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
+
+print("Inserting new lookup tables...");
+String fs = System.getProperty("file.separator");
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+
+void insertLookup(Connection db, int moduleId, int lookupId, String tableName, int level, String description, int categoryId) {
+  LookupListElement lookupList = new LookupListElement();
+  lookupList.setModuleId(moduleId);
+  lookupList.setLookupId(lookupId);
+  lookupList.setClassName("lookupList");
+  lookupList.setTableName(tableName);
+  lookupList.setLevel(level);
+  lookupList.setDescription(description);
+  lookupList.setCategoryId(categoryId);
+  lookupList.insert(db);
+}
+
+int constantId = -1;
+int lookupId = -1;
+
+constantId = PermissionCategory.PERMISSION_CAT_ACCOUNTS;
+lookupId = PermissionCategory.lookupId(db, constantId);
+if (1==1) { //Segment
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_SEGMENTS);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_SEGMENTS, "lookup_segments", 80, dictionary.getTerm("system.fields.label", "accounts.accounts_add.segment", "value"), constantId);
+    print("Segment entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Segment already exists");
+  }
+}
+
+if (1==1) { //Sub Segment
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_SUB_SEGMENT);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_SUB_SEGMENT, "lookup_sub_segment", 90, dictionary.getTerm("system.fields.label", "accounts.accounts_add.subSegment", "value"), constantId);
+    print("Sub Segment entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Sub Segment already exists");
+  }
+}
+
+if (1==1) { //Site
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_ACCOUNTS_SITE);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_ACCOUNTS_SITE, "lookup_site_id", 100, dictionary.getTerm("system.fields.label", "admin.user.site", "value"), constantId);
+    print("Site entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Site already exists");
+  }
+}
+
+if (1==1) { //Account Size
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_ACCOUNTS_SIZE);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_ACCOUNTS_SIZE, "lookup_account_size", 110, dictionary.getTerm("system.fields.label", "accounts.accounts_add.accountSize", "value"), constantId);
+    print("Account Size entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Account Size already exists");
+  }
+}
+
+constantId = PermissionCategory.PERMISSION_CAT_CONTACTS;
+lookupId = PermissionCategory.lookupId(db, constantId);
+
+if (1==1) { //Salutation
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_ACCOUNTS_TITLE);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_ACCOUNTS_TITLE, "lookup_title", 60, dictionary.getTerm("system.fields.label", "accounts.accounts_contacts_add.Salutation", "value"), constantId);
+    print("Salutation entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Salutation already exists");
+  }
+}
+

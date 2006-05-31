@@ -23,6 +23,7 @@
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Records" class="org.aspcfs.modules.base.CustomFieldRecordList" scope="request"/>
+<jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -41,6 +42,11 @@
 <td>
 
 <a href="Leads.do?command=Dashboard"><dhv:label name="pipeline.pipeline">PIPELINE</dhv:label></a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<% } %>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>">Opportunity Details</a> >
 <a href="LeadsFolders.do?command=FolderList&headerId=<%= OpportunityHeader.getId() %>"><dhv:label name="accounts.Folders">Folders</dhv:label></a> > 
 <dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label>
@@ -48,6 +54,10 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  &nbsp;<br>
 </dhv:evaluate>
 <dhv:container name="opportunities" selected="folders" object="OpportunityHeader" param="<%= "id=" + OpportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -68,12 +78,14 @@
   if (CategoryList.size() > 0) {
 %>
   <br />
+    <dhv:hasAuthority owner="<%= OpportunityHeader.getManagerOwnerIdRange() %>">
     <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
       <dhv:permission name="pipeline-folders-add">
         <a href="LeadsFolders.do?command=AddFolderRecord&headerId=<%= OpportunityHeader.getId() %>&catId=<%= Category.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_fields_list.AddRecordToFolder">Add a record to this folder</dhv:label></a>
-        <br>&nbsp;<br>
+        <br>&nbsp;<br />
       </dhv:permission>
     </dhv:evaluate>
+    </dhv:hasAuthority>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>
         <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
@@ -103,12 +115,16 @@
         count++;
         rowid = (rowid == 1 ? 2 : 1);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
-%>    
+        boolean hasPermission = false;
+%>
+  <dhv:hasAuthority owner="<%= OpportunityHeader.getManagerOwnerIdRange() %>">
+    <% hasPermission = true; %>
+  </dhv:hasAuthority>
       <tr class="containerBody">
         <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-           <a href="javascript:displayMenu('select<%= count %>','menuField','<%= OpportunityHeader.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuField');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+           <a href="javascript:displayMenu('select<%= count %>','menuField','<%= OpportunityHeader.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>', '<%= hasPermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuField');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
           </td>
         </dhv:evaluate>
         <td align="left" width="100%" nowrap class="row<%= rowid %>">

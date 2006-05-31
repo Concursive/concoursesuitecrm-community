@@ -1,0 +1,104 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Inserts data from manufacturer column of the asset table into the lookup_asset_manufacturer.
+  After the lookup list is populated, the the manufacturer_code column in the asset table 
+  is updated to reference the respective code in the lookup list 
+*/
+
+import org.aspcfs.utils.DatabaseUtils;
+
+print("Getting Distinct Asset Manufacturer...");
+distinctManufacturers = new ArrayList();
+lookupManufacturers = new HashMap();
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "SELECT DISTINCT manufacturer " +
+    "FROM asset ");
+  rs = pst.executeQuery();
+  count = 0;
+  while (rs.next()){
+    distinctManufacturers.add(rs.getString("manufacturer"));
+    count++;
+  }
+  print("Distinct Manufacturers --> " + count);
+  rs.close();
+  pst.close();
+}
+
+print("Inserting Distinct Asset Manufacturers into lookup_asset_manufacturer...");
+if (1 == 1){
+  id = DatabaseUtils.getNextSeq(db, "lookup_asset_manufactu_code_seq");
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_asset_manufacturer " +
+    "(" + 
+    (id > -1 ? "code, " : "") +
+    "description, "+
+    "level )" +
+    "VALUES(" +
+    (id > -1 ? "?, " : "") +
+    "?,?) " );
+  Iterator itr = distinctManufacturers.iterator();
+  i = 0;
+  while (itr.hasNext()){
+    value = (String)itr.next();
+    if (value != null){
+      if (!"".equals(value.trim())){
+        pstCount = 0;
+        if (id > -1) {
+          pst.setInt(++pstCount, id);
+        }
+        pst.setString(++pstCount, value);
+        pst.setInt(++pstCount, i++);
+        pst.execute();
+        id = DatabaseUtils.getCurrVal(db, "lookup_asset_manufactu_code_seq", id);
+        lookupManufacturers.put(new Integer(id), value.trim());
+        id = -1;
+        id = DatabaseUtils.getNextSeq(db, "lookup_asset_manufactu_code_seq");
+      }
+    }
+  }
+  pst.close();
+}
+
+print("Getting assetid manufacturer mapping...");
+assetManufacturers = new HashMap();
+if (1 == 1){
+  pst = db.prepareStatement(
+    "SELECT asset_id, manufacturer " +
+    "FROM asset " +
+    "WHERE manufacturer IS NOT NULL");
+  rs = pst.executeQuery();
+  while (rs.next()){
+    id = rs.getInt("asset_id");
+    manufacturer = rs.getString("manufacturer");
+    assetManufacturers.put(new Integer(id),manufacturer);
+  }
+  rs.close();
+  pst.close();
+}
+
+print("Updating manufacturerCode in asset table based on the code in the lookup_asset_manufacturer table...");
+Iterator itr1 = lookupManufacturers.keySet().iterator();
+pst = db.prepareStatement(
+  "UPDATE asset " +
+  "SET manufacturer_code = ? " +
+  "WHERE asset_id = ? ");
+while (itr1.hasNext()){
+  lookupManufacturerCode = (Integer)itr1.next();
+  lookupManufacturer = (String)lookupManufacturers.get(lookupManufacturerCode);
+  Iterator itr2 = assetManufacturers.keySet().iterator();
+  if (lookupManufacturer != null){
+    while(itr2.hasNext()){
+      assetId = (Integer)itr2.next();
+      assetManufacturer = (String)assetManufacturers.get(assetId);
+      if (lookupManufacturer.equals(assetManufacturer.trim())){
+        pst.setInt(1,lookupManufacturerCode.intValue());
+        pst.setInt(2, assetId.intValue());
+        pst.execute();
+      }
+    }
+  }
+}
+pst.close();

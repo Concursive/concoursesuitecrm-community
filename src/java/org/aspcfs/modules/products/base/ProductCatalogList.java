@@ -1022,12 +1022,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_catalog AS pctlg " +
-        "LEFT JOIN product_catalog AS pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        "LEFT JOIN lookup_product_type AS pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
-        "LEFT JOIN lookup_product_format AS pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
-        "LEFT JOIN lookup_product_shipping AS pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
-        "LEFT JOIN lookup_product_ship_time AS pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+        "FROM product_catalog pctlg " +
+        "LEFT JOIN product_catalog pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+        "LEFT JOIN lookup_product_type pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+        "LEFT JOIN lookup_product_format pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+        "LEFT JOIN lookup_product_shipping pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+        "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
         "WHERE pctlg.product_id > 0 ");
 
     createFilter(sqlFilter, db);
@@ -1080,12 +1080,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
         "pctlgformat.description AS format_name, " +
         "pctlgshipping.description AS shipping_name, " +
         "pctlgshiptime.description AS shiptime_name " +
-        "FROM product_catalog AS pctlg " +
-        "LEFT JOIN product_catalog AS pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        "LEFT JOIN lookup_product_type AS pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
-        "LEFT JOIN lookup_product_format AS pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
-        "LEFT JOIN lookup_product_shipping AS pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
-        "LEFT JOIN lookup_product_ship_time AS pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+        "FROM product_catalog pctlg " +
+        "LEFT JOIN product_catalog pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+        "LEFT JOIN lookup_product_type pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+        "LEFT JOIN lookup_product_format pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+        "LEFT JOIN lookup_product_shipping pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+        "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
         "WHERE pctlg.product_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -1244,34 +1244,28 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (name != null) {
       if (name.indexOf("%") >= 0) {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) LIKE " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) LIKE ? ");
       } else {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) = " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) = ? ");
       }
     }
     if (abbreviation != null) {
       if (abbreviation.indexOf("%") >= 0) {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.abbreviation) LIKE " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.abbreviation) LIKE ? ");
       } else {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.abbreviation) = " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.abbreviation) = ? ");
       }
     }
     if (sku != null) {
       if (sku.indexOf("%") >= 0) {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.sku) LIKE " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.sku) LIKE ? ");
       } else {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.sku) = " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.sku) = ? ");
       }
     }
 
@@ -1300,11 +1294,11 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (hasCategories == Constants.TRUE) {
       sqlFilter.append(
           " AND pctlg.product_id IN ( " +
-          " SELECT pcmap1.product_id FROM product_catalog_category_map AS pcmap1 ) ");
+          " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 ) ");
     } else if (hasCategories == Constants.FALSE) {
       sqlFilter.append(
           " AND pctlg.product_id NOT IN ( " +
-          " SELECT pcmap1.product_id FROM product_catalog_category_map AS pcmap1 )");
+          " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 )");
     }
 
     if (buildTopLevelOnly == Constants.TRUE) {
@@ -1316,12 +1310,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (buildActiveProductsOnly != Constants.UNDEFINED) {
       sqlFilter.append(
           "AND pctlg.product_id IN ( SELECT p.product_id " +
-          " FROM product_catalog AS p LEFT JOIN product_catalog_pricing AS price ON " +
+          " FROM product_catalog p LEFT JOIN product_catalog_pricing price ON " +
           " ( p.product_id = price.product_id ) " +
           " WHERE p.product_id > 0 ");
       if (buildActiveProductsOnly == Constants.TRUE) {
         sqlFilter.append(
-            " AND p.active = ? " +
+            " AND p.\"active\" = ? " +
             " AND price.enabled = ? " +
             " AND (p.start_date < ? OR p.start_date IS NULL) " +
             " AND (p.expiration_date IS NULL OR p.expiration_date > ?) " +
@@ -1330,12 +1324,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
             " ) ");
       } else if (buildActiveProductsOnly == Constants.FALSE) {
         sqlFilter.append(
-            " AND (p.active = ? " +
+            " AND (p.\"active\" = ? " +
             " OR price.enabled = ? " +
             " OR p.start_date > ? OR p.expiration_date < ? " +
             " OR price.start_date > ? OR price.expiration_date < ?) " +
             " ) OR pctlg.product_id NOT IN (SELECT pp.product_id " +
-            " FROM product_catalog_pricing AS pp WHERE pp.product_id > 0 ))");
+            " FROM product_catalog_pricing pp WHERE pp.product_id > 0 ))");
       }
     }
     //Sync API
@@ -1362,15 +1356,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     }
 
     if (active != Constants.UNDEFINED) {
-      sqlFilter.append(" AND pctlg.active = ? ");
+      sqlFilter.append(" AND pctlg.\"active\" = ? ");
     }
 
     if (selectedItems != null) {
       if (selectedItems.size() > 0) {
         sqlFilter.append(
-            "AND (pctlg.active = ? OR pctlg.product_id IN (" + getItemsAsList() + ")) ");
+            "AND (pctlg.\"active\" = ? OR pctlg.product_id IN (" + getItemsAsList() + ")) ");
       } else {
-        sqlFilter.append("AND pctlg.active = ? ");
+        sqlFilter.append("AND pctlg.\"active\" = ? ");
       }
     }
     if (includeOnlyTrashed) {
@@ -1410,15 +1404,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     }
 
     if (name != null) {
-      pst.setString(++i, name);
+      pst.setString(++i, name.toLowerCase());
     }
 
     if (abbreviation != null) {
-      pst.setString(++i, abbreviation);
+      pst.setString(++i, abbreviation.toLowerCase());
     }
 
     if (sku != null) {
-      pst.setString(++i, sku);
+      pst.setString(++i, sku.toLowerCase());
     }
 
     if (parentName != null) {

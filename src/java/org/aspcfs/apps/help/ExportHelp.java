@@ -223,7 +223,7 @@ public class ExportHelp {
      *  the Table of Contents
      */
     pst = db.prepareStatement(
-        "SELECT module_id, category, hm.category_id as catId, module_brief_description, module_detail_description " +
+        "SELECT module_id, category, hm.category_id as catId, module_brief_description, module_detail_description, constant " +
         "FROM help_module hm, permission_category pc " +
         "WHERE pc.category_id = hm.category_id " +
         "AND pc.category_id IN " + nonTocCategories);

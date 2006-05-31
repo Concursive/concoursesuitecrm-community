@@ -133,6 +133,9 @@ public class HTTPUtils {
       errorMessage = e;
     }
     if (errorMessage != null) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("HTTPUtils-> sendPacket error: " + errorMessage.getMessage());
+      }
       throw new java.io.IOException(errorMessage.toString());
     }
     return null;

@@ -139,8 +139,8 @@
   </tr>
   <tr class="containerBody">
 <%
-  String projectApprovedCheck = "";
-  String projectClosedCheck = "";
+  String projectApprovedCheck = (Project.getApproved()?" CHECKED":"");
+  String projectClosedCheck = (Project.getClosed()?" CHECKED":"");
 %>
     <zeroio:debug value="Approved"/>
     <td class="formLabel" valign="top" nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>

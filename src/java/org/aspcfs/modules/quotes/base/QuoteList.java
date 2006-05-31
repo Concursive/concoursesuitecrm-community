@@ -69,8 +69,11 @@ public class QuoteList extends ArrayList implements SyncableList {
   protected String sku = null;
   private int logoFileId = -1;
   private boolean deleteAllQuotes = false;
+  private int siteId = -1;
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
+  private boolean exclusiveToSite = false;
+  private boolean includeAllSites = true;
 
 
   /**
@@ -320,6 +323,26 @@ public class QuoteList extends ArrayList implements SyncableList {
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the siteId attribute of the QuoteList object
+   *
+   * @param tmp The new siteId value
+   */
+  public void setSiteId(int tmp) {
+    this.siteId = tmp;
+  }
+
+
+  /**
+   * Sets the siteId attribute of the QuoteList object
+   *
+   * @param tmp The new siteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
   }
 
 
@@ -982,6 +1005,7 @@ public class QuoteList extends ArrayList implements SyncableList {
     this.deleteAllQuotes = DatabaseUtils.parseBoolean(tmp);
   }
 
+
   /**
    * Sets the trashedDate attribute of the QuoteList object
    *
@@ -989,6 +1013,16 @@ public class QuoteList extends ArrayList implements SyncableList {
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
+  }
+
+
+  /**
+   * Gets the siteId attribute of the QuoteList object
+   *
+   * @return The siteId value
+   */
+  public int getSiteId() {
+    return siteId;
   }
 
 
@@ -1043,10 +1077,69 @@ public class QuoteList extends ArrayList implements SyncableList {
 
 
   /**
+   * Gets the exclusiveToSite attribute of the QuoteList object
+   *
+   * @return The exclusiveToSite value
+   */
+  public boolean getExclusiveToSite() {
+    return exclusiveToSite;
+  }
+
+
+  /**
+   * Sets the exclusiveToSite attribute of the QuoteList object
+   *
+   * @param tmp The new exclusiveToSite value
+   */
+  public void setExclusiveToSite(boolean tmp) {
+    this.exclusiveToSite = tmp;
+  }
+
+
+  /**
+   * Sets the exclusiveToSite attribute of the QuoteList object
+   *
+   * @param tmp The new exclusiveToSite value
+   */
+  public void setExclusiveToSite(String tmp) {
+    this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the includeAllSites attribute of the QuoteList object
+   *
+   * @return The includeAllSites value
+   */
+  public boolean getIncludeAllSites() {
+    return includeAllSites;
+  }
+
+
+  /**
+   * Sets the includeAllSites attribute of the QuoteList object
+   *
+   * @param tmp The new includeAllSites value
+   */
+  public void setIncludeAllSites(boolean tmp) {
+    this.includeAllSites = tmp;
+  }
+
+
+  /**
+   * Sets the includeAllSites attribute of the QuoteList object
+   *
+   * @param tmp The new includeAllSites value
+   */
+  public void setIncludeAllSites(String tmp) {
+    this.includeAllSites = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    * Constructor for the QuoteList object
    */
-  public QuoteList() {
-  }
+  public QuoteList() { }
 
 
   /**
@@ -1066,13 +1159,14 @@ public class QuoteList extends ArrayList implements SyncableList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM quote_entry qe " +
-        " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
-        " LEFT JOIN organization org ON (qe.org_id = org.org_id) " +
-        " LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id) " +
-        " LEFT JOIN lookup_quote_status lqs ON ( qe.status_id = lqs.code ) " +
-        " LEFT JOIN opportunity_header opp ON (qe.opp_id = opp.opp_id) " +
-        " WHERE qe.quote_id > -1 ");
+            " FROM quote_entry qe " +
+            " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
+            " LEFT JOIN organization org ON (qe.org_id = org.org_id) " +
+            " LEFT JOIN lookup_site_id lsi ON (org.site_id = lsi.code) " +
+            " LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id) " +
+            " LEFT JOIN lookup_quote_status lqs ON ( qe.status_id = lqs.code ) " +
+            " LEFT JOIN opportunity_header opp ON (qe.opp_id = opp.opp_id) " +
+            " WHERE qe.quote_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -1111,14 +1205,16 @@ public class QuoteList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         " qe.*, " +
-        " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName " +
-        " FROM quote_entry qe " +
-        " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
-        " LEFT JOIN organization org ON (qe.org_id = org.org_id) " +
-        " LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id) " +
-        " LEFT JOIN lookup_quote_status lqs ON ( qe.status_id = lqs.code ) " +
-        " LEFT JOIN opportunity_header opp ON (qe.opp_id = opp.opp_id) " +
-        " WHERE qe.quote_id > -1 ");
+            " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName, opp.\"lock\" AS opplock, " +
+            " lsi.description AS sitename " +
+            " FROM quote_entry qe " +
+            " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
+            " LEFT JOIN organization org ON (qe.org_id = org.org_id) " +
+            " LEFT JOIN lookup_site_id lsi ON (org.site_id = lsi.code) " +
+            " LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id) " +
+            " LEFT JOIN lookup_quote_status lqs ON ( qe.status_id = lqs.code ) " +
+            " LEFT JOIN opportunity_header opp ON (qe.opp_id = opp.opp_id) " +
+            " WHERE qe.quote_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -1223,8 +1319,8 @@ public class QuoteList extends ArrayList implements SyncableList {
     if (categoryId > -1) {
       sqlFilter.append(
           "AND qe.product_id IN ( SELECT product_id " +
-          " FROM product_catalog_category_map pccm " +
-          " WHERE pccm.category_id = ? ) ");
+              " FROM product_catalog_category_map pccm " +
+              " WHERE pccm.category_id = ? ) ");
     }
     if (closedOnly == Constants.TRUE) {
       sqlFilter.append(
@@ -1232,13 +1328,13 @@ public class QuoteList extends ArrayList implements SyncableList {
     } else if (closedOnly == Constants.FALSE) {
       sqlFilter.append(
           " AND (qe.closed > " + DatabaseUtils.getCurrentTimestamp(db) +
-          " OR qe.closed IS NULL ) ");
+              " OR qe.closed IS NULL ) ");
     }
     if (headerId > -1) {
       sqlFilter.append(" AND opp.opp_id = ? ");
     }
     if (version != null) {
-      sqlFilter.append(" AND qe.version = ? ");
+      sqlFilter.append(" AND qe.\"version\" = ? ");
     }
     if (groupId != -1) {
       sqlFilter.append(" AND qe.group_id = ? ");
@@ -1263,18 +1359,18 @@ public class QuoteList extends ArrayList implements SyncableList {
         productName)) {
       sqlFilter.append(
           "AND qe.quote_id IN ( " +
-          "SELECT pq.quote_id " +
-          "FROM quote_product AS pq " +
-          "LEFT JOIN product_catalog AS pctlg ON (pq.product_id = pctlg.product_id) " +
-          "WHERE pctlg.product_name LIKE ? ) ");
+              "SELECT pq.quote_id " +
+              "FROM quote_product pq " +
+              "LEFT JOIN product_catalog pctlg ON (pq.product_id = pctlg.product_id) " +
+              "WHERE pctlg.product_name LIKE ? ) ");
     }
     if (sku != null && !"".equals(sku) && !"%%".equals(sku)) {
       sqlFilter.append(
           "AND qe.quote_id IN ( " +
-          "SELECT pq.quote_id " +
-          "FROM quote_product AS pq " +
-          "LEFT JOIN product_catalog AS pctlg ON (pq.product_id = pctlg.product_id) " +
-          "WHERE pctlg.sku LIKE ? ) ");
+              "SELECT pq.quote_id " +
+              "FROM quote_product pq " +
+              "LEFT JOIN product_catalog pctlg ON (pq.product_id = pctlg.product_id) " +
+              "WHERE pctlg.sku LIKE ? ) ");
     }
 
     //Sync API
@@ -1297,6 +1393,18 @@ public class QuoteList extends ArrayList implements SyncableList {
     }
     if (logoFileId != -1) {
       sqlFilter.append("AND qe.logo_file_id = ? ");
+    }
+    if (!includeAllSites && orgId == -1 && contactId == -1 && enteredBy == -1
+        && ticketId == -1 && parentId == -1 && headerId == -1) {
+      if (siteId != -1) {
+        sqlFilter.append("AND (org.site_id = ? ");
+        if (!exclusiveToSite) {
+          sqlFilter.append("OR org.site_id IS NULL ");
+        }
+        sqlFilter.append(") ");
+      } else {
+        sqlFilter.append("AND org.site_id IS NULL ");
+      }
     }
     if (includeOnlyTrashed) {
       sqlFilter.append("AND qe.trashed_date IS NOT NULL ");
@@ -1390,6 +1498,10 @@ public class QuoteList extends ArrayList implements SyncableList {
     if (logoFileId != -1) {
       pst.setInt(++i, logoFileId);
     }
+    if (!includeAllSites && orgId == -1 && contactId == -1 && enteredBy == -1
+        && ticketId == -1 && parentId == -1 && headerId == -1 && siteId != -1) {
+      pst.setInt(++i, siteId);
+    }
     if (includeOnlyTrashed) {
       // do nothing
     } else if (trashedDate != null) {
@@ -1465,10 +1577,10 @@ public class QuoteList extends ArrayList implements SyncableList {
     int count = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT COUNT(DISTINCT(group_id)) as itemcount " +
-        "FROM quote_entry qe " +
-        "WHERE qe.quote_id > 0 " +
-        "AND qe.trashed_date IS NULL ");
+        "SELECT COUNT(DISTINCT(group_id)) AS itemcount " +
+            "FROM quote_entry qe " +
+            "WHERE qe.quote_id > 0 " +
+            "AND qe.trashed_date IS NULL ");
     if (moduleId == Constants.ACCOUNTS) {
       sql.append("AND qe.org_id = ? ");
     } else if (moduleId == Constants.CONTACTS) {

@@ -382,14 +382,14 @@ public class TaskCategory extends GenericBean {
    */
   public void buildResources(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT max(entered) AS latest, count(task_id) AS count " +
+        "SELECT max(entered) AS latest, count(task_id) AS thecount " +
         "FROM task " +
         "WHERE category_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       lastTaskEntered = rs.getTimestamp("latest");
-      taskCount = rs.getInt("count");
+      taskCount = rs.getInt("thecount");
     }
     rs.close();
     pst.close();

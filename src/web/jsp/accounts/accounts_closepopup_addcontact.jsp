@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ page import="org.aspcfs.utils.StringUtils,org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <html>
@@ -23,7 +24,21 @@
   function addContact(text, value){
     opener.insertOption(text, value, 'contactId');
   }
+  
+  function doClose() {
+    var source = '<%= request.getParameter("hiddensource") %>';
+    if (source == 'attachplan') {
+      var itemId = '<%= request.getParameter("actionStepWork") %>';
+      var displayId = "changecontact" + itemId;
+      opener.document.getElementById('contactid').value="<%= ContactDetails.getId() %>";
+      opener.changeDivContent(displayId, "<%= StringUtils.jsStringEscape(ContactDetails.getValidName()) %>");
+      opener.attachContact(itemId);
+    } else {
+      addContact("<%= StringUtils.jsStringEscape(ContactDetails.getValidName()) %>",'<%= ContactDetails.getId() %>');
+    }
+    window.close();
+  }
 </script>
-  <body onload="javascript:addContact('<%= toJavaScript(ContactDetails.getValidName()) %>','<%= ContactDetails.getId() %>');window.close();" />
+  <body onload="javascript:doClose();" />
 </body>
 </html>

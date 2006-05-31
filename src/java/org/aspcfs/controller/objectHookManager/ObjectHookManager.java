@@ -22,6 +22,7 @@ import org.aspcfs.apps.workFlowManager.BusinessProcessList;
 import org.aspcfs.apps.workFlowManager.ComponentContext;
 import org.aspcfs.apps.workFlowManager.ScheduledEventList;
 import org.aspcfs.apps.workFlowManager.WorkflowManager;
+import org.aspcfs.utils.web.RequestUtils;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.service.base.PacketContext;
 import org.w3c.dom.Element;
@@ -239,6 +240,7 @@ public class ObjectHookManager {
           context.setPreviousObject(previousObject);
           context.setThisObject(object);
           context.setParameter("FileLibraryPath", fileLibraryPath);
+          context.setAttribute("SERVERURL", RequestUtils.getLink(actionContext,""));
           context.setAttribute("ConnectionPool", sqlDriver);
           context.setAttribute("ConnectionElement", ce);
           context.setAttribute(

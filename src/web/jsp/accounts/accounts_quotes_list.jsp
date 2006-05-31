@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.quotes.base.*,org.aspcfs.modules.products.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="quoteList" class="org.aspcfs.modules.quotes.base.QuoteList" scope="request"/>
@@ -37,6 +38,10 @@
 <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%
+  boolean allowMultipleQuote = allowMultipleQuote(pageContext);
+  boolean allowMultipleVersion = allowMultipleVersion(pageContext);
+%>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -146,36 +151,40 @@
     Quote thisQuote = (Quote)j.next();
     String status = quoteStatusList.getValueFromId(thisQuote.getStatusId());
 %>
-		<tr class="containerBody">
-      <td valign="center" nowrap class="row<%= rowid %>">
-        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuQuote','<%= OrgDetails.getOrgId() %>','<%= thisQuote.getId() %>','<%= version %>','<%= (thisQuote.getClosed() == null) ? "true" : "false" %>','<%= thisQuote.isTrashed() || OrgDetails.isTrashed() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
-         <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+		<tr class="row<%= rowid %>">
+      <td valign="center" nowrap>
+        <% if(!thisQuote.getLock()){%>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <a href="javascript:displayMenu('select<%= i %>','menuQuote','<%= OrgDetails.getOrgId() %>','<%= thisQuote.getId() %>','<%= version %>','<%= (thisQuote.getClosed() == null) ? "true" : "false" %>','<%= thisQuote.isTrashed() || OrgDetails.isTrashed() %>','<%=thisQuote.getHeaderId()%>',<%=allowMultipleVersion%>,<%=allowMultipleQuote%> );"
+          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
+          <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        <% }else{ %>
+          <font color="red"><dhv:label name="pipeline.locked">Locked</dhv:label></font>
+        <% } %>
       </td>
-      <td valign="center" class="row<%= rowid %>" width="10%">
+      <td valign="center" width="10%">
         <a href="AccountQuotes.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %>&quoteId=<%= thisQuote.getId() %>"><%= thisQuote.getPaddedGroupId() %></a>
       </td>
-      <td valign="center" class="row<%= rowid %>">
+      <td valign="center">
         <%= toHtml(thisQuote.getVersion()) %>
       </td>
-      <td valign="center" width="50%" class="row<%= rowid %>">
+      <td valign="center" width="50%">
         <%= toHtml(thisQuote.getShortDescription()) %>
       </td>
-      <td valign="center" class="row<%= rowid %>" nowrap>
+      <td valign="center" nowrap>
         <%= toHtml(quoteStatusList.getValueFromId(thisQuote.getStatusId())) %>
       </td>
-      <td valign="center" width="10%" class="row<%= rowid %>">
-        <dhv:tz timestamp="<%= thisQuote.getEntered() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+      <td valign="center" width="10%">
+        <zeroio:tz timestamp="<%= thisQuote.getEntered() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
       </td>
-      <td valign="center" width="10%" class="row<%= rowid %>">
+      <td valign="center" width="10%">
     <% if(thisQuote.getIssuedDate() != null){ %>
-        <dhv:tz timestamp="<%= thisQuote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+        <zeroio:tz timestamp="<%= thisQuote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
     <% }else{ %>&nbsp;<% } %>
       </td>
-      <td valign="center" width="10%" class="row<%= rowid %>">
+      <td valign="center" width="10%">
     <% if(thisQuote.getClosed() != null){ %>
-        <dhv:tz timestamp="<%= thisQuote.getClosed() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+        <zeroio:tz timestamp="<%= thisQuote.getClosed() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
     <% }else{ %>&nbsp;<% } %>
       </td>
    </tr>

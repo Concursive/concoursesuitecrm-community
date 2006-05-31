@@ -31,6 +31,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -47,44 +48,47 @@
     formTest = true;
     message = "";
 <% if("pending".equals(request.getParameter("view"))){ %>
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
+    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
       message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
-    if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += label("specify.alert.description", "- Please specify an alert description\r\n");
-      formTest = false;
-    }
-    if (form.alertText.value == "") { 
+    if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) {
       message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     if (form.alertCallTypeId.value == "0") { 
-      message += label("specify.alert.type","- Please specify an alert type\r\n");
+      message += label("specify.alert.type", "- Please specify an alert type\r\n");
       formTest = false;
     }
-  
 <% }else{ %>
-  if (form.subject.value == "") { 
-      message += label("specify.blank.records","- Blank records cannot be saved\r\n");
+  if (checkNullString(form.subject.value)) { 
+      message += label("specify.blank.records", "- Blank records cannot be saved\r\n");
       formTest = false;
     }
     
     if (form.callTypeId.value == "0") { 
-      message += label("specify.type","- Please specify a type\r\n");
+      message += label("specify.type", "- Please specify a type\r\n");
       formTest = false;
     }
     
-    <% if(CallDetails.getAlertDate() == null){ %>
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += label("specify.alert.date", "- Please specify an alert date\r\n");
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += label("specify.alert.description", "- Please specify an alert description\r\n");
-      formTest = false;
-    }
-    <% } %>
+    if(form.hasFollowup != null && form.hasFollowup.checked){
+      if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+        message += label("specify.alert.date", "- Please specify an alert date\r\n");
+        formTest = false;
+      }
+      if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
+        message += label("specify.alert.description", "- Please specify an alert description\r\n");
+        formTest = false;
+      }
+      if (checkNullString(form.alertText.value)) { 
+        message += label("specify.alert.description", "- Please specify an alert description\r\n");
+        formTest = false;
+      }
+      if (form.alertCallTypeId.value == "0") { 
+        message += label("specify.alert.type", "- Please specify an alert type\r\n");
+        formTest = false;
+      }
+     } 
 <% } %>
   if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
@@ -113,7 +117,8 @@
     }
   }
   
-  <% if(!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null){ %>
+  <% if((!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null) ||
+  !((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null)){ %>
   function toggleSpan(cb, tag) {
     var form = document.addCall;
     if (cb.checked) {
@@ -162,6 +167,10 @@ function showHistory() {
 <%-- <%@ include file="../contacts/contact_details_header_include.jsp" %><br> --%>
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=CalendarCalls" onSubmit="return doCheck(this);" method="post">
 <dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= isPopup(request) %>">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>"><%= toHtml(ContactDetails.getTitle()) %><br /></dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getPhoneNumberList().getPrimaryPhoneNumber()) %>"><%= toHtml(ContactDetails.getPhoneNumberList().getPrimaryPhoneNumber()) %><br /></dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getEmailAddressList().getPrimaryEmailAddress()) %>"><%= toHtml(ContactDetails.getEmailAddressList().getPrimaryEmailAddress()) %><br /></dhv:evaluate>
+  <br />
   <%-- include call update form --%>
   <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
@@ -190,17 +199,25 @@ function showHistory() {
       <%-- include followup activity details --%>
       <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
     <% }else{ %>
-      <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
+      <span name="nextActionSpan" id="nextActionSpan" <%= (CallDetails.getHasFollowup() || (request.getAttribute("alertDateWarning") != null)) ? "" : "style=\"display:none\"" %>>
       <br>
       <%-- include pending activity form --%>
       <%@ include file="../contacts/call_followup_include.jsp" %>
+        <%--Add the javascript to toggle the followupInclude. --%>
+        <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+          <script type="text/javascript">
+            var form1 = document.addCall;
+            form1.hasFollowup.checked = true;
+            form1.hasFollowup.disabled = true;
+          </script>
+        </dhv:evaluate>
       </span>
   <% 
       }
     }
   %>
   &nbsp;
-  <br>
+  <br />
   <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
   </dhv:evaluate>
@@ -208,6 +225,7 @@ function showHistory() {
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
   <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
+  <input type="hidden" name="oppHeaderId" value="<%= CallDetails.getOppHeaderId() != -1? CallDetails.getOppHeaderId():PreviousCallDetails.getOppHeaderId() %>">
   <input type="hidden" name="id" value="<%= CallDetails.getId() %>">
   <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
   <br>

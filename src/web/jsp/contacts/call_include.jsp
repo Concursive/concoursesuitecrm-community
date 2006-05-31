@@ -40,9 +40,14 @@
     formTest = true;
     message = "";
     alertMessage = "";
+ 
+    if ((form.contactId.value == "-1")) { 
+      message += label("check.ticket.contact.entered","- Check that a Contact is selected\r\n");
+      formTest = false;
+    }
     
     if (checkNullString(form.subject.value)) { 
-      message += label("specify.blank.records","- Blank records cannot be saved\r\n");
+      message += label("specify.blank.records","- Blank recordsdsdsd cannot be saved\r\n");
       formTest = false;
     }
     

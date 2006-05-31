@@ -94,7 +94,7 @@ public class LabelHandler extends TagSupport {
       ApplicationPrefs prefs = (ApplicationPrefs) pageContext.getServletContext().getAttribute(
           "applicationPrefs");
       if (prefs != null) {
-        newLabel = prefs.getLabel(labelName);
+        newLabel = prefs.getLabel(labelName, prefs.get("SYSTEM.LANGUAGE"));
       }
     } else {
       SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
@@ -132,4 +132,3 @@ public class LabelHandler extends TagSupport {
   }
 
 }
-

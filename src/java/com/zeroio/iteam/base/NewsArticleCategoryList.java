@@ -176,7 +176,7 @@ public class NewsArticleCategoryList extends ArrayList {
       if (includeId == -1) {
         sqlFilter.append("AND c.enabled = ? ");
       } else {
-        sqlFilter.append("AND (c.enabled = ? OR c.category_id = ?) ");
+        sqlFilter.append("AND (c.enabled = ? OR EXISTS (SELECT news_id FROM project_news pn WHERE pn.category_id = ?)) ");
       }
     }
   }
@@ -237,9 +237,11 @@ public class NewsArticleCategoryList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       NewsArticleCategory thisCategory = (NewsArticleCategory) i.next();
-      thisSelect.addItem(
-          thisCategory.getId(),
-          thisCategory.getName());
+    if (thisCategory.getEnabled() || (!thisCategory.getEnabled() && thisCategory.getId() == selectedId)) {
+        thisSelect.addItem(
+            thisCategory.getId(),
+            thisCategory.getName()+(!thisCategory.getEnabled() && thisCategory.getId() == selectedId?" (X)":""));
+      }
     }
     return thisSelect.getHtml(selectName, selectedId);
   }

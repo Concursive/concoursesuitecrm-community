@@ -19,16 +19,23 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="PreviousCallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.addCall.subject.focus();">
+<% 
+  String actionSource = request.getParameter("actionSource");
+  if (actionSource == null) {
+    actionSource = "MyActionContacts";
+  }
+%>
 <% if(ContactDetails.getOrgId() == -1){ %>
-<form name="addCall" action="ExternalContactsCalls.do?command=Save&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
+<form name="addCall" action="ExternalContactsCalls.do?command=Save&auto-populate=true&actionSource=<%= actionSource %>" onSubmit="return doCheck(this);" method="post">
 <% }else{ %>
-<form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
+<form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=<%= actionSource %>" onSubmit="return doCheck(this);" method="post">
 <% } %>
   <dhv:formMessage showSpace="false" />
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
@@ -36,8 +43,10 @@
   <br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
+  <dhv:evaluate if="<%= "MyActionContacts".equals(request.getParameter("actionSource")) %>"> 
+    <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  </dhv:evaluate>
   <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
   <input type="hidden" name="parentId" value="<%= PreviousCallDetails.getId() %>">
 </form>
 </body>

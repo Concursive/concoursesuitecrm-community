@@ -23,8 +23,6 @@
 <jsp:useBean id="bcc" class="java.lang.String" scope="request"/>
 <jsp:useBean id="cc" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onload="window.opener.location=window.opener.location;">
-<p>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
@@ -33,7 +31,13 @@
   </tr>
   <tr class="row2">
     <td>
-      <%= Recipient.getNameLastFirst() %> (<%= Recipient.getPrimaryEmailAddress() %>)
+      <dhv:evaluate if="<%= Recipient.getNameLastFirst() != null %>">
+        <%= Recipient.getNameLastFirst() %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= Recipient.getNameLastFirst() == null %>">
+        <%= Recipient.getCompany() %>
+      </dhv:evaluate>
+      (<%= Recipient.getPrimaryEmailAddress() %>)
     </td>
   </tr>
   <dhv:evaluate if="<%= cc != null && !"".equals(cc) %>">
@@ -51,6 +55,5 @@
   </tr>
   </dhv:evaluate>
 </table>
-<p>
+<br />
 <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">
-</body>

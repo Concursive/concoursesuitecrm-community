@@ -23,6 +23,7 @@
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Record" class="org.aspcfs.modules.base.CustomFieldRecord" scope="request"/>
+<jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -33,6 +34,11 @@
 <tr>
 <td>
 <a href="Leads.do?command=Dashboard"><dhv:label name="pipeline.pipeline">PIPELINE</dhv:label></a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<% } %>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>">Opportunity Details</a> >
 <a href="LeadsFolders.do?command=FolderList&headerId=<%= OpportunityHeader.getId() %>"><dhv:label name="accounts.Folders">Folders</dhv:label></a> >
 
@@ -50,6 +56,10 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  &nbsp;<br>
 </dhv:evaluate>
 <dhv:container name="opportunities" selected="folders" object="OpportunityHeader" param="<%= "id=" + OpportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -72,6 +82,7 @@
     </tr>
   </table>
   <br>
+  <dhv:hasAuthority owner="<%= OpportunityHeader.getManagerOwnerIdRange() %>">
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
     <dhv:permission name="pipeline-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsFolders.do?command=ModifyFields&headerId=<%= OpportunityHeader.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"></dhv:permission>
     <dhv:permission name="pipeline-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='LeadsFolders.do?command=DeleteFields&headerId=<%= OpportunityHeader.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';confirmSubmit(this.form);"></dhv:permission>
@@ -79,6 +90,7 @@
       <br /><br /><dhv:formMessage showSpace="false" />
     </dhv:permission>
   </dhv:evaluate>
+  </dhv:hasAuthority>
   <%
     Iterator groups = Category.iterator();
     while (groups.hasNext()) {
@@ -145,8 +157,10 @@
   </table>
   <br>
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+  <dhv:hasAuthority owner="<%= OpportunityHeader.getManagerOwnerIdRange() %>">
     <dhv:permission name="pipeline-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsFolders.do?command=ModifyFields&headerId=<%= OpportunityHeader.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"></dhv:permission>
     <dhv:permission name="pipeline-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='LeadsFolders.do?command=DeleteFields&headerId=<%= OpportunityHeader.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';confirmSubmit(this.form);"></dhv:permission>
+  </dhv:hasAuthority>
   </dhv:evaluate>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
 </dhv:container>

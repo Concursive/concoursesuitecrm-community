@@ -70,6 +70,11 @@ function reopenOpportunity(id) {
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 <form method="post" name="inputForm" action="LeadsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="id" value="<%= opportunityHeader.getId() %>">
+<input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
+<input type="hidden" name="folderId" value="<%= request.getAttribute("folderId") %>">
+<%= addHiddenParams(request, "viewSource") %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -134,11 +139,6 @@ function reopenOpportunity(id) {
   </p>
   <input type="submit" value=" <dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload">
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="id" value="<%= opportunityHeader.getId() %>">
-  <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
-  <input type="hidden" name="folderId" value="<%= request.getAttribute("folderId") %>">
-  <%= addHiddenParams(request, "viewSource") %>
 </dhv:container>
 </form>
 </body>

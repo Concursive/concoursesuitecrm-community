@@ -61,7 +61,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
 
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context, thisTicket.getOrgId())) {
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
         return ("PermissionError");
       }
 
@@ -73,10 +73,8 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       }
 
       // Build the onsiteModelList
-      LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(
-          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
-      context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
+      // Load the form elements
+      buildFormElements(context, db);
       // Build the list of maintenance notes
       TicketMaintenanceNoteList thisList = new TicketMaintenanceNoteList();
       PagedListInfo sunListInfo = this.getPagedListInfo(
@@ -115,14 +113,15 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       db = this.getConnection(context);
       // Load the specified ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
-      // Load form elements
-      LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(
-          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
-      context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
+      // Load the form elements
+      buildFormElements(context, db);
       return ("AddOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -156,16 +155,20 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
-      // Load onsite model list
-      LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(
-          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
-      context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-      context.getRequest().setAttribute(
-          "return", context.getRequest().getParameter("return"));
+      // Load the form elements
+      buildFormElements(context, db);
+      context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
       // Load the maintenance note elements
       TicketMaintenanceNote thisSun = new TicketMaintenanceNote();
       thisSun.queryRecord(db, Integer.parseInt(formId));
+      //Check access permission to organization record
+      if (thisSun.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       context.getRequest().setAttribute("maintenanceDetails", thisSun);
       return ("ModifyOK");
     } catch (Exception e) {
@@ -195,6 +198,10 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
       // Save the base data
@@ -262,9 +269,16 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       loadOrganizaton(context, db, thisTicket);
       // Save the base data
       TicketMaintenanceNote thisMaintenance = new TicketMaintenanceNote();
-      thisMaintenance.setId(Integer.parseInt(formId));
+      thisMaintenance.queryRecord(db, Integer.parseInt(formId));
+      //Check access permission to organization record
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       thisMaintenance.setModifiedBy(getUserId(context));
-      thisMaintenance.setLinkTicketId(thisTicket.getId());
       String descriptionOfService = context.getRequest().getParameter(
           "descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
@@ -327,25 +341,24 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
-
-      //find record permissions for portal users
-      if (!isRecordAccessPermitted(context, thisTicket.getOrgId())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
-      // Load the onsiteModelList
-      LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(
-          -1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
-      context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-      // Load the related form items
+      // Load the form elements
+      buildFormElements(context, db);
       // Maintenance Note items
       TicketMaintenanceNote thisSun = new TicketMaintenanceNote();
       thisSun.queryRecord(db, Integer.parseInt(formId));
       context.getRequest().setAttribute("maintenanceDetails", thisSun);
+
+      //Check access permission to organization record
+      if (thisSun.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       return ("ViewOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -379,6 +392,18 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       Ticket thisTicket = new Ticket();
       thisTicket.queryRecord(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("ticketDetails", thisTicket);
+
+      //Check access permission to organization record
+      TicketMaintenanceNote thisMaintenance = new TicketMaintenanceNote();
+      thisMaintenance.queryRecord(db, Integer.parseInt(formId));
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
+
       // Prepare the HTML Dialog
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       htmlDialog.addMessage(
@@ -425,7 +450,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
       TicketMaintenanceNote thisMaintenance = new TicketMaintenanceNote();
-      thisMaintenance.setId(formId);
+      thisMaintenance.queryRecord(db, formId);
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+          return ("PermissionError");
+        }
+      } else {
+          return ("PermissionError");
+      }
       recordDeleted = thisMaintenance.delete(db);
     } catch (Exception e) {
       context.getRequest().setAttribute(
@@ -464,5 +496,29 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
     Organization thisOrganization = new Organization(db, ticket.getOrgId());
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
   }
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void buildFormElements(ActionContext context, Connection db) throws SQLException {
+
+    LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
+    onsiteModelList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
+
+    LookupList assetVendorList = new LookupList(db, "lookup_asset_vendor");
+    assetVendorList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("assetVendorList", assetVendorList);
+
+    LookupList assetManufacturerList = new LookupList(db, "lookup_asset_manufacturer");
+    assetManufacturerList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("assetManufacturerList", assetManufacturerList);
+
+  }
+
 }
 

@@ -80,6 +80,7 @@ public final class MyActionContacts extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("ContactActionListInfo");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     PagedListInfo contactActionListInfo = this.getPagedListInfo(
         context, "ContactActionListInfo");
     contactActionListInfo.setLink(
@@ -87,6 +88,10 @@ public final class MyActionContacts extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
+      LookupList siteIdList = new LookupList(db, "lookup_site_id");
+      siteIdList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteIdList);
+  
       ActionContactsList thisList = new ActionContactsList();
       thisList.setPagedListInfo(contactActionListInfo);
       thisList.setActionId(Integer.parseInt(actionId));
@@ -137,6 +142,7 @@ public final class MyActionContacts extends CFSModule {
     ActionList actionList = null;
     addModuleBean(context, "My Action Lists", "Action Contacts");
     Connection db = null;
+    SystemStatus thisSystem = this.getSystemStatus(context);
     try {
       db = getConnection(context);
 
@@ -179,6 +185,15 @@ public final class MyActionContacts extends CFSModule {
       context.getRequest().setAttribute(
           "NumberOperatorList", numberOperatorList);
 
+      LookupList siteValueList = new LookupList(db, "lookup_site_id");
+      siteValueList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteValueList);
+  
+  
+      LookupList siteCriteriaList = new LookupList(db, "lookup_site_id");
+      siteCriteriaList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteCriteriaList", siteCriteriaList);
+
       if (actionId != null && !"-1".equals("actionId")) {
         actionList = new ActionList(db, Integer.parseInt(actionId));
         context.getRequest().setAttribute("ActionList", actionList);
@@ -205,7 +220,7 @@ public final class MyActionContacts extends CFSModule {
    *
    * @param context Description of the Parameter
    * @return Description of the Return Value
-   */
+   */                                                                    
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
       return ("PermissionError");
@@ -244,6 +259,7 @@ public final class MyActionContacts extends CFSModule {
             thisSCL, this.getUserId(context), this.getUserRange(context));
         contacts.setBuildDetails(true);
         contacts.setBuildTypes(false);
+        contacts.setIncludeAllSites(true);
         contacts.buildList(db);
 
         //save action contacts
@@ -260,6 +276,9 @@ public final class MyActionContacts extends CFSModule {
                 "object.validation.criteriaNotDefined"));
         processErrors(context, errors);
       }
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -343,6 +362,8 @@ public final class MyActionContacts extends CFSModule {
     if (viewUserId == null || "".equals(viewUserId)) {
       viewUserId = String.valueOf(this.getUserId(context));
     }
+/*    String siteId = String.valueOf(this.getUser(context, Integer.parseInt(viewUserId)).getSiteId());
+    context.getRequest().setAttribute("siteId", siteId);*/
     boolean buildContacts = true;
     if ("false".equals(context.getRequest().getParameter("doBuild"))) {
       buildContacts = false;

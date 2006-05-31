@@ -55,6 +55,9 @@
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 <form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<input type="hidden" name="dosubmit" value="true" />
+<input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>" />
+<input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>" />
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -108,9 +111,6 @@
   </p>
   <input type="submit" value="<dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload" />
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';" />
-  <input type="hidden" name="dosubmit" value="true" />
-  <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>" />
-  <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>" />
 </dhv:container>
 </form>
 </body>

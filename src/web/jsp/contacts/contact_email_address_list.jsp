@@ -28,7 +28,7 @@
 <script language="JavaScript" TYPE="text/javascript">
   function confirmDelete(addressId){
     if (confirm(label('confirm.delete.contact.address','Are you sure you want to delete the selected contact address?'))) {
-      window.location.href = 'ContactEmailAddressSelector.do?command=Delete&addressId=' + addressId+'&contactId='+'<%= (contact != null)?""+contact.getId():"" %>';
+      window.location.href = 'ContactEmailAddressSelector.do?command=Delete&addressId=' + addressId+'&hiddenFieldId=<%= (hiddenFieldId!=null?hiddenFieldId:"") %>&contactId='+'<%= (contact != null)?""+contact.getId():"" %>';
     }
   }
 </script>

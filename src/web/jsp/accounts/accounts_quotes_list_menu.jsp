@@ -24,12 +24,18 @@
   var menu_init = false;
   var modifiable = 'true';
   var trashed = 'false';
+  var thisHeaderId = -1;
+  var thisAllowMultiVersion = true;
+  var thisAllowMultiQuote = true;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, quoteId, versionId, modi, trashed) {
+  function displayMenu(loc, id, orgId, quoteId, versionId, modi, trashed, headerId, allowMultiVersion, allowMultiQuote) {
     thisOrgId = orgId;
     thisQuoteId = quoteId;
     thisVersionId = versionId;
     this.modifiable = modi;
+    thisHeaderId = headerId;
+    thisAllowMultiVersion = allowMultiVersion;
+    thisAllowMultiQuote =  allowMultiQuote;
     updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
@@ -39,21 +45,35 @@
   }
 
   function updateMenu(trashed) {
-    if(modifiable == 'true'){
-      showSpan('menuModify');
-    }else{
-      hideSpan('menuModify');
-    }
     if (trashed == 'true'){
       hideSpan('menuModify');
       hideSpan('menuDelete');
       hideSpan('menuClone');
       hideSpan('menuAddVersion');
     } else {
-      showSpan('menuModify');
       showSpan('menuDelete');
-      showSpan('menuClone');
-      showSpan('menuAddVersion');
+      if (modifiable == 'true'){
+        showSpan('menuModify');
+      } else{
+        hideSpan('menuModify');
+      }
+      if (!(!thisAllowMultiVersion && (thisHeaderId != '-1'))){
+        showSpan('menuAddVersion');
+        showSpan('menuShowVersion');
+        if (thisVersionId == ''){
+          showSpan('menuShowVersion');
+        } else {
+          hideSpan('menuShowVersion');
+        }
+      } else {
+        hideSpan('menuAddVersion');
+        hideSpan('menuShowVersion');
+      }
+      if (!(!thisAllowMultiQuote && (thisHeaderId != '-1'))){
+        showSpan('menuClone');
+      } else {
+        hideSpan('menuClone');
+      }
     }
   }
   //Menu link functions
@@ -108,7 +128,7 @@
           <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
         </td>
       </tr>
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="showVersions();">
+      <tr id="menuShowVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="showVersions();">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

@@ -18,11 +18,15 @@ package org.aspcfs.controller;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.servlets.ControllerHook;
+import com.darkhorseventures.framework.hooks.CustomHook;
 import com.zeroio.iteam.base.ProjectList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.SiteUtils;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -33,11 +37,11 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
- * Every request to the ServletController executes this code.
+ *  Every request to the ServletController executes this code.
  *
- * @author mrajkowski
+ * @author     mrajkowski
  * @version $Id$
- * @created July 9, 2001
+ * @created    July 9, 2001
  */
 public class SecurityHook implements ControllerHook {
 
@@ -45,16 +49,16 @@ public class SecurityHook implements ControllerHook {
 
 
   /**
-   * Checks to see if a User session object exists, if not then the security
-   * check fails.<p>
-   * <p/>
-   * The security check also compares the date/time of the user's permissions
-   * to the date/time someone changed the user's permissions in the database.
+   *  Checks to see if a User session object exists, if not then the security
+   *  check fails.<p>
+   *  <p/>
+   *  The security check also compares the date/time of the user's permissions
+   *  to the date/time someone changed the user's permissions in the database.
    *
-   * @param request Description of Parameter
-   * @param servlet Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.1
+   * @param  request  Description of Parameter
+   * @param  servlet  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.1
    */
   public String securityCheck(Servlet servlet, HttpServletRequest request) {
     UserBean userSession = (UserBean) request.getSession().getAttribute(
@@ -75,14 +79,12 @@ public class SecurityHook implements ControllerHook {
         action.toUpperCase().startsWith("PROCESS")) {
       return null;
     }
-    // BEGIN DHV CODE ONLY
-    //Version check
-    if (applicationPrefs.isUpgradeable()) {
-      return "UpgradeCheck";
+    String value = CustomHook.populateSecurityHook(applicationPrefs);
+    if (value != null) {
+      return value;
     }
-    // END DHV CODE ONLY
     //User is supposed to have a valid session, so fail security check
-    if (userSession == null) {
+    if (userSession == null || userSession.getUserId() == -1) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* Please login, your session has expired");
       request.setAttribute("LoginBean", failedSession);
@@ -92,7 +94,7 @@ public class SecurityHook implements ControllerHook {
     //Check to see if this site requires SSL
     if ("true".equals(
         (String) servlet.getServletConfig().getServletContext().getAttribute(
-            "ForceSSL")) &&
+        "ForceSSL")) &&
         "http".equals(request.getScheme())) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* A secure connection is required");
@@ -104,7 +106,7 @@ public class SecurityHook implements ControllerHook {
     }
 
     //Good so far...
-    if (userSession != null) {
+    if (userSession != null && userSession.getUserId() > -1) {
       ConnectionElement ce = userSession.getConnectionElement();
       if (ce == null) {
         System.out.println("SecurityHook-> Fatal: CE is null");
@@ -125,10 +127,11 @@ public class SecurityHook implements ControllerHook {
         //session was serialized and reloaded, but the systemStatus isn't reloaded
         Connection db = null;
         try {
+          Site thisSite = retrieveSite(servlet.getServletConfig().getServletContext(), request);
           db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
               "ConnectionPool")).getConnection(ce);
           systemStatus = SecurityHook.retrieveSystemStatus(
-              servlet.getServletConfig().getServletContext(), db, ce);
+              servlet.getServletConfig().getServletContext(), db, ce, thisSite.getLanguage());
         } catch (Exception e) {
         } finally {
           ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
@@ -165,13 +168,24 @@ public class SecurityHook implements ControllerHook {
         request.setAttribute("LoginBean", failedSession);
         return "SecurityCheck";
       }
+      //The context reloaded and didn't reload the sessionManager userSession,
+      //so add the user back
+      if (sessionInfo == null) {
+        request.getSession().setMaxInactiveInterval(
+            systemStatus.getSessionTimeout());
+        thisManager.addUser(request, userSession.getActualUserId());
+        sessionInfo = thisManager.getUserSession(
+            userSession.getActualUserId());
+      }
+      // Set the last accessed time to track usage
+      sessionInfo.setLastAccessed(System.currentTimeMillis());
       //Check to see if new permissions should be loaded...
       //Calling getHierarchyCheck() and getPermissionCheck() will block the
       //user until hierarchy and permisions have been rebuilt
       if (userSession.getHierarchyCheck().before(
           systemStatus.getHierarchyCheck()) ||
           userSession.getPermissionCheck().before(
-              systemStatus.getPermissionCheck())) {
+          systemStatus.getPermissionCheck())) {
         Connection db = null;
         try {
           db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
@@ -213,22 +227,63 @@ public class SecurityHook implements ControllerHook {
       userSession.getUserRecord().setCurrency(
           applicationPrefs.get("SYSTEM.CURRENCY"));
       userSession.getUserRecord().setLanguage(
-          applicationPrefs.get("SYSTEM.LANGUAGE"));
+          systemStatus.getLanguage());
     }
     return null;
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @param db      Description of the Parameter
-   * @param ce      Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  context  Description of the Parameter
+   * @param  request  Description of the Parameter
+   * @return          Description of the Return Value
    */
-  public static synchronized SystemStatus retrieveSystemStatus(ServletContext context, Connection db, ConnectionElement ce) throws SQLException {
+  public static Site retrieveSite(ServletContext context, HttpServletRequest request) {
+    String serverName = request.getServerName();
+    ConnectionPool sqlDriver =
+        (ConnectionPool) context.getAttribute("ConnectionPool");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute(
+        "applicationPrefs");
+    SiteList sites = SiteUtils.getSiteList(prefs, sqlDriver, serverName);
+    if (sites.size() == 1) {
+      return (Site) sites.get(0);
+    }
+    return null;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @param  ce       Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public static Site retrieveSite(ServletContext context, ConnectionElement ce) {
+    ConnectionPool sqlDriver =
+        (ConnectionPool) context.getAttribute("ConnectionPool");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute(
+        "applicationPrefs");
+    SiteList sites = SiteUtils.getSiteList(prefs, sqlDriver, ce);
+    if (sites.size() == 1) {
+      return (Site) sites.get(0);
+    }
+    return null;
+  }
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context        Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @param  ce             Description of the Parameter
+   * @param  language       Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
+   */
+  public static synchronized SystemStatus retrieveSystemStatus(ServletContext context, Connection db, ConnectionElement ce, String language) throws SQLException {
     //SystemStatusList is created in InitHook
     Hashtable statusList = (Hashtable) context.getAttribute("SystemStatus");
     //Create the SystemStatus object if it does not exist for this connection,
@@ -241,6 +296,39 @@ public class SecurityHook implements ControllerHook {
       newSystemStatus.setFileLibraryPath(
           prefs.get("FILELIBRARY") + ce.getDbName() + fs);
       newSystemStatus.queryRecord(db);
+      ConnectionPool cp = (ConnectionPool) context.getAttribute(
+          "ConnectionPool");
+      // Determine the URL for accessing this site
+      String link = "";
+      String url = "";
+      if (prefs.has("WEBSERVER.URL")) {
+        url = prefs.get("WEBSERVER.URL");
+      } else {
+        SiteList sites = SiteUtils.getSiteList(prefs, cp, ce);
+        if (sites.size() > 0) {
+          Site thisSite = (Site) sites.get(0);
+          url = thisSite.getVirtualHost();
+          // Port?
+          String port = prefs.get("WEBSERVER.PORT");
+          if (port != null && !port.equals("80") && !port.equals("443")) {
+            url += ":" + port;
+          }
+          // Context?
+          String contextName = prefs.get("WEBSERVER.CONTEXT");
+          if (contextName != null) {
+            url += contextName;
+          }
+        }
+      }
+      if ("true".equals(prefs.get("FORCESSL"))) {
+        link = "https://" + url;
+      } else {
+        link = "http://" + url;
+      }
+      if (link.endsWith("/")) {
+        link = link.substring(0, link.length() - 1);
+      }
+      newSystemStatus.setUrl(link);
       //Cache the role list for the RoleHandler taglib
       newSystemStatus.getLookupList(db, "lookup_project_role");
       statusList.put(ce.getUrl(), newSystemStatus);
@@ -254,6 +342,15 @@ public class SecurityHook implements ControllerHook {
           Constants.SYSTEM_PROJECT_NAME_LIST, projectNameCache);
       //Give the systemStatus a handle to applicationPrefs for language support
       newSystemStatus.setApplicationPrefs(prefs);
+      // Use application language setting
+      if (language != null) {
+        newSystemStatus.setLanguage(language);
+      } else {
+        // Default to the application's language
+        newSystemStatus.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
+      }
+      prefs.addDictionary(context, language);
+      newSystemStatus.startServers(context);
     }
     return (SystemStatus) statusList.get(ce.getUrl());
   }

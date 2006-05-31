@@ -204,7 +204,7 @@
             </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= ImportDetails.getOwner() == -1 ? User.getUserId() : ImportDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&hierarchy=<%= User.getUserId() %>&usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
             &nbsp; [<a href="javascript:changeDivContent('changeowner',label('label.any','Any'));javascript:resetNumericFieldValue('ownerid');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
          </td>
         </tr>
@@ -291,7 +291,7 @@
    String field = (String) f.next();
    Property mappedProperty = (Property) fieldMappings.get(field);
   %>
-  <script>fields[fields.length] = '<%= field %>'</script>
+  <script type="text/javascript">fields[fields.length] = '<%= field %>';</script>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
      <%= toString(field) %>

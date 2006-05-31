@@ -39,6 +39,24 @@ try{
   print("All business_process_hook_library entries have been deleted");
   pst.close();
 
+  pst = db.prepareStatement(
+      "DELETE FROM business_process_parameter_library ");
+  pst.execute();
+  print("All business_process_parameter_library entries have been deleted");
+  pst.close();
+
+  pst = db.prepareStatement(
+      "DELETE FROM business_process_component_result_lookup ");
+  pst.execute();
+  print("All business_process_component_result_lookup entries have been deleted");
+  pst.close();
+
+  pst = db.prepareStatement(
+      "DELETE FROM business_process_component_library ");
+  pst.execute();
+  print("All business_process_component_library entries have been deleted");
+  pst.close();
+
 } catch (e){
   print(e);
 }

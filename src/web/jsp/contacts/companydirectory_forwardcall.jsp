@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <script type="text/javascript">
 function reopenContact(id) {
@@ -34,7 +35,7 @@ function reopenContact(id) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do"><dhv:label name="module-general-contacts">General Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <a href="ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId() %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
@@ -55,7 +56,7 @@ function reopenContact(id) {
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "popup|view|popupType") %>'">
   <% } %>
   <br><br>
-  <%@ include file="../newmessage.jsp" %>
+  <%@ include file="../newmessage_include.jsp" %>
   <br>
   <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
   <% if("list".equals(request.getParameter("return"))){ %>

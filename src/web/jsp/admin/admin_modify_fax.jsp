@@ -51,7 +51,7 @@
         <dhv:label name="admin.faxServer">Fax Server</dhv:label>
       </td>
       <td>
-         <input type="text" size="30" name="fax" value="<%= toHtmlValue(getPref(getServletContext(), "FAXSERVER")) %>"/>
+         <input type="text" size="30" name="fax" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "FAXSERVER")) %>"/>
       </td>
     </tr>
   </table>

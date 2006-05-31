@@ -93,7 +93,7 @@ public class CalendarContext
     if (thisSystem != null) {
       user = thisSystem.getUser(userId);
       user.setLanguage(
-          thisSystem.getApplicationPrefs().get("SYSTEM.LANGUAGE"));
+          thisSystem.getLanguage());
       user.setCurrency(
           thisSystem.getApplicationPrefs().get("SYSTEM.CURRENCY"));
       populateBindings(db, thisSystem);
@@ -203,4 +203,3 @@ public class CalendarContext
     }
   }
 }
-

@@ -21,6 +21,7 @@
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="EstimatedLOETypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="ticketTaskCategoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -36,6 +37,16 @@
       <%= toHtmlValue(Task.getDescription()) %>
     </td>
   </tr>
+  <dhv:evaluate if="<%= ticketTaskCategoryList != null && ticketTaskCategoryList.size() > 0 %>">
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
+      </td>
+      <td>
+        <%= toHtml(ticketTaskCategoryList.getSelectedValue(Task.getTicketTaskCategoryId())) %>
+      </td>
+    </tr>
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label>

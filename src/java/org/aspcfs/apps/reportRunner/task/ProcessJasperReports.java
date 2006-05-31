@@ -44,7 +44,7 @@ public class ProcessJasperReports {
 
   public final static String fs = System.getProperty("file.separator");
   public final static String CENTRIC_DICTIONARY = "CENTRIC_DICTIONARY";
-
+  public final static String SCRIPT_DB_CONNECTION = "SCRIPT_DB_CONNECTION";
 
   /**
    * Constructor for the ProcessJasperReports object
@@ -55,7 +55,7 @@ public class ProcessJasperReports {
    * @param dictionary Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  public ProcessJasperReports(Connection db, Site thisSite, Map config, Map dictionary) throws Exception {
+  public ProcessJasperReports(Connection db, Connection scriptdb, Site thisSite, Map config, Map dictionary) throws Exception {
     //Load the report queue for this site, unprocessed only
     ReportQueueList queue = new ReportQueueList();
     queue.setSortAscending(true);
@@ -94,6 +94,7 @@ public class ProcessJasperReports {
           long size = processReport(
               thisQueue,
               db,
+              scriptdb,
               reportDir,
               destDir + filename,
               fontPath,
@@ -123,7 +124,7 @@ public class ProcessJasperReports {
    * @return Description of the Return Value
    * @throws Exception Description of the Exception
    */
-  private static long processReport(ReportQueue thisQueue, Connection db, String path, String destFilename, String fontPath, Map localizationPrefs) throws Exception {
+  private static long processReport(ReportQueue thisQueue, Connection db, Connection scriptdb, String path, String destFilename, String fontPath, Map localizationPrefs) throws Exception {
     Report thisReport = new Report(db, thisQueue.getReportId());
     //Determine the path and load JasperReport
     JasperReport jasperReport = JasperReportUtils.getReport(
@@ -134,6 +135,7 @@ public class ProcessJasperReports {
     criteria.buildList(db);
     Map parameters = criteria.getParameters(jasperReport, path);
     parameters.put(CENTRIC_DICTIONARY, localizationPrefs);
+    parameters.put(SCRIPT_DB_CONNECTION, scriptdb);
     //Modify pdf font and encoding properties of all text fields if not default language
     String language = (String) parameters.get("language") + "_" + (String) parameters.get(
         "country");

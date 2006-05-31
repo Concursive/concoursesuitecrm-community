@@ -681,7 +681,7 @@ public class FileItemVersion extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO project_files_version ");
     sql.append(
-        "(item_id, subject, client_filename, filename, version, \"size\", ");
+        "(item_id, subject, client_filename, filename, \"version\", \"size\", ");
     sql.append("enabled, downloads, ");
     if (entered != null) {
       sql.append("entered, ");
@@ -734,7 +734,7 @@ public class FileItemVersion extends GenericBean {
         "UPDATE project_files_version " +
         "SET subject = ?, client_filename = ?, \"size\" = ? " +
         "WHERE item_id = ? " +
-        "AND version = ? ";
+        "AND \"version\" = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, subject);
@@ -788,13 +788,23 @@ public class FileItemVersion extends GenericBean {
     String sql =
         "DELETE FROM project_files_version " +
         "WHERE item_id = ? " +
-        "AND version = ? ";
+        "AND \"version\" = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, this.getId());
     pst.setDouble(2, this.getVersion());
     pst.execute();
     pst.close();
 
+    //Delete the thumbnail
+    pst = db.prepareStatement(
+        "DELETE FROM project_files_thumbnail " +
+        "WHERE item_id = ? " +
+        "AND \"version\" = ? ");
+    pst.setInt(1, this.getId());
+    pst.setDouble(2, this.getVersion());
+    pst.execute();
+    pst.close();
+    
     return true;
   }
 

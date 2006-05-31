@@ -24,8 +24,18 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<%
+  OpportunityHeader opportunityHeader = OppDetails.getHeader();
+	OpportunityComponent ComponentDetails = OppDetails.getComponent();
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.opportunityForm.header_description.focus();">
+<dhv:include name="opportunity.singleComponent">
+  <body onLoad="javascript:document.opportunityForm.component_description.focus();">
+</dhv:include>
+<dhv:include name="opportunity.singleComponent" none="true">
+  <body onLoad="javascript:document.opportunityForm.header_description.focus();">
+</dhv:include>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
@@ -33,7 +43,7 @@
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popContacts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
-<SCRIPT LANGUAGE="JavaScript">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
 function doCheck(form) {
   if (form.dosubmit.value == "false") {
     return true;
@@ -45,10 +55,18 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
+  <dhv:include name="opportunity.singleComponent">
+    <dhv:evaluate if="<%= opportunityHeader.getId() == -1 %>">
+      updateHeaderFields(form);
+    </dhv:evaluate>
+  </dhv:include>
+  <dhv:include name="opportunity.lowEstimateCanNotBeZero,pipeline-lowEstimate" none="true">
   if (form.component_low.value != "" && form.component_low.value != "" && (parseInt(form.component_low.value) > parseInt(form.component_high.value))) { 
     message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
   if ((!checkNullString(form.component_alertText.value)) && (checkNullString(form.component_alertDate.value))) { 
     message += label("specify.alert.date", "- Please specify an alert date\r\n");
     formTest = false;
@@ -57,8 +75,19 @@ function checkForm(form) {
     message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
   if (!checkNumber(form.component_commission.value)) { 
     message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
+    formTest = false;
+  }
+  </dhv:include>
+  if (form.header_manager.value == -1) {
+    message += label("check.valid.manager", "- Please select a valid user to manage the opportunity\r\n");
+    formTest = false;
+  }
+  if (form.component_owner.value == -1) {
+    message += label("check.valid.owner", "- Please select a valid user to assign the component\r\n");
     formTest = false;
   }
   if (formTest == false) {
@@ -68,19 +97,16 @@ function checkForm(form) {
     if(alertMessage != ""){
        return confirmAction(alertMessage);
     }else{
+  <dhv:include name="opportunity.componentTypes" none="true">
       var test = document.opportunityForm.selectedList;
       if (test != null) {
         return selectAllOptions(document.opportunityForm.selectedList);
       }
+  </dhv:include>
     }
   }
 }
 </script>
-
-<%
-  OpportunityHeader opportunityHeader = OppDetails.getHeader();
-	OpportunityComponent ComponentDetails = OppDetails.getComponent();
-%>
 <form name="opportunityForm" action="AccountContactsOpps.do?command=Save&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -113,6 +139,21 @@ function checkForm(form) {
     <%--  include basic opportunity form --%>
     <%@ include file="../pipeline/opportunity_include.jsp" %>
     <br />
+    <dhv:permission name="accounts-accounts-contacts-opportunities-quotes-add">
+      <dhv:evaluate if="<%= !isPopup(request) %>">
+        <table border="0">
+          <tr>
+            <td valign="top" >
+              <strong><dhv:label name="pipeline.addAQuoteQuestion">Add a quote?</dhv:label></strong>
+            </td>
+            <td>
+              <input type="checkbox" name="addQuote" value="true" />
+            </td>
+          </tr>
+        </table>
+      </dhv:evaluate>
+    </dhv:permission>
+    <br />
     <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
     <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />
     <input type="hidden" name="dosubmit" value="true">
@@ -121,5 +162,3 @@ function checkForm(form) {
 </dhv:container>
 </form>
 </body>
-
-

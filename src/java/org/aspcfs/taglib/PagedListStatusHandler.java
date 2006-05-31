@@ -16,6 +16,7 @@
 package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
@@ -29,13 +30,13 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
- * Displays the status of the PagedListInfo specified with record counts, next
- * and previous buttons, and optionally other items.
+ *  Displays the status of the PagedListInfo specified with record counts, next
+ *  and previous buttons, and optionally other items.
  *
- * @author chris
- * @version $Id: PagedListStatusHandler.java,v 1.9 2003/03/21 13:50:06
- *          mrajkowski Exp $
- * @created October, 2002
+ *@author     chris
+ *@created    October, 2002
+ *@version    $Id: PagedListStatusHandler.java,v 1.9 2003/03/21 13:50:06
+ *      mrajkowski Exp $
  */
 public class PagedListStatusHandler extends BodyTagSupport {
   private String name = "statusProperties";
@@ -58,6 +59,8 @@ public class PagedListStatusHandler extends BodyTagSupport {
   private String form = "0";
   private String externalJScript = null;
   private String externalText = null;
+  private String params = "";
+
 
   /**
    * Sets the name attribute of the PagedListStatusHandler object
@@ -308,25 +311,76 @@ public class PagedListStatusHandler extends BodyTagSupport {
     this.enableJScript = DatabaseUtils.parseBoolean(tmp);
   }
 
+
+  /**
+   *  Sets the form attribute of the PagedListStatusHandler object
+   *
+   *@param  form  The new form value
+   */
   public void setForm(String form) {
     this.form = form;
   }
 
+
+  /**
+   *  Gets the externalJScript attribute of the PagedListStatusHandler object
+   *
+   *@return    The externalJScript value
+   */
   public String getExternalJScript() {
     return externalJScript;
   }
 
+
+  /**
+   *  Sets the externalJScript attribute of the PagedListStatusHandler object
+   *
+   *@param  tmp  The new externalJScript value
+   */
   public void setExternalJScript(String tmp) {
     this.externalJScript = tmp;
   }
 
+
+  /**
+   *  Gets the externalText attribute of the PagedListStatusHandler object
+   *
+   *@return    The externalText value
+   */
   public String getExternalText() {
     return externalText;
   }
 
+
+  /**
+   *  Sets the externalText attribute of the PagedListStatusHandler object
+   *
+   *@param  tmp  The new externalText value
+   */
   public void setExternalText(String tmp) {
     this.externalText = tmp;
   }
+
+
+  /**
+   *  Sets the params attribute of the PagedListStatusHandler object
+   *
+   *@param  tmp  The new params value
+   */
+  public void setParams(String tmp) {
+    this.params = tmp;
+  }
+
+
+  /**
+   *  Gets the params attribute of the PagedListStatusHandler object
+   *
+   *@return    The params value
+   */
+  public String getParams() {
+    return params;
+  }
+
 
   /**
    * Description of the Method
@@ -354,19 +408,44 @@ public class PagedListStatusHandler extends BodyTagSupport {
    * @throws JspException Description of the Exception
    */
   public final int doEndTag() throws JspException {
+    ApplicationPrefs prefs = (ApplicationPrefs) pageContext.getServletContext().getAttribute(
+        "applicationPrefs");
     ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
         "ConnectionElement");
     if (ce == null) {
       System.out.println("PagedListStatusHandler-> ConnectionElement is null");
     }
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-        "SystemStatus")).get(ce.getUrl());
+    Hashtable statusList = (Hashtable) pageContext.getServletContext().getAttribute("SystemStatus");
+    SystemStatus systemStatus = (SystemStatus) statusList.get(ce.getUrl());
     if (systemStatus == null) {
       System.out.println("PagedListStatusHandler-> SystemStatus is null");
     }
     try {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(
           object);
+      if (systemStatus != null) {
+        if (systemStatus.getLabel(
+            "pagedListInfo.pagedListStatus." + title) != null) {
+          title = systemStatus.getLabel(
+              "pagedListInfo.pagedListStatus." + title);
+        }
+        if (systemStatus.getLabel(
+            "pagedListInfo.pagedListStatus." + externalText) != null) {
+          externalText = systemStatus.getLabel(
+              "pagedListInfo.pagedListStatus." + externalText);
+        }
+      } else {
+        if (prefs.getLabel(
+            "pagedListInfo.pagedListStatus." + title, prefs.get("SYSTEM.LANGUAGE")) != null) {
+          title = prefs.getLabel(
+              "pagedListInfo.pagedListStatus." + title, prefs.get("SYSTEM.LANGUAGE"));
+        }
+        if (prefs.getLabel(
+            "pagedListInfo.pagedListStatus." + externalText, prefs.get("SYSTEM.LANGUAGE")) != null) {
+          externalText = prefs.getLabel(
+              "pagedListInfo.pagedListStatus." + externalText, prefs.get("SYSTEM.LANGUAGE"));
+        }
+      }
       if (pagedListInfo != null) {
         pagedListInfo.setEnableJScript(enableJScript);
         JspWriter out = this.pageContext.getOut();
@@ -445,12 +524,12 @@ public class PagedListStatusHandler extends BodyTagSupport {
             if (systemStatus != null) {
               out.write(
                   " (" + pagedListInfo.getExpandLink(
-                      systemStatus.getLabel("pagedListInfo.showMore"), systemStatus.getLabel(
-                          "pagedListInfo.returnToOverview")) + ")");
+                  systemStatus.getLabel("pagedListInfo.showMore"), systemStatus.getLabel(
+                  "pagedListInfo.returnToOverview"), params) + ")");
             } else {
               out.write(
                   " (" + pagedListInfo.getExpandLink(
-                      "Show more", "Return to overview") + ")");
+                  "Show more", "Return to overview", params) + ")");
             }
             out.write("</td>");
           } else {
@@ -481,6 +560,9 @@ public class PagedListStatusHandler extends BodyTagSupport {
                               "pagedListInfo.pagedListStatus.oneItemsPerPageData")));
                 } else {
                   //Items 1 to 10 of 20 total [Previous|Next]
+                  if (systemStatus.getLabel("pagedListInfo.pagedListStatus." + label) != null) {
+                    label = systemStatus.getLabel("pagedListInfo.pagedListStatus." + label);
+                  }
                   map.put(
                       "${pagedListInfo.currentOffset}", String.valueOf(
                           pagedListInfo.getCurrentOffset() + 1));
@@ -529,6 +611,7 @@ public class PagedListStatusHandler extends BodyTagSupport {
                           "pagedListInfo.pagedListStatus.noneAvailable")));
             }
           } else {
+            // The SystemStatus IS NULL here...
             if (pagedListInfo.getMaxRecords() > 0) {
               if ((pagedListInfo.getCurrentOffset() + 1) <= pagedListInfo.getMaxRecords()) {
                 if (pagedListInfo.getItemsPerPage() == 1) {
@@ -537,6 +620,11 @@ public class PagedListStatusHandler extends BodyTagSupport {
                       String.valueOf(pagedListInfo.getCurrentOffset() + 1));
                 } else {
                   //Items 1 to 10 of 20 total [Previous|Next]
+                  if (prefs.getLabel(
+                      "pagedListInfo.pagedListStatus." + label, prefs.get("SYSTEM.LANGUAGE")) != null) {
+                    label = prefs.getLabel(
+                        "pagedListInfo.pagedListStatus." + label, prefs.get("SYSTEM.LANGUAGE"));
+                  }
                   out.write(
                       label + " " + (pagedListInfo.getCurrentOffset() + 1) + " to ");
                   if (pagedListInfo.getItemsPerPage() <= 0) {
@@ -561,7 +649,7 @@ public class PagedListStatusHandler extends BodyTagSupport {
             }
           }
           //Display next/previous buttons
-          if (pagedListInfo.getItemsPerPage() > 0) {
+          if (pagedListInfo.getItemsPerPage() > 0 || pagedListInfo.getItemsPerPage() == -1) {
             if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
               pagedListInfo.setScrollReload(scrollReload);
               if (systemStatus != null) {
@@ -581,10 +669,16 @@ public class PagedListStatusHandler extends BodyTagSupport {
                 out.write(
                     " [" +
                     pagedListInfo.getPreviousPageLink(
-                        "<font class='underline'>Previous</font>", "Previous", form) +
+                            "<font class='underline'>" + prefs.getLabel(
+                                "label.previous", prefs.get("SYSTEM.LANGUAGE")) + "</font>",
+                            prefs.getLabel(
+                                "label.previous", prefs.get("SYSTEM.LANGUAGE")), form) +
                     "|" +
                     pagedListInfo.getNextPageLink(
-                        "<font class='underline'>Next</font>", "Next", form) +
+                            "<font class='underline'>" + prefs.getLabel(
+                                "label.next", prefs.get("SYSTEM.LANGUAGE")) + "</font>",
+                            prefs.getLabel(
+                                "label.next", prefs.get("SYSTEM.LANGUAGE")), form) +
                     "]");
               }
               out.write(" ");
@@ -610,6 +704,7 @@ public class PagedListStatusHandler extends BodyTagSupport {
     }
     return EVAL_PAGE;
   }
+
 
   /**
    * Gets the label attribute of the PagedListStatusHandler object

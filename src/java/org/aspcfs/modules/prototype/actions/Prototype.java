@@ -43,19 +43,19 @@ public final class Prototype extends CFSModule {
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
     context.getRequest().setAttribute("IncludePage", includePage);
-    Connection db = null;
+    /*Connection db = null;
     try {
       db = this.getConnection(context);
-      addHtmlSelectElements(context, db);
-      addContact(context, db);
+      //addHtmlSelectElements(context, db);
+      //addContact(context, db);
       //addOpportunity(context, db);
       //addOrganization(context, db);
-      addOpportunityList(context, db);
+      //addOpportunityList(context, db);
     } catch (Exception e) {
       e.printStackTrace(System.out);
     } finally {
       this.freeConnection(context, db);
-    }
+    }*/
     if (module != null) {
       addModuleBean(context, module, module);
       return ("IncludeOK");

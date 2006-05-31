@@ -19,20 +19,42 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <SCRIPT LANGUAGE="JavaScript">
 function setField(formField,thisValue,thisForm) {
-        var frm = document.forms[thisForm];
-        var len = document.forms[thisForm].elements.length;
-        var i=0;
-        for( i=0 ; i<len ; i++) {
-                if (frm.elements[i].name.indexOf(formField)!=-1) {
-                  if(thisValue){
-                    frm.elements[i].value = "1";
-                  }
-                  else {
-                    frm.elements[i].value = "0";
-                  }
-              }
-        }
+  var frm = document.forms[thisForm];
+  var len = document.forms[thisForm].elements.length;
+  var i=0;
+  for( i=0 ; i<len ; i++) {
+    if (frm.elements[i].name.indexOf(formField)!=-1) {
+      if(thisValue){
+        frm.elements[i].value = "1";
+      }
+      else {
+        frm.elements[i].value = "0";
+      }
+  }
+  }
 }
+
+function changeDivContent(divName, divContents) {
+  if(document.layers){
+    // Netscape 4 or equiv.
+    divToChange = document.layers[divName];
+    divToChange.document.open();
+    divToChange.document.write(divContents);
+    divToChange.document.close();
+  } else if(document.all){
+    // MS IE or equiv.
+    divToChange = document.all[divName];
+    divToChange.innerHTML = divContents;
+  } else if(document.getElementById){
+    // Netscape 6 or equiv.
+    divToChange = document.getElementById(divName);
+    divToChange.innerHTML = divContents;
+  }
+  if (divName == 'changeowner') {
+    checkOwnerSite('siteId');
+  }
+}
+
 </SCRIPT>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -65,7 +87,7 @@ function setField(formField,thisValue,thisForm) {
           </td>
           <td>
             <input type="hidden" name="ownerContactId" id="ownerid" value="<%= ActionList.getOwner() == -1 ? User.getUserRecord().getContactId() : ActionList.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&hierarchy=<%= User.getUserRecord().getId() %>&reset=true&filters=employees|accountcontacts');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true<%= User.getUserRecord().getSiteId() == -1?"&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&hierarchy=<%= User.getUserRecord().getId() %>&reset=true&filters=employees|accountcontacts');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
           </td>
         </tr>
       </table>

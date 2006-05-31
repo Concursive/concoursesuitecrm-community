@@ -19,8 +19,10 @@ import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.apps.workFlowManager.WorkflowManager;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.login.beans.UserBean;
 
 import java.util.HashMap;
 
@@ -43,12 +45,54 @@ public class PacketContext {
   private WorkflowManager workflowManager = null;
   private ActionContext actionContext = null;
   private SyncClientMap clientMap = null;
+  private SystemStatus systemStatus = null;
+  private UserBean userBean = null;
 
 
   /**
    * Constructor for the PacketContext object
    */
   public PacketContext() {
+  }
+
+
+  /**
+   * Gets the systemStatus attribute of the PacketContext object
+   *
+   * @return The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
+  }
+
+
+  /**
+   * Sets the systemStatus attribute of the PacketContext object
+   *
+   * @param tmp The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+
+  /**
+   * Gets the userBean attribute of the PacketContext object
+   *
+   * @return The userBean value
+   */
+  public UserBean getUserBean() {
+    return userBean;
+  }
+
+
+  /**
+   * Sets the userBean attribute of the PacketContext object
+   *
+   * @param tmp The new userBean value
+   */
+  public void setUserBean(UserBean tmp) {
+    this.userBean = tmp;
   }
 
 

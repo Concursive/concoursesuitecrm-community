@@ -17,6 +17,9 @@ package org.aspcfs.modules.pipeline.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 
@@ -86,6 +89,8 @@ public final class LeadsFolders extends CFSModule {
       String headerId = context.getRequest().getParameter("headerId");
       db = this.getConnection(context);
       thisOpp = new OpportunityHeader(db, Integer.parseInt(headerId));
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      thisOpp.buildManagerOwnerIdRange(db, accessTypeList, this.getUserRange(context));
       context.getRequest().setAttribute("OpportunityHeader", thisOpp);
       //Show a list of the different folders available in Accounts
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
@@ -212,6 +217,8 @@ public final class LeadsFolders extends CFSModule {
     int resultCode = -1;
     OpportunityHeader thisOpp = null;
     boolean isValid = false;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
     try {
       String empId = context.getRequest().getParameter("headerId");
       db = this.getConnection(context);
@@ -299,6 +306,8 @@ public final class LeadsFolders extends CFSModule {
 
     String selectedCatId = (String) context.getRequest().getParameter("catId");
     String recordId = (String) context.getRequest().getParameter("recId");
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
 
     try {
       String contactId = context.getRequest().getParameter("headerId");
@@ -429,7 +438,7 @@ public final class LeadsFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCount == 1) {
-      return getReturn(context, "UpdateFields");
+      return executeCommandFields(context);
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");

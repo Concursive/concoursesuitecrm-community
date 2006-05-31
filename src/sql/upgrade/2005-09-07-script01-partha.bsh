@@ -1,0 +1,47 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import org.aspcfs.modules.admin.base.CategoryEditor;
+import java.util.*;
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+
+int categoryId = PermissionCategory.lookupId(db, 9);
+
+if (categoryId != -1) {
+
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator") ;
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+
+  CategoryEditor categoryEditor = new CategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_ACTIONPLAN);
+  
+  if (categoryEditor.getId() == -1) {
+    categoryEditor = new CategoryEditor();
+    categoryEditor.setModuleId(PermissionCategory.PERMISSION_CAT_ADMIN);
+    categoryEditor.setConstantId(PermissionCategory.MULTIPLE_CATEGORY_ACTIONPLAN);
+    categoryEditor.setTableName("action_plan_category");
+    categoryEditor.setLevel(10);
+    categoryEditor.setDescription(dictionary.getTerm("system.fields.label", "actionPlan.categories", "value"));
+    categoryEditor.setCategoryId(categoryId);
+    categoryEditor.setMaxLevels(4);
+    categoryEditor.insert(db);
+    print("Category Editor has added the Action Plan Category");
+  } else {
+    print("Category Editor already exists for the Action Plan Category");
+  }
+} else {
+  print("Category id could not be found");
+}
+

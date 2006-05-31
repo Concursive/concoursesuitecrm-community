@@ -1,0 +1,147 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb (only for 3.0->3.1->4.0 & 3.1->4.0)
+*/
+import java.sql.*;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.*;
+
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator");
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+print("Updating lookup items...");
+  
+LookupList lookupList = new LookupList(db, "lookup_duration_type");
+if (lookupList.size() == 0) {
+  print("Adding: lookup_duration_type");
+  // Add minutes if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "admin.minutes", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_duration_type") + 10);
+      thisElement.insertElement(db, "lookup_duration_type");
+    }
+  }
+
+  // Add hours if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "admin.hours", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_duration_type") + 10);
+      thisElement.insertElement(db, "lookup_duration_type");
+    }
+  }
+
+  // Add days if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "actionPlan.days", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_duration_type") + 10);
+      thisElement.insertElement(db, "lookup_duration_type");
+    }
+  }
+
+  // Add weeks if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "accounts.accounts_contacts_oppcomponent_details.weeks", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_duration_type") + 10);
+      thisElement.insertElement(db, "lookup_duration_type");
+    }
+  }
+
+  // Add months if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "accounts.accounts_contacts_oppcomponent_details.months", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_duration_type") + 10);
+      thisElement.insertElement(db, "lookup_duration_type");
+    }
+  }
+
+  // Add years if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "admin.years", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_duration_type") + 10);
+      thisElement.insertElement(db, "lookup_duration_type");
+    }
+  }
+}
+
+lookupList = new LookupList(db, "lookup_account_size");
+if (lookupList.size() == 0) {
+  print("Adding: lookup_account_size");
+  // Add 1-10 if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "accounts.1to10", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_account_size") + 10);
+      thisElement.insertElement(db, "lookup_account_size");
+    }
+  }
+
+  // Add 10-100 if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "accounts.11to100", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_account_size") + 10);
+      thisElement.insertElement(db, "lookup_account_size");
+    }
+  }
+
+  // Add 101-1000 if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "accounts.101to1000", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_account_size") + 10);
+      thisElement.insertElement(db, "lookup_account_size");
+    }
+  }
+
+  // Add >1000 if it does not exist
+  if (1 == 1) {
+    String value = dictionary.getTerm("system.fields.label", "accounts.gt1000", "value");
+    LookupElement thisElement = lookupList.get(value);
+    if (thisElement == null) {
+      thisElement = new LookupElement();
+      thisElement.setDescription(value);
+      thisElement.setLevel(LookupElement.retrieveMaxLevel(db, "lookup_account_size") + 10);
+      thisElement.insertElement(db, "lookup_account_size");
+    }
+  }
+}
+

@@ -26,6 +26,7 @@
 <jsp:useBean id="competitorsSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="compellingEventSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="budgetSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="accessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -53,9 +54,10 @@ function reopenOpportunity(id) {
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
 	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
+  <a href="Leads.do?command=SearchForm"><dhv:label name="">Search Form</dhv:label></a> >
 	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-<a href="Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>&reset=true<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> > 
+<a href="Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> > 
 <dhv:label name="accounts.accounts_contacts_oppcomponent_add.ComponentDetails">Component Details</dhv:label>
 </td>
 </tr>
@@ -68,11 +70,15 @@ function reopenOpportunity(id) {
 <%-- Begin container --%>
 <% String param1 = "id=" + opportunityHeader.getId(); 
    String param2 = addLinkParams(request, "viewSource");
-%>      
+%>
 <dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
-  <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>&return=details';submit();"></dhv:permission>
-  <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-  <br>&nbsp;
+  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == LeadsComponentDetails.getOwner() ? "":","+LeadsComponentDetails.getOwner())) %>">
+  <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
+    <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>';submit();"></dhv:permission>
+    <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+    <br />&nbsp;
+  </dhv:evaluate>
+  </dhv:hasAuthority>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -124,6 +130,7 @@ function reopenOpportunity(id) {
         <% } %>
       </td>
     </tr>
+    <dhv:include name="opportunity.lowEstimate,pipeline-lowEstimate"  none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
@@ -132,6 +139,17 @@ function reopenOpportunity(id) {
         <zeroio:currency value="<%= LeadsComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
+    </dhv:include>
+    <dhv:include name="pipeline-custom1Integer" none="true">
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="pipeline.custom1Integer">Custom1 Integer</dhv:label>
+        </td>
+        <td>
+          <%= opportunityHeader.getCustom1Integer() %>
+        </td>
+      </tr>
+    </dhv:include>
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
@@ -148,22 +166,36 @@ function reopenOpportunity(id) {
         <zeroio:currency value="<%= LeadsComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
+    <dhv:include name="opportunity.termsAndUnits,pipeline-terms" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
       </td>
-      <td>
-        <%= LeadsComponentDetails.getTerms() %> <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
+      <td><%= LeadsComponentDetails.getTerms() %>
+        <dhv:evaluate if="<%= LeadsComponentDetails.getUnits().equals("M") %>">
+           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
+        </dhv:evaluate><dhv:evaluate if="<%= LeadsComponentDetails.getUnits().equals("W") %>">
+          <dhv:label name="accounts.accounts_contacts_oppcomponent_details.weeks">weeks</dhv:label>
+        </dhv:evaluate>
       </td>
     </tr>
+    </dhv:include>
+    <dhv:include name="opportunity.currentStage" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
       </td>
       <td>
-        <%= toHtml(LeadsComponentDetails.getStageName()) %>&nbsp;
+        <dhv:evaluate if="<%= "Closed".equals(LeadsComponentDetails.getStageName()) %>">
+          <dhv:label name="quotes.closed">Closed</dhv:label>&nbsp;
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= !"Closed".equals(LeadsComponentDetails.getStageName()) %>">
+          <%= toHtml(LeadsComponentDetails.getStageName()) %>&nbsp;
+        </dhv:evaluate>
       </td>
     </tr>
+    </dhv:include>
+    <dhv:include name="opportunity.currentStage" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStageDate">Current Stage Date</dhv:label>
@@ -172,6 +204,8 @@ function reopenOpportunity(id) {
         <zeroio:tz timestamp="<%= LeadsComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
+    </dhv:include>
+    <dhv:include name="opportunity.environment" none="true">
     <dhv:evaluate if="<%= environmentSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -183,6 +217,8 @@ function reopenOpportunity(id) {
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.competitors" none="true">
     <dhv:evaluate if="<%= competitorsSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -193,6 +229,8 @@ function reopenOpportunity(id) {
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.compellingEvent" none="true">
     <dhv:evaluate if="<%= compellingEventSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -203,6 +241,8 @@ function reopenOpportunity(id) {
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.budget" none="true">
     <dhv:evaluate if="<%= budgetSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -213,6 +253,8 @@ function reopenOpportunity(id) {
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_oppcomponent_details.EstCommission">Est. Commission</dhv:label>
@@ -221,6 +263,8 @@ function reopenOpportunity(id) {
         <%= LeadsComponentDetails.getCommissionValue() %>%
       </td>
     </tr>
+  </dhv:include>
+  <dhv:include name="opportunity.alertDescription" none="true">
   <dhv:evaluate if="<%= hasText(LeadsComponentDetails.getAlertText()) %>">
      <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -231,6 +275,8 @@ function reopenOpportunity(id) {
       </td>
     </tr>
   </dhv:evaluate>
+  </dhv:include>
+  <dhv:include name="opportunity.alertDate" none="true">
   <dhv:evaluate if="<%= (LeadsComponentDetails.getAlertDate() != null) %>">
      <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -239,12 +285,14 @@ function reopenOpportunity(id) {
       <td>
         <zeroio:tz timestamp="<%= LeadsComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= LeadsComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true"  default="&nbsp;"/>
         <% if(!User.getTimeZone().equals(LeadsComponentDetails.getAlertDateTimeZone())){%>
-        <br>
+        <br />
         <zeroio:tz timestamp="<%= LeadsComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"  default="&nbsp;" />
         <% } %>
       </td>
     </tr>
   </dhv:evaluate>
+  </dhv:include>
+  <dhv:include name="opportunity.details.entered" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
@@ -254,6 +302,8 @@ function reopenOpportunity(id) {
         <zeroio:tz timestamp="<%= LeadsComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
+    </dhv:include>
+    <dhv:include name="opportunity.details.modified" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
@@ -263,10 +313,15 @@ function reopenOpportunity(id) {
         <zeroio:tz timestamp="<%= LeadsComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
+    </dhv:include>
   </table>
-  <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete"><br></dhv:permission>
-  <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>&return=details';submit();"></dhv:permission>
-  <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == LeadsComponentDetails.getOwner() ? "":","+LeadsComponentDetails.getOwner())) %>">
+  <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
+    <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete"><br></dhv:permission>
+    <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>';submit();"></dhv:permission>
+    <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+  </dhv:evaluate>
+  </dhv:hasAuthority>
   <%= addHiddenParams(request, "viewSource") %>
 </dhv:container>
 </form>

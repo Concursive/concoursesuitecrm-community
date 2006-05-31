@@ -19,11 +19,14 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.accounts.base.OrganizationReport;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.actionplans.base.ActionItemWork;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.User;
@@ -38,6 +41,7 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
 import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.modules.pipeline.base.OpportunityReport;
+import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.troubletickets.base.TicketReport;
 import org.aspcfs.utils.web.*;
@@ -49,19 +53,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Actions for the Accounts module
+ *  Actions for the Accounts module
  *
- * @author chris
- * @version $Id$
- * @created August 15, 2001
+ * @author     chris
+ * @created    August 15, 2001
+ * @version    $Id$
  */
 public final class Accounts extends CFSModule {
 
   /**
-   * Default: not used
+   *  Default: not used
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
 
@@ -70,11 +74,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Reports: Displays a list of previously generated reports with
-   * view/delete/download options.
+   *  Reports: Displays a list of previously generated reports with
+   *  view/delete/download options.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandReports(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-reports-view")) {
@@ -117,11 +121,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * DownloadCSVReport: Sends a copy of the CSV report to the user's local
-   * machine
+   *  DownloadCSVReport: Sends a copy of the CSV report to the user's local
+   *  machine
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
@@ -177,10 +181,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * ShowReportHtml: Displays a preview of the selected report in HTML format
+   *  ShowReportHtml: Displays a preview of the selected report in HTML format
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
@@ -208,11 +212,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * GenerateForm: Displays the form that allows the user to select criteria
-   * and specify information for a new Accounts report
+   *  GenerateForm: Displays the form that allows the user to select criteria
+   *  and specify information for a new Accounts report
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-reports-add")) {
@@ -241,11 +245,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * ExportReport: Creates both an HTML version (for preview) and a CSV version
-   * of the report
+   *  ExportReport: Creates both an HTML version (for preview) and a CSV version
+   *  of the report
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-reports-add")) {
@@ -256,10 +260,10 @@ public final class Accounts extends CFSModule {
     String subject = context.getRequest().getParameter("subject");
     String type = context.getRequest().getParameter("type");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
+    SystemStatus systemStatus = getSystemStatus(context);
     //process errors
     HashMap errors = new HashMap();
     if ((subject == null) || ("".equals(subject.trim()))) {
-      SystemStatus systemStatus = getSystemStatus(context);
       errors.put(
           "subjectError", systemStatus.getLabel("object.validation.required"));
     }
@@ -281,6 +285,8 @@ public final class Accounts extends CFSModule {
     orgReport.setFilePath(filePath);
     orgReport.setSubject(subject);
     orgReport.setMinerOnly(false);
+    orgReport.setIncludeEnabled(Constants.UNDEFINED);
+    orgReport.setOrgSiteId(this.getUserSiteId(context));
     if (ownerCriteria.equals("my")) {
       orgReport.setOwnerId(this.getUserId(context));
     } else if (ownerCriteria.equals("levels")) {
@@ -291,10 +297,15 @@ public final class Accounts extends CFSModule {
       //Accounts with opportunities report
       if (type.equals("5")) {
         OpportunityReport oppReport = new OpportunityReport();
-        oppReport.setHeader("Centric CRM Accounts");
+        oppReport.setHeader(systemStatus.getLabel("Centric CRM Accounts","centriccrm.accounts"));
         oppReport.setFilePath(filePath);
         oppReport.setEnteredBy(getUserId(context));
         oppReport.setModifiedBy(getUserId(context));
+        oppReport.setSiteId(this.getUserSiteId(context));
+        oppReport.setExclusiveToSite(true);
+        if (oppReport.getSiteId() == -1) {
+          oppReport.setIncludeAllSites(true);
+        }
         oppReport.setSubject(subject);
         if (ownerCriteria.equals("my")) {
           oppReport.setLimitId(this.getUserId(context));
@@ -315,9 +326,14 @@ public final class Accounts extends CFSModule {
         contactReport.setEnteredBy(getUserId(context));
         contactReport.setModifiedBy(getUserId(context));
         contactReport.setSubject(subject);
-        contactReport.setHeader("Centric CRM Accounts");
+        contactReport.setHeader(systemStatus.getLabel("Centric CRM Accounts","centriccrm.accounts"));
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactReport.addIgnoreTypeId(Contact.LEAD_TYPE);
+        contactReport.setSiteId(this.getUserSiteId(context));
+        contactReport.setExclusiveToSite(true);
+        if (contactReport.getSiteId() == -1) {
+          contactReport.setIncludeAllSites(true);
+        }
         contactReport.setCriteria(null);
         contactReport.getOrgReportJoin().setCriteria(
             context.getRequest().getParameterValues("selectedList"));
@@ -336,7 +352,12 @@ public final class Accounts extends CFSModule {
         ticReport.setEnteredBy(getUserId(context));
         ticReport.setModifiedBy(getUserId(context));
         ticReport.setSubject(subject);
-        ticReport.setHeader("Centric CRM Accounts");
+        ticReport.setSiteId(this.getUserSiteId(context));
+        ticReport.setExclusiveToSite(true);
+        if (ticReport.getSiteId() == -1) {
+          ticReport.setIncludeAllSites(true);
+        }
+        ticReport.setHeader(systemStatus.getLabel("Centric CRM Accounts","centriccrm.accounts"));
         ticReport.setJoinOrgs(true);
         if (ownerCriteria.equals("my")) {
           ticReport.setLimitId(this.getUserId(context));
@@ -372,11 +393,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * DeleteReport: Deletes previously generated report files (HTML and CSV)
-   * from server and all related file information from the project_files table.
+   *  DeleteReport: Deletes previously generated report files (HTML and CSV)
+   *  from server and all related file information from the project_files table.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-reports-delete"))) {
@@ -419,10 +440,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Search: Displays the Account search form
+   *  Search: Displays the Account search form
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandSearchForm(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-view"))) {
@@ -433,19 +454,30 @@ public final class Accounts extends CFSModule {
     if (isPortalUser(context)) {
       return (executeCommandSearch(context));
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = getConnection(context);
-      //Account type lookup
-      LookupList typeSelect = new LookupList(db, "lookup_account_types");
-      typeSelect.addItem(0, "All Types");
-      context.getRequest().setAttribute("TypeSelect", typeSelect);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
+      context.getRequest().setAttribute("SiteList", siteList);
+
       //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
       PagedListInfo orgListInfo = this.getPagedListInfo(
           context, "SearchOrgListInfo");
       orgListInfo.setCurrentLetter("");
       orgListInfo.setCurrentOffset(0);
+      if (orgListInfo.getSearchOptionValue("searchcodeContactCountry") != null) {
+        StateSelect stateSelect = new StateSelect(systemStatus,orgListInfo.getSearchOptionValue("searchcodeContactCountry"));
+        if (orgListInfo.getSearchOptionValue("searchcodeContactOtherState") != null) {
+          HashMap map = new HashMap();
+          map.put((String)orgListInfo.getSearchOptionValue("searchcodeContactCountry"), (String)orgListInfo.getSearchOptionValue("searchcodeContactOtherState"));
+          stateSelect.setPreviousStates(map);
+        }
+        context.getRequest().setAttribute("StateSelect", stateSelect);
+      }
+      buildFormElements(context, db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -458,20 +490,29 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Add: Displays the form used for adding a new Account
+   *  Add: Displays the form used for adding a new Account
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-add")) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = this.getConnection(context);
-      buildFormElements(context, db);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteList", siteList);
+
       Organization newOrg = (Organization) context.getFormBean();
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      StateSelect stateSelect = new StateSelect(systemStatus, (newOrg.getAddressList() != null?newOrg.getAddressList().getCountries():"")+prefs.get("SYSTEM.COUNTRY"));
+      stateSelect.setPreviousStates((newOrg.getAddressList() != null? newOrg.getAddressList().getSelectedStatesHashMap():new HashMap()));
+      context.getRequest().setAttribute("StateSelect", stateSelect);
+      buildFormElements(context, db);
       if (newOrg.getEnteredBy() != -1) {
         newOrg.setTypeListToTypes(db);
         context.getRequest().setAttribute("OrgDetails", newOrg);
@@ -485,16 +526,21 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, "Add Account", "Accounts Add");
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
-    return ("AddOK");
+    //if a different module reuses this action then do a explicit return
+    if (context.getRequest().getParameter("actionSource") != null) {
+        return getReturn(context, "AddAccount");
+    }
+
+    return getReturn(context, "Add");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @param db      Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  context        Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildFormElements(ActionContext context, Connection db) throws SQLException {
     String index = null;
@@ -502,14 +548,39 @@ public final class Accounts extends CFSModule {
       index = context.getRequest().getParameter("index");
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
+
+    LookupList salutationList = new LookupList(db, "lookup_title");
+    salutationList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SalutationList", salutationList);
+
+    LookupList segmentList = new LookupList(db, "lookup_segments");
+    segmentList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SegmentList", segmentList);
+
     LookupList industrySelect = new LookupList(db, "lookup_industry");
     industrySelect.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("IndustryList", industrySelect);
 
-    LookupList accountTypeList = new LookupList(db, "lookup_account_types");
-    accountTypeList.setSelectSize(4);
-    accountTypeList.setMultiple(true);
-    context.getRequest().setAttribute("AccountTypeList", accountTypeList);
+    LookupList sourceList = new LookupList(db, "lookup_contact_source");
+    sourceList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SourceList", sourceList);
+
+    LookupList ratingList = new LookupList(db, "lookup_contact_rating");
+    ratingList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("RatingList", ratingList);
+
+    LookupList accountTypeList1 = new LookupList(db, "lookup_account_types");
+    accountTypeList1.setSelectSize(4);
+    accountTypeList1.setMultiple(true);
+    context.getRequest().setAttribute("AccountTypeList", accountTypeList1);
+
+    LookupList accountTypeList2 = new LookupList(db, "lookup_account_types");
+    accountTypeList2.addItem(-1, systemStatus.getLabel("accounts.allTypes"));
+    context.getRequest().setAttribute("TypeSelect", accountTypeList2);
+
+    LookupList accountSizeList = new LookupList(db, "lookup_account_size");
+    accountSizeList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("AccountSizeList", accountSizeList);
 
     if (index == null || (index != null && Integer.parseInt(index) == 0)) {
       LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
@@ -535,9 +606,13 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
 
     }
-    //Make the StateSelect and CountrySelect drop down menus available in the request. 
+    //Make the StateSelect and CountrySelect drop down menus available in the request.
     //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-    StateSelect stateSelect = new StateSelect(systemStatus);
+    StateSelect stateSelect = (StateSelect) context.getRequest().getAttribute("StateSelect");
+    if (stateSelect == null) {
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      stateSelect = new StateSelect(systemStatus, prefs.get("SYSTEM.COUNTRY"));
+    }
     CountrySelect countrySelect = new CountrySelect(systemStatus);
 
     context.getRequest().setAttribute("StateSelect", stateSelect);
@@ -546,29 +621,37 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Details: Displays all details relating to the selected Account. The user
-   * can also goto a modify page from this form or delete the Account entirely
-   * from the database
+   *  Details: Displays all details relating to the selected Account. The user
+   *  can also goto a modify page from this form or delete the Account entirely
+   *  from the database
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-view")) {
       return ("PermissionError");
     }
     Connection db = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Organization newOrg = null;
     try {
       String temporgId = context.getRequest().getParameter("orgId");
-      if (!isRecordAccessPermitted(context, Integer.parseInt(temporgId))) {
-        return ("PermissionError");
+      if (temporgId == null) {
+        temporgId = (String) context.getRequest().getAttribute("orgId");
       }
       int tempid = Integer.parseInt(temporgId);
       db = this.getConnection(context);
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(temporgId))) {
+        return ("PermissionError");
+      }
       newOrg = new Organization(db, tempid);
       //check whether or not the owner is an active User
       newOrg.checkEnabledOwnerAccount(db);
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteList", siteList);
+      buildFormElements(context, db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -585,16 +668,16 @@ public final class Accounts extends CFSModule {
       //If user is going to the detail screen
       addModuleBean(context, "View Accounts", "View Account Details");
       context.getRequest().setAttribute("OrgDetails", newOrg);
-      return ("DetailsOK");
+      return getReturn(context, "Details");
     }
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!hasPermission(context, "accounts-dashboard-view")) {
@@ -645,10 +728,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Search Accounts
+   *  Search Accounts
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSearch(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-view")) {
@@ -663,7 +746,7 @@ public final class Accounts extends CFSModule {
     PagedListInfo searchListInfo = this.getPagedListInfo(
         context, "SearchOrgListInfo");
     searchListInfo.setLink("Accounts.do?command=Search");
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     //Need to reset any sub PagedListInfos since this is a new account
     this.resetPagedListInfo(context);
     Connection db = null;
@@ -681,40 +764,104 @@ public final class Accounts extends CFSModule {
           searchListInfo.getListView())) && !"searchForm".equals(source)) {
         return "ListOK";
       }
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
+      context.getRequest().setAttribute("SiteIdList", siteList);
 
-      //Build the organization list
-      organizationList.setPagedListInfo(searchListInfo);
-      organizationList.setMinerOnly(false);
-      organizationList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(organizationList, context);
-      //fetching criterea for account source (my accounts or all accounts)
-      if ("my".equals(searchListInfo.getListView())) {
-        organizationList.setOwnerId(this.getUserId(context));
-      }
-      //fetching criterea for account status (active, disabled or any)
-      int enabled = searchListInfo.getFilterKey("listFilter2");
-      organizationList.setIncludeEnabled(enabled);
-      //If the user is a portal user, fetching only the
-      //the organization that he access to
-      //(i.e., the organization for which he is an account contact
-      if (isPortalUser(context)) {
-        organizationList.setOrgId(getPortalUserPermittedOrgId(context));
-      }
-      organizationList.buildList(db);
-      context.getRequest().setAttribute("OrgList", organizationList);
-      if (organizationList.size() == 1 && organizationList.getAssetSerialNumber() != null) {
-        AssetList assets = new AssetList();
-        assets.setOrgId(((Organization) organizationList.get(0)).getId());
-        assets.setSerialNumber(organizationList.getAssetSerialNumber());
-        assets.buildList(db);
-        if (assets.size() == 1) {
-          Asset asset = (Asset) assets.get(0);
-          context.getRequest().setAttribute(
-              "id", String.valueOf(asset.getId()));
-          return "AssetDetailsOK";
+      //Display list of accounts if user chooses not to list contacts
+      if (!"true".equals(searchListInfo.getCriteriaValue("searchContacts"))) {
+        if ("contacts".equals(context.getSession().getAttribute("previousSearchType"))) {
+          this.deletePagedListInfo(context, "SearchOrgListInfo");
+          searchListInfo = this.getPagedListInfo(context, "SearchOrgListInfo");
+          searchListInfo.setLink("Accounts.do?command=Search");
         }
+        //Build the organization list
+        organizationList.setPagedListInfo(searchListInfo);
+        organizationList.setMinerOnly(false);
+        organizationList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
+        searchListInfo.setSearchCriteria(organizationList, context);
+        //fetching criterea for account source (my accounts or all accounts)
+        if ("my".equals(searchListInfo.getListView())) {
+          organizationList.setOwnerId(this.getUserId(context));
+        }
+        if (organizationList.getOrgSiteId() == Constants.INVALID_SITE) {
+          organizationList.setOrgSiteId(this.getUserSiteId(context));
+          organizationList.setIncludeOrganizationWithoutSite(false);
+        } else if (organizationList.getOrgSiteId() == -1) {
+          organizationList.setIncludeOrganizationWithoutSite(true);
+        }
+        //fetching criterea for account status (active, disabled or any)
+        int enabled = searchListInfo.getFilterKey("listFilter2");
+        organizationList.setIncludeEnabled(enabled);
+        //If the user is a portal user, fetching only the
+        //the organization that he access to
+        //(i.e., the organization for which he is an account contact
+        if (isPortalUser(context)) {
+          organizationList.setOrgId(getPortalUserPermittedOrgId(context));
+        }
+        organizationList.buildList(db);
+        context.getRequest().setAttribute("OrgList", organizationList);
+        context.getSession().setAttribute("previousSearchType", "accounts");
+        if (organizationList.size() == 1 && organizationList.getAssetSerialNumber() != null) {
+          AssetList assets = new AssetList();
+          assets.setOrgId(((Organization) organizationList.get(0)).getId());
+          assets.setSerialNumber(organizationList.getAssetSerialNumber());
+          assets.setSkipParentIdRequirement(true);
+          assets.buildList(db);
+          if (assets.size() == 1) {
+            Asset asset = (Asset) assets.get(0);
+            context.getRequest().setAttribute(
+                "id", String.valueOf(asset.getId()));
+            return "AssetDetailsOK";
+          }
+        }
+        return "ListOK";
+      } else {
+        if ("accounts".equals(context.getSession().getAttribute("previousSearchType"))) {
+          this.deletePagedListInfo(context, "SearchOrgListInfo");
+          searchListInfo = this.getPagedListInfo(context, "SearchOrgListInfo");
+          searchListInfo.setLink("Accounts.do?command=Search");
+        }
+        //Display list of contacts if user chooses to list contacts
+        ContactList contactList = new ContactList();
+        contactList.setIncludeAllSites(true);
+        contactList.setPagedListInfo(searchListInfo);
+        //fetching criterea for account source (my accounts or all accounts)
+        if ("my".equals(searchListInfo.getListView())) {
+          contactList.setAccountOwnerId(this.getUserId(context));
+        }
+        //fetching criterea for account type 
+        contactList.setAccountTypeId(searchListInfo.getFilterKey("listFilter1"));
+        
+        //fetching criterea for account status (active, disabled or any)
+        int enabled = searchListInfo.getFilterKey("listFilter2");
+        contactList.setIncludeEnabledAccount(enabled);
+        contactList.setBuildDetails(true);
+        contactList.setBuildTypes(false);
+        contactList.setWithAccountsOnly(true);
+        contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        searchListInfo.setSearchCriteria(contactList, context);
+        if (contactList.getOrgSiteId() == Constants.INVALID_SITE) {
+          contactList.setOrgSiteId(this.getUserSiteId(context));
+          contactList.setIncludeContactsFromOrganizationsWithoutSite(false);
+        } else if (contactList.getOrgSiteId() == -1) {
+          contactList.setIncludeContactsFromOrganizationsWithoutSite(true);
+        }
+
+        if (searchListInfo.getColumnToSortBy() == null || "searchForm".equals(source)) {
+          searchListInfo.setColumnToSortBy("c.org_name,c.namelast");
+        }
+
+        if (isPortalUser(context)) {
+          contactList.setOrgId(getPortalUserPermittedOrgId(context));
+        }
+        contactList.buildList(db);
+
+        context.getRequest().setAttribute("ContactList", contactList);
+        context.getSession().setAttribute("previousSearchType", "contacts");
+        return ("ContactListOK");
       }
-      return "ListOK";
     } catch (Exception e) {
       //Go through the SystemError process
       context.getRequest().setAttribute("Error", e);
@@ -726,11 +873,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * ViewTickets: Displays Ticket history (open and closed) for a particular
-   * Account.
+   *  ViewTickets: Displays Ticket history (open and closed) for a particular
+   *  Account.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandViewTickets(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-view")) {
@@ -743,10 +890,6 @@ public final class Accounts extends CFSModule {
     int passedId = Integer.parseInt(
         context.getRequest().getParameter("orgId"));
 
-    //find record permissions for portal users
-    if (!isRecordAccessPermitted(context, passedId)) {
-      return ("PermissionError");
-    }
     //Prepare PagedListInfo
     PagedListInfo ticketListInfo = this.getPagedListInfo(
         context, "AccountTicketInfo", "t.entered", "desc");
@@ -755,6 +898,10 @@ public final class Accounts extends CFSModule {
     ticList.setPagedListInfo(ticketListInfo);
     try {
       db = this.getConnection(context);
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context, db, passedId)) {
+        return ("PermissionError");
+      }
       newOrg = new Organization(db, passedId);
       ticList.setOrgId(passedId);
       if (newOrg.isTrashed()) {
@@ -775,10 +922,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Insert: Inserts a new Account into the database.
+   *  Insert: Inserts a new Account into the database.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandInsert(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-add")) {
@@ -800,9 +947,13 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
 
+      LookupList segmentList = new LookupList(db, "lookup_segments");
+      segmentList.addItem(-1, getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SegmentList", segmentList);
       //set the name to namelastfirstmiddle if individual
       if (context.getRequest().getParameter("form_type").equalsIgnoreCase(
           "individual")) {
+        newOrg.setIsIndividual(true);
         newOrg.setName(newOrg.getNameLastFirstMiddle());
         newOrg.populatePrimaryContact();
         newOrg.getPrimaryContact().setRequestItems(context);
@@ -812,8 +963,22 @@ public final class Accounts extends CFSModule {
         newOrg.getPrimaryContact().setAccessType(accessTypes.getDefaultItem());
       } else {
         //don't want to populate the addresses, etc. if this is an individual account
+        newOrg.setIsIndividual(false);
         newOrg.setRequestItems(context);
       }
+      if (this.getUserSiteId(context) != -1) {
+        // Set the site Id of the account to be equal to the site Id of the user
+        // for a new account
+        if (newOrg.getId() == -1) {
+          newOrg.setSiteId(this.getUserSiteId(context));
+        } else {
+          // Check whether the user has access to update the organization
+          if (!isRecordAccessPermitted(context, db, newOrg.getId())) {
+            return ("PermissionError");
+          }
+        }
+      }
+
       isValid = this.validateObject(context, db, newOrg);
       if (isValid) {
         recordInserted = newOrg.insert(db);
@@ -832,6 +997,9 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, "View Accounts", "Accounts Insert ok");
     if (recordInserted) {
       String target = context.getRequest().getParameter("target");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("ClosePopupOK");
+      }
       if (target != null && "add_contact".equals(target)) {
         return ("InsertAndAddContactOK");
       } else {
@@ -843,11 +1011,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Update: Updates the Organization table to reflect user-entered
-   * changes/modifications to the currently selected Account
+   *  Update: Updates the Organization table to reflect user-entered
+   *  changes/modifications to the currently selected Account
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-edit"))) {
@@ -858,6 +1026,7 @@ public final class Accounts extends CFSModule {
     boolean isValid = false;
     Organization newOrg = (Organization) context.getFormBean();
     Organization oldOrg = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     newOrg.setTypeList(
         context.getRequest().getParameterValues("selectedList"));
     newOrg.setModifiedBy(getUserId(context));
@@ -867,13 +1036,28 @@ public final class Accounts extends CFSModule {
       //set the name to namelastfirstmiddle if individual
       if (context.getRequest().getParameter("form_type").equalsIgnoreCase(
           "individual")) {
+        newOrg.setIsIndividual(true);
         newOrg.populatePrimaryContact(db);
-        newOrg.updatePrimaryContact();
-        ((Contact) newOrg.getPrimaryContact()).setRequestItems(context);
-        newOrg.setName(newOrg.getNameLastFirstMiddle());
+        if (newOrg.getPrimaryContact() == null) {
+          if (newOrg.getPrimaryContactId() == -1) {
+            newOrg.getErrors().put("primaryContactIdError",systemStatus.getLabel("","Select valid primary contact"));
+          } else {
+            newOrg.updatePrimaryContact(db, true);
+          }
+        } else {
+          newOrg.updatePrimaryContact();
+          ((Contact) newOrg.getPrimaryContact()).setRequestItems(context);
+          newOrg.setName(newOrg.getNameLastFirstMiddle());
+        }
       } else {
         //don't want to populate the addresses, etc. if this is an individual account
+        newOrg.setIsIndividual(false);
         newOrg.setRequestItems(context);
+        newOrg.populatePrimaryContact(db);
+        if (newOrg.getPrimaryContact() != null) {
+          //The account has been converted from an org to an individual
+          newOrg.updatePrimaryContact(db, false);
+        }
       }
       oldOrg = new Organization(db, newOrg.getOrgId());
       isValid = this.validateObject(context, db, newOrg);
@@ -885,10 +1069,15 @@ public final class Accounts extends CFSModule {
         //if this is an individual account, populate and update the primary contact
         if (context.getRequest().getParameter("form_type").equalsIgnoreCase(
             "individual")) {
-          ((Contact) newOrg.getPrimaryContact()).update(db);
+          if (newOrg.getPrimaryContactId() == -1) {
+            ((Contact) newOrg.getPrimaryContact()).update(db);
+          }
         }
         //update all contacts which are associated with this organization
         ContactList.updateOrgName(db, newOrg);
+        LookupList segmentList = new LookupList(db, "lookup_segments");
+        segmentList.addItem(-1, getSystemStatus(context).getLabel("calendar.none.4dashes"));
+        context.getRequest().setAttribute("SegmentList", segmentList);
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -920,10 +1109,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Delete: Deletes an Account from the Organization table
+   *  Delete: Deletes an Account from the Organization table
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-delete")) {
@@ -938,6 +1127,10 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
       thisOrganization = new Organization(
           db, Integer.parseInt(context.getRequest().getParameter("orgId")));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrganization.getId())) {
+        return ("PermissionError");
+      }
       if (context.getRequest().getParameter("action") != null) {
         if (((String) context.getRequest().getParameter("action")).equals(
             "delete")) {
@@ -982,7 +1175,7 @@ public final class Accounts extends CFSModule {
       System.out.println(errorMessage);
       context.getRequest().setAttribute(
           "actionError", systemStatus.getLabel(
-              "object.validation.actionError.accountDeletion"));
+          "object.validation.actionError.accountDeletion"));
       context.getRequest().setAttribute(
           "refreshUrl", "Accounts.do?command=Search");
       return ("DeleteError");
@@ -991,10 +1184,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandTrash(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-delete")) {
@@ -1005,13 +1198,21 @@ public final class Accounts extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      thisOrganization = new Organization(
-          db, Integer.parseInt(context.getRequest().getParameter("orgId")));
+      String orgId = context.getRequest().getParameter("orgId");
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
       // NOTE: these may have different options later
       recordUpdated = thisOrganization.updateStatus(
           db, context, true, this.getUserId(context));
       this.invalidateUserData(context, this.getUserId(context));
       this.invalidateUserData(context, thisOrganization.getOwner());
+      if (recordUpdated) {
+        deleteRecentItem(context, thisOrganization);
+        deleteRecentItems(context, db, thisOrganization);
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute(
           "refreshUrl", "Accounts.do?command=Search");
@@ -1022,7 +1223,6 @@ public final class Accounts extends CFSModule {
     }
     addModuleBean(context, "Accounts", "Delete Account");
     if (recordUpdated) {
-      deleteRecentItem(context, thisOrganization);
       context.getRequest().setAttribute(
           "refreshUrl", "Accounts.do?command=Search");
       if ("list".equals(context.getRequest().getParameter("return"))) {
@@ -1036,10 +1236,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandRestore(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-delete")) {
@@ -1050,8 +1250,12 @@ public final class Accounts extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      thisOrganization = new Organization(
-          db, Integer.parseInt(context.getRequest().getParameter("orgId")));
+      String orgId = context.getRequest().getParameter("orgId");
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
       // NOTE: these may have different options later
       recordUpdated = thisOrganization.updateStatus(
           db, context, false, this.getUserId(context));
@@ -1078,10 +1282,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandEnable(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-edit")) {
@@ -1110,10 +1314,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-delete")) {
@@ -1130,6 +1334,10 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisOrg = new Organization(db, Integer.parseInt(id));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getId())) {
+        return ("PermissionError");
+      }
       DependencyList dependencies = thisOrg.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.addMessage(
@@ -1156,11 +1364,11 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Modify: Displays the form used for modifying the information of the
-   * currently selected Account
+   *  Modify: Displays the form used for modifying the information of the
+   *  currently selected Account
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-edit")) {
@@ -1169,18 +1377,6 @@ public final class Accounts extends CFSModule {
     String orgid = context.getRequest().getParameter("orgId");
     context.getRequest().setAttribute("orgId", orgid);
     int tempid = Integer.parseInt(orgid);
-    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    //this is how we get the multiple-level heirarchy...recursive function.
-    User thisRec = thisUser.getUserRecord();
-    UserList shortChildList = thisRec.getShortChildList();
-    UserList userList = thisRec.getFullChildList(
-        shortChildList, new UserList());
-    userList.setMyId(getUserId(context));
-    userList.setMyValue(thisUser.getContact().getNameLastFirst());
-    userList.setIncludeMe(true);
-    userList.setExcludeDisabledIfUnselected(true);
-    userList.setExcludeExpiredIfUnselected(true);
-    context.getRequest().setAttribute("UserList", userList);
     Connection db = null;
     Organization newOrg = null;
     try {
@@ -1188,16 +1384,38 @@ public final class Accounts extends CFSModule {
       newOrg = (Organization) context.getFormBean();
       if (newOrg.getId() == -1) {
         newOrg = new Organization(db, tempid);
+        if (newOrg.getPrimaryContact() == null) {
+          newOrg.setIsIndividual(false);
+        } else {
+          newOrg.setIsIndividual(true);
+        }
       } else {
         newOrg.setTypeListToTypes(db);
       }
+      if (!isRecordAccessPermitted(context, db, newOrg.getId())) {
+        return ("PermissionError");
+      }
+      if (newOrg.getPrimaryContact() == null) {
+        ContactList contacts = new ContactList();
+        contacts.setOrgId(newOrg.getOrgId());
+        contacts.buildList(db);
+        context.getRequest().setAttribute("contactList", contacts);
+      }
       SystemStatus systemStatus = this.getSystemStatus(context);
-
+      context.getRequest().setAttribute("systemStatus", systemStatus);
       LookupList industrySelect = systemStatus.getLookupList(
           db, "lookup_industry");
       industrySelect.addItem(
           0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("IndustryList", industrySelect);
+
+      LookupList sourceList = new LookupList(db, "lookup_contact_source");
+      sourceList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SourceList", sourceList);
+
+      LookupList ratingList = new LookupList(db, "lookup_contact_rating");
+      ratingList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("RatingList", ratingList);
 
       LookupList phoneTypeList = systemStatus.getLookupList(
           db, "lookup_orgphone_types");
@@ -1210,6 +1428,23 @@ public final class Accounts extends CFSModule {
       LookupList emailTypeList = systemStatus.getLookupList(
           db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+
+      LookupList accountSizeList = new LookupList(db, "lookup_account_size");
+      accountSizeList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("AccountSizeList", accountSizeList);
+
+      LookupList salutationList = new LookupList(db, "lookup_title");
+      salutationList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SalutationList", salutationList);
+
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteList", siteList);
+
+      //SegmentList segmentList = new SegmentList(db);
+      LookupList segmentList = new LookupList(db, "lookup_segments");
+      segmentList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SegmentList", segmentList);
 
       //if this is an individual account
       if (newOrg.getPrimaryContact() != null) {
@@ -1226,14 +1461,19 @@ public final class Accounts extends CFSModule {
         context.getRequest().setAttribute(
             "ContactPhoneTypeList", contactPhoneTypeList);
       }
-      
-      //Make the StateSelect and CountrySelect drop down menus available in the request. 
+
+      //Make the StateSelect and CountrySelect drop down menus available in the request.
       //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-      StateSelect stateSelect = new StateSelect(systemStatus);
-      CountrySelect countrySelect = new CountrySelect(systemStatus);
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      StateSelect stateSelect = new StateSelect(systemStatus, (newOrg.getPrimaryContact() == null? newOrg.getAddressList().getCountries()+",":newOrg.getPrimaryContact().getAddressList().getCountries()+",")+prefs.get("SYSTEM.COUNTRY"));
+      stateSelect.setPreviousStates((newOrg.getPrimaryContact() == null?newOrg.getAddressList().getSelectedStatesHashMap():newOrg.getPrimaryContact().getAddressList().getSelectedStatesHashMap()));
       context.getRequest().setAttribute("StateSelect", stateSelect);
+      CountrySelect countrySelect = new CountrySelect(systemStatus);
       context.getRequest().setAttribute("CountrySelect", countrySelect);
       context.getRequest().setAttribute("systemStatus", systemStatus);
+
+      UserList userList = filterOwnerListForSite(context, newOrg.getSiteId());
+      context.getRequest().setAttribute("UserList", userList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -1251,10 +1491,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandFolderList(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-folders-view"))) {
@@ -1265,6 +1505,10 @@ public final class Accounts extends CFSModule {
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       //Show a list of the different folders available in Accounts
@@ -1284,17 +1528,17 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Accounts", "Custom Fields Details");
-    return ("FolderListOK");
+    return this.getReturn(context, "FolderList");
   }
 
 
   /**
-   * Fields: Shows a list of custom field records that are located "within" the
-   * selected Custom Folder. Also shows the details of a particular Custom
-   * Field Record when it is selected (details page)
+   *  Fields: Shows a list of custom field records that are located "within" the
+   *  selected Custom Folder. Also shows the details of a particular Custom
+   *  Field Record when it is selected (details page)
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandFields(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-folders-view"))) {
@@ -1302,12 +1546,24 @@ public final class Accounts extends CFSModule {
     }
     Connection db = null;
     Organization thisOrganization = null;
+    String source = context.getRequest().getParameter("source");
+    String actionStepId = context.getRequest().getParameter("actionStepId");
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("source", source);
+    }
+    if (actionStepId != null && !"".equals(actionStepId.trim())) {
+      context.getRequest().setAttribute("actionStepId", actionStepId);
+    }
     String recordId = null;
     boolean showRecords = true;
     String selectedCatId = null;
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
@@ -1390,31 +1646,164 @@ public final class Accounts extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "Custom Fields Details");
     if (Integer.parseInt(selectedCatId) <= 0) {
-      return ("FieldsEmptyOK");
+      return getReturn(context, "FieldsEmpty");
     } else if (recordId == null && showRecords) {
-      return ("FieldRecordListOK");
+      return getReturn(context, "FieldRecordList");
     } else {
-      return ("FieldsOK");
+      return getReturn(context, "Fields");
     }
   }
 
 
   /**
-   * AddFolderRecord: Displays the form for inserting a new custom field record
-   * for the selected Account.
+   *  Description of the Method
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandCheckFields(ActionContext context) {
+    if (!(hasPermission(context, "accounts-accounts-folders-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Organization thisOrganization = null;
+    String recordId = context.getRequest().getParameter("recId");
+    String source = context.getRequest().getParameter("source");
+    String actionStepId = context.getRequest().getParameter("actionStepId");
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("source", source);
+    }
+    if (actionStepId != null && !"".equals(actionStepId.trim())) {
+      context.getRequest().setAttribute("actionStepId", actionStepId);
+    }
+    boolean hasMultipleRecords = false;
+    String selectedCatId = null;
+    try {
+      String orgId = context.getRequest().getParameter("orgId");
+      db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+
+      //Show a list of the different folders available in Accounts
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.ACCOUNTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      //See which one is currently selected or use the default
+      selectedCatId = (String) context.getRequest().getParameter("catId");
+      if (selectedCatId == null) {
+        selectedCatId = (String) context.getRequest().getAttribute("catId");
+      }
+      if (selectedCatId == null) {
+        selectedCatId = "" + thisList.getDefaultCategoryId();
+      }
+      context.getRequest().setAttribute("catId", selectedCatId);
+
+      if (Integer.parseInt(selectedCatId) > 0) {
+        //Now build the specified or default category
+        CustomFieldCategory thisCategory = thisList.getCategory(
+            Integer.parseInt(selectedCatId));
+        thisCategory.setLinkModuleId(Constants.ACCOUNTS);
+        thisCategory.setIncludeEnabled(Constants.TRUE);
+        thisCategory.setIncludeScheduled(Constants.TRUE);
+        thisCategory.setLinkItemId(thisOrganization.getOrgId());
+        thisCategory.setBuildResources(true);
+        thisCategory.buildRecordId(db);
+        thisCategory.buildResources(db);
+        if (recordId == null || "".equals(recordId.trim()) || "-1".equals(recordId)) {
+          if (thisCategory.getRecordId() != -1) {
+            recordId = String.valueOf(thisCategory.getRecordId());
+          }
+        }
+        if ((recordId != null && !"".equals(recordId.trim())) && !"-1".equals(recordId)) {
+          CustomFieldRecord thisRecord = new CustomFieldRecord(
+              db, Integer.parseInt(recordId));
+          context.getRequest().setAttribute("Record", thisRecord);
+        }
+        if (thisCategory.getRecordId() == -1 && thisCategory.getAllowMultipleRecords()) {
+          //The user didn't request a specific record, so show a list
+          //of records matching this category that the user can choose from
+          PagedListInfo folderListInfo = this.getPagedListInfo(
+              context, "AccountFolderInfo");
+          folderListInfo.setLink(
+              "Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
+
+          CustomFieldRecordList recordList = new CustomFieldRecordList();
+          recordList.setLinkModuleId(Constants.ACCOUNTS);
+          recordList.setLinkItemId(thisOrganization.getOrgId());
+          recordList.setCategoryId(thisCategory.getId());
+          recordList.buildList(db);
+          recordList.buildRecordColumns(db, thisCategory);
+          hasMultipleRecords = (recordList.size() > 0 && (recordId == null || "".equals(recordId.trim()))) ||
+                                (recordList.size() > 1 && recordId != null && !"".equals(recordId.trim()));
+          context.getRequest().setAttribute("Records", recordList);
+        } else if (thisCategory.getRecordId() != -1 && thisCategory.getAllowMultipleRecords()) {
+          context.getRequest().setAttribute("recordDeleted", "true");
+          return executeCommandFields(context);
+        } else if (thisCategory.getRecordId() != -1 && !thisCategory.getAllowMultipleRecords()) {
+          context.getRequest().setAttribute("recId", recordId);
+          return executeCommandModifyFields(context);
+        } else if (thisCategory.getRecordId() == -1 && !thisCategory.getAllowMultipleRecords()) {
+          return executeCommandAddFolderRecord(context);
+        }
+        //The user requested a specific record, or this category only
+        //allows a single record.
+        context.getRequest().setAttribute("Category", thisCategory);
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Accounts", "Custom Fields Details");
+    if (Integer.parseInt(selectedCatId) <= 0) {
+      return getReturn(context, "FieldsEmpty");
+    } else {
+      if (hasMultipleRecords) {
+        return executeCommandModifyFields(context);
+      }
+      return getReturn(context, "FieldRecordList");
+    }
+  }
+
+
+  /**
+   *  AddFolderRecord: Displays the form for inserting a new custom field record
+   *  for the selected Account.
+   *
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandAddFolderRecord(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
       return ("PermissionError");
     }
     Connection db = null;
+    String source = context.getRequest().getParameter("source");
+    String actionStepId = context.getRequest().getParameter("actionStepId");
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("source", source);
+    }
+    if (actionStepId != null && !"".equals(actionStepId.trim())) {
+      context.getRequest().setAttribute("actionStepId", actionStepId);
+    }
     Organization thisOrganization = null;
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
@@ -1439,16 +1828,16 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, "View Accounts", "Add Folder Record");
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
-    return ("AddFolderRecordOK");
+    return getReturn(context, "AddFolderRecord");
   }
 
 
   /**
-   * ModifyFields: Displays the modify form for the selected Custom Field
-   * Record.
+   *  ModifyFields: Displays the modify form for the selected Custom Field
+   *  Record.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandModifyFields(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-folders-edit")) {
@@ -1456,11 +1845,29 @@ public final class Accounts extends CFSModule {
     }
     Connection db = null;
     Organization thisOrganization = null;
+    String source = context.getRequest().getParameter("source");
+    String actionStepId = context.getRequest().getParameter("actionStepId");
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("source", source);
+    }
+    if (actionStepId != null && !"".equals(actionStepId.trim())) {
+      context.getRequest().setAttribute("actionStepId", actionStepId);
+    }
     String selectedCatId = (String) context.getRequest().getParameter("catId");
     String recordId = (String) context.getRequest().getParameter("recId");
+    if (recordId == null || "".equals(recordId.trim()) || "-1".equals(recordId.trim())) {
+      recordId = (String) context.getRequest().getAttribute("recId");
+      if (recordId == null || "".equals(recordId.trim())) {
+        recordId = String.valueOf(-1);
+      }
+    }
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
@@ -1485,25 +1892,36 @@ public final class Accounts extends CFSModule {
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
     if (recordId.equals("-1")) {
-      return ("AddFolderRecordOK");
+      return getReturn(context, "AddFolderRecord");
     } else {
-      return ("ModifyFieldsOK");
+      return getReturn(context, "ModifyFields");
     }
   }
 
 
   /**
-   * UpdateFields: Performs the actual update of the selected Custom Field
-   * Record based on user-submitted information from the modify form.
+   *  UpdateFields: Performs the actual update of the selected Custom Field
+   *  Record based on user-submitted information from the modify form.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandUpdateFields(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-folders-edit"))) {
       return ("PermissionError");
     }
     Connection db = null;
+    boolean popup = false;
+    String source = context.getRequest().getParameter("source");
+    String actionStepId = context.getRequest().getParameter("actionStepId");
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("source", source);
+    }
+    if (actionStepId != null && !"".equals(actionStepId.trim())) {
+      context.getRequest().setAttribute("actionStepId", actionStepId);
+    }
+    String popupString = context.getRequest().getParameter("popup");
+    popup = (popupString != null && !"".equals(popupString.trim()) && "true".equals(popupString));
     Organization thisOrganization = null;
     int resultCount = 0;
     boolean isValid = false;
@@ -1513,6 +1931,10 @@ public final class Accounts extends CFSModule {
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
@@ -1527,7 +1949,6 @@ public final class Accounts extends CFSModule {
       String selectedCatId = (String) context.getRequest().getParameter(
           "catId");
       String recordId = (String) context.getRequest().getParameter("recId");
-
       context.getRequest().setAttribute("catId", selectedCatId);
       CustomFieldCategory thisCategory = new CustomFieldCategory(
           db,
@@ -1575,9 +1996,12 @@ public final class Accounts extends CFSModule {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Accounts-> ModifyField validation error");
         }
+        if (actionStepId != null && !"".equals(actionStepId.trim())) {
+          context.getRequest().setAttribute("recId", recordId);
+        }
         context.getRequest().setAttribute(
             "systemStatus", this.getSystemStatus(context));
-        return ("ModifyFieldsOK");
+        return getReturn(context, "ModifyFields");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -1586,7 +2010,7 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCount == 1 && isValid) {
-      return ("UpdateFieldsOK");
+      return getReturn(context, "UpdateFields");
     } else {
       context.getRequest().setAttribute(
           "Error", CFSModule.NOT_UPDATED_MESSAGE);
@@ -1596,23 +2020,38 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * InsertFields: Performs the actual insert of a new Custom Field Record.
+   *  InsertFields: Performs the actual insert of a new Custom Field Record.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandInsertFields(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
       return ("PermissionError");
     }
+    boolean popup = false;
+    String source = context.getRequest().getParameter("source");
+    String actionStepId = context.getRequest().getParameter("actionStepId");
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("source", source);
+    }
+    if (actionStepId != null && !"".equals(actionStepId.trim())) {
+      context.getRequest().setAttribute("actionStepId", actionStepId);
+    }
+    String popupString = context.getRequest().getParameter("popup");
+    popup = (popupString != null && !"".equals(popupString.trim()) && "true".equals(popupString));
     Connection db = null;
     int resultCode = -1;
     boolean isValid = false;
     Organization thisOrganization = null;
 
     try {
-      String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
+      String orgId = context.getRequest().getParameter("orgId");
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
@@ -1641,17 +2080,19 @@ public final class Accounts extends CFSModule {
       thisCategory.setModifiedBy(this.getUserId(context));
       if (!thisCategory.getReadOnly()) {
         thisCategory.setCanNotContinue(true);
-        resultCode = thisCategory.insert(db);
-        Iterator groups = (Iterator) thisCategory.iterator();
-        isValid = true;
-        while (groups.hasNext()) {
-          CustomFieldGroup group = (CustomFieldGroup) groups.next();
-          Iterator fields = (Iterator) group.iterator();
-          while (fields.hasNext()) {
-            CustomField field = (CustomField) fields.next();
-            field.setValidateData(true);
-            field.setRecordId(thisCategory.getRecordId());
-            isValid = this.validateObject(context, db, field) && isValid;
+        isValid = this.validateObject(context, db, thisCategory);
+        if (isValid) {
+          resultCode = thisCategory.insert(db);
+          Iterator groups = (Iterator) thisCategory.iterator();
+          while (groups.hasNext()) {
+            CustomFieldGroup group = (CustomFieldGroup) groups.next();
+            Iterator fields = (Iterator) group.iterator();
+            while (fields.hasNext()) {
+              CustomField field = (CustomField) fields.next();
+              field.setValidateData(true);
+              field.setRecordId(thisCategory.getRecordId());
+              isValid = this.validateObject(context, db, field) && isValid;
+            }
           }
         }
         thisCategory.setCanNotContinue(false);
@@ -1674,7 +2115,7 @@ public final class Accounts extends CFSModule {
         }
         context.getRequest().setAttribute(
             "systemStatus", this.getSystemStatus(context));
-        return ("AddFolderRecordOK");
+        return getReturn(context, "AddFolderRecord");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -1682,19 +2123,34 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    if (popup) {
+      return getReturn(context, "InsertFields");
+    }
     return (this.executeCommandFields(context));
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDeleteFields(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-folders-delete"))) {
       return ("PermissionError");
+    }
+    String source = context.getRequest().getParameter("source");
+    String popupString = context.getRequest().getParameter("popup");
+    boolean popup = (popupString != null && "true".equals(popupString.trim()));
+    boolean returnToList = true;
+    String actionStepId = context.getRequest().getParameter("actionStepId");
+    ActionItemWork item = null;
+    if (source != null && !"".equals(source.trim())) {
+      context.getRequest().setAttribute("source", source);
+    }
+    if (actionStepId != null && !"".equals(actionStepId.trim())) {
+      context.getRequest().setAttribute("actionStepId", actionStepId);
     }
     Connection db = null;
     try {
@@ -1702,6 +2158,11 @@ public final class Accounts extends CFSModule {
       String selectedCatId = context.getRequest().getParameter("catId");
       String recordId = context.getRequest().getParameter("recId");
       String orgId = context.getRequest().getParameter("orgId");
+
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
 
       CustomFieldCategory thisCategory = new CustomFieldCategory(
           db,
@@ -1712,24 +2173,37 @@ public final class Accounts extends CFSModule {
       thisRecord.setLinkModuleId(Constants.ACCOUNTS);
       thisRecord.setLinkItemId(Integer.parseInt(orgId));
       thisRecord.setCategoryId(Integer.parseInt(selectedCatId));
+      if (actionStepId != null && !"".equals(actionStepId.trim()) && !"-1".equals(actionStepId) && !"null".equals(actionStepId)) {
+        item = new ActionItemWork(db, Integer.parseInt(actionStepId));
+      }
       if (!thisCategory.getReadOnly()) {
         thisRecord.delete(db);
       }
       context.getRequest().setAttribute("recordDeleted", "true");
+      if (item != null && item.getId() > 0) {
+        if (thisRecord.getId() == item.getLinkItemId() && item.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
+          returnToList = false;
+          thisCategory.setRecordId(thisRecord.getId());
+          context.getRequest().setAttribute("Category", thisCategory);
+        }
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    return ("DeleteFieldsOK");
+    if (returnToList) {
+      return getReturn(context, "DeleteFields");
+    }
+    return "DeletedFieldPopupOK";
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
+   * @param  context  Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "ContactListInfo");
@@ -1748,10 +2222,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandRebuildFormElements(ActionContext context) {
     Connection db = null;
@@ -1790,6 +2264,138 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
     return ("RebuildElementsOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandOwnerJSList(ActionContext context) {
+
+    int siteId = -1;
+    String siteIdString = context.getRequest().getParameter("siteId");
+    if ((siteIdString != null) || !"".equals(siteIdString)) {
+      siteId = Integer.parseInt(siteIdString);
+    }
+    if (!isSiteAccessPermitted(context, String.valueOf(siteId))) {
+      return ("PermissionError");
+    }
+    UserList userList = new UserList();
+    HtmlSelect userListSelect = new HtmlSelect();
+    try {
+      userList = filterOwnerListForSite(context, siteId);
+      userListSelect = userList.getHtmlSelectObj("userId", this.getUserId(context));
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    }
+    context.getRequest().setAttribute("UserListSelect", userListSelect);
+    return ("OwnerJsListOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context        Description of the Parameter
+   * @param  siteId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @exception  Exception  Description of the Exception
+   */
+  private UserList filterOwnerListForSite(ActionContext context, int siteId) throws Exception {
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+    //this is how we get the multiple-level heirarchy...recursive function.
+    User thisRec = thisUser.getUserRecord();
+    UserList shortChildList = thisRec.getShortChildList();
+    UserList userList = thisRec.getFullChildList(
+        shortChildList, new UserList());
+    userList.setMyId(getUserId(context));
+    userList.setMyValue(thisUser.getContact().getNameLastFirst());
+    userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
+    userList.setExcludeExpiredIfUnselected(true);
+
+    // filter possible owners for accounts with site ids.
+
+    // An account WITH a site id can be owned by a user with the same
+    // site id or by one who has access to all sites
+    // (i.e., siteId = -1 or site_id IS NULL)
+    if (siteId != -1) {
+      Iterator itr = userList.iterator();
+      while (itr.hasNext()) {
+        User tmpUser = (User) itr.next();
+        if (tmpUser.getSiteId() == -1) {
+          continue;
+        }
+        if (siteId != tmpUser.getSiteId()) {
+          itr.remove();
+        }
+      }
+    }
+
+    // An account WITHOUT a site id can ONLY be owned by a user with access
+    // to all sites
+    // (i.e., siteId = -1 or site_id IS NULL)
+    if (siteId == -1) {
+      Iterator itr = userList.iterator();
+      while (itr.hasNext()) {
+        User tmpUser = (User) itr.next();
+        if (siteId != tmpUser.getSiteId()) {
+          itr.remove();
+        }
+      }
+    }
+    return userList;
+  }
+  
+  /**
+   *  Description of the Method
+   *
+   * @param  context     Description of the Parameter
+   * @param  organization  Description of the Parameter
+   * @param  db  Description of the Parameter
+   *
+   * @exception  Exception  Description of the Exception
+   */
+  protected void deleteRecentItems(ActionContext context, Connection db, Organization organization) throws SQLException {
+    //remove any recent contacts belonging to this account
+    ContactList contactList = new ContactList();
+    contactList.setOrgId(organization.getOrgId());
+    contactList.setIncludeOnlyTrashed(true);
+    contactList.buildList(db);
+    
+    this.deleteRecentItems(context, contactList.iterator());
+    
+    //remove any recent contact opps
+    Iterator i = contactList.iterator();
+    while (i.hasNext()) {
+      Contact contact = (Contact) i.next();
+      OpportunityHeaderList oppList = new OpportunityHeaderList();
+      oppList.setContactId(contact.getId());
+      oppList.setIncludeOnlyTrashed(true);
+      oppList.buildList(db);
+      
+      this.deleteRecentItems(context, oppList.iterator());
+    }
+    
+    //remove any recent account opps
+    OpportunityHeaderList opportunityList = new OpportunityHeaderList();
+    opportunityList.setOrgId(organization.getOrgId());
+    opportunityList.setIncludeOnlyTrashed(true);
+    opportunityList.buildList(db);
+    
+    this.deleteRecentItems(context, opportunityList.iterator());
+    
+    //remove any recent tickets
+    TicketList ticketList = new TicketList();
+    ticketList.setOrgId(organization.getOrgId());
+    ticketList.setIncludeOnlyTrashed(true);
+    ticketList.buildList(db);
+    
+    this.deleteRecentItems(context, ticketList.iterator());
   }
 }
 

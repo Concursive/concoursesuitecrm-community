@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.OpportunityHeader,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.modules.pipeline.beans.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
@@ -40,6 +40,9 @@
     return id;
   }
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -64,7 +67,7 @@
   <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
     <dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
       <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
-        <dhv:permission name="accounts-accounts-contacts-opportunities-add"><a href="AccountContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=AccountContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+        <dhv:permission name="accounts-accounts-contacts-opportunities-add"><a href="AccountContactsOpps.do?command=Prepare&orgId=<%=OrgDetails.getOrgId()%>&contactId=<%= ContactDetails.getId() %>&actionSource=AccountContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
       </dhv:evaluate>
     </dhv:evaluate>
     <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
@@ -74,9 +77,9 @@
         <form name="listView" method="post" action="AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
         <td align="left">
           <select size="1" name="listView" onChange="javascript:document.listView.submit();">
-            <option <%= AccountContactOppsPagedListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
             <option <%= AccountContactOppsPagedListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
             <option <%= AccountContactOppsPagedListInfo.getOptionValue("closed") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllClosedOpportunities">All Closed Opportunities</dhv:label></option>
+            <option <%= AccountContactOppsPagedListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
           </select>
         </td>
         <td>
@@ -94,9 +97,25 @@
           <strong><a href="AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.OpportunityName">Opportunity Name</dhv:label></a></strong>
           <%= AccountContactOppsPagedListInfo.getSortIcon("x.description") %>
         </th>
+        <dhv:evaluate if="<%=!allowMultiple%>">
+          <th nowrap>
+            <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.stage">Stage</dhv:label></strong>
+          </th>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%=!allowMultiple%>">
+          <th nowrap>
+            <strong><a href="AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=oc.closedate<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></strong>
+            <%= AccountContactOppsPagedListInfo.getSortIcon("oc.closedate") %>
+          </th>
+        </dhv:evaluate>
         <th nowrap>
           <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.BestGuessTotal">Best Guess Total</dhv:label></strong>
         </th>
+        <dhv:include name="pipeline-custom1Integer" none="true">
+          <th nowrap>
+            <strong><dhv:label name="pipeline.custom1Integer">Custom1 Integer</dhv:label></strong>
+          </th>
+        </dhv:include>
         <th nowrap>
           <strong><a href="AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.modified<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
           <%= AccountContactOppsPagedListInfo.getSortIcon("x.modified") %>
@@ -108,32 +127,58 @@
       if ( j.hasNext() ) {
         int rowid = 0;
         int i = 0;
-          while (j.hasNext()) {
-            i++;
-            rowid = (rowid != 1?1:2);
-            OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+        HashMap headersListed = new HashMap();
+        while (j.hasNext()) {
+          i++;
+          rowid = (rowid != 1?1:2);
+          OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+          boolean hasPermission = false;
     %>
-        <tr class="containerBody">
-          <td width="8" valign="top" align="center" class="row<%= rowid %>" nowrap>
+    <dhv:hasAuthority owner="<%= String.valueOf(oppHeader.getManager()) %>">
+      <% hasPermission = true; %>
+    </dhv:hasAuthority>
+        <tr class="row<%= rowid %>">
+          <td width="8" valign="top" align="center" nowrap>
             <%-- Use the unique id for opening the menu, and toggling the graphics --%>
             <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-          <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OrgDetails.isTrashed() %>">
-            <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= oppHeader.getId() %>','<%= oppHeader.getContactLink() %>','<%= oppHeader.isTrashed() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-          </dhv:evaluate>
-          <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() || OrgDetails.isTrashed() %>">&nbsp;</dhv:evaluate>
+            <dhv:evaluate if="<%= !oppHeader.getLock() %>">
+              <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OrgDetails.isTrashed() %>">
+                <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= oppHeader.getId() %>','<%= oppHeader.getContactLink() %>','<%= oppHeader.isTrashed() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() || OrgDetails.isTrashed() %>">&nbsp;</dhv:evaluate>
+        	 </dhv:evaluate>
+            <dhv:evaluate if="<%= oppHeader.getLock() %>">
+               <font color="red"><dhv:label name="pipeline.locked">Locked</dhv:label></font>
+        	 </dhv:evaluate>
           </td>
-          <td width="100%" valign="top" class="row<%= rowid %>">
+          <td width="100%" valign="top">
             <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
-            <%= toHtml(oppHeader.getDescription()) %></a>
-            (<%= oppHeader.getComponentCount() %>)
+            <%= toHtml(oppHeader.getDescription()) %></a> (<%= oppHeader.getComponentCount() %>)
             <dhv:evaluate if="<%= oppHeader.hasFiles() %>">
               <%= thisFile.getImageTag("-23") %>
             </dhv:evaluate>
           </td>
-          <td valign="top" align="right" class="row<%= rowid %>" nowrap>
-            <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-          </td>
-          <td valign="top" align="center" class="row<%= rowid %>" nowrap>
+          <dhv:evaluate if="<%= !allowMultiple %>" >
+            <td valign="center" nowrap>
+              <%= toHtml(oppHeader.getComponent().getStageName()) %>&nbsp;
+            </td>
+            <td valign="center" nowrap>
+              <zeroio:tz timestamp="<%= oppHeader.getComponent().getCloseDate() %>" dateOnly="true" timeZone="<%= oppHeader.getComponent().getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+              <% if(!User.getTimeZone().equals(oppHeader.getComponent().getCloseDateTimeZone())){%>
+              <br />
+              <zeroio:tz timestamp="<%= oppHeader.getComponent().getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+              <% } %>
+            </td>
+          </dhv:evaluate>
+            <td valign="top" align="right" nowrap>
+              <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+            </td>
+          <dhv:include name="pipeline-custom1Integer" none="true">
+            <td valign="top" align="right" nowrap>
+              <%= oppHeader.getCustom1Integer() %>&nbsp;
+            </td>
+          </dhv:include>
+          <td valign="top" align="center" nowrap>
            <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
           </td>
         </tr>
@@ -142,7 +187,12 @@
       } else {
     %>
         <tr class="containerBody">
-          <td colspan="6">
+          <dhv:include name="pipeline-custom1Integer" none="true">
+            <td colspan="7">
+          </dhv:include>
+          <dhv:include name="pipeline-custom1Integer">
+            <td colspan="6">
+          </dhv:include>
             <dhv:label name="accounts.accounts_contacts_oppcomponent_list.NoOpportunitiesFound">No opportunities found.</dhv:label>
           </td>
         </tr>

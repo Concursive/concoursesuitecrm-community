@@ -26,11 +26,12 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author mrajkowski
- * @version $Id$
- * @created November 26, 2001
+ * @author     mrajkowski
+ * @created    November 26, 2001
+ * @version    $Id: Recipient.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05 Aug
+ *      2005) mrajkowski $
  */
 public class Recipient extends GenericBean {
 
@@ -46,20 +47,21 @@ public class Recipient extends GenericBean {
   private java.sql.Timestamp replyDate = null;
   private java.sql.Timestamp bounceDate = null;
   private Contact contact = null;
+  private boolean allowDuplicates = false;
 
 
   /**
-   * Constructor for the Recipient object
+   *  Constructor for the Recipient object
    */
-  public Recipient() {
-  }
+  public Recipient() { }
 
 
   /**
-   * Constructor for the Recipient object
+   *  Constructor for the Recipient object
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  rs                Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of Exception
    */
   public Recipient(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -67,11 +69,12 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Constructor for the Recipient object
+   *  Constructor for the Recipient object
    *
-   * @param db          Description of Parameter
-   * @param recipientId Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  db                Description of Parameter
+   * @param  recipientId       Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of Exception
    */
   public Recipient(Connection db, int recipientId) throws SQLException {
     if (recipientId == -1) {
@@ -97,9 +100,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the Recipient object
+   *  Sets the id attribute of the Recipient object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -107,9 +110,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the campaignId attribute of the Recipient object
+   *  Sets the campaignId attribute of the Recipient object
    *
-   * @param tmp The new campaignId value
+   * @param  tmp  The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -117,9 +120,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the contactId attribute of the Recipient object
+   *  Sets the contactId attribute of the Recipient object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -127,9 +130,19 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the runId attribute of the Recipient object
+   *  Sets the contactId attribute of the Recipient object
    *
-   * @param tmp The new runId value
+   * @param  tmp  The new contactId value
+   */
+  public void setContactId(String tmp) {
+    this.contactId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the runId attribute of the Recipient object
+   *
+   * @param  tmp  The new runId value
    */
   public void setRunId(int tmp) {
     this.runId = tmp;
@@ -137,9 +150,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the statusId attribute of the Recipient object
+   *  Sets the statusId attribute of the Recipient object
    *
-   * @param tmp The new statusId value
+   * @param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -147,9 +160,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the status attribute of the Recipient object
+   *  Sets the status attribute of the Recipient object
    *
-   * @param tmp The new status value
+   * @param  tmp  The new status value
    */
   public void setStatus(String tmp) {
     this.status = tmp;
@@ -157,9 +170,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the statusDate attribute of the Recipient object
+   *  Sets the statusDate attribute of the Recipient object
    *
-   * @param tmp The new statusDate value
+   * @param  tmp  The new statusDate value
    */
   public void setStatusDate(java.sql.Timestamp tmp) {
     this.statusDate = tmp;
@@ -167,9 +180,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the scheduledDate attribute of the Recipient object
+   *  Sets the scheduledDate attribute of the Recipient object
    *
-   * @param tmp The new scheduledDate value
+   * @param  tmp  The new scheduledDate value
    */
   public void setScheduledDate(java.sql.Timestamp tmp) {
     this.scheduledDate = tmp;
@@ -177,9 +190,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the sentDate attribute of the Recipient object
+   *  Sets the sentDate attribute of the Recipient object
    *
-   * @param tmp The new sentDate value
+   * @param  tmp  The new sentDate value
    */
   public void setSentDate(java.sql.Timestamp tmp) {
     this.sentDate = tmp;
@@ -187,9 +200,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the replyDate attribute of the Recipient object
+   *  Sets the replyDate attribute of the Recipient object
    *
-   * @param tmp The new replyDate value
+   * @param  tmp  The new replyDate value
    */
   public void setReplyDate(java.sql.Timestamp tmp) {
     this.replyDate = tmp;
@@ -197,9 +210,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the bounceDate attribute of the Recipient object
+   *  Sets the bounceDate attribute of the Recipient object
    *
-   * @param tmp The new bounceDate value
+   * @param  tmp  The new bounceDate value
    */
   public void setBounceDate(java.sql.Timestamp tmp) {
     this.bounceDate = tmp;
@@ -207,9 +220,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Sets the contact attribute of the Recipient object
+   *  Sets the contact attribute of the Recipient object
    *
-   * @param tmp The new contact value
+   * @param  tmp  The new contact value
    */
   public void setContact(Contact tmp) {
     this.contact = tmp;
@@ -217,9 +230,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the id attribute of the Recipient object
+   *  Gets the id attribute of the Recipient object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -227,9 +240,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the campaignId attribute of the Recipient object
+   *  Gets the campaignId attribute of the Recipient object
    *
-   * @return The campaignId value
+   * @return    The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -237,9 +250,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the contactId attribute of the Recipient object
+   *  Gets the contactId attribute of the Recipient object
    *
-   * @return The contactId value
+   * @return    The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -247,9 +260,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the runId attribute of the Recipient object
+   *  Gets the runId attribute of the Recipient object
    *
-   * @return The runId value
+   * @return    The runId value
    */
   public int getRunId() {
     return runId;
@@ -257,9 +270,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the statusId attribute of the Recipient object
+   *  Gets the statusId attribute of the Recipient object
    *
-   * @return The statusId value
+   * @return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -267,9 +280,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the status attribute of the Recipient object
+   *  Gets the status attribute of the Recipient object
    *
-   * @return The status value
+   * @return    The status value
    */
   public String getStatus() {
     return status;
@@ -277,9 +290,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the statusDate attribute of the Recipient object
+   *  Gets the statusDate attribute of the Recipient object
    *
-   * @return The statusDate value
+   * @return    The statusDate value
    */
   public java.sql.Timestamp getStatusDate() {
     return statusDate;
@@ -287,9 +300,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the scheduledDate attribute of the Recipient object
+   *  Gets the scheduledDate attribute of the Recipient object
    *
-   * @return The scheduledDate value
+   * @return    The scheduledDate value
    */
   public java.sql.Timestamp getScheduledDate() {
     return scheduledDate;
@@ -297,9 +310,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the sentDate attribute of the Recipient object
+   *  Gets the sentDate attribute of the Recipient object
    *
-   * @return The sentDate value
+   * @return    The sentDate value
    */
   public java.sql.Timestamp getSentDate() {
     return sentDate;
@@ -307,9 +320,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the sentDateString attribute of the Recipient object
+   *  Gets the sentDateString attribute of the Recipient object
    *
-   * @return The sentDateString value
+   * @return    The sentDateString value
    */
   public String getSentDateString() {
     try {
@@ -321,9 +334,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the replyDate attribute of the Recipient object
+   *  Gets the replyDate attribute of the Recipient object
    *
-   * @return The replyDate value
+   * @return    The replyDate value
    */
   public java.sql.Timestamp getReplyDate() {
     return replyDate;
@@ -331,9 +344,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the replyDateString attribute of the Recipient object
+   *  Gets the replyDateString attribute of the Recipient object
    *
-   * @return The replyDateString value
+   * @return    The replyDateString value
    */
   public String getReplyDateString() {
     try {
@@ -345,9 +358,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the bounceDate attribute of the Recipient object
+   *  Gets the bounceDate attribute of the Recipient object
    *
-   * @return The bounceDate value
+   * @return    The bounceDate value
    */
   public java.sql.Timestamp getBounceDate() {
     return bounceDate;
@@ -355,9 +368,9 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the contact attribute of the Recipient object
+   *  Gets the contact attribute of the Recipient object
    *
-   * @return The contact value
+   * @return    The contact value
    */
   public Contact getContact() {
     return contact;
@@ -365,13 +378,46 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Gets the duplicate attribute of the Recipient object
+   *  Gets the allowDuplicates attribute of the Recipient object
    *
-   * @param db Description of the Parameter
-   * @return The duplicate value
-   * @throws SQLException Description of the Exception
+   * @return    The allowDuplicates value
+   */
+  public boolean getAllowDuplicates() {
+    return allowDuplicates;
+  }
+
+
+  /**
+   *  Sets the allowDuplicates attribute of the Recipient object
+   *
+   * @param  tmp  The new allowDuplicates value
+   */
+  public void setAllowDuplicates(boolean tmp) {
+    this.allowDuplicates = tmp;
+  }
+
+
+  /**
+   *  Sets the allowDuplicates attribute of the Recipient object
+   *
+   * @param  tmp  The new allowDuplicates value
+   */
+  public void setAllowDuplicates(String tmp) {
+    this.allowDuplicates = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the duplicate attribute of the Recipient object
+   *
+   * @param  db             Description of the Parameter
+   * @return                The duplicate value
+   * @throws  SQLException  Description of the Exception
    */
   protected boolean isDuplicate(Connection db) throws SQLException {
+    if (allowDuplicates) {
+      return false;
+    }
     boolean result = false;
     String sql =
         "SELECT * " +
@@ -392,10 +438,10 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
@@ -412,11 +458,11 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (isDuplicate(db)) {
@@ -443,11 +489,11 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     if (id == -1) {
@@ -501,11 +547,11 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -518,10 +564,10 @@ public class Recipient extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildContact(Connection db) throws SQLException {
     contact = new Contact();

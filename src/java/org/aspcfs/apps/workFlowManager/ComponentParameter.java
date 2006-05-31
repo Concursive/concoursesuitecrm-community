@@ -283,7 +283,7 @@ public class ComponentParameter {
     int i = 0;
     id = DatabaseUtils.getNextSeq(db, "business_process_comp_pa_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO business_process_component_parameter " +
+        "INSERT INTO " + DatabaseUtils.getTableName(db, "business_process_component_parameter") + " " +
         "(" + (id > -1 ? "id, " : "") + "component_id, parameter_id, param_value, enabled) VALUES " +
         "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     if (id > -1) {
@@ -309,7 +309,7 @@ public class ComponentParameter {
 
     System.out.println(" Deleting component parameter");
     PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM business_process_component_parameter " +
+        "DELETE FROM " + DatabaseUtils.getTableName(db, "business_process_component_parameter") + " " +
         "WHERE id = ? ");
 
     pst.setInt(1, this.id);
@@ -319,4 +319,3 @@ public class ComponentParameter {
   }
 
 }
-

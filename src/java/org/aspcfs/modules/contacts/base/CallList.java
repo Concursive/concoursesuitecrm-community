@@ -726,7 +726,7 @@ public class CallList extends ArrayList {
     createFilter(sqlFilter);
     sqlSelect.append(
         "SELECT c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate, c.alert, " +
-        "c.owner, c.notes, c.length, c.followup_notes, c.complete_date, ct.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " + "ct.org_name as ctcompany, ct.org_name as orgname, c.status_id, c.entered, p.description as priority " +
+        "c.owner, c.notes, c.\"length\", c.followup_notes, c.complete_date, ct.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " + "ct.org_name as ctcompany, ct.org_name as orgname, c.status_id, c.entered, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
@@ -770,7 +770,6 @@ public class CallList extends ArrayList {
       //build Contact Details
       Contact thisContact = new Contact();
       thisContact.setId(thisCall.getContactId());
-      thisContact.buildPhoneNumberList(db);
       thisCall.setContact(thisContact);
 
       //add call to list
@@ -778,6 +777,12 @@ public class CallList extends ArrayList {
     }
     rs.close();
     pst.close();
+    // Build resources
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Call thisCall = (Call) i.next();
+      thisCall.getContact().buildPhoneNumberList(db);
+    }
   }
 
 
@@ -830,7 +835,7 @@ public class CallList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c.length, " +
+        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c.\"length\", " +
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +

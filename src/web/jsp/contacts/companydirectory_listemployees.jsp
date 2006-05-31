@@ -20,6 +20,8 @@
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="EmployeeList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CompanyDirectoryInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -70,6 +72,11 @@
     <th nowrap>
       <strong><dhv:label name="account.phone">Phone</dhv:label></strong>
     </th>
+    <dhv:evaluate if="<%=User.getSiteId() == -1%>" >
+      <th nowrap>
+        <b><dhv:label name="admin.user.site">Site</dhv:label></b>
+      </th>
+    </dhv:evaluate>
   </tr>
 <%
   Iterator i = EmployeeList.iterator();
@@ -81,32 +88,37 @@
       rowid = (rowid != 1?1:2);
       Contact thisEmployee = (Contact)i.next();
 %>      
-  <tr>
-      <td width="8" valign="center" class="row<%= rowid %>" nowrap>
+  <tr class="row<%= rowid %>">
+      <td width="8" valign="center" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <a href="javascript:displayMenu('select<%= count %>','menuEmployee','<%= thisEmployee.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuEmployee');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
-    <td class="row<%= rowid %>" nowrap>
+    <td nowrap>
       <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a>
       <dhv:evaluate if="<%=!thisEmployee.hasEnabledAccount() && thisEmployee.hasAccount() %>"><font color="red">*</font></dhv:evaluate>
         <%= thisEmployee.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "&nbsp;") %>
     </td>
-    <td class="row<%= rowid %>">
+    <td>
       <%= toHtml(thisEmployee.getDepartmentName()) %>
     </td>
-    <td class="row<%= rowid %>">
+    <td>
       <%= toHtml(thisEmployee.getTitle()) %>
     </td>
-    <td class="row<%= rowid %>">
+    <td>
       <%= toHtml(thisEmployee.getPrimaryPhoneNumber()) %>
     </td>
+    <dhv:evaluate if="<%=User.getSiteId() == -1%>" >
+    <td>
+        <%= SiteList.getSelectedValue(thisEmployee.getSiteId()) %>
+      </td>
+    </dhv:evaluate>
   </tr>
 <%      
     }
   } else {
 %>
   <tr>
-    <td class="containerBody" colspan="5">
+    <td class="containerBody" colspan="<%=(User.getSiteId() == -1)? 6:5%>">
       <dhv:label name="employees.search.notFound">No Employees found.</dhv:label>
     </td>
   </tr>

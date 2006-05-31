@@ -18,6 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <form name="newMessageForm" action="AccountContactsCalls.do?command=SendCall&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
@@ -62,7 +63,7 @@
     <% } %>
     <br><br>
     <%-- include the message form --%>
-    <%@ include file="../newmessage.jsp" %>
+    <%@ include file="../newmessage_include.jsp" %>
     <br>
     <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
     <% if("list".equals(request.getParameter("return"))){ %>

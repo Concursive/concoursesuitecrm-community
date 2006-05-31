@@ -763,7 +763,7 @@ public class OrganizationHistoryList extends ArrayList implements SyncableList {
         pst = db.prepareStatement(
             sqlCount.toString() +
             sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(type) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(\"type\") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

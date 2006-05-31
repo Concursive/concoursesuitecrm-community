@@ -29,11 +29,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author kbhoopal
- * @version $Id$
- * @created November 26, 2003
+ *@author     kbhoopal
+ *@created    November 26, 2003
+ *@version    $Id: HelpModule.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05 Aug
+ *      2005) mrajkowski $
  */
 public class HelpModule {
 
@@ -43,6 +44,7 @@ public class HelpModule {
   private String briefDescription = null;
   private String detailDescription = null;
   private int pageId = -1;
+  private int constantForCategory = -1;
 
   private int contentLevel = -1;
 
@@ -52,7 +54,7 @@ public class HelpModule {
 
 
   /**
-   * Constructor for the HelpModule object
+   *  Constructor for the HelpModule object
    */
   public HelpModule() {
 
@@ -66,6 +68,7 @@ public class HelpModule {
    *
    * @param rs Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public HelpModule(ResultSet rs) throws SQLException {
 
@@ -185,6 +188,26 @@ public class HelpModule {
 
 
   /**
+   *  Sets the constantForCategory attribute of the HelpModule object
+   *
+   *@param  tmp  The new constantForCategory value
+   */
+  public void setConstantForCategory(int tmp) {
+    this.constantForCategory = tmp;
+  }
+
+
+  /**
+   *  Sets the constantForCategory attribute of the HelpModule object
+   *
+   *@param  tmp  The new constantForCategory value
+   */
+  public void setConstantForCategory(String tmp) {
+    this.constantForCategory = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Sets the helpContents attribute of the HelpModule object
    *
    * @param tmp The new helpContents value
@@ -245,6 +268,16 @@ public class HelpModule {
 
 
   /**
+   *  Gets the constantForCategory attribute of the HelpModule object
+   *
+   *@return    The constantForCategory value
+   */
+  public int getConstantForCategory() {
+    return constantForCategory;
+  }
+
+
+  /**
    * Gets the helpContents attribute of the HelpModule object
    *
    * @return The helpContents value
@@ -292,10 +325,11 @@ public class HelpModule {
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("catId");
-    category = rs.getString("category");
     categoryId = rs.getInt("catId");
+    category = rs.getString("category");
     briefDescription = rs.getString("module_brief_description");
     detailDescription = rs.getString("module_detail_description");
+    constantForCategory = rs.getInt("constant");
   }
 
 
@@ -483,6 +517,7 @@ public class HelpModule {
   public Node buildXML(Document d) {
     Element module = d.createElement("module");
     module.setAttribute("name", getCategory());
+    module.setAttribute("constant", String.valueOf(getConstantForCategory()));
     module.setAttribute("contentLevel", String.valueOf(getContentLevel()));
 
     Node briefDescription = d.createElement("briefDescription");

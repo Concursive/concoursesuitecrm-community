@@ -302,7 +302,7 @@ public final class RevenueManager extends CFSModule {
             imageFile, 1.0f, chart, width, height, info);
         PrintWriter pw = new PrintWriter(
             new BufferedWriter(new FileWriter(filePath + fileName + ".map")));
-        ChartUtilities.writeImageMap(pw, fileName, info);
+        ChartUtilities.writeImageMap(pw, fileName, info, false);
         pw.flush();
         pw.close();
 

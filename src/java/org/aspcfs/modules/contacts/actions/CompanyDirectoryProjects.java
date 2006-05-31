@@ -43,6 +43,9 @@ public final class CompanyDirectoryProjects extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact contactDetails = new Contact(db, Integer.parseInt(employeeId));
+      if (!isRecordAccessPermitted(context, contactDetails)){
+        return ("PermissionError");
+      }
       contactDetails.checkUserAccount(db);
       context.getRequest().setAttribute("ContactDetails", contactDetails);
       //PagedList Info

@@ -43,10 +43,13 @@ public final class Constants {
   public final static int TICKET_OBJECT = 42420030;
   public final static int CALL_OBJECT = 42420031;
   public final static int OPPORTUNITY_OBJECT = 42420032;
+  public final static int OPPORTUNITY_COMPONENT_OBJECT = 1011200517;
   public final static int TASK_OBJECT = 42420033;
   public final static int ACCOUNT_OBJECT = 42420034;
   public final static int MESSAGE_OBJECT = 42420035;
   public final static int CAMPAIGN_OBJECT = 51320031;
+  public final static int ACTION_ITEM_WORK_NOTE_OBJECT = 831200519;
+  public final static int ACTION_ITEM_WORK_SELECTION_OBJECT = 831200520;
   //Folders
   public final static int FOLDERS_ACCOUNTS = 1;
   public final static int FOLDERS_CONTACTS = 2;
@@ -82,8 +85,9 @@ public final class Constants {
   public final static int DOCUMENTS_CUSTOMER_PRODUCT = 423200418;
   public final static int DOCUMENTS_DOCUMENTS = 20041083;
   public final static int DOCUMENTS_QUOTE_LOGO = 126200511;
-
-
+  public final static int DOCUMENTS_KNOWLEDGEBASE = 104051616;
+  public final static int DOCUMENTS_SALES_REPORTS = 2006031313;
+  
   //Unsorted -- used for folders, documents, and other
   //TODO: Cleanup this list once modules have been updated
   public final static int ACCOUNTS = 1;
@@ -148,6 +152,7 @@ public final class Constants {
   public final static int IMPORT_LEADS = 33020042;
   public final static int IMPORT_ACCOUNT_CONTACTS = 33020043;
   public final static int IMPORT_SALES = 324200544;
+  public final static int IMPORT_NETAPP_EXPIRATION = 917200409;
 
   //System cache names
   public static final String SYSTEM_PROJECT_NAME_LIST = "200401202226";
@@ -159,6 +164,8 @@ public final class Constants {
 
   //Error messages
   public final static String NOT_FOUND_ERROR = "NOT_FOUND_ERROR";
+  
+  //invalid site id
+  public final static int INVALID_SITE = -2;
 
 }
-

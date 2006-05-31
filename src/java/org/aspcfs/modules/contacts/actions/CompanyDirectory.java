@@ -25,6 +25,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.RequestUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -87,7 +88,18 @@ public final class CompanyDirectory extends CFSModule {
       employeeList.setBuildDetails(true);
       employeeList.setPersonalId(ContactList.IGNORE_PERSONAL);
       employeeList.setBuildTypes(false);
+      employeeList.setSiteId(this.getUserSiteId(context));
+      employeeList.setExclusiveToSite(true);
+      if (this.getUser(context, this.getUserId(context)).getSiteId() == -1) {
+        employeeList.setIncludeAllSites(true);
+      }
       employeeList.buildList(db);
+      
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteList", siteList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -127,6 +139,9 @@ public final class CompanyDirectory extends CFSModule {
     try {
       db = this.getConnection(context);
       thisEmployee = new Contact(db, employeeId);
+      if (!isRecordAccessPermitted(context, thisEmployee)){
+        return ("PermissionError");
+      }
       //enabled user?
       thisEmployee.checkEnabledUserAccount(db);
       context.getRequest().setAttribute("ContactDetails", thisEmployee);
@@ -160,6 +175,9 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       thisEmployee = (Contact) context.getFormBean();
       thisEmployee.queryRecord(db, Integer.parseInt(employeeId));
+      if (!isRecordAccessPermitted(context, thisEmployee)){
+        return ("PermissionError");
+      }
       //enabled user?
       thisEmployee.checkEnabledUserAccount(db);
       addRecentItem(context, thisEmployee);
@@ -212,6 +230,9 @@ public final class CompanyDirectory extends CFSModule {
         addModuleBean(context, "Internal Contacts", "Internal Insert");
         isValid = validateObject(context, db, thisEmployee);
         if (isValid) {
+          if (!isRecordAccessPermitted(context, thisEmployee)){
+            return ("PermissionError");
+          }
           recordInserted = thisEmployee.insert(db);
         }
       } else {
@@ -219,6 +240,9 @@ public final class CompanyDirectory extends CFSModule {
         addModuleBean(context, "Internal Contacts", "Update Employee");
         isValid = validateObject(context, db, thisEmployee);
         if (isValid) {
+          if (!isRecordAccessPermitted(context, thisEmployee)){
+            return ("PermissionError");
+          }
           resultCount = thisEmployee.update(db);
         }
       }
@@ -241,7 +265,7 @@ public final class CompanyDirectory extends CFSModule {
     if (recordInserted) {
       if ("true".equals(
           (String) context.getRequest().getParameter("saveAndNew"))) {
-        context.getRequest().removeAttribute("ContactDetails");
+        context.getRequest().setAttribute("ContactDetails", new Contact());
         return (executeCommandPrepare(context));
       }
       context.getRequest().setAttribute("ContactDetails", thisEmployee);
@@ -306,6 +330,9 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
       thisContact = new Contact(db, id);
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
       thisContact.checkUserAccount(db);
       DependencyList dependencies = thisContact.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
@@ -320,7 +347,8 @@ public final class CompanyDirectory extends CFSModule {
             systemStatus.getLabel("confirmdelete.employeeUserAccountHeader"));
       }
       htmlDialog.addButton(
-          systemStatus.getLabel("button.delete"), "javascript:window.location.href='CompanyDirectory.do?command=TrashEmployee&empid=" + id + "&popup=true'");
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='CompanyDirectory.do?command=TrashEmployee&empid=" + id + RequestUtils.addLinkParams(
+          context.getRequest(), "popupType|actionId|popup|sourcePopup") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
 
@@ -363,6 +391,11 @@ public final class CompanyDirectory extends CFSModule {
       departmentList.addItem(
           0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("DepartmentList", departmentList);
+
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteList", siteList);
+
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -399,6 +432,10 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(
           db, context.getRequest().getParameter("empid"));
+
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
 
       recordDeleted = thisContact.delete(db, this.getDbNamePath(context));
       processErrors(context, thisContact.getErrors());
@@ -445,12 +482,17 @@ public final class CompanyDirectory extends CFSModule {
     boolean recordDeleted = false;
     Contact thisContact = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
+    String popup = (String) context.getRequest().getParameter("sourcePopup");
 
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisContact = new Contact(
           db, context.getRequest().getParameter("empid"));
+
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
 
       recordDeleted = thisContact.updateStatus(
           db, context, true, this.getUserId(context));
@@ -464,11 +506,11 @@ public final class CompanyDirectory extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         deleteRecentItem(context, thisContact);
-        if ("true".equals(context.getRequest().getParameter("popup"))) {
-          context.getRequest().setAttribute(
-              "refreshUrl", "CompanyDirectory.do?command=ListEmployees");
+        if (popup != null && "true".equals(popup)) {
           return ("EmployeeDeletePopupOK");
         }
+        context.getRequest().setAttribute(
+            "refreshUrl", "CompanyDirectory.do?command=ListEmployees");
         return "EmployeeDeleteOK";
       } else {
         processErrors(context, thisContact.getErrors());
@@ -496,6 +538,10 @@ public final class CompanyDirectory extends CFSModule {
       String empId = context.getRequest().getParameter("empid");
       db = this.getConnection(context);
       thisContact = new Contact(db, Integer.parseInt(empId));
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
+
       context.getRequest().setAttribute("ContactDetails", thisContact);
       //Show a list of the different folders available in Accounts
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
@@ -537,6 +583,10 @@ public final class CompanyDirectory extends CFSModule {
       String empId = context.getRequest().getParameter("empid");
       db = this.getConnection(context);
       thisContact = new Contact(db, Integer.parseInt(empId));
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
+
       context.getRequest().setAttribute("ContactDetails", thisContact);
       //Show a list of the different folders available in Accounts
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
@@ -626,6 +676,10 @@ public final class CompanyDirectory extends CFSModule {
       String contactId = context.getRequest().getParameter("empid");
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
+
       context.getRequest().setAttribute("ContactDetails", thisContact);
       String selectedCatId = (String) context.getRequest().getParameter(
           "catId");
@@ -639,6 +693,7 @@ public final class CompanyDirectory extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
+      context.getRequest().setAttribute("systemStatus", this.getSystemStatus(context));
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -668,6 +723,9 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, empId);
       if (!(hasPermission(context, "contacts-internal_contacts-folders-add"))) {
+        return ("PermissionError");
+      }
+      if (!isRecordAccessPermitted(context, thisContact)){
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -718,6 +776,7 @@ public final class CompanyDirectory extends CFSModule {
       }
       context.getRequest().setAttribute("Category", thisCategory);
       if (resultCode == -1 || !isValid) {
+        context.getRequest().setAttribute("systemStatus", this.getSystemStatus(context));
         if (thisCategory.getRecordId() != -1) {
           CustomFieldRecord record = new CustomFieldRecord(
               db, thisCategory.getRecordId());
@@ -758,7 +817,9 @@ public final class CompanyDirectory extends CFSModule {
       if (!(hasPermission(context, "contacts-internal_contacts-folders-edit"))) {
         return ("PermissionError");
       }
-
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       CustomFieldCategory thisCategory = new CustomFieldCategory(
@@ -772,7 +833,7 @@ public final class CompanyDirectory extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
-
+      context.getRequest().setAttribute("systemStatus", this.getSystemStatus(context));
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -808,6 +869,9 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
       if (!(hasPermission(context, "contacts-internal_contacts-folders-edit"))) {
+        return ("PermissionError");
+      }
+      if (!isRecordAccessPermitted(context, thisContact)){
         return ("PermissionError");
       }
 
@@ -864,6 +928,7 @@ public final class CompanyDirectory extends CFSModule {
       }
       context.getRequest().setAttribute("Category", thisCategory);
       if (resultCount == -1 || !isValid) {
+        context.getRequest().setAttribute("systemStatus", this.getSystemStatus(context));
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Employees-> ModifyField validation error");
         }
@@ -906,6 +971,9 @@ public final class CompanyDirectory extends CFSModule {
       Contact thisContact = new Contact(db, Integer.parseInt(contactId));
       if (!(hasPermission(
           context, "contacts-internal_contacts-folders-delete"))) {
+        return ("PermissionError");
+      }
+      if (!isRecordAccessPermitted(context, thisContact)){
         return ("PermissionError");
       }
       CustomFieldCategory thisCategory = new CustomFieldCategory(

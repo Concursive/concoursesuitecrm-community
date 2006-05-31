@@ -20,6 +20,7 @@ import com.zeroio.iteam.base.FileItemVersionList;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.actionplans.base.ActionPlanList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.ContactType;
 import org.aspcfs.modules.contacts.base.ContactTypeList;
@@ -32,6 +33,7 @@ import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.LookupListElement;
 import org.aspcfs.utils.web.LookupListList;
+import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -194,7 +196,7 @@ public final class Admin extends CFSModule {
         }
         if (logEntry != null) {
           HashMap map = new HashMap();
-          map.put("${number}", nf.format(userListCount));
+          map.put("${number}", nf.format(fileCount));
           map.put("${size}", nf.format(fileSize));
           usageList.add(this.getLabel(systemStatus, map, logEntry));
         } else {
@@ -592,7 +594,6 @@ public final class Admin extends CFSModule {
       ContactTypeList compareList = new ContactTypeList();
       compareList.setCategory(category);
       compareList.setIncludeDefinedByUser(this.getUserId(context));
-      compareList.setShowPersonal(true);
       compareList.buildList(db);
       ContactTypeList newList = new ContactTypeList(params, names);
       Iterator i = compareList.iterator();

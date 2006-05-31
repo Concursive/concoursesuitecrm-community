@@ -42,6 +42,7 @@ public class CSVReader implements DataReader {
   protected String propertyFile = null;
   protected PropertyMapList mappings = null;
   protected boolean ignoreRow1 = true;
+  protected int importUserId = -1;
 
 
   /**
@@ -76,6 +77,37 @@ public class CSVReader implements DataReader {
 
   /**
    * Sets the csvFile attribute of the CSVReader object
+   *  Gets the importUserId attribute of the CSVReader object
+   *
+   *@return    The importUserId value
+   */
+  public int getImportUserId() {
+    return importUserId;
+  }
+
+
+  /**
+   *  Sets the importUserId attribute of the CSVReader object
+   *
+   *@param  tmp  The new importUserId value
+   */
+  public void setImportUserId(int tmp) {
+    this.importUserId = tmp;
+  }
+
+
+  /**
+   *  Sets the importUserId attribute of the CSVReader object
+   *
+   *@param  tmp  The new importUserId value
+   */
+  public void setImportUserId(String tmp) {
+    this.importUserId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the csvFile attribute of the CSVReader object
    *
    * @param tmp The new csvFile value
    */
@@ -208,7 +240,7 @@ public class CSVReader implements DataReader {
     value = StringUtils.replace(value, "\\n\\r", lf);
     value = StringUtils.replace(value, "\\n", lf);
     value = StringUtils.replace(value, "\\r", lf);
-    return value;
+    return value.trim();
   }
 
 

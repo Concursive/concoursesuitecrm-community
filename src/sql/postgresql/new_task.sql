@@ -30,6 +30,14 @@ CREATE TABLE lookup_task_category (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE SEQUENCE lookup_ticket_task_cat_code_seq;
+CREATE TABLE lookup_ticket_task_category (
+  code INTEGER DEFAULT nextval('lookup_ticket_task_cat_code_seq') NOT NULL PRIMARY KEY,
+  description VARCHAR(255) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
 
 CREATE TABLE task (
   task_id SERIAL PRIMARY KEY,
@@ -52,7 +60,8 @@ CREATE TABLE task (
   completedate TIMESTAMP(3),
   category_id INTEGER REFERENCES lookup_task_category,
   duedate_timezone VARCHAR(255),
-  trashed_date TIMESTAMP(3)
+  trashed_date TIMESTAMP(3),
+  ticket_task_category_id INTEGER REFERENCES lookup_ticket_task_category(code)
 );
 
 CREATE TABLE tasklink_contact (
@@ -63,7 +72,8 @@ CREATE TABLE tasklink_contact (
 
 CREATE TABLE tasklink_ticket (
   task_id INT NOT NULL REFERENCES task,
-  ticket_id INT NOT NULL REFERENCES ticket(ticketid)
+  ticket_id INT NOT NULL REFERENCES ticket(ticketid),
+  category_id INT REFERENCES lookup_ticket_task_category(code)
 );
 
 CREATE TABLE tasklink_project (

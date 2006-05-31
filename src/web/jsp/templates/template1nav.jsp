@@ -37,7 +37,7 @@
 <%@ include file="../initPage.jsp" %>
 <META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus(getServletConfig()).getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= getServerUrl(request) %>/MyCFS.do?command=Home">
 <title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label><%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
-<jsp:include page="cssInclude.jsp" flush="true"/>
+  <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/quickAction.js"></script>
@@ -162,7 +162,7 @@
 <br />
 <center>
 <zeroio:tz timestamp="<%= new java.util.Date() %>" timeFormat="<%= DateFormat.LONG %>" timeZone="<%= User.getTimeZone()%>" /><br />
-&#169; Copyright 2000-2005 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label><br />
+&#169; Copyright 2000-2006 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label><br />
 </div>
 <%-- Allow pages have to have a scrollTo... must be at end of html --%>
 <script language="JavaScript" type="text/javascript" src="javascript/scrollReload.js"></script>

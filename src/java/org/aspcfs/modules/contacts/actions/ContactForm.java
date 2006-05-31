@@ -16,6 +16,7 @@
 package org.aspcfs.modules.contacts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.contacts.base.Contact;
@@ -80,22 +81,46 @@ public final class ContactForm extends CFSModule {
       LookupList sources = new LookupList(db, "lookup_contact_source");
       sources.addItem(
           -1, systemStatus.getLabel(
-              "accounts.accounts_contacts_calls_details_followup_include.None"));
+          "accounts.accounts_contacts_calls_details_followup_include.None"));
       context.getRequest().setAttribute("SourceList", sources);
 
       LookupList ratings = new LookupList(db, "lookup_contact_rating");
       ratings.addItem(
           -1, systemStatus.getLabel(
-              "accounts.accounts_contacts_calls_details_followup_include.None"));
+          "accounts.accounts_contacts_calls_details_followup_include.None"));
       context.getRequest().setAttribute("RatingList", ratings);
 
       //Make the StateSelect and CountrySelect drop down menus available in the request. 
       //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-      StateSelect stateSelect = new StateSelect(systemStatus);
-      CountrySelect countrySelect = new CountrySelect(systemStatus);
+      StateSelect stateSelect = (StateSelect) context.getRequest().getAttribute("StateSelect");
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      if (stateSelect == null) {
+        if (newContact.getId() > -1 || (newContact.getAddressList() != null)) {
+          stateSelect = new StateSelect(systemStatus, newContact.getAddressList().getCountries()+","+prefs.get("SYSTEM.COUNTRY"));
+          stateSelect.setPreviousStates(newContact.getAddressList().getSelectedStatesHashMap());
+        } else {
+          stateSelect = new StateSelect(systemStatus, prefs.get("SYSTEM.COUNTRY"));
+        }
+      }
       context.getRequest().setAttribute("StateSelect", stateSelect);
+      CountrySelect countrySelect = new CountrySelect(systemStatus);
       context.getRequest().setAttribute("CountrySelect", countrySelect);
       context.getRequest().setAttribute("systemStatus", systemStatus);
+
+      LookupList salutationList = new LookupList(db, "lookup_title");
+      salutationList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SalutationList", salutationList);
+
+      LookupList contactTypeList = new LookupList(db, "lookup_contact_types");
+      contactTypeList.addItem(
+          0, systemStatus.getLabel(
+          "accounts.accounts_contacts_calls_details_followup_include.None"));
+      context.getRequest().setAttribute("ContactTypeList2", contactTypeList);
+
+      LookupList siteid = new LookupList(db, "lookup_site_id");
+      siteid.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteid);
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

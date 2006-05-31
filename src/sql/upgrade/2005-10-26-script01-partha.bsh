@@ -1,0 +1,136 @@
+/* BSH script to insert the constant for ActionPlan.PIPELINE_COMPONENT = 1011200517 */
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+
+HashMap map = ActionPlan.buildConstants(db);
+
+//ActionPlan.ACCOUNTS for the accounts module
+if (map.get(new Integer(42420034)) == null) {
+  ActionPlan.insertConstant(db, 42420034, "accounts");
+  print("The constant for accounts has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for accounts already exists in the action_plan_constants table");
+}
+
+//ActionPlan.TICKETS for the help desk module
+if (map.get(new Integer(912051329)) == null) {
+  ActionPlan.insertConstant(db, 912051329, "tickets");
+  print("The constant for tickets has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for tickets already exists in the action_plan_constants table");
+}
+
+//ActionPlan.CONTACTS = 2;
+if (map.get(new Integer(2)) == null) {
+  ActionPlan.insertConstant(db, 2, "contacts");
+  print("The constant for contacts has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for contacts already exists in the action_plan_constants table");
+}
+
+// ActionPlan.QUOTES = 912051328;
+if (map.get(new Integer(912051328)) == null) {
+  ActionPlan.insertConstant(db, 912051328, "quotes");
+  print("The constant for quotes has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for quotes already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.PIPELINE = 3;
+if (map.get(new Integer(3)) == null) {
+  ActionPlan.insertConstant(db, 3, "pipeline");
+  print("The constant for pipeline has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for pipeline already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.PROJECTS = 912051330;
+if (map.get(new Integer(912051330)) == null) {
+  ActionPlan.insertConstant(db, 912051330, "projects");
+  print("The constant for projects has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for projects already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.COMMUNICATIONS = 912051331;
+if (map.get(new Integer(912051331)) == null) {
+  ActionPlan.insertConstant(db, 912051331, "communications");
+  print("The constant for communications has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for communications already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.ADMIN = 912051332;
+if (map.get(new Integer(912051332)) == null) {
+  ActionPlan.insertConstant(db, 912051332, "admin");
+  print("The constant for admin has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for admin already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.CONTACTS_CALLS = 912051333;
+if (map.get(new Integer(912051333)) == null) {
+  ActionPlan.insertConstant(db, 912051333, "calls");
+  print("The constant for calls has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for calls already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.CFSNOTE = 912051334;
+if (map.get(new Integer(912051334)) == null) {
+  ActionPlan.insertConstant(db, 912051334, "cfsnote");
+  print("The constant for cfsnote has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for cfsnote already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.PIPELINE_CALLS = 912051335;
+if (map.get(new Integer(912051335)) == null) {
+  ActionPlan.insertConstant(db, 912051335, "pipeline_calls");
+  print("The constant for pipeline_calls has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for pipeline_calls already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.MYHOMEPAGE = 912051336;
+if (map.get(new Integer(912051336)) == null) {
+  ActionPlan.insertConstant(db, 912051336, "myhomepage");
+  print("The constant for myhomepage has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for myhomepage already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.ACTION_ITEM_WORK_NOTE_OBJECT
+if (map.get(new Integer(831200519)) == null) {
+  ActionPlan.insertConstant(db, 831200519, "note");
+  print("The constant for note has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for note already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.ACTION_ITEM_WORK_SELECTION_OBJECT
+if (map.get(new Integer(831200520)) == null) {
+  ActionPlan.insertConstant(db, 831200520, "selection");
+  print("The constant for selection has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for selection already exists in the action_plan_constants table");
+}
+
+
+// ActionPlan.PIPELINE_COMPONENT = 1011200517;
+if (map.get(new Integer(1011200517)) == null) {
+  ActionPlan.insertConstant(db, 1011200517, "pipeline_component");
+  print("The constant for pipeline_component has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for pipeline_component already exists in the action_plan_constants table");
+}
+

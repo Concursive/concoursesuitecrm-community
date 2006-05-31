@@ -588,7 +588,7 @@ public class IssueReply extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "project_issue_repl_reply_id_seq");
     sql.append(
         "INSERT INTO project_issue_replies " +
-        "(issue_id, reply_to, subject, message, importance, ");
+        "(issue_id, reply_to, subject, \"message\", importance, ");
     if (id > -1) {
       sql.append("reply_id, ");
     }
@@ -853,7 +853,7 @@ public class IssueReply extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE project_issue_replies " +
-        "SET subject = ?, message = ?, importance = ?, " +
+        "SET subject = ?, \"message\" = ?, importance = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE reply_id = ? " +
         "AND modified = ? ");

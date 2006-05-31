@@ -70,6 +70,23 @@ CREATE TABLE lookup_hours_reason(
  enabled BOOLEAN DEFAULT TRUE
 );
 
+CREATE SEQUENCE lookup_asset_manufactu_code_seq;
+CREATE TABLE lookup_asset_manufacturer(
+ code INTEGER DEFAULT nextval('lookup_asset_manufactu_code_seq') NOT NULL PRIMARY KEY,
+ description VARCHAR(300),
+ default_item BOOLEAN DEFAULT FALSE,
+ level INTEGER,
+ enabled BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE lookup_asset_vendor(
+ code SERIAL PRIMARY KEY,
+ description VARCHAR(300),
+ default_item BOOLEAN DEFAULT FALSE,
+ level INTEGER,
+ enabled BOOLEAN DEFAULT TRUE
+);
+
 CREATE TABLE service_contract (
   contract_id SERIAL PRIMARY KEY,
   contract_number VARCHAR(30),
@@ -126,7 +143,8 @@ CREATE TABLE asset_category (
   full_description text NOT NULL DEFAULT '',
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE TABLE asset_category_draft (
@@ -138,7 +156,8 @@ CREATE TABLE asset_category_draft (
   full_description text NOT NULL DEFAULT '',
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE TABLE asset (
@@ -152,8 +171,6 @@ CREATE TABLE asset (
   level1 INT REFERENCES asset_category(id),
   level2 INT REFERENCES asset_category(id),
   level3 INT REFERENCES asset_category(id),
-  vendor VARCHAR(30),
-  manufacturer VARCHAR(30),
   serial_number VARCHAR(30),
   model_version VARCHAR(30),
   description TEXT,
@@ -178,5 +195,25 @@ CREATE TABLE asset (
   date_listed_timezone VARCHAR(255),
   expiration_date_timezone VARCHAR(255),
   purchase_date_timezone VARCHAR(255),
-  trashed_date TIMESTAMP(3)
+  trashed_date TIMESTAMP(3),
+  parent_id INTEGER REFERENCES asset(asset_id),
+  vendor_code INT REFERENCES lookup_asset_vendor(code),
+  manufacturer_code INT REFERENCES lookup_asset_manufacturer(code)
 );
+
+CREATE TABLE lookup_asset_materials(
+ code SERIAL PRIMARY KEY,
+ description VARCHAR(300),
+ default_item BOOLEAN DEFAULT FALSE,
+ level INTEGER,
+ enabled BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE asset_materials_map (
+  map_id SERIAL PRIMARY KEY,
+  asset_id INTEGER NOT NULL REFERENCES asset(asset_id),
+  code INTEGER NOT NULL REFERENCES lookup_asset_materials(code),
+  quantity FLOAT,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+

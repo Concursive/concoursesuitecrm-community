@@ -1,0 +1,23 @@
+/*
+  This is a beanshell script that adds data to the database 
+  connection (db) from ant upgradedb
+  
+  Update all the previous "Action Plan Work" records with the current_phase
+*/
+import java.sql.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.actionplans.base.*;
+
+print("Deleting plan work records with missing account link...");
+
+pst = db.prepareStatement(
+    "SELECT plan_work_id FROM action_plan_work " +
+    "WHERE link_item_id NOT IN (select org_id from organization) ");
+rs = pst.executeQuery();
+while (rs.next()) {
+  ActionPlanWork planWork = new ActionPlanWork(db, rs.getInt("plan_work_id"));
+  print("Deleting Plan: " + planWork.getId());
+  planWork.delete(db);
+}
+
+print("Deletion Complete...");

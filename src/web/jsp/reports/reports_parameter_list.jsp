@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*" %>
@@ -30,6 +30,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/div.js"></script>
 <script language="JavaScript">
  function resetNumericFieldValue(fieldId){
@@ -66,16 +67,31 @@
   Iterator i = parameterList.iterator();
   while (i.hasNext()) {
     Parameter parameter = (Parameter) i.next();
-    //Show only the parameters that require input from the user
+    //Show only the parameters that require input from the user and those that are required
+    //siteid is to be prompted but not when user belongs to a specific site (required == false)
 %>
 <dhv:evaluate if="<%= parameter.getIsForPrompting() %>"><% ++count; %>
-  <tr>
-    <td class="formLabel"><%= toHtml(parameter.getDisplayName(systemStatus)) %></td>
-    <td>
-      <%= parameter.getHtml(systemStatus, request) %> <font color="red">*</font>
-      <%= showAttribute(request,parameter.getName() + "Error") %>
-    </td>
-  </tr>
+  <dhv:evaluate if="<%= !parameter.getName().startsWith("hidden_") %>">
+    <tr>
+      <td class="formLabel"><%= toHtml(parameter.getDisplayName(systemStatus)) %></td>
+      <td>
+  </dhv:evaluate>
+        <%= parameter.getHtml(systemStatus, request, parameterList) %>
+  <dhv:evaluate if="<%= !parameter.getName().startsWith("hidden_") %>">
+        <font color="red">*</font>
+        <%= showAttribute(request,parameter.getName() + "Error") %>
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:evaluate>
+<%-- 
+  In the report design if the parameter was specified to be used for prompting and while
+  preparing the parameter's context it was decided that system's value is to be used
+  instead of user provided value, then 'isForPrompting' will be set to false, but the parmeter
+  will still be required to use the system provided value while preparing its context
+--%>
+<dhv:evaluate if="<%= parameter.getRequired() && !parameter.getIsForPrompting() %>">
+  <input type="hidden" name="<%= parameter.getName() %>" id="<%= parameter.getName() %>" value="<%= toHtmlValue(parameter.getValue()) %>">
 </dhv:evaluate>
 <%
   }
@@ -101,11 +117,11 @@
   </tr>
 </table>
 <%-- No previously saved criteria --%>
-<dhv:evaluate if="<%= request.getParameter("criteriaId").equals("-1") %>">
+<dhv:evaluate if="<%= "-1".equals(request.getAttribute("criteriaId")) %>">
 <input type="checkbox" name="save" value="true"> <dhv:label name="reports.saveCriteria.text">Save this criteria for generating future reports</dhv:label><br />
 </dhv:evaluate>
 <%-- Using previously saved criteria --%>
-<dhv:evaluate if="<%= !request.getParameter("criteriaId").equals("-1") %>">
+<dhv:evaluate if="<%= !"-1".equals(request.getAttribute("criteriaId")) %>">
 <input type="radio" name="saveType" value="none" checked> <dhv:label name="reports.doNotSaveCriteria">Do not save criteria for generating future reports</dhv:label><br />
 <input type="radio" name="saveType" value="overwrite"> <dhv:label name="reports.overwritePreviousCriteria.text">Overwrite previously saved criteria</dhv:label><br />
 <input type="radio" name="saveType" value="save"> <dhv:label name="reports.saveNewCopyCriteria.text">Save a new copy of this criteria</dhv:label><br />

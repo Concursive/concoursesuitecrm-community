@@ -19,11 +19,15 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.base.Constants" %>
+<jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="SegmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -39,8 +43,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
-<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
+<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= isPopup(request) || !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
 <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 <dhv:evaluate if="<%=OrgDetails.isTrashed()%>">
     <dhv:permission name="accounts-accounts-edit">
@@ -49,14 +54,16 @@
 </dhv:evaluate>
 <dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
   <dhv:evaluate if="<%=(OrgDetails.getEnabled())%>">
-    <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
+    <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|actionplan") %>';"></dhv:permission>
   </dhv:evaluate>
   <dhv:evaluate if="<%=!(OrgDetails.getEnabled())%>">
     <dhv:permission name="accounts-accounts-edit">
       <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
     </dhv:permission>
   </dhv:evaluate>
-  <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
+  <dhv:evaluate if="<%= (request.getParameter("actionplan") == null) %>">
+    <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
+  </dhv:evaluate>
 </dhv:evaluate>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -84,6 +91,30 @@
     </td>
   </tr>
 </dhv:evaluate>
+<dhv:include name="organization.source" none="true">
+  <dhv:evaluate if="<%= OrgDetails.getSource() != -1 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="contact.Source">Source</dhv:label>
+      </td>
+      <td>
+        <%= SourceList.getSelectedValue(OrgDetails.getSource()) %> 
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.rating" none="true">
+  <dhv:evaluate if="<%= OrgDetails.getRating() != -1 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="sales.rating">Rating</dhv:label>
+      </td>
+      <td>
+        <%= RatingList.getSelectedValue(OrgDetails.getRating()) %> 
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
 <dhv:evaluate if="<%= hasText(OrgDetails.getAccountNumber()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -95,64 +126,113 @@
   </tr>
 </dhv:evaluate>
 <dhv:include name="organization.url" none="true">
-<dhv:evaluate if="<%= hasText(OrgDetails.getUrl()) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.WebSiteURL">Web Site URL</dhv:label>
-    </td>
-    <td>
-      <a href="<%= toHtml(OrgDetails.getUrlString()) %>" target="_new"><%= toHtml(OrgDetails.getUrl()) %></a>&nbsp;
-    </td>
-  </tr>
-</dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(OrgDetails.getUrl()) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.WebSiteURL">Web Site URL</dhv:label>
+      </td>
+      <td>
+        <a href="<%= toHtml(OrgDetails.getUrlString()) %>" target="_new"><%= toHtml(OrgDetails.getUrl()) %></a>&nbsp;
+      </td>
+    </tr>
+  </dhv:evaluate>
 </dhv:include>
 <dhv:include name="organization.industry" none="true">
-<dhv:evaluate if="<%= hasText(OrgDetails.getIndustryName()) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
-    </td>
-    <td>
-       <%= toHtml(OrgDetails.getIndustryName()) %>&nbsp;
-    </td>
-  </tr>
-</dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(OrgDetails.getIndustryName()) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
+      </td>
+      <td>
+         <%= toHtml(OrgDetails.getIndustryName()) %>&nbsp;
+      </td>
+    </tr>
+  </dhv:evaluate>
 </dhv:include>
 <dhv:include name="organization.employees" none="true">
-<dhv:evaluate if="<%= (OrgDetails.getEmployees() > 0) %>">
+  <dhv:evaluate if="<%= (OrgDetails.getEmployees() > 0) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="organization.employees">No. of Employees</dhv:label>
+      </td>
+      <td>
+         <%= OrgDetails.getEmployees() %>
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.potential" none="true">
+  <dhv:evaluate if="<%= (OrgDetails.getPotential() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="organization.employees">No. of Employees</dhv:label>
+      <dhv:label name="accounts.accounts_add.potential">Potential</dhv:label>
     </td>
     <td>
-       <%= OrgDetails.getEmployees() %>
+       <zeroio:currency value="<%= OrgDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
-</dhv:evaluate>
+  </dhv:evaluate>
 </dhv:include>
 <dhv:include name="organization.revenue" none="true">
-<dhv:evaluate if="<%= (OrgDetails.getRevenue() > 0) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
-    </td>
-    <td>
-       <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>
-  </tr>
-</dhv:evaluate>
+  <dhv:evaluate if="<%= (OrgDetails.getRevenue() > 0) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
+      </td>
+      <td>
+         <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+    </tr>
+  </dhv:evaluate>
+  </dhv:include>
+  <dhv:include name="organization.ticker" none="true">
+  <dhv:evaluate if="<%= hasText(OrgDetails.getTicker()) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.TickerSymbol">Ticker Symbol</dhv:label>
+      </td>
+      <td>
+         <%= toHtml(OrgDetails.getTicker()) %>&nbsp;
+      </td>
+    </tr>
+  </dhv:evaluate>
 </dhv:include>
-<dhv:include name="organization.ticker" none="true">
-<dhv:evaluate if="<%= hasText(OrgDetails.getTicker()) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.TickerSymbol">Ticker Symbol</dhv:label>
-    </td>
-    <td>
-       <%= toHtml(OrgDetails.getTicker()) %>&nbsp;
-    </td>
-  </tr>
-</dhv:evaluate>
+<dhv:include name="accounts-size" none="true">
+  <dhv:evaluate if="<%= hasText(OrgDetails.getAccountSizeName()) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.accountSize">Account Size</dhv:label>
+      </td>
+      <td>
+         <%= toHtml(OrgDetails.getAccountSizeName()) %>&nbsp;
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.segment" none="true">
+  <dhv:evaluate if="<%= (OrgDetails.getSegmentId() > 0) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Segment
+      </td>
+      <td>
+         <%= SegmentList.getSelectedValue(OrgDetails.getSegmentId()) %>
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.directBill" none="true">
+  <dhv:evaluate if="<%= OrgDetails.getDirectBill() %>">
+    <tr>
+      <tr class="containerBody">
+        <td nowrap class="formLabel">
+          Direct Bill
+        </td>
+      <td>
+      <input type="checkbox" name="directBill" CHECKED DISABLED />
+      </td>
+    </tr>
+  </dhv:evaluate>
 </dhv:include>
 <dhv:include name="organization.contractEndDate" none="true">
 <dhv:evaluate if="<%= hasText(OrgDetails.getContractEndDateString()) %>">
@@ -448,17 +528,22 @@
 </dhv:evaluate>
 <dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
   <dhv:evaluate if="<%=(OrgDetails.getEnabled())%>">
-    <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
+    <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|actionplan") %>';"></dhv:permission>
   </dhv:evaluate>
   <dhv:evaluate if="<%=!(OrgDetails.getEnabled())%>">
     <dhv:permission name="accounts-accounts-edit">
       <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
     </dhv:permission>
   </dhv:evaluate>
-  <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
+  <dhv:evaluate if="<%= (request.getParameter("actionplan") == null) %>">
+    <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
+  </dhv:evaluate>
 </dhv:evaluate>
 </dhv:container>
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
 <% if (request.getParameter("return") != null) { %>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-</form>
+<% if (request.getParameter("actionplan") != null) { %>
+<input type="hidden" name="actionplan" value="<%=request.getParameter("actionplan")%>">
+<%}%>

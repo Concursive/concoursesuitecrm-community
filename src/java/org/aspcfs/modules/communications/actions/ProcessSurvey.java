@@ -15,13 +15,14 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.communications.base.ActiveSurvey;
 import org.aspcfs.modules.communications.base.SurveyResponse;
+import org.aspcfs.modules.communications.base.ScheduledRecipient;
 import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.utils.PrivateString;
+import org.aspcfs.utils.DateUtils;
 
 import java.sql.Connection;
 import java.util.StringTokenizer;
@@ -45,7 +46,6 @@ public final class ProcessSurvey extends CFSModule {
    */
   public String executeCommandDefault(ActionContext context) {
     ActiveSurvey thisSurvey = null;
-    ConnectionPool sqlDriver = null;
     Connection db = null;
     String codedId = context.getRequest().getParameter("id");
     //return alert message if someone tried clicking link from the campaign dashboard's message tab
@@ -57,9 +57,11 @@ public final class ProcessSurvey extends CFSModule {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
       // Load the survey key which decodes the url
-      String filename = getDbNamePath(context) + fs + "keys" + fs + "survey.key";
+      String dbName = auth.getConnectionElement(context).getDbName();
+      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;
+      int contactId = -1;
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());
@@ -68,9 +70,21 @@ public final class ProcessSurvey extends CFSModule {
         String value = stPair.nextToken();
         if ("id".equals(param)) {
           surveyId = Integer.parseInt(value);
+        } else if ("cid".equals(param)) {
+          contactId = Integer.parseInt(value);
         }
       }
       thisSurvey = new ActiveSurvey(db, surveyId);
+      
+      if (contactId != -1) {
+        //mark the recipient to have received the survey
+        ScheduledRecipient recipient = new ScheduledRecipient(db, thisSurvey.getCampaignId(), contactId);
+        if (recipient.getReplyDate() == null) {
+          recipient.setReplyDate(
+            DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+          recipient.update(db);
+        }
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("NotFoundError");
@@ -100,7 +114,8 @@ public final class ProcessSurvey extends CFSModule {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
       // Load the survey key which decodes the url
-      String filename = getDbNamePath(context) + fs + "keys" + fs + "survey.key";
+      String dbName = auth.getConnectionElement(context).getDbName();
+      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
       String codedId = context.getRequest().getParameter("id");
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;

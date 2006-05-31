@@ -19,8 +19,10 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.FilterList;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -119,9 +121,36 @@ public final class AccountSelector extends CFSModule {
       typeSelect.addItem(0, thisSystem.getLabel("accounts.allTypes")); //All Types
       context.getRequest().setAttribute("TypeSelect", typeSelect);
 
+      LookupList siteIdList = new LookupList(db, "lookup_site_id");
+      siteIdList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes")); //None Site
+      context.getRequest().setAttribute("siteIdList", siteIdList);
+      
       //Set OrganizationList Parameters and build the list
       setParameters(acctList, context);
+      UserBean thisUserBean = (UserBean) context.getSession().getAttribute("User");
+      User thisUser = thisUserBean.getUserRecord();
+      acctList.setOrgSiteId(thisUser.getSiteId());
+
+      String siteId = context.getRequest().getParameter("siteId");
+      if (siteId == null || "".equals(siteId)) {
+        String tmpOrgId = context.getRequest().getParameter("siteIdOrg");
+        if (tmpOrgId != null && !"".equals(tmpOrgId) && !"-1".equals(tmpOrgId)) {
+          Organization org = new Organization(db, Integer.parseInt(tmpOrgId));
+          siteId = String.valueOf(org.getSiteId());
+        }
+      }
+      String thisSiteIdOnly = context.getRequest().getParameter("thisSiteIdOnly");
+      //fetch organizations with the same site as the one requested
+      if (siteId != null && !"".equals(siteId.trim())) {
+        int siteIdToFetch = Integer.parseInt(siteId);
+        acctList.setOrgSiteId(siteIdToFetch);
+        //fetch organizations with null site
+        if ((siteIdToFetch == -1) && ("true".equals(thisSiteIdOnly))){
+          acctList.setIncludeOrganizationWithoutSite(true);
+        }
+      }
       acctList.buildList(db);
+      context.getRequest().setAttribute("siteId", siteId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -185,7 +214,10 @@ public final class AccountSelector extends CFSModule {
     filters.setSource(Constants.ACCOUNTS);
     filters.build(thisSystem, context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
-
+    String filterString = context.getRequest().getParameter("filters");
+    if (filterString != null && !"".equals(filterString)) {
+      context.getRequest().setAttribute("filterString", filterString);
+    }
     //  set Filter for retrieving addresses depending on typeOfContact
     String firstFilter = filters.getFirstFilter(acctListInfo.getListView());
 

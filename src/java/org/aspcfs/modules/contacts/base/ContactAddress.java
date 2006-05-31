@@ -17,6 +17,7 @@ package org.aspcfs.modules.contacts.base;
 
 import org.aspcfs.modules.base.Address;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.StateSelect;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -93,11 +94,11 @@ public class ContactAddress extends Address {
     isContact = true;
     PreparedStatement pst = db.prepareStatement(
         "SELECT c.address_id, c.contact_id, c.address_type, c.addrline1, c.addrline1,  " +
-        "c.addrline2, c.addrline3, c.city, c.state, c.country, c.postalcode, c.entered, c.enteredby, " +
-        "c.modified, c.modifiedby, c.primary_address, l.description " +
-        "FROM contact_address c, lookup_contactaddress_types l " +
-        "WHERE c.address_type = l.code " +
-        "AND address_id = " + addressId + " ");
+            "c.addrline2, c.addrline3, c.addrline4, c.city, c.state, c.country, c.postalcode, c.entered, c.enteredby, " +
+            "c.modified, c.modifiedby, c.primary_address, l.description " +
+            "FROM contact_address c, lookup_contactaddress_types l " +
+            "WHERE c.address_type = l.code " +
+            "AND address_id = " + addressId + " ");
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -166,7 +167,7 @@ public class ContactAddress extends Address {
     this.setId(DatabaseUtils.getNextSeq(db, "contact_address_address_id_seq"));
     sql.append(
         "INSERT INTO contact_address " +
-        "(contact_id, address_type, addrline1, addrline2, addrline3, city, state, postalcode, country, primary_address, ");
+            "(contact_id, address_type, addrline1, addrline2, addrline3, addrline4, city, state, postalcode, country, primary_address, ");
     if (getId() > -1) {
       sql.append("address_id, ");
     }
@@ -177,7 +178,7 @@ public class ContactAddress extends Address {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (getId() > -1) {
       sql.append("?, ");
     }
@@ -205,13 +206,9 @@ public class ContactAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
+    pst.setString(++i, this.getStreetAddressLine4());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
-        this.getCountry())) {
-      pst.setString(++i, this.getState());
-    } else {
-      pst.setString(++i, this.getOtherState());
-    }
+    pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
     pst.setBoolean(++i, this.getPrimaryAddress());
@@ -246,9 +243,9 @@ public class ContactAddress extends Address {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact_address " +
-        "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, city = ?, state = ?, postalcode = ?, country = ?, primary_address = ?, " +
-        "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
-        "WHERE address_id = ? ");
+            "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, addrline4 = ?, city = ?, state = ?, postalcode = ?, country = ?, primary_address = ?, " +
+            "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+            "WHERE address_id = ? ");
     int i = 0;
     if (this.getType() > -1) {
       pst.setInt(++i, this.getType());
@@ -258,13 +255,9 @@ public class ContactAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
+    pst.setString(++i, this.getStreetAddressLine4());
     pst.setString(++i, this.getCity());
-    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(
-        this.getCountry())) {
-      pst.setString(++i, this.getState());
-    } else {
-      pst.setString(++i, this.getOtherState());
-    }
+    pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
     pst.setBoolean(++i, this.getPrimaryAddress());
@@ -284,7 +277,7 @@ public class ContactAddress extends Address {
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM contact_address " +
-        "WHERE address_id = ? ");
+            "WHERE address_id = ? ");
     int i = 0;
     pst.setInt(++i, this.getId());
     pst.execute();

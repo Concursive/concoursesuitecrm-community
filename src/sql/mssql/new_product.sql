@@ -37,11 +37,9 @@ CREATE TABLE product_category (
   short_description TEXT,
   long_description TEXT,
   type_id INTEGER REFERENCES lookup_product_category_type(code),
-  -- images
   thumbnail_image_id INTEGER REFERENCES project_files(item_id),
   small_image_id INTEGER REFERENCES project_files(item_id),
   large_image_id INTEGER REFERENCES project_files(item_id),
-  -- record status
   list_order INTEGER DEFAULT 10,
   enteredby INT NOT NULL REFERENCES access(user_id),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -164,7 +162,6 @@ CREATE TABLE product_catalog (
 CREATE TABLE product_catalog_pricing (
   price_id INT IDENTITY PRIMARY KEY,
   product_id INTEGER REFERENCES product_catalog(product_id),
-  -- pricing
   tax_id INTEGER REFERENCES lookup_product_tax(code),
   msrp_currency INTEGER REFERENCES lookup_currency(code),
   msrp_amount FLOAT NOT NULL DEFAULT 0,
@@ -192,11 +189,9 @@ CREATE TABLE package (
   abbreviation VARCHAR(30),
   short_description TEXT,
   long_description TEXT,
-  --images
   thumbnail_image_id INTEGER REFERENCES project_files(item_id),
   small_image_id INTEGER REFERENCES project_files(item_id),
   large_image_id INTEGER REFERENCES project_files(item_id),
-  -- record status
   list_order INTEGER DEFAULT 10,
   enteredby INT NOT NULL REFERENCES access(user_id),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

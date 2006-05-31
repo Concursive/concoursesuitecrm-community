@@ -32,15 +32,16 @@
 		<defaultValueExpression ><![CDATA["en"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[SELECT t.task_id,
-priority, description, 
-duedate, completedate,
-c.namefirst AS firstname, c.namelast AS lastname
-FROM task t
-LEFT JOIN access a ON (t.owner = a.user_id)
-LEFT JOIN contact c ON (a.contact_id = c.contact_id)
-WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id = $P{ticketid})
-AND t.trashed_date IS NULL]]></queryString>
+	<queryString><![CDATA[
+    SELECT t.task_id,
+    priority, description, 
+    duedate, completedate,
+    c.namefirst AS firstname, c.namelast AS lastname
+    FROM task t
+    LEFT JOIN "access" a ON (t.owner = a.user_id)
+    LEFT JOIN contact c ON (a.contact_id = c.contact_id)
+    WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id = $P{ticketid})
+    AND t.trashed_date IS NULL]]></queryString>
 	<field name="description" class="java.lang.String"/>
 	<field name="duedate" class="java.sql.Timestamp"/>
 	<field name="firstname" class="java.lang.String"/>

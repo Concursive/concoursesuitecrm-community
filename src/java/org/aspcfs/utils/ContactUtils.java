@@ -44,10 +44,15 @@ public class ContactUtils {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public static String foundDuplicateLastName(Connection db, String lastName) throws SQLException {
+  public static String foundDuplicateLastName(Connection db, String lastName, int siteId) throws SQLException {
     if (lastName != null && !"".equals(lastName)) {
       ContactList contacts = new ContactList();
       contacts.setLastName(lastName);
+      contacts.setSiteId(siteId);
+      contacts.setExclusiveToSite(true);
+      if (siteId == -1) {
+        contacts.setIncludeAllSites(true);
+      }
       contacts.buildList(db);
       if (contacts.size() > 1) {
         return ((Contact) contacts.get(0)).getNameFull();
@@ -84,13 +89,22 @@ public class ContactUtils {
         "AND (status_id IS NULL OR status_id = ?) " +
         "AND (" + DatabaseUtils.toLowerCase(db) + "(namelast) = ? AND namelast IS NOT NULL) " +
         "AND trashed_date IS NULL " +
-        "AND enabled = ? " +
-        "AND owner IN (" + userIdRange + ") ");
+        "AND enabled = ? ");
+    if (!hasAcPermission || !hasGcPermission) {
+      sql.append("AND ( ");
+    }
     if (!hasAcPermission) {
-      sql.append("AND org_id IS NULL ");
+      sql.append("(org_id IS NULL " +
+        "AND owner IN (" + userIdRange + ")) ");
+    }
+    if (!hasAcPermission && !hasGcPermission) {
+      sql.append("OR ");
     }
     if (!hasGcPermission) {
-      sql.append("AND org_id IS NOT NULL ");
+      sql.append("org_id IS NOT NULL ");
+    }
+    if (!hasAcPermission || !hasGcPermission) {
+      sql.append(") ");
     }
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, false);
@@ -118,11 +132,15 @@ public class ContactUtils {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public static ContactList foundDuplicateCompany(Connection db, String companyName) throws SQLException {
+  public static ContactList foundDuplicateCompany(Connection db, String companyName, int siteId) throws SQLException {
     ContactList contacts = new ContactList();
     if (companyName != null && !"".equals(companyName)) {
-      contacts = new ContactList();
       contacts.setCompany(companyName);
+      contacts.setSiteId(siteId);
+      contacts.setExclusiveToSite(true);
+      if (siteId == -1) {
+        contacts.setIncludeAllSites(true);
+      }
       contacts.buildList(db);
     }
     return contacts;
@@ -208,10 +226,15 @@ public class ContactUtils {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public static String foundDuplicateEmailAddress(Connection db, String emailAddress) throws SQLException {
+  public static String foundDuplicateEmailAddress(Connection db, String emailAddress, int siteId) throws SQLException {
     if (emailAddress != null && !"".equals(emailAddress)) {
       ContactList contacts = new ContactList();
       contacts.setEmailAddress(emailAddress);
+      contacts.setSiteId(siteId);
+      contacts.setExclusiveToSite(true);
+      if (siteId == -1) {
+        contacts.setIncludeAllSites(true);
+      }
       contacts.buildList(db);
       if (contacts.size() > 1) {
         return ((Contact) contacts.get(0)).getNameFull();
@@ -287,12 +310,17 @@ public class ContactUtils {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public static HashMap foundDuplicateEmailAddresses(Connection db, EmailAddressList emailAddresses) throws SQLException {
+  public static HashMap foundDuplicateEmailAddresses(Connection db, EmailAddressList emailAddresses, int siteId) throws SQLException {
     HashMap map = new HashMap();
     Iterator iterator = emailAddresses.iterator();
     while (iterator.hasNext()) {
       EmailAddress emailAddress = (EmailAddress) iterator.next();
       ContactList contacts = new ContactList();
+      contacts.setSiteId(siteId);
+      contacts.setExclusiveToSite(true);
+      if (siteId == -1) {
+        contacts.setIncludeAllSites(true);
+      }
       contacts.setEmailAddress(emailAddress.getEmail());
       contacts.buildList(db);
       if (contacts.size() > 1) {

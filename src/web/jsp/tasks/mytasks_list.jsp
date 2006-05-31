@@ -236,7 +236,7 @@
               <ul>
               <tr>
                 <td>
-                  <li>&nbsp;<dhv:label name="account.name.colon">Name:</dhv:label> &nbsp;<%= thisTask.getContact().getNameLastFirst() %></li>
+                  <li>&nbsp;<dhv:label name="account.name.colon">Name:</dhv:label> &nbsp;<%= thisTask.getContact().getNameFull() %></li>
                 </td>
               </tr>
               <tr>
@@ -246,7 +246,7 @@
                   Iterator i = thisTask.getContact().getEmailAddressList().iterator();
                   while (i.hasNext()) {
                     EmailAddress thisAddress = (EmailAddress)i.next(); %>
-                    &nbsp;<%=thisAddress.getEmail()%>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
+                    &nbsp;<%= toHtml(thisAddress.getEmail()) %>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
                   <%}%>
                   </li>
                 </td>

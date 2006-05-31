@@ -1,0 +1,1059 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+- we assume enabled=true
+
+- we assume level = the order listed
+
+- we assume default_item=false, unless...
+
+- if a default, then specify the default_item as an attribute
+
+- use CDATA for each XML record
+
+- Some lookup table records have custom attributes/data columns that need
+  if attributes other than 'enabled' and 'default_item', specify its datatype in the attribute element.
+  For e.g., if an attribute link_id exists of type integer, specify its datatype
+  as follows 
+  <attribute name="link_id" type="integer"/>
+  if the attribute is not defined its data type is assumed to be a string
+
+- In certain lookup tables, a column value may refer to another column value in another lookup table
+   (i.e., a foreign key constraint on the column of a lookup table)
+   Consider the following example
+
+    <lookup table="lookup_l1">
+      <record LUID="2005022510"><![CDATA[1a-1]]></record>
+      <record LUID="2005022511"><![CDATA[1b-1]]></record>
+      <record LUID="2005022512"><![CDATA[1c-1]]></record>
+      <record LUID="2005022513"><![CDATA[1d-1]]></record>
+      <record LUID="2005022514"><![CDATA[1e-1]]></record>
+    </lookup>                              
+    <lookup table="lookup_l11">
+      <attribute name="link_id" type="look_upl1.LUID"/>
+      <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record>
+      <record link_id="lookup_l1.2005022511"><![CDATA[11b-1]]></record>
+      <record link_id="lookup_l1.2005022512"><![CDATA[11c-1]]></record>
+      <record link_id="lookup_l1.2005022513"><![CDATA[11d-1]]></record>
+    </lookup>
+
+  The values of attribute 'link_id' (lookup_l1.NUM) of table 'lookup_l11' refers to the value
+  of the attribute 'LUID' (Locally Unique Identifier) attribute of 'lookup_l1'. 
+  
+  In the element <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record> the 
+  attribute value "lookup_l1.2005022510" refers to  value "2005022510" of attribute "LUID" in
+  lookup table 'lookup_l1'
+
+  Note that the datatype of 'link_id' is defined as 'look_upl1.LUID', more generically it is 
+  '<referring tablename>.LUID' 
+
+- The primary key of lookup tables is assumed to be 'code'. If the primary key differs specify the 
+   primary key as an attribute 'key' in the 'lookup' element and the value of the attribute as the name 
+   of the primary key. For example if the primary key of a table is 'type_id' specify as follows 
+    <lookup table="lookup_l1" key="type_id">
+      <record><![CDATA[A]]></record>
+      <record><![CDATA[B]]></record>
+      <record><![CDATA[C]]></record>
+    </lookup>
+     
+- To be specified and added to the insert query, lookup_lists_xx_XX.xml will reside in the system directory.
+
+- Most tables have a single description column, which is represented as a CDATA for each 'record' element, however
+  if more than one field exists that are similar to description, the following method can be used to specify the 
+  values of those columns
+
+ <lookup table="lookup_l4">
+  <record>
+    <item1><![CDATA[4a-1-1]]></item1>
+    <item2><![CDATA[4a-2-1]]></item2>
+  </record>
+  <record>
+    <item1><![CDATA[4b-1-1]]></item1>
+    <item2><![CDATA[4b-2-1]]></item2>
+  </record>             
+  <record>
+    <item1><![CDATA[4c-1-1]]></item1>
+    <item2><![CDATA[4c-2-1]]></item2>
+  </record>             
+ </lookup>
+
+  In this example it is assumed that the table lookup_l4 has two columns 'item1' and 'item2' which 
+  are equivalent to description (and hence required translation)
+
+- As and when other variations are required for a lookup table , they may be included, 
+  but a custom handler needs to be implemented for this lookup list
+  
+- Some lookup lists may be preceded by an explanation or comment. They should be read and
+  understood before their values are changed                               
+-->
+<lookupLists>
+    <lookup table="asset_category_draft" key="id">
+      <attribute name="parent_cat_code" type="asset_category_draft.LUID"/>
+      <attribute name="cat_level" type="integer"/>
+      <record LUID="2005022711"><![CDATA[Software]]></record>
+      <record LUID="2005022712"><![CDATA[Hardware]]></record>
+      <record LUID="2005022714" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[Sistemi Operativi]]></record>
+      <record LUID="2005022715" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[Software Applicativi]]></record>
+      <record LUID="2005022717" cat_level="1" parent_cat_code="asset_category_draft.2005022712"><![CDATA[Desktops]]></record>
+      <record LUID="2005022718" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[Server di posta]]></record>
+      <record LUID="2005022719" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[CRM]]></record>
+      <record LUID="2005022720" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Linux]]></record>
+      <record LUID="2005022721" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Unix]]></record>
+      <record LUID="2005022722" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Windows 2003]]></record>
+    </lookup>            
+    <!-- 
+      The CDATA for the operator element SHOULD NOT be changed
+      The CDATA for the display_text may be changed for the chosen language
+    -->
+    <lookup table="field_types" key="id">
+      <attribute name="data_typeid" type="integer" />
+      <attribute name="data_type" type="string" />
+      <record data_typeid="0" data_type="string">
+        <operator><![CDATA[=]]></operator>
+        <display_text><![CDATA[è]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string">
+        <operator><![CDATA[!=]]></operator>
+        <display_text><![CDATA[non è]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[= | or field_name is null]]></operator>
+        <display_text><![CDATA[è vuoto]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[!= | and field_name is not null]]></operator>
+        <display_text><![CDATA[non è vuoto]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[like %search_value%]]></operator>
+        <display_text><![CDATA[contiene]]></display_text>
+      </record>
+      <record data_typeid="0" data_type="string" enabled="false">
+        <operator><![CDATA[not like %search_value%]]></operator>
+        <display_text><![CDATA[non contiene]]></display_text>
+      </record>
+
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[<]]></operator>
+        <display_text><![CDATA[prima]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[>]]></operator>
+        <display_text><![CDATA[dopo]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date" enabled="false">
+        <operator><![CDATA[between]]></operator>
+        <display_text><![CDATA[tra]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[<=]]></operator>
+        <display_text><![CDATA[il o prima del]]></display_text>
+      </record>
+      <record data_typeid="1" data_type="date">
+        <operator><![CDATA[>=]]></operator>
+        <display_text><![CDATA[il o dopo il]]></display_text>
+      </record>
+
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[>]]></operator>
+        <display_text><![CDATA[maggiore di]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[<]]></operator>
+        <display_text><![CDATA[minore di]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[=]]></operator>
+        <display_text><![CDATA[uguale]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[>=]]></operator>
+        <display_text><![CDATA[maggiore di o uguale a]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[<=]]></operator>
+        <display_text><![CDATA[minore di o uguale a]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[is not null]]></operator>
+        <display_text><![CDATA[esiste]]></display_text>
+      </record>
+      <record data_typeid="2" data_type="number">
+        <operator><![CDATA[is null]]></operator>
+        <display_text><![CDATA[non esiste]]></display_text>
+      </record>
+    </lookup>
+    <lookup table="lookup_access_types">
+      <attribute name="link_module_id" type="integer" />
+      <attribute name="rule_id" type="integer" />
+      <record link_module_id="626030330" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>
+      <record link_module_id="626030330" rule_id="626030334">Public</record>
+      <record link_module_id="626030330" rule_id="626030333">Personal</record>
+      <record link_module_id="626030331" default_item="true" rule_id="626030334">Public</record>
+      <record link_module_id="626030332" default_item="true" rule_id="626030334">Public</record>
+      <record link_module_id="707031028" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>
+      <record link_module_id="707031028" rule_id="626030334">Public</record>
+      <record link_module_id="707031028" rule_id="626030333">Personal</record>
+    </lookup>
+    <lookup table="lookup_account_types">
+      <record><![CDATA[Piccolo]]></record>
+      <record><![CDATA[Medio]]></record>
+      <record><![CDATA[Grande]]></record>
+      <record><![CDATA[Contratto]]></record>
+      <record><![CDATA[Non Contratto]]></record>
+      <record><![CDATA[Territorio 1: Nord-est]]></record>
+      <record><![CDATA[Territorio 2: Sud-est]]></record>
+      <record><![CDATA[Territorio 3: Mediooriente]]></record>
+      <record><![CDATA[Territorio 4: Nord-ovest]]></record>
+      <record><![CDATA[Territorio 5: Sud-ovest]]></record>
+    </lookup>
+    <lookup table="lookup_asset_status">
+      <record default_item="true"><![CDATA[In uso]]></record>
+      <record><![CDATA[Non in uso]]></record>
+      <record><![CDATA[Reichiede manutenzione]]></record>
+      <record><![CDATA[Ritirato]]></record>
+    </lookup>
+    <lookup table="lookup_call_priority">
+      <attribute name="weight" type="integer" />
+      <record default_item="true" weight="10"><![CDATA[Basso]]></record>
+      <record weight="20"><![CDATA[Medio]]></record>
+      <record weight="30"><![CDATA[Alto]]></record>
+    </lookup>
+    <!-- 
+      The value for the attribute base_value of the record element 
+      denotes seconds equivalent of whatever is specified in the CDATA
+      for the record element. For e.g., A 'Minute' has 60 seconds, hence the attribute
+      value is "60"
+    -->
+    <lookup table="lookup_call_reminder">
+      <attribute name="base_value" type="integer" />
+      <record base_value="60" default_item="true"><![CDATA[Minuto(i)]]></record>
+      <record base_value="3600"><![CDATA[Ora(e)]]></record>
+      <record base_value="86400"><![CDATA[Giorno(i)]]></record>
+      <record base_value="604800"><![CDATA[Settimana(s)]]></record>
+      <record base_value="18144000"><![CDATA[Mese(i)]]></record>
+    </lookup>
+    <lookup table="lookup_call_result" key="result_id">
+        <attribute name="next_required" type="boolean"/>
+        <attribute name="next_days" type="integer"/>
+        <attribute name="canceled_type" type="boolean"/>
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[Sì - Il lavoro sta procedendo]]></record>
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[No - Nessun lavoro in questo momento]]></record>
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[Non sicuro - Non sicuro o nessun contatto]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Perso ai competitori]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Nessun interesse ulteriore]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Evento rinviato/cancellato ]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Altra azione in corso]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Un altro contatto gestice l'evento]]></record>
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[Il contatto non è più nella compagnia]]></record>
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[Assistenza]]></record>
+    </lookup>
+    <lookup table="lookup_call_types">
+      <record default_item="true"><![CDATA[Chiamate in ingresso]]></record>
+      <record><![CDATA[Chiamate in ucita]]></record>
+      <record><![CDATA[Chiamate attuative]]></record>
+      <record><![CDATA[Incontro in sede]]></record>
+      <record><![CDATA[Appuntamento fuori sede]]></record>
+      <record><![CDATA[Meeting Attivo]]></record>
+      <record><![CDATA[Assistenza Email]]></record>
+      <record><![CDATA[Email attuativa]]></record>
+      <record><![CDATA[Assistenza]]></record>
+      <record><![CDATA[Fax attuativo]]></record>
+    </lookup>
+    <lookup table="lookup_contactaddress_types">
+      <record><![CDATA[Lavoro]]></record>
+      <record><![CDATA[Casa]]></record>
+      <record><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_contactemail_types">
+      <record><![CDATA[Lavoro]]></record>
+      <record><![CDATA[Personale]]></record>
+      <record><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_contactphone_types">
+      <record><![CDATA[Lavoro]]></record>
+      <record><![CDATA[Lavoro2]]></record>
+      <record><![CDATA[Fax Lavoro]]></record>
+      <record><![CDATA[Casa]]></record>
+      <record><![CDATA[Casa2]]></record>
+      <record><![CDATA[Fax Casa]]></record>
+      <record><![CDATA[Cellulare]]></record>
+      <record><![CDATA[Cercapersone]]></record>
+      <record><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_contact_types">
+      <attribute name="category" type="integer"/>
+      <record category="0"><![CDATA[Conoscenza]]></record>
+      <record category="0"><![CDATA[Competitore]]></record>
+      <record category="0"><![CDATA[Cliente]]></record>
+      <record category="0"><![CDATA[Amico]]></record>
+      <record category="0"><![CDATA[Prospetto]]></record>
+      <record category="0"><![CDATA[Azionista]]></record>
+      <record category="0"><![CDATA[Venditore]]></record>
+      <record category="1"><![CDATA[Contabilità]]></record>
+      <record category="1"><![CDATA[Amministrativo]]></record>
+      <record category="1"><![CDATA[Sviluppo Commerciale]]></record>
+      <record category="1"><![CDATA[Servizio clienti]]></record>
+      <record category="1"><![CDATA[Tecnico]]></record>
+      <record category="1"><![CDATA[Esecutivo]]></record>
+      <record category="1"><![CDATA[Finanza]]></record>
+      <record category="1"><![CDATA[Marketing]]></record>
+      <record category="1"><![CDATA[Operazioni]]></record>
+      <record category="1"><![CDATA[Acquisti]]></record>
+      <record category="1"><![CDATA[Vendite]]></record>
+      <record category="1"><![CDATA[Spedizione/Ricezione]]></record>
+      <record category="1"><![CDATA[Tecnologia]]></record>
+    </lookup>
+    <lookup table="lookup_contact_source">
+      <record><![CDATA[Pubblicità]]></record>
+      <record><![CDATA[Riferimento Impiegati]]></record>
+      <record><![CDATA[Riferimento Esterno]]></record>
+      <record><![CDATA[Partner]]></record>
+      <record><![CDATA[Pubbliche Relazioni]]></record>
+      <record><![CDATA[Esposizione Commerciale]]></record>
+      <record><![CDATA[Web]]></record>
+      <record><![CDATA[Passaparola]]></record>
+      <record><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_creditcard_types">
+      <record><![CDATA[Visa]]></record>
+      <record><![CDATA[Master Card]]></record>
+      <record><![CDATA[American Express]]></record>
+      <record><![CDATA[Discover]]></record>
+    </lookup>
+    <lookup table="lookup_currency">
+    </lookup>
+    <lookup table="lookup_delivery_options">
+      <record><![CDATA[Solo Email]]></record>
+      <record><![CDATA[Solo Fax]]></record>
+      <record><![CDATA[Solo Lettera]]></record>
+      <record><![CDATA[Email quindi Fax]]></record>
+      <record><![CDATA[Email quindi Lettera]]></record>
+      <record><![CDATA[Email, Fax, quindi Lettera]]></record>
+      <record><![CDATA[Diffusione]]></record>
+      <record enabled="false"><![CDATA[Messaggio Instantaneo]]></record>
+      <record enabled="false"><![CDATA[Secure Socket]]></record>
+    </lookup>
+    <lookup table="lookup_department">
+      <record><![CDATA[Contabilità]]></record>
+      <record><![CDATA[amministrazione]]></record>
+      <record><![CDATA[Fatturazione]]></record>
+      <record><![CDATA[Rapporti con i clienti]]></record>
+      <record><![CDATA[Tecnici]]></record>
+      <record><![CDATA[Finanza]]></record>
+      <record><![CDATA[Risorse umane]]></record>
+      <record><![CDATA[Legale]]></record>
+      <record><![CDATA[Commerciale]]></record>
+      <record><![CDATA[Operazioni]]></record>
+      <record><![CDATA[Acquisti]]></record>
+      <record><![CDATA[Vendite]]></record>
+      <record><![CDATA[Spedizione/Ricezione]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_permission_category">
+      <record LUID="2251509"><![CDATA[Dettagli catalogo documenti]]></record>
+      <record LUID="2251510"><![CDATA[Membri del Team]]></record>
+      <record LUID="2251511"><![CDATA[Libreria Documenti]]></record>
+      <record LUID="2251512"><![CDATA[Installa]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_role">
+      <attribute name="group_id" type="integer" />
+      <record group_id="1" level="1" LUID="2251509"><![CDATA[Manager]]></record>
+      <record group_id="1" level="2" LUID="2251510"><![CDATA[Contributore di livello 3]]></record>
+      <record group_id="1" level="3" LUID="2251511"><![CDATA[CContributore di livello 2]]></record>
+      <record group_id="1" level="4" LUID="2251512"><![CDATA[Contributore di livello 1]]></record>
+      <record group_id="1" level="5" LUID="2251513"><![CDATA[Ospite]]></record>
+    </lookup>
+    <lookup table="lookup_document_store_permission">
+      <attribute name="group_id" type="integer" />
+      <attribute name="category_id" type="lookup_document_store_permission_category.LUID" />
+      <attribute name="default_role" type="lookup_document_store_role.LUID" />
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251513" permission="documentcenter-details-view"><![CDATA[Vedi dettagli catalogo documenti]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-edit"><![CDATA[Modifica dettagli catalogo documenti]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-delete"><![CDATA[Cancella catalogo documenti]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251513" permission="documentcenter-team-view"><![CDATA[Vedi membri del team]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251512" permission="documentcenter-team-view-email"><![CDATA[Vedi indirizzi email membri del team]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit"><![CDATA[Modifica team]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit-role"><![CDATA[Modifica il ruolo del componente del team]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-view"><![CDATA[Vedi documenti]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-add"><![CDATA[Crea cartelle]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-folders-edit"><![CDATA[Modifica cartelle]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-delete"><![CDATA[Cancella cartelle]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251512" permission="documentcenter-documents-files-upload"><![CDATA[carica files]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-files-download"><![CDATA[Scarica files]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-files-rename"><![CDATA[Rinomina files]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-files-delete"><![CDATA[Vedi dettagli catalogo documenti]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251512" default_role="lookup_document_store_role.2251509" permission="documentcenter-setup-permissions"><![CDATA[Configura permessi catalogo documenti]]></record>
+    </lookup>
+    <lookup table="lookup_email_model">
+      <record><![CDATA[Nessun supporto via email]]></record>
+      <record><![CDATA[2 ore]]></record>
+      <record><![CDATA[4 ore]]></record>
+      <record><![CDATA[Stesso giorno]]></record>
+      <record><![CDATA[giorno lavorativo successivo]]></record>
+    </lookup>
+    <lookup table="lookup_employment_types">
+    </lookup>
+    <lookup table="lookup_help_features">
+    </lookup>
+    <lookup table="lookup_hours_reason">
+      <record><![CDATA[Acquista]]></record>
+      <record><![CDATA[Rinnova]]></record>
+      <record><![CDATA[Correggi]]></record>
+    </lookup>
+    <lookup table="lookup_im_types">
+      <record><![CDATA[Lavoro]]></record>
+      <record><![CDATA[Personale]]></record>
+      <record><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_im_services">
+      <record><![CDATA[AIM]]></record>
+      <record><![CDATA[Jabber]]></record>
+      <record><![CDATA[MSN]]></record>
+      <record><![CDATA[ICQ]]></record>
+      <record><![CDATA[Yahoo]]></record>
+    </lookup>
+    <lookup table="lookup_industry">
+      <record><![CDATA[Automotive]]></record>
+      <record><![CDATA[Biotecnologia]]></record>
+      <record><![CDATA[Diffusione e Cavo]]></record>
+      <record><![CDATA[Computer]]></record>
+      <record><![CDATA[Consulenze]]></record>
+      <record><![CDATA[Difesa]]></record>
+      <record><![CDATA[Energia]]></record>
+      <record><![CDATA[Educazione]]></record>
+      <record><![CDATA[Servizi finanziari]]></record>
+      <record><![CDATA[Alimentare]]></record>
+      <record><![CDATA[Salute]]></record>
+      <record><![CDATA[Ospedali]]></record>
+      <record><![CDATA[Assicurazioni]]></record>
+      <record><![CDATA[Internet]]></record>
+      <record><![CDATA[Ditte Legali]]></record>
+      <record><![CDATA[Media]]></record>
+      <record><![CDATA[Farmaceutiche]]></record>
+      <record><![CDATA[Beni immobili]]></record>
+      <record><![CDATA[Vendita al dettaglio]]></record>
+      <record><![CDATA[Telecomunicazioni]]></record>
+      <record><![CDATA[Trasporti]]></record>
+    </lookup>
+    <lookup table="lookup_locale">
+    </lookup>
+    <lookup table="lookup_onsite_model">
+      <record><![CDATA[Nessun servizio onsite]]></record>
+      <record><![CDATA[L-V 7.00-16.00]]></record>
+      <record><![CDATA[L-V 8.00-17.00]]></record>
+      <record><![CDATA[L-V 8.00-20.00]]></record>
+      <record><![CDATA[24x7]]></record>
+    </lookup>
+    <lookup table="lookup_opportunity_types">
+      <attribute name="order_id" type="integer" />
+      <record><![CDATA[Vitalizio]]></record>
+      <record><![CDATA[Consultazione]]></record>
+      <record><![CDATA[Sviluppo]]></record>
+      <record><![CDATA[Manutenzione]]></record>
+      <record><![CDATA[Vendita Prodotti]]></record>
+      <record><![CDATA[Servizi]]></record>
+    </lookup>
+    <lookup table="lookup_orderaddress_types">
+      <record><![CDATA[Fatturazione]]></record>
+      <record><![CDATA[Spedizione]]></record>
+    </lookup>
+    <lookup table="lookup_order_source">
+    </lookup>
+    <lookup table="lookup_order_status">
+      <record><![CDATA[In atteso]]></record>
+      <record><![CDATA[In Progresso]]></record>
+      <record><![CDATA[Cancellato]]></record>
+      <record><![CDATA[Rifiutato]]></record>
+      <record><![CDATA[Completato]]></record>
+      <record><![CDATA[Chiuso]]></record>
+    </lookup>
+    <lookup table="lookup_order_terms">
+    </lookup>
+    <lookup table="lookup_order_type">
+      <record><![CDATA[Nuovo]]></record>
+      <record><![CDATA[Cambio]]></record>
+      <record><![CDATA[Upgrade]]></record>
+      <record><![CDATA[Downgrade]]></record>
+      <record><![CDATA[Disconnesso]]></record>
+      <record><![CDATA[Sposta]]></record>
+      <record><![CDATA[Ritorno]]></record>
+      <record><![CDATA[Sospeso]]></record>
+      <record><![CDATA[Non sospeso]]></record>
+    </lookup>
+    <lookup table="lookup_orgaddress_types">
+      <record><![CDATA[Primario]]></record>
+      <record><![CDATA[Ausiliario]]></record>
+      <record><![CDATA[Fatturazione]]></record>
+      <record><![CDATA[Spedizione]]></record>
+    </lookup>
+    <lookup table="lookup_orgemail_types">
+      <record><![CDATA[Primario]]></record>
+      <record><![CDATA[Ausiliario]]></record>
+    </lookup>
+    <lookup table="lookup_orgphone_types">
+      <record><![CDATA[Principale]]></record>
+      <record><![CDATA[Fax]]></record>
+    </lookup>
+    <lookup table="lookup_payment_methods">
+      <record><![CDATA[In contanti]]></record>
+      <record><![CDATA[Carta di Credito]]></record>
+      <record><![CDATA[Assegno personale]]></record>
+      <record><![CDATA[Ordine]]></record>
+      <record><![CDATA[assegno certificato]]></record>
+    </lookup>
+    <lookup table="lookup_payment_status">
+      <record><![CDATA[In attesa]]></record>
+      <record><![CDATA[In Progresso]]></record>
+      <record><![CDATA[Approvato]]></record>
+      <record><![CDATA[Declinato]]></record>
+    </lookup>
+    <lookup table="lookup_phone_model">
+      <record><![CDATA[Nessun supporto telefonico]]></record>
+      <record><![CDATA[< 15 minuti]]></record>
+      <record><![CDATA[< 5 minuti]]></record>
+      <record><![CDATA[L-V 7.00-16.00]]></record>
+      <record><![CDATA[L-V 8.00-17.00]]></record>
+      <record><![CDATA[L-V 8.00-20.00]]></record>
+      <record><![CDATA[24x7]]></record>
+    </lookup>
+    <lookup table="lookup_product_category_type">
+    </lookup>
+    <lookup table="lookup_product_conf_result">
+      <record><![CDATA[intero]]></record>
+      <record><![CDATA[virgola mobile]]></record>
+      <record><![CDATA[booleano]]></record>
+      <record><![CDATA[data/ora]]></record>
+      <record><![CDATA[stringa]]></record>
+    </lookup>
+    <lookup table="lookup_product_format">
+      <record><![CDATA[Fisico]]></record>
+      <record><![CDATA[Elettronico]]></record>
+    </lookup>
+    <lookup table="lookup_product_keyword">
+    </lookup>
+    <lookup table="lookup_product_manufacturer">
+    </lookup>
+    <lookup table="lookup_product_shipping">
+      <record><![CDATA[DHL]]></record>
+      <record><![CDATA[FEDEX]]></record>
+      <record><![CDATA[UPS]]></record>
+      <record><![CDATA[USPS]]></record>
+    </lookup>
+    <lookup table="lookup_product_ship_time">
+      <record><![CDATA[24 Ore]]></record>
+      <record><![CDATA[2 Giorni]]></record>
+      <record><![CDATA[1 Settimana]]></record>
+    </lookup>
+    <lookup table="lookup_product_tax">
+      <record><![CDATA[Tasse Statali]]></record>
+      <record><![CDATA[Tasse di vendita]]></record>
+    </lookup>
+    <lookup table="lookup_product_type">
+    </lookup>
+    <lookup table="lookup_project_activity">
+    </lookup>
+    <lookup table="lookup_project_category">
+    </lookup>
+    <lookup table="lookup_project_loe">
+      <attribute name="base_value" type="integer"/>
+      <record default_item="true" base_value="60"><![CDATA[Minuto(i)]]></record>
+      <record base_value="3600"><![CDATA[Ora(e)]]></record>
+      <record base_value="86400"><![CDATA[Giorno(i)]]></record>
+      <record base_value="604800"><![CDATA[Settimana(e)]]></record>
+      <record base_value="18144000"><![CDATA[Mese(i)]]></record>
+    </lookup>
+    <lookup table="lookup_project_role">
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" level="10" LUID="2251509"><![CDATA[Capo Progetto]]></record>
+      <record group_id="1" level="20" LUID="2251510"><![CDATA[Contributore]]></record>
+      <record group_id="1" level="30" LUID="2251511"><![CDATA[Osservatore]]></record>
+      <record group_id="1" level="100" LUID="2251512"><![CDATA[Ospite]]></record>
+    </lookup>
+    <lookup table="lookup_project_permission_category">
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" LUID="2251509"><![CDATA[Dettagli Progetto]]></record>
+      <record group_id="1" LUID="2251510"><![CDATA[Membri del Team]]></record>
+      <record group_id="1" LUID="2251511"><![CDATA[Novità]]></record>
+      <record group_id="1" LUID="2251512"><![CDATA[Progetti/Profili]]></record>
+      <record group_id="1" LUID="2251513"><![CDATA[Liste]]></record>
+      <record group_id="1" LUID="2251514"><![CDATA[Discussioni]]></record>
+      <record group_id="1" LUID="2251515"><![CDATA[Tickets]]></record>
+      <record group_id="1" LUID="2251516"><![CDATA[Libreria Documenti]]></record>
+      <record group_id="1" LUID="2251520"><![CDATA[Accounts]]></record>
+      <record group_id="1" LUID="2251517"><![CDATA[Installa]]></record>
+    </lookup>
+    <lookup table="lookup_project_permission">
+      <attribute name="group_id" type="integer" />
+      <attribute name="category_id" type="lookup_project_permission_category.LUID" />
+      <attribute name="default_role" type="lookup_project_role.LUID" />
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251512" permission="project-details-view"><![CDATA[Vedi dettagli progetto]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-edit"><![CDATA[Modifica dettagli progetto]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-delete"><![CDATA[Cancella progetto]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251512" permission="project-team-view"><![CDATA[Vedi membri del team]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251511" permission="project-team-view-email"><![CDATA[Vedi gli indirizzi emaildie membri del team]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit"><![CDATA[Modifica team]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit-role"><![CDATA[Modifica ruolo dle membro del team]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-view"><![CDATA[Vedi novità correnti]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-view-unreleased"><![CDATA[Vedi novità non rilasciate]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251511" permission="project-news-view-archived"><![CDATA[Vedi novità archiviate]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-add"><![CDATA[Aggiungi novità]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-edit"><![CDATA[Modifica novità]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-delete"><![CDATA[Cancella novità]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251512" permission="project-plan-view"><![CDATA[Vedi profili]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-add"><![CDATA[Aggiungi un profilo]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-edit"><![CDATA[Modifica dettagli di un profilo esistente]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-delete"><![CDATA[Cancella un profilo]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-modify"><![CDATA[Cambia un profilo]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-activities-assign"><![CDATA[Riassegna attività]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251512" permission="project-lists-view"><![CDATA[Vedi liste]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-add"><![CDATA[Aggiungi una lista]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-edit"><![CDATA[Modifica dettagli di una lista esistente]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251509" permission="project-lists-delete"><![CDATA[Cancella una lista]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-modify"><![CDATA[Cambia gli elementi di una lista]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-forums-view"><![CDATA[Vedi forums di discussione]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-add"><![CDATA[Aggiungi un forum di discussione]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-edit"><![CDATA[Modifica un forum di discussione]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-delete"><![CDATA[Cancella un forum di discussione]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-topics-view"><![CDATA[Vedi argomenti del forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-add"><![CDATA[Aggiungi argomenti del forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-edit"><![CDATA[Modifica argomenti del forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-delete"><![CDATA[Cancella argomenti del forum]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-add"><![CDATA[Invia messaggi]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-reply"><![CDATA[Rispondi a messaggi]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-edit"><![CDATA[Modifica messaggi esistenti]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-delete"><![CDATA[Cancella Messsaggi]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251512" permission="project-tickets-view"><![CDATA[Vedi tickets]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251511" permission="project-tickets-add"><![CDATA[Aggiungi unticket]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251510" permission="project-tickets-edit"><![CDATA[Modifica un ticket esistente ]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-delete"><![CDATA[Cancella un ticket]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-assign"><![CDATA[Assegna un ticket]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-view"><![CDATA[Vedi documenti]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-add"><![CDATA[Crea cartelle]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-edit"><![CDATA[Modifica cartelle]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-delete"><![CDATA[Cancella cartelle]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-upload"><![CDATA[Carica files]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-files-download"><![CDATA[Scarica files]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-rename"><![CDATA[Rinomina files]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-files-delete"><![CDATA[Cancella files]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251511" permission="project-accounts-view"><![CDATA[Vedi collegamenti dell'account]]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251509" permission="project-accounts-manage"><![CDATA[Gestisci collegamenti dell'account]]></record>
+
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-customize"><![CDATA[Personalizza caratteristiche del progetto]></record>
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-permissions"><![CDATA[Configura permessi del progetto]]></record>
+    </lookup>
+    <lookup table="lookup_project_priority">
+      <attribute name="type" type="integer"/>
+      <attribute name="graphic" type="integer"/>
+      <attribute name="group_id" type="integer"/>
+      <record group_id="1" type="10"><![CDATA[basso]]></record>
+      <record group_id="1" type="20" default_item="true"><![CDATA[Normale]]></record>
+      <record group_id="1" type="30"><![CDATA[Alto]]></record>
+    </lookup>
+    <lookup table="lookup_project_status">
+      <attribute name="group_id" type="integer"/>
+      <attribute name="type" type="integer"/>      
+      <record group_id="1" graphic="box.gif" type="1"><![CDATA[Non iniziato]]></record>
+      <record group_id="1" graphic="box.gif" type="2"><![CDATA[In Progresse]]></record>
+      <record group_id="1" graphic="box-checked.gif" type="3"><![CDATA[Completato]]></record>
+      <record group_id="1" graphic="box-closed.gif" type="4"><![CDATA[Chiuso]]></record>
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[Sospeso]]></record>
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[Richieste Spec.]]></record>
+    </lookup>
+    <!--
+    <lookup table="lookup_news_template">
+      <attribute name="group_id" type="integer"/>
+      <attribute name="load_article" type="integer"/>
+      <record group_id="1" mapped_jsp="templateArticle.jsp" load_article="true"><![CDATA[Article]]></record>
+    </lookup>
+    -->
+    <lookup table="lookup_quote_condition">
+    </lookup>
+    <lookup table="lookup_quote_delivery">
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Fax]]></record>
+      <record><![CDATA[Di Persona]]></record>
+      <record><![CDATA[DHL]]></record>
+      <record><![CDATA[FEDEX]]></record>
+      <record><![CDATA[UPS]]></record>
+      <record><![CDATA[USPS]]></record>
+    </lookup>
+    <lookup table="lookup_quote_remarks">
+    </lookup>
+    <lookup table="lookup_quote_source">
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Fax]]></record>
+      <record><![CDATA[Chiamata Telefonica in entrata]]></record>
+      <record><![CDATA[Chiamata Telefonica in uscita]]></record>
+      <record><![CDATA[Di Persona]]></record>
+      <record><![CDATA[Mail]]></record>
+      <record><![CDATA[Richiesta Agente]]></record>
+    </lookup>
+    <lookup table="lookup_quote_status">
+      <record><![CDATA[Incompleta]]></record>
+      <record><![CDATA[In attesa di approvazione interna]]></record>
+      <record><![CDATA[Internamente approvata]]></record>
+      <record><![CDATA[Non approvata Internamente]]></record>
+      <record><![CDATA[In attea accettazione del cliente]]></record>
+      <record><![CDATA[Accettata dal cliente]]></record>
+      <record><![CDATA[Rifiutata dal cliente]]></record>
+      <record><![CDATA[Richiesti cambiamenti dal cliente]]></record>
+      <record><![CDATA[Cancellato]]></record>
+      <record><![CDATA[Completato]]></record>
+    </lookup>
+    <lookup table="lookup_quote_terms">
+    </lookup>
+    <lookup table="lookup_quote_type">
+      <record><![CDATA[Nuovo]]></record>
+      <record><![CDATA[Cambio]]></record>
+      <record><![CDATA[Upgrade/Downgrade]]></record>
+      <record><![CDATA[Disconnesso]]></record>
+      <record><![CDATA[Spostato]]></record>
+    </lookup>
+    <lookup table="lookup_recurring_type">
+      <record><![CDATA[Settimanale]]></record>
+      <record><![CDATA[Mensile]]></record>
+      <record><![CDATA[Annuale]]></record>
+    </lookup>
+    <lookup table="lookup_relationship_types" key="type_id">
+      <attribute name="category_id_maps_from" type="integer" />
+      <attribute name="category_id_maps_to" type="integer" />
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Sussidiario di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Parente di]]></reciprocal_name_2>
+      </record>
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Cliente di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Fornitore di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Partner di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Partner di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Concorrente di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Concorrente di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Impiegato di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Impiegante di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Dipartimento di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organizzazione composta da]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Gruppo di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organizzazione composta da]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Membro di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Organizzazione composta da]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Consulente di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Consulente di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Influente di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Influenzato da]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Nemico di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Nemico di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Proponente di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Firmato da]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Alleato di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Alleato di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Sponsor di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Sponsorizzato da]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Relativo di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Relativo di]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Affiliato con]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Affiliato con]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[In Team con]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[In Team con]]></reciprocal_name_2>
+      </record>             
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Finanziatore di]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Finanziato da]]></reciprocal_name_2>
+      </record>             
+    </lookup>
+    <lookup table="lookup_response_model">
+      <record><![CDATA[Nessun tempo di risposta garantito]]></record>
+      <record><![CDATA[L-V 8.00-17.00 8 ore]]></record>
+      <record><![CDATA[L-V 8.00-17.00 6 ore]]></record>
+      <record><![CDATA[L-V 8.00-17.00 4 ore]]></record>
+      <record><![CDATA[L-V 8.00-17.00 stesso giorno]]></record>
+      <record><![CDATA[L-V 8.00-20.00 giorno lavorativo sucessivo]]></record>
+      <record><![CDATA[M-V 8.00-20.00 4 ore]]></record>
+      <record><![CDATA[M-V 8.00-20.00 2 ore]]></record>
+      <record><![CDATA[24x7 8 ore]]></record>
+      <record><![CDATA[24x7 4 ore]]></record>
+      <record><![CDATA[24x7 2 ore]]></record>
+    </lookup>
+    <lookup table="lookup_revenuedetail_types">
+    </lookup>
+    <lookup table="lookup_revenue_types">
+    </lookup>
+    <lookup table="lookup_sc_category">
+      <record><![CDATA[Consulenza]]></record>
+      <record><![CDATA[Manutenzione Hardware]]></record>
+      <record><![CDATA[Manutenzione del Costruttore]]></record>
+      <record><![CDATA[Monitoraggio]]></record>
+      <record><![CDATA[Tempi e materiali]]></record>
+      <record><![CDATA[Garanzia]]></record>
+    </lookup>
+    <lookup table="lookup_sc_type">
+    </lookup>
+    <lookup table="lookup_stage">
+      <record><![CDATA[Ricerca]]></record>
+      <record><![CDATA[Qualificazione]]></record>
+      <record><![CDATA[Necessita analisi]]></record>
+      <record><![CDATA[Poposta valore]]></record>
+      <record><![CDATA[Percezione Analisi]]></record>
+      <record><![CDATA[Proposta/Offerta Economica]]></record>
+      <record><![CDATA[Negoziazione/Rivedi]]></record>
+      <record><![CDATA[Chiusa vinta]]></record>
+      <record><![CDATA[Chiusa persa]]></record>
+    </lookup>
+    <lookup table="lookup_survey_types">
+      <record><![CDATA[Risposta aperta]]></record>
+      <record><![CDATA[Quantitativo (nessun commento)]]></record>
+      <record><![CDATA[Quantitativo (con commenti)]]></record>
+      <record><![CDATA[Elenco Oggetti]]></record>
+    </lookup>
+    <lookup table="lookup_task_category">
+    </lookup>
+    <lookup table="lookup_task_loe">
+      <record><![CDATA[Minuto(i)]]></record>
+      <record><![CDATA[Ora(e)]]></record>
+      <record><![CDATA[Giorno(i)]]></record>
+      <record><![CDATA[Settimana(e)]]></record>
+      <record><![CDATA[Mese(i)]]></record>
+    </lookup>
+    <lookup table="lookup_task_priority">
+      <record default_item="true"><![CDATA[1]]></record>
+      <record><![CDATA[2]]></record>
+      <record><![CDATA[3]]></record>
+      <record><![CDATA[4]]></record>
+      <record><![CDATA[5]]></record>
+    </lookup>
+    <lookup table="lookup_textmessage_types">
+      <record><![CDATA[Lavoro]]></record>
+      <record><![CDATA[Personale]]></record>
+      <record><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_ticketsource">
+      <record><![CDATA[Telefono]]></record>
+      <record><![CDATA[Email]]></record>
+      <record><![CDATA[Web]]></record>
+      <record><![CDATA[Lettera]]></record>
+      <record><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_ticket_status" />
+    <lookup table="product_option_configurator" key="configurator_id">
+      <attribute name="result_type" type="integer" />
+      <attribute name="class_name" type="string" />
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.StringConfigurator">
+        <configurator_name><![CDATA[Testo]]></configurator_name>
+        <short_description><![CDATA[Un campo di testo per informazioni addizionali libere]]></short_description>
+        <long_description><![CDATA[Configuratore Stringa]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.CheckboxConfigurator">
+        <configurator_name><![CDATA[casella di spunta]]></configurator_name>
+        <short_description><![CDATA[Una casella di spunta per informazioni sì/no]]></short_description>
+        <long_description><![CDATA[Configuratore casella di spunta]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.LookupListConfigurator">
+        <configurator_name><![CDATA[Lista di ricerca]]></configurator_name>
+        <short_description><![CDATA[Una lista di scelte disponibili che possono essere selezionate]]></short_description>
+        <long_description><![CDATA[Configuratore lista di scelta]]></long_description>
+      </record>
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.NumericalConfigurator">
+        <configurator_name><![CDATA[Numero]]></configurator_name>
+        <short_description><![CDATA[Un campo di input che permette solo numeri]]></short_description>
+        <long_description><![CDATA[Configuratore Numerico]]></long_description>
+      </record>
+    </lookup>
+    <lookup table="search_fields" key="id">
+      <attribute name="field" type="string" />
+      <attribute name="searchable" type="boolean" />
+      <attribute name="field_typeid" type="integer" />
+      <attribute name="table_name" type="string" />
+      <attribute name="object_class" type="string" />
+      <record field="company" searchable="true" field_typeid="0"><![CDATA[Nome Compagnia]]></record>
+      <record field="namefirst" searchable="true" field_typeid="0"><![CDATA[Nome Contatto]]></record>
+      <record field="namelast" searchable="true" field_typeid="0"><![CDATA[Cognome Contatto]]></record>
+      <record field="entered" searchable="true" field_typeid="1"><![CDATA[Data inserimento]]></record>
+      <record field="zip" searchable="true" field_typeid="0"><![CDATA[CAP]]></record>
+      <record field="areacode" searchable="true" field_typeid="0"><![CDATA[Prefisso]]></record>
+      <record field="city" searchable="true" field_typeid="0"><![CDATA[Città]]></record>
+      <record field="typeId" searchable="true" field_typeid="0"><![CDATA[Tipo contatto]]></record>
+      <record field="contactId" searchable="false" field_typeid="0"><![CDATA[ID Contatto]]></record>
+      <record field="title" searchable="false" field_typeid="0"><![CDATA[Titolo Contatto]]></record>
+      <record field="accountTypeId" searchable="true" field_typeid="0"><![CDATA[Tipo Account]]></record>
+      <record field="siteId" searchable="true" field_typeid="0"><![CDATA[Site]]></record>
+    </lookup>
+    <lookup table="survey" key="survey_id">
+      <attribute name="type" type="integer" />
+      <attribute name="enteredby" type="integer" />
+      <attribute name="modifiedby" type="integer" />
+      <record type="2" enteredby="0" modifiedby="0">
+        <name>Address Update Request</name>
+      </record>
+    </lookup>
+    <lookup table="ticket_level">
+      <record><![CDATA[Livello di ingresso]]></record>
+      <record><![CDATA[Primo livello]]></record>
+      <record><![CDATA[Secondo livello]]></record>
+      <record><![CDATA[Terzo livello]]></record>
+      <record><![CDATA[Massimo livello]]></record>
+    </lookup>
+    <lookup table="ticket_priority">
+      <record><![CDATA[Next]]></record>
+      <record style="background-color:lightgreen;color:black;"><![CDATA[Come programmato]]></record>
+      <record style="background-color:yellow;color:black;"><![CDATA[Urgente]]></record>
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[Critico]]></record>
+    </lookup>
+    <lookup table="ticket_severity">
+      <record style="background-color:lightgreen;color:black;"><![CDATA[Normale]]></record>
+      <record style="background-color:yellow;color:black;"><![CDATA[Importante]]></record>
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[Critico]]></record>
+    </lookup>
+    <lookup table="ticket_category_draft" key="id">       
+      <attribute name="parent_cat_code" type="ticket_category_draft.LUID"/>
+      <attribute name="cat_level" type="integer"/>
+      <record LUID="2005022711"><![CDATA[Vendite]]></record>
+      <record LUID="2005022712"><![CDATA[Fatturazione]]></record>
+      <record LUID="2005022714"><![CDATA[Tecnico]]></record>
+      <record LUID="2005022715"><![CDATA[Ordine]]></record>
+      <record LUID="2005022717"><![CDATA[Altro]]></record>
+    </lookup>
+    <lookup table="lookup_opportunity_environment">
+    </lookup>
+    <lookup table="lookup_opportunity_competitors">
+    </lookup>
+    <lookup table="lookup_opportunity_event_compelling">
+    </lookup>
+    <lookup table="lookup_opportunity_budget">
+    </lookup>
+    <lookup table="lookup_duration_type">
+      <record><![CDATA[minutes]]></record>
+      <record><![CDATA[hours]]></record>
+      <record><![CDATA[days]]></record>
+      <record><![CDATA[weeks]]></record>
+      <record><![CDATA[months]]></record>
+      <record><![CDATA[years]]></record>
+    </lookup>
+    <lookup table="lookup_step_actions">
+      <attribute name="constant_id" type="integer" />
+      <record constant_id="110061030"><![CDATA[Require user to attach or create an opportunity]]></record>
+      <record constant_id="110061031"><![CDATA[Require user to attach or upload a document]]></record>
+<!--      <record constant_id="110061032"><![CDATA[Require user to attach or create an activity]]></record> -->
+      <record constant_id="110061033"><![CDATA[Require user to update a specific action plan folder]]></record>
+      <record constant_id="110061034"><![CDATA[Require user to update the rating]]></record>
+      <record constant_id="110061035"><![CDATA[Require user to attach or create a single note]]></record>
+      <record constant_id="110061036"><![CDATA[Require user to attach or create multiple notes]]></record>
+<!--      <record constant_id="110061037"><![CDATA[Require user to attach or create a lookup list]]></record> -->
+      <record constant_id="110061038"><![CDATA[Allow user to view the account]]></record>
+      <record constant_id="110061039"><![CDATA[Require user to attach or create an account contact]]></record>
+      <record constant_id="110061040"><![CDATA[Require user to create account relationships]]></record>
+      <record constant_id="302061653"><![CDATA[Require user to add a recipient to the active campaign]]></record>
+    </lookup>
+    <lookup table="lookup_asset_materials">
+    </lookup>
+    <lookup table="lookup_ticket_cause">
+    </lookup>
+    <lookup table="lookup_ticket_resolution">
+    </lookup>
+    <lookup table="action_plan_constants" key="map_id">
+      <attribute name="constant_id" type="integer"/>
+      <record LUID="2005101901" constant_id="42420034"><![CDATA[accounts]]></record>
+      <record LUID="2005101902" constant_id="912051329"><![CDATA[tickets]]></record>
+      <record LUID="2005101903" constant_id="2"><![CDATA[contacts]]></record>
+      <record LUID="2005101904" constant_id="912051328"><![CDATA[quotes]]></record>
+      <record LUID="2005101905" constant_id="3"><![CDATA[pipeline]]></record>
+      <record LUID="2005101906" constant_id="912051330"><![CDATA[projects]]></record>
+      <record LUID="2005101907" constant_id="912051331"><![CDATA[communications]]></record>
+      <record LUID="2005101908" constant_id="912051332"><![CDATA[admin]]></record>
+      <record LUID="2005101909" constant_id="912051333"><![CDATA[calls]]></record>
+      <record LUID="2005101910" constant_id="912051334"><![CDATA[cfsnote]]></record>
+      <record LUID="2005101911" constant_id="912051335"><![CDATA[pipeline_calls]]></record>
+      <record LUID="2005101912" constant_id="912051336"><![CDATA[myhomepage]]></record>
+      <record LUID="2005101913" constant_id="831200519"><![CDATA[note]]></record>
+      <record LUID="2005101914" constant_id="831200520"><![CDATA[selection]]></record>
+      <record LUID="2005101915" constant_id="1011200517"><![CDATA[pipeline_component]]></record>
+      <record LUID="2005101916" constant_id="110061020"><![CDATA[relationship]]></record>
+    </lookup>
+    <lookup table="step_action_map" key="map_id">
+      <attribute name="constant_id" type="action_plan_constants.LUID"/>
+      <attribute name="action_constant_id" type="integer"/>
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061030" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061031" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061032" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061033" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061034" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061039" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061040" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061035" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061036" />
+<!--      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061037" /> -->
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061038" />
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="302061653" />
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="302061653" />
+    </lookup>
+    <lookup table="lookup_ticket_task_category">
+    </lookup>
+    <lookup table="lookup_account_size">
+      <record><![CDATA[1-10]]></record>
+      <record><![CDATA[11-100]]></record>
+      <record><![CDATA[101-1000]]></record>
+      <record><![CDATA[>1000]]></record>
+    </lookup>
+    <lookup table="lookup_segments">
+    </lookup>
+    <lookup table="lookup_sub_segment">
+    </lookup>
+    <lookup table="lookup_site_id">
+    </lookup>
+    <lookup table="lookup_title">
+      <record><![CDATA[Mr.]]></record>
+      <record><![CDATA[Mrs.]]></record>
+      <record><![CDATA[Ms.]]></record>
+      <record><![CDATA[Miss]]></record>
+      <record><![CDATA[Dr.]]></record>
+      <record><![CDATA[Prof.]]></record>
+    </lookup>
+    <lookup table="lookup_ticket_state">
+      <record><![CDATA[Under review]]></record>
+      <record><![CDATA[In progress]]></record>
+      <record><![CDATA[Solution is being tested]]></record>
+      <record><![CDATA[Solution is being verified]]></record>
+      <record><![CDATA[Solution complete]]></record>
+      <record><![CDATA[Cannot resolve]]></record>
+      <record><![CDATA[Duplicate]]></record>
+    </lookup>
+</lookupLists>

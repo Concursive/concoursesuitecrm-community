@@ -1,0 +1,164 @@
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.controller.*;
+import org.aspcfs.utils.web.*;
+import java.sql.*;
+import java.util.*;
+HashMap map = new HashMap();
+TicketCategoryList categoryList = new TicketCategoryList();
+categoryList.setIncludeDisabled(true);
+for (int i=0;i<4;i++) {
+  TicketCategoryList tempList = new TicketCategoryList();
+  tempList.setCatLevel(i);
+  tempList.setIncludeDisabled(true);
+  tempList.buildList(db);
+  categoryList.addAll(tempList);
+}
+//build the master list of categories
+print("completed building the categoryList "+ categoryList.toString());
+//build the list of sites
+LookupList siteid = new LookupList(db, "lookup_site_id");
+
+//Iterate thru the sites and insert ticket categories for each iteration.
+Iterator iter = (Iterator) siteid.iterator();
+while (iter.hasNext()) {
+  LookupElement element = (LookupElement) iter.next();
+  HashMap siteMap = new HashMap();
+print("Ticket Categories are being inserted for the site "+ element.getDescription());
+  Iterator iterator = (Iterator) categoryList.iterator();
+  while (iterator.hasNext()) {
+    TicketCategory category = (TicketCategory) iterator.next();
+    TicketCategory newCategory = (TicketCategory) null;
+print("Just before the category.lookupCategory is being called for the category with name "+ category.getDescription());
+    int newCategoryId = category.lookupCategory(db, category.getDescription(), element.getCode());
+print("The new categoryId is "+ newCategoryId);
+    if (newCategoryId == -1) {
+      newCategory = category.cloneCategory();
+      newCategory.setSiteId(element.getCode());
+      String parentCode = (String) siteMap.get(String.valueOf(category.getParentCode()));
+      if (parentCode != null && !"".equals(parentCode)) {
+        newCategory.setParentCode(parentCode);
+      }
+      //insert the new ticket category
+      newCategory.insert(db);
+    } else {
+      newCategory = new TicketCategory(db, newCategoryId);
+    }
+print("A new ticket category has been inserted for "+newCategory.getDescription()+" with an id "+ newCategory.getId());
+    //retrieve the ticket category assignment and clone it for the new category
+    TicketCategoryAssignment assignment = new TicketCategoryAssignment(db, category.getId(), "");
+    if (assignment.getId() > -1) {
+      TicketCategoryAssignment newAssignment = new TicketCategoryAssignment(db, newCategory.getId(), "");
+      if (newAssignment.getId() == -1) {
+        newAssignment = assignment.cloneAssignment(db, element.getCode());
+        if (newAssignment != null) {
+          newAssignment.setCategoryId(newCategory.getId());
+          newAssignment.insert(db);
+        }
+      }
+print("A new ticket category assignment has been inserted for "+newCategory.getDescription()+" with an id "+ newAssignment.getId());
+    }
+    //build the list of plan mappings for the category and clone them for the new category
+    TicketCategoryPlanMapList planMapList = new TicketCategoryPlanMapList();
+    planMapList.setCategoryId(category.getId());
+    planMapList.buildList(db);
+    if (planMapList.size() > 0) {
+      TicketCategoryPlanMapList newPlanMapList = new TicketCategoryPlanMapList();
+      newPlanMapList.setCategoryId(newCategory.getId());
+      newPlanMapList.buildList(db);
+      if (newPlanMapList.size() == 0) {
+        newPlanMapList = planMapList.clonePlanMapList(db, newCategory.getSiteId());
+        newPlanMapList.setCategoryId(newCategory.getId());
+        newPlanMapList.parse(db);
+      }
+    }
+print("A new ticket category plan map has been assigned for the new Plan Map List");
+    //add a map for the new category based on the current category
+    siteMap.put(String.valueOf(category.getId()), String.valueOf(newCategory.getId()));
+  }
+  //add a map for the site with the current siteMap of categories
+  map.put(String.valueOf(element.getCode()), siteMap);
+print("The site "+element.getDescription()+" has been added to the map");
+}
+print("=============================================================");
+print("Resetting the ticket category assignments for the non-site");
+TicketCategoryAssignmentList assignmentList = new TicketCategoryAssignmentList();
+assignmentList.setCheckSite(true);
+assignmentList.setSiteId(-1);
+assignmentList.buildList(db);
+iter = (Iterator) assignmentList.iterator();
+while (iter.hasNext()) {
+  TicketCategoryAssignment assignment = (TicketCategoryAssignment) iter.next();
+  TicketCategoryAssignment newAssignment = assignment.cloneAssignment(db, -1);
+  boolean changedAssignmentData = false;
+print("The assignment being checked has an id "+ assignment.getId());
+  if (newAssignment != null) {
+print("The assignment is not null");
+    if (assignment.getAssignedTo() != -1) {
+      changedAssignmentData = (newAssignment.getAssignedTo() != assignment.getAssignedTo());
+      if (changedAssignmentData) {
+print("The assignment assignedTo has been changed from "+ assignment.getAssignedTo()+" to "+ newAssignment.getAssignedTo());
+        assignment.setAssignedTo(newAssignment.getAssignedTo());
+      }
+    }
+    if (assignment.getUserGroupId() != -1) {
+      changedAssignmentData = (newAssignment.getUserGroupId() != assignment.getUserGroupId()) || changedAssignmentData;
+      if (changedAssignmentData) {
+print("The assignment userGroupId has been changed from "+ assignment.getUserGroupId()+" to "+ newAssignment.getUserGroupId());
+        assignment.setUserGroupId(newAssignment.getUserGroupId());
+      }
+    }
+    if (changedAssignmentData) {
+      assignment.update(db);
+print("The assignment with the Id "+ assignment.getId() +" has been updated with new data");
+    }
+  } else {
+    iter.remove();
+    assignment.delete(db);
+print("As the assignment with id "+ assignment.getId() +" is not supposed to exist, it has been deleted");
+  }
+}
+
+print("\n\n--------------------------------------------------------------\n\n");
+print("Modifying the ticket information with the new site data ");
+//Iterate thru the list of sites
+iter = (Iterator) siteid.iterator();
+while (iter.hasNext()) {
+  LookupElement element = (LookupElement) iter.next();
+  //retrieve the category mappings for the site.
+  HashMap siteMap = (HashMap) map.get(String.valueOf(element.getCode()));
+  //build the list of tickets for the site
+  TicketList tickets = new TicketList();
+  tickets.setSiteId(element.getCode());
+  tickets.buildList(db);
+  //Iterate thru the list of tickets and update the new categoryId for each ticket
+  Iterator iterator = (Iterator) tickets.iterator();
+  while (iterator.hasNext()) {
+    org.aspcfs.modules.troubletickets.base.Ticket ticket = (org.aspcfs.modules.troubletickets.base.Ticket) iterator.next();
+    ticket.setCatCode(siteMap.get(String.valueOf(ticket.getCatCode())) != null?(String) siteMap.get(String.valueOf(ticket.getCatCode())):"-1");
+    ticket.setSubCat1(siteMap.get(String.valueOf(ticket.getSubCat1())) != null?(String) siteMap.get(String.valueOf(ticket.getSubCat1())):"-1");
+    ticket.setSubCat2(siteMap.get(String.valueOf(ticket.getSubCat2())) != null?(String) siteMap.get(String.valueOf(ticket.getSubCat2())):"-1");
+    ticket.setSubCat3(siteMap.get(String.valueOf(ticket.getSubCat3())) != null?(String) siteMap.get(String.valueOf(ticket.getSubCat3())):"-1");
+    ticket.update(db);
+  }
+}
+//After inserting the ticket categories for all sites, 
+//create the ticket category draft entries for all sites using the CategoryEditor
+CategoryEditor thisEditor = new CategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_TICKET);
+iter = (Iterator) siteid.iterator();
+while (iter.hasNext()) {
+  LookupElement element = (LookupElement) iter.next();
+  thisEditor.setSiteId(element.getCode());
+  thisEditor.setTableName("ticket_category");
+  thisEditor.build(db);
+print("Just before resetting the categoryDraft entries for the site "+ element.getDescription());
+  thisEditor.reset(db);
+}
+if (1 == 1) {
+  thisEditor.setSiteId(-1);
+  thisEditor.setTableName("ticket_category");
+  thisEditor.build(db);
+  thisEditor.reset(db);
+}
+print("Completed resetting all the category draft entries");
+

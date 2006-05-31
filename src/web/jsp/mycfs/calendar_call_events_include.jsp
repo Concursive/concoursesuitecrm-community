@@ -73,7 +73,7 @@
           src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
      </td>
      <td nowrap valign="top">
-       <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeOnly="true"/>
+       <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" timeOnly="true"/>
      </td>
      <td nowrap valign="top">
        <%= toString(pendingCall.getContactName()) %><br />

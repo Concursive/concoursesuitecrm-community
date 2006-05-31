@@ -64,6 +64,10 @@ public final class AccountsDocuments extends CFSModule {
 
     try {
       db = getConnection(context);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
 
@@ -105,7 +109,7 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "View Documents");
     if (errorMessage == null) {
-      return ("ViewOK");
+      return (getReturn(context, "View"));
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -131,6 +135,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("OrgDetails", thisOrg);
       String folderId = context.getRequest().getParameter("folderId");
       if (folderId != null) {
@@ -181,14 +189,22 @@ public final class AccountsDocuments extends CFSModule {
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
+      String actionStepWork = (String) parts.get("actionStepWork");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
       }
       if (subject != null) {
         context.getRequest().setAttribute("subject", subject);
       }
+      if (actionStepWork != null) {
+        context.getRequest().setAttribute("actionStepWork", actionStepWork);
+      }
       db = getConnection(context);
       thisOrg = addOrganization(context, db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
@@ -210,6 +226,8 @@ public final class AccountsDocuments extends CFSModule {
         }
         if (recordInserted) {
           this.processInsertHook(context, thisItem);
+          context.getRequest().setAttribute("fileItem", thisItem);
+          context.getRequest().setAttribute("subject", "");
         }
       } else {
         recordInserted = false;
@@ -266,6 +284,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       FileItem thisFile = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       context.getRequest().setAttribute("FileItem", thisFile);
@@ -323,6 +345,10 @@ public final class AccountsDocuments extends CFSModule {
       }
       db = getConnection(context);
       thisOrg = addOrganization(context, db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
@@ -333,7 +359,7 @@ public final class AccountsDocuments extends CFSModule {
         thisItem.setLinkItemId(thisOrg.getOrgId());
         thisItem.setId(Integer.parseInt(itemId));
         previousItem = new FileItem(
-            db, Integer.parseInt(itemId), thisItem.getLinkModuleId(), thisItem.getLinkItemId());
+            db, Integer.parseInt(itemId),thisItem.getLinkItemId(), thisItem.getLinkModuleId());
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
         thisItem.setSubject(subject);
@@ -396,6 +422,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       Organization thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
 
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
@@ -450,6 +480,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       if (version != null) {
@@ -561,6 +595,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.buildVersionList(db);
@@ -604,6 +642,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       FileItem previousItem = new FileItem(
@@ -651,6 +693,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       recordDeleted = thisItem.delete(db, this.getPath(context, "accounts"));
@@ -733,6 +779,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       //Load the file
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
@@ -772,6 +822,10 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       //Load the file
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);

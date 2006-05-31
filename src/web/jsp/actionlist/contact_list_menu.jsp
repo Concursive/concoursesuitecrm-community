@@ -52,9 +52,9 @@
   }
   function addCall() {
     if(thisOrgId == -1){
-      popURL('ExternalContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Call','600','300','yes','yes');
+      popURL('ExternalContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Activity','600','300','yes','yes');
     }else{
-      popURL('AccountContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Call','600','300','yes','yes');
+      popURL('AccountContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Activity','600','300','yes','yes');
     }
   }
   function addTicket() {

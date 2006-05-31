@@ -1,0 +1,74 @@
+//Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+//Upgrade Sync API for Outlook Integration
+
+import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.service.base.*;
+
+int systemId = -1;
+String system = "CFSHttpXMLWriter";
+pst = db.prepareStatement(
+  "SELECT system_id " +
+  "FROM sync_system " +
+  "WHERE application_name = ? ");
+pst.setString(1, system);
+rs = pst.executeQuery();
+
+if (rs.next()) {
+  systemId = rs.getInt("system_id");
+}
+
+if (systemId > -1) {
+  print("System ID for " + system + " determined: " + systemId);
+  //Add Task Mapping
+  if (1==1) {
+    String className = "org.aspcfs.modules.tasks.base.Task";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("task");
+      thisTable.setMappedClassName(className);
+      thisTable.setKey("id");
+      thisTable.insert(db);
+    } else {
+      print("Mapping alredy exists for class: " + className);
+    }
+  }
+  //Add ContactMessage Mapping
+  if (1==1) {
+    String className = "org.aspcfs.modules.communications.base.ContactMessage";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("contactMessage");
+      thisTable.setMappedClassName(className);
+      thisTable.insert(db);
+    } else {
+      print("Mapping alredy exists for class: " + className);
+    }
+  }
+  //Update key attribute that needs to be shared within transactions
+  if (1==1) {
+    SyncTable thisTable = new SyncTable();
+    thisTable.setSystemId(systemId);
+    thisTable.setName("scheduledRecipient");
+    thisTable.setKey("id");
+    thisTable.updateKey(db);
+  }
+  if (1==1) {
+    SyncTable thisTable = new SyncTable();
+    thisTable.setSystemId(systemId);
+    thisTable.setName("campaign");
+    thisTable.setKey("id");
+    thisTable.updateKey(db);
+  }
+  if (1==1) {
+    SyncTable thisTable = new SyncTable();
+    thisTable.setSystemId(systemId);
+    thisTable.setName("message");
+    thisTable.setKey("id");
+    thisTable.updateKey(db);
+  }
+}
+
+

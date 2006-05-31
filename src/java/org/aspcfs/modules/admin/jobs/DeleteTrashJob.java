@@ -36,6 +36,7 @@ import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
 import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.modules.troubletickets.base.TicketDefectList;
 import org.aspcfs.utils.SiteUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -120,6 +121,11 @@ public class DeleteTrashJob implements StatefulJob {
           ticketList.setIncludeOnlyTrashed(true);
           ticketList.buildList(db);
           ticketList.delete(db, fileLibraryPath);
+          
+          TicketDefectList defects = new TicketDefectList();
+          defects.setIncludeOnlyTrashed(Constants.TRUE);
+          defects.buildList(db);
+          defects.delete(db);
 
           QuoteList quoteList = new QuoteList();
           quoteList.setIncludeOnlyTrashed(true);
@@ -153,8 +159,9 @@ public class DeleteTrashJob implements StatefulJob {
 
           ContactList contactList = new ContactList();
           contactList.setIncludeOnlyTrashed(true);
+          contactList.setIncludeAllSites(true);
 //          contactList.setEmployeesOnly(Constants.FALSE); //Employees are trashed too
-          contactList.setLeadsOnly(Constants.FALSE);
+//          contactList.setLeadsOnly(Constants.FALSE); //Leads are trashed too
           contactList.buildList(db);
           if (System.getProperty("DEBUG") != null) {
             System.out.println(

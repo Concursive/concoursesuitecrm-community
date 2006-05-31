@@ -55,6 +55,10 @@ public final class TroubleTicketsFolders extends CFSModule {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
 
       //Show a list of the different folders available in this module
@@ -161,6 +165,10 @@ public final class TroubleTicketsFolders extends CFSModule {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ticketDetails", thisTicket);
 
       //Show a list of the different folders available in Accounts
@@ -201,6 +209,10 @@ public final class TroubleTicketsFolders extends CFSModule {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
 
       String selectedCatId = (String) context.getRequest().getParameter(
@@ -249,6 +261,10 @@ public final class TroubleTicketsFolders extends CFSModule {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
 
       CustomFieldCategory thisCategory = new CustomFieldCategory(
@@ -300,6 +316,10 @@ public final class TroubleTicketsFolders extends CFSModule {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
 
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
@@ -397,6 +417,10 @@ public final class TroubleTicketsFolders extends CFSModule {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TicketDetails", thisTicket);
 
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
@@ -454,6 +478,8 @@ public final class TroubleTicketsFolders extends CFSModule {
           System.out.println(
               "TroubleTicketsFolders-> InsertField validation error");
         }
+        context.getRequest().setAttribute(
+            "systemStatus", this.getSystemStatus(context));
         return ("AddFolderRecordOK");
       } else {
         processInsertHook(context, thisCategory);
@@ -485,6 +511,12 @@ public final class TroubleTicketsFolders extends CFSModule {
       String recordId = context.getRequest().getParameter("recId");
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
+      //Load the ticket
+      Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       CustomFieldCategory thisCategory = new CustomFieldCategory(
           db,
           Integer.parseInt(selectedCatId));

@@ -1,0 +1,100 @@
+import org.aspcfs.modules.actionplans.base.*;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.utils.web.LookupList;
+
+int moduleConstantId = -1;
+
+// Tickets mapping
+moduleConstantId = ActionStepMap.retrieveActionPlanMapIdFromConstantId(db, 912051329);
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061035);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061036);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061037);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061038);
+  actionStepMap.insert(db);
+}
+print("mappings added for tickets");
+
+
+// Accounts mapping
+moduleConstantId = ActionStepMap.retrieveActionPlanMapIdFromConstantId(db, 42420034);
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061030);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061031);
+  actionStepMap.insert(db);
+}
+/*
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061032);
+  actionStepMap.insert(db);
+}
+*/
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061033);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061034);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061035);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061036);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061037);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061038);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061039);
+  actionStepMap.insert(db);
+}
+print("mappings added for accounts");

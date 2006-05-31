@@ -23,6 +23,7 @@
 <jsp:useBean id="SelectedAccounts" class="java.util.ArrayList" scope="session"/>
 <jsp:useBean id="FinalAccounts" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="siteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="Filters" class="org.aspcfs.modules.base.FilterList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -110,6 +111,9 @@
       <th>
         <strong><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></strong>
       </th>
+      <th>
+        <strong><dhv:label name="accounts.site">Site</dhv:label></strong>
+      </th>
     </tr>
 <%
 	Iterator j = AccountList.iterator();
@@ -135,7 +139,7 @@
 <%}%>
         <input type="hidden" name="hiddenAccountId<%= count %>" value="<%= thisAcct.getOrgId() %>">
       </td>
-      <td nowrap>
+      <td width="100%">
           <%= toHtml(thisAcct.getName()) %>
       </td>
       <dhv:evaluate if="<%= (thisAcct.getPrimaryContact() == null) %>">
@@ -149,6 +153,7 @@
       <dhv:evaluate if="<%= (thisAcct.getPrimaryContact() != null) %>">
         <td nowrap> <%= (!"".equals(thisAcct.getPrimaryContact().getPrimaryPhoneNumber()) ? toHtml(thisAcct.getPrimaryContact().getPrimaryPhoneNumber()) : "None") %></td> 
       </dhv:evaluate>
+      <td nowrap><%= siteIdList.getSelectedValue(thisAcct.getSiteId()) %></td>
     </tr>
 <%
     }
@@ -165,10 +170,14 @@
     <input type="hidden" name="functionName" value="<%= request.getParameter("functionName") %>">
     <input type="hidden" name="finalsubmit" value="false">
     <input type="hidden" name="rowcount" value="0">
+    <input type="hidden" name="siteId" value="<%= toHtmlValue(request.getParameter("siteId")) %>">
+    <input type="hidden" name="siteIdOrg" value="<%= toHtmlValue(request.getParameter("siteIdOrg")) %>">
+    <input type="hidden" name="thisSiteIdOnly" value="<%= toHtmlValue(request.getParameter("thisSiteIdOnly")) %>">
     <input type="hidden" name="displayFieldId" value="<%= toHtmlValue(request.getParameter("displayFieldId")) %>">
     <input type="hidden" name="hiddenFieldId" value="<%= toHtmlValue(request.getParameter("hiddenFieldId")) %>">
     <input type="hidden" name="listType" value="<%= toHtmlValue(request.getParameter("listType")) %>">
     <input type="hidden" name="showMyCompany" value="<%= toHtmlValue(request.getParameter("showMyCompany")) %>">
+    <input type="hidden" name="filters" value="<%= toHtmlValue((String) request.getAttribute("filterString")) %>" />
   </table>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:setFieldSubmit('finalsubmit','true','acctListView');">
@@ -181,8 +190,12 @@
 </form>
 <%} else { %>
 <%-- The final submit --%>
-  <body onLoad="javascript:setParentList(acctIds, acctNames, '<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
-  <script>acctIds = new Array();acctNames = new Array();</script>
+  <body onLoad="javascript:setParentList(acctIds, acctNames, '<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>', acctSites);window.close()">
+  <script>
+    acctIds = new Array();
+    acctNames = new Array();
+    acctSites = new Array();
+  </script>
 <%
   Iterator i = FinalAccounts.iterator();
   int count = -1;
@@ -193,6 +206,7 @@
   <script>
     acctIds[<%= count %>] = "<%= thisOrg.getOrgId() %>";
     acctNames[<%= count %>] = "<%= toJavaScript(thisOrg.getName()) %>";
+    acctSites[<%= count %>] = "<%= thisOrg.getSiteId() %>";
   </script>
 <%	
   }

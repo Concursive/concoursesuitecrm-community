@@ -18,6 +18,7 @@ package org.aspcfs.modules.troubletickets.base;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,12 +29,12 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * Contains TicketCategory items for displaying to the user
+ *  Contains TicketCategory items for displaying to the user
  *
- * @author chris
- * @version $Id: TicketCategoryList.java,v 1.2 2002/03/25 19:12:22 mrajkowski
- *          Exp $
- * @created December 11, 2001
+ * @author     chris
+ * @created    December 11, 2001
+ * @version    $Id: TicketCategoryList.java,v 1.2 2002/03/25 19:12:22 mrajkowski
+ *      Exp $
  */
 public class TicketCategoryList extends Vector {
   HtmlSelect catListSelect = new HtmlSelect();
@@ -43,19 +44,21 @@ public class TicketCategoryList extends Vector {
   private String HtmlJsEvent = "";
   private int enabledState = -1;
   private boolean includeDisabled = false;
+  private int siteId = -1;
+  private boolean exclusiveToSite = false;
+  private boolean includeAllSites = false;
 
 
   /**
-   * Constructor for the TicketCategoryList object
+   *  Constructor for the TicketCategoryList object
    */
-  public TicketCategoryList() {
-  }
+  public TicketCategoryList() { }
 
 
   /**
-   * Sets the PagedListInfo attribute of the TicketCategoryList object
+   *  Sets the PagedListInfo attribute of the TicketCategoryList object
    *
-   * @param tmp The new PagedListInfo value
+   * @param  tmp  The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -63,9 +66,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the HtmlJsEvent attribute of the TicketCategoryList object
+   *  Sets the HtmlJsEvent attribute of the TicketCategoryList object
    *
-   * @param HtmlJsEvent The new HtmlJsEvent value
+   * @param  HtmlJsEvent  The new HtmlJsEvent value
    */
   public void setHtmlJsEvent(String HtmlJsEvent) {
     this.HtmlJsEvent = HtmlJsEvent;
@@ -73,9 +76,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the CatListSelect attribute of the TicketCategoryList object
+   *  Sets the CatListSelect attribute of the TicketCategoryList object
    *
-   * @param catListSelect The new CatListSelect value
+   * @param  catListSelect  The new CatListSelect value
    */
   public void setCatListSelect(HtmlSelect catListSelect) {
     this.catListSelect = catListSelect;
@@ -83,9 +86,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the ParentCode attribute of the TicketCategoryList object
+   *  Sets the ParentCode attribute of the TicketCategoryList object
    *
-   * @param tmp The new ParentCode value
+   * @param  tmp  The new ParentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -93,9 +96,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the ParentCode attribute of the TicketCategoryList object
+   *  Sets the ParentCode attribute of the TicketCategoryList object
    *
-   * @param tmp The new ParentCode value
+   * @param  tmp  The new ParentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -103,9 +106,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the CatLevel attribute of the TicketCategoryList object
+   *  Sets the CatLevel attribute of the TicketCategoryList object
    *
-   * @param catLevel The new CatLevel value
+   * @param  catLevel  The new CatLevel value
    */
   public void setCatLevel(int catLevel) {
     this.catLevel = catLevel;
@@ -113,9 +116,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the CatLevel attribute of the TicketCategoryList object
+   *  Sets the CatLevel attribute of the TicketCategoryList object
    *
-   * @param catLevel The new CatLevel value
+   * @param  catLevel  The new CatLevel value
    */
   public void setCatLevel(String catLevel) {
     this.catLevel = Integer.parseInt(catLevel);
@@ -123,9 +126,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the enabledState attribute of the TicketCategoryList object
+   *  Sets the enabledState attribute of the TicketCategoryList object
    *
-   * @param tmp The new enabledState value
+   * @param  tmp  The new enabledState value
    */
   public void setEnabledState(int tmp) {
     this.enabledState = tmp;
@@ -133,9 +136,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Sets the includeDisabled attribute of the TicketCategoryList object
+   *  Sets the includeDisabled attribute of the TicketCategoryList object
    *
-   * @param includeDisabled The new includeDisabled value
+   * @param  includeDisabled  The new includeDisabled value
    */
   public void setIncludeDisabled(boolean includeDisabled) {
     this.includeDisabled = includeDisabled;
@@ -143,9 +146,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the includeDisabled attribute of the TicketCategoryList object
+   *  Gets the includeDisabled attribute of the TicketCategoryList object
    *
-   * @return The includeDisabled value
+   * @return    The includeDisabled value
    */
   public boolean getIncludeDisabled() {
     return includeDisabled;
@@ -153,9 +156,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the CatListSelect attribute of the TicketCategoryList object
+   *  Gets the CatListSelect attribute of the TicketCategoryList object
    *
-   * @return The CatListSelect value
+   * @return    The CatListSelect value
    */
   public HtmlSelect getCatListSelect() {
     return catListSelect;
@@ -163,9 +166,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the HtmlJsEvent attribute of the TicketCategoryList object
+   *  Gets the HtmlJsEvent attribute of the TicketCategoryList object
    *
-   * @return The HtmlJsEvent value
+   * @return    The HtmlJsEvent value
    */
   public String getHtmlJsEvent() {
     return HtmlJsEvent;
@@ -173,10 +176,10 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the HtmlSelect attribute of the TicketCategoryList object
+   *  Gets the HtmlSelect attribute of the TicketCategoryList object
    *
-   * @param selectName Description of Parameter
-   * @return The HtmlSelect value
+   * @param  selectName  Description of Parameter
+   * @return             The HtmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -184,9 +187,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the CatLevel attribute of the TicketCategoryList object
+   *  Gets the CatLevel attribute of the TicketCategoryList object
    *
-   * @return The CatLevel value
+   * @return    The CatLevel value
    */
   public int getCatLevel() {
     return catLevel;
@@ -194,9 +197,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the PagedListInfo attribute of the TicketCategoryList object
+   *  Gets the PagedListInfo attribute of the TicketCategoryList object
    *
-   * @return The PagedListInfo value
+   * @return    The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -204,9 +207,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the ParentCode attribute of the TicketCategoryList object
+   *  Gets the ParentCode attribute of the TicketCategoryList object
    *
-   * @return The ParentCode value
+   * @return    The ParentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -214,9 +217,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the enabledState attribute of the TicketCategoryList object
+   *  Gets the enabledState attribute of the TicketCategoryList object
    *
-   * @return The enabledState value
+   * @return    The enabledState value
    */
   public int getEnabledState() {
     return enabledState;
@@ -224,11 +227,116 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the HtmlSelect attribute of the TicketCategoryList object
+   *  Gets the siteId attribute of the TicketCategoryList object
    *
-   * @param selectName Description of Parameter
-   * @param defaultKey Description of Parameter
-   * @return The HtmlSelect value
+   * @return    The siteId value
+   */
+  public int getSiteId() {
+    return siteId;
+  }
+
+
+  /**
+   *  Sets the siteId attribute of the TicketCategoryList object
+   *
+   * @param  tmp  The new siteId value
+   */
+  public void setSiteId(int tmp) {
+    this.siteId = tmp;
+  }
+
+
+  /**
+   *  Sets the siteId attribute of the TicketCategoryList object
+   *
+   * @param  tmp  The new siteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the exclusiveToSite attribute of the TicketCategoryList object
+   *
+   * @return    The exclusiveToSite value
+   */
+  public boolean getExclusiveToSite() {
+    return exclusiveToSite;
+  }
+
+
+  /**
+   *  Sets the exclusiveToSite attribute of the TicketCategoryList object
+   *
+   * @param  tmp  The new exclusiveToSite value
+   */
+  public void setExclusiveToSite(boolean tmp) {
+    this.exclusiveToSite = tmp;
+  }
+
+
+  /**
+   *  Sets the exclusiveToSite attribute of the TicketCategoryList object
+   *
+   * @param  tmp  The new exclusiveToSite value
+   */
+  public void setExclusiveToSite(String tmp) {
+    this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the includeAllSites attribute of the TicketCategoryList object
+   *
+   * @return    The includeAllSites value
+   */
+  public boolean getIncludeAllSites() {
+    return includeAllSites;
+  }
+
+
+  /**
+   *  Sets the includeAllSites attribute of the TicketCategoryList object
+   *
+   * @param  tmp  The new includeAllSites value
+   */
+  public void setIncludeAllSites(boolean tmp) {
+    this.includeAllSites = tmp;
+  }
+
+
+  /**
+   *  Sets the includeAllSites attribute of the TicketCategoryList object
+   *
+   * @param  tmp  The new includeAllSites value
+   */
+  public void setIncludeAllSites(String tmp) {
+    this.includeAllSites = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the TicketCategoryList object
+   *
+   * @param  selectName  Description of the Parameter
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, String defaultKey) {
+    if (defaultKey != null && !"".equals(defaultKey.trim())) {
+      return getHtmlSelect(selectName, Integer.parseInt(defaultKey));
+    }
+    return getHtmlSelect(selectName);
+  }
+
+
+  /**
+   *  Gets the HtmlSelect attribute of the TicketCategoryList object
+   *
+   * @param  selectName  Description of Parameter
+   * @param  defaultKey  Description of Parameter
+   * @return             The HtmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     Iterator i = this.iterator();
@@ -265,10 +373,10 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -355,9 +463,9 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param sqlFilter Description of Parameter
+   * @param  sqlFilter  Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -372,15 +480,26 @@ public class TicketCategoryList extends Vector {
     if (catLevel != -1) {
       sqlFilter.append("AND tc.cat_level = ? ");
     }
+    if (!includeAllSites) {
+      if (siteId > -1) {
+        sqlFilter.append("AND (tc.site_id = ? ");
+        if (!exclusiveToSite) {
+          sqlFilter.append("OR tc.site_id IS NULL ");
+        }
+        sqlFilter.append(")");
+      } else {
+        sqlFilter.append("AND tc.site_id IS NULL ");
+      }
+    }
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param pst Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @param  pst            Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -393,15 +512,18 @@ public class TicketCategoryList extends Vector {
     if (catLevel != -1) {
       pst.setInt(++i, catLevel);
     }
+    if (siteId > -1) {
+      pst.setInt(++i, siteId);
+    }
     return i;
   }
 
 
   /**
-   * Returns just an HtmlSelect object without generating the Html output
+   *  Returns just an HtmlSelect object without generating the Html output
    *
-   * @param defaultKey Description of the Parameter
-   * @return The htmlSelect value
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelect value
    */
   public HtmlSelect getHtmlSelect(int defaultKey) {
     HtmlSelect catListSelect = new HtmlSelect();
@@ -428,10 +550,10 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   * Gets the idFromValue attribute of the TicketCategoryList object
+   *  Gets the idFromValue attribute of the TicketCategoryList object
    *
-   * @param value Description of the Parameter
-   * @return The idFromValue value
+   * @param  value  Description of the Parameter
+   * @return        The idFromValue value
    */
   public int getIdFromValue(String value) {
     Iterator i = this.iterator();
@@ -442,6 +564,46 @@ public class TicketCategoryList extends Vector {
       }
     }
     return -1;
+  }
+
+
+  /**
+   *  Gets the valueFromId attribute of the TicketCategoryList object
+   *
+   * @param  id  Description of the Parameter
+   * @return     The valueFromId value
+   */
+  public String getValueFromId(int id) {
+    String result = null;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TicketCategory thisCategory = (TicketCategory) i.next();
+      if (id == thisCategory.getId()) {
+        result = thisCategory.getDescription() + (!thisCategory.getEnabled() ? "*" : "");
+        break;
+      }
+    }
+    return result;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the TicketCategoryList object
+   *
+   * @param  id  Description of the Parameter
+   * @return     The enabled value
+   */
+  public boolean isEnabled(int id) {
+    boolean result = false;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TicketCategory thisCategory = (TicketCategory) i.next();
+      if (id == thisCategory.getId()) {
+        result = thisCategory.getEnabled();
+        break;
+      }
+    }
+    return result;
   }
 }
 

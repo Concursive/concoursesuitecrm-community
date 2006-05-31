@@ -59,6 +59,10 @@
   }
 </script>
 <form method="POST" name="inputForm" action="ProjectManagementFiles.do?command=Upload&pid=<%= request.getParameter("pid") %>&folderId=<%= request.getParameter("folderId") %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="pid" value="<%= Project.getId() %>">
+<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
@@ -113,14 +117,10 @@
       </td>
     </tr>
   </table>
-  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   <p align="center"><dhv:label name="documents.documents.largeFileUploadMessage" param="break=<br />">* Large files may take awhile to upload.<br />Wait for file completion message when upload finishes.</dhv:label>
   </p>
   <input type="submit" value="<dhv:label name="global.button.Upload">Upload</dhv:label>" name="upload">
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>&folderId=<%= request.getParameter("folderId") %>';">
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="pid" value="<%= Project.getId() %>">
-  <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </form>
 </body>
 

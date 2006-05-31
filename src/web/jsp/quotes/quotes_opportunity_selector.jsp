@@ -1,8 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="org.aspcfs.utils.CurrencyFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="oppList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="opportunityListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popOpportunities.js"></SCRIPT>
 <script language="javascript">
@@ -11,8 +15,19 @@
     opener.setParentHiddenField(hiddenFieldId, headerId);
     self.close();
   }
+  
+  function submitActionPlan(headerId, displayValue, hiddenFieldId, displayFieldId, actionStepWork) {
+    opener.document.getElementById(hiddenFieldId).value = headerId;
+    opener.changeDivContent(displayFieldId, displayValue);
+    opener.attachOpportunity(actionStepWork);
+    self.close();
+  }
 </script>
-
+&nbsp;<br />
+<dhv:evaluate if="<%= "true".equals(request.getParameter("addNewOpp")) %>">
+  <a href="javascript:window.location.href='Opportunities.do?command=Add&popup=true&source=<%= request.getParameter("source") %>&actionStepWork=<%= request.getParameter("actionStepWork") %>&orgId=<%= request.getParameter("orgId") %>';">Create New Opportunity</a>
+  &nbsp;<br /><br />
+</dhv:evaluate>
 <%--<center><%= opportunityListInfo.getAlphabeticalPageLinks() %></center>--%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
@@ -40,12 +55,19 @@
 %>      
   <tr class="containerBody">
     <td valign="center" class="row<%= rowid %>">
-      <a href="javascript:submitPage('<%= oppHeader.getId() %>', '<%= toHtml(oppHeader.getDescription()) %>', '<%= request.getAttribute("hiddenFieldId") %>','<%= request.getAttribute("displayFieldId") %>');">
-      <%= toHtml(oppHeader.getDescription()) %></a>
+      <% if ("true".equals((String) request.getParameter("actionplan"))) {%>
+        <%-- TODO: the following line is broken, but appears not to be used? --%>
+        <%-- <a href="javascript:submitActionPlan('<%= oppHeader.getId() %>', '<%= CurrencyFormat.getCurrencyString(oppHeader.getGuess(), User.getLocale(), applicationPrefs.get("SYSTEM.CURRENCY")) + " " + NumberFormat.getPercentInstance().format(oppHeader.getCloseProb())  %>', '<%= request.getAttribute("hiddenFieldId") %>','<%= request.getAttribute("displayFieldId") %>','<%= request.getParameter("actionStepWork") %>');"> --%>
+        <a href="javascript:submitActionPlan('<%= oppHeader.getId() %>', '', '<%= request.getAttribute("hiddenFieldId") %>','<%= request.getAttribute("displayFieldId") %>','<%= request.getParameter("actionStepWork") %>');">
+        <%= toHtml(oppHeader.getDescription()) %></a>
+      <% } else { %>
+        <a href="javascript:submitPage('<%= oppHeader.getId() %>', '<%= toHtml(oppHeader.getDescription()) %>', '<%= request.getAttribute("hiddenFieldId") %>','<%= request.getAttribute("displayFieldId") %>');">
+        <%= toHtml(oppHeader.getDescription()) %></a>
+      <% } %>
       (<%= oppHeader.getComponentCount() %>)
     </td>  
     <td valign="center" class="row<%= rowid %>" nowrap>
-      <dhv:tz timestamp="<%= oppHeader.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= oppHeader.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>   
   </tr>
 <%}%>
@@ -60,7 +82,3 @@
 <br>
 <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();"/>
 <%--<dhv:pagedListControl object="opportunityListInfo"/>--%>
-</td>
-</tr>
-</table>
-

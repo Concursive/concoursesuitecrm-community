@@ -63,6 +63,10 @@ public final class ContactsPortal extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       User thisPortalUser = new User();
       if (thisContact.getUserId() > -1) {
         thisPortalUser.buildRecord(db, thisContact.getUserId());
@@ -101,6 +105,10 @@ public final class ContactsPortal extends CFSModule {
         thisContact = new Contact(db, id);
       } else {
         thisContact = (Contact) context.getFormBean();
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
       }
       setOrganization(context, db, thisContact.getOrgId());
       ContactEmailAddressList emailList = thisContact.getEmailAddressList();
@@ -149,6 +157,10 @@ public final class ContactsPortal extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       inserted = insertUser(context, db, thisContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -182,6 +194,10 @@ public final class ContactsPortal extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       setOrganization(context, db, thisContact.getOrgId());
 
       //Cannot change portal login information if the
@@ -240,6 +256,10 @@ public final class ContactsPortal extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       oldContactInfo = new Contact(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, oldContactInfo.getOrgId())) {
+        return ("PermissionError");
+      }
       oldUserInfo = new User();
       oldUserInfo.buildRecord(db, oldContactInfo.getUserId());
       resultCount = updateUser(context, db, oldContactInfo, oldUserInfo);
@@ -304,6 +324,10 @@ public final class ContactsPortal extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       setOrganization(context, db, thisContact.getOrgId());
       //Cannot change portal login information if the
       //user contact does not have email
@@ -371,6 +395,10 @@ public final class ContactsPortal extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
       //Cannot change portal login information if the
       //user contact does not have email
       ContactEmailAddressList emailList = thisContact.getEmailAddressList();
@@ -467,6 +495,7 @@ public final class ContactsPortal extends CFSModule {
 
     boolean recordInserted = false;
 
+    SystemStatus systemStatus = this.getSystemStatus(context);
     User newUser = new User();
     newUser.setContactId(thisContact.getId());
     newUser.setRoleId(context.getRequest().getParameter("roleId"));
@@ -484,9 +513,8 @@ public final class ContactsPortal extends CFSModule {
     newUser.setModifiedBy(getUserId(context));
     newUser.setTimeZone(getPref(context, "SYSTEM.TIMEZONE"));
     newUser.setCurrency(getPref(context, "SYSTEM.CURRENCY"));
-    newUser.setLanguage(getPref(context, "SYSTEM.LANGUAGE"));
+    newUser.setLanguage(getPref(context, systemStatus.getLanguage()));
     recordInserted = newUser.insert(db, context);
-    SystemStatus systemStatus = this.getSystemStatus(context);
 
     if (recordInserted) {
       //subsequently use this email address to email the user
@@ -673,4 +701,3 @@ public final class ContactsPortal extends CFSModule {
     return resultCount;
   }
 }
-

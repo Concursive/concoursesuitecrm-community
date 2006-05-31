@@ -1,0 +1,113 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh-2.0b2.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+import java.io.*;
+import java.util.*;
+
+String CRLF = System.getProperty("line.separator");
+
+try {
+  File checkFile = new File("mssql-base.sql");
+  if (!checkFile.exists()) {
+    print("Usage:");
+    print("  StripMSSQL");
+    print("");
+    print("  * The files mssql-base.sql and src/sql/mssql/distribution/mssql.sql must exist, mssql-base2.sql will be created");
+    System.exit(0);
+  }
+
+  // Build a map of tables and their constraint names
+  HashMap tableMap = new HashMap();
+  if (1 == 1) {
+    // Grap the constraint names
+    File mssqlFile = new File("src/sql/mssql/distribution/mssql.sql");
+    BufferedReader in = new BufferedReader(new FileReader(mssqlFile));
+    String line = null;
+    String table = null;
+    while ((line = in.readLine()) != null) {
+      //ALTER TABLE [events] WITH NOCHECK ADD
+      if (line.trim().startsWith("ALTER TABLE [")) {
+        table = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+      }
+      //        CONSTRAINT [DF__events__second__014935CB] DEFAULT ('0') FOR [second],
+      if (line.trim().startsWith("CONSTRAINT [DF__")) {
+        HashMap constraintMap = null;
+        if (tableMap.containsKey(table)) {
+          constraintMap = (HashMap) tableMap.get(table);
+        } else {
+          constraintMap = new HashMap();
+          tableMap.put(table, constraintMap);
+          print("Reading: " + table);
+        }
+        String constraint = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+        String name = constraint.substring(0, constraint.length() - 8);
+        ArrayList list = null;
+        if (constraintMap.containsKey(name)) {
+          list = (ArrayList) constraintMap.get(name);
+        } else {
+          list = new ArrayList();
+          constraintMap.put(name, list);
+        }
+        list.add(constraint);
+      }
+    }
+    in.close();
+  }
+
+  if (1 == 1) {
+    int count = 0;
+    // Open file for writing
+    BufferedWriter out = new BufferedWriter(new FileWriter(
+        "mssql-base2.sql"));
+
+    // Read the file
+    BufferedReader in = new BufferedReader(
+        new FileReader("mssql-base.sql"));
+    String line = null;
+    String table = null;
+    while ((line = in.readLine()) != null) {
+      // Remove the [centric_crm]. from lines
+      int indexCentric = line.indexOf("[centric_crm].");
+      if (indexCentric > -1) {
+        line = line.substring(0, indexCentric) + line.substring(indexCentric + 14);
+      }
+      // Remove the COLLATE
+      int indexCollate = line.indexOf(" COLLATE Latin1_General_CI_AS");
+      if (indexCollate > -1) {
+        line = line.substring(0, indexCollate) + line.substring(indexCollate + 29);
+      }
+      // Find the current table name
+      if (line.trim().startsWith("ALTER TABLE [")) {
+        table = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+      }
+      // Lookup the first available constraint name
+      //        CONSTRAINT [DF__events__second__014935CB] DEFAULT ('0') FOR [second],
+      if (line.trim().startsWith("CONSTRAINT [DF__")) {
+        String constraint = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+        String name = constraint.substring(0, constraint.length() - 8);
+
+        if (tableMap.containsKey(table)) {
+          HashMap constraintMap = (HashMap) tableMap.get(table);
+          if (constraintMap.containsKey(name)) {
+            ArrayList list = (ArrayList) constraintMap.get(name);
+            if (list.size() > 0) {
+              String newConstraint = list.get(0);
+              list.remove(0);
+              if (!constraint.equals(newConstraint)) {
+                line = line.substring(0, line.indexOf("[") + 1) + newConstraint + line.substring(line.indexOf("]"));
+                ++count;
+              }
+            }
+          }
+        }
+      }
+      out.write(line + CRLF);
+    }
+    in.close();
+    out.close();
+    print("Replaced " + count + " constraints");
+  }
+
+} catch (Exception e) {
+  e.printStackTrace(System.out);
+}

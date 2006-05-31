@@ -173,6 +173,7 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       this.setOnlyWithProducts(false);
       // now set the values for this list
       this.setAssignedTo(this.getUserId());
+      this.setIncludeAllSites(true);
       this.setOnlyAssigned(true);
       this.setHasEstimatedResolutionDate(true);
       this.setOnlyOpen(true);
@@ -245,6 +246,7 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
       //set the search criteria for the first list
       this.setAssignedTo(this.getUserId());
+      this.setIncludeAllSites(true);
       this.setOnlyAssigned(true);
       this.setOnlyOpen(true);
       this.setHasEstimatedResolutionDate(true);

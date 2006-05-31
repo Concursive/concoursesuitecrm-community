@@ -2,15 +2,19 @@
 <script language="javascript">
   var thisConditionId = -1;
   var thisQuoteId = -1;
-  var thisOtherId = -1;
+  var thisOrgId = -1;
+  var thisContactId = -1;
+  var thisHeaderId = -1;
   var thisLocation = '';
   var isCondition = false;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenuCondition(loc, id, quoteId, conditionId, otherId, location, isCon) {
+  function displayMenuCondition(loc, id, quoteId, conditionId, location, isCon, orgId, contactId, headerId) {
     thisQuoteId = quoteId;
     thisConditionId = conditionId;
-    thisOtherId = otherId;
+    thisOrgId = orgId;
+    thisContactId = contactId;
+    thisHeaderId = headerId;
     thisLocation = location;
     isCondition = isCon;
     if (!menu_init) {
@@ -26,9 +30,11 @@
       if(thisLocation == 'quotes') {
         scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId);
       } else if (thisLocation == 'accountsQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&orgId='+thisOtherId);
+        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&orgId='+thisOrgId);
       } else if (thisLocation == 'opportunitiesQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&headerId='+thisOtherId+'<%= addLinkParams(request, "viewSource") %>');
+        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
+      } else if (thisLocation == 'accountsContactsOppsQuotes') {
+        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&orgId='+thisOrgId+'&contactId='+thisContactId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
       } else {
         alert(label("program.error.conditions","Programming Error. the location/module has to be specified for conditions"));
       }
@@ -36,10 +42,12 @@
       if(thisLocation == 'quotes') {
         scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId);
       } else if (thisLocation == 'accountsQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&orgId='+thisOtherId);
+        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&orgId='+thisOrgId);
       } else if (thisLocation == 'opportunitiesQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&headerId='+thisOtherId+'<%= addLinkParams(request, "viewSource") %>');
-      } else {
+        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
+      } else if (thisLocation == 'accountsContactsOppsQuotes') {
+        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&orgId='+thisOrgId+'&contactId='+thisContactId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
+      }else {
         alert(label("program.error.remarks","Programming Error. the location/module has to be specified for remarks"));
       }
     }

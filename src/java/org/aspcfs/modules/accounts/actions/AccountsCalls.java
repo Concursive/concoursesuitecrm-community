@@ -142,6 +142,10 @@ public final class AccountsCalls extends CFSModule {
       addFormElements(context, db);
       Organization tmpOrganization = (Organization) context.getRequest().getAttribute(
           "OrgDetails");
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, tmpOrganization.getOrgId())) {
+        return ("PermissionError");
+      }
       if (tmpOrganization.isTrashed()) {
         callList.setIncludeOnlyTrashed(true);
       } else {

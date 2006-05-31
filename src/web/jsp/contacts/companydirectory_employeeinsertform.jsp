@@ -18,11 +18,13 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -42,10 +44,15 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    if ((form.siteId.value) == <%=Constants.INVALID_SITE%>) { 
+      message += label("site.required", "- Site is a required field\r\n");
+      formTest = false;
+    }
     if (checkNullString(form.nameLast.value)){
       message += label("check.lastname", "- Last name is a required field\r\n");
       formTest = false;
     }
+<dhv:include name="contact.phoneNumbers" none="true">
     if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) || (checkNullString(form.phone1number.value) && !checkNullString(form.phone1ext.value)) || (checkNullString(form.phone2number.value) && !checkNullString(form.phone2ext.value)) || (checkNullString(form.phone3number.value) && !checkNullString(form.phone3ext.value))) { 
       message += label("check.phone", "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n");
       formTest = false;
@@ -54,14 +61,19 @@
       message += label("check.phone.ext","- Please enter a valid phone number extension\r\n");
       formTest = false;
     }
+</dhv:include>
+<dhv:include name="contact.emailAddresses" none="true">
     if ((!checkEmail(form.email1address.value)) || (!checkEmail(form.email2address.value))){
       message += label("check.email", "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
+</dhv:include>
+<dhv:include name="contact.textMessageAddresses" none="true">
     if ((!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value))){
       message += label("check.textmessage", "- At least one entered text message address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
+</dhv:include>
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -72,18 +84,29 @@
       }
     }
   }
-  function update(countryObj, stateObj) {
-  var country = document.forms['addEmployee'].elements[countryObj].value;
-   if(country == "UNITED STATES" || country == "CANADA"){
-      hideSpan('state2' + stateObj);
-      showSpan('state1' + stateObj);
-   }else{
+
+  function update(countryObj, stateObj, selectedValue) {
+    var country = document.forms['addEmployee'].elements[countryObj].value;
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=addEmployee&stateObj=address"+stateObj+"state";
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueUpdateState(stateObj, showText) {
+    if(showText == 'true'){
       hideSpan('state1' + stateObj);
       showSpan('state2' + stateObj);
+    } else {
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
     }
   }
 </script>
-<body onLoad="javascript:document.addEmployee.nameFirst.focus();">
+<dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+  <body onLoad="javascript:document.addEmployee.siteId.focus();">
+</dhv:evaluate>
+<dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+  <body onLoad="javascript:document.addEmployee.nameFirst.focus();">
+</dhv:evaluate>
   <form name="addEmployee" action="CompanyDirectory.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -103,7 +126,7 @@
   <dhv:evaluate if="<%= !isPopup(request) %>">
     <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">
     <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';" %>">
     <input type="hidden" name="dosubmit" value="true">
     </dhv:evaluate>
 <br />
@@ -113,6 +136,21 @@
     <th colspan="2">
       <strong><dhv:label name="employees.addEmployeeRecord">Add an Employee Record</dhv:label></strong>
     </th>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </td>
+    <td>
+      <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+        <%= SiteList.getHtmlSelect("siteId",(ContactDetails.getSiteId() == -1? User.getSiteId(): ContactDetails.getSiteId())) %>
+        <font color="red">*</font> <%= showAttribute(request, "siteIdError") %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+         <%= SiteList.getSelectedValue(User.getSiteId()) %>
+        <input type="hidden" name="siteId" value="<%= User.getSiteId() %>" >
+      </dhv:evaluate>
+    </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -144,8 +182,9 @@
       <td>
         <%= DepartmentList.getHtmlSelect("department", ContactDetails.getDepartment()) %>
       </td>
-   </tr>
-   <tr class="containerBody">
+  </tr>
+  <dhv:include name="contact.additionalNames" none="true">
+  <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
     </td>
@@ -153,6 +192,7 @@
       <input type="text" size="35" name="additionalNames" value="<%= toHtmlValue(ContactDetails.getAdditionalNames()) %>">
     </td>
   </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
@@ -161,15 +201,17 @@
       <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
     </td>
   </tr>
+  <dhv:include name="contact.birthday" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addEmployee" field="birthDate" timestamp="<%= ContactDetails.getBirthDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false"/>
       <%= showAttribute(request, "birthDateError") %>
     </td>
   </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
@@ -178,6 +220,7 @@
       <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
     </td>
   </tr>
+  <dhv:include name="contact.role" none="true">
   <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_add.Role">Role</dhv:label>
@@ -186,6 +229,7 @@
         <input type="text" size="35" name="role" value="<%= toHtmlValue(ContactDetails.getRole()) %>">
       </td>
     </tr>
+    </dhv:include>
 </table>
 &nbsp;<br>  
 <%--  include basic contact form --%>
@@ -193,14 +237,11 @@
 <br>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">
   <dhv:evaluate if="<%= !isPopup(request) %>">
-  <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
+    <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   </dhv:evaluate>
-  <% if(isPopup(request)){ %>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-  <% }else{ %>
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';" %>">
   <input type="hidden" name="dosubmit" value="true">
-  <%}%>
   <%= addHiddenParams(request, "popup|source") %>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>
 </body>

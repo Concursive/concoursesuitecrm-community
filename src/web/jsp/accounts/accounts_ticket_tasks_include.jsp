@@ -31,11 +31,17 @@
 <%} else {%>
 <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>"/>
 <%}%>
+<%
+  String ticketId = request.getParameter("ticketId"); 
+  if (ticketId == null || "".equals(ticketId.trim())) {
+    ticketId = (String) request.getAttribute("ticketId");
+  }
+%>
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-<input type="hidden" name="ticketId" value="<%= request.getParameter("ticketId") %>" />
+<input type="hidden" name="ticketId" value="<%= ticketId %>" />
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>" />
 <input type="hidden" name="type" value="<%= Constants.TICKET_OBJECT %>" />
-<input type="hidden" name="return" value="AccountTicketTasks.do?command=List&ticketId=<%= request.getParameter("ticketId") %>" />
+<input type="hidden" name="return" value="AccountTicketTasks.do?command=List&ticketId=<%= ticketId %>" />
 </form>
 </body>
 

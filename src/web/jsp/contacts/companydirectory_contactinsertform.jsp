@@ -24,7 +24,10 @@
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
+<jsp:useBean id="SalutationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -33,6 +36,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/setSalutation.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     <% if("adduser".equals(request.getParameter("source"))){ %>
@@ -49,10 +53,20 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    
+    if (document.addContact.company.value != "" && checkNullString(document.addContact.company.value)) {
+       message += label("check.company.blanks", "- Please enter a valid company name.\r\n");
+			 formTest = false;
+    }
+    if (form.nameLast.value != "" && checkNullString(form.nameLast.value)) {
+       message += label("check.name.last.blanks", "- Please enter a valid last name.\r\n");
+			 formTest = false;
+    }
     if(document.addContact.contactcategory[0] && document.addContact.contactcategory[1].checked && document.addContact.orgId.value == '-1') {
        message += label("sure.select.account", "- Make sure you select an account.\r\n");
 			 formTest = false;
     }
+<dhv:include name="contact.phoneNumbers" none="true">
     if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) || (checkNullString(form.phone1number.value) && !checkNullString(form.phone1ext.value)) || (checkNullString(form.phone2number.value) && !checkNullString(form.phone2ext.value)) || (checkNullString(form.phone3number.value) && !checkNullString(form.phone3ext.value))) { 
       message += label("check.phone", "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n");
       formTest = false;
@@ -61,14 +75,19 @@
       message += label("check.phone.ext","- Please enter a valid phone number extension\r\n");
       formTest = false;
     }
+</dhv:include>
+<dhv:include name="contact.emailAddresses" none="true">
     if ((!checkEmail(form.email1address.value)) || (!checkEmail(form.email2address.value)) || (!checkEmail(form.email3address.value))){
       message += label("check.email", "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
+</dhv:include>
+<dhv:include name="contact.textMessageAddresses" none="true">
     if ((!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value))){
       message += label("check.textmessage", "- At least one entered text message address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
+</dhv:include>
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -79,17 +98,24 @@
       }
     }
   }
-  function update(countryObj, stateObj) {
-  var country = document.forms['addContact'].elements[countryObj].value;
-   if(country == "UNITED STATES" || country == "CANADA"){
-      hideSpan('state2' + stateObj);
-      showSpan('state1' + stateObj);
-   }else{
+
+  function update(countryObj, stateObj, selectedValue) {
+    var country = document.forms['addContact'].elements[countryObj].value;
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=addContact&stateObj=address"+stateObj+"state";
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueUpdateState(stateObj, showText) {
+    if(showText == 'true'){
       hideSpan('state1' + stateObj);
       showSpan('state2' + stateObj);
+    } else {
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
     }
   }
-  
+
+
   function setCategoryPopContactType(selectedId, contactId){
     var category = 'general';
     if(document.addContact.contactcategory[0] && document.addContact.contactcategory[1].checked){
@@ -133,13 +159,11 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-  <dhv:evaluate if="<%= !isPopup(request) %>">
-  <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-  </dhv:evaluate>
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
-<br />
-<dhv:formMessage />
+<dhv:formMessage showSpace="false"/>
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+<dhv:evaluate if="<%= !isPopup(request) %>"><input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';"></dhv:evaluate>
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
+<br /><br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -147,6 +171,21 @@
     </th>
   </tr>
     <tr class="containerBody">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.site">Site</dhv:label>
+      </td>
+      <td>
+        <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+          <%= SiteList.getHtmlSelect("siteId",ContactDetails.getSiteId()) %>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+           <%= SiteList.getSelectedValue(User.getSiteId()) %>
+          <input type="hidden" name="siteId" value="<%=User.getSiteId()%>" >
+        </dhv:evaluate>
+        <%= showAttribute(request, "siteIdError") %>
+      </td>
+    </tr>
     <td class="formLabel" nowrap>
       <dhv:label name="contact.contactCategory">Contact Category</dhv:label>
     </td>
@@ -226,6 +265,18 @@
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
+  <dhv:include name="contact-salutation" none="true">
+     <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Salutation">Salutation</dhv:label>
+      </td>
+      <td>
+        <% SalutationList.setJsEvent("onchange=\"javascript:fillSalutation('addContact');\"");%>
+        <%= SalutationList.getHtmlSelect("listSalutation",ContactDetails.getNameSalutation()) %> 
+        <input type="hidden" size="35" name="nameSalutation" value="<%= toHtmlValue(ContactDetails.getNameSalutation()) %>">
+      </td>
+    </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
@@ -251,6 +302,7 @@
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
+  <dhv:include name="contact.additionalNames" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
@@ -259,6 +311,7 @@
       <input type="text" size="35" name="additionalNames" value="<%= toHtmlValue(ContactDetails.getAdditionalNames()) %>">
     </td>
   </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
@@ -267,15 +320,17 @@
       <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
     </td>
   </tr>
+  <dhv:include name="contact.birthday" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addContact" field="birthDate" timestamp="<%= ContactDetails.getBirthDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false"/>
       <%= showAttribute(request, "birthDateError") %>
     </td>
   </tr>
+  </dhv:include>
   <%-- Check if a user is being added --%>
   <% if("adduser".equals(request.getParameter("source"))){ %>
   <tr>
@@ -302,6 +357,7 @@
         <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
       </td>
     </tr>
+    <dhv:include name="contact.role" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_add.Role">Role</dhv:label>
@@ -310,6 +366,7 @@
         <input type="text" size="35" name="role" value="<%= toHtmlValue(ContactDetails.getRole()) %>">
       </td>
     </tr>
+    </dhv:include>
 </table>
 &nbsp;<br>
 <%--  include basic contact form --%>

@@ -918,10 +918,10 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM product_category AS pctgy " +
-        " LEFT JOIN product_category AS pctgy2 " +
+        " FROM product_category pctgy " +
+        " LEFT JOIN product_category pctgy2 " +
         " ON ( pctgy.parent_id = pctgy2.category_id ) " +
-        " LEFT JOIN lookup_product_category_type AS pctgytype " +
+        " LEFT JOIN lookup_product_category_type pctgytype " +
         " ON ( pctgy.type_id = pctgytype.code ) " +
         " WHERE pctgy.category_id > 0 ");
     createFilter(sqlFilter, db);
@@ -967,12 +967,12 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         " pctgy.*, " +
-        " pctgy2.category_name as parent_name," +
+        " pctgy2.category_name AS parent_name," +
         " pctgytype.description AS type_name " +
-        " FROM product_category AS pctgy " +
-        " LEFT JOIN product_category AS pctgy2 " +
+        " FROM product_category pctgy " +
+        " LEFT JOIN product_category pctgy2 " +
         " ON ( pctgy.parent_id = pctgy2.category_id ) " +
-        " LEFT JOIN lookup_product_category_type AS pctgytype " +
+        " LEFT JOIN lookup_product_category_type pctgytype " +
         " ON ( pctgy.type_id = pctgytype.code ) " +
         " WHERE pctgy.category_id > -1 ");
     pst = db.prepareStatement(
@@ -1073,23 +1073,19 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     if (name != null) {
       if (name.indexOf("%") >= 0) {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.category_name) LIKE " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.category_name) LIKE ? ");
       } else {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.category_name) = " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.category_name) = ? ");
       }
     }
     if (abbreviation != null) {
       if (abbreviation.indexOf("%") >= 0) {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.abbreviation) LIKE " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.abbreviation) LIKE ? ");
       } else {
         sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.abbreviation) = " + DatabaseUtils.toLowerCase(
-                db) + "(?) ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.abbreviation) = ? ");
       }
     }
     if (parentName != null) {
@@ -1178,11 +1174,11 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     }
 
     if (name != null) {
-      pst.setString(++i, name);
+      pst.setString(++i, name.toLowerCase());
     }
 
     if (abbreviation != null) {
-      pst.setString(++i, abbreviation);
+      pst.setString(++i, abbreviation.toLowerCase());
     }
 
     if (parentName != null) {

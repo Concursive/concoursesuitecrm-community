@@ -17,6 +17,10 @@
   - Description:
   --%>
 <%@ page import="org.aspcfs.utils.web.HtmlSelect,org.aspcfs.utils.StringUtils,org.aspcfs.utils.web.LookupList" %>
+<jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+
 <dhv:evaluate if="<%= PreviousCallDetails.getId() > 0 %>">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -116,15 +120,43 @@
       </strong>
     </th>
   </tr>
+<dhv:evaluate if="<%= "GlobalItem".equals(request.getParameter("actionSource")) %>">  
+  <tr>
+    <td class="formLabel">
+      <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
+    </td>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="4" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            <div id="changecontact">
+              <% if(ContactDetails.getId() != -1) {%>
+                <%= toHtml(ContactDetails.getValidName()) %>
+              <%} else {%>
+                <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+              <%}%>
+            </div>
+          </td>
+          <td valign="top" width="100%" nowrap>
+            <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
+            [<a href="javascript:popContactsListSingle('contactLink','changecontact','&listView=contacts<%= User.getUserRecord().getSiteId() == -1?"&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&nonUsersOnly=true&reset=true&filters=all|accountcontacts|mycontacts');"><dhv:label name="admin.selectContact">Select Contact</dhv:label></a>]
+            <input type="hidden" name="contactId" id="contactLink" value="<%= ContactDetails.getId() %>">
+            [<a href="javascript:popURL('ExternalContacts.do?command=Prepare&source=addactivity&actionSource=GlobalItem&popup=true', 'New_Contact','600','550','yes','yes');"><dhv:label name="admin.createContact">Create new contact</dhv:label></a>]
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
-      <%= CallTypeList.getHtmlSelect("callTypeId", (PreviousCallDetails.getId() > 0 ? -1 : CallDetails.getCallTypeId())) %><font color="red">*</font><%= showAttribute(request, "typeError") %>
+      <%= CallTypeList.getHtmlSelect("callTypeId",CallDetails.getCallTypeId()) %><font color="red">*</font><%= showAttribute(request, "typeError") %>
       <dhv:include name="call-type" none="true">
       <dhv:label name="contact.length.colon">Length:</dhv:label>
-      <input type="text" size="5" name="length" value="<%= (PreviousCallDetails.getId() > 0 ? "" : toHtmlValue(CallDetails.getLengthString())) %>"> <dhv:label name="admin.minutes">minutes</dhv:label>  <%= showAttribute(request, "lengthError") %>
+      <input type="text" size="5" name="length" value="<%= toHtmlValue(CallDetails.getLengthString()) %>"> <dhv:label name="admin.minutes">minutes</dhv:label>  <%= showAttribute(request, "lengthError") %>
       </dhv:include>
     </td>
   </tr>
@@ -133,7 +165,7 @@
       <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
-      <input type="text" size="50" maxlength="255" name="subject" value="<%= (PreviousCallDetails.getId() > 0 ? "" : toHtmlValue(CallDetails.getSubject())) %>"><font color="red">*</font><%= showAttribute(request, "subjectError") %>
+      <input type="text" size="50" maxlength="255" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>"><font color="red">*</font><%= showAttribute(request, "subjectError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -141,7 +173,7 @@
       <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
-      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= (PreviousCallDetails.getId() > 0 ? "" :toString(CallDetails.getNotes())) %></TEXTAREA>
+      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(CallDetails.getNotes()) %></TEXTAREA>
     </td>
   </tr>
   <tr class="containerBody">
@@ -157,7 +189,7 @@
           thisLookupList = callResultList.getCompletedLookupList(CallDetails.getResultId());
         }
        if((CallDetails.getStatusId() != Call.CANCELED && !"cancel".equals(request.getParameter("action"))) && (CallDetails.getId() == -1 || (CallDetails.getId() > 0 && ((CallDetails.getAlertDate() == null) || (request.getAttribute("alertDateWarning") != null))  ))){ 
-        HtmlSelect resultSelect = thisLookupList.getHtmlSelectObj(PreviousCallDetails.getId() > 0 ? -1 : CallDetails.getResultId());
+        HtmlSelect resultSelect = thisLookupList.getHtmlSelectObj(CallDetails.getResultId());
         resultSelect.addAttribute("onChange", "javascript:makeSuggestion();");
         resultSelect.addAttribute("id", "resultId");
       %>
@@ -172,4 +204,3 @@
 
   </tr>
 </table>
-

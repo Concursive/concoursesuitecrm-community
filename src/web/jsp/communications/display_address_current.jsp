@@ -22,7 +22,7 @@
 <%@ include file="../initPage.jsp" %>
 <html>
 <head>
-  <title>Thank you for visiting our contact information update page</title>
+  <title><dhv:label name="campaign.contactUpdate.thankYou">Thank you for visiting our contact information update page</dhv:label></title>
 <script language="JavaScript">
 </script>
 </head>
@@ -34,7 +34,7 @@
     <table cellpadding="4" cellspacing="0" border="0" width="85%">
       <tr class="row1">
         <td>
-          <font color="#8c8c8c"><strong>Address Confirmation</strong></font>
+          <font color="#8c8c8c"><strong><dhv:label name="campaign.contactUpdate.addressConfirmation">Address Confirmation</dhv:label></strong></font>
         </td>
       </tr>
     </table>
@@ -42,7 +42,7 @@
     <table cellpadding="4" cellspacing="0" border="0" width="85%">
       <tr>
         <td>
-          <strong>Please click OK to confirm that your address on file is current and accurate.</strong></font>
+          <strong><dhv:label name="campaign.contactUpdate.addressInfoConfirmation">Please click OK to confirm that your address on file is current and accurate.</dhv:label></strong>
         </td>
       </tr>
     </table>
@@ -50,8 +50,8 @@
     <table cellpadding="4" cellspacing="0" border="0" width="85%">
       <tr>
         <td>
-          <input type="submit" value="OK" />
-          <input type="button" value="Cancel" onClick="window.opener=self;window.close()" />
+          <input type="submit" value="<dhv:label name="button.ok">OK</dhv:label>" />
+          <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="window.opener=self;window.close()" />
           <input type="hidden" name="dosubmit" value="true" />
           <input type="hidden" name="enteredBy" value="<%=ContactDetails.getEnteredBy()%>" />
           <input type="hidden" name="modifiedBy" value="<%=ContactDetails.getModifiedBy()%>" />
@@ -64,6 +64,7 @@
         </td>
       </tr>
     </table>
+    </center>
     <br>
   </form>
  </body>

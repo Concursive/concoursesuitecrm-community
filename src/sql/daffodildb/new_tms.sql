@@ -1,7 +1,7 @@
 CREATE SEQUENCE ticket_level_code_seq;
 CREATE TABLE ticket_level (
   code INT PRIMARY KEY,
-  description VARCHAR(300)  UNIQUE NOT NULL,
+  description VARCHAR(300) UNIQUE NOT NULL,
   default_item boolean DEFAULT false,
   "level" INT DEFAULT 0,
   enabled boolean DEFAULT true
@@ -20,7 +20,7 @@ CREATE TABLE ticket_severity (
 CREATE SEQUENCE lookup_ticketsource_code_seq;
 CREATE TABLE lookup_ticketsource (
   code INT PRIMARY KEY
-  ,description VARCHAR(300)  UNIQUE NOT NULL
+  ,description VARCHAR(300) UNIQUE NOT NULL
   ,default_item boolean DEFAULT false
   ,"level" INTEGER DEFAULT 0
   ,enabled boolean DEFAULT true
@@ -38,11 +38,20 @@ CREATE TABLE lookup_ticket_status (
 CREATE SEQUENCE ticket_priority_code_seq;
 CREATE TABLE ticket_priority (
   code INT PRIMARY KEY,
-  description VARCHAR(300)  NOT NULL UNIQUE ,
+  description VARCHAR(300) NOT NULL UNIQUE,
   style CLOB DEFAULT ''  NOT NULL ,
   default_item boolean DEFAULT false,
   "level" INTEGER DEFAULT 0,
   enabled boolean DEFAULT true
+);
+
+CREATE SEQUENCE lookup_ticket_escalati_code_seq;
+CREATE TABLE lookup_ticket_escalation(
+  code INTEGER PRIMARY KEY
+  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,default_item BOOLEAN DEFAULT false
+  ,"level" INTEGER DEFAULT 0
+  ,enabled BOOLEAN DEFAULT true
 );
 
 CREATE SEQUENCE ticket_category_id_seq;
@@ -55,6 +64,7 @@ CREATE TABLE ticket_category (
   ,default_item boolean DEFAULT false
   ,"level" INTEGER DEFAULT 0
   ,enabled boolean DEFAULT true
+  ,site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE SEQUENCE ticket_category_draft_id_seq;
@@ -67,7 +77,28 @@ CREATE TABLE ticket_category_draft (
   full_description CLOB  DEFAULT '' NOT NULL,
   default_item boolean DEFAULT false,
   "level" INTEGER DEFAULT false,
-  enabled boolean DEFAULT true
+  enabled boolean DEFAULT true,
+  site_id INTEGER REFERENCES lookup_site_id(code)
+);
+
+-- Ticket Category Draft Assignment table
+CREATE SEQUENCE ticket_category_draft_assignment_map_id_seq;
+CREATE TABLE ticket_category_draft_assignment (
+  map_id INT PRIMARY KEY,
+  category_id INTEGER REFERENCES ticket_category_draft(id) NOT NULL,
+  department_id INTEGER REFERENCES lookup_department(code),
+  assigned_to INTEGER REFERENCES access(user_id),
+  group_id INTEGER REFERENCES user_group(group_id)
+);
+
+-- Ticket Category Assignment table
+CREATE SEQUENCE ticket_category_assignment_map_id_seq;
+CREATE TABLE ticket_category_assignment (
+  map_id INT PRIMARY KEY,
+  category_id INTEGER REFERENCES ticket_category(id) NOT NULL,
+  department_id INTEGER REFERENCES lookup_department(code),
+  assigned_to INTEGER REFERENCES access(user_id),
+  group_id INTEGER REFERENCES user_group(group_id)
 );
 
 CREATE SEQUENCE ticket_ticketid_seq;
@@ -114,7 +145,7 @@ CREATE INDEX "ticketlist_entered" ON "ticket" (entered);
 
 CREATE TABLE project_ticket_count (
   project_id INT UNIQUE NOT NULL REFERENCES projects(project_id),
-  key_count INT  DEFAULT false NOT NULL
+  key_count INT DEFAULT 0 NOT NULL
 );
 
 CREATE SEQUENCE ticketlog_id_seq;
@@ -191,3 +222,49 @@ CREATE TABLE ticketlink_project (
   ticket_id INT NOT NULL REFERENCES ticket(ticketid),
   project_id INT NOT NULL REFERENCES projects(project_id)
 );
+
+CREATE INDEX ticketlink_project_idx ON ticketlink_project(ticket_id);
+
+-- Ticket Cause lookup
+CREATE SEQUENCE lookup_ticket_cause_code_seq;
+CREATE TABLE lookup_ticket_cause (
+  code INTEGER PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INTEGER DEFAULT 0,
+	enabled BOOLEAN DEFAULT true
+);
+
+-- Ticket Resolution lookup
+CREATE SEQUENCE lookup_ticket_resoluti_code_seq;
+CREATE TABLE lookup_ticket_resolution (
+  code INTEGER PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INTEGER DEFAULT 0,
+	enabled BOOLEAN DEFAULT true
+);
+
+--Ticket Defect table
+CREATE SEQUENCE ticket_defect_defect_id_seq;
+CREATE TABLE ticket_defect (
+  defect_id INT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description CLOB,
+  start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  end_date TIMESTAMP,
+  enabled BOOLEAN DEFAULT true NOT NULL,
+  trashed_date TIMESTAMP,
+  site_id INT REFERENCES lookup_site_id(code)
+);
+
+-- Ticket State lookup
+CREATE SEQUENCE lookup_ticket_state_code_seq;
+CREATE TABLE lookup_ticket_state (
+  code INTEGER PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INTEGER DEFAULT 0,
+	enabled BOOLEAN DEFAULT true
+);
+

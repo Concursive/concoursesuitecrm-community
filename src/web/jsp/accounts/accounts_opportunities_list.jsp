@@ -18,10 +18,11 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.OpportunityHeader,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.modules.pipeline.beans.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
-<jsp:useBean id="OpportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
+<jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="OpportunityPagedInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="accessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -39,6 +40,9 @@
     return id;
   }
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -64,9 +68,9 @@
       <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">
       <td align="left">
         <select size="1" name="listView" onChange="javascript:document.listView.submit();">
-          <option <%= OpportunityPagedInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
           <option <%= OpportunityPagedInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
           <option <%= OpportunityPagedInfo.getOptionValue("closed") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllClosedOpportunities">All Closed Opportunities</dhv:label></option>
+          <option <%= OpportunityPagedInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
         </select>
       </td>
       <td>
@@ -87,60 +91,107 @@
       <th nowrap>
         <strong><dhv:label name="account.opportunities.associatedWith">Associated With</dhv:label></strong>
       </th>
-      <th nowrap>
-        <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.BestGuessTotal">Best Guess Total</dhv:label></strong>
-      </th>
+      <dhv:evaluate if="<%=!allowMultiple%>" >
+        <th nowrap>
+          <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.stage">Stage</dhv:label></strong>
+        </th>
+        <th nowrap>
+          <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=oc.closedate<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></strong>
+          <%= OpportunityPagedInfo.getSortIcon("oc.closedate") %>
+        </th>
+        <th nowrap>
+          <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.BestGuessTotal">Best Guess Total</dhv:label></strong>
+        </th>
+      </dhv:evaluate>
+      <dhv:include name="pipeline-custom1Integer" none="true">
+        <th nowrap>
+          <strong><dhv:label name="pipeline.custom1Integer">Custom1 Integer</dhv:label></strong>
+        </th>
+      </dhv:include>
       <th nowrap>
         <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
         <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
       </th>
     </tr>
   <%
-    Iterator j = OpportunityList.iterator();
+    Iterator j = OpportunityHeaderList.iterator();
     FileItem thisFile = new FileItem();
     if ( j.hasNext() ) {
       int rowid = 0;
       int i = 0;
-        while (j.hasNext()) {
-          i++;
-          rowid = (rowid != 1?1:2);
-          OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+      HashMap headersListed = new HashMap();
+      while (j.hasNext()) {
+        i++;
+        rowid = (rowid != 1?1:2);
+        OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+        boolean hasPermission = false;
   %>
-    <tr class="containerBody">
-      <td width="8" valign="center" nowrap class="row<%= rowid %>">
-        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-        <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-        <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppHeader.getId() %>','<%= oppHeader.isTrashed() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+  <dhv:hasAuthority owner="<%= oppHeader.getManager() %>">
+    <% hasPermission = true; %>
+  </dhv:hasAuthority>
+    <tr class="row<%= rowid %>">
+      <td width="8" valign="center" nowrap>
+        <% if(!oppHeader.getLock()){%>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+          <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppHeader.getId() %>','<%= oppHeader.isTrashed() %>','<%= hasPermission %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+         <% }else{ %>
+          <font color="red"><dhv:label name="pipeline.locked">Locked</dhv:label></font>
+         <% } %>
       </td>
-      <td valign="center" class="row<%= rowid %>">
-        <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
-        <%= toHtml(oppHeader.getDescription()) %></a>
-        (<%= oppHeader.getComponentCount() %>)
+      <td valign="center">
+          <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
+          <%= toHtml(oppHeader.getDescription()) %></a>
+          (<%= oppHeader.getComponentCount() %>)
         <dhv:evaluate if="<%= oppHeader.hasFiles() %>">
         <%= thisFile.getImageTag("-23") %>
         </dhv:evaluate>
       </td>
       <dhv:evaluate if="<%=oppHeader.getAccountLink() != -1 %>">
-        <td valign="center" align="right" class="row<%= rowid %>" nowrap>
+        <td valign="center" align="right" nowrap>
           <%= toHtml(oppHeader.getAccountName()) %>
         </td>
       </dhv:evaluate>
       <dhv:evaluate if="<%=oppHeader.getContactLink() != -1 %>">
-        <td valign="center" align="right" class="row<%= rowid %>" nowrap>
+        <td valign="center" align="right" nowrap>
           <%= toHtml(oppHeader.getContactName()) %>
         </td>
       </dhv:evaluate>
-      <td valign="center" align="right" class="row<%= rowid %>" nowrap>
-        <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-      </td>
-      <td valign="center" class="row<%= rowid %>" nowrap>
+      <dhv:evaluate if="<%=!allowMultiple%>" >
+        <td valign="center" nowrap>
+          <%= toHtml(oppHeader.getComponent().getStageName()) %>&nbsp;
+        </td>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%=!allowMultiple%>" >
+        <td valign="center" nowrap>
+          <zeroio:tz timestamp="<%= oppHeader.getComponent().getCloseDate() %>" dateOnly="true" timeZone="<%= oppHeader.getComponent().getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% if(!User.getTimeZone().equals(oppHeader.getComponent().getCloseDateTimeZone())){%>
+          <br />
+          <zeroio:tz timestamp="<%= oppHeader.getComponent().getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% } %>
+        </td>
+        <td valign="top" align="right" nowrap>
+          <zeroio:currency value="<%= oppHeader.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        </td>
+      </dhv:evaluate>
+      <dhv:include name="pipeline-custom1Integer" none="true">
+        <td valign="top" align="right" class="row<%= rowid %>" nowrap>
+          <%= oppHeader.getCustom1Integer() %>&nbsp;
+        </td>
+      </dhv:include>
+      <td valign="center" nowrap>
         <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
       </td>
     </tr>
   <%}%>
   <%} else {%>
     <tr class="containerBody">
-      <td colspan="5">
+      <dhv:include name="pipeline-custom1Integer" none="true">
+        <td colspan="8">
+      </dhv:include>
+      <dhv:include name="pipeline-custom1Integer">
+        <td colspan="6">
+      </dhv:include>
         <dhv:label name="accounts.accounts_contacts_oppcomponent_list.NoOpportunitiesFound">No opportunities found.</dhv:label>
       </td>
     </tr>

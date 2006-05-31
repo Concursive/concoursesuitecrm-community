@@ -40,7 +40,9 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
    * @param event Description of the Parameter
    */
   public void sessionCreated(HttpSessionEvent event) {
-    //System.out.println("HttpSession object has been created");
+    /*if (System.getProperty("DEBUG") != null) {
+      System.out.println("ContextSessionListener-> sessionCreated");
+    }*/
   }
 
 
@@ -50,7 +52,9 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
    * @param event Description of the Parameter
    */
   public void sessionDestroyed(HttpSessionEvent event) {
-
+    /*if (System.getProperty("DEBUG") != null) {
+      System.out.println("ContextSessionListener-> sessionDestroyed");
+    }*/
   }
 
 
@@ -61,7 +65,9 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
    * @param se Description of the Parameter
    */
   public void attributeAdded(HttpSessionBindingEvent se) {
-    //System.out.println("An attribute was added to the ServletContext object");
+    /*if (System.getProperty("DEBUG") != null) {
+      System.out.println("ContextSessionListener-> attributeAdded");
+    }*/
   }
 
 
@@ -85,7 +91,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
           SessionManager thisManager = ((SystemStatus) ((Hashtable) context.getAttribute(
               "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getSessionManager();
           UserSession thisSession = thisManager.getUserSession(userId);
-          if (thisSession.getId().equals(se.getSession().getId())) {
+          if (thisSession.getId().equals(thisUser.getSessionId())) {
             thisManager.removeUser(userId);
             if (System.getProperty("DEBUG") != null) {
               System.out.println(
@@ -95,7 +101,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
         }
       }
     } catch (Exception e) {
-      //System.out.println("ContextSessionListener-> Error: " + e.toString());
+      System.out.println("ContextSessionListener-> attributeRemoved Error: " + e.toString());
     }
   }
 

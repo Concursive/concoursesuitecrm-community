@@ -1,0 +1,51 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
+
+int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_TICKETS);
+
+if (categoryId != -1) {
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator");
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+
+  LookupListElement incorrectElement = new LookupListElement(db,
+    PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_ASSETS),
+    PermissionCategory.LOOKUP_TICKET_STATE);
+  if (incorrectElement.getId() > -1) {
+    print("Removing incorrect lookup table entry into lookup_lists_lookup table...");
+    incorrectElement.delete(db);
+  }
+
+  LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_TICKET_STATE);
+  if (element.getId() < 0) {
+    element = new LookupListElement();
+    element.setModuleId(categoryId);
+    element.setCategoryId(PermissionCategory.PERMISSION_CAT_TICKETS);
+    element.setLookupId(PermissionCategory.LOOKUP_TICKET_STATE);
+    element.setTableName("lookup_ticket_state");
+    element.setClassName("lookupList");
+    element.setLevel(80);
+    element.setDescription(dictionary.getTerm("system.fields.label", "tickets.ticketState", "value"));
+    element.insert(db);
+    print("Lookup table element inserted: " + element.getTableName());
+  } else {
+    print("The lookup table element already exists");
+  }
+} else {
+  print("The category Id has not been found");
+}

@@ -37,7 +37,6 @@ public class ContactInstantMessageAddressList extends InstantMessageAddressList 
   private String emptyHtmlSelectRecord = null;
   private String jsEvent = null;
 
-
   /**
    * Gets the emptyHtmlSelectRecord attribute of the
    * ContactInstantMessageAddressList object
@@ -78,7 +77,6 @@ public class ContactInstantMessageAddressList extends InstantMessageAddressList 
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
   }
-
 
   /**
    * Constructor for the ContactInstantMessageAddressList object
@@ -132,7 +130,7 @@ public class ContactInstantMessageAddressList extends InstantMessageAddressList 
 
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-        "SELECT *, " +
+        "SELECT cim.*, " +
         "lims.description AS service_description, limt.description AS type_description " +
         "FROM contact_imaddress cim " +
         "LEFT JOIN lookup_im_services lims ON (cim.imaddress_service = lims.code) " +
@@ -223,7 +221,7 @@ public class ContactInstantMessageAddressList extends InstantMessageAddressList 
    */
   public String getEmptyHtmlSelect(String selectName) {
     HtmlSelect select = new HtmlSelect();
-    select.addItem(-1, "--None--");
+    select.addItem(-1, "-- None --");
     return select.getHtml(selectName);
   }
 

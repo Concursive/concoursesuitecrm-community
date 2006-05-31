@@ -566,7 +566,7 @@ public class AdRun {
     pst.setBoolean(++i, includePhoto);
     if (completeDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
-      pst.setInt(++i, -1);
+      DatabaseUtils.setInt(pst, ++i, -1);
     } else {
       pst.setDate(++i, completeDate);
       pst.setInt(++i, completedBy);
@@ -609,7 +609,7 @@ public class AdRun {
       pst.setBoolean(++i, includePhoto);
       if (completeDate == null) {
         pst.setNull(++i, java.sql.Types.DATE);
-        pst.setInt(++i, -1);
+        DatabaseUtils.setInt(pst, ++i, -1);
       } else {
         pst.setDate(++i, completeDate);
         pst.setInt(++i, completedBy);
@@ -660,7 +660,7 @@ public class AdRun {
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setNull(++i, java.sql.Types.DATE);
-    pst.setInt(++i, -1);
+    DatabaseUtils.setInt(pst, ++i, -1);
     pst.setInt(++i, id);
     pst.execute();
     pst.close();

@@ -71,6 +71,9 @@ public class ImportAccounts extends CSVReader {
   private int URL = 0;
   private int MODIFIED = 0;
   private int ENTERED = 0;
+  private int SEGMENT_ID = 0;
+  private int COMPANY_SIZE_ID = 0;
+  private int DIRECT_BILL = 0;
 
 
   /**
@@ -155,13 +158,14 @@ public class ImportAccounts extends CSVReader {
       PhoneNumberFormatter phoneFormatter = new PhoneNumberFormatter();
 
       //Parse the text file
+      ArrayList thisRecord = null;
       BufferedReader in = new BufferedReader(new FileReader(csvFile));
       String line = null;
       int lineNumber = 0;
       while ((line = in.readLine()) != null) {
         ++lineNumber;
         //For each line use the parseExcelCSVLine method to get a record
-        ArrayList thisRecord = new ArrayList(
+        thisRecord = new ArrayList(
             StringUtils.parseExcelCSVLine(line));
         if (lineNumber == 1) {
           //Process the column mappings
@@ -226,6 +230,9 @@ public class ImportAccounts extends CSVReader {
               thisRecord, new String[]{"DATE_MODIFIED", "Modified"});
           ENTERED = findColumn(
               thisRecord, new String[]{"DATE_ENTERED", "Entered"});
+          SEGMENT_ID = findColumn(thisRecord, new String[]{"SEGMENT_ID"});
+          COMPANY_SIZE_ID = findColumn(thisRecord, new String[]{"COMPANY_SIZE_ID"});
+          DIRECT_BILL = findColumn(thisRecord, new String[]{"DIRECT_BILL"});
           continue;
         }
         ++orgId;
@@ -247,6 +254,15 @@ public class ImportAccounts extends CSVReader {
         thisOrganization.setName(getValue(thisRecord, COMPANY_NAME));
         thisOrganization.setNotes(getValue(thisRecord, NOTES));
         thisOrganization.setUrl(getValue(thisRecord, URL));
+        if (getValue(thisRecord, SEGMENT_ID) != null) {
+          thisOrganization.setSegmentId(getValue(thisRecord, SEGMENT_ID));
+        }
+        if (getValue(thisRecord, COMPANY_SIZE_ID) != null) {
+          thisOrganization.setAccountSize(getValue(thisRecord, COMPANY_SIZE_ID));
+        }
+        if (getValue(thisRecord, DIRECT_BILL) != null) {
+          thisOrganization.setDirectBill(getValue(thisRecord, DIRECT_BILL));
+        }
         if (getValue(thisRecord, KEY_COMPANY) != null) {
           thisOrganization.setOrgId(getValue(thisRecord, KEY_COMPANY));
         } else {

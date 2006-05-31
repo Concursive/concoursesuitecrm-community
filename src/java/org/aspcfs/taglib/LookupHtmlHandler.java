@@ -15,10 +15,15 @@
  */
 package org.aspcfs.taglib;
 
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.SystemStatus;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
@@ -104,6 +109,25 @@ public class LookupHtmlHandler extends TagSupport {
    */
   public int doStartTag() throws JspException {
     try {
+      // Translated labels needed
+      String noneSelected = "None Selected";
+      // Use the system status if available
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
+          "ConnectionElement");
+      if (ce == null) {
+        ApplicationPrefs prefs = (ApplicationPrefs) pageContext.getServletContext().getAttribute(
+            "applicationPrefs");
+        if (prefs != null) {
+          noneSelected = prefs.getLabel("accounts.accounts_add.NoneSelected", prefs.get("SYSTEM.LANGUAGE"));
+        }
+      } else {
+        SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+            "SystemStatus")).get(ce.getUrl());
+        // Look up the label key in system status to get the value
+        if (systemStatus != null) {
+          noneSelected = systemStatus.getLabel("accounts.accounts_add.NoneSelected", "None Selected");
+        }
+      }
       //TODO: if a lookupType is specified like hashmap, logic needs to be included to handle that case.
       ArrayList selectedList = (ArrayList) pageContext.getRequest().getAttribute(
           listName);
@@ -134,12 +158,10 @@ public class LookupHtmlHandler extends TagSupport {
             }
           }
         } else {
-          this.pageContext.getOut().write(
-              "<option value=\"-1\">None Selected</option>");
+          this.pageContext.getOut().write("<option value=\"-1\">" + noneSelected + "</option>");
         }
       } else {
-        this.pageContext.getOut().write(
-            "<option value=\"-1\">None Selected</option>");
+        this.pageContext.getOut().write("<option value=\"-1\">" + noneSelected + "</option>");
       }
     } catch (Exception e) {
       throw new JspException("LookupHtmlHandler - > Error: " + e.getMessage());
@@ -147,4 +169,3 @@ public class LookupHtmlHandler extends TagSupport {
     return SKIP_BODY;
   }
 }
-

@@ -17,10 +17,12 @@ package org.aspcfs.modules.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.StateSelect;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -41,6 +43,7 @@ public class Address {
   private String streetAddressLine1 = "";
   private String streetAddressLine2 = "";
   private String streetAddressLine3 = "";
+  private String streetAddressLine4 = "";
   private String city = null;
   private String state = null;
   private String otherState = null;
@@ -141,6 +144,17 @@ public class Address {
 
 
   /**
+   *  Sets the streetAddressLine4 attribute of the Address object
+   *
+   *@param  streetAddressLine4  The new streetAddressLine4 value
+   */
+  public void setStreetAddressLine4(String streetAddressLine4) {
+    this.streetAddressLine4 = streetAddressLine4;
+  }
+
+
+
+  /**
    * Sets the otherState attribute of the Address object
    *
    * @param tmp The new otherState value
@@ -203,6 +217,16 @@ public class Address {
    */
   public String getStreetAddressLine3() {
     return streetAddressLine3;
+  }
+
+
+  /**
+   *  Gets the streetAddressLine4 attribute of the Address object
+   *
+   * @return    The streetAddressLine4 value
+   */
+  public String getStreetAddressLine4() {
+    return streetAddressLine4;
   }
 
 
@@ -457,7 +481,8 @@ public class Address {
    * @since 1.5
    */
   public String getState() {
-    if ("UNITED STATES".equals(country) || ("CANADA".equals(country))) {
+    StateSelect stateSelect = new StateSelect(country);
+    if (stateSelect.hasCountry(country)) {
       return state;
     }
     if ("-1".equals(otherState)) {
@@ -584,6 +609,7 @@ public class Address {
     if ((streetAddressLine1 == null || streetAddressLine1.trim().equals("")) &&
         (streetAddressLine2 == null || streetAddressLine2.trim().equals("")) &&
         (streetAddressLine3 == null || streetAddressLine3.trim().equals("")) &&
+        (streetAddressLine4 == null || streetAddressLine4.trim().equals("")) &&
         (city == null || city.trim().equals("")) &&
         (state == null ||
         state.trim().equals("") ||
@@ -688,6 +714,10 @@ public class Address {
         "")) {
       thisAddress.append(this.getStreetAddressLine3().trim() + "\r\n");
     }
+    if (this.getStreetAddressLine4() != null && !this.getStreetAddressLine4().trim().equals("")) {
+      thisAddress.append(this.getStreetAddressLine4().trim() + "\r\n");
+    }
+
     if (!this.getCityState().trim().equals("")) {
       thisAddress.append(this.getCityState().trim() + "\r\n");
     }
@@ -754,6 +784,7 @@ public class Address {
     this.setStreetAddressLine1(rs.getString("addrline1"));
     this.setStreetAddressLine2(rs.getString("addrline2"));
     this.setStreetAddressLine3(rs.getString("addrline3"));
+    this.setStreetAddressLine4(rs.getString("addrline4"));
     this.setCity(rs.getString("city"));
     this.setState(rs.getString("state"));
     this.setOtherState(state);
@@ -799,10 +830,15 @@ public class Address {
     if (buffer != null && !"".equals(buffer.trim())) {
       this.setStreetAddressLine3(buffer);
     }
+    buffer = request.getParameter("address" + parseItem + "line4");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setStreetAddressLine4(buffer);
+    }
     buffer = request.getParameter("address" + parseItem + "city");
     if (buffer != null && !"".equals(buffer.trim())) {
       this.setCity(buffer);
     }
+    this.setCountry(request.getParameter("address" + parseItem + "country"));
     buffer = request.getParameter("address" + parseItem + "state");
     if (buffer != null && !"".equals(buffer.trim())) {
       this.setState(buffer);
@@ -815,13 +851,27 @@ public class Address {
     if (buffer != null && !"".equals(buffer.trim())) {
       this.setZip(buffer);
     }
-    this.setCountry(request.getParameter("address" + parseItem + "country"));
     if (request.getParameter("address" + parseItem + "delete") != null) {
       String action = request.getParameter("address" + parseItem + "delete").toLowerCase();
       if (action.equals("on")) {
         this.setEnabled(false);
       }
     }
+    if (request.getParameter("addressprimary") != null) {
+      String tmp = request.getParameter("addressprimary");
+      if (Integer.parseInt(tmp) == parseItem) {
+        this.setPrimaryAddress(true);
+      } else {
+        this.setPrimaryAddress(false);
+      }
+    }
+  }
+  
+  public static ArrayList getUserIdParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("enteredBy");
+    thisList.add("modifiedBy");
+    return thisList;
   }
 }
 

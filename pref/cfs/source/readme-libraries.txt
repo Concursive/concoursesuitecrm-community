@@ -32,31 +32,37 @@ DAMAGES RELATING TO THE SOFTWARE.
 
 This distribution includes the required Centric CRM 3rd party libraries:
 
-  PDFBox-0.6.7.jar
   activation.jar
+  asterisk-java-0.2-rc1.jar
   batik-all.jar
   bcprov-jdk14-121.jar
-  bsh.jar
+  bsh-2.0b2.jar
   commons-beanutils.jar
-  commons-collections.jar
-  commons-digester.jar
+  commons-collections-3.1.jar
+  commons-digester-1.7.jar
   commons-logging-api.jar
   commons-logging.jar
-  DaffodilDB_402_Common.jar
-  DaffodilDB_402_Embedded.jar
-  iText.jar
-  jasperreports-0.6.4.jar
-  jcommon-0.9.6.jar
-  jfreechart-0.9.21.jar
-  jtds-1.1.jar
+  DaffodilDB_410_Common.jar
+  DaffodilDB_410_Embedded.jar
+  iText-1.3.jar
+  jasperreports-1.0.2.jar
+  jasperreports-bsh-1.0.2.jar
+  jaybird-full-2.0.1.jar
+  jcommon-1.0.0-rc1.jar
+  jfreechart-1.0.0-rc1.jar
+  jtds-1.2.jar
   log4j-1.2.9.jar
   lucene-1.4.2.jar
   mail.jar
   nekohtml.jar
+  oracle-10.2.0.1.0-jdbc14.jar
+  PDFBox-0.6.7.jar
   poi-2.5-final-20040302.jar
   poi-scratchpad-2.5-final-20040302.jar
-  postgresql-8.0-310.jdbc3.jar
-  quartz-1.4.5.jar
+  postgresql-8.1-404.jdbc3.jar
+  quartz-1.5.1.jar
+  smack-2.0.0.jar
+  smackx-2.0.0.jar
   tm-extractors-0.4.jar
   xercesMinimal.jar
   
@@ -74,10 +80,12 @@ license:
 
 Project Name                      License
 --------------------------------  -----------------------------------------
+Asterisk-Java                     Apache Software License
 Batik                             Apache Software License
-Bean Shell                        LGPL
+Bean Shell                        Sun Public License
 Bouncy Castle Crypto API          Bouncy Castle Open Source License
 DaffodilDB (One$DB Embedded)      LGPL
+FirebirdSQL JDBC (Jaybird)        LGPL
 gnu.regexp                        LGPL
 HTMLArea                          BSD style
 HTTPMultiPartParser               iSavvix Public License
@@ -87,17 +95,21 @@ Jakarta Commons                   Apache Software License
 Jasper Reports                    LGPL
 Java Activitation Framework       Sun License
 Java Mail                         Sun License
+Jaybird FirebirdSQL JDBC          LGPL
 Jcrontab                          LGPL
 jTDS                              LGPL
 Kafenio                           LGPL
 Log4J                             Apache Software License
 Lucene                            Apache Software License
 NekoHTML                          Apache style
+Oracle JDBC Driver                Oracle Technology Network Development and
+                                  Distribution License
 PDFBox                            BSD
 POI                               Apache Software License
 PostgreSQL JDBC Driver            BSD
 Quartz                            OpenSymphony Software License
-Team Elements Project Management  Team Elements, LLC Commercial License
+Smack and Smackx                  Apache Software License
+Team Elements Project Management  Centric Public License
 TinyMCE                           LGPL
 TMExtractors                      Apache style
 Xerces                            Apache Software License

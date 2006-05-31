@@ -250,5 +250,8 @@ public class OrganizationEmailAddressList extends EmailAddressList {
     pst.close();
   }
 
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 

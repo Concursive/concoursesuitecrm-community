@@ -16,10 +16,15 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ page import="org.aspcfs.modules.base.Constants, org.aspcfs.modules.troubletickets.base.Ticket" %>
 <%
   Ticket thisTicket = (Ticket)request.getAttribute("TicketDetails");
-  if (thisTicket == null)
+  if (thisTicket == null) {
     thisTicket = (Ticket)request.getAttribute("ticketDetails");
+  }
+  if (thisTicket == null) {
+    thisTicket = (Ticket) request.getAttribute("ticket");
+  }
 %>
 <table width="100%" border="0">
   <tr>

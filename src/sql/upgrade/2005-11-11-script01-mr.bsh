@@ -1,0 +1,18 @@
+// Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+// Database upgrade v3.2 (2005-11-14)
+
+import java.sql.*;
+import org.aspcfs.modules.communications.base.SearchField;
+import org.aspcfs.modules.communications.base.SearchFieldList;
+
+print("Checking search field: siteId");
+
+if (SearchFieldList.queryField(db, "siteId") == -1) {
+  SearchField field = new SearchField();
+  field.setFieldName("siteId");
+  field.setDescription("Site");
+  field.setFieldTypeId(0);
+  field.setSearchable(true);
+  field.insert(db);
+  print("Field inserted");
+}

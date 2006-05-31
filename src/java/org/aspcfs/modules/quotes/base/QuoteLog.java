@@ -728,20 +728,20 @@ public class QuoteLog extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT q.*, " +
-        "lqso.description AS source_name, " +
-        "lqst.description AS status_name, " +
-        "lqtm.description AS terms_name, " +
-        "lqty.description AS type_name, " +
-        "lqd.description AS delivery_name," +
-        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst " +
-        "FROM quotelog AS q " +
-        "LEFT JOIN contact ct_eb ON (q.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN lookup_quote_status AS lqst ON (q.status_id = lqst.code) " +
-        "LEFT JOIN lookup_quote_source AS lqso ON (q.source_id = lqso.code) " +
-        "LEFT JOIN lookup_quote_terms AS lqtm ON (q.terms_id = lqtm.code) " +
-        "LEFT JOIN lookup_quote_type AS lqty ON (q.type_id = lqty.code) " +
-        "LEFT JOIN lookup_quote_delivery AS lqd ON (q.delivery_id = lqd.code) " +
-        "WHERE q.id = ? ");
+            "lqso.description AS source_name, " +
+            "lqst.description AS status_name, " +
+            "lqtm.description AS terms_name, " +
+            "lqty.description AS type_name, " +
+            "lqd.description AS delivery_name," +
+            "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst " +
+            "FROM quotelog q " +
+            "LEFT JOIN contact ct_eb ON (q.enteredby = ct_eb.user_id) " +
+            "LEFT JOIN lookup_quote_status lqst ON (q.status_id = lqst.code) " +
+            "LEFT JOIN lookup_quote_source lqso ON (q.source_id = lqso.code) " +
+            "LEFT JOIN lookup_quote_terms lqtm ON (q.terms_id = lqtm.code) " +
+            "LEFT JOIN lookup_quote_type lqty ON (q.type_id = lqty.code) " +
+            "LEFT JOIN lookup_quote_delivery lqd ON (q.delivery_id = lqd.code) " +
+            "WHERE q.id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -858,13 +858,12 @@ public class QuoteLog extends GenericBean {
     }
   }
 
-
   /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   *@return Description of the Return Value
+   *@exception SQLException  Description of the Exception
    */
   /**
    * Description of the Method
@@ -908,7 +907,8 @@ public class QuoteLog extends GenericBean {
    */
   protected boolean isValid() {
     errors.clear();
-    if (quoteId == -1 || (notes == null || notes.trim().equals("")) || enteredBy == -1 || modifiedBy == -1) {
+    if (quoteId == -1 || (notes == null || notes.trim().equals("")) || enteredBy == -1 || modifiedBy == -1)
+    {
       return false;
     } else {
       return true;

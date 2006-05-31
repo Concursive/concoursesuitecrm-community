@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -12,9 +12,9 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -24,6 +24,7 @@
 <jsp:useBean id="assetContact" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="asset" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
 <jsp:useBean id="serviceContract" class="org.aspcfs.modules.servicecontracts.base.ServiceContract" scope="request"/>
+<jsp:useBean id="assetMaterialList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="responseModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="phoneModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -32,16 +33,18 @@
 <jsp:useBean id="categoryList2" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="assetStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="assetVendorList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="assetManufacturerList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<form name="viewAccountAsset" action="AccountsAssets.do?command=Modify&auto-populate=true&id=<%=asset.getId()%>" method="post">
+<form name="viewAccountAsset" action="AccountsAssets.do?command=Modify&auto-populate=true&id=<%=asset.getId()%>&return=details" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
-  <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+  <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
   <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
   <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.Assets">Assets</dhv:label></a> >
@@ -51,13 +54,23 @@
 </table>
 <%-- End Trails --%>
 <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountsassets" selected="details" object="asset" param="<%= "id=" + asset.getId() %>">
+<%
+  if (asset.getParentList() != null && asset.getParentList().size() > 0) {
+    Iterator iter = (Iterator) asset.getParentList().iterator();
+    while (iter.hasNext()) {
+      Asset parentAsset = (Asset) iter.next();
+      String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
+%>
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" />
+<% }} %>
+<% String param2 = "id=" + asset.getId() + "|parentId="+asset.getId()+"|orgId="+OrgDetails.getOrgId(); %>
+<dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>">
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() || !asset.isTrashed()%>">
     <dhv:permission name="accounts-assets-edit"><input type=submit value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
     <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
   </dhv:evaluate>
-    <input type=hidden name="orgId" value = <%= OrgDetails.getOrgId() %> >
-    <input type=hidden name="id" value = <%= asset.getOrgId() %> >
+    <input type="hidden" name="orgId" value = <%= OrgDetails.getOrgId() %> />
+    <input type="hidden" name="id" value = <%= asset.getOrgId() %> />
     <br /><br />
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
       <tr>
@@ -70,7 +83,9 @@
           <dhv:label name="accounts.accountasset_include.Vendor">Vendor</dhv:label>
         </td>
         <td>
-          <%= toHtml(asset.getVendor()) %>
+          <dhv:evaluate if="<%= asset.getVendorCode() > 0 %>">
+            <%= toHtml(assetVendorList.getSelectedValue(asset.getVendorCode())) %>
+          </dhv:evaluate>&nbsp;
         </td>
       </tr>
       <tr class="containerBody">
@@ -78,7 +93,9 @@
           <dhv:label name="accounts.accountasset_include.Manufacturer">Manufacturer</dhv:label>
         </td>
         <td>
-          <%= toHtml(asset.getManufacturer()) %>
+          <dhv:evaluate if="<%= asset.getManufacturerCode() > 0 %>">
+            <%= toHtml(assetManufacturerList.getSelectedValue(asset.getManufacturerCode())) %>
+          </dhv:evaluate>&nbsp;
         </td>
       </tr>
       <tr class="containerBody">
@@ -349,6 +366,29 @@
         </td>
       </tr>
     </table>
+  <dhv:evaluate if="<%= asset.getMaterials() != null && asset.getMaterials().size() > 0 %>">
+    <br /><table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="3">
+          <strong><dhv:label name="accounts.assets.listOfMaterials">List of Materials</dhv:label></strong>
+        </th>
+      </tr>
+<%Iterator iter = (Iterator) asset.getMaterials().iterator();
+  int i=0;
+  int rowid = 0;
+  while(iter.hasNext()) {
+    ++i;
+    rowid = (rowid != 1 ? 1 : 2);
+    AssetMaterial material = (AssetMaterial) iter.next();
+%>
+  <tr class="row<%=rowid%>">
+    <td valign="top" nowrap><%= i %></td>
+    <td valign="top" width="100%"><%= assetMaterialList.getSelectedValue(material.getCode()) %></td>
+    <td valign="top" align="right" nowrap><%= Double.toString(material.getQuantity()) %></td>
+  </tr>
+<%}%>
+    </table>
+  </dhv:evaluate>
     <%= addHiddenParams(request, "popup|popupType|actionId") %>
     <%-- end details --%>
     <br />

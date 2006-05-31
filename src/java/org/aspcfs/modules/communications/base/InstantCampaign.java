@@ -30,7 +30,7 @@ import java.util.Iterator;
  * criteria.
  *
  * @author akhi_m
- * @version $id:exp$
+ * @version $Id$
  * @created May 13, 2003
  */
 public class InstantCampaign extends Campaign {
@@ -108,6 +108,7 @@ public class InstantCampaign extends Campaign {
       //Replace tags
       Template template = new Template();
       template.setText(instantMessage.getMessageText());
+      template.setParseElements(instantMessage.getParseElements());
 
       //insert the campaign
       java.util.Date dtNow = new java.util.Date();
@@ -154,10 +155,10 @@ public class InstantCampaign extends Campaign {
         //Finalize the campaign activation
         pst = db.prepareStatement(
             "UPDATE campaign " +
-            "SET active = ?, " +
+            "SET \"active\" = ?, " +
             "reply_addr = ?, " +
             "subject = ?, " +
-            "message = ?, " +
+            "\"message\" = ?, " +
             "modifiedby = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE campaign_id = ? ");
@@ -195,7 +196,7 @@ public class InstantCampaign extends Campaign {
   public int updateInstantCampaignMessage(Connection db, Message tmpMessage) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE campaign " +
-        "SET message = ? " +
+        "SET \"message\" = ? " +
         "WHERE campaign_id = ? ");
     int i = 0;
     pst.setString(++i, tmpMessage.getMessageText());

@@ -22,20 +22,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
+import java.util.HashMap;
 
 /**
- * An element represents a specific search choice, and can be combined with
- * other elements when forming a search query.
+ *  An element represents a specific search choice, and can be combined with
+ *  other elements when forming a search query.
  *
- * @author Wesley_S_Gillette
- * @version $Id: SearchCriteriaElement.java,v 1.1 2001/11/13 20:36:35
- * @created November 12, 2001
+ *@author     Wesley_S_Gillette
+ *@created    November 12, 2001
+ *@version    $Id: SearchCriteriaElement.java,v 1.1 2001/11/13 20:36:35
  */
 public class SearchCriteriaElement {
   //Properties
   int fieldId = -1;
   int operatorId = -1;
   int sourceId = -1;
+  int siteId = -1;
   //Display/Lookup Properties
   String text = null;
   String operator = null;
@@ -45,23 +47,27 @@ public class SearchCriteriaElement {
   String accountTypeName = null;
   String contactNameFirst = null;
   String contactNameLast = null;
+  String contactCompany = null;
+
+  protected HashMap errors = new HashMap();
+  protected HashMap warnings = new HashMap();
+  protected boolean onlyWarnings = false;
 
 
   /**
-   * SearchCriteriaElement default constructor
+   *  SearchCriteriaElement default constructor
    *
-   * @since 1.1
+   *@since    1.1
    */
-  public SearchCriteriaElement() {
-  }
+  public SearchCriteriaElement() { }
 
 
   /**
-   * SearchCriteriaElement constructor that parses a delimited string and
-   * populates the object based on that
+   *  SearchCriteriaElement constructor that parses a delimited string and
+   *  populates the object based on that
    *
-   * @param elementText delimited string to be parsed
-   * @since 1.1
+   *@param  elementText  delimited string to be parsed
+   *@since               1.1
    */
   public SearchCriteriaElement(String elementText) {
 
@@ -78,14 +84,18 @@ public class SearchCriteriaElement {
     if (st.hasMoreTokens()) {
       sourceId = Integer.parseInt((String) st.nextToken());
     }
+    if (st.hasMoreTokens()) {
+      siteId = Integer.parseInt((String) st.nextToken());
+    }
   }
 
 
   /**
-   * Constructor for the SearchCriteriaElement object
+   *  Constructor for the SearchCriteriaElement object
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of the Exception
+   *@throws  SQLException     Description of Exception
    */
   public SearchCriteriaElement(ResultSet rs) throws SQLException {
 
@@ -94,9 +104,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the SourceId attribute of the SearchCriteriaElement object
+   *  Sets the SourceId attribute of the SearchCriteriaElement object
    *
-   * @param sourceId The new SourceId value
+   *@param  sourceId  The new SourceId value
    */
   public void setSourceId(int sourceId) {
     this.sourceId = sourceId;
@@ -104,9 +114,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the SourceId attribute of the SearchCriteriaElement object
+   *  Sets the SourceId attribute of the SearchCriteriaElement object
    *
-   * @param sourceId The new SourceId value
+   *@param  sourceId  The new SourceId value
    */
   public void setSourceId(String sourceId) {
     this.sourceId = Integer.parseInt(sourceId);
@@ -114,9 +124,29 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the AccountTypeName attribute of the SearchCriteriaElement object
+   *  Sets the SiteId attribute of the SearchCriteriaElement object
    *
-   * @param accountTypeName The new AccountTypeName value
+   *@param  tmp  The new SiteId value
+   */
+  public void setSiteId(int tmp) {
+    this.siteId = tmp;
+  }
+
+
+  /**
+   *  Sets the SiteId attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new SiteId value
+   */
+  public void setSiteId(String tmp) {
+    this.siteId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the AccountTypeName attribute of the SearchCriteriaElement object
+   *
+   *@param  accountTypeName  The new AccountTypeName value
    */
   public void setAccountTypeName(String accountTypeName) {
     this.accountTypeName = accountTypeName;
@@ -124,9 +154,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the contactTypeName attribute of the SearchCriteriaElement object
+   *  Sets the contactTypeName attribute of the SearchCriteriaElement object
    *
-   * @param contactTypeName The new contactTypeName value
+   *@param  contactTypeName  The new contactTypeName value
    */
   public void setContactTypeName(String contactTypeName) {
     this.contactTypeName = contactTypeName;
@@ -134,9 +164,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the contactNameFirst attribute of the SearchCriteriaElement object
+   *  Sets the contactNameFirst attribute of the SearchCriteriaElement object
    *
-   * @param tmp The new contactNameFirst value
+   *@param  tmp  The new contactNameFirst value
    */
   public void setContactNameFirst(String tmp) {
     this.contactNameFirst = tmp;
@@ -144,9 +174,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the contactNameLast attribute of the SearchCriteriaElement object
+   *  Sets the contactNameLast attribute of the SearchCriteriaElement object
    *
-   * @param tmp The new contactNameLast value
+   *@param  tmp  The new contactNameLast value
    */
   public void setContactNameLast(String tmp) {
     this.contactNameLast = tmp;
@@ -154,10 +184,20 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the fieldId attribute of the SearchCriteriaElement object
+   *  Sets the contactCompany attribute of the SearchCriteriaElement object
    *
-   * @param fieldId The new fieldId value
-   * @since 1.1
+   *@param  tmp  The new contactCompany value
+   */
+  public void setContactCompany(String tmp) {
+    this.contactCompany = tmp;
+  }
+
+
+  /**
+   *  Gets the fieldId attribute of the SearchCriteriaElement object
+   *
+   *@param  fieldId  The new fieldId value
+   *@since           1.1
    */
 
   public void setFieldId(int fieldId) {
@@ -166,9 +206,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the DataType attribute of the SearchCriteriaElement object
+   *  Sets the DataType attribute of the SearchCriteriaElement object
    *
-   * @param dataType The new DataType value
+   *@param  dataType  The new DataType value
    */
   public void setDataType(String dataType) {
     this.dataType = dataType;
@@ -176,9 +216,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the Operator attribute of the SearchCriteriaElement object
+   *  Sets the Operator attribute of the SearchCriteriaElement object
    *
-   * @param operator The new Operator value
+   *@param  operator  The new Operator value
    */
   public void setOperator(String operator) {
     this.operator = operator;
@@ -186,10 +226,10 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the operatorId attribute of the SearchCriteriaElement object
+   *  Sets the operatorId attribute of the SearchCriteriaElement object
    *
-   * @param operatorId The new operatorId value
-   * @since 1.1
+   *@param  operatorId  The new operatorId value
+   *@since              1.1
    */
   public void setOperatorId(int operatorId) {
     this.operatorId = operatorId;
@@ -197,9 +237,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the operatorDisplayText attribute of the SearchCriteriaElement object
+   *  Sets the operatorDisplayText attribute of the SearchCriteriaElement object
    *
-   * @param tmp The new operatorDisplayText value
+   *@param  tmp  The new operatorDisplayText value
    */
   public void setOperatorDisplayText(String tmp) {
     this.operatorDisplayText = tmp;
@@ -207,10 +247,10 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Sets the text attribute of the SearchCriteriaElement object
+   *  Sets the text attribute of the SearchCriteriaElement object
    *
-   * @param text The new text value
-   * @since 1.1
+   *@param  text  The new text value
+   *@since        1.1
    */
   public void setText(String text) {
     this.text = text;
@@ -218,9 +258,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the SourceId attribute of the SearchCriteriaElement object
+   *  Gets the SourceId attribute of the SearchCriteriaElement object
    *
-   * @return The SourceId value
+   *@return    The SourceId value
    */
   public int getSourceId() {
     return sourceId;
@@ -228,9 +268,19 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the AccountTypeName attribute of the SearchCriteriaElement object
+   *  Gets the SiteId attribute of the SearchCriteriaElement object
    *
-   * @return The AccountTypeName value
+   *@return    The SiteId value
+   */
+  public int getSiteId() {
+    return siteId;
+  }
+
+
+  /**
+   *  Gets the AccountTypeName attribute of the SearchCriteriaElement object
+   *
+   *@return    The AccountTypeName value
    */
   public String getAccountTypeName() {
     return accountTypeName;
@@ -238,9 +288,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the contactTypeName attribute of the SearchCriteriaElement object
+   *  Gets the contactTypeName attribute of the SearchCriteriaElement object
    *
-   * @return The contactTypeName value
+   *@return    The contactTypeName value
    */
   public String getContactTypeName() {
     return contactTypeName;
@@ -248,9 +298,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the contactNameFirst attribute of the SearchCriteriaElement object
+   *  Gets the contactNameFirst attribute of the SearchCriteriaElement object
    *
-   * @return The contactNameFirst value
+   *@return    The contactNameFirst value
    */
   public String getContactNameFirst() {
     return contactNameFirst;
@@ -258,9 +308,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the contactNameLast attribute of the SearchCriteriaElement object
+   *  Gets the contactNameLast attribute of the SearchCriteriaElement object
    *
-   * @return The contactNameLast value
+   *@return    The contactNameLast value
    */
   public String getContactNameLast() {
     return contactNameLast;
@@ -268,9 +318,19 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the DataType attribute of the SearchCriteriaElement object
+   *  Gets the contactCompany attribute of the SearchCriteriaElement object
    *
-   * @return The DataType value
+   *@return    The contactCompany value
+   */
+  public String getContactCompany() {
+    return contactCompany;
+  }
+
+
+  /**
+   *  Gets the DataType attribute of the SearchCriteriaElement object
+   *
+   *@return    The DataType value
    */
   public String getDataType() {
     return dataType;
@@ -278,9 +338,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the Operator attribute of the SearchCriteriaElement object
+   *  Gets the Operator attribute of the SearchCriteriaElement object
    *
-   * @return The Operator value
+   *@return    The Operator value
    */
   public String getOperator() {
     return operator;
@@ -288,9 +348,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the operatorDisplayText attribute of the SearchCriteriaElement object
+   *  Gets the operatorDisplayText attribute of the SearchCriteriaElement object
    *
-   * @return The operatorDisplayText value
+   *@return    The operatorDisplayText value
    */
   public String getOperatorDisplayText() {
     return operatorDisplayText;
@@ -298,10 +358,10 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the fieldId attribute of the SearchCriteriaElement object
+   *  Gets the fieldId attribute of the SearchCriteriaElement object
    *
-   * @return The fieldId value
-   * @since 1.1
+   *@return    The fieldId value
+   *@since     1.1
    */
   public int getFieldId() {
     return fieldId;
@@ -309,9 +369,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the FieldIdAsString attribute of the SearchCriteriaElement object
+   *  Gets the FieldIdAsString attribute of the SearchCriteriaElement object
    *
-   * @return The FieldIdAsString value
+   *@return    The FieldIdAsString value
    */
   public String getFieldIdAsString() {
     return String.valueOf(fieldId);
@@ -319,10 +379,10 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the operatorId attribute of the SearchCriteriaElement object
+   *  Gets the operatorId attribute of the SearchCriteriaElement object
    *
-   * @return The operatorId value
-   * @since 1.1
+   *@return    The operatorId value
+   *@since     1.1
    */
   public int getOperatorId() {
     return operatorId;
@@ -330,9 +390,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the OperatorIdAsString attribute of the SearchCriteriaElement object
+   *  Gets the OperatorIdAsString attribute of the SearchCriteriaElement object
    *
-   * @return The OperatorIdAsString value
+   *@return    The OperatorIdAsString value
    */
   public String getOperatorIdAsString() {
     return String.valueOf(operatorId);
@@ -340,10 +400,10 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Gets the text attribute of the SearchCriteriaElement object
+   *  Gets the text attribute of the SearchCriteriaElement object
    *
-   * @return The text value
-   * @since 1.1
+   *@return    The text value
+   *@since     1.1
    */
   public String getText() {
     return text;
@@ -351,11 +411,81 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Retrieves descriptor information from the field_types table that pertains
-   * to the operator that is associated with this SearchCriteriaElement
+   *  Gets the errors attribute of the SearchCriteriaElement object
    *
-   * @param db db connection
-   * @throws SQLException SQL Exception
+   *@return    The errors value
+   */
+  public HashMap getErrors() {
+    return errors;
+  }
+
+
+  /**
+   *  Sets the errors attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new errors value
+   */
+  public void setErrors(HashMap tmp) {
+    this.errors = tmp;
+  }
+
+
+  /**
+   *  Gets the warnings attribute of the SearchCriteriaElement object
+   *
+   *@return    The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
+  }
+
+
+  /**
+   *  Sets the warnings attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
+   *  Gets the onlyWarnings attribute of the SearchCriteriaElement object
+   *
+   *@return    The onlyWarnings value
+   */
+  public boolean getOnlyWarnings() {
+    return onlyWarnings;
+  }
+
+
+  /**
+   *  Sets the onlyWarnings attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new onlyWarnings value
+   */
+  public void setOnlyWarnings(boolean tmp) {
+    this.onlyWarnings = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyWarnings attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new onlyWarnings value
+   */
+  public void setOnlyWarnings(String tmp) {
+    this.onlyWarnings = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Retrieves descriptor information from the field_types table that pertains
+   *  to the operator that is associated with this SearchCriteriaElement
+   *
+   *@param  db             db connection
+   *@throws  SQLException  SQL Exception
    */
   public void buildOperatorData(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -375,24 +505,25 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Inserts this SearchCriteriaElement into the database
+   *  Inserts this SearchCriteriaElement into the database
    *
-   * @param listid unique ID of the SearchCriteriaList that contains
-   *               this element
-   * @param db     db connection
-   * @throws SQLException SQL Exception
+   *@param  listid         unique ID of the SearchCriteriaList that contains
+   *      this element
+   *@param  db             db connection
+   *@return                Description of the Return Value
+   *@throws  SQLException  SQL Exception
    */
   public boolean insert(int listid, Connection db) throws SQLException {
     this.buildOperatorData(db);
     boolean doCommit = false;
     try {
-      if ((doCommit = db.getAutoCommit()) == true) {
+      if (doCommit = db.getAutoCommit()) {
         db.setAutoCommit(false);
       }
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO saved_criteriaelement " +
-          "(id, field, operator, operatorid, value, source, value_id) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+          "(id, field, operator, operatorid, \"value\", source, value_id, site_id) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
       int i = 0;
       pst.setInt(++i, listid);
       pst.setInt(++i, this.getFieldId());
@@ -402,6 +533,7 @@ public class SearchCriteriaElement {
       pst.setInt(++i, this.getSourceId());
       int valueId = DatabaseUtils.parseInt(this.getText(), -1);
       DatabaseUtils.setInt(pst, ++i, valueId);
+      DatabaseUtils.setInt(pst, ++i, siteId);
       pst.execute();
       pst.close();
       if (doCommit) {
@@ -422,9 +554,9 @@ public class SearchCriteriaElement {
 
 
   /**
-   * Retrieves element information in string format
+   *  Retrieves element information in string format
    *
-   * @return String representation of this element's info
+   *@return    String representation of this element's info
    */
   public String toString() {
     StringBuffer tmp = new StringBuffer();
@@ -434,15 +566,16 @@ public class SearchCriteriaElement {
     tmp.append("OperatorId: " + operatorId + "\r\n");
     tmp.append("Operator Text: " + operatorDisplayText + "\r\n");
     tmp.append("Text: " + text + "\r\n");
+    tmp.append("Site: " + siteId + "\r\n");
     return tmp.toString();
   }
 
 
   /**
-   * Populates object from ResultSet data
+   *  Populates object from ResultSet data
    *
-   * @param rs data resultset from a query
-   * @throws SQLException SQL Exception
+   *@param  rs             data resultset from a query
+   *@throws  SQLException  SQL Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //saved_criteriaelement table
@@ -451,12 +584,14 @@ public class SearchCriteriaElement {
     operatorId = rs.getInt("operatorid");
     text = rs.getString("value");
     sourceId = rs.getInt("source");
+    siteId = DatabaseUtils.getInt(rs, "site_id");
     //lookup_contact_types table
     contactTypeName = rs.getString("ctype");
     accountTypeName = rs.getString("atype");
     //contact table
     contactNameFirst = rs.getString("cnamefirst");
     contactNameLast = rs.getString("cnamelast");
+    contactCompany = rs.getString("ccompany");
   }
 }
 

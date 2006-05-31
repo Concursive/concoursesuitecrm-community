@@ -16,6 +16,7 @@
 package org.aspcfs.modules.tasks.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.UserCentric;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -38,7 +39,7 @@ import java.util.TimeZone;
  *          $
  * @created August 15, 2002
  */
-public class TaskList extends ArrayList {
+public class TaskList extends ArrayList implements UserCentric {
   protected int enteredBy = -1;
   protected PagedListInfo pagedListInfo = null;
   protected int owner = -1;
@@ -51,6 +52,7 @@ public class TaskList extends ArrayList {
   protected int projectId = -1;
   protected int ticketId = -1;
   protected int hasLinkedContact = Constants.UNDEFINED;
+  protected int hasLinkedTicket = Constants.UNDEFINED;
   protected int areAssigned = Constants.UNDEFINED;
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
@@ -263,6 +265,36 @@ public class TaskList extends ArrayList {
 
 
   /**
+   * Gets the hasLinkedTicket attribute of the TaskList object
+   *
+   * @return The hasLinkedTicket value
+   */
+  public int getHasLinkedTicket() {
+    return hasLinkedTicket;
+  }
+
+
+  /**
+   * Sets the hasLinkedTicket attribute of the TaskList object
+   *
+   * @param tmp The new hasLinkedTicket value
+   */
+  public void setHasLinkedTicket(int tmp) {
+    this.hasLinkedTicket = tmp;
+  }
+
+
+  /**
+   * Sets the hasLinkedTicket attribute of the TaskList object
+   *
+   * @param tmp The new hasLinkedTicket value
+   */
+  public void setHasLinkedTicket(String tmp) {
+    this.hasLinkedTicket = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Gets the areAssigned attribute of the TaskList object
    *
    * @return The areAssigned value
@@ -369,15 +401,16 @@ public class TaskList extends ArrayList {
     StringBuffer sqlTail = new StringBuffer();
     sqlSelect.append(
         "SELECT duedate, count(*) AS nocols " +
-        "FROM task t " +
-        "WHERE t.task_id > -1 ");
+            "FROM task t " +
+            "WHERE t.task_id > -1 ");
     createFilter(sqlFilter);
     sqlFilter.append("AND duedate IS NOT NULL ");
-    sqlFilter.append("AND t.complete = " + DatabaseUtils.getFalse(db) + " ");
+    sqlFilter.append("AND t.complete = ? ");
     sqlTail.append("GROUP BY duedate");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     int i = prepareFilter(pst);
+    pst.setBoolean(++i, false);
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("TaskList-> Building Record Count ");
@@ -407,9 +440,9 @@ public class TaskList extends ArrayList {
     createFilter(sqlFilter);
     sqlSelect.append(
         "SELECT t.task_id, t.description, t.duedate, t.complete, t.priority, t.entered, tc.contact_id " +
-        "FROM task t " +
-        "LEFT JOIN tasklink_contact tc ON (t.task_id = tc.task_id) " +
-        "WHERE t.task_id > -1 ");
+            "FROM task t " +
+            "LEFT JOIN tasklink_contact tc ON (t.task_id = tc.task_id) " +
+            "WHERE t.task_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
@@ -430,6 +463,16 @@ public class TaskList extends ArrayList {
     pst.close();
   }
 
+  /**
+   * This will force the contact list to include records that are owned by the user
+   *
+   * @param userId Description of the Parameter
+   */
+  public void accessedBy(int userId) {
+    if (userId > -1) {
+      this.setOwner(userId);
+    }
+  }
 
   /**
    * Description of the Method
@@ -448,8 +491,8 @@ public class TaskList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM task t " +
-        "WHERE t.task_id > -1 ");
+            "FROM task t " +
+            "WHERE t.task_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -466,8 +509,8 @@ public class TaskList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND t.priority > ? ");
+                sqlFilter.toString() +
+                "AND t.priority > ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -495,11 +538,11 @@ public class TaskList extends ArrayList {
     }
     sqlSelect.append(
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
-        "t.estimatedloetype, t.type, t.owner, t.completedate, t.modified, " +
-        "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date " +
-        "FROM task t " +
-        "WHERE t.task_id > -1 ");
+            "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
+            "t.estimatedloetype, t.\"type\", t.owner, t.completedate, t.modified, " +
+            "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date, t.ticket_task_category_id " +
+            "FROM task t " +
+            "WHERE t.task_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -521,6 +564,50 @@ public class TaskList extends ArrayList {
         thisTask.buildLinkDetails(db);
       }
     }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Task thisTask = (Task) i.next();
+      if (thisTask.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @param userId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Task thisTask = (Task) i.next();
+      thisTask.setModifiedBy(userId);
+      if (thisTask.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
   }
 
 
@@ -574,6 +661,9 @@ public class TaskList extends ArrayList {
     if (projectId > 0) {
       sqlFilter.append(
           "AND t.task_id IN (SELECT task_id FROM tasklink_project WHERE project_id = ?) ");
+    } else {
+      sqlFilter.append(
+          "AND t.task_id NOT IN (SELECT task_id FROM tasklink_project) ");
     }
 
     if (ticketId > 0) {
@@ -586,6 +676,13 @@ public class TaskList extends ArrayList {
     } else if (hasLinkedContact == Constants.FALSE) {
       sqlFilter.append(
           "AND t.task_id NOT IN (SELECT tlc.task_id FROM tasklink_contact tlc WHERE tlc.contact_id IS NOT NULL) ");
+    }
+    if (hasLinkedTicket == Constants.TRUE) {
+      sqlFilter.append(
+          "AND t.task_id IN (SELECT tlt.task_id FROM tasklink_ticket tlt WHERE tlt.ticket_id IS NOT NULL) ");
+    } else if (hasLinkedTicket == Constants.FALSE) {
+      sqlFilter.append(
+          "AND t.task_id NOT IN (SELECT tlt.task_id FROM tasklink_ticket tlt WHERE tlt.ticket_id IS NOT NULL) ");
     }
     if (areAssigned == Constants.TRUE) {
       sqlFilter.append("AND t.owner IS NOT NULL ");
@@ -672,8 +769,9 @@ public class TaskList extends ArrayList {
     int toReturn = 0;
     String sql =
         "SELECT count(*) as taskcount " +
-        "FROM task " +
-        "WHERE owner = ? AND complete = ? ";
+            "FROM task " +
+            "WHERE owner = ? AND complete = ? AND trashed_date IS NULL " + 
+            "AND task_id NOT IN (SELECT task_id FROM tasklink_project) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, userId);

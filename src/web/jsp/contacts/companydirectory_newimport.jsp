@@ -17,9 +17,10 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,org.aspcfs.utils.web.*,org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="ImportDetails" class="org.aspcfs.modules.contacts.base.ContactImport" scope="request"/>
 <jsp:useBean id="SourceTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request" />
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript">
@@ -38,6 +39,11 @@
 			 formTest = false;
     }
     
+    if(form.siteId.value == <%=Constants.INVALID_SITE%>) {
+       message += label("site.required", "- Site is a required field.\r\n");
+			 formTest = false;
+    }
+
     if (form.id.value.length < 5) {
       message += label("file.required", "- File is required\r\n");
       formTest = false;

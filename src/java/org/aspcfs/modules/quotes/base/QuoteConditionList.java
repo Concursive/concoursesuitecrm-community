@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.quotes.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -174,10 +175,10 @@ public class QuoteConditionList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM quote_condition AS qc " +
-        " LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
-        " LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
-        " WHERE qc.map_id > -1 ");
+            " FROM quote_condition qc " +
+            " LEFT JOIN quote_entry qe ON (qc.quote_id = qe.quote_id) " +
+            " LEFT JOIN lookup_quote_condition lqc ON (qc.condition_id = lqc.code) " +
+            " WHERE qc.map_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -191,6 +192,22 @@ public class QuoteConditionList extends ArrayList {
       rs.close();
       pst.close();
 
+      //Determine the offset, based on the filter, for the first record to show
+      if (!pagedListInfo.getCurrentLetter().equals("")) {
+        pst = db.prepareStatement(
+            sqlCount.toString() +
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(lqc.description) < ? ");
+        items = prepareFilter(pst);
+        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          int offsetCount = rs.getInt("recordcount");
+          pagedListInfo.setCurrentOffset(offsetCount);
+        }
+        rs.close();
+        pst.close();
+      }
       //Determine column to sort by
       pagedListInfo.setDefaultSort("qc.map_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -205,11 +222,11 @@ public class QuoteConditionList extends ArrayList {
     }
     sqlSelect.append(
         "qc.*, " +
-        "lqc.description AS condition_name " +
-        "FROM quote_condition AS qc " +
-        "LEFT JOIN quote_entry AS qe ON (qc.quote_id = qe.quote_id) " +
-        "LEFT JOIN lookup_quote_condition AS lqc ON (qc.condition_id = lqc.code) " +
-        " WHERE qc.map_id > -1 ");
+            "lqc.description AS condition_name " +
+            "FROM quote_condition qc " +
+            "LEFT JOIN quote_entry qe ON (qc.quote_id = qe.quote_id) " +
+            "LEFT JOIN lookup_quote_condition lqc ON (qc.condition_id = lqc.code) " +
+            " WHERE qc.map_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -34,7 +34,7 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
   function selectUser(form) {
-    popContactsListSingle('viewUserId','changeUser', 'usersOnly=true&hierarchy=<%= User.getUserRecord().getId() %>&reset=true&filters=employees|accountcontacts');
+    popContactsListSingle('viewUserId','changeUser', 'usersOnly=true&hierarchy=<%= User.getUserRecord().getId() %><%= User.getUserRecord().getSiteId() == -1?"&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+ User.getUserRecord().getSiteId() %>&reset=true&filters=employees|accountcontacts');
   }
   function resetUser(form) {
     window.location.href='MyActionLists.do?command=List&linkModuleId=2&viewUserId=<%= User.getUserRecord().getId() %>';
@@ -147,4 +147,3 @@
 </table>
 &nbsp;<br>
 <dhv:pagedListControl object="ActionListInfo" tdClass="row1"/>
-

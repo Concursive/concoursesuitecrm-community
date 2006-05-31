@@ -22,6 +22,17 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+  <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
+  <parameter name="siteid" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[accounts.site]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(-1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siteid_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND t.site_id = $P{siteid}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[reports.helpdesk.startDate]]></parameterDescription>
 		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2005-01-01 00:00:00"))]]></defaultValueExpression>
@@ -49,13 +60,17 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT t.entered,
 t.assigned_to,
 co.namefirst,
 co.namelast
 FROM ticket t
 LEFT JOIN contact co ON (t.assigned_to = co.user_id)
+LEFT JOIN organization o ON (t.org_id = o.org_id)
 WHERE t.ticketid > 0
+AND o.enabled = $P{TRUE}
+$P!{siteid_where}
 AND t.trashed_date IS NULL
 AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project)
 AND t.entered >= $P{date_start}

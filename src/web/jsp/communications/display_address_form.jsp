@@ -22,6 +22,8 @@
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="ContactInstantMessageAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="ContactInstantMessageAddressServiceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactTextMessageAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
@@ -85,14 +87,20 @@
       }
     }
   }
-  function update(countryObj, stateObj) {
-  var country = document.forms['addContact'].elements[countryObj].value;
-   if(country == "UNITED STATES" || country == "CANADA"){
-      hideSpan('state2' + stateObj);
-      showSpan('state1' + stateObj);
-   }else{
+
+  function update(countryObj, stateObj, selectedValue) {
+    var country = document.forms['addContact'].elements[countryObj].value;
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=addContact&stateObj=address"+stateObj+"state";
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueUpdateState(stateObj, showText) {
+    if(showText == 'true'){
       hideSpan('state1' + stateObj);
       showSpan('state2' + stateObj);
+    } else {
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
     }
   }
 </script>
@@ -100,6 +108,30 @@
 <body>
 <center>
 <form name="addContact" action="ProcessAddressSurvey.do?command=Update&auto-populate=true" onSubmit="return doCheck(this);window.close()" method="post">
+<dhv:include name="contact.secretword">
+<table class="note" cellspacing="0">
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td><dhv:label name="contacts.secretWord.text">Please specify a secret word that will be displayed on all messages to you.</dhv:label></td>
+  </tr>
+</table>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+	    <strong><dhv:label name="contacts.add.secretWord">Secret Word</dhv:label></strong>
+	  </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="contacts.add.secretWord">Secret Word</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="secretWord" maxlength="255" value="<%= toHtmlValue(ContactDetails.getSecretWord()) %>">
+    </td>
+  </tr>
+</table>
+&nbsp;<br />
+</dhv:include>
 <table class="note" cellspacing="0">
 <tr>
   <th>
@@ -110,7 +142,6 @@
   </td>
 </tr>
 </table>
-&nbsp;<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -141,6 +172,46 @@
       <%= toHtmlValue(ContactDetails.getNameLast()) %>&nbsp;
     </td>
   </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
+    </td>
+    <td>
+      <%= toHtmlValue(ContactDetails.getCompany()) %>&nbsp;
+    </td>
+  </tr>
+  <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="additionalNames" value="<%= toHtmlValue(ContactDetails.getAdditionalNames()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Role">Role</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="role" value="<%= toHtmlValue(ContactDetails.getRole()) %>">
+      </td>
+    </tr>
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -189,6 +260,69 @@
 <%
   }
 %>
+</table>
+&nbsp;<br />
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+	    <strong><dhv:label name="accounts.accounts_add.InstantMessageAddresses">Instant Message Addresses</dhv:label></strong>
+	  </th>
+  </tr>
+<%
+  int imcount = 0;
+  int imtotal = 3;
+  Iterator imnumber = ContactDetails.getInstantMessageAddressList().iterator();
+  while (imnumber.hasNext()) {
+    ++imcount;
+    ContactInstantMessageAddress thisInstantMessageAddress = (ContactInstantMessageAddress)imnumber.next();
+%>  
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
+      <dhv:label name="accounts.accounts_add.InstantMessageAddress">IM Address</dhv:label> <%= imcount %>
+    </td>
+    <td nowrap>
+      <%= ContactInstantMessageAddressTypeList.getHtmlSelect("instantmessage"+imcount+"type", thisInstantMessageAddress.getAddressIMType()) %>
+      <%= ContactInstantMessageAddressServiceList.getHtmlSelect("instantmessage"+imcount+"service", thisInstantMessageAddress.getAddressIMService()) %>
+      <input type="text" size="40" name="instantmessage<%= imcount %>address" maxlength="255" value="<%= toHtmlValue(thisInstantMessageAddress.getAddressIM()) %>">
+      <input type="radio" name="primaryIM" value="<%= imcount %>" <%= (thisInstantMessageAddress.getPrimaryIM()) ? " checked" : "" %>><dhv:label name="contact.primary">Primary</dhv:label>
+      <dhv:evaluate if="<%= thisInstantMessageAddress.getId() > 0 %>">
+        <input type="hidden" name="instantmessage<%= imcount %>id" value="<%= thisInstantMessageAddress.getId() %>"><br />
+        <input type="checkbox" name="instantmessage<%= imcount %>delete" value="on"><dhv:label name="accounts.accounts_modify.MarkToRemove">mark to remove</dhv:label>
+      </dhv:evaluate>
+    </td>
+  </tr>
+<%    
+  }
+  while (imcount < imtotal) {
+    ++imcount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
+      <dhv:label name="accounts.accounts_add.InstantMessageAddress">IM Address</dhv:label> <%= imcount %>
+    </td>
+    <td>
+      <%= ContactInstantMessageAddressTypeList.getHtmlSelect("instantmessage" + imcount + "type", ((ContactDetails.getInstantMessageAddressTypeId(1)==-1)?1:ContactDetails.getInstantMessageAddressTypeId(1))) %>
+      <%= ContactInstantMessageAddressServiceList.getHtmlSelect("instantmessage" + imcount + "service", ((ContactDetails.getInstantMessageAddressServiceId(1)==-1)?1:ContactDetails.getInstantMessageAddressServiceId(1))) %>
+      <input type="text" size="40" name="instantmessage<%=imcount%>address" maxlength="255">
+      <input type="radio" name="primaryIM" value="<%= imcount %>"><dhv:label name="contact.primary">Primary</dhv:label>
+    </td>
+  </tr>
+<%}%>
+<%if (ContactDetails.getInstantMessageAddressList().size() >= 3) {
+    ++imcount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
+      <dhv:label name="accounts.accounts_add.InstantMessageAddress">IM Address</dhv:label> <%= imcount %>
+    </td>
+    <td>
+      <%= ContactInstantMessageAddressTypeList.getHtmlSelect("instantmessage" + imcount + "type", ((ContactDetails.getInstantMessageAddressTypeId(1)==-1)?1:ContactDetails.getInstantMessageAddressTypeId(1))) %>
+      <%= ContactInstantMessageAddressServiceList.getHtmlSelect("instantmessage" + imcount + "service", ((ContactDetails.getInstantMessageAddressServiceId(1)==-1)?1:ContactDetails.getInstantMessageAddressServiceId(1))) %>
+      <input type="text" size="40" name="instantmessage<%=imcount%>address" maxlength="255">
+      <input type="radio" name="primaryIM" value="<%= imcount %>"><dhv:label name="contact.primary">Primary</dhv:label>
+    </td>
+  </tr>
+<%}%>
 </table>
 &nbsp;<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -349,14 +483,13 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
-        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry())? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -372,11 +505,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
@@ -385,7 +515,7 @@
       &nbsp;
     </td>
   </tr>
-<%    
+<%
   }
   while (acount < atotal) {
     ++acount;
@@ -438,13 +568,12 @@
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtml("address" + acount + "state") %>
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY"),"-1") %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
       <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -460,11 +589,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <script type="text/javascript">
-        update('address<%= acount %>country','<%= acount %>');
-      </script>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
@@ -479,7 +605,7 @@
 </table>
 <tr>
 <td>
-<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" /> &nbsp;
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" /> 
 <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="window.opener=self;window.close();" />
 <input type="hidden" name="dosubmit" value="true" />
 <input type="hidden" name="enteredBy" value="<%=ContactDetails.getEnteredBy()%>" />
@@ -492,7 +618,8 @@
 </td>
 </tr>
 &nbsp;<br>
-  </center>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>
+</center>
  </body>
 </html>

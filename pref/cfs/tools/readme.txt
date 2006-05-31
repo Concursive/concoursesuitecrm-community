@@ -1,7 +1,7 @@
 Centric CRM Tools; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
-Centric CRM Tools 0.2
+Centric CRM Tools 4.0
 
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |
@@ -56,6 +56,10 @@ http://www.centriccrm.com/Portal.do?key=community
 | CHANGELOG                                                                |
 ----------------------------------------------------------------------------
 
+v4.0
+  April 18, 2006
+  Updated against Centric CRM 4.0
+
 v0.2
   June 17, 2005
   Fix for sending data as UNICODE
@@ -73,9 +77,11 @@ v0.1
 The centric_crm_tools.jar can be used with any Java 1.4 or 1.5 application.
 You will need to have the Java Servlet-API in your classpath.
 
+In Centric CRM 4.0, a "client" will need to be configured under the Admin 
+module to provide remote access to Centric CRM.  
 
-In the Centric CRM database, a couple of manual operations currently need
-to be performed (these will have Admin web config in a later version)
+In versions prior to 4.0, the Centric CRM database needs to be modified
+manually:
 
 *  In the [sync_client] table, an arbitrary client should be inserted
    with a plain-text password in the [code] field.  This will be used in

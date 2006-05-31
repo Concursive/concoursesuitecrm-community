@@ -37,7 +37,7 @@
       </tr>
       <tr align="center">
         <td>
-          <input type="submit" value="Broadcast">
+          <input type="submit" value="<dhv:label name="communications.button.broadcast">Broadcast</dhv:label>" />
           <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
           <input type="hidden" name="modified" value="<%=Campaign.getModified()%>" />
         </td>

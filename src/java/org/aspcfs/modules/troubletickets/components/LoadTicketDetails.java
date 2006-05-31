@@ -26,6 +26,7 @@ import org.aspcfs.modules.troubletickets.base.TicketCategory;
 import org.aspcfs.utils.web.LookupElement;
 
 import java.sql.Connection;
+import java.text.DateFormat;
 
 /**
  * Description of the Class
@@ -47,6 +48,11 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
   public final static String PRIORITY_LOOKUP = "ticketPriorityLookup";
   public final static String ENTERED_BY_CONTACT = "ticketEnteredByContact";
   public final static String MODIFIED_BY_CONTACT = "ticketModifiedByContact";
+  public final static String ASSIGNED_TO_CONTACT = "ticketAssignedToContact";
+  public final static String GROUP_USERS = "ticketGroupUsers";
+  public final static String TICKET_CATEGORIES = "ticketCategories";
+  public final static String ENTERED_DATE = "process.ticketEnteredDate";
+  public final static String PROJECT_ID = "projectTicket.id";
 
 
   /**
@@ -72,12 +78,23 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
     Connection db = null;
     try {
       db = this.getConnection(context);
+      context.setAttribute(ENTERED_DATE, thisTicket.getEnteredString(DateFormat.LONG, DateFormat.SHORT));
       if (thisTicket.getOrgId() > -1) {
         Organization organization = new Organization(
             db, thisTicket.getOrgId());
         context.setAttribute(ORGANIZATION, organization);
       } else {
         context.setAttribute(ORGANIZATION, new Organization());
+      }
+      int projectId = thisTicket.getProjectIdByTicket(db);
+      if (projectId > -1) {
+        context.setAttribute(PROJECT_ID, String.valueOf(projectId));
+      }
+      if (thisTicket.getAssignedTo() > 0) {
+        User user = new User();
+        user.setBuildContact(true);
+        user.buildRecord(db, thisTicket.getAssignedTo());
+        context.setAttribute(ASSIGNED_TO_CONTACT, user.getContact());
       }
       if (thisTicket.getContactId() > 0) {
         Contact contact = new Contact(db, thisTicket.getContactId());
@@ -87,21 +104,33 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
         TicketCategory categoryLookup = new TicketCategory(
             db, thisTicket.getCatCode());
         context.setAttribute(CATEGORY_LOOKUP, categoryLookup);
+      } else {
+        TicketCategory temp = new TicketCategory();
+        context.setAttribute(CATEGORY_LOOKUP, temp);
       }
       if (thisTicket.getSubCat1() > 0) {
         TicketCategory subCategory1Lookup = new TicketCategory(
             db, thisTicket.getSubCat1());
         context.setAttribute(SUBCATEGORY1_LOOKUP, subCategory1Lookup);
+      } else {
+        TicketCategory temp = new TicketCategory();
+        context.setAttribute(SUBCATEGORY1_LOOKUP, temp);
       }
       if (thisTicket.getSubCat2() > 0) {
         TicketCategory subCategory2Lookup = new TicketCategory(
             db, thisTicket.getSubCat2());
         context.setAttribute(SUBCATEGORY2_LOOKUP, subCategory2Lookup);
+      } else {
+        TicketCategory temp = new TicketCategory();
+        context.setAttribute(SUBCATEGORY2_LOOKUP, temp);
       }
       if (thisTicket.getSubCat3() > 0) {
         TicketCategory subCategory3Lookup = new TicketCategory(
             db, thisTicket.getSubCat3());
         context.setAttribute(SUBCATEGORY3_LOOKUP, subCategory3Lookup);
+      } else {
+        TicketCategory temp = new TicketCategory();
+        context.setAttribute(SUBCATEGORY3_LOOKUP, temp);
       }
       if (thisTicket.getSeverityCode() > 0) {
         LookupElement severityLookup = new LookupElement(

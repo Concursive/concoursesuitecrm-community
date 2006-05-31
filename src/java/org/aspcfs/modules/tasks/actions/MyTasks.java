@@ -21,10 +21,12 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.LookupList;
 
 import java.sql.Connection;
 import java.util.StringTokenizer;
@@ -133,6 +135,8 @@ public final class MyTasks extends CFSModule {
       db = this.getConnection(context);
       thisTask = new Task(db, Integer.parseInt(id));
       context.getRequest().setAttribute("Task", thisTask);
+      LookupList list = this.getSystemStatus(context).getLookupList(db, "lookup_ticket_task_category");
+      context.getRequest().setAttribute("ticketTaskCategoryList", list);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -162,18 +166,25 @@ public final class MyTasks extends CFSModule {
       return ("PermissionError");
     }
     context.getSession().removeAttribute("contactListInfo");
-    if (context.getRequest().getParameter("id") != null) {
-      id = Integer.parseInt(context.getRequest().getParameter("id"));
-    }
     try {
+      if (context.getRequest().getParameter("id") != null) {
+        id = Integer.parseInt(context.getRequest().getParameter("id"));
+      }
       db = this.getConnection(context);
       thisTask = (Task) context.getFormBean();
       if (thisTask.getId() == -1) {
         thisTask = new Task(db, id);
+        thisTask.buildResources(db);
       }
       thisTask.checkEnabledOwnerAccount(db);
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
+        Contact contact = new Contact(db, thisTask.getContactId());
+        thisTask.setContactName(contact.getNameFull());
+      }
+      if (thisTask.getTicketId() > -1) {
+        LookupList list = this.getSystemStatus(context).getLookupList(db, "lookup_ticket_task_category");
+        context.getRequest().setAttribute("ticketTaskCategoryList", list);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -229,6 +240,17 @@ public final class MyTasks extends CFSModule {
       if (inserted) {
         Task bufferTask = new Task(db, newTask.getId());
         processInsertHook(context, bufferTask);
+      } else {
+        if (newTask.getContactId() > -1) {
+          newTask.checkEnabledLinkAccount(db);
+          Contact contact = new Contact(db, newTask.getContactId());
+          newTask.setContactName(contact.getNameFull());
+          context.getRequest().setAttribute("Task", newTask);
+        }
+        if (newTask.getTicketId() > -1) {
+          LookupList list = this.getSystemStatus(context).getLookupList(db, "lookup_ticket_task_category");
+          context.getRequest().setAttribute("ticketTaskCategoryList", list);
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

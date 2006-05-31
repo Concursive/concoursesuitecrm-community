@@ -48,6 +48,15 @@ public class SetupUtils {
     // Default database inserts
     script.source(setupPath + "database.bsh");
     script.source(setupPath + "sync.bsh");
+    // Lookup Lists
+    String lookupFile = "lookuplists_en_US.xml";
+    File checkLookupFile = new File(
+        setupPath + "lookuplists_" + locale + ".xml");
+    if (checkLookupFile.exists()) {
+      lookupFile = "lookuplists_" + locale + ".xml";
+    }
+    ImportLookupLists lookups = new ImportLookupLists();
+    lookups.importLookups(db, setupPath + lookupFile);
     // Permissions
     String permissionsFile = "permissions_en_US.xml";
     File checkPermissionFile = new File(
@@ -60,15 +69,6 @@ public class SetupUtils {
     PermissionsAndRolesWriter permissionsWriter = new PermissionsAndRolesWriter();
     permissionsWriter.setDb(db);
     permissionsReader.execute(permissionsWriter);
-    // Lookup Lists
-    String lookupFile = "lookuplists_en_US.xml";
-    File checkLookupFile = new File(
-        setupPath + "lookuplists_" + locale + ".xml");
-    if (checkLookupFile.exists()) {
-      lookupFile = "lookuplists_" + locale + ".xml";
-    }
-    ImportLookupLists lookups = new ImportLookupLists();
-    lookups.importLookups(db, setupPath + lookupFile);
     // Workflow
     script.source(setupPath + "workflow.bsh");
     // Help content
@@ -79,18 +79,29 @@ public class SetupUtils {
     help.buildTableOfContents();
     help.insertTableOfContents(db);
     // Database version
-    DatabaseVersion.insertVersion(
-        db, DatabaseUtils.getTypeName(db), "2004-06-15");
-    DatabaseVersion.insertVersion(
-        db, DatabaseUtils.getTypeName(db), "2004-08-30");
-    DatabaseVersion.insertVersion(
-        db, DatabaseUtils.getTypeName(db), "2005-01-14");
-    DatabaseVersion.insertVersion(
-        db, DatabaseUtils.getTypeName(db), "2005-03-30");
-    DatabaseVersion.insertVersion(
-        db, DatabaseUtils.getTypeName(db), "2005-05-02");
-    DatabaseVersion.insertVersion(
-        db, DatabaseUtils.getTypeName(db), "2005-07-08");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2004-06-15");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2004-08-30");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-01-14");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-03-30");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-05-02");
+    // Version 3.1
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-07-08");
+    // Version 3.2
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-08-24");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-08-30");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-10-17");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-10-24");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-11-02");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-11-03");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-11-14");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-12-14");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2005-12-19");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-01-25");
+    // Version 4.0
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-04-12");
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-04-17");
+    // Version 4.0.1
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-05-08");
     // Events (last because a check for these is made later)
     script.source(setupPath + "events_gk.bsh");
   }

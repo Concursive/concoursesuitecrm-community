@@ -35,7 +35,7 @@ function page_init() {
     LookupElement element = (LookupElement) i.next();
 %>
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<%= StringUtils.jsStringEscape(element.getDescription()) %>';
+    newOpt.text="<%= StringUtils.jsStringEscape(element.getDescription()) %>";
     newOpt.value='<%= element.getId() %>';
     list.options[list.length] = newOpt;
 <%

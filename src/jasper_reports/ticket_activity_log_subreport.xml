@@ -35,13 +35,14 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT t.ticketid,
 sc.contract_number AS contractnumber,
 sc.current_start_date AS startdate,
 sc.current_end_date AS enddate,
 sc.description AS description,
 cat.description AS category,
-type.description AS type,
+sc_type.description AS "type",
 ct.namelast AS lastname, ct.namefirst AS firstname,
 response.description AS responsetime,
 phone.description AS telephoneservice,
@@ -51,7 +52,7 @@ sc.total_hours_remaining AS hoursremaining
 FROM ticket t
 LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id )
 LEFT JOIN lookup_sc_category cat ON (sc.category = cat.code)
-LEFT JOIN lookup_sc_type type ON (sc.type = type.code)
+LEFT JOIN lookup_sc_type sc_type ON (sc.type = sc_type.code)
 LEFT JOIN contact ct ON (sc.contact_id = ct.contact_id)
 LEFT JOIN lookup_response_model response ON (sc.response_time = response.code)
 LEFT JOIN lookup_phone_model phone ON (sc.telephone_service_model = phone.code)
@@ -400,7 +401,7 @@ AND t.trashed_date IS NULL]]></queryString>
 						isRemoveLineWhenBlank="true"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(!((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(!((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
@@ -1175,7 +1176,7 @@ AND t.trashed_date IS NULL]]></queryString>
 		</columnHeader>
 		<detail>
 			<band height="38"  isSplitAllowed="false" >
-				<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+				<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 				<subreport  isUsingCache="true">
 					<reportElement
 						mode="Opaque"
@@ -1192,7 +1193,7 @@ AND t.trashed_date IS NULL]]></queryString>
 						isRemoveLineWhenBlank="true"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<subreportParameter  name="ticketid">
 						<subreportParameterExpression><![CDATA[$P{ticketid}]]></subreportParameterExpression>
@@ -1228,7 +1229,7 @@ AND t.trashed_date IS NULL]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).activityItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">

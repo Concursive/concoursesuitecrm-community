@@ -346,9 +346,9 @@ public class ProductOptionList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_option AS popt " +
-        "LEFT JOIN product_option_configurator AS poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
-        "LEFT JOIN product_option AS popt2 ON ( popt.parent_id = popt2.option_id ) " +
+        "FROM product_option popt " +
+        "LEFT JOIN product_option_configurator poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
+        "LEFT JOIN product_option popt2 ON ( popt.parent_id = popt2.option_id ) " +
         "WHERE popt.option_id > 0 ");
 
     createFilter(sqlFilter, db);
@@ -390,12 +390,12 @@ public class ProductOptionList extends ArrayList {
     }
     sqlSelect.append(
         "popt.*, " +
-        "poptconf.result_type as result_type, " +
-        "poptconf.configurator_name as conf_name, " +
-        "popt2.option_name as parent_name " +
-        "FROM product_option AS popt " +
-        "LEFT JOIN product_option_configurator AS poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
-        "LEFT JOIN product_option AS popt2 ON ( popt.parent_id = popt2.option_id ) " +
+        "poptconf.result_type AS result_type, " +
+        "poptconf.configurator_name AS conf_name, " +
+        "popt2.option_name AS parent_name " +
+        "FROM product_option popt " +
+        "LEFT JOIN product_option_configurator poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
+        "LEFT JOIN product_option popt2 ON ( popt.parent_id = popt2.option_id ) " +
         "WHERE popt.option_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

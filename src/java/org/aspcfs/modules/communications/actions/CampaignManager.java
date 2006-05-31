@@ -41,21 +41,21 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- * Actions for dealing with Campaigns in the Communications Module, including
- * the dashboard and campaign center.
+ *  Actions for dealing with Campaigns in the Communications Module, including
+ *  the dashboard and campaign center.
  *
- * @author w. gillette
- * @version $Id: CampaignManager.java,v 1.4 2002/03/12 21:42:27 mrajkowski Exp
- *          $
- * @created October 18, 2001
+ * @author     w. gillette
+ * @created    October 18, 2001
+ * @version    $Id: CampaignManager.java,v 1.4 2002/03/12 21:42:27 mrajkowski
+ *      Exp $
  */
 public final class CampaignManager extends CFSModule {
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     //Check to see if the user has a preference
@@ -64,11 +64,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Generates the Dashboard List
+   *  Generates the Dashboard List
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.1
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.1
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!hasPermission(context, "campaign-dashboard-view")) {
@@ -86,6 +86,7 @@ public final class CampaignManager extends CFSModule {
       campaignList.setCompleteOnly(true);
       if ("all".equals(pagedListInfo.getListView())) {
         campaignList.setOwnerIdRange(this.getUserRange(context));
+        campaignList.setUserGroupUserId(this.getUserId(context));
         campaignList.setType(Campaign.GENERAL);
       } else if ("instant".equals(pagedListInfo.getListView())) {
         campaignList.setOwnerIdRange(this.getUserRange(context));
@@ -119,11 +120,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Generates a list of Incomplete Campaigns
+   *  Generates a list of Incomplete Campaigns
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.1
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.1
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -166,11 +167,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Generates the items needed to Add a New Campaign
+   *  Generates the items needed to Add a New Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.1
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.1
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-add")) {
@@ -192,11 +193,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Processes the Campaign Insert form
+   *  Processes the Campaign Insert form
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandInsert(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-add")) {
@@ -233,11 +234,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Details of a Campaign
+   *  Campaign Center: Details of a Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandViewDetails(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -250,6 +251,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       FileItemList files = new FileItemList();
@@ -267,18 +273,15 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("ViewDetailsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -290,7 +293,12 @@ public final class CampaignManager extends CFSModule {
     String campaignId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
-      campaign = new Campaign(db, campaignId);
+      campaign = new Campaign();
+      campaign.setBuildGroupMaps(true);
+      campaign.queryRecord(db, Integer.parseInt(campaignId));
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -298,19 +306,16 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("ModifyOK");
   }
 
 
   /**
-   * Campaign Center: Groups of a Campaign
+   *  Campaign Center: Groups of a Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandViewGroups(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -323,6 +328,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -330,18 +340,15 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("ViewGroupsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandPreviewGroups(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -354,6 +361,11 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       //Show the campaign name
       campaign = new Campaign(db, context.getRequest().getParameter("id"));
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
       //Load the criteria for the contacts query
       SearchCriteriaList thisSCL = new SearchCriteriaList(
@@ -371,35 +383,29 @@ public final class CampaignManager extends CFSModule {
       ContactList contacts = new ContactList();
       contacts.setScl(
           thisSCL, campaign.getEnteredBy(), this.getUserRange(
-              context, campaign.getEnteredBy()));
+          context, campaign.getEnteredBy()));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setCheckExcludedFromCampaign(campaign.getId());
+      contacts.setIncludeAllSites(true);
       contacts.setBuildDetails(true);
       contacts.setBuildTypes(false);
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-      return ("PreviewGroupsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("PreviewGroupsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandToggleRecipient(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -433,11 +439,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Message of a Campaign
+   *  Campaign Center: Message of a Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandViewMessage(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -451,6 +457,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
       //Build my messages
       MessageList messageList = new MessageList();
@@ -477,18 +488,15 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("ViewMessageOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandPreviewMessage(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -501,6 +509,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       documents.setLinkItemId(Integer.parseInt(campaignId));
@@ -513,18 +526,15 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("PreviewMessageOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDownloadMessage(ActionContext context) {
 
@@ -574,7 +584,7 @@ public final class CampaignManager extends CFSModule {
               "CampaignDocuments-> Trying to send a file that does not exist");
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.downloadDoesNotExist"));
+              "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandPreviewMessage(context));
         }
       } else {
@@ -597,7 +607,7 @@ public final class CampaignManager extends CFSModule {
               "CampaignMessage Documents -> Trying to send a file that does not exist");
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.downloadDoesNotExist"));
+              "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandPreviewMessage(context));
         }
       }
@@ -626,10 +636,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandViewAttachment(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -643,6 +653,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       SurveyList surveyList = new SurveyList();
@@ -667,19 +682,16 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("ViewAttachmentOK");
   }
 
 
   /**
-   * Campaign Center: Schedule of a Campaign
+   *  Campaign Center: Schedule of a Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandViewSchedule(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -692,6 +704,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
       //Prepare the list of available delivery types
       LookupList deliveryList = new LookupList(db, "lookup_delivery_options");
@@ -702,18 +719,15 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("ViewScheduleOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandPreviewSchedule(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -726,6 +740,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -733,18 +752,15 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("PreviewScheduleOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandPreviewSurvey(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-surveys-view")) {
@@ -779,11 +795,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Add groups to the Campaign
+   *  Campaign Center: Add groups to the Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandAddGroups(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -839,11 +855,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Processes the selected groups
+   *  Campaign Center: Processes the selected groups
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandInsertGroups(ActionContext context) {
 
@@ -888,11 +904,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Generates a list of Messages to choose from
+   *  Campaign Center: Generates a list of Messages to choose from
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandAddMessage(ActionContext context) {
 
@@ -938,10 +954,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandAddAttachment(ActionContext context) {
 
@@ -980,11 +996,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Saves the selected message to the Campaign
+   *  Campaign Center: Saves the selected message to the Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandInsertMessage(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -1023,10 +1039,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandInsertAttachment(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1066,10 +1082,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandUpdateAddressRequest(ActionContext context) {
 
@@ -1121,11 +1137,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Saves the schedule details to the Campaign
+   *  Campaign Center: Saves the schedule details to the Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandInsertSchedule(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1176,11 +1192,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Processes the groups and removes them from a Campaign
+   *  Campaign Center: Processes the groups and removes them from a Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandRemoveGroups(ActionContext context) {
 
@@ -1225,11 +1241,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Campaign Center: Updates the details of a Campaign
+   *  Campaign Center: Updates the details of a Campaign
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1245,6 +1261,8 @@ public final class CampaignManager extends CFSModule {
       if (hasAuthority(context, enteredBy) && (this.validateObject(
           context, db, campaign))) {
         campaign.setModifiedBy(getUserId(context));
+        campaign.setBuildGroupMaps(true);
+        campaign.buildUserGroupMaps(db);
         resultCount = campaign.updateDetails(db);
       } else {
         resultCount = -1;
@@ -1267,11 +1285,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * From the Dashboard, processes a Cancel Campaign request
+   *  From the Dashboard, processes a Cancel Campaign request
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandCancel(ActionContext context) {
 
@@ -1300,7 +1318,7 @@ public final class CampaignManager extends CFSModule {
       if (resultCount == 1) {
         campaign.setContacts(
             db, campaign.getEnteredBy(), this.getUserRange(
-                context, campaign.getEnteredBy()));
+            context, campaign.getEnteredBy()));
         this.processUpdateHook(context, previousCampaign, campaign);
       }
     } catch (Exception e) {
@@ -1328,12 +1346,12 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * From the Incomplete Campaign list or the Campaign center, processes an
-   * Activate Campaign request
+   *  From the Incomplete Campaign list or the Campaign center, processes an
+   *  Activate Campaign request
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandActivate(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -1357,12 +1375,12 @@ public final class CampaignManager extends CFSModule {
       campaign.setServerName(RequestUtils.getServerUrl(context.getRequest()));
       resultCount = campaign.activate(
           db, campaign.getEnteredBy(), this.getUserRange(
-              context, campaign.getEnteredBy()));
+          context, campaign.getEnteredBy()));
       campaign.queryRecord(db, campaign.getId());
       if (resultCount == 1) {
         campaign.setContacts(
             db, campaign.getEnteredBy(), this.getUserRange(
-                context, campaign.getEnteredBy()));
+            context, campaign.getEnteredBy()));
         processUpdateHook(context, previousCampaign, campaign);
       }
     } catch (Exception errorMessage) {
@@ -1381,11 +1399,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Read in an activated Campaign -- ready only, with stats.
+   *  Read in an activated Campaign -- ready only, with stats.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandDetails(ActionContext context) {
 
@@ -1402,6 +1420,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
@@ -1419,29 +1442,21 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute(
           "User", this.getUser(context, this.getUserId(context)));
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-      addModuleBean(context, "Dashboard", "Campaign: Details");
-      return ("DetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "Dashboard", "Campaign: Details");
+    return ("DetailsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandViewResults(ActionContext context) {
 
@@ -1468,6 +1483,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
@@ -1475,7 +1495,6 @@ public final class CampaignManager extends CFSModule {
           db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
         thisList.setActiveSurveyId(surveyId);
-        thisList.setPagedListInfo(pagedListInfo);
         thisList.setBuildResults(true);
         thisList.buildList(db);
         context.getRequest().setAttribute("SurveyQuestionList", thisList);
@@ -1506,29 +1525,21 @@ public final class CampaignManager extends CFSModule {
         context.getRequest().setAttribute("recipientList", recipients);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-      addModuleBean(context, "Dashboard", "Campaign: Results");
-      return ("ResultsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "Dashboard", "Campaign: Results");
+    return ("ResultsOK");
   }
 
 
   /**
-   * View the survey response based on the recipients.
+   *  View the survey response based on the recipients.
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandViewResponse(ActionContext context) {
 
@@ -1558,6 +1569,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
@@ -1580,29 +1596,22 @@ public final class CampaignManager extends CFSModule {
             "AddressUpdateResponseList", thisList);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
 
-    if (errorMessage == null) {
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-      addModuleBean(context, "Dashboard", "Campaign: Response");
-      return ("ResponseOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "Dashboard", "Campaign: Response");
+    return ("ResponseOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandAddressUpdateResponseDetails(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1621,6 +1630,11 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       //Load the campaign
       campaign = new Campaign(db, id);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
       //Load the answers for this contact
       int addressSurveyId = -1;
@@ -1677,18 +1691,15 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     return ("AddressResponseDetailsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandResponseDetails(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1712,6 +1723,11 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       //Load the campaign
       campaign = new Campaign(db, id);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
       //Load the contact
       Contact thisContact = new Contact(db, Integer.parseInt(contactId));
@@ -1722,7 +1738,6 @@ public final class CampaignManager extends CFSModule {
           db, campaign.getId(), Constants.SURVEY_REGULAR)) > 0) {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
         thisList.setActiveSurveyId(surveyId);
-        thisList.setPagedListInfo(pagedListInfo);
         thisList.buildList(db);
         thisList.buildResponse(
             db, Integer.parseInt(contactId), Integer.parseInt(responseId));
@@ -1734,19 +1749,16 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
-    }
     addModuleBean(context, "Dashboard", "Campaign: Response Details");
     return ("ResponseDetailsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandPreviewRecipients(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -1766,7 +1778,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("Campaign", campaign);
@@ -1775,29 +1789,25 @@ public final class CampaignManager extends CFSModule {
       recipients.setCampaignId(campaign.getId());
       recipients.setBuildContact(true);
       recipients.setPagedListInfo(pagedListInfo);
+      pagedListInfo.setSearchCriteria(recipients, context);
       recipients.buildList(db);
       context.getRequest().setAttribute("RecipientList", recipients);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "Dashboard", "Campaign: Recipients");
-      return ("PreviewRecipientsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "Dashboard", "Campaign: Recipients");
+    return ("PreviewRecipientsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandShowItems(ActionContext context) {
 
@@ -1836,10 +1846,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Show all contacts who responded to a specific item in the Item List
+   *  Show all contacts who responded to a specific item in the Item List
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandShowItemDetails(ActionContext context) {
 
@@ -1884,10 +1894,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-delete")) {
@@ -1933,11 +1943,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Processes a Campaign Delete request
+   *  Processes a Campaign Delete request
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.26
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.26
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-delete")) {
@@ -1979,10 +1989,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandTrash(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-delete")) {
@@ -2024,10 +2034,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -2086,11 +2096,11 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Builds comments for a SurveyQuestion Question could be either a Open Ended
-   * or Quantitative with comments
+   *  Builds comments for a SurveyQuestion Question could be either a Open Ended
+   *  or Quantitative with comments
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandShowComments(ActionContext context) {
     Connection db = null;
@@ -2124,10 +2134,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param selectedList Description of the Parameter
-   * @param context      Description of the Parameter
+   * @param  selectedList  Description of the Parameter
+   * @param  context       Description of the Parameter
    */
   private static void processListCheckBoxes(SearchCriteriaListList selectedList, ActionContext context) {
     int count = 0;
@@ -2147,10 +2157,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandViewAttachmentsOverview(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -2164,6 +2174,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
       if (campaign.hasSurvey()) {
         Survey survey = new Survey(db, campaign.getSurveyId());
@@ -2175,27 +2190,20 @@ public final class CampaignManager extends CFSModule {
       files.buildList(db);
       context.getRequest().setAttribute("fileItemList", files);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-      return ("ViewAttachmentsOverviewOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("ViewAttachmentsOverviewOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandManageFileAttachments(ActionContext context) {
 
@@ -2213,6 +2221,11 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       FileItemList files = new FileItemList();
@@ -2222,30 +2235,20 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("fileItemList", files);
 
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-
-      return ("ManageFileAttachmentsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("ManageFileAttachmentsOK");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandUploadFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -2270,7 +2273,9 @@ public final class CampaignManager extends CFSModule {
       //String subject = (String) parts.get("subject");
       //String folderId = (String) parts.get("folderId");
       Campaign campaign = new Campaign(db, Integer.parseInt(id));
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("Campaign", campaign);
@@ -2300,7 +2305,7 @@ public final class CampaignManager extends CFSModule {
         SystemStatus systemStatus = this.getSystemStatus(context);
         errors.put(
             "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileName"));
+            "object.validation.incorrectFileName"));
         processErrors(context, errors);
       }
     } catch (Exception e) {
@@ -2314,10 +2319,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandRemoveFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -2348,10 +2353,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Export a Campaign Report
+   *  Export a Campaign Report
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandExportReport(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-view")) {
@@ -2382,10 +2387,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDownloadFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
@@ -2431,7 +2436,7 @@ public final class CampaignManager extends CFSModule {
             "CampaignManager-> Trying to send a file that does not exist");
         context.getRequest().setAttribute(
             "actionError", systemStatus.getLabel(
-                "object.validation.actionError.downloadDoesNotExist"));
+            "object.validation.actionError.downloadDoesNotExist"));
         return (executeCommandView(context));
       }
     } catch (java.net.SocketException se) {
@@ -2459,10 +2464,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandMessageJSList(ActionContext context) {
     Connection db = null;
@@ -2501,10 +2506,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSurveyJSList(ActionContext context) {
     Connection db = null;
@@ -2530,10 +2535,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandBroadcastAuthenticationForm(ActionContext context) {
     String campaignId = context.getRequest().getParameter("id");
@@ -2556,10 +2561,10 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandBroadcastCampaign(ActionContext context) {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
@@ -2600,7 +2605,7 @@ public final class CampaignManager extends CFSModule {
     if (!validUser) {
       context.getRequest().setAttribute(
           "Error", systemStatus.getLabel(
-              "communications.campaign.broadCastInvalidPasswordMessage"));
+          "communications.campaign.broadCastInvalidPasswordMessage"));
       return executeCommandBroadcastAuthenticationForm(context);
     }
     if (resultCount == 1) {
@@ -2614,9 +2619,104 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandRestart(ActionContext context) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "ManageCampaigns", "Restart Campaign");
+    Connection db = null;
+    Campaign campaign = null;
+    String campaignId = context.getRequest().getParameter("id");
+    if (campaignId == null || "".equals(campaignId.trim())) {
+      campaignId = (String) context.getRequest().getAttribute("id");
+    }
+    try {
+      db = this.getConnection(context);
+      campaign = new Campaign(db, campaignId);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
+      campaign.restartCampaign(db);
+      context.getRequest().setAttribute("Campaign", campaign);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ResetOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandAddRecipient(ActionContext context) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
+      return ("PermissionError");
+    }
+    boolean recipientAdded = false;
+    Exception errorMessage = null;
+    Connection db = null;
+    Campaign campaign = null;
+    Campaign oldCampaign = null;
+    String contactId = context.getRequest().getParameter("contactId");
+    String allowDuplicates = context.getRequest().getParameter("allowDuplicates");
+    String id = context.getRequest().getParameter("id");
+    try {
+      db = this.getConnection(context);
+      campaign = new Campaign(db, id);
+      oldCampaign = new Campaign(db, id);
+      campaign.setBuildGroupMaps(true);
+      campaign.buildUserGroupMaps(db);
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      RecipientList recipients = new RecipientList();
+      recipients.setCampaignId(campaign.getId());
+      recipients.setBuildContact(true);
+      recipients.buildList(db);
+      if (allowDuplicates != null && !"".equals(allowDuplicates.trim())) {
+        recipients.setAllowDuplicates(allowDuplicates);
+      }
+      recipientAdded = recipients.addRecipient(db, contactId);
+      if (recipientAdded) {
+        String str = executeCommandRestart(context);
+        campaign = new Campaign(db, id);
+        Contact contact = new Contact(db, Integer.parseInt(contactId));
+        ContactList contacts = new ContactList();
+        contacts.add(contact);
+        campaign.setContactList(contacts);
+        this.processUpdateHook(context, oldCampaign, campaign);
+      }
+      context.getRequest().setAttribute("recipientAdded", String.valueOf(recipientAdded));
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("AddRecipientOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "CampaignListInfo");
@@ -2628,6 +2728,7 @@ public final class CampaignManager extends CFSModule {
     this.deletePagedListInfo(context, "CampaignDashboardRecipientInfo");
     this.deletePagedListInfo(context, "ItemDetailsListInfo");
     this.deletePagedListInfo(context, "CommentListInfo");
+    this.deletePagedListInfo(context, "campaignUserGroupListInfo");
   }
 }
 

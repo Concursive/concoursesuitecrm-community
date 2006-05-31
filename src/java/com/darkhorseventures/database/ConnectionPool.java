@@ -15,6 +15,8 @@
  */
 package com.darkhorseventures.database;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -391,6 +393,17 @@ public class ConnectionPool implements Runnable {
             //Go with the connection
             requestElement.renew();
             busyConnections.put(existingConnection, requestElement);
+            // Default to case insensitive order by clauses
+            if (DatabaseUtils.getType(existingConnection) == DatabaseUtils.ORACLE) {
+              //PreparedStatement pst = existingConnection.prepareStatement(
+              //      "ALTER SESSION SET nls_comp=ansi");
+              //pst.execute();
+              //pst.close();
+              PreparedStatement pst = existingConnection.prepareStatement(
+                    "ALTER SESSION SET nls_sort=binary_ci");
+              pst.execute();
+              pst.close();
+            }
             return (existingConnection);
           } catch (NullPointerException npe) {
             return (getConnection(requestElement));

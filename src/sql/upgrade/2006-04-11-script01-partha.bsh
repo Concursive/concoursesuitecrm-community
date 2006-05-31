@@ -1,0 +1,18 @@
+//upgrade script to delete the Account Action Plan Step Action - Attach Activity.
+//This is specific for Centric CRM 4.0 release
+import org.aspcfs.modules.actionplans.base.*;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.utils.web.LookupList;
+
+int moduleConstantId = -1;
+
+try {
+  moduleConstantId = ActionStepMap.retrieveActionPlanMapIdFromConstantId(db, 42420034);
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(ActionStep.ATTACH_ACTIVITY);
+  actionStepMap.delete(db);
+  print("Deleted the action step map");
+} catch (Exception e) {
+  e.printStackTrace();
+}

@@ -207,7 +207,7 @@ public class ProductOptionValuesList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_option_values AS poptvalues " +
+        "FROM product_option_values poptvalues " +
         "WHERE poptvalues.value_id > 0 ");
 
     createFilter(sqlFilter, db);
@@ -232,7 +232,7 @@ public class ProductOptionValuesList extends ArrayList {
     }
     sqlSelect.append(
         "poptvalues.* " +
-        "FROM product_option_values AS poptvalues " +
+        "FROM product_option_values poptvalues " +
         "WHERE poptvalues.value_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

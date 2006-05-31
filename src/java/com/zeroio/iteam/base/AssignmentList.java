@@ -511,7 +511,7 @@ public class AssignmentList extends ArrayList {
         pst = db.prepareStatement(
             sqlCount.toString() +
             sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(activity) < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(\"role\") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -538,7 +538,7 @@ public class AssignmentList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "a.*, s.description as status, s.type as status_type, s.graphic as status_graphic, " +
+        "a.*, s.description as status, s.\"type\" as status_type, s.graphic as status_graphic, " +
         "loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type, pr.description as priority " +
         "FROM project_assignments a " +
         " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +

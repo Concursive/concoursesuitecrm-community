@@ -54,15 +54,7 @@ public class QueryPreviouslyActivated extends ObjectHookComponent implements Com
     boolean result = false;
     Campaign thisCampaign = (Campaign) context.getThisObject();
     Campaign previousCampaign = (Campaign) context.getPreviousObject();
-    Connection db = null;
-    try {
-      db = getConnection(context);
-      result = (previousCampaign.getStatusId() != Campaign.CANCELED);
-    } catch (Exception e) {
-    } finally {
-      freeConnection(context, db);
-    }
-    return result;
+    return (previousCampaign.getStatusId() != Campaign.CANCELED);
   }
 }
 

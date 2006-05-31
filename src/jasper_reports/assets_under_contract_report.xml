@@ -22,6 +22,14 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+  <parameter name="siteid" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[accounts.site]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(-1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siteid_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND o.site_id = $P{siteid}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="orgid" isForPrompting="true" class="java.lang.Integer">
 		<parameterDescription><![CDATA[reports.contacts.organization]]></parameterDescription>
 		<defaultValueExpression ><![CDATA[new Integer(-1)]]></defaultValueExpression>
@@ -36,7 +44,11 @@
 	<parameter name="country" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
+  <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[select sc.contract_number,
 o.name,
 sc.current_start_date,
@@ -49,7 +61,10 @@ left join organization o ON (sc.account_id=o.org_id)
 left join asset a ON (sc.contract_id=a.contract_id)
 where sc.contract_id > 0
 AND sc.trashed_date IS NULL
+AND a.trashed_date IS NULL
+AND o.enabled = $P{TRUE}
 $P!{orgid_where}
+$P!{siteid_where}
 order by o.name,sc.contract_number]]></queryString>
 	<field name="contract_number" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>

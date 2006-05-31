@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aspcfs>
+  <views>
+    <view name="tickets" constantId="113051436" enabled="true">
+      <field name="ticket.number"/>
+      <field name="ticket.priority"/>
+      <field name="ticket.estimatedResolutionDate"/>
+      <field name="ticket.age"/>
+      <field name="ticket.company"/>
+      <field name="ticket.resourceAssigned"/>
+      <field name="ticket.source"/>
+      <field name="ticket.entered"/>
+    </view>
+  </views>
+</aspcfs>

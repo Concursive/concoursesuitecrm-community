@@ -1,0 +1,47 @@
+// Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+// Database upgrade v3.2 (2005-11-14)
+
+import java.sql.*;
+import org.aspcfs.utils.web.LookupElement;
+
+print("Inserting new lookup table data...");
+
+int level = 0;
+
+void insertElement(String tableName, String description) {
+  level += 10;
+  LookupElement element = new LookupElement();
+  element.setTableName(tableName);
+  element.setDescription(description);
+  element.setLevel(level);
+  element.insert(db);
+}
+
+if (1==1) {
+  level = LookupElement.retrieveMaxLevel(db, "lookup_title");
+  if (level == 0) {
+    insertElement("lookup_title", "Mr.");
+    insertElement("lookup_title", "Mrs.");
+    insertElement("lookup_title", "Ms.");
+    insertElement("lookup_title", "Miss");
+    insertElement("lookup_title", "Dr.");
+    insertElement("lookup_title", "Prof.");
+    print("lookup_title elements added");
+  }
+}
+
+if (1==1) {
+  level = LookupElement.retrieveMaxLevel(db, "lookup_ticket_state");
+  if (level == 0) {
+    insertElement("lookup_ticket_state", "Under review");
+    insertElement("lookup_ticket_state", "In progress");
+    insertElement("lookup_ticket_state", "Solution is being tested");
+    insertElement("lookup_ticket_state", "Solution is being verified");
+    insertElement("lookup_ticket_state", "Solution complete");
+    insertElement("lookup_ticket_state", "Cannot resolve");
+    insertElement("lookup_ticket_state", "Duplicate");
+    print("lookup_ticket_state elements added");
+  }
+}
+
+

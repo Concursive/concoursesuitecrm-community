@@ -66,6 +66,7 @@
   String titleLabel = "quotes.addQuote";
   String quoteParams = "";
   boolean changeAccount = true;
+  boolean changeContact = true;
   boolean changeOpportunity = true;
   String opportunityName = opportunity.getDescription() != null ? opportunity.getDescription() : "Opportunity Selected";
   String opportunityNameLabel = opportunity.getDescription() != null? "":"quotes.opportunitySelected";

@@ -1,5 +1,4 @@
-/*
- *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+/*  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
  *  rights reserved. This material cannot be distributed without written
  *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
  *  this material for internal use is hereby granted, provided that the above
@@ -544,18 +543,20 @@ public final class ExternalContactsCalls extends CFSModule {
     String contactId = context.getRequest().getParameter("contactId");
     addModuleBean(context, "External Contacts", "Add an Activity");
     Connection db = null;
+    Contact thisContact = null;
     try {
       db = this.getConnection(context);
-      Contact thisContact = new Contact(db, contactId);
-      if (!hasPermission(context, "contacts-external_contacts-calls-add") || (thisContact.getOrgId() > 0 && !(hasPermission(
-          context, "accounts-accounts-contacts-calls-add")))) {
-        return ("PermissionError");
+      if (contactId != null && !"".equals(contactId.trim()) && Integer.parseInt(contactId) > -1) {
+        thisContact = new Contact(db, contactId);
+        if (!hasPermission(context, "contacts-external_contacts-calls-add") || (thisContact.getOrgId() > 0 && !(hasPermission(
+	          context, "accounts-accounts-contacts-calls-add")))) {
+	        return ("PermissionError");
+	      }
+	      if (!hasAuthority(db, context, thisContact)) {
+	        return ("PermissionError");
+	      }
+	      context.getRequest().setAttribute("ContactDetails", thisContact);
       }
-      if (!hasAuthority(db, context, thisContact)) {
-        return ("PermissionError");
-      }
-      context.getRequest().setAttribute("ContactDetails", thisContact);
-
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Type Lookup
       LookupList callTypeList = systemStatus.getLookupList(
@@ -586,8 +587,9 @@ public final class ExternalContactsCalls extends CFSModule {
     }
     //if a different module reuses this action then do a explicit return
     if (context.getRequest().getParameter("actionSource") != null) {
-      return getReturn(context, "AddCall");
+        return getReturn(context, "AddCall");
     }
+
     return getReturn(context, "Add");
   }
 
@@ -752,7 +754,8 @@ public final class ExternalContactsCalls extends CFSModule {
           contactName + StringUtils.toString(thisCall.getContactName()) + "\n" +
           type + StringUtils.toString(thisCall.getCallType()) + "\n" +
           length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-          subject + StringUtils.toString(thisCall.getSubject()) + "\n" +
+          subject + StringUtils.toString(thisCall.getSubject()) + 
+                (((!StringUtils.toString(thisCall.getSubject()).equals(StringUtils.toString(thisCall.getAlertText()))) && (!"".equals(StringUtils.toString(thisCall.getAlertText()))))? "\\" + StringUtils.toString(thisCall.getAlertText()):"") + "\n" +
           notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
           entered + getUser(context, thisCall.getEnteredBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(
               this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +

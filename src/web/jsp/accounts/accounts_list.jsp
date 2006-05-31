@@ -17,9 +17,11 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.modules.base.*" %>
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -65,6 +67,14 @@
       <strong><a href="Accounts.do?command=Search&column=o.name"><dhv:label name="organization.name">Account Name</dhv:label></a></strong>
       <%= SearchOrgListInfo.getSortIcon("o.name") %>
     </th>
+<%--    <dhv:include name="organization.list.siteId" none="true"> --%>
+<zeroio:debug value="<%="JSP::accounts_list.jsp "+ SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId")+" == "+(String.valueOf(Constants.INVALID_SITE)) %>"/>
+      <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+        <th <% ++columnCount; %>>
+          <strong><dhv:label name="accounts.site">Site</dhv:label></strong>
+        </th>
+      </dhv:evaluate>
+<%--    </dhv:include> --%>
     <dhv:include name="organization.phoneNumbers" none="true">
     <th nowrap <% ++columnCount; %>>
         <strong><dhv:label name="account.phoneFax">Phone/Fax</dhv:label></strong>
@@ -86,19 +96,24 @@
     rowid = (rowid != 1 ? 1 : 2);
     Organization thisOrg = (Organization)j.next();
 %>
-  <tr>
-    <td width="8" valign="center" nowrap class="row<%= rowid %>">
+  <tr class="row<%= rowid %>">
+    <td width="8" valign="center" nowrap>
       <% int status = -1;%>
       <dhv:permission name="accounts-accounts-edit"><% status = thisOrg.getEnabled() ? 1 : 0; %></dhv:permission>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
        <a href="javascript:displayMenu('select<%= i %>','menuAccount', '<%= thisOrg.getOrgId() %>', '<%= status %>', '<%=thisOrg.isTrashed() %>');"
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAccount');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-		<td class="row<%= rowid %>">
+		<td>
       <a href="Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
 		</td>
+<%--    <dhv:include name="organization.list.siteId" none="true"> --%>
+      <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+        <td valign="top"><%= SiteIdList.getSelectedValue(thisOrg.getSiteId()) %></td>
+      </dhv:evaluate>
+<%--    </dhv:include> --%>
     <dhv:include name="organization.phoneNumbers" none="true">
-		<td valign="center" class="row<%= rowid %>" nowrap>
+		<td valign="center" nowrap>
 		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
       <%Iterator itr = thisOrg.getPhoneNumberList().iterator();%>
       <%if (!itr.hasNext()) {%>&nbsp;<%}%>
@@ -118,7 +133,7 @@
 		</td>
     </dhv:include>
     <dhv:include name="organization.emailAddresses" none="true">
-		<td valign="center" class="row<%= rowid %>" nowrap>
+		<td valign="center" nowrap>
 		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
       <% if ( (!"".equals(thisOrg.getPrimaryEmailAddress()))) { %>
         <a href="mailto:<%= toHtml(thisOrg.getPrimaryEmailAddress()) %>"><%= toHtml(thisOrg.getPrimaryEmailAddress()) %></a>
@@ -139,7 +154,7 @@
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="<%= columnCount %>">
+    <td colspan="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE))?columnCount+1:columnCount %>">
       <dhv:label name="accounts.search.notFound">No accounts found with the specified search parameters.</dhv:label><br />
       <a href="Accounts.do?command=SearchForm"><dhv:label name="accounts.accounts_list.ModifySearch">Modify Search</dhv:label></a>.
     </td>

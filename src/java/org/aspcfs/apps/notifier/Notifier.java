@@ -17,6 +17,7 @@ package org.aspcfs.apps.notifier;
 
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
+import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.apps.ReportBuilder;
 import org.aspcfs.apps.common.ReportConstants;
 import org.aspcfs.modules.accounts.base.Organization;
@@ -31,6 +32,7 @@ import org.aspcfs.modules.communications.base.Recipient;
 import org.aspcfs.modules.communications.base.RecipientList;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.pipeline.base.OpportunityComponent;
+import org.aspcfs.modules.pipeline.base.OpportunityComponentEmail;
 import org.aspcfs.modules.pipeline.base.OpportunityComponentList;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.system.base.Site;
@@ -186,7 +188,7 @@ public class Notifier extends ReportBuilder {
           }
           if (this.getTaskList().contains(
               "org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients")) {
-            this.output.append(this.buildCommunications(db, thisSite));
+            this.output.append(this.buildCommunications(db, thisSite, null));
           }
           if (this.getTaskList().contains(
               "org.aspcfs.apps.notifier.task.NotifyCallOwners")) {
@@ -266,33 +268,33 @@ public class Notifier extends ReportBuilder {
         }
         thisNotification.setFrom((String) this.config.get("EMAILADDRESS"));
         thisNotification.setSiteCode(baseName);
-        thisNotification.setSubject(
-            "CRM Opportunity" + (relationshipName != null ? ": " + StringUtils.toHtml(
-                relationshipName) : ""));
-        thisNotification.setMessageToSend(
-            ReportConstants.NOREPLY_DISCLAIMER + "<br>" +
-            "<br>" +
-            "The following opportunity component in Centric CRM has an alert set:<br>" +
-            "<br>" +
-            (relationshipType != null ?
-            relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>" : "") +
-            "Opportunity Name: " + StringUtils.toHtml(
-                thisOpportunity.getDescription()) + "<br>" +
-            "Component Description: " + StringUtils.toHtml(
-                thisComponent.getDescription()) + "<br>" +
-            "Alert Text: " + StringUtils.toHtml(thisComponent.getAlertText()) + "<br>" +
-            "Notes: " + StringUtils.toHtml(thisComponent.getNotes()) + "<br>" +
-            "<br>" +
-            generateCFSUrl(
-                siteInfo, "LeadsComponents.do?command=DetailsComponent&id=" + thisComponent.getId()));
-        thisNotification.setType(Notification.EMAIL);
-        thisNotification.setTypeText(Notification.EMAIL_TEXT);
-        thisNotification.notifyUser(db);
-        ++notifyCount;
+        String dbNamePath = (String) config.get("FILELIBRARY") + siteInfo.getDatabaseName() + fs;
+        String templateFile = dbNamePath + "templates_" + siteInfo.getLanguage() + ".xml";
+        if (!FileUtils.fileExists(templateFile)) {
+          templateFile = dbNamePath + "templates_en_US.xml";
+        }
+        try {
+          OpportunityComponentEmail componentEmail = new OpportunityComponentEmail();
+          componentEmail.setRelationshipType(relationshipType);
+          componentEmail.setRelationshipName(relationshipName);
+          componentEmail.setOpportunity(thisOpportunity);
+          componentEmail.setComponent(thisComponent);
+          componentEmail.setUrl(generateLink(
+                  siteInfo, "LeadsComponents.do?command=DetailsComponent&id=" + thisComponent.getId()));
+          componentEmail.render(templateFile);
+          thisNotification.setSubject(componentEmail.getSubject());
+          thisNotification.setMessageToSend(componentEmail.getBody());
+          thisNotification.setType(Notification.EMAIL);
+          thisNotification.setTypeText(Notification.EMAIL_TEXT);
+          thisNotification.notifyUser(db);
+          ++notifyCount;
+        } catch (Exception e) {
+          //TODO: What to do if this generates an error?
+        }
       }
       if (thisNotification.hasErrors()) {
         System.out.println(
-            "Notifier Error-> " + thisNotification.getErrorMessage());
+            "Notifier Error 297-> " + thisNotification.getErrorMessage());
         if (System.getProperty("DEBUG") != null) {
           System.out.println(
               "Notifier-> Opportunity Component: " + thisComponent.getId());
@@ -354,7 +356,7 @@ public class Notifier extends ReportBuilder {
       }
       if (thisNotification.hasErrors()) {
         System.err.println(
-            "Notifier Error-> " + thisNotification.getErrorMessage());
+            "Notifier Error 359-> " + thisNotification.getErrorMessage());
       }
     }
     thisReport.setHeader(
@@ -372,7 +374,7 @@ public class Notifier extends ReportBuilder {
    * @return Description of the Returned Value
    * @throws Exception Description of Exception
    */
-  public String buildCommunications(Connection db, Site siteInfo) throws Exception {
+  public String buildCommunications(Connection db, Site siteInfo, ConnectionPool cp) throws Exception {
     String dbName = siteInfo.getDatabaseName();
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
@@ -463,12 +465,17 @@ public class Notifier extends ReportBuilder {
       } else {
         thisCampaign.setStatusId(Campaign.ERROR);
         thisCampaign.setStatus("No Recipients");
+        thisCampaign.setBuildGroupMaps(true);
+        thisCampaign.buildUserGroupMaps(db);
         thisCampaign.update(db);
       }
       //Send each recipient a message
       while (iList.hasNext()) {
         ++campaignCount;
         Recipient thisRecipient = (Recipient) iList.next();
+        if (cp != null) {
+          cp.renew(db);
+        }
         Contact thisContact = new Contact(db, thisRecipient.getContactId());
 
         Notification thisNotification = new Notification();
@@ -478,6 +485,7 @@ public class Notifier extends ReportBuilder {
         thisNotification.setDatabaseName(dbName);
         thisNotification.setItemId(thisCampaign.getId());
         thisNotification.setFileAttachments(attachments);
+        thisNotification.setCampaignType(thisCampaign.getType());
         thisNotification.setItemModified(thisCampaign.getActiveDate());
         if (thisNotification.isNew(db)) {
           thisNotification.setFrom(thisCampaign.getReplyTo());
@@ -509,12 +517,12 @@ public class Notifier extends ReportBuilder {
             String addressCurrentURLParameters = java.net.URLEncoder.encode(
                 PrivateString.encrypt(
                     thisKey.getKey(), "addressNoChangeId=" + value + ",cid=" + thisContact.getId() + ",campaignId=" + thisCampaign.getId()), "UTF-8");
-            String addressCurrentURL = "If this information is accurate click <a href=\"" + schema + "://" + serverName + "/ProcessAddressSurvey.do?id=" + addressCurrentURLParameters + "}\">here</a>";
+            String addressCurrentURL = "If this information is accurate click <a href=\"" + schema + "://" + serverName + "/ProcessAddressSurvey.do?id=" + addressCurrentURLParameters + "\">here</a>";
 
             String addressUpdateURLParameters = java.net.URLEncoder.encode(
                 PrivateString.encrypt(
                     thisKey.getKey(), "addressSurveyId=" + value + ",cid=" + thisContact.getId() + ",campaignId=" + thisCampaign.getId()), "UTF-8");
-            String addressUpdateURL = ", if you would like to update your contact information click <a href=\"" + schema + "://" + serverName + "/ProcessAddressSurvey.do?id=" + addressUpdateURLParameters + "}\">here</a>.";
+            String addressUpdateURL = ", if you would like to update your contact information click <a href=\"" + schema + "://" + serverName + "/ProcessAddressSurvey.do?id=" + addressUpdateURLParameters + "\">here</a>.";
 
             template.addParseElement(
                 "${survey_url_address=" + value + "}", "<br />" + addressCurrentURL + addressUpdateURL + "<br />");
@@ -545,6 +553,14 @@ public class Notifier extends ReportBuilder {
               template.addParseElement(
                   "${contact_address=" + value + "}", ((contactInformation != null) ? contactInformation : ""));
             }
+          }
+          //For broadcast message confirmation
+          value = template.getValue("campaignId");
+          if (value != null) {
+            template.addParseElement(
+             "${campaignId=" + value + "}", java.net.URLEncoder.encode(
+                PrivateString.encrypt(
+                  thisKey.getKey(), "campaignId=" + thisCampaign.getId() + ",cid=" + thisContact.getId()), "UTF-8"));
           }
           //NOTE: The following items are the same as the ProcessMessage.java items
           template.addParseElement(
@@ -592,7 +608,7 @@ public class Notifier extends ReportBuilder {
         }
         if (thisNotification.hasErrors()) {
           System.out.println(
-              "Notifier Error-> " + thisNotification.getErrorMessage());
+              "Notifier Error 611-> " + thisNotification.getErrorMessage());
         }
       }
       if (campaignCount > 0) {
@@ -601,6 +617,8 @@ public class Notifier extends ReportBuilder {
         thisCampaign.setStatusId(Campaign.FINISHED);
         thisCampaign.setRecipientCount(campaignCount);
         thisCampaign.setSentCount(sentCount);
+        thisCampaign.setBuildGroupMaps(true);
+        thisCampaign.buildUserGroupMaps(db);
         thisCampaign.update(db);
       }
     }
@@ -818,6 +836,14 @@ public class Notifier extends ReportBuilder {
         "</a>");
   }
 
+  public String generateLink(Site siteInfo, String url) {
+    String schema = "http";
+    if ("true".equals((String) config.get("FORCESSL"))) {
+      schema = "https";
+    }
+    return (schema + "://" + siteInfo.getVirtualHost() + "/" + url);
+  }
+
 
   /**
    * Gets the taskList attribute of the Notifier object
@@ -838,4 +864,3 @@ public class Notifier extends ReportBuilder {
     return config;
   }
 }
-

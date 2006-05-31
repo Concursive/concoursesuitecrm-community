@@ -36,7 +36,7 @@ function page_init() {
 %>
   if ( !(inArray(parent.document.forms['projectMemberForm'].elements['selProjectList'], <%= member.getUserId() %>)) ) {
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<dhv:username id="<%= member.getUserId() %>"/>';
+    newOpt.text='<dhv:username id="<%= member.getUserId() %>" forJS="true" />';
     newOpt.value='<%= member.getUserId() %>';
     list.options[list.length] = newOpt;
   }

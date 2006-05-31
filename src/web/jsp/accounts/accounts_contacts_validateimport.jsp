@@ -198,7 +198,7 @@
             </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= ImportDetails.getOwner() == -1 ? User.getUserId() : ImportDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true<%= User.getUserRecord().getSiteId() > -1?"&mySiteOnly=true":"" %>&siteId=<%=ImportDetails.getSiteId()%>&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
          </td>
         </tr>
     </table>
@@ -291,7 +291,7 @@
    String field = (String) f.next();
    Property mappedProperty = (Property) fieldMappings.get(field);
   %>
-  <script>fields[fields.length] = '<%= field %>'</script>
+  <script>fields[fields.length] = '<%= field %>';</script>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
      <%= toString(field) %>

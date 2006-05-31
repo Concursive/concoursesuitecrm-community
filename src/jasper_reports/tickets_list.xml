@@ -51,6 +51,8 @@
 	<parameter name="country" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
+  <parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT t.*, 
 o.name AS orgname, o.enabled AS orgenabled, 
 ld.description AS dept, 
@@ -73,7 +75,7 @@ AND t.trashed_date IS NULL
 AND t.entered >= $P{date_start}
 AND t.entered <= $P{date_end}
 $P!{lookup_department_where}
-ORDER BY dept,t.entered]]></queryString>
+ORDER BY ld.description,t.entered]]></queryString>
 	<field name="ticketid" class="java.lang.Integer"/>
 	<field name="problem" class="java.lang.String"/>
 	<field name="entered" class="java.sql.Timestamp"/>

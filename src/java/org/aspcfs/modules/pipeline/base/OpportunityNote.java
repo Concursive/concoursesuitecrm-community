@@ -71,8 +71,8 @@ public class OpportunityNote extends Note {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM note " +
-        "WHERE id = " + noteId + " ");
+            "FROM note " +
+            "WHERE id = " + noteId + " ");
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
@@ -97,7 +97,7 @@ public class OpportunityNote extends Note {
    * @throws SQLException Description of Exception
    */
   public void process(Connection db, int oppHeaderId, int enteredBy, int modifiedBy) throws SQLException {
-    if (this.getEnabled() == true) {
+    if (this.getEnabled()) {
       if (this.getId() == -1) {
         this.insert(db, oppHeaderId, enteredBy);
       } else {
@@ -119,12 +119,16 @@ public class OpportunityNote extends Note {
    */
   public void insert(Connection db, int oppHeaderId, int enteredBy) throws SQLException {
     // TODO: This table does not yet exist
+    this.setId(DatabaseUtils.getNextSeq(db, "note_id_seq"));
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO note " +
-        "(org_id, contact_id, opp_id, subject, body, enteredby, modifiedby) " +
-        "VALUES " +
-        "(?, ?, ?, ?, ?, ?, ?) ");
+            "(" + (getId() > -1 ? "id, " : "") + "org_id, contact_id, opp_id, subject, body, enteredby, modifiedby) " +
+            "VALUES " +
+            "(" + (getId() > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
+    if (getId() > -1) {
+      pst.setInt(++i, getId());
+    }
     pst.setInt(++i, this.getOrgId());
     pst.setInt(++i, this.getContactId());
     pst.setInt(++i, oppHeaderId);
@@ -134,7 +138,7 @@ public class OpportunityNote extends Note {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-    this.setId(DatabaseUtils.getCurrVal(db, "note_id_seq", -1));
+    this.setId(DatabaseUtils.getCurrVal(db, "note_id_seq", getId()));
   }
 
 
@@ -149,8 +153,8 @@ public class OpportunityNote extends Note {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE note " +
-        "SET body = ?, subject = ?, modifiedby = ? " +
-        "WHERE id = ? ");
+            "SET body = ?, subject = ?, modifiedby = ? " +
+            "WHERE id = ? ");
     int i = 0;
     pst.setString(++i, this.getBody());
     pst.setString(++i, this.getSubject());
@@ -170,7 +174,7 @@ public class OpportunityNote extends Note {
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM note " +
-        "WHERE id = ? ");
+            "WHERE id = ? ");
     int i = 0;
     pst.setInt(++i, this.getId());
     pst.execute();

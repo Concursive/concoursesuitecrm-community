@@ -82,11 +82,11 @@
   <tr class="containerBody">
 <%
   String projectApprovedCheck = "";
-  if (Project.getApprovalDate() != null) {
+  if ((Project.getApprovalDate() != null) || (Project.getApproved())){
     projectApprovedCheck = " checked";
   }
   String projectClosedCheck = "";
-  if (Project.getCloseDate() != null) {
+  if ((Project.getCloseDate() != null) || (Project.getClosed())){
     projectClosedCheck = " checked";
   }
 %>

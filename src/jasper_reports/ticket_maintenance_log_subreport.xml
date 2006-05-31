@@ -35,30 +35,32 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT t.ticketid,
 a.asset_tag AS assettag,
 a.serial_number AS serialnumber,
-a.vendor AS assetvendor,
 a.model_version AS modelversion,
 a.location AS assetlocation,
 sc.contract_number AS contractnumber,
 sc.current_start_date AS contractstartdate,
 sc.current_end_date AS contractenddate,
-lk_om.description AS servicemodel
+lk_om.description AS servicemodel,
+lk_av.description AS assetvendor
 FROM ticket t
 LEFT JOIN asset a ON (t.link_asset_id = a.asset_id)
 LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id)
 LEFT JOIN lookup_onsite_model lk_om ON (sc.onsite_service_model = lk_om.code)
+LEFT JOIN lookup_asset_vendor lk_av ON (a.vendor_code = lk_av.code)
 WHERE t.ticketid = $P{ticketid}]]></queryString>
 	<field name="assettag" class="java.lang.String"/>
 	<field name="serialnumber" class="java.lang.String"/>
-	<field name="assetvendor" class="java.lang.String"/>
 	<field name="modelversion" class="java.lang.String"/>
 	<field name="assetlocation" class="java.lang.String"/>
 	<field name="contractnumber" class="java.lang.String"/>
 	<field name="contractstartdate" class="java.sql.Timestamp"/>
 	<field name="contractenddate" class="java.sql.Timestamp"/>
 	<field name="servicemodel" class="java.lang.String"/>
+	<field name="assetvendor" class="java.lang.String"/>
 		<group  name="dummy" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
@@ -229,7 +231,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(!((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(!((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
@@ -756,7 +758,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 		</columnHeader>
 		<detail>
 			<band height="37"  isSplitAllowed="true" >
-				<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+				<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
@@ -773,7 +775,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
@@ -797,7 +799,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true">
-							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{SCRIPT_DB_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 						</reportElement>
 					<subreportParameter  name="ticketid">
 						<subreportParameterExpression><![CDATA[$P{ticketid}]]></subreportParameterExpression>

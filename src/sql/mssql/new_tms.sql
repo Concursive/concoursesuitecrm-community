@@ -55,7 +55,15 @@ CREATE TABLE ticket_priority (
 );
 
 
-CREATE TABLE ticket_category ( 
+CREATE TABLE lookup_ticket_escalation(
+  code INTEGER IDENTITY PRIMARY KEY
+  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,default_item BIT DEFAULT 0
+  ,level INTEGER DEFAULT 0
+  ,enabled BIT DEFAULT 1
+);
+
+CREATE TABLE ticket_category (
   id INT IDENTITY PRIMARY KEY
   ,cat_level int  NOT NULL DEFAULT 0 
   ,parent_cat_code int NOT NULL DEFAULT 0
@@ -64,6 +72,7 @@ CREATE TABLE ticket_category (
   ,default_item BIT DEFAULT 0
   ,level INTEGER DEFAULT 0
   ,enabled BIT DEFAULT 1
+  ,site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
 CREATE TABLE ticket_category_draft (
@@ -75,7 +84,26 @@ CREATE TABLE ticket_category_draft (
   full_description text NOT NULL DEFAULT '',
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  site_id INTEGER REFERENCES lookup_site_id(code)
+);
+
+-- Ticket Category Draft Assignment table
+CREATE TABLE ticket_category_draft_assignment (
+  map_id INT IDENTITY PRIMARY KEY,
+  category_id INTEGER NOT NULL REFERENCES ticket_category_draft(id),
+  department_id INTEGER REFERENCES lookup_department(code),
+  assigned_to INTEGER REFERENCES access(user_id),
+  group_id INTEGER REFERENCES user_group(group_id)
+);
+
+-- Ticket Category Assignment table
+CREATE TABLE ticket_category_assignment (
+  map_id INT IDENTITY PRIMARY KEY,
+  category_id INTEGER NOT NULL REFERENCES ticket_category(id),
+  department_id INTEGER REFERENCES lookup_department(code),
+  assigned_to INTEGER REFERENCES access(user_id),
+  group_id INTEGER REFERENCES user_group(group_id)
 );
 
 CREATE TABLE ticket (
@@ -196,3 +224,45 @@ CREATE TABLE ticketlink_project (
   ticket_id INT NOT NULL REFERENCES ticket(ticketid),
   project_id INT NOT NULL REFERENCES projects(project_id)
 );
+
+CREATE INDEX ticketlink_project_idx ON ticketlink_project(ticket_id);
+
+-- Ticket Cause lookup
+CREATE TABLE lookup_ticket_cause (
+  code INTEGER IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+	enabled BIT DEFAULT 1
+);
+
+-- Ticket Resolution lookup
+CREATE TABLE lookup_ticket_resolution (
+  code INTEGER IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+	enabled BIT DEFAULT 1
+);
+
+--Ticket Defect table
+CREATE TABLE ticket_defect (
+  defect_id INT IDENTITY PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  start_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  end_date DATETIME,
+  enabled BIT NOT NULL DEFAULT 1,
+  trashed_date DATETIME,
+  site_id INT REFERENCES lookup_site_id(code)
+);
+
+-- Ticket State lookup
+CREATE TABLE lookup_ticket_state (
+  code INTEGER IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+	enabled BIT DEFAULT 1
+);
+

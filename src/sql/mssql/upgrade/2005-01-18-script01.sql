@@ -1,6 +1,6 @@
 -- Add IM, Text Message, and Address Request
 
-ALTER TABLE active_survey_responses ADD COLUMN address_updated INT;
+ALTER TABLE active_survey_responses ADD address_updated INT;
 --TODO: What about existing data? what to do with address_updated
 
 CREATE TABLE lookup_im_types (

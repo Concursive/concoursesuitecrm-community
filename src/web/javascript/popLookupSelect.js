@@ -1,4 +1,4 @@
-function popLookupSelectMultiple(displayFieldId,highLightedId,table) {
+function popLookupSelectMultiple(displayFieldId,hiddenFieldId,table) {
   title  = '_types';
   width  =  '500';
   height =  '450';
@@ -26,7 +26,7 @@ function popLookupSelectMultiple(displayFieldId,highLightedId,table) {
   }
   
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('LookupSelector.do?command=PopupSelector&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&table=' + table + '', title, params);
+  var newwin=window.open('LookupSelector.do?command=PopupSelector&hiddenFieldId='+hiddenFieldId+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&table=' + table + '&listType=list', title, params);
   newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
@@ -130,6 +130,81 @@ function popQuoteConditionSelectMultiple(displayFieldId,highLightedId,table,quot
 }
 
 
+function popAssetMaterialsSelectMultiple(displayFieldId,highLightedId,table,assetId,currentIds,currentQuantities) {
+  title  = 'asset_material_types';
+  width  =  '500';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'no';
+  
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  
+  var selectedIds = currentIds;
+  var selectedQtys = currentQuantities;
+  
+  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('AssetMaterialsSelector.do?command=PopupSelector&assetId='+assetId+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionQuantity='+ selectedQtys +'&table=' + table + '', title, params);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+
+function popUserGroupsSelectMultiple(displayFieldId,highLightedId,table,userId,currentIds,currentValues, type) {
+  title  = '_types';
+  width  =  '500';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'no';
+  
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  
+  var selectedIds = currentIds;
+  var selectedDisplays = currentValues;
+  
+  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var userString = '&userId='+userId;
+  if (displayFieldId == 'campaign') {
+    userString = '&campaignId='+userId;
+  }
+  var newwin=window.open('UserGroups.do?command=PopupSelector'+userString+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&table=' + table + '&type='+ type+ '', title, params);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+
+function popUserGroupsListSingle(hiddenFieldId, displayFieldId, params) {
+  title  = 'Contacts';
+  width  =  '700';
+  height =  '425';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  var newwin=window.open('UserGroups.do?command=PopupSingleSelector&listType=single&flushtemplist=true&selectedIds='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+function popActionPlansSelectMultiple(displayFieldId,highLightedId,categoryId,constantId,siteId,currentIds, type) {
+  var selectedIds = currentIds;
+  window.location.href= 'AdminCategories.do?command=PopupSelector&categoryId='+categoryId+'&siteId='+siteId+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&categoryId=' + categoryId +'&constantId='+ constantId + '&type='+ type+ '';
+}
+
 function popLookupSelectSingle(displayFieldId, moduleId, lookupId) {
   title  = '_types';
   width  =  '500';
@@ -149,6 +224,26 @@ function popLookupSelectSingle(displayFieldId, moduleId, lookupId) {
   }
 }
 
+function popLookupSelector(hiddenFieldId, displayFieldId, table, params) {
+  title  = '_types';
+  width  =  '500';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'no';
+  
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('LookupSelector.do?command=PopupSelector&displayFieldId='+displayFieldId+'&hiddenFieldId=' + hiddenFieldId + '&table=' + table + params, title, windowParams);
+  newwin.focus();
+
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+
 
   function setParentValue(displayFieldId, fieldValue) {
     opener.document.getElementById(displayFieldId).value = fieldValue;
@@ -156,7 +251,7 @@ function popLookupSelectSingle(displayFieldId, moduleId, lookupId) {
   }
 
   function setParentList(selectedIds,selectedValues,listType,displayFieldId, hiddenFieldId, browserId){
-	  if(selectedValues.length == 0 && listType == "list"){
+    if(selectedValues.length == 0 && listType == "list"){
       opener.deleteOptions(displayFieldId);
 		  opener.insertOption("None Selected","-1",displayFieldId);
       return true;
@@ -279,5 +374,9 @@ function popLookupSelectSingle(displayFieldId, moduleId, lookupId) {
     }
     
     return true;
+  }
+  
+  function setParentHiddenField(hiddenFieldId, strValue) {
+    document.getElementById(hiddenFieldId).value = strValue;
   }
 

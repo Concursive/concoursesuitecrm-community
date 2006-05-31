@@ -177,7 +177,7 @@
                   <ul>
                   <tr>
                     <td>
-                      <li>&nbsp;<dhv:label name="account.name.colon">Name:</dhv:label> &nbsp;<%= thisTask.getContact().getNameLastFirst() %></li>
+                      <li>&nbsp;<dhv:label name="account.name.colon">Name:</dhv:label> &nbsp;<%= thisTask.getContact().getNameFull() %></li>
                     </td>
                   </tr>
                   <tr>
@@ -189,7 +189,7 @@
                       while (i.hasNext()) {
                         EmailAddress thisAddress = (EmailAddress)i.next(); %>
                       <tr><td>
-                        &nbsp;<%=thisAddress.getEmail()%>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
+                        &nbsp;<%= toHtml(thisAddress.getEmail()) %>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
                       </td></tr>
                      <%}%>
                      </table></td></tr></table>

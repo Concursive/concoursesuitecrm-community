@@ -22,11 +22,17 @@
   var thisVersionId = -1;
   var menu_init = false;
   var modifiable = 'true';
+  var thisHeaderId = -1;
+  var thisAllowMultiVersion = true;
+  var thisAllowMultiQuote = true;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, quoteId, versionId, modi, trashed) {
+  function displayMenu(loc, id, quoteId, versionId, modi, trashed, headerId, allowMultiVersion, allowMultiQuote) {
     thisQuoteId = quoteId;
     thisVersionId = versionId;
     modifiable = modi;
+    thisHeaderId = headerId;
+    thisAllowMultiVersion = allowMultiVersion;
+    thisAllowMultiQuote =  allowMultiQuote;
     updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
@@ -36,21 +42,35 @@
   }
 
   function updateMenu(trashed) {
-    if(modifiable == 'true'){
-      showSpan('menuModify');
-    }else{
-      hideSpan('menuModify');
-    }
     if (trashed == 'true'){
       hideSpan('menuModify');
       hideSpan('menuClone');
-      hideSpan('menuVersion');
+      hideSpan('menuAddVersion');
       hideSpan('menuDelete');
     } else {
-      showSpan('menuModify');
-      showSpan('menuClone');
-      showSpan('menuVersion');
       showSpan('menuDelete');
+      if(modifiable == 'true'){
+        showSpan('menuModify');
+      }else{
+        hideSpan('menuModify');
+      }
+      if (!(!thisAllowMultiVersion && (thisHeaderId != '-1'))){
+        showSpan('menuAddVersion');
+        showSpan('menuShowVersion');
+        if (thisVersionId == ''){
+          showSpan('menuShowVersion');
+        } else {
+          hideSpan('menuShowVersion');
+        }
+      } else {
+        hideSpan('menuAddVersion');
+        hideSpan('menuShowVersion');
+      }
+      if (!(!thisAllowMultiQuote && (thisHeaderId != '-1'))){
+        showSpan('menuClone');
+      } else {
+        hideSpan('menuClone');
+      }
     }
   }
   //Menu link functions
@@ -94,7 +114,7 @@
           <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
         </td>
       </tr>
-      <tr id="menuDetails" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="showVersions();">
+      <tr id="menuShowVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="showVersions();">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -123,7 +143,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="quotes-quotes-add">
-      <tr id="menuVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addVersion();">
+      <tr id="menuAddVersion" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addVersion();">
         <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

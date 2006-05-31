@@ -747,12 +747,12 @@ public class ProductOption extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT " +
         "popt.*, " +
-        "poptconf.result_type as result_type, " +
-        "poptconf.configurator_name as conf_name, " +
-        "popt2.option_name as parent_name " +
-        "FROM product_option AS popt " +
-        "LEFT JOIN product_option_configurator AS poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
-        "LEFT JOIN product_option AS popt2 ON ( popt.parent_id = popt2.option_id ) " +
+        "poptconf.result_type AS result_type, " +
+        "poptconf.configurator_name AS conf_name, " +
+        "popt2.option_name AS parent_name " +
+        "FROM product_option popt " +
+        "LEFT JOIN product_option_configurator poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
+        "LEFT JOIN product_option popt2 ON ( popt.parent_id = popt2.option_id ) " +
         "WHERE popt.option_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -1193,7 +1193,7 @@ public class ProductOption extends GenericBean {
   public static boolean lookupId(Connection db, String optName) throws SQLException {
     boolean result = false;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT count(*) as counter " +
+        "SELECT count(*) AS counter " +
         "FROM product_option " +
         "WHERE short_description = ? ");
     pst.setString(1, optName);
@@ -1225,13 +1225,13 @@ public class ProductOption extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        "SELECT max(range_max) AS max " +
+        "SELECT MAX(range_max) AS maxrange " +
         "FROM product_option_values " +
         "WHERE option_id = ? ");
     pst.setInt(1, optionId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      nextMin = rs.getInt("max");
+      nextMin = rs.getInt("maxrange");
     }
     rs.close();
     pst.close();
@@ -1286,7 +1286,7 @@ public class ProductOption extends GenericBean {
     //Check for the current product mappings in product_option_map
     int i = 0;
     pst = db.prepareStatement(
-        "SELECT count(*) as productcount " +
+        "SELECT count(*) AS productcount " +
         "FROM product_option_map " +
         "WHERE option_id = ? ");
     pst.setInt(++i, this.getId());
@@ -1307,7 +1307,7 @@ public class ProductOption extends GenericBean {
     //Check for the current product mappings in product_option_map
     i = 0;
     pst = db.prepareStatement(
-        "SELECT count(*) as quoteoptioncount " +
+        "SELECT count(*) AS quoteoptioncount " +
         "FROM quote_product_options qpo, product_option_map pom " +
         "WHERE qpo.product_option_id = pom.product_option_id AND option_id = ? ");
     pst.setInt(++i, this.getId());

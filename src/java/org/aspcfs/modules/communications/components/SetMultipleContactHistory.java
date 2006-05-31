@@ -68,23 +68,26 @@ public class SetMultipleContactHistory extends ObjectHookComponent implements Co
     try {
       db = getConnection(context);
       campaign = (Campaign) context.getThisObject();
-      if (campaign.getActive() && campaign.getContactList().size() > 0) {
+      if (campaign.getContactList() != null && campaign.getContactList().size() > 0) {
         Iterator iterator = (Iterator) campaign.getContactList().iterator();
         while (iterator.hasNext()) {
           Contact contact = (Contact) iterator.next();
           history = new ContactHistory();
-          history.setLevel(context.getParameterAsInt(LEVEL));
           history.setContactId(contact.getId());
           history.setLinkObjectId(context.getParameterAsInt(LINK_OBJECT_ID));
           history.setLinkItemId(context.getParameterAsInt(LINK_ITEM_ID));
-          history.setDescription(context.getParameter(DESCRIPTION));
-          history.setStatus(context.getParameter(STATUS));
-          history.setType(context.getParameter(TYPE));
-          history.setEnabled(context.getParameter(ENABLED));
-          history.setEnteredBy(context.getParameter(ENTERED_BY));
-          history.setModifiedBy(context.getParameter(MODIFIED_BY));
-          result = history.insert(db);
+          if (!history.queryRecord(db)) {
+            history.setLevel(context.getParameterAsInt(LEVEL));
+            history.setDescription(context.getParameter(DESCRIPTION));
+            history.setStatus(context.getParameter(STATUS));
+            history.setType(context.getParameter(TYPE));
+            history.setEnabled(context.getParameter(ENABLED));
+            history.setEnteredBy(context.getParameter(ENTERED_BY));
+            history.setModifiedBy(context.getParameter(MODIFIED_BY));
+            result = history.insert(db);
+          }
         }
+        result = true;
       } else {
         return false;
       }

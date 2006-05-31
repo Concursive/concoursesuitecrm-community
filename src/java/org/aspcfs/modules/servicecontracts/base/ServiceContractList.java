@@ -518,9 +518,9 @@ public class ServiceContractList extends ArrayList {
     int count = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT COUNT(*) as itemcount " +
+        "SELECT COUNT(*) AS itemcount " +
         "FROM service_contract sc " +
-        "WHERE contract_id > 0 ");
+        "WHERE sc.contract_id > 0 AND sc.trashed_date IS NULL ");
     if (moduleId == Constants.ACCOUNTS) {
       sql.append("AND sc.account_id = ?");
     }

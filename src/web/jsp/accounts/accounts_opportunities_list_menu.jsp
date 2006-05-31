@@ -22,10 +22,14 @@
   var thisHeaderId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, headerId, trashed) {
+  function displayMenu(loc, id, orgId, headerId, trashed, hasPermission) {
     thisOrgId = orgId;
     thisHeaderId = headerId;
-    updateMenu(trashed);
+    if (hasPermission == 'true') {
+      updateMenu(trashed);
+    } else {
+      updateMenu('true');
+    }
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));

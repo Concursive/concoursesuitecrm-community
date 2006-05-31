@@ -37,9 +37,6 @@ import java.util.Iterator;
  */
 public class ContactTypeList extends ArrayList {
 
-  private final static int EMPLOYEE_TYPE = 1;
-  private boolean showEmployees = false;
-  private boolean showPersonal = false;
   private String jsEvent = "";
   private int defaultKey = -1;
   private int size = 1;
@@ -112,33 +109,12 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   * Sets the showPersonal attribute of the ContactTypeList object
-   *
-   * @param showPersonal The new showPersonal value
-   */
-  public void setShowPersonal(boolean showPersonal) {
-    this.showPersonal = showPersonal;
-  }
-
-
-  /**
    * Sets the Multiple attribute of the ContactTypeList object
    *
    * @param multiple The new Multiple value
    */
   public void setMultiple(boolean multiple) {
     this.multiple = multiple;
-  }
-
-
-  /**
-   * Sets the ShowEmployees attribute of the ContactTypeList object
-   *
-   * @param tmp The new ShowEmployees value
-   * @since 1.2
-   */
-  public void setShowEmployees(boolean tmp) {
-    this.showEmployees = tmp;
   }
 
 
@@ -296,16 +272,6 @@ public class ContactTypeList extends ArrayList {
 
 
   /**
-   * Gets the showPersonal attribute of the ContactTypeList object
-   *
-   * @return The showPersonal value
-   */
-  public boolean getShowPersonal() {
-    return showPersonal;
-  }
-
-
-  /**
    * Gets the Size attribute of the ContactTypeList object
    *
    * @return The Size value
@@ -322,17 +288,6 @@ public class ContactTypeList extends ArrayList {
    */
   public boolean getMultiple() {
     return multiple;
-  }
-
-
-  /**
-   * Gets the ShowEmployees attribute of the ContactTypeList object
-   *
-   * @return The ShowEmployees value
-   * @since 1.2
-   */
-  public boolean getShowEmployees() {
-    return showEmployees;
   }
 
 
@@ -426,7 +381,7 @@ public class ContactTypeList extends ArrayList {
             break;
         }
       }
-      if (thisContactType.getEnabled() == true || thisContactType.getId() == EMPLOYEE_TYPE) {
+      if (thisContactType.getEnabled() == true) {
         contactTypeSelect.appendItem(
             thisContactType.getId(), thisContactType.getDescription());
       } else if (thisContactType.getId() == defaultKey) {
@@ -594,20 +549,12 @@ public class ContactTypeList extends ArrayList {
       sqlFilter = new StringBuffer();
     }
 
-    if (!showEmployees) {
-      sqlFilter.append("AND lct.code NOT IN (" + EMPLOYEE_TYPE + ") ");
-    }
-
-    if (!showPersonal) {
-      sqlFilter.append("AND lct.code != 2 ");
-    }
-
     if (category != -1) {
       sqlFilter.append("AND lct.category = ? ");
     }
 
     if (!showDisabled) {
-      sqlFilter.append("AND lct.enabled = " + DatabaseUtils.getTrue(db) + " ");
+      sqlFilter.append("AND lct.enabled = ? ");
     }
 
     if (includeDefinedByUser > 0) {
@@ -632,7 +579,9 @@ public class ContactTypeList extends ArrayList {
     if (category != -1) {
       pst.setInt(++i, category);
     }
-
+    if (!showDisabled) {
+      pst.setBoolean(++i, true);
+    }
     if (includeDefinedByUser > 0) {
       pst.setInt(++i, includeDefinedByUser);
     }

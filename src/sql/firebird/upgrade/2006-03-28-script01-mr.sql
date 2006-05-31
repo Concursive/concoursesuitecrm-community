@@ -1,0 +1,11 @@
+-- The following changes are required for Firebird SQL only
+-- Not sure how to form these as a sql script
+
+-- access table renamed to "access"
+-- opportunity_header table, field lock renamed to "lock"
+-- quote_product table, field comment renamed to "comment"
+-- ticket table, field comment renamed to "comment"
+-- ticketlog table, field comment renamed to "comment"
+-- generator opportunity_c_log_id_seq renamed to opportunity_c_ponent_log_id_seq
+-- netapp_contractexpiration_log table, renamed comment to "comment"
+-- netapp_contractexpiration table, renamed comment to "comment"

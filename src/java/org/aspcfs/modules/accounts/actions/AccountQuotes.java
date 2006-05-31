@@ -68,13 +68,11 @@ public final class AccountQuotes extends CFSModule {
     if (orgid == null) {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
+    String headerId = context.getRequest().getParameter("headerId");
+    if (headerId == null) {
+      headerId = (String) context.getRequest().getAttribute("headerId");
+    }
 
-    //find record permissions for portal users
-    /*
-     *  if (!isRecordAccessPermitted(context, Integer.parseInt(orgid))) {
-     *  return ("PermissionError");
-     *  }
-     */
     PagedListInfo quoteListInfo = this.getPagedListInfo(
         context, "accountQuoteListInfo", "qe.group_id", "desc");
     quoteListInfo.setLink(
@@ -88,6 +86,10 @@ public final class AccountQuotes extends CFSModule {
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgid))) {
+        return ("PermissionError");
+      }
 
       if (thisOrganization.isTrashed()) {
         quoteList.setIncludeOnlyTrashed(true);
@@ -108,6 +110,9 @@ public final class AccountQuotes extends CFSModule {
       }
       quoteList.setPagedListInfo(quoteListInfo);
       quoteList.setOrgId(Integer.parseInt(orgid));
+      if ((headerId != null) && !"".equals(headerId)) {
+        quoteList.setHeaderId(Integer.parseInt(headerId));
+      }
       quoteList.buildList(db);
 
     } catch (Exception errorMessage) {
@@ -179,6 +184,11 @@ public final class AccountQuotes extends CFSModule {
       quote.setBuildProducts(true);
       quote.queryRecord(db, Integer.parseInt(quoteId));
       quote.retrieveTicket(db);
+
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
 
       thisOrganization = new Organization(db, quote.getOrgId());
 
@@ -267,8 +277,22 @@ public final class AccountQuotes extends CFSModule {
     try {
       db = getConnection(context);
       quoteProduct = new QuoteProduct(db, productId);
+
+      Quote previousQuote = new Quote();
+      previousQuote.setBuildProducts(true);
+      previousQuote.queryRecord(db, quoteProduct.getQuoteId());
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, previousQuote.getOrgId())) {
+        return ("PermissionError");
+      }
+      // Delete the requested product
       product = new ProductCatalog(db, quoteProduct.getProductId());
       quoteProduct.delete(db);
+      // Load the final quote
+      Quote quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteProduct.getQuoteId());
+      processUpdateHook(context, previousQuote, quote);
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -316,6 +340,10 @@ public final class AccountQuotes extends CFSModule {
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
       previousQuote = new Quote(db, quoteId);
 
@@ -398,6 +426,10 @@ public final class AccountQuotes extends CFSModule {
       quoteId = Integer.parseInt(quoteIdString);
       quote = new Quote();
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -437,12 +469,15 @@ public final class AccountQuotes extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       quote.delete(db);
-
+      processDeleteHook(context, quote);
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -487,6 +522,10 @@ public final class AccountQuotes extends CFSModule {
       quote.setBuildProducts(true);
       quote.setBuildTicket(true);
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
 
       htmlDialog.setTitle("Centric CRM: Quote Management");
       DependencyList dependencies = quote.processDependencies(db);
@@ -545,13 +584,16 @@ public final class AccountQuotes extends CFSModule {
     Quote quote = null;
     Connection db = null;
     try {
-
       db = getConnection(context);
       Quote quoteBean = (Quote) context.getFormBean();
 
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       previousQuote = new Quote(db, quoteId);
 
       if (quoteBean.getNotes() != null) {
@@ -618,6 +660,10 @@ public final class AccountQuotes extends CFSModule {
 
       //Create a new instance of Quote
       quote = new Quote(db, Integer.parseInt(quoteIdString));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quoteBean", quote);
 
       int headerId = quote.getHeaderId();
@@ -626,6 +672,9 @@ public final class AccountQuotes extends CFSModule {
         context.getRequest().setAttribute("opportunity", opportunity);
       }
 
+      Organization orgDetails = new Organization(db, quote.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", orgDetails);
+
       ContactList contactList = new ContactList();
       contactList.setOrgId(quote.getOrgId());
       contactList.setLeadsOnly(Constants.FALSE);
@@ -633,9 +682,6 @@ public final class AccountQuotes extends CFSModule {
       contactList.setDefaultContactId(quote.getContactId());
       contactList.buildList(db);
       context.getRequest().setAttribute("contactList", contactList);
-
-      Organization orgDetails = new Organization(db, quote.getOrgId());
-      context.getRequest().setAttribute("OrgDetails", orgDetails);
 
       //Create a list for selection of a logo file
       FileItemList itemList = new FileItemList();
@@ -707,6 +753,10 @@ public final class AccountQuotes extends CFSModule {
 
       //Create a new instance of Quote
       quote = new Quote(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       previousQuote = new Quote(db, quoteId);
 
       //Retrieve the lookup list for the quote status
@@ -736,10 +786,9 @@ public final class AccountQuotes extends CFSModule {
       quote.setCloseIt(quoteBean.getCloseIt());
       quote.setClosed(quoteBean.getClosed());
       quote.setSubmitAction(quoteBean.getSubmitAction());
-      quote.setShowTotal(quoteBean.getShowTotal());
       quote.setLogoFileId(quoteBean.getLogoFileId());
       quote.setModifiedBy(user.getId());
-      isValid = this.validateObject(context, db, quoteBean);
+      isValid = this.validateObject(context, db, quote);
       if (isValid) {
         recordCount = quote.update(db);
       }
@@ -808,6 +857,10 @@ public final class AccountQuotes extends CFSModule {
 
       //Create a new instance of Quote
       quote = (Quote) context.getFormBean();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
 
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -918,7 +971,10 @@ public final class AccountQuotes extends CFSModule {
           db, "lookup_quote_delivery");
       list2.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("quoteDeliveryList", list2);
-
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, orgId)) {
+        return ("PermissionError");
+      }
       Organization orgDetails = new Organization(db, orgId);
       context.getRequest().setAttribute("OrgDetails", orgDetails);
 
@@ -995,6 +1051,10 @@ public final class AccountQuotes extends CFSModule {
         oldQuote.setBuildProducts(true);
         oldQuote.queryRecord(db, Integer.parseInt(quoteId));
       }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, oldQuote.getOrgId())) {
+        return ("PermissionError");
+      }
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
@@ -1036,17 +1096,22 @@ public final class AccountQuotes extends CFSModule {
     Connection db = null;
     Quote quote = null;
     String quoteId = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       quoteId = (String) context.getRequest().getParameter("quoteId");
       db = this.getConnection(context);
       quote = new Quote();
       quote.setBuildHistory(true);
+      quote.setSystemStatus(systemStatus);
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
       Organization orgDetails = new Organization(db, quote.getOrgId());
       context.getRequest().setAttribute("OrgDetails", orgDetails);
       //Retrieve the lookup list for the quote status
-      SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 

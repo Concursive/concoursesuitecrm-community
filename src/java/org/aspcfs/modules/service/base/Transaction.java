@@ -130,7 +130,7 @@ public class Transaction extends ArrayList {
     while (i.hasNext()) {
       Element objectElement = (Element) i.next();
       TransactionItem thisItem = new TransactionItem(
-          objectElement, packetContext.getObjectMap());
+          objectElement, packetContext.getObjectMap(), packetContext.getUserBean());
       thisItem.setPacketContext(packetContext);
       if (thisItem.getName().equals("meta")) {
         if (System.getProperty("DEBUG") != null) {
@@ -178,8 +178,11 @@ public class Transaction extends ArrayList {
    */
   public int execute(Connection db, Connection dbLookup) throws SQLException {
     Exception exception = null;
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       //Create a shared context for items within a transaction
       TransactionContext transactionContext = new TransactionContext();
       //Process the transaction items
@@ -188,6 +191,11 @@ public class Transaction extends ArrayList {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
         thisItem.setTransactionContext(transactionContext);
+        //Verify if the Object is valid
+        if (!thisItem.isObjectValid(db)) {
+          appendErrorMessage("Object validation error");
+          throw new Exception("Object Validation Failed");
+        }
         thisItem.execute(db, dbLookup);
         //If the item generated an error, then add it to the list to show the client
         if (thisItem.hasError()) {
@@ -210,14 +218,20 @@ public class Transaction extends ArrayList {
           }
         }
       }
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (Exception e) {
       exception = e;
       e.printStackTrace(System.out);
       appendErrorMessage("Transaction failed");
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
 
     if (exception == null && errorMessage.length() == 0) {

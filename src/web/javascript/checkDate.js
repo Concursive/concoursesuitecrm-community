@@ -9,7 +9,7 @@ function checkDate(datein) {
 
   if (datein.indexOf("/") != -1) {
     sep = datein.split("/");
-  } else if (datein.indexOf("-") != -1) {
+  } else if (datein.indexOf("-") != -1 && datein.indexOf("-") != 0) {
     sep = datein.split("-");
   } else if (datein.indexOf(".") != -1) {
     sep = datein.split(".");

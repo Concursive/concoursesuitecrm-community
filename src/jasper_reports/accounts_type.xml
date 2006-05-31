@@ -40,6 +40,7 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<queryString><![CDATA[SELECT
 o.name AS name,
 o.account_number AS account_number,
@@ -58,7 +59,7 @@ AND (o.status_id IS NULL OR o.status_id = 7)
 AND o.trashed_date IS NULL
 AND o.owner = $P{userid}
 $P!{lookup_account_types_where}
-ORDER BY type_desc, o.name]]></queryString>
+ORDER BY lat.description, o.name]]></queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="account_number" class="java.lang.String"/>
 	<field name="contract_end" class="java.util.Date"/>

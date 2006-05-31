@@ -266,7 +266,7 @@ CREATE TABLE message (
   enteredby INT  REFERENCES access(user_id) NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INT  REFERENCES access(user_id) NOT NULL,
-  access_type INT REFERENCES lookup_access_types
+  access_type INT REFERENCES lookup_access_types(code)
 );
 
 CREATE SEQUENCE message_template_id_seq;
@@ -291,5 +291,26 @@ CREATE TABLE saved_criteriaelement (
   operatorid INTEGER  references field_types(id) NOT NULL,
   value VARCHAR(80) NOT NULL,
   source INT DEFAULT -1 NOT NULL,
-  value_id INT
+  value_id INT,
+  site_id INT
 );
+
+-- Messages received by an user, from a specific contact
+CREATE SEQUENCE contact_message_id_seq;
+CREATE TABLE contact_message (
+  id INT PRIMARY KEY,
+  message_id INTEGER NOT NULL REFERENCES message(id),
+  received_date TIMESTAMP NOT NULL,
+  received_from INT NOT NULL REFERENCES contact(contact_id),
+  received_by INT NOT NULL REFERENCES access(user_id)
+);
+
+-- Each campaign can be associated with several user groups.
+-- The users belonging to the user groups will have access to the campaign results.
+CREATE SEQUENCE campaign_group_map_map_id_seq;
+CREATE TABLE campaign_group_map (
+  map_id INT PRIMARY KEY,
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
+  user_group_id INT NOT NULL REFERENCES user_group(group_id)
+);
+

@@ -55,7 +55,7 @@
       } else {
         hideSpan('menuEditContactHistoryObject');
       }
-      urlDelete = 'ExternalContactsHistory.do?command=DeleteNote&id='+ thisHistoryId +'&contactId='+ thisContactId;
+      urlDelete = 'ExternalContactsHistory.do?command=DeleteNote&id='+ thisHistoryId +'&contactId='+ thisContactId+'<%= isPopup(request)?"&popup=true":"" %>';
       urlModify = 'ExternalContactsHistory.do?command=ModifyNote&id='+ thisHistoryId +'&contactId='+ thisContactId +'&popup=true';
       isPopup = true;
       } else if(thisObjectId == '<%= OrganizationHistory.COMPLETE_ACTIVITY %>') {

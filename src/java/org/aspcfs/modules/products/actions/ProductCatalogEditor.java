@@ -93,6 +93,7 @@ public final class ProductCatalogEditor extends CFSModule {
       ProductCatalogList productList = new ProductCatalogList();
       PagedListInfo productListInfo = this.getPagedListInfo(
           context, "productListInfo");
+      productListInfo.setLink("ProductCatalogEditor.do?command=List&moduleId="+moduleId);
 
       String categoryId = context.getRequest().getParameter("categoryId");
 

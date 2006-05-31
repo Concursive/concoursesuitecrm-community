@@ -22,7 +22,22 @@
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="RecipientList" class="org.aspcfs.modules.communications.base.RecipientList" scope="request"/>
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script type="text/javascript">
+function reopen() {
+ window.location.href='CampaignManager.do?command=PreviewRecipients&id=<%= Campaign.getId() %>';
+}
+function addRecipient() {
+  popContactsListSingle('tempId','contactId','<%= User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&listView=accountcontacts&reset=true&recipient=true&hiddensource=recipients<%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>');
+}
+function continueAddRecipient(contactId, allowDuplicates) {
+  var url = "CampaignManager.do?command=AddRecipient&id=<%= Campaign.getId() %>&contactId="+contactId+'&allowDuplicates=true';
+  window.frames['server_commands'].location.href=url;
+}
+</script>
+<input type="hidden" name="tempId" id="tempId" value="-1"/>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -37,7 +52,10 @@
 <%-- End Trails --%>
 <dhv:container name="communications" selected="recipients" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
-  <center><dhv:pagedListAlphabeticalLinks object="CampaignDashboardRecipientInfo"/></center></dhv:include>
+	<table cellpadding="4" cellspacing="0" width="100%" class="empty">
+  <tr><td nowrap><a href="javascript:addRecipient();"><dhv:label name="campaigns.addRecipient">Add Recipient</dhv:label></a></td>
+  <td width="100%"><center><dhv:pagedListAlphabeticalLinks object="CampaignDashboardRecipientInfo"/></dhv:include></center></td>
+  </tr></table>
   <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDashboardRecipientInfo"/>
 	<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	  <tr>
@@ -50,16 +68,19 @@
 	      <dhv:label name="campaign.count">Count</dhv:label>
 	    </th>
 	    <th>
-	      <dhv:label name="contacts.name">Name</dhv:label>
+	      <a href="CampaignManager.do?command=PreviewRecipients&id=<%= Campaign.getId() %>&column=c.namelast"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
+        <%= CampaignDashboardRecipientInfo.getSortIcon("c.namelast") %>
 	    </th>
 	    <th width="100%">
 	      <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
 	    </th>
 	    <th align="center" nowrap>
-	      <dhv:label name="campaign.sentDate">Sent Date</dhv:label>
+	      <a href="CampaignManager.do?command=PreviewRecipients&id=<%= Campaign.getId() %>&column=r.sent_date"><strong><dhv:label name="campaign.sentDate">Sent Date</dhv:label></strong></a>
+        <%= CampaignDashboardRecipientInfo.getSortIcon("r.sent_date") %>
 	    </th>
 	    <th align="center" nowrap>
-	      <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
+	      <a href="CampaignManager.do?command=PreviewRecipients&id=<%= Campaign.getId() %>&column=r.status"><strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong></a>
+        <%= CampaignDashboardRecipientInfo.getSortIcon("r.status") %>
 	    </th>
 	  </tr>
 	<%
@@ -103,3 +124,4 @@
 	</table>
 	<%}%>
 </dhv:container>
+<iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

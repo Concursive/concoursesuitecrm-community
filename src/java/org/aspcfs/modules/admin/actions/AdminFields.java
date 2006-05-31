@@ -279,6 +279,7 @@ public final class AdminFields extends CFSModule {
         this.processErrors(context, thisCategory.getErrors());
       }
     } catch (Exception e) {
+      e.printStackTrace();
       context.getRequest().setAttribute(
           "actionError", this.getSystemStatus(context).getLabel(
               "object.validation.categoryDeletion"));

@@ -23,10 +23,16 @@
 <jsp:useBean id="UserSelectList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="SourceUser" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="SourceAccounts" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
-<jsp:useBean id="SourceContacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="SourceAllContacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="SourcePublicContacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="SourceHierarchyContacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="SourceAccountContacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="SourceLeads" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="SourceUsers" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="SourceOpenTickets" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
+<jsp:useBean id="IncompleteTicketTasks" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="SourceRevenue" class="org.aspcfs.modules.accounts.base.RevenueList" scope="request"/>
+<jsp:useBean id="ManagingOpenOpportunities" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceOpportunities" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceOpenOpportunities" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceAssignments" class="com.zeroio.iteam.base.AssignmentList" scope="request"/>
@@ -105,12 +111,12 @@
       <%= UserList.getHtmlSelect("ownerToAccounts") %>
     </td>
   </tr>
-<%-- Contacts --%>
+<%-- All Contacts --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      <dhv:label name="accounts.Contacts">Contacts</dhv:label>
-      (<%= SourceContacts.size() %>)
+      <dhv:label name="actionList.allContacts">All Contacts</dhv:label>
+      (<%= SourceAllContacts.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
@@ -120,7 +126,96 @@
     <%}%>
     </td>
 		<td valign="top" nowrap>
-      <%= UserList.getHtmlSelect("ownerToContacts") %>
+      <%= UserList.getHtmlSelect("ownerToAllContacts") %>
+    </td>
+  </tr>
+<%-- Public Contacts --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="contacts.generalContacts.brackets.public">General Contacts (Public)</dhv:label>
+      (<%= SourcePublicContacts.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToPublicContacts") %>
+    </td>
+  </tr>
+<%-- Controlled Hierarchy Contacts --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="contacts.generalContacts.brackets.controlledHierarchy">General Contacts (Controlled Hierarchy)</dhv:label>
+      (<%= SourceHierarchyContacts.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToHierarchyContacts") %>
+    </td>
+  </tr>
+<%-- Account Contacts --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="documents.team.accountContacts">Account Contacts</dhv:label>
+      (<%= SourceAccountContacts.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToAccountContacts") %>
+    </td>
+  </tr>
+<%-- Leads --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="sales.leads">Leads</dhv:label>
+      (<%= SourceLeads.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToLeads") %>
+    </td>
+  </tr>
+<%-- Opportunities being Managed(Open) --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="calendar.opportunitiesBeingManaged.openOnly.brackets">Opportunities being Managed (Open Only)</dhv:label> (<%= ManagingOpenOpportunities.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("managerToOpenOpps") %>
     </td>
   </tr>
 <%-- Opportunities (Open) --%>
@@ -208,6 +303,23 @@
       <%= UserList.getHtmlSelect("ownerToOpenTickets") %>
     </td>
   </tr>
+<%-- Incomplete Ticket Tasks --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="ticket.ticketTask.incomplete.bracket">Ticket Tasks (Incomplete)</dhv:label> (<%= IncompleteTicketTasks.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToIncompleteTicketTasks") %>
+    </td>
+  </tr>
 <%-- Document Stores (Open) --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
@@ -240,7 +352,7 @@
     <%}%>
     </td>
 		<td valign="top" nowrap>
-      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="empty">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" class="empty">
         <tr><td align="left"><%= UserList.getHtmlSelect("ownerToUsers") %></td>
         <td><%= showAttribute(request, "managerIdError") %></td></tr>
       </table>

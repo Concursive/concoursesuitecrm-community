@@ -22,14 +22,18 @@
   var thisCompId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, headerId, compId, trashed) {
+  function displayMenu(loc, id, headerId, compId, trashed, hasPermission) {
     thisHeaderId = headerId;
     thisCompId = compId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
     }
-    updateMenu(trashed);
+    if (hasPermission == 'true') {
+      updateMenu(trashed);
+    } else {
+      updateMenu('true');
+    }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
 

@@ -58,7 +58,7 @@
       <tr class="containerBody">
     <%}%>
         <td nowrap valign="top" class="formLabel">
-          <%= toHtml(thisEntry.getEnteredByName()) %>
+          <dhv:username id="<%= thisEntry.getEnteredBy() %>"/>
         </td>
         <td nowrap valign="top">
           <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>

@@ -73,7 +73,7 @@ public class LookupLists {
    * @return Description of the Return Value
    * @throws Exception Description of the Exception
    */
-  public ArrayList buildLookupLists(String filePath, HashMap customLookupListHandlers) throws Exception {
+  public ArrayList buildLookupLists(String filePath, HashMap customLookupListHandlers, HashMap lookupListsWithNoDescription) throws Exception {
     System.out.println("Reading from file:" + filePath);
     File configFile = new File(filePath);
     XMLUtils xml = new XMLUtils(configFile);
@@ -143,6 +143,8 @@ public class LookupLists {
         if (customLookupListHandlers.containsKey(tableName)) {
           // Use custom handler if the lookup list needs a custom handler
           buildMultipleDescriptions(columnValues, lookupElement);
+        } else if (lookupListsWithNoDescription.containsKey(tableName)) {
+          //do nothing
         } else {
           columnValues.put("description", XMLUtils.getNodeText(lookupElement));
         }

@@ -24,6 +24,7 @@ import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.LookupList;
 
 import java.sql.Connection;
+import java.util.StringTokenizer;
 
 /**
  * Description of the Class
@@ -64,12 +65,26 @@ public final class OpportunityForm extends CFSModule {
     //Opporunity units list
     HtmlSelect unitSelect = new HtmlSelect();
     unitSelect.setSelectName("units");
-    unitSelect.addItem("M", thisSystem.getLabel("pipeline.units.months")); //Months
-    unitSelect.build();
+    if (!thisSystem.hasField("opportunity.units.week")) {
+      unitSelect.addItem("W", thisSystem.getLabel("pipeline.units.weeks")); //Weeks
+    }
+    if (!thisSystem.hasField("opportunity.units.month")) {
+      unitSelect.addItem("M", thisSystem.getLabel("pipeline.units.months")); //Months
+    }
+//    unitSelect.build();
     context.getRequest().setAttribute("UnitTypeList", unitSelect);
     try {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
+      if (getPref(context, "OPPORTUNITY.CLOSE_PROBABILITY") != null) {
+        StringTokenizer str = new StringTokenizer(getPref(context, "OPPORTUNITY.CLOSE_PROBABILITY"), ",");
+        HtmlSelect closeProbSelect = new HtmlSelect();
+        while (str.hasMoreTokens()) {
+          String closeProb = str.nextToken();
+          closeProbSelect.addItem(java.lang.Math.round(Float.parseFloat(closeProb)), closeProb+"%");
+        }
+        context.getRequest().setAttribute("closeProbSelect", closeProbSelect);
+      }
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
       LookupList environmentSelect = systemStatus.getLookupList(

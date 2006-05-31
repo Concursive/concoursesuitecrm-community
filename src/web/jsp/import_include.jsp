@@ -1,3 +1,5 @@
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -19,6 +21,43 @@
     </td>
     <td>
       <TEXTAREA NAME="description" ROWS="3" COLS="50"><%= toString(ImportDetails.getDescription()) %></TEXTAREA>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel" valign="top">
+      <dhv:label name="campaign.comments">Comments</dhv:label>
+    </td>
+    <td>
+      <TEXTAREA NAME="comments" ROWS="3" COLS="50"><%= toString(ImportDetails.getComments()) %></TEXTAREA>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
+      <dhv:label name="contacts.source">Source</dhv:label>
+    </td>
+    <td class="containerBody">
+      <%= SourceTypeList.getHtmlSelect("sourceType", ImportDetails.getSourceType()) %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
+      <dhv:label name="sales.rating">Rating</dhv:label>
+    </td>
+    <td><%= RatingList.getHtmlSelect("rating", ImportDetails.getRating()) %></td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="admin.user.site">Site</dhv:label>
+    </td>
+    <td>
+      <dhv:evaluate if="<%=User.getSiteId() == - 1%>" >
+        <%= SiteList.getHtmlSelect("siteId", Constants.INVALID_SITE) %><font color="red">*</font>
+        <%= showAttribute(request, "siteIdError") %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%=User.getSiteId() != - 1%>" >
+        <%= SiteList.getSelectedValue(User.getSiteId()) %>
+        <input type="hidden" name="siteId" value="<%=User.getSiteId()%>" >
+      </dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">

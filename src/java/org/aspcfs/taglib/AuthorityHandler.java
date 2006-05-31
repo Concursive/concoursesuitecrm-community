@@ -25,59 +25,56 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.util.Hashtable;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author akhi_m
- * @version $id: exp$
- * @created June 19, 2003
+ * @author     akhi_m
+ * @created    June 19, 2003
+ * @version    $Id: TicketLogList.java,v 1.11 2003/03/07 14:47:27 mrajkowski Exp
+ *          $
  */
 public class AuthorityHandler extends TagSupport {
 
-  private int owner = -1;
+  private String owner = null;
 
 
   /**
-   * Sets the owner attribute of the AuthorityHandler object
+   *  Gets the owner attribute of the AuthorityHandler object
    *
-   * @param owner The new owner value
+   * @return    The owner value
    */
-  public void setOwner(int owner) {
-    this.owner = owner;
-  }
-
-
-  /**
-   * Sets the owner attribute of the AuthorityHandler object
-   *
-   * @param owner The new owner value
-   */
-  public void setOwner(String owner) {
-    this.owner = Integer.parseInt(owner);
-  }
-
-
-  /**
-   * Gets the owner attribute of the AuthorityHandler object
-   *
-   * @return The owner value
-   */
-  public int getOwner() {
+  public String getOwner() {
     return owner;
   }
 
 
   /**
-   * Description of the Method
+   *  Sets the owner attribute of the AuthorityHandler object
    *
-   * @return Description of the Return Value
-   * @throws JspException Description of the Exception
+   * @param  tmp  The new owner value
+   */
+  public void setOwner(String tmp) {
+    this.owner = tmp;
+  }
+
+
+  /**
+   *  Sets the owner attribute of the AuthorityHandler object
+   *
+   * @param  tmp  The new owner value
+   */
+  public void setOwner(int tmp) {
+    this.owner = String.valueOf(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return                Description of the Return Value
+   * @throws  JspException  Description of the Exception
    */
   public final int doStartTag() throws JspException {
     try {
-      //get system status
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Getting system status ");
-      }
       UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
           "User");
       ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
@@ -86,18 +83,28 @@ public class AuthorityHandler extends TagSupport {
       if (ce != null) {
         systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
             "SystemStatus")).get(ce.getUrl());
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Got system status ");
-        }
       }
 
       int userId = ((UserBean) pageContext.getSession().getAttribute("User")).getUserId();
-      if (userId == owner) {
-        return EVAL_BODY_INCLUDE;
+      String[] owners = owner.split(",");
+      boolean flag = false;
+      for (int i = 0; i < owners.length; i++) {
+        String oneOwner = owners[i];
+        if (userId == Integer.parseInt(oneOwner)) {
+          flag = true;
+          break;
+        }
+        User userRecord = systemStatus.getUser(userId);
+        User childRecord = null;
+        if (oneOwner != null && !"".equals(oneOwner.trim())) {
+          childRecord = userRecord.getChild(Integer.parseInt(oneOwner));
+        }
+        if (childRecord != null) {
+          flag = true;
+          break;
+        }
       }
-      User userRecord = systemStatus.getUser(userId);
-      User childRecord = userRecord.getChild(owner);
-      if (childRecord != null) {
+      if (flag) {
         return EVAL_BODY_INCLUDE;
       }
     } catch (Exception e) {
@@ -105,6 +112,5 @@ public class AuthorityHandler extends TagSupport {
     }
     return SKIP_BODY;
   }
-
 }
 

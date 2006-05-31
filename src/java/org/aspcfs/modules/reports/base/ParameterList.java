@@ -18,6 +18,9 @@ package org.aspcfs.modules.reports.base;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperReport;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.UserUtils;
@@ -31,12 +34,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * A collection of Parameter objects.
+ *  A collection of Parameter objects.
  *
- * @author matt rajkowski
- * @version $Id: ParameterList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
- *          Exp $
- * @created September 15, 2003
+ * @author     matt rajkowski
+ * @created    September 15, 2003
+ * @version    $Id: ParameterList.java,v 1.1.2.1 2003/09/15 20:58:21 mrajkowski
+ *      Exp $
  */
 public class ParameterList extends ArrayList {
 
@@ -47,16 +50,15 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Constructor for the ParameterList object
+   *  Constructor for the ParameterList object
    */
-  public ParameterList() {
-  }
+  public ParameterList() { }
 
 
   /**
-   * Sets the criteriaId attribute of the ParameterList object
+   *  Sets the criteriaId attribute of the ParameterList object
    *
-   * @param tmp The new criteriaId value
+   * @param  tmp  The new criteriaId value
    */
   public void setCriteriaId(int tmp) {
     this.criteriaId = tmp;
@@ -64,9 +66,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Sets the criteriaId attribute of the ParameterList object
+   *  Sets the criteriaId attribute of the ParameterList object
    *
-   * @param tmp The new criteriaId value
+   * @param  tmp  The new criteriaId value
    */
   public void setCriteriaId(String tmp) {
     this.criteriaId = Integer.parseInt(tmp);
@@ -74,9 +76,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Sets the systemStatus attribute of the ParameterList object
+   *  Sets the systemStatus attribute of the ParameterList object
    *
-   * @param tmp The new systemStatus value
+   * @param  tmp  The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -84,9 +86,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Gets the systemStatus attribute of the ParameterList object
+   *  Gets the systemStatus attribute of the ParameterList object
    *
-   * @return The systemStatus value
+   * @return    The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -94,9 +96,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Gets the criteriaId attribute of the ParameterList object
+   *  Gets the criteriaId attribute of the ParameterList object
    *
-   * @return The criteriaId value
+   * @return    The criteriaId value
    */
   public int getCriteriaId() {
     return criteriaId;
@@ -104,9 +106,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Sets the errors attribute of the ParameterList object
+   *  Sets the errors attribute of the ParameterList object
    *
-   * @param tmp The new errors value
+   * @param  tmp  The new errors value
    */
   public void setErrors(HashMap tmp) {
     this.errors = tmp;
@@ -114,9 +116,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Gets the errors attribute of the ParameterList object
+   *  Gets the errors attribute of the ParameterList object
    *
-   * @return The errors value
+   * @return    The errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -124,9 +126,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean hasErrors() {
     return (errors.size() > 0);
@@ -134,9 +136,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Initially loads the parameters from the JasperReport
+   *  Initially loads the parameters from the JasperReport
    *
-   * @param report The new parameters value
+   * @param  report  The new parameters value
    */
   public void setParameters(JasperReport report) {
     JRParameter[] params = report.getParameters();
@@ -152,20 +154,22 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Takes the user input and expands the data into the corresponding jasper
-   * parameters
+   *  Takes the user input and expands the data into the corresponding jasper
+   *  parameters
    *
-   * @param request The new parameters value
-   * @return Description of the Return Value
+   * @param  request  The new parameters value
+   * @return          Description of the Return Value
    */
   public boolean setParameters(HttpServletRequest request) {
     Timestamp startDate = null;
     Timestamp endDate = null;
+    Calendar today = Calendar.getInstance();
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Parameter param = (Parameter) i.next();
-      //For each parameter the user is prompted for, evaluate the answer
-      if (param.getIsForPrompting()) {
+      //For each parameter the user is prompted for or value provided to the parameter
+      //while preparing its context, evaluate the answer
+      if (param.getIsForPrompting() || param.getRequired()) {
         param.setValue(request.getParameter(param.getName()));
         //Auto-populate the user's range based on selected type
         if (param.getName().equals("userid_range_source")) {
@@ -213,6 +217,110 @@ public class ParameterList extends ArrayList {
           }
           addParam(param.getName(), param.getValue());
         }
+	      //HtmlSelect date range. Proceed only if both start and end dates are null
+        if (param.getName().equals("range_date")) {
+          Parameter startParam = this.getParameter("date_start");
+          Parameter endParam = this.getParameter("date_end");
+          if (startParam != null && endParam != null) {
+            //set the values available in the request
+            startParam.setValue(request.getParameter(startParam.getName()));
+            endParam.setValue(request.getParameter(endParam.getName()));
+
+            if (startParam.getValue() != null && endParam.getValue() != null) {
+              if (!"".equals(startParam.getValue().trim()) && "".equals(endParam.getValue().trim())) {
+                //Only start date provided
+                startDate = this.getTimestamp(request, startParam.getValue());
+                String start = this.getDateAsString(startDate);
+                startParam.setValue(start);
+                //set the start date
+                this.setDateRange(start, "");
+                //remove the end date filter
+                Parameter rangeEndParam = this.getParameter("range_date_end");
+                addParam(rangeEndParam.getName(), "");
+              } else if (!"".equals(endParam.getValue().trim()) && "".equals(startParam.getValue().trim())) {
+                //Only end date provided
+                endDate = this.getTimestamp(request, endParam.getValue());
+                String end = this.getDateAsString(endDate);
+                endParam.setValue(end);
+                //set the end date
+                this.setDateRange("", end);
+                //remove the start date filter
+                Parameter rangeStartParam = this.getParameter("range_date_start");
+                addParam(rangeStartParam.getName(), "");
+              } else if (!"".equals(endParam.getValue().trim()) && !"".equals(startParam.getValue().trim())) {
+                startDate = this.getTimestamp(request, startParam.getValue());
+                String start = this.getDateAsString(startDate);
+                startParam.setValue(start);
+
+                endDate = this.getTimestamp(request, endParam.getValue());
+                String end = this.getDateAsString(endDate);
+                endParam.setValue(end);
+                //set the date range
+                this.setDateRange(start, end);
+              } else {
+                //No dates provided. So determine the range. End date should be a timestamp to include
+                //all the records entered today until this time.
+                String end = DateUtils.roundUpToNextFive(System.currentTimeMillis()).toString();
+                String start = "";
+                if ("7".equals(param.getValue())) {
+                  //Replace the start and end dates to match last 7 days
+                  today.add(Calendar.DATE, -7);
+                  start = getDateAsString(request, today);
+                } else if ("14".equals(param.getValue())) {
+                  //Replace the start and end dates to match last 14 days
+                  today.add(Calendar.DATE, -14);
+                  start = getDateAsString(request, today);
+                } else if ("30".equals(param.getValue())) {
+                  //Replace the start and end dates to match last 30 days
+                  today.add(Calendar.DATE, -30);
+                  start = getDateAsString(request, today);
+                }
+
+                if (!"-1".equals(param.getValue())) {
+                  this.setDateRange(start, end);
+                  addParam(startParam.getName(), start);
+                  addParam(endParam.getName(), end);
+                } else {
+                  //All records need to be displayed
+                  Parameter rangeStartParam = this.getParameter("range_date_start");
+                  Parameter rangeEndParam = this.getParameter("range_date_end");
+                  addParam(rangeStartParam.getName(), "");
+                  addParam(rangeEndParam.getName(), "");
+                }
+              }
+            }
+          }
+          addParam(param.getName(), param.getValue());
+        }
+        if (param.getName().startsWith("textlookup_")) {
+          Parameter whereParam = this.getParameter(param.getName() + "_where");
+          if (whereParam != null) {
+            if (!"".equals(param.getValue())) {
+              //New case, replace query param with another param and parse
+              Template where = new Template(whereParam.getDescription());
+              where.addParseElement("$P{" + param.getName() + "}", param.getValue());
+              addParam(whereParam.getName(), where.getParsedText());
+            } else {
+              addParam(whereParam.getName(), " ");
+            }
+          }
+          addParam(param.getName(), param.getValue());
+        }
+        //Where clause for text fields
+        if (param.getName().startsWith("text_")) {
+          Parameter whereParam = this.getParameter(param.getName() + "_where");
+          if (whereParam != null) {
+            if (!"".equals(param.getValue())) {
+              //New case, replace query param with another param and parse
+              Template where = new Template(whereParam.getDescription());
+              where.addParseElement("$P{" + param.getName() + "}", param.getValue());
+              addParam(whereParam.getName(), where.getParsedText());
+            } else {
+              addParam(whereParam.getName(), " ");
+            }
+          }
+          addParam(param.getName(), param.getValue());
+        }
         //Percent lookup uses a range from the HtmlSelectProbabilityRange object
         if (param.getName().startsWith("percent_")) {
           //The range will be specified as -0.01|1.01 for the query
@@ -239,32 +347,60 @@ public class ParameterList extends ArrayList {
           }
           addParam(param.getName(), param.getValue());
         }
-        try {
-          if (param.getName().startsWith("date_")) {
-            Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(
-                TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(
-                    request));
-            SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
-                DateFormat.SHORT, Locale.getDefault());
-            String date = formatter.format(tmpTimestamp);
-            param.setValue(date);
-            if (param.getName().equals("date_start")) {
-              startDate = tmpTimestamp;
+        //Integer siteid lookup
+        if (param.getName().startsWith("siteid")) {
+          Parameter whereParam = this.getParameter(param.getName() + "_where");
+          if (whereParam != null) {
+            if (!"-1".equals(param.getValue())) {
+              //New case, replace query param with another param and parse
+              Template where = new Template(whereParam.getDescription());
+              where.addParseElement(
+                  "$P{" + param.getName() + "}", param.getValue());
+              addParam(whereParam.getName(), where.getParsedText());
+            } else {
+              addParam(whereParam.getName(), " ");
             }
-            if (param.getName().equals("date_end")) {
-              endDate = tmpTimestamp;
+          }
+          addParam(param.getName(), param.getValue());
+        }
+        try {
+          //proceed only if date range has NOT been specified
+          if (this.getParameter("range_date") == null) {
+            if (param.getName().startsWith("date_")) {
+              Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(
+                  TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(
+                  request));
+              SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+                  DateFormat.SHORT, Locale.getDefault());
+              String date = formatter.format(tmpTimestamp);
+              param.setValue(date);
+              if (param.getName().equals("date_start")) {
+                startDate = tmpTimestamp;
+              }
+              if (param.getName().equals("date_end")) {
+                endDate = tmpTimestamp;
+              }
             }
           }
         } catch (Exception e) {
           if (systemStatus != null) {
             errors.put(
                 param.getName() + "Error", systemStatus.getLabel(
-                    "object.validation.invalidInput"));
+                "object.validation.invalidInput"));
           } else {
             errors.put(param.getName() + "Error", "no input or invalid date");
           }
         }
       }
+
+      //reports can have hidden parameters which don't required user input but the
+      // default value provided during design time will be used
+      //Auto-populate the user's range based on selected type
+      if (param.getName().startsWith("hidden_")) {
+        //TODO: Currently Report parameter default value is ignored. Determine a scheme to consider the
+        //parameter's default value
+      }
+
       if (System.getProperty("DEBUG") != null) {
         System.out.println(
             "ParameterList-> " + param.getName() + "=" + param.getValue());
@@ -273,12 +409,9 @@ public class ParameterList extends ArrayList {
     if (startDate != null && endDate != null) {
       if (startDate.after(endDate)) {
         if (systemStatus != null) {
-          errors.put(
-              "date_startError", systemStatus.getLabel(
-                  "object.validation.firstDateNotAfterSecondDate"));
+          errors.put("date_startError", systemStatus.getLabel("object.validation.firstDateNotAfterSecondDate"));
         } else {
-          errors.put(
-              "date_startError", "The first date can not be after second date.");
+          errors.put("date_startError", "The first date can not be after second date.");
         }
       }
     }
@@ -286,6 +419,24 @@ public class ParameterList extends ArrayList {
     this.addParam("country", UserUtils.getUserLocale(request).getCountry());
     this.addParam("language", UserUtils.getUserLocale(request).getLanguage());
     this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
+    this.addParam("user_hierarchy", UserUtils.getUserIdRange(request));
+    this.addParam("user_contact_name", UserUtils.getUserContactName(request));
+    
+    //Determine the module and add the constants required
+    PermissionCategory thisCategory = (PermissionCategory) request.getAttribute("category");
+    if (thisCategory != null) {
+      switch (thisCategory.getConstant()) {
+        case PermissionCategory.PERMISSION_CAT_ACCOUNTS:
+          this.addParam("actionplan_module_constant", String.valueOf(ActionPlan.ACCOUNTS));
+          break;
+        case PermissionCategory.PERMISSION_CAT_TICKETS:
+          this.addParam("actionplan_module_constant", String.valueOf(ActionPlan.TICKETS));
+          break;
+      }
+    }
+    
+    //Add constants
+    this.addParam("COMPLETE_FOLLOWUP_PENDING", String.valueOf(Call.COMPLETE_FOLLOWUP_PENDING));
     if (hasErrors()) {
       return false;
     }
@@ -294,9 +445,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Updates the parameters with values from previously saved Criteria
+   *  Updates the parameters with values from previously saved Criteria
    *
-   * @param criteria The new parameters value
+   * @param  criteria  The new parameters value
    */
   public void setParameters(Criteria criteria) {
     Iterator i = criteria.getParameters().iterator();
@@ -308,11 +459,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Builds a list of Parameter objects based on the filter properties of this
-   * list object.
+   *  Builds a list of Parameter objects based on the filter properties of this
+   *  list object.
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -373,9 +524,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Defines additional parameters to be added to the query
+   *  Defines additional parameters to be added to the query
    *
-   * @param sqlFilter Description of the Parameter
+   * @param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -388,11 +539,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Populates the additional parameters that have been added to the query
+   *  Populates the additional parameters that have been added to the query
    *
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -404,10 +555,10 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Inserts all of the parameters contained in this object to the database
+   *  Inserts all of the parameters contained in this object to the database
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -420,11 +571,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Updates all of the parameters contained in this object against the
-   * database
+   *  Updates all of the parameters contained in this object against the
+   *  database
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void update(Connection db) throws SQLException {
     //Delete all parameters already saved for this criteriaId
@@ -440,10 +591,10 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Deletes all of the parameters contained in this object from the database
+   *  Deletes all of the parameters contained in this object from the database
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -456,11 +607,11 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Adds a feature to the Param attribute of the ParameterList object
+   *  Adds a feature to the Param attribute of the ParameterList object
    *
-   * @param param The feature to be added to the Param attribute
-   * @param value The feature to be added to the Param attribute
-   * @return Description of the Return Value
+   * @param  param  The feature to be added to the Param attribute
+   * @param  value  The feature to be added to the Param attribute
+   * @return        Description of the Return Value
    */
   public boolean addParam(String param, String value) {
     Iterator i = this.iterator();
@@ -476,9 +627,9 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Gets the displayValues attribute of the ParameterList object
+   *  Gets the displayValues attribute of the ParameterList object
    *
-   * @return The displayValues value
+   * @return    The displayValues value
    */
   public String getDisplayValues() {
     StringBuffer sb = new StringBuffer();
@@ -498,10 +649,10 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Gets the classValue attribute of the ParameterList object
+   *  Gets the classValue attribute of the ParameterList object
    *
-   * @param param Description of the Parameter
-   * @return The valueClass value
+   * @param  param  Description of the Parameter
+   * @return        The valueClass value
    */
   public java.lang.Class getValueClass(String param) {
     Iterator i = this.iterator();
@@ -516,10 +667,10 @@ public class ParameterList extends ArrayList {
 
 
   /**
-   * Gets the parameter attribute of the ParameterList object
+   *  Gets the parameter attribute of the ParameterList object
    *
-   * @param param Description of the Parameter
-   * @return The parameter value
+   * @param  param  Description of the Parameter
+   * @return        The parameter value
    */
   public Parameter getParameter(String param) {
     Iterator i = this.iterator();
@@ -531,6 +682,69 @@ public class ParameterList extends ArrayList {
     }
     return null;
   }
+
+
+  /**
+   *  Gets the timestamp attribute of the ParameterList object
+   *
+   * @param  request  Description of the Parameter
+   * @param  value    Description of the Parameter
+   * @return          The timestamp value
+   */
+  private Timestamp getTimestamp(HttpServletRequest request, String value) {
+    Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(
+        TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, value, UserUtils.getUserLocale(
+        request));
+    return tmpTimestamp;
+  }
+
+
+  /**
+   *  Gets the dateAsString attribute of the ParameterList object
+   *
+   * @param  ts  Description of the Parameter
+   * @return     The dateAsString value
+   */
+  private String getDateAsString(Timestamp ts) {
+    SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+        DateFormat.SHORT, Locale.getDefault());
+    return (formatter.format(ts));
+  }
+
+
+  /**
+   *  Gets the dateAsString attribute of the ParameterList object
+   *
+   * @param  cal      Description of the Parameter
+   * @param  request  Description of the Parameter
+   * @return          The dateAsString value
+   */
+  private String getDateAsString(HttpServletRequest request, Calendar cal) {
+    String date =
+        DateUtils.getServerToUserDateString(
+        TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)),
+        DateFormat.SHORT,
+        DateUtils.getUserToServerDateTime(cal,
+        TimeZone.getTimeZone(UserUtils.getUserTimeZone(request))));
+    return date;
+  }
+
+
+  /**
+   *  Sets the dateRange attribute of the ParameterList object
+   *
+   * @param  start  The new dateRange value
+   * @param  end    The new dateRange value
+   */
+  private void setDateRange(String start, String end) {
+    Parameter rangeStartParam = this.getParameter("range_date_start");
+    Template t1 = new Template(rangeStartParam.getDescription());
+    t1.addParseElement("$P{date_start}", "'" + start + "'");
+    addParam(rangeStartParam.getName(), t1.getParsedText());
+
+    Parameter rangeEndParam = this.getParameter("range_date_end");
+    Template t2 = new Template(rangeEndParam.getDescription());
+    t2.addParseElement("$P{date_end}", "'" + end + "'");
+    addParam(rangeEndParam.getName(), t2.getParsedText());
+  }
 }
-
-

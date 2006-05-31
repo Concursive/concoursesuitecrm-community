@@ -47,13 +47,20 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+/**
+ *  Description of the Class
+ *
+ *@author     kbhoopal
+ *@created    November 21, 2005
+ *@version    $Id$
+ */
 public final class SalesImports extends CFSModule {
 
   /**
-   * Default Action: View Imports
+   *  Default Action: View Imports
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return (this.executeCommandView(context));
@@ -61,10 +68,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * View Imports
+   *  View Imports
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -108,25 +115,36 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Create new import
+   *  Create new import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandNew(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
       return ("PermissionError");
     }
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
 
+      buildFormElements(db, context);
+
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
     return getReturn(context, "New");
   }
 
 
   /**
-   * Save import
+   *  Save import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -152,6 +170,10 @@ public final class SalesImports extends CFSModule {
       HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       String subject = (String) parts.get("name");
       String description = (String) parts.get("description");
+      String sourceType = (String) parts.get("sourceType");
+      String rating = (String) parts.get("rating");
+      String comments = (String) parts.get("comments");
+      String siteId = (String) parts.get("siteId");
 
       //set import properties
       thisImport.setEnteredBy(this.getUserId(context));
@@ -159,6 +181,10 @@ public final class SalesImports extends CFSModule {
       thisImport.setType(Constants.IMPORT_SALES);
       thisImport.setName(subject);
       thisImport.setDescription(description);
+      thisImport.setSourceType(sourceType);
+      thisImport.setRating(rating);
+      thisImport.setComments(comments);
+      thisImport.setSiteId(siteId);
       thisImport.setLead(true);
       thisImport.setLeadStatus(Contact.LEAD_UNPROCESSED);
       thisImport.setSystemStatus(systemStatus);
@@ -166,14 +192,20 @@ public final class SalesImports extends CFSModule {
         fileRecordInserted = false;
         errors.put(
             "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileName"));
+            "object.validation.incorrectFileName"));
         processErrors(context, errors);
-        isValid = this.validateObject(context, db, thisImport); /*check for errors in the import*/
+        isValid = this.validateObject(context, db, thisImport);
+        /*
+         *  check for errors in the import
+         */
         context.getRequest().setAttribute("name", subject);
         isValid = false;
       } else {
         isValid = this.validateObject(context, db, thisImport);
         if (isValid) {
+          if (!isRecordAccessPermitted(context, thisImport)){
+            return ("PermissionError");
+          }
           contactRecordInserted = thisImport.insert(db);
           if (contactRecordInserted) {
             if ((Object) parts.get("id") instanceof FileInfo) {
@@ -218,15 +250,15 @@ public final class SalesImports extends CFSModule {
     if (fileRecordInserted && contactRecordInserted) {
       return getReturn(context, "Save");
     }
-    return getReturn(context, "New");
+    return executeCommandNew(context);
   }
 
 
   /**
-   * Import Details
+   *  Import Details
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -237,11 +269,14 @@ public final class SalesImports extends CFSModule {
     try {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
-      
+
       //build the import
       String importId = context.getRequest().getParameter("importId");
       ContactImport thisImport = new ContactImport(
           db, Integer.parseInt(importId));
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       thisImport.buildFileDetails(db);
       thisImport.setSystemStatus(systemStatus);
 
@@ -259,6 +294,9 @@ public final class SalesImports extends CFSModule {
       } else if (thisImport.isRunning() && activeImport == null) {
         thisImport.updateStatus(db, Import.FAILED);
       }
+
+      buildFormElements(db, context);
+
       context.getRequest().setAttribute("ImportDetails", thisImport);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -271,10 +309,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Start import validation
+   *  Start import validation
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandInitValidate(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -288,6 +326,9 @@ public final class SalesImports extends CFSModule {
       String importId = context.getRequest().getParameter("importId");
       ContactImport thisImport = new ContactImport(
           db, Integer.parseInt(importId));
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       thisImport.setSystemStatus(systemStatus);
       thisImport.buildFileDetails(db);
       context.getRequest().setAttribute("ImportDetails", thisImport);
@@ -316,7 +357,7 @@ public final class SalesImports extends CFSModule {
       } else {
         context.getRequest().setAttribute(
             "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileName"));
+            "object.validation.incorrectFileName"));
       }
       //build form elements
       buildValidateFormElements(db, context, thisImport);
@@ -331,10 +372,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Validate import
+   *  Validate import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandValidate(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -348,6 +389,9 @@ public final class SalesImports extends CFSModule {
       String importId = context.getRequest().getParameter("importId");
       ContactImport thisImport = new ContactImport(
           db, Integer.parseInt(importId));
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       thisImport.setSystemStatus(systemStatus);
       thisImport.buildFileDetails(db);
       thisImport.setProperties(context.getRequest());
@@ -380,7 +424,7 @@ public final class SalesImports extends CFSModule {
       } else {
         context.getRequest().setAttribute(
             "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileName"));
+            "object.validation.incorrectFileName"));
       }
 
       buildValidateFormElements(db, context, thisImport);
@@ -395,10 +439,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Run the import
+   *  Run the import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandProcess(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -411,6 +455,9 @@ public final class SalesImports extends CFSModule {
           "ImportValidator");
       ContactImport thisImport = (ContactImport) context.getRequest().getAttribute(
           "ImportDetails");
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       FileItem thisItem = (FileItem) context.getRequest().getAttribute(
           "FileItem");
 
@@ -439,7 +486,7 @@ public final class SalesImports extends CFSModule {
         map.put("${thisImport.name}", thisImport.getName());
         Template template = new Template(
             systemStatus.getLabel(
-                "object.validation.actionError.importAlreadyRunning"));
+            "object.validation.actionError.importAlreadyRunning"));
         template.setParseElements(map);
         context.getRequest().setAttribute(
             "actionError", template.getParsedText());
@@ -453,10 +500,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Cancel the import
+   *  Cancel the import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandCancel(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -473,7 +520,7 @@ public final class SalesImports extends CFSModule {
       if (!manager.cancel(Integer.parseInt(importId))) {
         context.getRequest().setAttribute(
             "actionError", systemStatus.getLabel(
-                "object.validation.actionError.importCancelFailed"));
+            "object.validation.actionError.importCancelFailed"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -487,10 +534,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Confirm deletion of import
+   *  Confirm deletion of import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Connection db = null;
@@ -506,6 +553,9 @@ public final class SalesImports extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       ContactImport thisImport = new ContactImport(
           db, Integer.parseInt(importId));
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       DependencyList dependencies = thisImport.processDependencies(db);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       dependencies.setSystemStatus(systemStatus);
@@ -535,10 +585,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Delete import
+   *  Delete import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
@@ -551,6 +601,9 @@ public final class SalesImports extends CFSModule {
       db = this.getConnection(context);
       ContactImport thisImport = new ContactImport(
           db, Integer.parseInt(importId));
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       int recordDeleted = thisImport.updateStatus(db, Import.DELETED);
 
       if (recordDeleted > 0) {
@@ -572,10 +625,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Download import file(could be error file)
+   *  Download import file(could be error file)
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -595,6 +648,9 @@ public final class SalesImports extends CFSModule {
     try {
       db = getConnection(context);
       thisImport = new ContactImport(db, Integer.parseInt(importId));
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       thisItem = new FileItem(
           db, Integer.parseInt(itemId), Integer.parseInt(importId), Constants.IMPORT_SALES);
       if (version != null) {
@@ -632,7 +688,7 @@ public final class SalesImports extends CFSModule {
               "SalesImports-> Trying to send a file that does not exist");
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.downloadDoesNotExist"));
+              "object.validation.actionError.downloadDoesNotExist"));
           context.getRequest().setAttribute("ImportDetails", thisImport);
           context.getRequest().setAttribute("FileItem", itemToDownload);
           return getReturn(context, "Details");
@@ -657,7 +713,7 @@ public final class SalesImports extends CFSModule {
               "SalesImports-> Trying to send a file that does not exist");
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.downloadDoesNotExist"));
+              "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -680,10 +736,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Approve the import
+   *  Approve the import
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandApprove(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -701,7 +757,7 @@ public final class SalesImports extends CFSModule {
       } else {
         context.getRequest().setAttribute(
             "actionError", systemStatus.getLabel(
-                "object.validation.actionError.importNotProcessed"));
+            "object.validation.actionError.importNotProcessed"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -714,10 +770,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * View Results
+   *  View Results
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandViewResults(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -733,6 +789,9 @@ public final class SalesImports extends CFSModule {
       db = this.getConnection(context);
       ContactImport thisImport = new ContactImport(
           db, Integer.parseInt(importId));
+      if (!isRecordAccessPermitted(context, thisImport)){
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       ContactList thisList = new ContactList();
@@ -742,6 +801,8 @@ public final class SalesImports extends CFSModule {
       thisList.setExcludeUnapprovedContacts(false);
       thisList.setLeadsOnly(Constants.TRUE);
       thisList.setUserId(this.getUserId(context));
+      thisList.setBuildDetails(true);
+      thisList.setIncludeAllSites(true);
       thisList.buildList(db);
       context.getRequest().setAttribute("ImportResults", thisList);
     } catch (Exception e) {
@@ -755,10 +816,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * View details of a contact
+   *  View details of a contact
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandContactDetails(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -768,7 +829,12 @@ public final class SalesImports extends CFSModule {
     String contactId = context.getRequest().getParameter("contactId");
     try {
       db = this.getConnection(context);
-      Contact thisContact = new Contact(db, Integer.parseInt(contactId));
+      Contact thisContact = new Contact();
+      thisContact.setBuildDetails(true);
+      thisContact.queryRecord(db, Integer.parseInt(contactId));
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       Import thisImport = new Import(db, thisContact.getImportId());
@@ -784,10 +850,10 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Delete a contact
+   *  Delete a contact
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDeleteContact(ActionContext context) {
     if (!(hasPermission(context, "sales-import-view"))) {
@@ -801,6 +867,9 @@ public final class SalesImports extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, Integer.parseInt(contactId));
+      if (!isRecordAccessPermitted(context, thisContact)){
+        return ("PermissionError");
+      }
       if (thisContact.getStatusId() != Import.PROCESSED_APPROVED) {
         recordDeleted = thisContact.delete(
             db, context, this.getPath(context, "contacts"));
@@ -827,12 +896,12 @@ public final class SalesImports extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context    Description of the Parameter
-   * @param db         Description of the Parameter
-   * @param thisImport Description of the Parameter
-   * @throws SQLException Description of the Exception
+   *@param  context        Description of the Parameter
+   *@param  db             Description of the Parameter
+   *@param  thisImport     Description of the Parameter
+   *@throws  SQLException  Description of the Exception
    */
   private void buildValidateFormElements(Connection db, ActionContext context, ContactImport thisImport) throws SQLException {
     SystemStatus systemStatus = getSystemStatus(context);
@@ -863,6 +932,30 @@ public final class SalesImports extends CFSModule {
         db, "lookup_contactaddress_types");
     context.getRequest().setAttribute(
         "ContactAddressTypeList", addressTypeList);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void buildFormElements(Connection db, ActionContext context) throws SQLException {
+    SystemStatus systemStatus = getSystemStatus(context);
+
+    LookupList sourceList = new LookupList(db, "lookup_contact_source");
+    sourceList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SourceTypeList", sourceList);
+
+    LookupList ratings = new LookupList(db, "lookup_contact_rating");
+    ratings.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("RatingList", ratings);
+
+    LookupList siteList = new LookupList(db, "lookup_site_id");
+    siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SiteList", siteList);
   }
 }
 

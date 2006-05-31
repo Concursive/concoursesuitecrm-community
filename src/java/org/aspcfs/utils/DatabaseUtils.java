@@ -17,12 +17,12 @@ package org.aspcfs.utils;
 
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.base.Constants;
 
 import javax.servlet.ServletContext;
 import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
@@ -35,18 +35,24 @@ import java.util.Locale;
  */
 public class DatabaseUtils {
 
+  public final static String CRLF = System.getProperty("line.separator");
+  // Database types
   public final static int POSTGRESQL = 1;
   public final static int MSSQL = 2;
   public final static int ORACLE = 3;
   public final static int FIREBIRD = 4;
   public final static int DAFFODILDB = 5;
   public final static int DB2 = 6;
-  public final static String CRLF = System.getProperty("line.separator");
+  public final static String sqlReservedWords = ",language,password,level,type,position,second," +
+      "minute,hour,month,dayofweek,year,length,message," +
+      "active,role,number,module,section,value,size," +
+      "version,display,parameter,action,global,access,lock,comment,";
   //intervals
   public final static int DAY = 1;
   public final static int WEEK = 2;
   public final static int MONTH = 3;
   public final static int YEAR = 4;
+
 
   /**
    * Gets the true attribute of the DatabaseUtils class
@@ -63,11 +69,11 @@ public class DatabaseUtils {
       case DatabaseUtils.DAFFODILDB:
         return "true";
       case DatabaseUtils.ORACLE:
-        return "true";
+        return "1";
       case DatabaseUtils.DB2:
         return "true";
       case DatabaseUtils.FIREBIRD:
-        return "1";
+        return "'Y'";
       default:
         return "true";
     }
@@ -89,11 +95,11 @@ public class DatabaseUtils {
       case DatabaseUtils.DAFFODILDB:
         return "false";
       case DatabaseUtils.ORACLE:
-        return "false";
+        return "0";
       case DatabaseUtils.DB2:
         return "false";
       case DatabaseUtils.FIREBIRD:
-        return "0";
+        return "'N'";
       default:
         return "false";
     }
@@ -146,6 +152,8 @@ public class DatabaseUtils {
       return MSSQL;
     } else if ("net.sourceforge.jtds.jdbc.TdsConnection".equals(databaseName)) {
       return MSSQL;
+    } else if ("org.firebirdsql.jdbc.FBConnection".equals(databaseName)) {
+      return FIREBIRD;
     } else if ("org.firebirdsql.jdbc.FBDriver".equals(databaseName)) {
       return FIREBIRD;
     } else if (databaseName.indexOf("oracle") > -1) {
@@ -156,7 +164,7 @@ public class DatabaseUtils {
     } else if (databaseName.indexOf("db2") > -1) {
       return DB2;
     } else {
-      System.out.println("DatabaseUtils-> Driver: " + databaseName);
+      System.out.println("DatabaseUtils-> Unkown Connection Class: " + databaseName);
       return -1;
     }
   }
@@ -216,56 +224,122 @@ public class DatabaseUtils {
 
 
   /**
-   * Adds a feature to the TimeStampInterval attribute of the DatabaseUtils
+   * Adds a feature to the TimestampInterval attribute of the DatabaseUtils
    * class
    *
    * @param db                  The feature to be added to the
-   *                            TimeStampInterval attribute
+   *                            TimestampInterval attribute
    * @param units               The feature to be added to the
-   *                            TimeStampInterval attribute
+   *                            TimestampInterval attribute
    * @param termsColumnName     The feature to be added to the
-   *                            TimeStampInterval attribute
-   * @param timeStampColumnName The feature to be added to the
-   *                            TimeStampInterval attribute
+   *                            TimestampInterval attribute
+   * @param timestampColumnName The feature to be added to the
+   *                            TimestampInterval attribute
    * @return Description of the Return Value
    */
-  public static String addTimeStampInterval(Connection db, int units, String termsColumnName, String timeStampColumnName) {
-    String addTimeStampIntervalString = "";
+  public static String addTimestampInterval(Connection db, int units, String termsColumnName, String timestampColumnName) {
+    String addTimestampIntervalString = "";
     String customUnits = "";
     switch (DatabaseUtils.getType(db)) {
       case DatabaseUtils.POSTGRESQL:
         if (units == DAY) {
+          customUnits = "days";
         } else if (units == WEEK) {
+          customUnits = "weeks";
         } else if (units == MONTH) {
           customUnits = "months";
         } else if (units == YEAR) {
+          customUnits = "years";
         }
-        addTimeStampIntervalString = timeStampColumnName + " + ( (" + termsColumnName + " + 1 )::text || ' " + customUnits + "')::interval ";
+        addTimestampIntervalString = timestampColumnName + " + ( (" + termsColumnName + " + 1 )::text || ' " + customUnits + "')::interval ";
         break;
       case DatabaseUtils.MSSQL:
         if (units == DAY) {
         } else if (units == WEEK) {
+          customUnits = "WEEK";
         } else if (units == MONTH) {
           customUnits = "MONTH";
         } else if (units == YEAR) {
+          customUnits = "YEAR";
         }
-        addTimeStampIntervalString = " DATEADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timeStampColumnName + ")";
+        addTimestampIntervalString = " DATEADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timestampColumnName + ")";
         break;
       case DatabaseUtils.FIREBIRD:
+        if (units == DAY) {
+          addTimestampIntervalString = " (" + timestampColumnName + " + " + termsColumnName + ") ";
+        } else if (units == WEEK) {
+          addTimestampIntervalString = " (" + timestampColumnName + " + (" + termsColumnName + " * 7)) ";
+        } else if (units == MONTH) {
+          addTimestampIntervalString = " (" + timestampColumnName + " + (" + termsColumnName + " * 30)) ";
+        } else if (units == YEAR) {
+          addTimestampIntervalString = " (" + timestampColumnName + " + (" + termsColumnName + " * 365)) ";
+        }
         break;
       case DatabaseUtils.DAFFODILDB:
         if (units == DAY) {
         } else if (units == WEEK) {
+          customUnits = "SQL_TSI_WEEK";
         } else if (units == MONTH) {
           customUnits = "SQL_TSI_MONTH";
         } else if (units == YEAR) {
+          customUnits = "SQL_TSI_YEAR";
         }
-        addTimeStampIntervalString = " TIMESTAMPADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timeStampColumnName + ")";
+        addTimestampIntervalString = " TIMESTAMPADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timestampColumnName + ")";
         break;
       case DatabaseUtils.ORACLE:
         break;
     }
-    return addTimeStampIntervalString;
+    return addTimestampIntervalString;
+  }
+
+
+  /**
+   * Adds a feature to the TimestampInterval attribute of the DatabaseUtils
+   * class
+   *
+   * @param db                  The feature to be added to the
+   *                            TimestampInterval attribute
+   * @param units               The feature to be added to the
+   *                            TimestampInterval attribute
+   * @param termsColumnName     The feature to be added to the
+   *                            TimestampInterval attribute
+   * @param timestampColumnName The feature to be added to the
+   *                            TimestampInterval attribute
+   * @param defaultUnits        The feature to be added to the
+   *                            TimestampInterval attribute
+   * @param defaultTerms        The feature to be added to the
+   *                            TimestampInterval attribute
+   * @return Description of the Return Value
+   */
+  public static String addTimestampInterval(Connection db, int units, String termsColumnName, String timestampColumnName, String defaultUnits, long defaultTerms) {
+    String addTimestampIntervalString = "";
+    String customUnits = "";
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        if (units == WEEK) {
+          customUnits = "weeks";
+        }
+        addTimestampIntervalString = timestampColumnName + " + ( (" + termsColumnName + " + " + (defaultTerms + 1) + " )::text || ' " + customUnits + "')::interval ";
+        break;
+      case DatabaseUtils.MSSQL:
+        if (units == WEEK) {
+          customUnits = "WEEK";
+        }
+        addTimestampIntervalString = " DATEADD(" + customUnits + ",(" + termsColumnName + " + " + (defaultTerms + 1) + ")," + timestampColumnName + ")";
+        break;
+      case DatabaseUtils.FIREBIRD:
+        addTimestampIntervalString = " (" + timestampColumnName + " + ((" + termsColumnName + " + " + defaultTerms + 1 + ") * 7)) ";
+        break;
+      case DatabaseUtils.DAFFODILDB:
+        if (units == WEEK) {
+          customUnits = "SQL_TSI_WEEK";
+        }
+        addTimestampIntervalString = " TIMESTAMPADD(" + customUnits + ",(" + termsColumnName + " + " + (defaultTerms + 1) + ")," + timestampColumnName + ")";
+        break;
+      case DatabaseUtils.ORACLE:
+        break;
+    }
+    return addTimestampIntervalString;
   }
 
 
@@ -288,6 +362,11 @@ public class DatabaseUtils {
     ResultSet rs = null;
     switch (typeId) {
       case DatabaseUtils.FIREBIRD:
+        if (sequenceName.length() > 31) {
+          String seqPart1 = sequenceName.substring(0, 13);
+          String seqPart2 = sequenceName.substring(14);
+          sequenceName = seqPart1 + "_" + seqPart2.substring(seqPart2.length() - 17);
+        }
         rs = st.executeQuery(
             "SELECT GEN_ID (" + sequenceName + ",1) FROM RDB$DATABASE");
         break;
@@ -295,6 +374,11 @@ public class DatabaseUtils {
         rs = st.executeQuery("SELECT " + sequenceName + ".nextval from dual");
         break;
       case DatabaseUtils.ORACLE:
+        if (sequenceName.length() > 30) {
+          String seqPart1 = sequenceName.substring(0, 13);
+          String seqPart2 = sequenceName.substring(14);
+          sequenceName = seqPart1 + "_" + seqPart2.substring(seqPart2.length() - 16);
+        }
         rs = st.executeQuery("SELECT " + sequenceName + ".nextval from dual");
         break;
       default:
@@ -418,6 +502,60 @@ public class DatabaseUtils {
         return "DAYOFWEEK(" + fieldname + ")";
       case DatabaseUtils.ORACLE:
         return "EXTRACT(DAY FROM " + fieldname + ")";
+      default:
+        return "";
+    }
+  }
+
+
+  /**
+   * Useful when generating a SQL order by clause to sort by hour of day for the given
+   * timestamp field
+   *
+   * @param db        Description of the Parameter
+   * @param fieldname Description of the Parameter
+   * @return The dayPart value
+   */
+  public static String getHourPart(Connection db, String fieldname) {
+    //TODO: Verify if all databases work
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        return "date_part('hour', " + fieldname + ")";
+      case DatabaseUtils.MSSQL:
+        return "DATEPART(HH, " + fieldname + ")";
+      case DatabaseUtils.FIREBIRD:
+        return "EXTRACT(HOUR FROM " + fieldname + ")";
+      case DatabaseUtils.DAFFODILDB:
+        //return "DAYOFWEEK(" + fieldname + ")";
+      case DatabaseUtils.ORACLE:
+        return "EXTRACT(HOUR FROM " + fieldname + ")";
+      default:
+        return "";
+    }
+  }
+
+
+  /**
+   * Useful when generating a SQL order by clause to sort by minutes for the given
+   * timestamp field
+   *
+   * @param db        Description of the Parameter
+   * @param fieldname Description of the Parameter
+   * @return The dayPart value
+   */
+  public static String getMinutePart(Connection db, String fieldname) {
+    //TODO: Verify if all databases work
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        return "date_part('minute', " + fieldname + ")";
+      case DatabaseUtils.MSSQL:
+        return "DATEPART(M, " + fieldname + ")";
+      case DatabaseUtils.FIREBIRD:
+        return "EXTRACT(MINUTE FROM " + fieldname + ")";
+      case DatabaseUtils.DAFFODILDB:
+        return "DAYOFWEEK(" + fieldname + ")";
+      case DatabaseUtils.ORACLE:
+        return "EXTRACT(MINUTE FROM " + fieldname + ")";
       default:
         return "";
     }
@@ -605,6 +743,25 @@ public class DatabaseUtils {
     try {
       java.util.Date tmpDate = DateFormat.getDateTimeInstance(
           DateFormat.SHORT, DateFormat.LONG, locale).parse(tmp);
+      timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
+      timestampValue.setTime(tmpDate.getTime());
+      return timestampValue;
+    } catch (Exception e) {
+      try {
+        return java.sql.Timestamp.valueOf(tmp);
+      } catch (Exception e2) {
+      }
+    }
+    return null;
+  }
+
+
+  public static java.sql.Timestamp parseTimestamp(String tmp, Locale locale, boolean beLenient) {
+    java.sql.Timestamp timestampValue = null;
+    try {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", locale);
+      simpleDateFormat.setLenient(beLenient);
+      java.util.Date tmpDate = simpleDateFormat.parse(tmp);
       timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
       timestampValue.setTime(tmpDate.getTime());
       return timestampValue;
@@ -958,5 +1115,70 @@ public class DatabaseUtils {
       }
     }
   }
-}
 
+  public static String getTableName(Connection db, String tableName) {
+    if (DatabaseUtils.getType(db) != FIREBIRD &&
+        DatabaseUtils.getType(db) != ORACLE) {
+      return tableName;
+    }
+    if (tableName.length() < 32) {
+      return tableName;
+    }
+    if ("business_process_component_library".equals(tableName)) {
+      return "business_process_comp_library";
+    }
+    if ("business_process_component_parameter".equals(tableName)) {
+      return "business_pro_comp_parameter";
+    }
+    if ("business_process_component_result_lookup".equals(tableName)) {
+      if (DatabaseUtils.getType(db) == FIREBIRD) {
+        return "business_pro_comp_result_lookup";
+      } else {
+        return "business_pro_com_result_lookup";
+      }
+    }
+    if ("business_process_parameter_library".equals(tableName)) {
+      return "business_process_param_library";
+    }
+    if ("document_store_department_member".equals(tableName)) {
+      return "doc_store_depart_member";
+    }
+    if ("lookup_document_store_permission".equals(tableName)) {
+      return "lookup_doc_store_perm";
+    }
+    if ("lookup_document_store_permission_category".equals(tableName)) {
+      return "lookup_doc_store_perm_cat";
+    }
+    if ("lookup_project_permission_category".equals(tableName)) {
+      return "lookup_project_perm_category";
+    }
+    if ("lookup_opportunity_event_compelling".equals(tableName)) {
+      return "lookup_opt_event_compelling";
+    }
+    if ("ticket_category_draft_assignment".equals(tableName)) {
+      if (DatabaseUtils.getType(db) == FIREBIRD) {
+        return "ticket_category_draf_assignment";
+      } else {
+        return "ticket_category_dra_assignment";
+      }
+    }
+    System.out.println("DatabaseUtils-> Invalid table name: " + tableName);
+    return tableName;
+  }
+
+  public static String parseReservedWord(Connection db, String reservedWord) {
+    if (DatabaseUtils.getType(db) == FIREBIRD ||
+        DatabaseUtils.getType(db) == ORACLE) {
+      if (reservedWord.indexOf(".") > -1) {
+        // Table is being specified with field
+        String part1 = reservedWord.substring(0, reservedWord.indexOf("."));
+        String part2 = reservedWord.substring(reservedWord.indexOf(".") + 1);
+        return (part1 + "." + parseReservedWord(db, part2));
+      }
+      if (sqlReservedWords.indexOf("," + reservedWord + ",") != -1) {
+        return "\"" + reservedWord + "\"";
+      }
+    }
+    return reservedWord;
+  }
+}

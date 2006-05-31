@@ -259,7 +259,7 @@ public final class ProductsCatalog extends CFSModule {
   public String executeCommandAddOptions(ActionContext context) {
     String categoryIdString = (String) context.getRequest().getParameter(
         "categoryId");
-    Quote quote = null;
+    Quote previousQuote = null;
     boolean isValid = false;
     QuoteProduct quoteProduct = null;
     QuoteProductOption quoteProductOption = null;
@@ -268,7 +268,10 @@ public final class ProductsCatalog extends CFSModule {
     try {
       db = getConnection(context);
       String quoteId = context.getRequest().getParameter("quoteId");
-      quote = new Quote(db, Integer.parseInt(quoteId));
+      previousQuote = new Quote(db, Integer.parseInt(quoteId));
+      previousQuote.setBuildProducts(true);
+      previousQuote.queryRecord(db, Integer.parseInt(quoteId));
+      previousQuote.retrieveTicket(db);
       for (int i = 1; ; i++) {
         String productIdString = (String) context.getRequest().getParameter(
             "product_" + i);
@@ -277,6 +280,8 @@ public final class ProductsCatalog extends CFSModule {
         } else {
           String quantityString = (String) context.getRequest().getParameter(
               "qty_" + i);
+          String priceString = (String) context.getRequest().getParameter("price_" + i);
+          String commentString = (String) context.getRequest().getParameter("comment_" + i);
           if (quantityString != null && !"".equals(quantityString)) {
             ProductCatalog product = new ProductCatalog(
                 db, Integer.parseInt(productIdString));
@@ -284,10 +289,14 @@ public final class ProductsCatalog extends CFSModule {
             quoteProduct = new QuoteProduct();
             quoteProduct.setProductCatalog(product);
             quoteProduct.setProductId(product.getId());
+            quoteProduct.setComment(commentString);
             quoteProduct.setQuantity(quantityString);
-            quoteProduct.setQuoteId(quote.getId());
+            quoteProduct.setQuoteId(previousQuote.getId());
             // Build the quoteProduct price from the product price
             quoteProduct.buildPricing(db);
+            if (!"".equals(priceString)){
+              quoteProduct.setPriceAmount(Double.parseDouble(priceString));
+            }
             isValid = this.validateObject(context, db, quoteProduct);
             if (isValid) {
               QuoteProductOptionList optionList = new QuoteProductOptionList();
@@ -345,9 +354,13 @@ public final class ProductsCatalog extends CFSModule {
           }
         }
       }
+      Quote quote = new Quote(db, Integer.parseInt(quoteId));
       quote.setBuildProducts(true);
       quote.queryRecord(db, Integer.parseInt(quoteId));
       quote.retrieveTicket(db);
+      
+      processUpdateHook(context, previousQuote, quote);
+      
       context.getRequest().setAttribute("quote", quote);
 
       if (categoryIdString != null && !"".equals(categoryIdString) && !"-1".equals(

@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.pipeline.base.OpportunityComponent" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
@@ -41,6 +41,9 @@
     }
   }
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -48,9 +51,9 @@
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") == null) { %>
-<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
-<a href="Accounts.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+  <a href="Accounts.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <%}%>
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> >
@@ -66,22 +69,21 @@
 <form name="componentDetails" action="AccountContactsOpps.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>" method="post">
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
-    <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
-    <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
+    <dhv:container name="accountcontactopportunities" selected="details" object="OpportunityHeader" param="<%= "headerId=" + OpportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>">
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>
     </dhv:evaluate>
-    <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OppComponentDetails.isTrashed()%>">
-      <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete">
-      <br /><br />
-      </dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&headerId=<%= OppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','AccountContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete">
-      <br />&nbsp;
-      </dhv:permission>
-    </dhv:evaluate>
+    <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>">
+      <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
+        <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OppComponentDetails.isTrashed()%>">
+          <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete"><br /><br /></dhv:permission>
+          <dhv:permission name="accounts-accounts-contacts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&headerId=<%= OppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
+          <dhv:permission name="accounts-accounts-contacts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','AccountContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+          <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete"><br />&nbsp;</dhv:permission>
+        </dhv:evaluate>
+      </dhv:evaluate>
+    </dhv:hasAuthority>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
       <tr>
         <th colspan="2">
@@ -133,6 +135,7 @@
           <% } %>
         </td>
       </tr>
+      <dhv:include name="opportunity.lowEstimate,pipeline-lowEstimate"  none="true">
       <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
@@ -141,6 +144,17 @@
           <zeroio:currency value="<%= OppComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </tr>
+      </dhv:include>
+      <dhv:include name="pipeline-custom1Integer" none="true">
+        <tr class="containerBody">
+          <td class="formLabel" nowrap>
+            <dhv:label name="pipeline.custom1Integer">Custom1 Integer</dhv:label>
+          </td>
+          <td>
+            <%= OpportunityHeader.getCustom1Integer() %>
+          </td>
+        </tr>
+      </dhv:include>
       <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
@@ -157,14 +171,17 @@
           <zeroio:currency value="<%= OppComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </tr>
-      <tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
-        </td>
-        <td>
-          <%= OppComponentDetails.getTerms() %> <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
-        </td>
-      </tr>
+      <dhv:include name="opportunity.termsAndUnits,pipeline-terms" none="true">
+        <tr class="containerBody">
+          <td class="formLabel" nowrap>
+            <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
+          </td>
+          <td>
+            <%= OppComponentDetails.getTerms() %> <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
+          </td>
+        </tr>
+      </dhv:include>
+      <dhv:include name="opportunity.currentStage" none="true">
       <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
@@ -181,6 +198,8 @@
           <zeroio:tz timestamp="<%= OppComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
         </td>
       </tr>
+    </dhv:include>
+    <dhv:include name="opportunity.environment" none="true">
     <dhv:evaluate if="<%= environmentSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -191,6 +210,8 @@
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.competitors" none="true">
     <dhv:evaluate if="<%= competitorsSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -201,6 +222,8 @@
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.compellingEvent" none="true">
     <dhv:evaluate if="<%= compellingEventSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -211,6 +234,8 @@
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.budget" none="true">
     <dhv:evaluate if="<%= budgetSelect.getEnabledElementCount() > 0 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -221,6 +246,8 @@
       </td>
     </tr>
     </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
       <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.EstCommission">Est. Commission</dhv:label>
@@ -229,30 +256,36 @@
           <%= OppComponentDetails.getCommissionValue() %>%
         </td>
       </tr>
-    <dhv:evaluate if="<%= hasText(OppComponentDetails.getAlertText()) %>">
-       <tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_add.AlertDescription">Alert Description</dhv:label>
-        </td>
-        <td>
-           <%= toHtml(OppComponentDetails.getAlertText()) %>
-        </td>
-      </tr>
-    </dhv:evaluate>
-    <dhv:evaluate if="<%= OppComponentDetails.getAlertDate() != null %>">
-      <tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
-        </td>
-        <td>
-          <zeroio:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true"  default="&nbsp;"/>
-          <% if(!User.getTimeZone().equals(OppComponentDetails.getAlertDateTimeZone())){%>
-          <br>
-          <zeroio:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"  default="&nbsp;" />
-          <% } %>
-         </td>
-      </tr>
-    </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.alertDescription" none="true">
+      <dhv:evaluate if="<%= hasText(OppComponentDetails.getAlertText()) %>">
+         <tr class="containerBody">
+          <td class="formLabel" nowrap>
+            <dhv:label name="accounts.accounts_add.AlertDescription">Alert Description</dhv:label>
+          </td>
+          <td>
+             <%= toHtml(OppComponentDetails.getAlertText()) %>
+          </td>
+        </tr>
+      </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.alertDate" none="true">
+      <dhv:evaluate if="<%= OppComponentDetails.getAlertDate() != null %>">
+        <tr class="containerBody">
+          <td class="formLabel" nowrap>
+            <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
+          </td>
+          <td>
+            <zeroio:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true"  default="&nbsp;"/>
+            <% if(!User.getTimeZone().equals(OppComponentDetails.getAlertDateTimeZone())){%>
+            <br>
+            <zeroio:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"  default="&nbsp;" />
+            <% } %>
+           </td>
+        </tr>
+      </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="opportunity.details.entered" none="true">
       <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
@@ -262,6 +295,8 @@
           <zeroio:tz timestamp="<%= OppComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
         </td>
       </tr>
+    </dhv:include>
+    <dhv:include name="opportunity.details.modified" none="true">
       <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
@@ -271,19 +306,25 @@
           <zeroio:tz timestamp="<%= OppComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
         </td>
       </tr>
+      </dhv:include>
     </table>
-    <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OppComponentDetails.isTrashed()%>">
-      <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete"><br></dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','AccountContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete"></dhv:permission>
-    </dhv:evaluate>
+    <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>">
+      <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
+        <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OppComponentDetails.isTrashed()%>">
+          <br />
+          <dhv:permission name="accounts-accounts-contacts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
+          <dhv:permission name="accounts-accounts-contacts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','AccountContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+          <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete"></dhv:permission>
+        </dhv:evaluate>
+      </dhv:evaluate>
+    </dhv:hasAuthority>
       <%-- end container content --%>
       <input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
       <input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
       <input type="hidden" name="actionSource" value="AccountContactsOppComponents">
     <%= addHiddenParams(request, "popup|popupType|actionId") %>
+    </dhv:container>
   </dhv:container>
 </dhv:container>
 </form>

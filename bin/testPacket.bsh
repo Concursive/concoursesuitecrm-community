@@ -1,5 +1,5 @@
 #!/bin/sh
-//bin/true; exec java -classpath .:/usr/local/tomcat/common/lib/servlet-api.jar:lib/bsh.jar:build/lib/aspcfs.jar:/usr/java/tomcat/common/lib/servlet-api.jar bsh.Interpreter "$0" "$@"
+//bin/true; exec java -classpath .:/usr/local/tomcat/common/lib/servlet-api.jar:lib/bsh-2.0b2.jar:build/lib/aspcfs.jar:/usr/java/tomcat/common/lib/servlet-api.jar bsh.Interpreter "$0" "$@"
 
 /* Servlet API is required and may not be set */
 
@@ -24,4 +24,3 @@ if (bsh.args.length > 1) {
 String xml = StringUtils.loadText(filename);
 System.out.println(HTTPUtils.sendPacket(url, xml));
 System.exit(0);
-

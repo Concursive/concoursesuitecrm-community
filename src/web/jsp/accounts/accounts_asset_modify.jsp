@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -27,6 +27,11 @@
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="emailModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="asset" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
+<jsp:useBean id="parent" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
+<jsp:useBean id="assetVendorList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="assetManufacturerList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="assetMaterialValue" class="java.util.HashMap" scope="request"/>
+<jsp:useBean id="assetMaterialQty" class="java.util.HashMap" scope="request"/>
 <jsp:useBean id="categoryList1" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList2" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
@@ -48,11 +53,22 @@
 </table>
 <%-- End Trails --%>
   <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<%
+  if (asset.getParentList() != null && asset.getParentList().size() > 0) {
+    Iterator iter = (Iterator) asset.getParentList().iterator();
+    while (iter.hasNext()) {
+      Asset parentAsset = (Asset) iter.next();
+      String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
+%>
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" />
+<% }} %>
+<% String param2 = "id=" + asset.getId() + "|parentId="+asset.getId()+"|orgId="+OrgDetails.getOrgId(); %>
+<dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>">
     <input type=submit value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
     <%if ("list".equals(request.getParameter("return"))) { %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= asset.getParentId() %>';this.form.dosubmit.value='false';" />
     <%}else{ %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>';this.form.dosubmit.value='false';" />
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&parentId=<%= asset.getParentId() %>';this.form.dosubmit.value='false';" />
     <%}%>
     <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
     <input type="hidden" name="id" value="<%= asset.getId() %>" />
@@ -71,3 +87,7 @@
     <input type="hidden" name="dosubmit" value="true" />
   </dhv:container>
 </form>
+</dhv:container>
+<script type="text/javascript">
+  refreshMaterials();
+</script>

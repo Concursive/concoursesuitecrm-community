@@ -30,7 +30,7 @@ function page_init() {
     DocumentStore thisDocumentStore = (DocumentStore) i.next();
 %>
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<%= StringUtils.jsStringEscape(thisDocumentStore.getTitle()) %>';
+    newOpt.text="<%= StringUtils.jsStringEscape(thisDocumentStore.getTitle()) %>";
     newOpt.value='<%= thisDocumentStore.getId() %>';
     list.options[list.length] = newOpt;
 <%

@@ -89,7 +89,13 @@
 <%} else {%>
   <tr bgcolor="white">
     <td colspan="4">
-      <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
+      <dhv:evaluate if="<%= request.getAttribute("textError") != null && !"".equals((String)request.getAttribute("textError")) %>">
+        <%= toHtml((String) request.getAttribute("errorString")) %><br />
+        <%= showAttribute(request, "textError") %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= request.getAttribute("textError") == null && "".equals((String) request.getAttribute("textError")) %>">
+        <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
+      </dhv:evaluate>
     </td>
   </tr>
 </table>

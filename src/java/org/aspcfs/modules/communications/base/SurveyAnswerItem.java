@@ -322,8 +322,11 @@ public class SurveyAnswerItem {
     if (thisAnswerId == -1) {
       throw new SQLException("Answer ID not specified");
     }
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       int seqId = DatabaseUtils.getNextSeq(
           db, "active_survey_answer_ite_id_seq");
       PreparedStatement pst = db.prepareStatement(
@@ -341,12 +344,18 @@ public class SurveyAnswerItem {
       pst.execute();
       pst.close();
       updateSurveyAverage(db, questionId);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -366,20 +375,16 @@ public class SurveyAnswerItem {
     }
     int count = 0;
     int i = 0;
-    try {
-      PreparedStatement pst = null;
-      i = 0;
-      pst = db.prepareStatement(
-          "UPDATE active_survey_answer_avg " +
-          "SET total = total + 1 " +
-          "WHERE question_id = ? AND item_id =? ");
-      pst.setInt(++i, questionId);
-      pst.setInt(++i, this.getId());
-      count = pst.executeUpdate();
-      pst.close();
-    } catch (SQLException e) {
-      throw new SQLException(e.getMessage());
-    }
+    PreparedStatement pst = null;
+    i = 0;
+    pst = db.prepareStatement(
+        "UPDATE active_survey_answer_avg " +
+        "SET total = total + 1 " +
+        "WHERE question_id = ? AND item_id =? ");
+    pst.setInt(++i, questionId);
+    pst.setInt(++i, this.getId());
+    count = pst.executeUpdate();
+    pst.close();
     return count;
   }
 

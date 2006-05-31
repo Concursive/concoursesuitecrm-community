@@ -29,7 +29,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr class="row1">
     <td>
-      <font color="#8c8c8c"><strong>Contact Information Update</strong></font>
+      <font color="#8c8c8c"><strong><dhv:label name="campaign.contactInfoUpdate">Contact Information Update</dhv:label></strong></font>
     </td>
   </tr>
 </table>
@@ -37,13 +37,13 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr>
     <td>
-      <strong>Contact Information Submitted</strong>
+      <strong><dhv:label name="campaign.contactInfoSubmitted">Contact Information Submitted</dhv:label></strong>
     </td>
   </tr>
   <tr>
     <td>
       <%--<%= toHtml(ThankYouText) %>--%>
-      Thank you for informing us about changes in your contact information.<br>
+      <dhv:label name="campaign.contactInfoUpdateThanks">Thank you for informing us about changes in your contact information.</dhv:label><br>
     </td>
   </tr>
 </table>

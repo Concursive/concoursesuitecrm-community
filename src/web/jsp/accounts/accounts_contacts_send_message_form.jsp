@@ -112,7 +112,7 @@ boolean showCc = true;
 if(!"new".equals(request.getParameter("listView"))){ %>
 <% 
    messageList.setJsEvent("onChange=\"javascript:updateMessage();\""); 
-   messageList.addItem(0, "--None--");
+   messageList.addItem(0, "-- None --");
 %>
 <%= messageList.getHtmlSelect("messageId", (request.getParameter("messageId") != null ? Integer.parseInt(request.getParameter("messageId")) : -1)) %>
 <% }else{ %>
@@ -127,7 +127,7 @@ if(!"new".equals(request.getParameter("listView"))){ %>
   <dhv:label name="action.contacts.Note.text">Note: The recipient's contact information will be attached with the chosen message.</dhv:label>
 <%}%>
 <br />
-<table border="0" style="empty">
+<table border="0" class="empty">
 <tr id="send"><td>
   <input type="submit" value="<dhv:label name="button.sendMessage">Send Message</dhv:label>" />
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='Contacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>';" />

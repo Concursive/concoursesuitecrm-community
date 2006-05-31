@@ -55,6 +55,7 @@
       String documentFileDetails = "AccountTicketsDocuments.do?command=Details&tId="+TicketDetails.getId();
       String documentModule = "AccountTickets";
       String specialID = ""+TicketDetails.getId();
+      boolean hasPermission = true;
     %>
     <%@ include file="../accounts/documents_list_include.jsp" %>
   </dhv:container>

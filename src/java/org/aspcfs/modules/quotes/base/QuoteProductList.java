@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -43,6 +44,9 @@ public class QuoteProductList extends ArrayList {
   private int productId = -1;
   private String productName = null;
   private boolean buildResources = false;
+  private HashMap errors = new HashMap();
+  private HashMap warnings = new HashMap();
+  private boolean onlyWarnings = false;
 
 
   /**
@@ -156,6 +160,69 @@ public class QuoteProductList extends ArrayList {
 
 
   /**
+   * Sets the errors attribute of the QuoteProductList object
+   *
+   * @param tmp The new errors value
+   */
+  public void setErrors(HashMap tmp) {
+    this.errors = tmp;
+  }
+
+
+  /**
+   * Gets the errors attribute of the QuoteProductList object
+   *
+   * @return The errors value
+   */
+  public HashMap getErrors() {
+    return errors;
+  }
+
+
+  /**
+   * Sets the warnings attribute of the QuoteProductList object
+   *
+   * @param tmp The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
+   * Gets the warnings attribute of the QuoteProductList object
+   *
+   * @return The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
+  }
+
+
+  /**
+   * Sets the onlyWarnings attribute of the QuoteProductList object
+   *
+   * @param tmp The new onlyWarnings value
+   */
+  public void setOnlyWarnings(boolean tmp) {
+    this.onlyWarnings = tmp;
+  }
+
+
+  /**
+   * Sets the onlyWarnings attribute of the QuoteProductList object
+   *
+   * @param tmp The new onlyWarnings value
+   */
+  public void setOnlyWarnings(String tmp) {
+    this.onlyWarnings = "on".equalsIgnoreCase(tmp);
+  }
+
+  public boolean isOnlyWarnings() {
+    return onlyWarnings;
+  }
+
+  /**
    * Gets the pagedListInfo attribute of the QuoteProductList object
    *
    * @return The pagedListInfo value
@@ -229,10 +296,10 @@ public class QuoteProductList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM quote_product qp " +
-        "LEFT JOIN product_catalog pctlg " +
-        "ON (qp.product_id = pctlg.product_id) " +
-        "WHERE qp.item_id > -1 ");
+            "FROM quote_product qp " +
+            "LEFT JOIN product_catalog pctlg " +
+            "ON (qp.product_id = pctlg.product_id) " +
+            "WHERE qp.item_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -272,10 +339,10 @@ public class QuoteProductList extends ArrayList {
     }
     sqlSelect.append(
         "qp.* " +
-        "FROM quote_product qp " +
-        "LEFT JOIN product_catalog pctlg " +
-        "ON (qp.product_id = pctlg.product_id) " +
-        "WHERE qp.item_id > -1 ");
+            "FROM quote_product qp " +
+            "LEFT JOIN product_catalog pctlg " +
+            "ON (qp.product_id = pctlg.product_id) " +
+            "WHERE qp.item_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -414,6 +481,8 @@ public class QuoteProductList extends ArrayList {
           "product_" + i);
       String quantityString = (String) context.getRequest().getParameter(
           "qty_" + i);
+      String priceString = (String) context.getRequest().getParameter("price_" + i);
+      String commentString = (String) context.getRequest().getParameter("comment_" + i);
       if (productIdString != null && !"".equals(productIdString)) {
         if (quantityString != null && !"".equals(quantityString)) {
           ProductCatalog product = new ProductCatalog(
@@ -424,8 +493,14 @@ public class QuoteProductList extends ArrayList {
           QuoteProduct quoteProduct = new QuoteProduct();
           quoteProduct.setProductCatalog(product);
           quoteProduct.setProductId(product.getId());
+          quoteProduct.setComment(commentString);
           quoteProduct.setQuantity(Integer.parseInt(quantityString));
           quoteProduct.buildPricing(db);
+          if ((priceString != null) && !"".equals(priceString)) {
+            quoteProduct.setPriceAmount(Double.parseDouble(priceString));
+          } else {
+            quoteProduct.setPriceAmount(0.0);
+          }
           this.add(quoteProduct);
         }
       } else {

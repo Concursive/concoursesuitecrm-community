@@ -195,6 +195,11 @@ function validateRadio (field) {
       </dhv:evaluate>
       </table>
      </td>
+     <dhv:evaluate if="<%= thisQuestion.getRequired() %>">
+       <td>
+         (<dhv:label name="dynamicForm.required">Required</dhv:label>)
+       </td>
+     </dhv:evaluate>
     </tr>
     <% 
       }
@@ -208,7 +213,8 @@ function validateRadio (field) {
       <%
         }
       %>
-    </table><br>
+    </table>
+    <br/>
     <input type="hidden" name="id" value="<%= request.getParameter("id") %>">
     <input type="submit" value="<dhv:label name="campaign.submitSurvey">Submit Survey</dhv:label>">
     <br>

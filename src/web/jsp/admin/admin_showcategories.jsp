@@ -20,6 +20,7 @@
 <%@ page import="java.util.Iterator,org.aspcfs.modules.admin.base.PermissionCategory, org.aspcfs.modules.admin.base.CategoryEditor" %>
 <jsp:useBean id="editorList" class="org.aspcfs.modules.admin.base.CategoryEditorList" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -50,7 +51,7 @@
     CategoryEditor thisEditor = (CategoryEditor) i.next();
 %>
     <tr class="row<%= rowid %>">
-      <dhv:permission name="admin-sysconfig-categories-edit"><td align="center"><a href="AdminCategories.do?command=ViewActive&moduleId=<%= thisEditor.getModuleId() %>&constantId=<%= thisEditor.getConstantId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a></td></dhv:permission>
+      <dhv:permission name="admin-sysconfig-categories-edit"><td align="center"><a href="AdminCategories.do?command=ViewActive&moduleId=<%= thisEditor.getModuleId() %>&constantId=<%= thisEditor.getConstantId() %>&siteId=<%= User.getUserRecord().getSiteId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a></td></dhv:permission>
       <td valign="center" width="100%"><%= toHtml(thisEditor.getDescription()) %></td>
     </tr>
 <%

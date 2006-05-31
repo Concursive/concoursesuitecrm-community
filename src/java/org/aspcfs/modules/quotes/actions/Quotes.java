@@ -19,6 +19,10 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.webutils.FileDownload;
+
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
@@ -95,6 +99,9 @@ public final class Quotes extends CFSModule {
 
       //build the quote list
       quoteList.setPagedListInfo(quoteListInfo);
+      quoteList.setIncludeAllSites(false);
+      quoteList.setSiteId(this.getUser(context, this.getUserId(context)).getSiteId());
+      quoteList.setExclusiveToSite(true);
       quoteList.setBuildResources(true);
       quoteList.buildList(db);
 
@@ -147,6 +154,14 @@ public final class Quotes extends CFSModule {
 //      categoryList.buildList(db);
 //      HtmlSelect select = categoryList.getHtmlSelect(list.getIdFromValue("Publication"));
 //      context.getRequest().setAttribute("categorySelect", select);
+
+      //sites lookup
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
+      context.getRequest().setAttribute("SiteList", siteList);
+
+      
       //reset the offset and current letter of the paged list in order to make sure we search ALL quotes
       PagedListInfo quoteListInfo = this.getPagedListInfo(
           context, "quoteListInfo");
@@ -189,7 +204,7 @@ public final class Quotes extends CFSModule {
     String source = (String) context.getRequest().getParameter("source");
     QuoteList quoteList = new QuoteList();
     addModuleBean(context, "View Quotes", "Search Results");
-
+    User user = this.getUser(context, this.getUserId(context));
     //Prepare pagedListInfo
     PagedListInfo searchListInfo = this.getPagedListInfo(
         context, "quoteListInfo", "group_id", "desc");
@@ -233,6 +248,13 @@ public final class Quotes extends CFSModule {
       searchListInfo.setSearchCriteria(quoteList, context);
       if (isPortalUser(context)) {
         quoteList.setOrgId(getPortalUserPermittedOrgId(context));
+      }
+      if (quoteList.getSiteId() == Constants.INVALID_SITE) {
+        quoteList.setIncludeAllSites(true);
+        quoteList.setSiteId(user.getSiteId());
+      } else {
+        quoteList.setIncludeAllSites(false);
+        quoteList.setExclusiveToSite(true);
       }
       quoteList.buildList(db);
       context.getRequest().setAttribute("quoteList", quoteList);
@@ -313,6 +335,10 @@ public final class Quotes extends CFSModule {
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
 
@@ -414,6 +440,10 @@ public final class Quotes extends CFSModule {
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
 
@@ -504,6 +534,10 @@ public final class Quotes extends CFSModule {
       //retrieve the quote from the database
       quote = new Quote();
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -554,6 +588,10 @@ public final class Quotes extends CFSModule {
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
 
       //Check to see for any new notes to save them as a new quote note entry
@@ -631,7 +669,19 @@ public final class Quotes extends CFSModule {
     try {
       db = getConnection(context);
       quoteProduct = new QuoteProduct(db, productId);
+      Quote previousQuote = new Quote();
+      previousQuote.queryRecord(db, quoteProduct.getQuoteId());
+      previousQuote.buildProducts(db);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, previousQuote.getOrgId())) {
+        return ("PermissionError");
+      }
       quoteProduct.delete(db);
+
+      Quote quote = new Quote();
+      quote.queryRecord(db, quoteProduct.getQuoteId());
+      quote.buildProducts(db);
+      processUpdateHook(context, previousQuote, quote);
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -663,14 +713,17 @@ public final class Quotes extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-
       //retrieve the quote from the database
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
-
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       //delete the quote
       quote.delete(db);
+      processDeleteHook(context, quote);
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -704,12 +757,14 @@ public final class Quotes extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-
       //retrieve the quote from the database
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
-
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       //delete the quote
       quote.updateStatus(db, true, this.getUserId(context));
     } catch (Exception e) {
@@ -751,7 +806,10 @@ public final class Quotes extends CFSModule {
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
-
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       //restore the quote
       quote.updateStatus(db, false, this.getUserId(context));
     } catch (Exception e) {
@@ -819,6 +877,10 @@ public final class Quotes extends CFSModule {
       if (flag) {
         isValid = this.validateObject(context, db, quote);
         if (isValid) {
+          //Check access permission to organization record
+          if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+            return ("PermissionError");
+          }
           recordCount = quote.update(db);
         }
         if (recordCount > 0) {
@@ -867,6 +929,10 @@ public final class Quotes extends CFSModule {
       quote.setBuildProducts(true);
       quote.setBuildTicket(true);
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       DependencyList dependencies = quote.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.addMessage(
@@ -919,6 +985,7 @@ public final class Quotes extends CFSModule {
     if (quoteIdString == null || "".equals(quoteIdString)) {
       quoteIdString = (String) context.getRequest().getParameter("quoteId");
     }
+    User user = this.getUser(context, this.getUserId(context));
     Quote quote = null;
     Connection db = null;
 
@@ -936,6 +1003,10 @@ public final class Quotes extends CFSModule {
 
       //Create a new instance of Quote
       quote = new Quote(db, Integer.parseInt(quoteIdString));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quoteBean", quote);
 
       int headerId = quote.getHeaderId();
@@ -947,7 +1018,11 @@ public final class Quotes extends CFSModule {
       ContactList contactList = new ContactList();
       if (quote.getOrgId() != -1) {
         contactList.setOrgId(quote.getOrgId());
+      } else if (user.getSiteId() == -1) {
+        contactList.setIncludeAllSites(true);
       }
+      contactList.setSiteId(user.getSiteId());
+      contactList.setExclusiveToSite(true);
       contactList.setBuildDetails(false);
       contactList.setBuildTypes(false);
       contactList.setIncludeEnabled(Constants.UNDEFINED);
@@ -1027,6 +1102,10 @@ public final class Quotes extends CFSModule {
 
       //Create a new instance of Quote
       quote = new Quote(db, quoteId);
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       previousQuote = new Quote(db, quoteId);
 
       //Retrieve the lookup list for the quote status
@@ -1057,10 +1136,17 @@ public final class Quotes extends CFSModule {
       quote.setCloseIt(quoteBean.getCloseIt());
       quote.setClosed(quoteBean.getClosed());
       quote.setSubmitAction(quoteBean.getSubmitAction());
-      quote.setShowTotal(quoteBean.getShowTotal());
       quote.setLogoFileId(quoteBean.getLogoFileId());
       quote.setModifiedBy(user.getId());
-      isValid = this.validateObject(context, db, quoteBean);
+      isValid = this.validateObject(context, db, quote);
+      if (isValid){
+        if ("submit".equals(context.getRequest().getParameter("return"))){
+          Quote tmpQuote = new Quote();
+          tmpQuote.setBuildProducts(true);
+          tmpQuote.queryRecord(db, quote.getId());
+          isValid = this.validateObject(context, db, tmpQuote.getProductList());
+        }
+      }
       if (isValid) {
         resultCount = quote.update(db);
       }
@@ -1170,6 +1256,10 @@ public final class Quotes extends CFSModule {
       quote.setVersion(quote.getNewVersion());
       isValid = this.validateObject(context, db, quote);
       if (isValid) {
+        //Check access permission to organization record
+        if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+          return ("PermissionError");
+        }
         quote.createNewGroup(db);
         recordInserted = quote.insert(db);
       }
@@ -1316,6 +1406,10 @@ public final class Quotes extends CFSModule {
       Quote quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, Integer.parseInt(quoteIdString));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       previousQuote = new Quote(db, Integer.parseInt(quoteIdString));
 
       //check the user for the necessary permissions
@@ -1430,6 +1524,7 @@ public final class Quotes extends CFSModule {
     }
     String quoteId = (String) context.getRequest().getParameter("quoteId");
     Quote oldQuote = null;
+    User user = this.getUser(context, this.getUserId(context));
     ContactList contactList = null;
     Connection db = null;
     try {
@@ -1437,6 +1532,10 @@ public final class Quotes extends CFSModule {
       oldQuote = new Quote();
       oldQuote.setBuildProducts(true);
       oldQuote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, oldQuote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", oldQuote);
 
       //Retrieve the lookup list for the quote status
@@ -1447,12 +1546,15 @@ public final class Quotes extends CFSModule {
       contactList = new ContactList();
       if (oldQuote.getOrgId() != -1) {
         contactList.setOrgId(oldQuote.getOrgId());
+      } else if (user.getSiteId() == -1) {
+        contactList.setIncludeAllSites(true);
       }
+      contactList.setSiteId(user.getSiteId());
+      contactList.setExclusiveToSite(true);
       contactList.setBuildDetails(false);
       contactList.setBuildTypes(false);
       contactList.buildList(db);
       context.getRequest().setAttribute("contactList", contactList);
-
     } catch (Exception e) {
       // Go through the SystemError process
       e.printStackTrace();
@@ -1501,6 +1603,10 @@ public final class Quotes extends CFSModule {
       oldQuote = new Quote();
       oldQuote.setBuildProducts(true);
       oldQuote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, oldQuote.getOrgId())) {
+        return ("PermissionError");
+      }
 
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -1520,7 +1626,7 @@ public final class Quotes extends CFSModule {
               "id", "" + quote.getId() + "&orgId=" + quote.getOrgId());
         } else if (returnValue.equals("old")) {
           context.getRequest().setAttribute(
-              "id", "" + oldQuote.getId() + "&version=" + (version != null ? version : "") + "&orgId=" + quote.getOrgId());
+              "id", "" + oldQuote.getId() + "&version=" + (version != null ? version : "") + "&orgId=" + oldQuote.getOrgId());
         }
       }
     } catch (Exception e) {
@@ -1564,6 +1670,10 @@ public final class Quotes extends CFSModule {
         oldQuote = new Quote();
         oldQuote.setBuildProducts(true);
         oldQuote.queryRecord(db, Integer.parseInt(quoteId));
+      }
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, oldQuote.getOrgId())) {
+        return ("PermissionError");
       }
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -1665,6 +1775,7 @@ public final class Quotes extends CFSModule {
     Connection db = null;
     Quote quote = null;
     String quoteId = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       quoteId = (String) context.getRequest().getParameter("quoteId");
       db = this.getConnection(context);
@@ -1673,11 +1784,15 @@ public final class Quotes extends CFSModule {
       quote.setBuildProducts(true);
       quote.setBuildResources(true);
       quote.setBuildConditions(true);
+      quote.setSystemStatus(systemStatus);
       quote.setBuildRemarks(true);
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
       //Retrieve the lookup list for the quote status
-      SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 
@@ -1719,6 +1834,10 @@ public final class Quotes extends CFSModule {
       db = this.getConnection(context);
       quote = new Quote();
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -1760,6 +1879,10 @@ public final class Quotes extends CFSModule {
       db = this.getConnection(context);
       quote = new Quote();
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
       //Build the user's contact information
       userContact.setBuildDetails(true);
@@ -1797,6 +1920,10 @@ public final class Quotes extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("id");
       Quote quote = new Quote(db, Integer.parseInt(id));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
 
       HashMap map = new HashMap();
       map.put("quote_id", new Integer(id));
@@ -1817,8 +1944,7 @@ public final class Quotes extends CFSModule {
       }
       //provide the language, currency and country information
       map.put(
-          "language", this.getSystemStatus(context).getApplicationPrefs().get(
-              "SYSTEM.LANGUAGE"));
+          "language", this.getSystemStatus(context).getLanguage());
       map.put(
           "currency", this.getSystemStatus(context).getApplicationPrefs().get(
               "SYSTEM.CURRENCY"));
@@ -1827,10 +1953,21 @@ public final class Quotes extends CFSModule {
               "SYSTEM.COUNTRY"));
       //provide the dictionary as a parameter to the quote report
       map.put(
-          "CENTRIC_DICTIONARY", this.getSystemStatus(context).getApplicationPrefs().getLocalizationPrefs());
+          "CENTRIC_DICTIONARY", this.getSystemStatus(context).getLocalizationPrefs());
       String filename = "quote.xml";
-      byte[] bytes = JasperReportUtils.getReportAsBytes(
-          reportPath + filename, map, db);
+      
+      //Replace the font based on the system language to support i18n chars
+      String fontPath = getWebInfPath(context, "fonts");
+      String reportDir = getWebInfPath(context, "reports");
+      JasperReport jasperReport = JasperReportUtils.getReport(reportDir + filename); 
+      String language = getPref(context, "SYSTEM.LANGUAGE");
+      
+      JasperReportUtils.modifyFontProperties(
+          jasperReport, reportDir, fontPath, language);
+      
+      byte[] bytes = JasperRunManager.runReportToPdf(
+        jasperReport, map, db);
+        
       if (bytes != null) {
         FileDownload fileDownload = new FileDownload();
         fileDownload.setDisplayName(
@@ -1921,6 +2058,10 @@ public final class Quotes extends CFSModule {
       quote = new Quote();
       quote.setBuildResources(true);
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("quote", quote);
       //Retrieve the lookup list for the quote status
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
@@ -2011,6 +2152,10 @@ public final class Quotes extends CFSModule {
       db = this.getConnection(context);
       quote = new Quote();
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       previousQuote = new Quote(db, Integer.parseInt(quoteId));
       boolean canShowTotal = new Boolean(showTotal).booleanValue();
       quote.setShowTotal(canShowTotal);
@@ -2057,6 +2202,10 @@ public final class Quotes extends CFSModule {
       db = this.getConnection(context);
       quote = new Quote();
       quote.queryRecord(db, Integer.parseInt(quoteId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, quote.getOrgId())) {
+        return ("PermissionError");
+      }
       previousQuote = new Quote(db, Integer.parseInt(quoteId));
       boolean canShowSubtotal = new Boolean(showSubtotal).booleanValue();
       quote.setShowSubtotal(canShowSubtotal);

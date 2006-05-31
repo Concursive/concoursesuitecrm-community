@@ -23,6 +23,8 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.FileDownload;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 
@@ -658,8 +660,9 @@ public final class LeadsDocuments extends CFSModule {
    */
   private int addOpportunity(ActionContext context, Connection db, String opportunityId) throws SQLException {
     context.getRequest().setAttribute("headerId", opportunityId);
-    OpportunityHeader thisOpportunity = new OpportunityHeader(
-        db, opportunityId);
+    OpportunityHeader thisOpportunity = new OpportunityHeader(db, opportunityId);
+    AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
+    thisOpportunity.buildManagerOwnerIdRange(db, accessTypeList, this.getUserRange(context));
     context.getRequest().setAttribute("opportunityHeader", thisOpportunity);
     return thisOpportunity.getId();
   }

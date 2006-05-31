@@ -24,6 +24,8 @@ import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.ModuleFieldCategoryLink;
 import org.aspcfs.modules.reports.base.Report;
 import org.aspcfs.utils.web.LookupListElement;
+import org.aspcfs.modules.actionplans.base.PlanEditor;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -237,6 +239,7 @@ public class PermissionsAndRolesWriter
         thisCategory.setProducts(record.getValue("products"));
         thisCategory.setWebdav(record.getValue("webdav"));
         thisCategory.setLogos(record.getValue("logos"));
+        thisCategory.setActionPlans(record.getValue("actionPlans"));
         thisCategory.insert(db);
         id = thisCategory.getId();
         return true;
@@ -267,6 +270,17 @@ public class PermissionsAndRolesWriter
         categoryLink.setLevel(record.getIntValue("level"));
         categoryLink.setDescription(record.getValue("description"));
         categoryLink.insert(db);
+        return true;
+      }
+      
+      if (record.getName().equals("planEditor")) {
+        PlanEditor editor = new PlanEditor();
+        editor.setModuleId(record.getIntValue("moduleId"));
+        editor.setConstantId(ActionPlan.getMapIdGivenConstantId(db, record.getIntValue("constantId")));
+        editor.setLevel(record.getIntValue("level"));
+        editor.setDescription(record.getValue("description"));
+        editor.setCategoryId(record.getIntValue("categoryId"));
+        editor.insert(db);
         return true;
       }
 
@@ -312,6 +326,16 @@ public class PermissionsAndRolesWriter
         return true;
       }
 
+      if (record.getName().equals("customListViewCategory")) {
+        CustomListViewEditor listViewEditor = new CustomListViewEditor();
+        listViewEditor.setModuleId(record.getIntValue("moduleId"));
+        listViewEditor.setConstantId(record.getIntValue("constantId"));
+        listViewEditor.setDescription(record.getValue("description"));
+        listViewEditor.setCategoryId(record.getIntValue("categoryId"));
+        listViewEditor.insert(db);
+        return true;
+      }
+      
       if (record.getName().equals("role")) {
         Role thisRole = new Role();
         thisRole.setRole(record.getValue("role"));

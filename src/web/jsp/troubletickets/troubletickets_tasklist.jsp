@@ -175,9 +175,9 @@
             <a href="javascript:popURL('TroubleTicketTasks.do?command=Details&ticketId=<%= TicketDetails.getId() %>&id=<%= thisTask.getId() %>&popup=true','CRM_Task','600','425','yes','yes');"><%= toHtml(thisTask.getDescription()) %></a>&nbsp;
 <% if(thisTask.getContactId()!=-1) {%>
   <% if(!thisTask.getContact().getEmployee()) {%>
-  [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameLastFirst() %>"><font color="green"><dhv:label name="admin.contact.abbreviation">Contact</dhv:label></font></a>]
+  [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameFull() %>"><font color="green"><dhv:label name="admin.contact.abbreviation">Contact</dhv:label></font></a>]
   <%} else {%>
-  [<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameLastFirst() %>"><font color="green"><dhv:label name="admin.employee.abbreviation">Employee</dhv:label></font></a>]
+  [<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameFull() %>"><font color="green"><dhv:label name="admin.employee.abbreviation">Employee</dhv:label></font></a>]
   <%}%>
 <%}%>
           </td>
@@ -196,7 +196,7 @@
                 <tr>
                   <td>
                     <table cellpadding="4" cellspacing="0" class="empty"><tr><td valign="top"><li>&nbsp;<dhv:label name="account.name.colon">Name:</dhv:label></li></td>
-                    <td align="left">&nbsp;<%= thisTask.getContact().getNameLastFirst() %></td></tr></table>
+                    <td align="left">&nbsp;<%= thisTask.getContact().getNameFull() %></td></tr></table>
                   </td>
                 </tr>
                 <tr>
@@ -208,7 +208,7 @@
                     while (i.hasNext()) {
                       EmailAddress thisAddress = (EmailAddress)i.next(); %>
                       <tr><td>
-                        &nbsp;<%=thisAddress.getEmail()%>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
+                        &nbsp;<%= toHtml(thisAddress.getEmail()) %>(<%= thisAddress.getTypeName() %>)&nbsp;&nbsp;
                       </td></tr>
                     <%}%>
                     </table>

@@ -176,7 +176,7 @@
           String description = itemList.nextToken();
           itemListSelect.addItem(description);
      %>
-          <script>itemList[<%= count %>] = "<%=description%>"</script>
+          <script>itemList[<%= count %>] = "<%=description%>";</script>
      <% 
         count++;
        }%>

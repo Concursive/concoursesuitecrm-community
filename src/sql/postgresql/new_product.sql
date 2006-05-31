@@ -38,11 +38,9 @@ CREATE TABLE product_category (
   short_description TEXT,
   long_description TEXT,
   type_id INTEGER REFERENCES lookup_product_category_type(code),
-  -- images
   thumbnail_image_id INTEGER REFERENCES project_files(item_id),
   small_image_id INTEGER REFERENCES project_files(item_id),
   large_image_id INTEGER REFERENCES project_files(item_id),
-  -- record status
   list_order INTEGER DEFAULT 10,
   enteredby INT NOT NULL REFERENCES access(user_id),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -168,7 +166,6 @@ CREATE TABLE product_catalog (
 CREATE TABLE product_catalog_pricing (
   price_id SERIAL PRIMARY KEY,
   product_id INTEGER REFERENCES product_catalog(product_id),
-  -- pricing
   tax_id INTEGER REFERENCES lookup_product_tax(code),
   msrp_currency INTEGER REFERENCES lookup_currency(code),
   msrp_amount FLOAT NOT NULL DEFAULT 0,
@@ -196,11 +193,9 @@ CREATE TABLE package (
   abbreviation VARCHAR(30),
   short_description TEXT,
   long_description TEXT,
-  --images
   thumbnail_image_id INTEGER REFERENCES project_files(item_id),
   small_image_id INTEGER REFERENCES project_files(item_id),
   large_image_id INTEGER REFERENCES project_files(item_id),
-  -- record status
   list_order INTEGER DEFAULT 10,
   enteredby INT NOT NULL REFERENCES access(user_id),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -271,7 +266,6 @@ CREATE TABLE product_option (
   allow_customer_configure BOOLEAN NOT NULL DEFAULT false,
   allow_user_configure BOOLEAN NOT NULL DEFAULT false,
   required BOOLEAN NOT NULL DEFAULT false,
-  -- record information
   start_date TIMESTAMP(3) DEFAULT NULL,
   end_date TIMESTAMP(3) DEFAULT NULL,
   enabled BOOLEAN DEFAULT false,

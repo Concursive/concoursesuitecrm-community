@@ -33,6 +33,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -45,6 +46,7 @@
     formTest = true;
     message = "";
     alertMessage = "";
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
     if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
       message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
@@ -53,10 +55,13 @@
       message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
     if (!checkNumber(form.commission.value)) { 
       message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
     }
+  </dhv:include>
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -64,10 +69,12 @@
       if(alertMessage != ""){
          return confirmAction(alertMessage);
       }else{
+  <dhv:include name="opportunity.componentTypes" none="true">
         var test = document.opportunityForm.selectedList;
         if (test != null) {
           return selectAllOptions(document.opportunityForm.selectedList);
         }
+  </dhv:include>
       }
     }
   }
@@ -85,6 +92,9 @@
     }
   }
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">

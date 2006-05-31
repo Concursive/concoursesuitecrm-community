@@ -44,6 +44,7 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
+  <dhv:include name="opportunity.alertDescription opportunity.alertDate,pipeline-alertdate" none="true">
   if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
     message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
     formTest = false;
@@ -56,11 +57,13 @@ function checkForm(form) {
     message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
+  </dhv:include>
+  <dhv:include name="opportunity.estimatedCommission,pipeline-commission" none="true">
   if (!checkNumber(form.commission.value)) { 
     message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
     formTest = false;
   }
-  
+  </dhv:include>
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -86,6 +89,9 @@ function checkForm(form) {
     }
   }
 </script>
+<%
+  boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
+%>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -113,8 +119,7 @@ function checkForm(form) {
 <form name="opportunityForm" action="AccountContactsOppComponents.do?command=SaveComponent&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
-    <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
-    <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param="<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>">
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>
@@ -123,11 +128,11 @@ function checkForm(form) {
     <br>
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
     <% if ("list".equals(request.getParameter("return"))) {%>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
     <% }else if ("listAll".equals(request.getParameter("return"))) {%>
-          <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
     <% }else{ %>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
      <% } %>
     <dhv:evaluate if="<%= isPopup(request)  && !isInLinePopup(request) %>">
       <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();">
@@ -158,6 +163,7 @@ function checkForm(form) {
       <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
     </dhv:evaluate>
     <%= addHiddenParams(request, "popup|popupType|actionId") %>
+    </dhv:container>
   </dhv:container>
 </dhv:container>
 </form>

@@ -39,6 +39,7 @@ public class ImportLookupLists {
   private ArrayList lookupListsWithLevelAsIsFromAttributeList = null;
   private HashMap globallyUniqueIds = null;
   private ArrayList lookupListsWithNoLevelColumn = null;
+  private HashMap lookupListsWithNoDescription = null;
 
   public ImportLookupLists() {
   }
@@ -101,7 +102,7 @@ public class ImportLookupLists {
     initializeCustomHandlers();
     lookupLists = new LookupLists();
     completeLookupListList = lookupLists.buildLookupLists(
-        filePath, customLookupListHandlers);
+        filePath, customLookupListHandlers, lookupListsWithNoDescription);
     globallyUniqueIds = lookupLists.getGloballyUniqueIds();
     insertLookupListList(db);
   }
@@ -151,7 +152,7 @@ public class ImportLookupLists {
     StringBuffer sqlColumnNames = new StringBuffer();
     StringBuffer sqlColumnValues = new StringBuffer();
 
-    sqlString.append("INSERT INTO " + tableName);
+    sqlString.append("INSERT INTO " + DatabaseUtils.getTableName(db, tableName));
 
     Set columnNames = row.keySet();
     Iterator columnNameIterator = columnNames.iterator();
@@ -176,7 +177,7 @@ public class ImportLookupLists {
       } else if ("level".equals(columnName)) {
         //nothing
       } else {
-        sqlColumnNames.append(((!firstColumn) ? ", " : "") + columnName);
+        sqlColumnNames.append(((!firstColumn) ? ", " : "") + (columnName.equals("type") ? "\"type\"" : columnName));
         sqlColumnValues.append(((!firstColumn) ? ", " : "") + "?");
         firstColumn = false;
       }
@@ -231,6 +232,9 @@ public class ImportLookupLists {
           }
           continue;
         } else {
+          if ("\"type\"".equals(columnName)) {
+            columnName = "type";
+          }
           columnType = (String) columnTypes.get(columnName);
           if (columnName.equals(primaryKey) && dbId > -1) {
             pst.setInt(++i, dbId);
@@ -323,6 +327,11 @@ public class ImportLookupLists {
     lookupListsWithNoLevelColumn.add("product_option_configurator");
     lookupListsWithNoLevelColumn.add("search_fields");
     lookupListsWithNoLevelColumn.add("survey");
+    lookupListsWithNoLevelColumn.add("action_plan_constants");
+    lookupListsWithNoLevelColumn.add("step_action_map");
+
+    lookupListsWithNoDescription = new HashMap();
+    lookupListsWithNoDescription.put("step_action_map", "step_action_map");
   }
 
 
@@ -361,4 +370,3 @@ public class ImportLookupLists {
     return true;
   }
 }
-

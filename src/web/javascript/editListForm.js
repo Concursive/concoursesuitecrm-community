@@ -79,11 +79,13 @@ function isDuplicate(){
 
 function resetOptions(){
   var searchList = document.modifyList.selectedList;
-  var selectedOption = searchList.options[searchList.selectedIndex];
-  var selected = selectedOption.selected;
-  document.getElementById("addButton").value  = label("button.addR","Add >");
-  document.getElementById("newValue").value = "";
-  selectedOption.selected = selected;
+  if (searchList.options.length > 0) {
+    var selectedOption = searchList.options[searchList.selectedIndex];
+    var selected = selectedOption.selected;
+    document.getElementById("addButton").value  = label("button.addR","Add >");
+    document.getElementById("newValue").value = "";
+    selectedOption.selected = selected;
+  }
 }
 
 function removeValues(){
@@ -250,7 +252,7 @@ function sortSelect (select, compareFunction) {
   select.options.length = 0;
   for (var i = 0; i < options.length; i++) {
     select.options[i] = options[i];
-    itemList[i] = new category(i, options[i].text, 'true');
+    itemList[i] = new category(select.options[i].value, options[i].text, 'true');
   }
 }
 
@@ -275,8 +277,15 @@ function editValues(){
    return;
   }
   if(tmpList.options[0].value != "-1"){
+    var selectedValue = tmpList.options[tmpList.selectedIndex].value;
+    var itemIndex = 0;
+    for(i=0; i < itemList.length;i++){
+      if (selectedValue == itemList[i].id) {
+        document.getElementById("newValue").value = itemList[i].description;
+        break;
+      }
+    }
     document.getElementById("addButton").value  = label("button.updateR","Update >");
-    document.getElementById("newValue").value = itemList[tmpList.selectedIndex].description;
   }
 }
 

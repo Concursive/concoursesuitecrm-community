@@ -30,6 +30,11 @@
       <permission value="accounts-accounts-contacts-view"/>
       <link value="Contacts.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="actionplans">
+      <long_html value="Action Plans"/>
+      <permission value="accounts-action-plans-view"/>
+      <link value="AccountActionPlans.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="activities">
       <long_html value="Activities"/>
       <permission value="accounts-accounts-contacts-calls-view"/>
@@ -85,11 +90,11 @@
       <permission value="accounts-accounts-documents-view"/>
       <link value="AccountsDocuments.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
-  <submenu name="relationships">
-    <long_html value="Relationships"/>
-    <permission value="accounts-accounts-relationships-view"/>
-    <link value="AccountRelationships.do?command=View&amp;orgId=${orgId}"/>
-  </submenu>
+    <submenu name="relationships">
+      <long_html value="Relationships"/>
+      <permission value="accounts-accounts-relationships-view"/>
+      <link value="AccountRelationships.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
   </container>
   
   <!-- Submenu used in the Contacts module -->
@@ -176,6 +181,11 @@
       <permission value="accounts-accounts-contacts-history-view"/>
       <link value="AccountContactsHistory.do?command=View&amp;contactId=${id}"/>
     </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value="accounts-accounts-contacts-folders-view"/>
+      <link value="Contacts.do?command=FolderList&amp;contactId=${id}"/>
+    </submenu>
     <submenu name="calls">
       <long_html value="Activities"/>
       <permission value="accounts-accounts-contacts-calls-view"/>
@@ -198,6 +208,29 @@
     </submenu>
   </container>
 
+  <!-- Submenu used in the Account Contacts module -->
+  <container name="accountcontactopportunities">
+    <properties>
+      <icon>images/icons/stock_form-currency-field-16.gif</icon>
+      <label>${description}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value="accounts-accounts-contacts-opportunities-view"/>
+      <link value="AccountContactsOpps.do?command=DetailsOpp&amp;headerId=${headerId}&amp;orgId=${orgId}&amp;contactId=${contactId}"/>
+    </submenu>
+    <submenu name="quotes">
+      <long_html value="Quotes"/>
+      <permission value="accounts-accounts-contacts-opportunities-quotes-view"/>
+      <link value="AccountContactsOppQuotes.do?command=View&amp;headerId=${headerId}&amp;orgId=${orgId}&amp;contactId=${contactId}"/>
+    </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value="accounts-accounts-contacts-opps-folders-view"/>
+      <link value="AccountContactsOpps.do?command=FolderList&amp;headerId=${headerId}&amp;orgId=${orgId}&amp;contactId=${contactId}"/>
+    </submenu>
+  </container>
+
   <container name="accountsassets">
     <properties>
       <label>${serialNumber}</label>
@@ -212,6 +245,11 @@
       <permission value="accounts-assets-view"/>
       <link value="AccountsAssets.do?command=History&amp;id=${id}"/>
     </submenu>
+    <submenu name="billofmaterials">
+      <long_html value="Bill of Materials"/>
+      <permission value="accounts-assets-view"/>
+      <link value="AccountsAssets.do?command=List&amp;parentId=${id}&amp;orgId=${orgId}"/>
+    </submenu>
   </container>
   
   <!-- Submenu used in the Opportunities (Pipeline) module -->
@@ -224,6 +262,11 @@
       <long_html value="Components"/>
       <permission value=""/>
       <link value="Leads.do?command=DetailsOpp&amp;headerId=${id}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value=""/>
+      <link value="LeadsComponents.do?command=ComponentHistory&amp;headerId=${id}"/>
     </submenu>
     <submenu name="calls">
       <long_html value="Activities"/>
@@ -242,7 +285,7 @@
     </submenu>
     <submenu name="quotes">
       <long_html value="Quotes"/>
-      <permission value="pipeline-opportunities-view"/>
+      <permission value="pipeline-quotes-view"/>
       <link value="LeadsQuotes.do?command=QuoteList&amp;headerId=${id}"/>
     </submenu>
 <!--
@@ -321,6 +364,11 @@
       <permission value="campaign-dashboard-view"/>
       <link value="CampaignDocuments.do?command=View&amp;id=${id}"/>
     </submenu>
+    <submenu name="access">
+      <long_html value="Access"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignUserGroups.do?command=ViewActive&amp;id=${id}"/>
+    </submenu>
   </container>
   
   <!-- Submenu used in the TroubleTickets module -->
@@ -348,6 +396,11 @@
       <long_html value="Maintenance Notes"/>
       <permission value="tickets-maintenance-report-view"/>
       <link value="TroubleTicketMaintenanceNotes.do?command=List&amp;id=${id}"/>
+    </submenu>
+    <submenu name="actionplans">
+      <long_html value="Action Plans"/>
+      <permission value="tickets-action-plans-view"/>
+      <link value="TroubleTicketActionPlans.do?command=List&amp;ticketId=${id}"/>
     </submenu>
     <submenu name="tasks">
       <long_html value="Tasks"/>
@@ -407,6 +460,28 @@
       <permission value="accounts-accounts-tickets-documents-view"/>
       <link value="AccountTicketsDocuments.do?command=View&amp;tId=${id}"/>
     </submenu>
+    <submenu name="actionplans">
+      <long_html value="Action Plans"/>
+      <permission value="accounts-accounts-tickets-view"/>
+      <link value="AccountTicketActionPlans.do?command=List&amp;ticketId=${id}"/>
+    </submenu>
+  </container>
+
+  <!-- Submenus used in the Netapp Module -->
+  <container name="netapps">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value="netapps_expiration_contracts-view"/>
+      <link value="NetworkApplications.do?command=View&amp;expirationId=${expirationId}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="netapps_expiration_contracts-view"/>
+      <link value="NetworkApplications.do?command=ViewHistory&amp;expirationId=${expirationId}"/>
+    </submenu>
   </container>
   
   <!-- Submenu used in the Auto Guide section of the Accounts module -->
@@ -454,6 +529,11 @@
       <permission value="admin-users-view"/>
       <link value="Viewpoints.do?command=ListViewpoints&amp;userId=${id}"/>
     </submenu>
+    <submenu name="groups">
+      <long_html value="Groups"/>
+      <permission value="admin-users-view"/>
+      <link value="UserGroups.do?command=GroupList&amp;userId=${id}"/>
+    </submenu>
   </container>
 
   <container name="categories">
@@ -461,12 +541,12 @@
     <submenu name="active categories">
       <long_html value="Active Categories"/>
       <permission value="admin-view"/>
-      <link value="AdminCategories.do?command=ViewActive&amp;moduleId=${moduleId}&amp;constantId=${constantId}"/>
+      <link value="AdminCategories.do?command=ViewActive&amp;moduleId=${moduleId}&amp;constantId=${constantId}&amp;siteId=${siteId}&amp;popup=${popup}"/>
     </submenu>
     <submenu name="draft categories">
       <long_html value="Draft Categories"/>
       <permission value="admin-view"/>
-      <link value="AdminCategories.do?command=View&amp;moduleId=${moduleId}&amp;constantId=${constantId}"/>
+      <link value="AdminCategories.do?command=View&amp;moduleId=${moduleId}&amp;constantId=${constantId}&amp;siteId=${siteId}&amp;popup=${popup}"/>
     </submenu>
   </container>
   <!-- Submenu in Pipeline Management Reports -->
@@ -643,5 +723,10 @@
       <permission value=""/>
       <link value="ProductHistory.do?command=History&amp;adId=${adId}"/>
     </submenu>
+  </container>
+  <container name="communicationitemdetails">
+  <properties>
+    <label>${description}</label>
+  </properties>
   </container>
 </application>

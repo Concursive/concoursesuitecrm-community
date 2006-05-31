@@ -22,6 +22,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.admin.base.User, org.aspcfs.modules.documents.base.*" %>
 <jsp:useBean id="documentStore" class="org.aspcfs.modules.documents.base.DocumentStore" scope="request"/>
 <jsp:useBean id="currentMember" class="org.aspcfs.modules.documents.base.DocumentStoreTeamMember" scope="request"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
@@ -44,8 +45,8 @@
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-team-edit-role">
     <script language="javascript" type="text/javascript">
-      function updateRole(documentStoreId, id, rid, memberType) {
-        window.frames['server_commands'].location.href='DocumentStoreManagementTeam.do?command=ChangeRole&documentStoreId=' + documentStoreId + '&id=' + id + '&role=' + rid + '&memberType=' + memberType;
+      function updateRole(documentStoreId, id, rid, memberType,sid) {
+        window.frames['server_commands'].location.href='DocumentStoreManagementTeam.do?command=ChangeRole&documentStoreId=' + documentStoreId + '&id=' + id + '&role=' + rid + '&memberType=' + memberType+'&siteId='+sid;
       }
     </script>
     <br />
@@ -114,7 +115,7 @@
           <dhv:documentRoleSelect
             name="<%= "role" + thisMember.getItemId() %>"
             value="<%= thisMember.getUserLevel() %>"
-            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user');" %>"/>
+            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user', "+ thisMember.getSiteId()+");" %>"/>
          </dhv:evaluate>
          <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
            <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
@@ -157,7 +158,7 @@
     </th>
     <th width="50%">
       <strong>
-        <dhv:label name="documents.team.department">Organization</dhv:label>
+        <dhv:label name="documents.team.organization">Organization</dhv:label>
        </strong>
      </th>
     <dhv:documentPermission name="documentcenter-team-view-email">
@@ -202,7 +203,7 @@
           <dhv:documentRoleSelect
             name="<%= "role" + thisMember.getItemId() %>"
             value="<%= thisMember.getUserLevel() %>"
-            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user');" %>"/>
+            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user',"+thisMember.getSiteId()+");" %>"/>
         </dhv:evaluate>
         <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
           <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
@@ -235,7 +236,7 @@
   <tr>
     <th>
       <strong>
-        <dhv:label name="documents.team.AccessLevel">Access level</dhv:label>
+        <dhv:label name="documents.team.accessLevel">Access level</dhv:label>
       </strong>
     </th>
     <th width="90%">
@@ -260,7 +261,7 @@
   while (i.hasNext()) {
     rowId = (rowId != 1?1:2);
     DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) i.next();
-    String roleName = (String) thisMember.getUser();
+    String roleName = (String) thisMember.getUser() + (thisMember.getSiteId() == -1?"":" ("+SiteIdList.getSelectedValue(thisMember.getSiteId()) +")");
 %>    
   <tr class="row<%= rowId %>">
     <td valign="top" nowrap>
@@ -271,7 +272,7 @@
         <dhv:documentRoleSelect
           name="<%= "role" + thisMember.getItemId() %>"
           value="<%= thisMember.getUserLevel() %>"
-          onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'role');" %>"/>
+          onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'role',"+thisMember.getSiteId()+");" %>"/>
       </dhv:documentPermission>
     </td>
     <td valign="top"><%= toHtml(roleName) %></td>
@@ -311,7 +312,7 @@
   while (i.hasNext()) {
     rowId = (rowId != 1?1:2);
     DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) i.next();
-    String departmentName = (String) thisMember.getUser();
+    String departmentName = (String) thisMember.getUser() + (thisMember.getSiteId() == -1?"":" ("+SiteIdList.getSelectedValue(thisMember.getSiteId()) +")");
 %>    
   <tr class="row<%= rowId %>">
     <td valign="top" nowrap>
@@ -323,7 +324,7 @@
           <dhv:documentRoleSelect
             name="<%= "role" + thisMember.getItemId() %>"
             value="<%= thisMember.getUserLevel() %>"
-            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'department');" %>"/>
+            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'department',"+thisMember.getSiteId()+");" %>"/>
         </dhv:evaluate>
         <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
           <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>

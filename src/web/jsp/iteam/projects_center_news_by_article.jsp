@@ -5,7 +5,7 @@
   -          place.
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -31,7 +31,7 @@
       <img alt="" src="images/icons/stock_news-16.gif" align="absmiddle" />
       <font size="2"><%= toHtml(thisArticle.getSubject()) %></font>
       <font color="red">
-      <dhv:evaluate if="<%= thisArticle.getStatus() == NewsArticle.DRAFT %>">(Draft)</dhv:evaluate>
+      <dhv:evaluate if="<%= thisArticle.getStatus() == NewsArticle.DRAFT %>"><dhv:label name="project.Draft.brackets">(Draft)</dhv:label></dhv:evaluate>
       <dhv:evaluate if="<%= thisArticle.getStatus() == NewsArticle.UNAPPROVED %>">(Unapproved)</dhv:evaluate>
       </font>
     </th>
@@ -41,9 +41,10 @@
       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="empty">
         <tr>
           <td width="100%">
-            By <dhv:username id="<%= thisArticle.getEnteredBy() %>"/>
+            <dhv:label name="project.By">By</dhv:label>
+            <dhv:username id="<%= thisArticle.getEnteredBy() %>"/>
             -
-            Posted on
+            <dhv:label name="project.postedOn">Posted on</dhv:label>
             <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>"/>
           </td>
           <td align="right" nowrap valign="top">
@@ -51,15 +52,15 @@
             <zeroio:permission name="project-news-edit">
               <%-- send email to team members --%>
               <img src="images/icons/stock_mail-16.gif" border="0" align="absmiddle">
-              <a href="javascript:displayMenu('select_<%= thisArticle.getId() %>', 'menuItem', <%= thisArticle.getId() %>);" name="select_<%= thisArticle.getId() %>" id="select_<%= thisArticle.getId() %>">Email</a>
+              <a href="javascript:displayMenu('select_<%= thisArticle.getId() %>', 'menuItem', <%= thisArticle.getId() %>);" name="select_<%= thisArticle.getId() %>" id="select_<%= thisArticle.getId() %>"><dhv:label name="reports.email">Email</dhv:label></a>
               <%-- edit message --%>
               <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle">
-              <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>">Edit</a>
+              <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a>
             </zeroio:permission>
             <zeroio:permission name="project-news-delete">
               <%-- delete message --%>
               <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle">
-              <a href="javascript:confirmDelete('ProjectManagementNews.do?command=Delete&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>');">Delete</a>
+              <a href="javascript:confirmDelete('ProjectManagementNews.do?command=Delete&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>');"><dhv:label name="global.button.delete">Delete</dhv:label></a>
             </zeroio:permission>
             </dhv:evaluate>
             &nbsp;
@@ -98,4 +99,3 @@
 <%
   }
 %>
-

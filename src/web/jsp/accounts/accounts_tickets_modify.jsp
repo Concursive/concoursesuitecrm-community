@@ -12,56 +12,83 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*" %>
-<%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="resolvedByDeptList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="causeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="resolutionList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="ticketStateList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="EscalationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="resolvedUserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="SubList1" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
+<jsp:useBean id="actionPlans" class="org.aspcfs.modules.actionplans.base.ActionPlanList" scope="request"/>
+<jsp:useBean id="insertActionPlan" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="defectSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="defectCheck" class="java.lang.String" scope="request"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProducts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript">
   function updateSubList1() {
     var sel = document.forms['details'].elements['catCode'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=CategoryJSList&form=details&catCode=" + escape(value);
+    var url = "TroubleTickets.do?command=CategoryJSList&form=details&catCode=" + escape(value)+'&orgId=<%= OrgDetails.getOrgId() %>';
     window.frames['server_commands'].location.href=url;
   }
   function updateSubList2() {
     var sel = document.forms['details'].elements['subCat1'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=CategoryJSList&form=details&subCat1=" + escape(value);
+    var url = "TroubleTickets.do?command=CategoryJSList&form=details&subCat1=" + escape(value)+'&orgId=<%= OrgDetails.getOrgId() %>';
     window.frames['server_commands'].location.href=url;
   }
+<dhv:include name="ticket.subCat2" none="true">
   function updateSubList3() {
     var sel = document.forms['details'].elements['subCat2'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=CategoryJSList&form=details&subCat2=" + escape(value);
+    var url = "TroubleTickets.do?command=CategoryJSList&form=details&subCat2=" + escape(value)+'&orgId=<%= OrgDetails.getOrgId() %>';
     window.frames['server_commands'].location.href=url;
   }
+</dhv:include>
+<dhv:include name="ticket.subCat3" none="true">
+  function updateSubList4() {
+    var sel = document.forms['details'].elements['subCat3'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&form=details&subCat3=" + escape(value)+'&orgId=<%= OrgDetails.getOrgId() %>';
+    window.frames['server_commands'].location.href=url;
+  }
+</dhv:include>
   function updateUserList() {
     var sel = document.forms['details'].elements['departmentCode'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=DepartmentJSList&form=details&departmentCode=" + escape(value);
+    var orgSite = document.forms['details'].elements['orgSiteId'].value;
+    var url = "TroubleTickets.do?command=DepartmentJSList&form=details&dept=Assigned&orgSiteId="+ orgSite +"&populateResourceAssigned=true&resourceAssignedDepartmentCode=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateResolvedByUserList() {
+    var sel = document.forms['details'].elements['resolvedByDeptCode'];
+    var value = sel.options[sel.selectedIndex].value;
+    var orgSite = document.forms['details'].elements['orgSiteId'].value;
+    var url = "TroubleTickets.do?command=DepartmentJSList&form=details&dept=Resolved&orgSiteId="+ orgSite + "&populateResolvedBy=true&resolvedByDepartmentCode=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
   function changeDivContent(divName, divContents) {
@@ -87,14 +114,26 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if (form.problem.value == "") { 
+    if (form.problem.value == "") {
       message += label("check.ticket.issue.entered","- Check that Issue is entered\r\n");
       formTest = false;
     }
-    if (form.closeNow.checked && form.solution.value == "") { 
+  <dhv:include name="ticket.resolution" none="true">
+    if (form.closeNow.checked && form.solution.value == "") {
       message += label("check.ticket.resolution.atclose","- Resolution needs to be filled in when closing a ticket\r\n");
       formTest = false;
     }
+  </dhv:include>
+    <dhv:include name="ticket.actionPlans" none="true">
+      if (form.insertActionPlan.checked && form.assignedTo.value <= 0) {
+        message += label("check.ticket.assignToUser","- Please assign the ticket to create the related action plan.\r\n");
+        formTest = false;
+      }
+    if (form.insertActionPlan.checked && form.actionPlanId.value <= 0) {
+      message += label("check.actionplan","- Please select an action plan to be inserted.\r\n");
+      formTest = false;
+    }
+    </dhv:include>
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -102,17 +141,72 @@
       return true;
     }
   }
-  
+
   function setAssignedDate(){
     resetAssignedDate();
     if (document.forms['details'].assignedTo.value > 0){
       document.forms['details'].assignedDate.value = document.forms['details'].currentDate.value;
     }
   }
-  
+
   function resetAssignedDate(){
     document.forms['details'].assignedDate.value = '';
-  }  
+  }
+  
+  function setField(formField,thisValue,thisForm) {
+    var frm = document.forms[thisForm];
+    var len = document.forms[thisForm].elements.length;
+    var i=0;
+    for( i=0 ; i<len ; i++) {
+      if (frm.elements[i].name.indexOf(formField)!=-1) {
+        if(thisValue){
+          frm.elements[i].value = "1";
+        } else {
+          frm.elements[i].value = "0";
+        }
+      }
+    }
+  }
+
+  function selectUserGroups() {
+    var siteId = document.forms['details'].orgSiteId.value;
+    if ('<%= OrgDetails.getOrgId() %>' != '-1') {
+      popUserGroupsListSingle('userGroupId','changeUserGroup', '&userId=<%= User.getUserRecord().getId() %>&siteId='+siteId);
+    } else {
+      alert(label("select.account.first",'You have to select an Account first'));
+      return;
+    }
+  }
+
+  function popKbEntries() {
+    var siteId = '<%= OrgDetails.getSiteId() %>';
+    var form = document.forms['details'];
+    var catCode = form.elements['catCode'];
+    var catCodeValue = catCode.options[catCode.selectedIndex].value;
+    if (catCodeValue == '0') {
+      alert(label('','Please select a category first'));
+      return;
+    }
+    var subCat1 = form.elements['subCat1'];
+    var subCat1Value = subCat1.options[subCat1.options.selectedIndex].value;
+  <dhv:include name="ticket.subCat2" none="true">
+    var subCat2 = form.elements['subCat2'];
+    var subCat2Value = subCat2.options[subCat2.options.selectedIndex].value;
+  </dhv:include>
+  <dhv:include name="ticket.subCat2" none="true">
+    var subCat3 = form.elements['subCat3'];
+    var subCat3Value = subCat3.options[subCat3.options.selectedIndex].value;
+  </dhv:include>
+    var url = 'KnowledgeBaseManager.do?command=Search&popup=true&searchcodeSiteId='+siteId+'&searchcodeCatCode='+catCodeValue;
+    url = url + '&searchcodeSubCat1='+ subCat1Value;
+  <dhv:include name="ticket.subCat2" none="true">
+    url = url + '&searchcodeSubCat2='+ subCat2Value;
+  </dhv:include>
+  <dhv:include name="ticket.subCat2" none="true">
+    url = url + '&searchcodeSubCat3='+ subCat3Value;
+  </dhv:include>
+    popURL(url, 'KnowledgeBase','600','550','yes','yes');
+  }
 </script>
 <body>
 <form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" onSubmit="return checkForm(this);" method="post">
@@ -120,7 +214,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
 <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
@@ -178,7 +272,15 @@
         </td>
       </tr>
       <tr class="containerBody">
-        <td nowrap class="formLabel">
+        <td class="formLabel">
+          <dhv:label name="tickets.ticketState">Ticket State</dhv:label>
+        </td>
+        <td>
+          <%= ticketStateList.getHtmlSelect("stateId",  TicketDetails.getStateId()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
           <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
         </td>
         <td>
@@ -190,6 +292,7 @@
           <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
         </td>
       </tr>
+  <dhv:include name="ticket.contractNumber" none="true">
       <tr class="containerBody">
       <td class="formLabel">
         <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
@@ -218,6 +321,8 @@
       </table>
      </td>
     </tr>
+  </dhv:include>
+  <dhv:include name="ticket.asset" none="true">
     <tr class="containerBody">
       <td class="formLabel">
         <dhv:label name="account.asset">Asset</dhv:label>
@@ -228,7 +333,7 @@
           <td>
             <div id="addAsset">
               <% if(TicketDetails.getAssetId() != -1) {%>
-                <%= TicketDetails.getAssetSerialNumber() %>
+                <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
               <%} else {%>
                 <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
               <%}%>
@@ -246,7 +351,9 @@
       </table>
      </td>
     </tr>
-      <tr class="containerBody">
+  </dhv:include>
+  <dhv:include name="ticket.laborCategory" none="true">
+    <tr class="containerBody">
       <td class="formLabel">
         <dhv:label name="account.laborCategory">Labor Category</dhv:label>
       </td>
@@ -274,17 +381,18 @@
       </table>
      </td>
     </tr>
+  </dhv:include>
     </table>
     <br />
     <a name="categories"></a>
-    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
         <th colspan="2">
           <strong><dhv:label name="accounts.accounts_add.Classification">Classification</dhv:label></strong>
         </th>
       </tr>
       <tr class="containerBody">
-        <td class="formLabel" valign="top">
+      <td valign="top" class="formLabel">
           <dhv:label name="ticket.issue">Issue</dhv:label>
         </td>
         <td>
@@ -308,13 +416,21 @@
           <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
         </td>
       </tr>
+      <dhv:include name="ticket.defect" none="true">
+        <tr class="containerBody">
+          <td valign="top" class="formLabel">
+            <dhv:label name="tickets.defects.defect">Defect</dhv:label>
+          </td>
+          <td><%= defectSelect.getHtml("defectId", TicketDetails.getDefectId()) %></td>
+        </tr>
+      </dhv:include>
       <dhv:include name="ticket.catCode" none="true">
       <tr class="containerBody">
         <td class="formLabel">
           <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
         </td>
         <td>
-          <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
+          <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %> <input type="checkbox" name="autoSetFields" id="autoSetFields" value="true" /> <dhv:label name="tickets.automaticallyPopulateAssignment.text">Automatically populate assignment based on categories</dhv:label>
         </td>
       </tr>
       </dhv:include>
@@ -324,7 +440,7 @@
           <dhv:label name="account.ticket.subLevel1">Sub-level 1</dhv:label>
         </td>
         <td>
-          <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
+          <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %><dhv:permission name="tickets-knowledge-base-view">&nbsp;<a href="javascript:popKbEntries();"><dhv:label name="tickets.knowledgebase.displayKBforSelectedCategories.text">Display Knowledge Base for selected Categories</dhv:label></a></dhv:permission>
         </td>
       </tr>
       </dhv:include>
@@ -348,6 +464,17 @@
         </td>
       </tr>
       </dhv:include>
+      <dhv:include name="ticket.actionplans" none="true">
+      <tr class="containerBody">
+          <td class="formLabel" nowrap>
+            <dhv:label name="sales.actionPlan">Action Plan</dhv:label>
+          </td>
+          <td>
+            <%= actionPlans.getHtmlSelect("actionPlanId", TicketDetails.getActionPlanId()) %>
+          <input type="checkbox" name="insertActionPlan" value="true" <%= insertActionPlan != null && "true".equals(insertActionPlan) ?"checked":"" %>/>&nbsp;<dhv:label name="actionPlan.activateThisPlan">Activate this plan</dhv:label>
+          </td>
+        </tr>
+      </dhv:include>
       <dhv:include name="ticket.severity" none="true">
       <tr class="containerBody">
         <td class="formLabel">
@@ -360,7 +487,7 @@
       </dhv:include>
     </table>
     <br>
-    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
         <th colspan="2">
           <strong><dhv:label name="project.assignment">Assignment</dhv:label></strong>
@@ -388,11 +515,39 @@
         <td nowrap class="formLabel">
           <dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label>
         </td>
-        <td valign=center>
+      <td>
           <% UserList.setJsEvent("onChange=\"javascript:setAssignedDate();\"");%>
           <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
         </td>
       </tr>
+      <dhv:include name="tickets.userGroup" none="true">
+      <tr class="containerBody">
+        <td class="formLabel" valign="top">
+          <dhv:label name="usergroup.assignedGroup">Assigned Group</dhv:label>
+        </td>
+        <td>
+          <table cellspacing="0" cellpadding="0" border="0" class="empty">
+            <tr>
+              <td>
+                <div id="changeUserGroup">
+                  <dhv:evaluate if="<%= TicketDetails.getUserGroupId() != -1 %>">
+                    <%= toHtml(TicketDetails.getUserGroupName()) %>
+                  </dhv:evaluate>
+                  <dhv:evaluate if="<%= TicketDetails.getUserGroupId() == -1 %>">
+                    <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+                  </dhv:evaluate>
+                </div>
+              </td>
+              <td>
+                <input type="hidden" name="userGroupId" id="userGroupId" value="<%= TicketDetails.getUserGroupId() %>"/> &nbsp;
+                [<a href="javascript:selectUserGroups();"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>] &nbsp;
+                [<a href="javascript:document.forms['details'].userGroupId.value='-1';javascript:changeDivContent('changeUserGroup', label('none.selected','None Selected'));"><dhv:label name="button.clear">Clear</dhv:label></a>]
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      </dhv:include>
       <tr class="containerBody">
         <td nowrap class="formLabel">
           <dhv:label name="account.ticket.assignmentDate">Assignment Date</dhv:label>
@@ -400,6 +555,14 @@
         <td>
           <zeroio:dateSelect form="details" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>"  timeZone="<%= TicketDetails.getAssignedDateTimeZone() %>" showTimeZone="true" />
           <%= showAttribute(request, "assignedDateError") %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="tickets.escalationLevel">Escalation Level</dhv:label>
+        </td>
+        <td>
+          <%= EscalationList.getHtmlSelect("escalationLevel", TicketDetails.getEscalationLevel() ) %>
         </td>
       </tr>
       <tr class="containerBody">
@@ -412,17 +575,15 @@
         </td>
       </tr>
       <tr class="containerBody">
-        <td class="formLabel" valign="top">
+      <td valign="top" class="formLabel">
           <dhv:label name="ticket.issueNotes">Issue Notes</dhv:label>
         </td>
         <td>
           <table border="0" cellspacing="0" cellpadding="0" class="empty">
             <tr>
-              <td>
-                <textarea name="comment" cols="55" rows="5"><%= toString(TicketDetails.getComment()) %></textarea>
-              </td>
               <td valign="top">
-                <dhv:label name="accounts.tickets.ticket.previousTicket">(Previous notes for this ticket are listed under the history tab.)</dhv:label>
+              <textarea name="comment" cols="55" rows="5"><%= toString(TicketDetails.getComment()) %></textarea><br />
+              <dhv:label name="tickets.noteAddedtoTicketHistory.brackets">(This note is added to the ticket history. Previous notes for this ticket are listed under the history tab.)</dhv:label>
               </td>
             </tr>
           </table>
@@ -430,33 +591,63 @@
       </tr>
     </table>
     <br />
-    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
         <th colspan="2">
           <strong><dhv:label name="accounts.accounts_asset_history.Resolution">Resolution</dhv:label></strong>
         </th>
       </tr>
+    <dhv:include name="ticket.cause" none="true">
       <tr class="containerBody">
         <td valign="top" class="formLabel">
           <dhv:label name="account.ticket.cause">Cause</dhv:label>
         </td>
         <td>
           <textarea name="cause" cols="55" rows="8"><%= toString(TicketDetails.getCause()) %></textarea>
+          <dhv:include name="ticket.causeId" none="true"><br />
+            <%= causeList.getHtmlSelect("causeId", TicketDetails.getCauseId()) %>
+          </dhv:include>
+        </td>
+      </tr>
+    </dhv:include>
+      <%-- Ticket Resolved By Information --%>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="project.department">Department</dhv:label>
+        </td>
+        <td>
+          <%= resolvedByDeptList.getHtmlSelect("resolvedByDeptCode", TicketDetails.getResolvedByDeptCode()) %>
         </td>
       </tr>
       <tr class="containerBody">
-        <td class="formLabel" valign="top">
-          <dhv:label name="accounts.accounts_asset_history.Resolution">Resolution</dhv:label>
+        <td valign="top" class="formLabel">
+          <dhv:label name="ticket.resolvedby">Resolved By</dhv:label>
         </td>
         <td>
-          <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-          <input type="checkbox" name="closeNow" value="true" <%= TicketDetails.getCloseIt() ? " checked" : ""%>><dhv:label name="accounts.tickets.ticket.close">Close ticket</dhv:label>
+          <%= resolvedUserList.getHtmlSelect("resolvedBy", TicketDetails.getResolvedBy()) %><br />
+          <input type="checkbox" name="chk1" value="true" onclick="javascript:setField('resolvable',document.details.chk1.checked,'details');" <%= TicketDetails.getResolvable() ? " checked" : ""%>><dhv:label name="tickets.resolvable">Resolvable</dhv:label>
+        <input type="hidden" name="resolvable" value="">
+        </td>
+      </tr>
+      <%-- Ticket Resolved By Information --%>
+      <tr class="containerBody">
+      <td valign="top" class="formLabel">
+        <dhv:label name="ticket.resolution">Resolution</dhv:label>
+        </td>
+        <td>
+        <dhv:include name="ticket.resolution" none="true">
+        <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br /></dhv:include>
+        <dhv:include name="ticket.resolutionId" none="true">
+          <%= resolutionList.getHtmlSelect("resolutionId", TicketDetails.getResolutionId()) %><br />
+        </dhv:include>
+          <input type="checkbox" name="closeNow" value="true" <%= TicketDetails.getCloseIt() ? " checked" : ""%>><dhv:label name="tickets.ticket.close">Close ticket</dhv:label>
           <%--
           <br>
           <input type="checkbox" name="kbase" value="true">Add this solution to Knowledge Base
           --%>
         </td>
       </tr>
+    <dhv:include name="ticket.resolution.date" none="true">
       <tr class="containerBody">
         <td class="formLabel">
           <dhv:label name="ticket.resolutionDate">Resolution Date</dhv:label>
@@ -466,6 +657,8 @@
           <%= showAttribute(request, "resolutionDateError") %>
         </td>
       </tr>
+  </dhv:include>
+  <dhv:include name="ticket.feedback" none="true">
       <tr class="containerBody">
         <td class="formLabel">
           <dhv:label name="account.serviceExpectation.question">Have our services met or exceeded your expectations?</dhv:label>
@@ -476,6 +669,7 @@
           <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>><dhv:label name="account.undecided">Undecided</dhv:label>
         </td>
       </tr>
+  </dhv:include>
      </table>
     &nbsp;<br>
    <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
@@ -505,6 +699,7 @@
     </dhv:evaluate>
     <input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">
     <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
+    <input type="hidden" name="orgSiteId" id="orgSiteId" value="<%=  TicketDetails.getOrgSiteId() %>" />
     <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
     <input type="hidden" name="companyName" value="<%= toHtml(TicketDetails.getCompanyName()) %>">
     <input type="hidden" name="statusId" value="<%=  TicketDetails.getStatusId() %>" />

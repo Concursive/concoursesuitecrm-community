@@ -1,0 +1,1 @@
+UPDATE document_store_user_member d SET d.site_id = (SELECT site_id FROM "access" ac WHERE ac.user_id = d.item_id);

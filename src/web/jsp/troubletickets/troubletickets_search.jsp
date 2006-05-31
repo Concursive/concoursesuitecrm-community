@@ -21,17 +21,21 @@
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="EscalationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TicketTypeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TicListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="userGroup" class="org.aspcfs.modules.admin.base.UserGroup" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script type="text/javascript">
   function checkForm(form) {
     formTest = true;
@@ -46,6 +50,31 @@
     }
     return true;
   }
+  
+  function getSiteId() {
+    var site = document.forms['searchTicket'].searchcodeSiteId;
+    var siteId = '';
+    if ('<%= User.getUserRecord().getSiteId() == -1 %>' == 'true') {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
+    if (siteId == '<%= Constants.INVALID_SITE %>') {
+      siteId = '&includeAllSites=true';
+    } else {
+      siteId = siteId + '&thisSiteIdOnly=true';
+    }
+    return siteId
+  }
+  
+  function clearSiteSpecificInfo() {
+    document.forms['searchTicket'].searchcodeOrgId.value="-1";
+    changeDivContent('changeaccount',label('label.all','All'));
+    document.forms['searchTicket'].searchcodeAssignedTo.value="-1";
+    changeDivContent('changeowner',label('label.anyone','Anyone'));
+    document.forms['searchTicket'].searchcodeUserGroupId.value="-1";
+    changeDivContent('changegroup',label('label.any','Any'));
+  }
 
   function clearForm() {
     document.forms['searchTicket'].searchcodeId.value="";
@@ -55,8 +84,14 @@
     document.forms['searchTicket'].searchcodeSeverity.options.selectedIndex = 0;
     document.forms['searchTicket'].searchcodePriority.options.selectedIndex = 0;
     document.forms['searchTicket'].listFilter1.options.selectedIndex = 0;
+    document.forms['searchTicket'].searchcodeEscalationLevel.options.selectedIndex = 0;
     document.forms['searchTicket'].searchcodeAssignedTo.value="-1";
     changeDivContent('changeowner',label('label.anyone','Anyone'));
+    document.forms['searchTicket'].searchcodeUserGroupId.value="-1";
+    changeDivContent('changegroup',label('label.any','Any'));
+    <dhv:evaluate if="<%=User.getSiteId() == -1 %>" >
+    document.forms['searchTicket'].searchcodeSiteId.options.selectedIndex = 0;
+    </dhv:evaluate>
   }
   
   function clearAccount(){
@@ -121,7 +156,7 @@
           </td>
           <td>
             <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId" value="<%= TicListInfo.getSearchOptionValue("searchcodeOrgId") %>">
-            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'showMyCompany=true&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'showMyCompany=true&siteId='+getSiteId()+'&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp;[<a href="javascript:clearAccount();"><dhv:label name="button.clear">Clear</dhv:label></a>]
           </td>
         </tr>
@@ -157,6 +192,15 @@
       <input type="hidden" name="search" value="1">
     </td>
 	</tr>
+	<tr>
+    <td class="formLabel">
+      <dhv:label name="tickets.escalationLevel">Escalation Level</dhv:label>
+    </td>
+    <td>
+      <%= EscalationList.getHtmlSelect("searchcodeEscalationLevel", TicListInfo.getSearchOptionValue("searchcodeEscalationLevel")) %>
+      <input type="hidden" name="search" value="1">
+    </td>
+	</tr>
   <tr>
     <td class="formLabel">
       <dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label>
@@ -175,13 +219,53 @@
           </td>
           <td>
             <input type="hidden" name="searchcodeAssignedTo" id="ownerid" value="<%= TicListInfo.getSearchOptionValue("searchcodeAssignedTo") %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&siteId='+getSiteId()+'&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
             &nbsp;[<a href="javascript:clearOwner();"><dhv:label name="button.clear">Clear</dhv:label></a>]
           </td>
         </tr>
       </table>
     </td>
 	</tr>
+  <tr>
+    <td class="formLabel">
+      <dhv:label name="usergroup.assignedGroup">Assigned Group</dhv:label>
+    </td>
+    <td>
+      <table class="empty">
+        <tr>
+          <td>
+            <div id="changegroup">
+            <%if("".equals(TicListInfo.getSearchOptionValue("searchcodeUserGroupId")) || "-1".equals(TicListInfo.getSearchOptionValue("searchcodeUserGroupId"))){ %>
+                &nbsp;<dhv:label name="pipeline.any">Any</dhv:label>
+              <% }else{ %>
+                <%= toHtml(userGroup.getName()) %>
+              <% } %>
+            </div>
+          </td>
+          <td>
+            <input type="hidden" name="searchcodeUserGroupId" id="searchcodeUserGroupId" value="<%= TicListInfo.getSearchOptionValue("searchcodeUserGroupId") %>"/>
+            [<a href="javascript:popUserGroupsListSingle('searchcodeUserGroupId','changegroup', 'siteId='+getSiteId());"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>] &nbsp;
+            [<a href="javascript:document.forms['searchTicket'].searchcodeUserGroupId.value='-1';javascript:changeDivContent('changegroup',label('label.any','Any'));"><dhv:label name="button.clear">Clear</dhv:label></a>]
+          </td>
+        </tr>
+      </table>
+    </td>
+	</tr>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </td>
+    <td>
+     <dhv:evaluate if="<%=User.getSiteId() == -1 %>" >
+      <% SiteList.setJsEvent("onChange=\"clearSiteSpecificInfo();\""); %>
+      <%= SiteList.getHtmlSelect("searchcodeSiteId", ("".equals(TicListInfo.getSearchOptionValue("searchcodeSiteId")) ? String.valueOf(Constants.INVALID_SITE) : TicListInfo.getSearchOptionValue("searchcodeSiteId"))) %>
+     </dhv:evaluate>
+     <dhv:evaluate if="<%=User.getSiteId() > -1 %>" >
+      <input type="hidden" name="searchcodeSiteId" value="<%= User.getSiteId() %>">
+      <%= SiteList.getSelectedValue(User.getSiteId()) %>
+     </dhv:evaluate>
+    </td>
+  </tr>
   <%--
   <tr>
     <td class="formLabel">

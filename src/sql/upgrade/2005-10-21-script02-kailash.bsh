@@ -1,0 +1,69 @@
+// Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+// Database upgrade v3.2 (2005-10-21)
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
+
+print("Inserting new lookup tables...");
+String fs = System.getProperty("file.separator");
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+
+void insertLookup(Connection db, int moduleId, int lookupId, String tableName, int level, String description, int categoryId) {
+  LookupListElement lookupList = new LookupListElement();
+  lookupList.setModuleId(moduleId);
+  lookupList.setLookupId(lookupId);
+  lookupList.setClassName("lookupList");
+  lookupList.setTableName(tableName);
+  lookupList.setLevel(level);
+  lookupList.setDescription(description);
+  lookupList.setCategoryId(categoryId);
+  lookupList.insert(db);
+}
+
+int constantId = -1;
+int lookupId = -1;
+
+constantId = 130041000;
+lookupId = PermissionCategory.lookupId(db, constantId);
+
+if (1==1) { //Asset Vendor
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_ASSET_VENDOR);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_ASSET_VENDOR, "lookup_asset_vendor", 20, dictionary.getTerm("system.fields.label", "asset.vendor", "value"), constantId);
+    print("Asset Vendor entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Asset Vendor already exists");
+  }
+}
+if (1==1) { //Asset Manufacturer
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_ASSET_MANUFACTURER);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_ASSET_MANUFACTURER, "lookup_asset_manufacturer", 30, dictionary.getTerm("system.fields.label", "asset.manufacturer", "value"), constantId);
+    print("Asset Manufacturer entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Asset Manufacturer already exists");
+  }
+}
+
+constantId = 8;
+lookupId = PermissionCategory.lookupId(db, constantId);
+if (1==1) { //Ticket Escalation Level
+  LookupListElement element = new LookupListElement(db, lookupId, PermissionCategory.LOOKUP_TICKET_ESCALATION);
+  if (element.getId() < 0) {
+    insertLookup(db, lookupId, PermissionCategory.LOOKUP_TICKET_ESCALATION, "lookup_ticket_escalation", 40, dictionary.getTerm("system.fields.label", "tickets.ticketEscalationLevel", "value"), constantId);
+    print("Ticket Escalation Level entry inserted into the lookup_lists_lookup table");
+  } else {
+    print("The lookup_lists_lookup element Ticket Escalation Level already exists");
+  }
+}

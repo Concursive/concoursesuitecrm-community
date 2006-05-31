@@ -54,10 +54,12 @@ function reopenOpportunity(id) {
 <td>
   <a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
   <% if (request.getParameter("return") == null) { %>
+    <a href="Leads.do?command=SearchForm"><dhv:label name="">Search Form</dhv:label></a> >
 	  <a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
     <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
     <%} else {%>
     <% if (request.getParameter("return").equals("list")) { %>
+    <a href="Leads.do?command=SearchForm"><dhv:label name="">Search Form</dhv:label></a> >
 		<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
     <%} else if (request.getParameter("return").equals("dashboard")) { %>
 		<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
@@ -132,7 +134,7 @@ function reopenOpportunity(id) {
                     </td>
                     <td>
                       <input type="hidden" name="accountLink" id="accountLink" value="<%= opportunityHeader.getAccountLink() %>">&nbsp;<font color="red">*</font> <%= showAttribute(request, "acctContactError") %>
-                      &nbsp;[<a href="<%= "javascript:document.forms['modifyOpp'].type[0].checked='t';popAccountsListSingle('accountLink','changeaccount');" %>" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+                      &nbsp;[<a href="<%= "javascript:document.forms['modifyOpp'].type[0].checked='t';popAccountsListSingle('accountLink','changeaccount','siteId="+ opportunityHeader.getSiteId() +"&thisSiteIdOnly=true');" %>" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
                     </td>
                   </tr>
              </table>
@@ -155,12 +157,17 @@ function reopenOpportunity(id) {
                 </td>
                 <td>
                   <input type="hidden" name="contactLink" id="contactLink" value="<%= opportunityHeader.getContactLink() %>">
-                  &nbsp;[<a href=<%= "\"javascript:document.forms['modifyOpp'].type[1].checked='t';popContactsListSingle('contactLink','changecontact','reset=true&filters="+ ("true".equals(hasQuotes) ? "":"mycontacts|") +"accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+                  &nbsp;[<a href=<%= "\"javascript:document.forms['modifyOpp'].type[1].checked='t';popContactsListSingle('contactLink','changecontact','reset=true&siteId="+opportunityHeader.getSiteId()+"&mySiteOnly=true&filters="+ ("true".equals(hasQuotes) ? "":"mycontacts|") +"accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
                 </td>
               </tr>
             </table>
           </td>
         </tr>
+        </dhv:permission>
+        <dhv:permission name="accounts-accounts-contacts-move-view" none="true">
+          <input type="hidden" name="type" value="<%= opportunityHeader.getContactLink() != -1?"contact":"account" %>" />
+          <input type="hidden" name="accountLink" id="accountLink" value="<%= opportunityHeader.getAccountLink() %>" />
+          <input type="hidden" name="contactLink" id="contactLink" value="<%= opportunityHeader.getContactLink() %>" />
         </dhv:permission>
       </table>
       &nbsp;

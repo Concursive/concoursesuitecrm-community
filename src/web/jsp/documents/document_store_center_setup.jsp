@@ -33,7 +33,7 @@
 </table>
 <dhv:evaluate if="<%= currentMember.getRoleId() <= DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER %>">
 <br>
-<a href="DocumentManagement.do?command=ConfigurePermissions&documentStoreId=<%= documentStore.getId() %>&return=DocumentStoreCenter"><dhv:label name="documents.permissions.configure_permissions">Configure Permissions</dhv:label></a>
+<a href="DocumentManagement.do?command=ConfigurePermissions&documentStoreId=<%= documentStore.getId() %>&return=DocumentStoreCenter"><dhv:label name="documents.permissions.configurePermissions">Configure Permissions</dhv:label></a>
 <br>
 </dhv:evaluate>
 <br>

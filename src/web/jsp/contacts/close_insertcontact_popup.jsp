@@ -22,8 +22,17 @@
   <body onLoad="javascript:doClose();">
     <script language="JavaScript" TYPE="text/javascript">
       function doClose() {
-        opener.document.getElementById('contactLink').value="<%= ContactDetails.getId() %>";
-        opener.changeDivContent("changecontact", "<%= StringUtils.jsStringEscape(ContactDetails.getNameLastFirst()) %>");
+        var source = '<%= request.getParameter("source") %>';
+        if (source == 'attachplan') {
+          var itemId = '<%= request.getParameter("actionStepWork") %>';
+          var displayId = "changecontact" + itemId;
+          opener.document.getElementById('contactid').value="<%= ContactDetails.getId() %>";
+          opener.changeDivContent(displayId, "<%= StringUtils.jsStringEscape(ContactDetails.getNameLastFirst()) %>");
+          opener.attachContact(itemId);
+        } else {
+          opener.document.getElementById('contactLink').value="<%= ContactDetails.getId() %>";
+          opener.changeDivContent("changecontact", "<%= StringUtils.jsStringEscape(ContactDetails.getNameLastFirst()) %>");
+        }
         window.close();
       }
     </script>

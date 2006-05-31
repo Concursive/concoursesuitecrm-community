@@ -18,11 +18,10 @@ package org.aspcfs.modules.communications.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.communications.base.SearchCriteriaList;
-import org.aspcfs.modules.communications.base.SearchCriteriaListList;
-import org.aspcfs.modules.communications.base.SearchFieldList;
-import org.aspcfs.modules.communications.base.SearchOperatorList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.communications.beans.SearchFormBean;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.contacts.base.ContactTypeList;
@@ -35,6 +34,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * Actions for dealing with Groups in the Communications Module
@@ -287,15 +287,27 @@ public final class CampaignManagerGroup extends CFSModule {
       if (!this.validateObject(context, db, thisSearchForm)) {
         return ("InsertOK");
       }
-
+      isValid = true;
+      StringTokenizer st = new StringTokenizer(thisSearchForm.getSearchCriteriaText(), "^");
+      while (st.hasMoreTokens()) {
+        String tmpCriteria = (String) st.nextToken();
+        SearchCriteriaElement thisElement = new SearchCriteriaElement(tmpCriteria);
+        isValid = this.validateObject(context, db, thisElement) && isValid;
+      }
       thisSCL.setGroupName(thisSearchForm.getGroupName());
       thisSCL.setContactSource(thisSearchForm.getContactSource());
       thisSCL.setEnteredBy(getUserId(context));
       thisSCL.setModifiedBy(getUserId(context));
       thisSCL.setOwner(getUserId(context));
-      isValid = this.validateObject(context, db, thisSCL);
+      isValid = this.validateObject(context, db, thisSCL) && isValid;
       if (isValid) {
         recordInserted = thisSCL.insert(db);
+      } else {
+        LookupList siteList = new LookupList(db, "lookup_site_id");
+        siteList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+        thisSCL.setSiteList(siteList);
+        thisSCL.buildRelatedResources(db);
+        context.getRequest().setAttribute("SCL", thisSCL);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -331,7 +343,12 @@ public final class CampaignManagerGroup extends CFSModule {
       buildFormElements(context, db);
       if (passedId != null) {
         scl = new SearchCriteriaList(db, passedId);
+        LookupList siteList = new LookupList(db, "lookup_site_id");
+        siteList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+        scl.setSiteList(siteList);
         context.getRequest().setAttribute("SCL", scl);
+        User owner = new User(db, scl.getOwner());
+        context.getRequest().setAttribute("owner", owner);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -371,9 +388,8 @@ public final class CampaignManagerGroup extends CFSModule {
     }
     Connection db = null;
     boolean isValid = false;
-    int resultCount = 0;
-    SearchFormBean thisSearchForm = (SearchFormBean) context.getRequest().getAttribute(
-        "SearchForm");
+    int resultCount = -1;
+    SearchFormBean thisSearchForm = (SearchFormBean) context.getRequest().getAttribute("SearchForm");
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
     try {
       db = this.getConnection(context);
@@ -382,7 +398,13 @@ public final class CampaignManagerGroup extends CFSModule {
       if (!this.validateObject(context, db, thisSearchForm)) {
         return ("UpdateOK");
       }
-
+      isValid = true;
+      StringTokenizer st = new StringTokenizer(thisSearchForm.getSearchCriteriaText(), "^");
+      while (st.hasMoreTokens()) {
+        String tmpCriteria = (String) st.nextToken();
+        SearchCriteriaElement thisElement = new SearchCriteriaElement(tmpCriteria);
+        isValid = this.validateObject(context, db, thisElement) && isValid;
+      }
       thisSCL.setId(Integer.parseInt(context.getRequest().getParameter("id")));
       thisSCL.setGroupName(thisSearchForm.getGroupName());
       thisSCL.setContactSource(thisSearchForm.getContactSource());
@@ -391,7 +413,7 @@ public final class CampaignManagerGroup extends CFSModule {
       if (!hasAuthority(context, thisSCL.getOwner())) {
         return ("PermissionError");
       }
-      isValid = this.validateObject(context, db, thisSCL);
+      isValid = this.validateObject(context, db, thisSCL) && isValid;
       if (isValid) {
         resultCount = thisSCL.update(db);
       }
@@ -405,6 +427,7 @@ public final class CampaignManagerGroup extends CFSModule {
             "CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
       }
     } catch (Exception e) {
+      e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
@@ -445,6 +468,9 @@ public final class CampaignManagerGroup extends CFSModule {
       //The criteria that makes up the contact list query
       thisSCL = new SearchCriteriaList(
           db, context.getRequest().getParameter("id"));
+      LookupList siteList = new LookupList(db, "lookup_site_id");
+      siteList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      thisSCL.setSiteList(siteList);
       context.getRequest().setAttribute("scl", thisSCL);
       context.getRequest().setAttribute("id", String.valueOf(thisSCL.getId()));
     } catch (Exception e) {
@@ -478,6 +504,7 @@ public final class CampaignManagerGroup extends CFSModule {
     }
     Exception errorMessage = null;
     Connection db = null;
+    User user = this.getUser(context, this.getUserId(context));
     SearchCriteriaList thisSCL = null;
     try {
       db = this.getConnection(context);
@@ -500,6 +527,14 @@ public final class CampaignManagerGroup extends CFSModule {
           thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setBuildDetails(true);
+      contacts.setLeadsOnly(Constants.FALSE);
+      if (contacts.getSiteId() == Constants.INVALID_SITE) {
+        contacts.setSiteId(user.getSiteId());
+        contacts.setIncludeAllSites(true);
+      } else {
+        contacts.setExclusiveToSite(true);
+        contacts.setIncludeAllSites(false);
+      }
       contacts.setBuildTypes(false);
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
@@ -534,6 +569,8 @@ public final class CampaignManagerGroup extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     SearchCriteriaList thisSCL = null;
+    User user = this.getUser(context, this.getUserId(context));
+    boolean isValid = false;
     try {
       String criteria = context.getRequest().getParameter("criteria");
       //Enable paging through records
@@ -545,22 +582,45 @@ public final class CampaignManagerGroup extends CFSModule {
       pagedListInfo.setLink(
           "CampaignManagerGroup.do?command=PopPreview&criteria=" + criteria + "&popup=true");
       //The criteria that makes up the contact list query
-      thisSCL = new SearchCriteriaList(criteria);
-      thisSCL.setGroupName("Preview Group");
-      thisSCL.setEnteredBy(getUserId(context));
-      thisSCL.setModifiedBy(getUserId(context));
-      thisSCL.setOwner(getUserId(context));
-      db = this.getConnection(context);
-      thisSCL.buildRelatedResources(db);
-      context.getRequest().setAttribute("scl", thisSCL);
+      isValid = true;
+      StringTokenizer st = new StringTokenizer(criteria, "^");
+      while (st.hasMoreTokens()) {
+        String tmpCriteria = (String) st.nextToken();
+        SearchCriteriaElement thisElement = new SearchCriteriaElement(tmpCriteria);
+        isValid = this.validateObject(context, db, thisElement) && isValid;
+      }
+        db = this.getConnection(context);
+      if (isValid) {
+        thisSCL = new SearchCriteriaList(criteria);
+        thisSCL.setGroupName("Preview Group");
+        thisSCL.setEnteredBy(getUserId(context));
+        thisSCL.setModifiedBy(getUserId(context));
+        thisSCL.setOwner(getUserId(context));
+        thisSCL.buildRelatedResources(db);
+      }
       //Build the contactList
       ContactList contacts = new ContactList();
-      contacts.setScl(
-          thisSCL, this.getUserId(context), this.getUserRange(context));
+      if (isValid) {
+        contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setBuildDetails(true);
+      contacts.setLeadsOnly(Constants.FALSE);
+      if (contacts.getSiteId() == Constants.INVALID_SITE) {
+        contacts.setIncludeAllSites(true);
+        contacts.setSiteId(user.getSiteId());
+      } else {
+        contacts.setIncludeAllSites(false);
+        contacts.setExclusiveToSite(true);
+      }
       contacts.setBuildTypes(false);
+      //contacts.setOrgSiteId(UserUtils.getUserSiteId(context.getRequest()));
       contacts.buildList(db);
+      } else {
+        context.getRequest().setAttribute("errorString",
+          this.getSystemStatus(context).getLabel("object.validation.checkCriteria.error",
+            "Error. Please enter valid search criteria."));
+      }
+      context.getRequest().setAttribute("scl", thisSCL);
       context.getRequest().setAttribute("ContactList", contacts);
     } catch (Exception e) {
       errorMessage = e;
@@ -639,7 +699,14 @@ public final class CampaignManagerGroup extends CFSModule {
     numberOperatorList.buildOperatorList(db, 2);
     context.getRequest().setAttribute(
         "NumberOperatorList", numberOperatorList);
-  }
 
+    LookupList siteValueList = new LookupList(db, "lookup_site_id");
+    siteValueList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SiteValueList", siteValueList);
+
+    LookupList siteCriteriaList = new LookupList(db, "lookup_site_id");
+    siteCriteriaList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SiteCriteriaList", siteCriteriaList);
+  }
 }
 

@@ -23,7 +23,7 @@ CREATE TABLE lookup_quote_condition (
 -- Create a new table to group quote versions
 CREATE TABLE quote_group (
   group_id SERIAL PRIMARY KEY,
-  unused CHAR(1) NULL
+  unused CHAR(1)
 );
 SELECT setval ('quote_group_group_id_seq', 1000, false);
 

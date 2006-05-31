@@ -28,6 +28,9 @@
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactSource" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="SiteValueList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteCriteriaList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="owner" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -69,7 +72,8 @@ function checkValue() {
       }
     }
   } else if (!(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 8) && 
-      !(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11))  {
+      !(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11) &&
+      !(document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 12))  {
     if (checkNullString(document.getElementById("searchValue").value)) {
       alert(label("check.valid.input","Please enter a valid input"));
       return false;
@@ -77,7 +81,6 @@ function checkValue() {
   }
   return true;
 }
-<!-- 
 //updateOperators has to be defined in each file because it uses bean
 //information to populate selects
 function updateOperators(){
@@ -105,6 +108,9 @@ function updateOperators(){
     javascript:hideSpan('searchText2');    
     javascript:hideSpan('new1');
     javascript:hideSpan('new1a');
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
 	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
 		javascript:hideSpan('new0');
@@ -113,6 +119,9 @@ function updateOperators(){
     javascript:showSpan('new1a');
     javascript:showSpan('searchText1');
     javascript:showSpan('searchText2');
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = "";
 	} else if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11) {
     javascript:hideSpan('new1');
@@ -124,8 +133,8 @@ function updateOperators(){
     if (z.hasNext()) {
       while (z.hasNext()) {
         LookupElement thisElt = (LookupElement)z.next();
-        if (thisElt.getEnabled() || (!thisElt.getEnabled() && !ContactTypeList.getExcludeDisabledIfUnselected())) {%>
-          insertOption("<%= thisElt.getDescription() %>", "<%=thisElt.getCode()%>", "idSelect");
+        if (thisElt.getEnabled() || (!thisElt.getEnabled() && !AccountTypeList.getExcludeDisabledIfUnselected())) {%>
+          insertOption("<%= StringUtils.jsStringEscape(thisElt.getDescription()) %>", '<%= thisElt.getCode() %>', 'idSelect');
       <%}
       }
     }%>
@@ -133,14 +142,35 @@ function updateOperators(){
     javascript:showSpan('new0a');
     javascript:hideSpan('searchText1');
     javascript:hideSpan('searchText2');    
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
-	} else {
+	} else if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 12) {
+		javascript:hideSpan('new0');
+    javascript:hideSpan('new0a');
+    javascript:hideSpan('new1');
+    javascript:hideSpan('new1a');
+    javascript:hideSpan('searchText1');
+    javascript:hideSpan('searchText2');    
+    javascript:showSpan('searchSite1');
+    javascript:hideSpan('searchSite2a');
+    javascript:hideSpan('searchSite2b');
+    if (document.searchForm.allSites){
+		  document.searchForm.searchValue.value = document.searchForm.siteId1.options[document.searchForm.siteId1.selectedIndex].text;
+    } else {
+		  document.searchForm.searchValue.value = document.searchForm.siteName1.value;
+    }
+  } else {
 		javascript:hideSpan('new0');
     javascript:hideSpan('new0a');
     javascript:hideSpan('new1');
     javascript:hideSpan('new1a');
     javascript:showSpan('searchText1');
     javascript:showSpan('searchText2');    
+    javascript:hideSpan('searchSite1');
+    javascript:showSpan('searchSite2a');
+    javascript:showSpan('searchSite2b');
 		document.searchForm.searchValue.value = "";
 	}
 	// empty the operator list
@@ -151,7 +181,6 @@ function updateOperators(){
 		operatorList.options[i] = new Option(listOfOperators[fieldSelectIndex][i].displayText, listOfOperators[fieldSelectIndex][i].id)
 	}
 } // end updateOperators
-//  End -->
 
 function checkForm(form) {
   formTest = true;
@@ -174,7 +203,7 @@ function checkForm(form) {
 }
 
 </SCRIPT>
-<body onLoad="javascript:document.searchForm.groupName.focus()">
+<body onLoad="javascript:document.searchForm.groupName.focus();javascript:updateOperators()">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/searchForm.js"></script>
@@ -191,7 +220,7 @@ searchField = new Array();
 			fieldArrayID ++;
 			SearchField thisSearchField = (SearchField)f.next();
 %> 
-searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%= thisSearchField.getDescription() %>", <%= thisSearchField.getFieldTypeId() %>);
+searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%= StringUtils.jsStringEscape(thisSearchField.getDescription()) %>", <%= thisSearchField.getFieldTypeId() %>);
 <% } } %>
 stringOperators = new Array();
 <%
@@ -202,7 +231,7 @@ stringOperators = new Array();
 			stringArrayID ++;
 			SearchOperator thisStringOperator = (SearchOperator)s.next();
 %> 
-stringOperators[<%= stringArrayID %>] = new operator(<%= thisStringOperator.getId() %>, "<%= thisStringOperator.getOperator() %>", "<%= thisStringOperator.getDisplayText() %>");
+stringOperators[<%= stringArrayID %>] = new operator(<%= thisStringOperator.getId() %>, "<%= StringUtils.jsStringEscape(thisStringOperator.getOperator()) %>", "<%= StringUtils.jsStringEscape(thisStringOperator.getDisplayText()) %>");
 <% } } %>
 dateOperators = new Array();
 <%
@@ -213,7 +242,7 @@ dateOperators = new Array();
 		dateArrayID ++;
 		SearchOperator thisDateOperator = (SearchOperator)d.next();
 %> 
-dateOperators[<%= dateArrayID %>] = new operator(<%= thisDateOperator.getId() %>, "<%= thisDateOperator.getOperator() %>", "<%= thisDateOperator.getDisplayText() %>");
+dateOperators[<%= dateArrayID %>] = new operator(<%= thisDateOperator.getId() %>, "<%= StringUtils.jsStringEscape(thisDateOperator.getOperator()) %>", "<%= StringUtils.jsStringEscape(thisDateOperator.getDisplayText()) %>");
 <% } } %>
 numberOperators = new Array();
 <%
@@ -224,7 +253,7 @@ numberOperators = new Array();
 		numberArrayID ++;
 		SearchOperator thisNumberOperator = (SearchOperator)n.next();
 %> 
-numberOperators[<%= numberArrayID %>] = new operator(<%= thisNumberOperator.getId() %>, "<%= thisNumberOperator.getOperator() %>", "<%= thisNumberOperator.getDisplayText() %>");
+numberOperators[<%= numberArrayID %>] = new operator(<%= thisNumberOperator.getId() %>, "<%= StringUtils.jsStringEscape(thisNumberOperator.getOperator()) %>", "<%= StringUtils.jsStringEscape(thisNumberOperator.getDisplayText()) %>");
 <% } } %>
 listOfOperators = new Array()
 listOfOperators[0] = stringOperators
@@ -254,8 +283,9 @@ listOfOperators[2] = numberOperators
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>'">
 </dhv:evaluate>
 <input type="button" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popPreview()">
-<br>
-&nbsp;<br>
+<br />
+&nbsp;<br />
+<dhv:formMessage showSpace="false" />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -288,7 +318,7 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1');"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
+            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1','<%=User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %><%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>');"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
           </td>
         </tr>
         <tr>
@@ -324,7 +354,7 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            Operator
+            <dhv:label name="campaign.operator">Operator</dhv:label>
           </td>
           <td width="100%" valign="center">
       <script language="JavaScript">
@@ -368,6 +398,18 @@ listOfOperators[2] = numberOperators
           </td>
           <td valign="center">
             <span name="new0" ID="new0" style="display:none"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select></span>
+            <span name="searchSite1" ID="searchSite1"  style="display:none">
+                <dhv:evaluate if="<%= owner.getSiteId() == -1 %>" >
+                  <% SiteValueList.setJsEvent("onChange=\"javascript:setText(document.searchForm.siteId1);\""); %>
+                  <%= SiteValueList.getHtmlSelect("siteId1",-1) %>
+                  <input type="hidden" name="allSites" value="true" >
+                </dhv:evaluate>
+                <dhv:evaluate if="<%= owner.getSiteId() != -1 %>" >
+                   <%= SiteValueList.getSelectedValue(owner.getSiteId()) %>
+                  <input type="hidden" name="siteId1" value="<%=owner.getSiteId()%>" >
+                  <input type="hidden" name="siteName1" value="<%= SiteValueList.getSelectedValue(owner.getSiteId()) %>" >
+                </dhv:evaluate>
+          </span>
           </td>
         </tr>
         <tr>
@@ -379,9 +421,28 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
+          <td style="text-align: right;" nowrap>
+            <span name="searchSite2a" ID="searchSite2a">
+              <dhv:label name="campaign.at">At</dhv:label>
+            </span>
+          </td>
+          <td width="100%" valign="center">
+            <span name="searchSite2b" ID="searchSite2b">
+              <dhv:evaluate if="<%= owner.getSiteId() == -1 %>" >
+                <%= SiteCriteriaList.getHtmlSelect("siteId2",-1) %>
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= owner.getSiteId() != -1 %>" >
+                 <%= SiteCriteriaList.getSelectedValue(owner.getSiteId()) %>
+                <input type="hidden" name="siteId2" value="<%=owner.getSiteId()%>" >
+                <input type="hidden" name="siteName2" value="<%= SiteCriteriaList.getSelectedValue(owner.getSiteId()) %>" >
+              </dhv:evaluate>
+            </span>
+          </td>
+        </tr>
+        <tr>
           <td style="text-align: center;" colspan="2" nowrap>
             <br>
-            <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:if (checkValue()) {addValues();}">
+            <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:if(checkValue()) {addValues();}">
           </td>
         </tr>
       </table>
@@ -394,12 +455,14 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td>
+          <td><%= showAttribute(request, "criteriaError") %>
             &nbsp;
           </td>
         </tr>
         <tr>
           <td style="text-align: center;">
+      <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
+        <tr><td align="center">
 		<% if (SCL.size() > 0) {%>
       <% SCL.setHtmlSelectIdName("listViewId"); %>
 			<%= SCL.getHtmlSelect("searchCriteria") %>
@@ -408,18 +471,25 @@ listOfOperators[2] = numberOperators
         <option value="-1"><dhv:label name="campaign.searchCriteria.label">----------------Search Criteria----------------</dhv:label></option>
 			</select>
 		<%}%>
+    </td><td valign="top" align="left">
+      <%= showAttribute(request,"textError") %>
+    </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
       <br>
       &nbsp;<br>
-      <input type="hidden" name="previousSelection" value="">
-      <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="removeValues()">
+      <input type="hidden" name="previousSelection" value="" />
+      <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="removeValues()" />
+      </td></tr></table>
           </td>
         </tr>
       </table>
     </td>
 	</tr>
 </table>
-&nbsp;<br>
-<input type="hidden" name="searchCriteriaText">
+&nbsp;<br />
+<input type="hidden" name="searchCriteriaText" value="">
 <input type="hidden" name="owner" value="<%= SCL.getOwner() %>">
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save">

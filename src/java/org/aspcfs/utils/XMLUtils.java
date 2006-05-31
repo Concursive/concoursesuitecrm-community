@@ -342,8 +342,10 @@ public class XMLUtils {
             //The value was not set successfully, so add it to the ignored list,
             //however the value may be processed later under certain conditions
             if (System.getProperty("DEBUG") != null) {
+              String displayParam = param.substring(0, 1).toUpperCase() + param.substring(
+                  1);
               System.out.println(
-                  "XMLUtils-> set" + param + "(" + value + ") **IGNORED");
+                  "XMLUtils-> set" + displayParam + "(" + value + ") **IGNORED");
             }
             ignoredProperties.put(param, value);
           }

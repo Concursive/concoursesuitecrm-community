@@ -226,7 +226,7 @@ public class ActiveSurveyQuestionList extends ArrayList {
       pagedListInfo.setDefaultSort("sq.position", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY sq.position ");
+      sqlOrder.append("ORDER BY sq.\"position\" ");
     }
 
     //Need to build a base SQL statement for returning records

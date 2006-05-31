@@ -48,24 +48,28 @@
 	</parameter>
 	<parameter name="logopath" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[SELECT qe.quote_id, 
-qe.expiration_date as expiry,
-myorg.org_id as myorgid,
-quoteorg.org_id as quoteorgid,
-issued, ct.namefirst as contactnamefirst,
-ct.namelast as contactnamelast,
-ctent.namelast as enteredbylastname,
-ctent.namefirst as enteredbyfirstname,
-quoteorg.name as quoteorgname,
-myorg.name as myorgname,
-group_id, version
-FROM organization myorg, quote_entry qe
-LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id)
-LEFT JOIN access ent ON (qe.enteredby = ent.user_id)
-LEFT JOIN contact ctent ON (ent.contact_id = ctent.contact_id)
-LEFT JOIN organization quoteorg ON (qe.org_id = quoteorg.org_id)
-WHERE myorg.org_id = 0 AND quote_id = $P{quote_id}
-AND qe.trashed_date IS NULL]]></queryString>
+  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<queryString><![CDATA[
+    SELECT qe.quote_id, 
+    qe.expiration_date as expiry,
+    myorg.org_id as myorgid,
+    quoteorg.org_id as quoteorgid,
+    issued, ct.namefirst as contactnamefirst,
+    ct.namelast as contactnamelast,
+    ctent.namelast as enteredbylastname,
+    ctent.namefirst as enteredbyfirstname,
+    quoteorg.name as quoteorgname,
+    myorg.name as myorgname,
+    group_id, "version"
+    FROM organization myorg, quote_entry qe
+    LEFT JOIN contact ct ON (qe.contact_id = ct.contact_id)
+    LEFT JOIN "access" ent ON (qe.enteredby = ent.user_id)
+    LEFT JOIN contact ctent ON (ent.contact_id = ctent.contact_id)
+    LEFT JOIN organization quoteorg ON (qe.org_id = quoteorg.org_id)
+    WHERE myorg.org_id = 0 
+    AND qe.quote_id = $P{quote_id}
+    AND qe.trashed_date IS NULL
+   ]]></queryString>
 	<field name="quote_id" class="java.lang.Integer"/>
 	<field name="expiry" class="java.sql.Timestamp"/>
 	<field name="myorgid" class="java.lang.Integer"/>
@@ -296,7 +300,7 @@ AND qe.trashed_date IS NULL]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getOrgAddress($P{REPORT_CONNECTION}, $F{myorgid}.intValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getOrgAddress($P{SCRIPT_DB_CONNECTION}, $F{myorgid}.intValue())]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
@@ -424,7 +428,7 @@ AND qe.trashed_date IS NULL]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getQuoteContactAddress($P{REPORT_CONNECTION}, $F{quote_id}.intValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getQuoteContactAddress($P{SCRIPT_DB_CONNECTION}, $F{quote_id}.intValue())]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
@@ -475,6 +479,9 @@ AND qe.trashed_date IS NULL]]></queryString>
 					<subreportParameter  name="CENTRIC_DICTIONARY">
 						<subreportParameterExpression><![CDATA[$P{CENTRIC_DICTIONARY}]]></subreportParameterExpression>
 					</subreportParameter>
+          <subreportParameter  name="SCRIPT_DB_CONNECTION">
+						<subreportParameterExpression><![CDATA[$P{SCRIPT_DB_CONNECTION}]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportParameter  name="path">
 						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -516,6 +523,9 @@ AND qe.trashed_date IS NULL]]></queryString>
 					</subreportParameter>
 					<subreportParameter  name="CENTRIC_DICTIONARY">
 						<subreportParameterExpression><![CDATA[$P{CENTRIC_DICTIONARY}]]></subreportParameterExpression>
+					</subreportParameter>
+          <subreportParameter  name="SCRIPT_DB_CONNECTION">
+						<subreportParameterExpression><![CDATA[$P{SCRIPT_DB_CONNECTION}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter  name="path">
 						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
@@ -787,7 +797,7 @@ AND qe.trashed_date IS NULL]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getQuoteContactAddress($P{REPORT_CONNECTION}, $F{quote_id}.intValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getQuoteContactAddress($P{SCRIPT_DB_CONNECTION}, $F{quote_id}.intValue())]]></textFieldExpression>
 				</textField>
 				<image  scaleImage="RetainShape" vAlign="Bottom" hAlign="Left" isUsingCache="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1020,7 +1030,7 @@ AND qe.trashed_date IS NULL]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getOrgAddress($P{REPORT_CONNECTION}, $F{myorgid}.intValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getOrgAddress($P{SCRIPT_DB_CONNECTION}, $F{myorgid}.intValue())]]></textFieldExpression>
 				</textField>
 			</band>
 		</title>

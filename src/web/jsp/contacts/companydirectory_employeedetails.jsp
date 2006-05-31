@@ -24,7 +24,43 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/scrollReload.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script type="text/javascript">
+<% String param2 = addLinkParams(request, "popup|popupType|actionId");%>
+function reopen() {
+  scrollReload('CompanyDirectory.do?command=EmployeeDetails&empid=<%= ContactDetails.getId() %><%= param2 %>');
+}
+function reopenOnDelete() {
+  try {
+    if ('<%= isPopup(request) %>' != 'true') {
+      scrollReload('CompanyDirectory.do?command=ListEmployees');
+    } else {
+      var contactId = -1;
+      try {
+        contactId = opener.reopenContact('<%= ContactDetails.getId() %>');
+      } catch (oException) {
+      }
+      if (contactId != '<%= ContactDetails.getId() %>') {
+        opener.reopen();
+      }
+    }
+  } catch (oException) {
+  }
+  if ('<%= isPopup(request) %>' == 'true') {
+    window.close();
+  }
+}
+
+function reopenContact(id) {
+  if (id == '<%= ContactDetails.getId() %>') {
+    scrollReload('CompanyDirectory.do?command=ListEmployees');
+    return id;
+  } else {
+    return '<%= ContactDetails.getId() %>';
+  }
+}
+</script>
 <form name="details" action="CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -39,10 +75,10 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="employees" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-<dhv:evaluate if="<%= !isPopup(request) %>">
+<dhv:container name="employees" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
+<dhv:evaluate if="<%= ContactDetails.getEnabled()  && !ContactDetails.isTrashed() %>">
   <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-  <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');"></dhv:permission>
+  <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true<%= isPopup(request) ? "&sourcePopup=true":"" %>','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');"></dhv:permission>
   <dhv:permission name="contacts-internal_contacts-view"><input type="button" value="<dhv:label name="button.downloadVcard">Download VCard</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=DownloadVCard&id=<%= ContactDetails.getId() %>'"/></dhv:permission>
   <dhv:permission name="contacts-internal_contacts-view,contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br><br></dhv:permission>
 </dhv:evaluate>
@@ -75,7 +111,7 @@
   <dhv:evaluate if="<%= ContactDetails.getBirthDate() != null %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= ContactDetails.getBirthDate() %>" dateOnly="true"/>
@@ -104,6 +140,7 @@
 </dhv:evaluate>
 </table>
 &nbsp;<br />
+<dhv:include name="contact.emailAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -137,6 +174,8 @@
 <%}%>
 </table>
 &nbsp;<br />
+</dhv:include>
+<dhv:include name="contact.instantMessageAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -149,39 +188,41 @@
       while (imAddress.hasNext()) {
         ContactInstantMessageAddress thisInstantMessageAddress = (ContactInstantMessageAddress)imAddress.next();
   %>
-    <tr class="containerBody">
-      <td class="formLabel">
-        <%= toHtml(thisInstantMessageAddress.getAddressIMTypeName()) %>
-      </td>
-      <td>
-        <dhv:evaluate if="<%= hasText(thisInstantMessageAddress.getAddressIM()) %>">
-          <%= toHtml(thisInstantMessageAddress.getAddressIM()) %>
-           (<%= toHtml(thisInstantMessageAddress.getAddressIMServiceName()) %>)
-          <dhv:evaluate if="<%=thisInstantMessageAddress.getPrimaryIM()%>">
-            <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
-          </dhv:evaluate>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <%= toHtml(thisInstantMessageAddress.getAddressIMTypeName()) %>
+    </td>
+    <td>
+      <dhv:evaluate if="<%= hasText(thisInstantMessageAddress.getAddressIM()) %>">
+        <%= toHtml(thisInstantMessageAddress.getAddressIM()) %>
+         (<%= toHtml(thisInstantMessageAddress.getAddressIMServiceName()) %>)
+        <dhv:evaluate if="<%=thisInstantMessageAddress.getPrimaryIM()%>">
+          <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
         </dhv:evaluate>
-        &nbsp;
-      </td>
-    </tr>
+      </dhv:evaluate>
+      &nbsp;
+    </td>
+  </tr>
   <%
       }
     } else {
   %>
-    <tr class="containerBody">
-      <td>
-        <font color="#9E9E9E"><dhv:label name="contacts.NoInstantMessageAddresses">No instant message addresses entered.</dhv:label></font>
-      </td>
-    </tr>
+  <tr class="containerBody">
+    <td>
+      <font color="#9E9E9E"><dhv:label name="contacts.NoInstantMessageAddresses">No instant message addresses entered.</dhv:label></font>
+    </td>
+  </tr>
   <%}%>
-  </table>
+</table>
   &nbsp;
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-    <tr>
-      <th colspan="2">
-        <strong><dhv:label name="accounts.accounts_add.TextMessageAddresses">Text Message Addresses</dhv:label></strong>
-      </th>
-    </tr>
+</dhv:include>
+<dhv:include name="contact.textMessageAddresses" none="true">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong><dhv:label name="accounts.accounts_add.TextMessageAddresses">Text Message Addresses</dhv:label></strong>
+    </th>
+  </tr>
   <%
     Iterator itmAddress = ContactDetails.getTextMessageAddressList().iterator();
     if (itmAddress.hasNext()) {
@@ -212,8 +253,10 @@
       </td>
     </tr>
   <%}%>
-  </table>
-  &nbsp;
+</table>
+&nbsp;
+</dhv:include>
+<dhv:include name="contact.phoneNumbers" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -247,6 +290,8 @@
 <%}%>
 </table>
 &nbsp;
+</dhv:include>
+<dhv:include name="contact.addresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -280,6 +325,8 @@
 <%}%>
 </table>
 <br />
+</dhv:include>
+<dhv:include name="contact.additionalDetails" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -292,6 +339,7 @@
   </tr>
 </table>
 &nbsp;
+</dhv:include>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -317,13 +365,13 @@
     </td>
   </tr>
 </table>
-<dhv:evaluate if="<%= !isPopup(request) %>">
+<dhv:evaluate if="<%= ContactDetails.getEnabled()  && !ContactDetails.isTrashed() %>">
   <dhv:permission name="contacts-internal_contacts-view,contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
   <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-  <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');"></dhv:permission>
+  <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true<%= isPopup(request) ? "&sourcePopup=true":"" %>','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');"></dhv:permission>
   <dhv:permission name="contacts-internal_contacts-view"><input type="button" value="<dhv:label name="button.downloadVcard">Download VCard</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=DownloadVCard&id=<%= ContactDetails.getId() %>'"/></dhv:permission>
 </dhv:evaluate>
 </dhv:container>
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
 </form>
-
 

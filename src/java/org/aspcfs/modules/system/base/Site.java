@@ -376,6 +376,7 @@ public class Site extends GenericBean {
     ConnectionElement ce = new ConnectionElement(
         databaseUrl, databaseUsername, databasePassword);
     ce.setDriver(databaseDriver);
+    ce.setDbName(databaseName);
     return ce;
   }
 

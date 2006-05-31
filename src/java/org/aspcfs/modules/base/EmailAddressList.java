@@ -37,7 +37,7 @@ public class EmailAddressList extends Vector {
   protected int orgId = -1;
   protected int type = -1;
   protected int contactId = -1;
-
+  protected String username = null;
 
   /**
    * Sets the PagedListInfo attribute of the EmailAddressList object
@@ -61,6 +61,11 @@ public class EmailAddressList extends Vector {
   }
 
 
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
+
+
   /**
    * Sets the ContactId attribute of the EmailAddressList object
    *
@@ -78,10 +83,13 @@ public class EmailAddressList extends Vector {
    * @param tmp The new Type value
    * @since 1.1
    */
-  protected void setType(int tmp) {
+  public void setType(int tmp) {
     this.type = tmp;
   }
 
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
   /**
    * Gets the EmailAddress attribute of the EmailAddressList object
@@ -177,6 +185,9 @@ public class EmailAddressList extends Vector {
     if (contactId != -1) {
       sqlFilter.append("AND contact_id = ? ");
     }
+    if (username != null) {
+      sqlFilter.append("AND contact_id IN (SELECT contact_id FROM \"access\" WHERE lower(username) = ?) ");
+    }
   }
 
 
@@ -202,7 +213,9 @@ public class EmailAddressList extends Vector {
     if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
-
+    if (username != null) {
+      pst.setString(++i, username.toLowerCase());
+    }
     return i;
   }
 

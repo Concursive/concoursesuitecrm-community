@@ -83,7 +83,7 @@
         </dhv:permission>
       </dhv:evaluate>
     </dhv:evaluate>
-    <dhv:permission name="accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"><br>&nbsp;</dhv:permission>
+    <dhv:permission name="accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete,myhomepage-inbox-view"><br>&nbsp;</dhv:permission>
     <% if("pending".equals(request.getParameter("view"))){ %>
       <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
         <%-- include follow up activity details --%>

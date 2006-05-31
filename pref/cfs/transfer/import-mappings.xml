@@ -96,6 +96,9 @@
       <property>owner</property>
       <property>entered</property>
       <property>modified</property>
+      <property>segmentId</property>
+      <property>accountSize</property>
+      <property>directBill</property>
     </map>
     <map class="org.aspcfs.modules.admin.base.User" id="user">
       <property alias="guid">id</property>

@@ -20,6 +20,7 @@ import com.zeroio.webdav.context.ItemContext;
 import com.zeroio.webdav.context.ModuleContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
 
 import javax.naming.NamingException;
 import java.io.FileNotFoundException;
@@ -193,15 +194,31 @@ public class AccountsWebdavContext
     if (linkModuleId == -1) {
       throw new SQLException("Module ID not specified");
     }
+    int siteId = getUserSiteId(db, userId);
+    
     PreparedStatement pst = db.prepareStatement(
-        "SELECT org_id, name, entered, modified " +
+        "SELECT org_id, name, namelast, namefirst, entered, modified " +
         "FROM organization " +
         "WHERE org_id > 0 " +
+        (siteId != -1 ? "AND site_id = ? " : "") +
+        "AND (status_id IS NULL OR status_id = 7) " + 
+        "AND enabled = ? " +
         "AND trashed_date IS NULL ");
+    int i = 0;
+    if (siteId != -1) {
+      pst.setInt(++i, siteId);
+    }
+    pst.setBoolean(++i, true);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       ItemContext item = new ItemContext();
-      item.setContextName(rs.getString("name"));
+      if (rs.getString("namelast") != null && rs.getString("namefirst") != null) {
+        item.setContextName(Contact.getNameFirstLast(
+          rs.getString("namefirst"), 
+          rs.getString("namelast")));
+      } else {
+        item.setContextName(rs.getString("name"));
+      }
       item.setLinkModuleId(linkModuleId);
       item.setLinkItemId(rs.getInt("org_id"));
       item.setPath(fileLibraryPath + ACCOUNTS + fs);

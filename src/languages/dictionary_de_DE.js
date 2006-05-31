@@ -213,7 +213,10 @@ if (!FrameworkI18N) {
       "label.tickets.required":            "- Check that the tickets label is entered\r\n",
       "label.accounts.required":            "- Check that the accounts label is entered\r\n",
       "label.team.required":            "- Check that the team label is entered\r\n",
-      "label.details.required":            "- Check that the details label is entered\r\n"
+      "label.details.required":            "- Check that the details label is entered\r\n",
+      "check.valid.input":              "Please enter a valid input",
+      "check.valid.date":               "Please enter a valid date",
+      "check.avoided.text":             "Please enter a valid input. Avoid [*^|]"
     }
   }
 }

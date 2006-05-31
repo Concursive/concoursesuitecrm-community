@@ -157,6 +157,7 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
       this.setOnlyWithProducts(false);
       // now set the values for this list
       this.setAssignedTo(this.getUserId());
+      this.setIncludeAllSites(true);
       this.setOnlyAssigned(true);
       this.setHasEstimatedResolutionDate(true);
       this.setOnlyOpen(true);
@@ -211,6 +212,7 @@ public class ProjectTicketListScheduledActions extends TicketList implements Sch
 
       //set the search criteria for the first list
       this.setAssignedTo(this.getUserId());
+      this.setIncludeAllSites(true);
       this.setOnlyAssigned(true);
       this.setOnlyOpen(true);
       this.setHasEstimatedResolutionDate(true);

@@ -27,7 +27,7 @@
  *  DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
-package org.aspcfs.modules.troubletickets.actions;
+package org.aspcfs.modules.accounts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.actions.ProjectManagementFileFolders;
@@ -65,7 +65,13 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
       FileFolder thisFolder = (FileFolder) context.getFormBean();
       thisFolder.setParentId(context.getRequest().getParameter("parentId"));
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       //Build array of folder trails
       ProjectManagementFileFolders.buildHierarchy(db, context);
       context.getRequest().setAttribute("fileFolder", thisFolder);
@@ -97,7 +103,13 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
     boolean isValid = false;
     try {
       db = this.getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       //Insert or update the folder
       FileFolder thisFolder = (FileFolder) context.getFormBean();
       boolean newFolder = (thisFolder.getId() == -1);
@@ -149,7 +161,13 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       //Load the file folder
       FileFolder thisFolder = new FileFolder(db, Integer.parseInt(itemId));
       recordDeleted = thisFolder.delete(db);
@@ -188,7 +206,13 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       //Load the file folder to be modified
       FileFolder thisFolder = (FileFolder) context.getFormBean();
       thisFolder.setId(Integer.parseInt(itemId));
@@ -219,7 +243,13 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       //Load the folder
       FileFolder thisFolder = new FileFolder(db, Integer.parseInt(itemId));
       context.getRequest().setAttribute("FileFolder", thisFolder);
@@ -253,7 +283,13 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int ticketId = addTicket(context, db);
+      //Load the ticket and the organization
+      Ticket thisTicket = addTicket(context, db);
+      int ticketId = thisTicket.getId();
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
+        return ("PermissionError");
+      }
       //Load the current folder
       FileFolder thisFolder = new FileFolder(db, Integer.parseInt(itemId));
       int folderId = Integer.parseInt(newFolderId);
@@ -284,7 +320,7 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
   }
 
 
-  private int addTicket(ActionContext context, Connection db) throws SQLException {
+  private Ticket addTicket(ActionContext context, Connection db) throws SQLException {
     String ticketId = (String) context.getRequest().getParameter("tId");
     if (ticketId == null) {
       ticketId = (String) context.getRequest().getAttribute("tId");
@@ -298,18 +334,17 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
    *
    * @param context  The feature to be added to the Ticket attribute
    * @param db       The feature to be added to the Ticket attribute
-   * @param ticketId The feature to be added to the Ticket attribute
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
+  private Ticket addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
     context.getRequest().setAttribute("tId", ticketId);
     Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
     context.getRequest().setAttribute("TicketDetails", thisTicket);
     //also add the organization
     context.getRequest().setAttribute(
         "OrgDetails", new Organization(db, thisTicket.getOrgId()));
-    return thisTicket.getId();
+    return thisTicket;
   }
 }
 

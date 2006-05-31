@@ -77,6 +77,10 @@ public final class AccountsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, Integer.parseInt(orgid));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, newOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("OrgDetails", newOrg);
       //Build the list of contacts
       contacts.setOrgId(orgid);
@@ -126,6 +130,10 @@ public final class AccountsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, Integer.parseInt(orgId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, newOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("OrgDetails", newOrg);
       history = new OrganizationHistory();
       context.getRequest().setAttribute("history", history);
@@ -170,6 +178,10 @@ public final class AccountsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, Integer.parseInt(orgId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, newOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       history.setEnteredBy(this.getUserId(context));
       history.setModifiedBy(this.getUserId(context));
       isValid = this.validateObject(context, db, history);
@@ -222,6 +234,10 @@ public final class AccountsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, Integer.parseInt(orgId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, newOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("OrgDetails", newOrg);
       history = new OrganizationHistory(db, Integer.parseInt(id));
       context.getRequest().setAttribute("history", history);
@@ -256,6 +272,10 @@ public final class AccountsHistory extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, Integer.parseInt(orgId));
+      //Check access permission to organization record
+      if (!isRecordAccessPermitted(context, db, newOrg.getOrgId())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("OrgDetails", newOrg);
       history = new OrganizationHistory(db, Integer.parseInt(id));
       result = history.delete(db);

@@ -250,7 +250,7 @@ public class Event {
         "INSERT INTO events (" +
         (id > -1 ? "event_id, " : "") +
         "\"minute\", \"hour\", dayofmonth, " +
-        "\"month\", dayofweek, \"year\", " +
+        "\"month\", \"dayofweek\", \"year\", " +
         "task, extrainfo, enabled) " +
         "VALUES(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
@@ -272,4 +272,3 @@ public class Event {
   }
 
 }
-

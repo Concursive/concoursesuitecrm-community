@@ -531,7 +531,6 @@ public class PhoneNumber {
     if (rs.wasNull()) {
       this.setType(-1);
     }
-    this.setTypeName(rs.getString("description"));
     this.setNumber(rs.getString("number"));
     this.setExtension(rs.getString("extension"));
     this.setEntered(rs.getTimestamp("entered"));
@@ -542,6 +541,7 @@ public class PhoneNumber {
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
     this.setPrimaryNumber(rs.getBoolean("primary_number"));
+    this.setTypeName(rs.getString("description"));
     if (modifiedBy == -1) {
       this.setModifiedBy(0);
     }

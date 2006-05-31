@@ -49,6 +49,8 @@
 </script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <form name="uploadPhoto" action="AutoGuide.do?command=Upload&id=<%= InventoryItem.getId() %>&return=<%= java.net.URLEncoder.encode(request.getParameter("return")) %>" enctype="multipart/form-data" method='post' onSubmit="return checkFileForm(this);">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="id" value="<%= InventoryItem.getId() %>">
 <table cellpadding="10" cellspacing="0" border="0" width="100%">
   <tr class="title">
     <td>
@@ -78,7 +80,5 @@
     </td>
   </tr>
 </table>
-<input type="hidden" name="dosubmit" value="true">
-<input type="hidden" name="id" value="<%= InventoryItem.getId() %>">
 </form>
 

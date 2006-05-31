@@ -25,7 +25,10 @@
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
+<jsp:useBean id="SalutationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -34,6 +37,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/setSalutation.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -45,6 +49,15 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    if (document.addContact.company.value != "" && checkNullString(document.addContact.company.value)) {
+       message += label("check.company.blanks", "- Please enter a valid company name.\r\n");
+			 formTest = false;
+    }
+    if (form.nameLast.value != "" && checkNullString(form.nameLast.value)) {
+       message += label("check.name.last.blanks", "- Please enter a valid last name.\r\n");
+			 formTest = false;
+    }
+<dhv:include name="contact.phoneNumbers" none="true">
 <%  for (int i= 1; i <= (ContactDetails.getPhoneNumberList().size() <3?3:ContactDetails.getPhoneNumberList().size()+1); i++) { %>
     <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value) || (checkNullString(form.phone<%=i%>number.value) && !checkNullString(form.phone<%=i%>ext.value))) {
       message += label("check.phone", "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n");
@@ -56,34 +69,32 @@
       message += label("check.phone.ext","- Please enter a valid phone number extension\r\n");
       formTest = false;
     }
-<%  }
-    for (int i=1; i<=(ContactDetails.getEmailAddressList().size() <3?3:ContactDetails.getEmailAddressList().size()+1); i++) {
+<%  } %>
+</dhv:include>
+<dhv:include name="contact.emailAddresses" none="true">
+<%  for (int i=1; i<=(ContactDetails.getEmailAddressList().size() <3?3:ContactDetails.getEmailAddressList().size()+1); i++) {
 %>
     <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if (!checkEmail(form.email<%=i%>address.value)) {
       message += label("check.email", "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
-<%
-    }
-    for (int i=1; i<=(ContactDetails.getTextMessageAddressList().size() <3?3:ContactDetails.getTextMessageAddressList().size()+1); i++) {
+<%  } %>
+</dhv:include>
+<dhv:include name="contact.textMessageAddresses" none="true">
+<%  for (int i=1; i<=(ContactDetails.getTextMessageAddressList().size() <3?3:ContactDetails.getTextMessageAddressList().size()+1); i++) {
 %>
     <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if (!checkEmail(form.textmessage<%=i%>address.value)) {
       message += label("check.textmessage", "- At least one entered text message address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
-<%
-    }
-    if(ContactDetails.getOrgId() == -1){
-%>
-
+<%  } %>
+</dhv:include>
+<%  if(ContactDetails.getOrgId() == -1) { %>
     if(document.addContact.contactcategory[0] && document.addContact.contactcategory[1].checked && document.addContact.orgId.value == '-1') {
        message += label("sure.select.account", "- Make sure you select an account.\r\n");
 			 formTest = false;
     }
-<%
-  }
-%>
-  
+<%  } %>
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -94,14 +105,19 @@
       }
     }
   }
-  function update(countryObj, stateObj) {
-  var country = document.forms['addContact'].elements[countryObj].value;
-   if(country == "UNITED STATES" || country == "CANADA"){
-      hideSpan('state2' + stateObj);
-      showSpan('state1' + stateObj);
-   }else{
+  function update(countryObj, stateObj, selectedValue) {
+    var country = document.forms['addContact'].elements[countryObj].value;
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=addContact&stateObj=address"+stateObj+"state";
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueUpdateState(stateObj, showText) {
+    if(showText == 'true'){
       hideSpan('state1' + stateObj);
       showSpan('state2' + stateObj);
+    } else {
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
     }
   }
   
@@ -193,6 +209,16 @@ function reopenContact(id) {
           <%}%>
         </strong>
       </th>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.site">Site</dhv:label>
+      </td>
+      <td>
+        <%= SiteList.getSelectedValue(ContactDetails.getSiteId()) %>
+        <input type="hidden" name="siteId" value="<%=ContactDetails.getSiteId()%>" >
+        <%= showAttribute(request, "siteIdError") %>
+      </td>
     </tr>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
@@ -297,6 +323,18 @@ function reopenContact(id) {
         <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       </td>
     </tr>
+  <dhv:include name="contact-salutation" none="true">
+     <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Salutation">Salutation</dhv:label>
+      </td>
+      <td>
+        <% SalutationList.setJsEvent("onchange=\"javascript:fillSalutation('addContact');\"");%>
+        <%= SalutationList.getHtmlSelect("listSalutation",ContactDetails.getNameSalutation()) %> 
+        <input type="hidden" size="35" name="nameSalutation" value="<%= toHtmlValue(ContactDetails.getNameSalutation()) %>">
+      </td>
+    </tr>
+  </dhv:include>
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
@@ -322,6 +360,7 @@ function reopenContact(id) {
         <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
       </td>
     </tr>
+  <dhv:include name="contact.additionalNames" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
@@ -330,6 +369,7 @@ function reopenContact(id) {
         <input type="text" size="35" name="additionalNames" value="<%= toHtmlValue(ContactDetails.getAdditionalNames()) %>">
       </td>
     </tr>
+    </dhv:include>
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
@@ -338,15 +378,17 @@ function reopenContact(id) {
         <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
       </td>
     </tr>
+  <dhv:include name="contact.birthday" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
-        <dhv:label name="accounts.accounts_add.dateOfBirth">Date of Birth</dhv:label>
+        <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
       </td>
       <td>
         <zeroio:dateSelect form="addContact" field="birthDate" timestamp="<%= ContactDetails.getBirthDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false"/>
         <%= showAttribute(request, "birthDateError") %>
       </td>
     </tr>
+    </dhv:include>
     <tr class="containerBody">
         <td class="formLabel" nowrap>
           <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
@@ -369,6 +411,7 @@ function reopenContact(id) {
         <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
       </td>
     </tr>
+    <dhv:include name="contact.role" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_contacts_add.Role">Role</dhv:label>
@@ -377,6 +420,7 @@ function reopenContact(id) {
         <input type="text" size="35" name="role" value="<%= toHtmlValue(ContactDetails.getRole()) %>">
       </td>
     </tr>
+    </dhv:include>
   </table>
   &nbsp;<br>
   <%--  include basic contact form --%>

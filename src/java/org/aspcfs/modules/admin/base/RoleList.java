@@ -18,6 +18,7 @@ package org.aspcfs.modules.admin.base;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -32,7 +33,7 @@ import java.util.Iterator;
  *
  * @author matt rajkowski
  * @version $Id$
- * @created < January 14, 2002
+ * @created January 14, 2002
  */
 public class RoleList extends ArrayList {
 
@@ -43,13 +44,12 @@ public class RoleList extends ArrayList {
   private boolean buildUserCount = false;
   private int roleType = -1;
   private int excludeRoleType = -1;
-
+  private String jsEvent = null;
 
   /**
    * Constructor for the RoleList object
    */
-  public RoleList() {
-  }
+  public RoleList() { }
 
 
   /**
@@ -121,8 +121,22 @@ public class RoleList extends ArrayList {
     this.roleType = Integer.parseInt(tmp);
   }
 
+
+  /**
+   * Sets the excludeRoleType attribute of the RoleList object
+   *
+   * @param tmp The new excludeRoleType value
+   */
   public void setExcludeRoleType(int tmp) {
     this.excludeRoleType = tmp;
+  }
+
+  public void setJsEvent(String jsEvent) {
+    this.jsEvent = jsEvent;
+  }
+
+  public String getJsEvent() {
+    return jsEvent;
   }
 
   /**
@@ -137,8 +151,8 @@ public class RoleList extends ArrayList {
 
 
   /**
-   * Gets the htmlSelect attribute of the RoleList object
-   * Selects the regular roles from the role list
+   * Gets the htmlSelect attribute of the RoleList object Selects the regular
+   * roles from the role list
    *
    * @param selectName Description of the Parameter
    * @param defaultKey Description of the Parameter
@@ -149,6 +163,9 @@ public class RoleList extends ArrayList {
     if (emptyHtmlSelectRecord != null) {
       roleListSelect.addItem(-1, emptyHtmlSelectRecord);
     }
+    if (jsEvent != null) {
+      roleListSelect.setJsEvent(jsEvent);
+    }
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Role thisRole = (Role) i.next();
@@ -157,6 +174,24 @@ public class RoleList extends ArrayList {
           thisRole.getRole());
     }
     return roleListSelect.getHtml(selectName, defaultKey);
+  }
+
+
+  /**
+   * Gets the lookupList attribute of the RoleList object
+   *
+   * @return The lookupList value
+   */
+  public LookupList getLookupList() {
+    LookupList thisList = new LookupList();
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Role thisRole = (Role) i.next();
+      thisList.addItem(
+          thisRole.getId(),
+          thisRole.getRole());
+    }
+    return thisList;
   }
 
 
@@ -177,14 +212,14 @@ public class RoleList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM \"role\" r " +
-        "WHERE r.role_id > -1 ");
+            "FROM \"role\" r " +
+            "WHERE r.role_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -197,8 +232,8 @@ public class RoleList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(\"role\") < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(\"role\") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -218,8 +253,8 @@ public class RoleList extends ArrayList {
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT * " +
-        "FROM \"role\" r " +
-        "WHERE r.role_id > -1 ");
+            "FROM \"role\" r " +
+            "WHERE r.role_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -289,6 +324,26 @@ public class RoleList extends ArrayList {
       pst.setBoolean(++i, enabledState == Constants.TRUE);
     }
     return i;
+  }
+
+
+  /**
+   * Gets the roleNameFromId attribute of the RoleList object
+   *
+   * @param id Description of the Parameter
+   * @return The roleNameFromId value
+   */
+  public String getRoleNameFromId(int id) {
+    String result = null;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Role thisRole = (Role) i.next();
+      if (id == thisRole.getId()) {
+        result = thisRole.getRole();
+        break;
+      }
+    }
+    return result;
   }
 
 }

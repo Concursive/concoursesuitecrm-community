@@ -17,6 +17,7 @@
   - Description:
   --%>
 <%-- Trails --%>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <table class="trails" cellspacing="0">
 <tr>
@@ -36,7 +37,7 @@
 <% }else{ %>
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteDetails&id=<%= request.getParameter("id") %>'">
 <% } %><br><br>
-<%@ include file="../newmessage.jsp" %>
+<%@ include file="../newmessage_include.jsp" %>
 <br>
 <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
 <% if("list".equals(request.getParameter("return"))){ %>

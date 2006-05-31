@@ -42,6 +42,19 @@
   int count = 0;
   int rowid = 0;
 %>
+<%-- Action Plans --%>
+<%
+  if (PermissionCategory.getActionPlans()) {
+%>
+  <dhv:permission name="admin-actionplans-view">
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+	<tr class="row<%= rowid %>">
+		<td>
+			<a href="ActionPlanEditor.do?command=ListEditors&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.actionPlan.actionPlanEditor">Action Plan Editor</dhv:label></a>
+		</td>
+	</tr>
+  </dhv:permission>
+<%}%>
 <%-- Categories --%>
 <% 
   if (PermissionCategory.getCategories()) { 
@@ -125,6 +138,19 @@
 	<tr class="row<%= rowid %>">
 		<td>
 			<a href="ProductCatalogEditor.do?command=List&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.productCatalogEditor">Product Catalog Editor</dhv:label></a>
+		</td>
+	</tr>
+  </dhv:permission>
+<%}%>
+<%-- Custom List View Editor --%>
+<% 
+  if (PermissionCategory.getCustomListViews()) { 
+%>
+  <dhv:permission name="admin-sysconfig-customlistviews-view">
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+	<tr class="row<%= rowid %>">
+		<td>
+			<a href="AdminCustomListViews.do?command=List&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.customListViewEditor">Custom List View Editor</dhv:label></a>
 		</td>
 	</tr>
   </dhv:permission>

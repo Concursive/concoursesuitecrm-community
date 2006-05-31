@@ -10,6 +10,7 @@
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkCreditCardNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkRadioButton.js"></script>
@@ -18,19 +19,19 @@
   function checkForm(form) {
     formTest = true ;
     message = "";   
-    if (form.address1line1.value == "") {
+    if (checkNullString(form.address1line1.value)) {
       message += label("check.street.address","- Street Address is required\r\n");
       formTest = false;
     }
-    if (form.address1city.value == "") {
+    if (checkNullString(form.address1city.value)) {
       message += label("check.city.name","- City Name is required\r\n");
       formTest = false;
     }
-    if (form.address1state.value == "") {
+    if ((checkNullString(form.address1state.value) || form.address1state.value == '-1') && checkNullString(form.address1otherState.value)) {
       message += label("check.state.name","- State Name is required\r\n");
       formTest = false;
     }
-    if (form.address1country.value == "") {
+    if (checkNullString(form.address1country.value) || form.address1country.value == '-1') {
       message += label("check.country.name","- Country Name is required\r\n");
       formTest = false;
     }
@@ -40,14 +41,19 @@
     return formTest;
   }
   
-  function update(countryObj, stateObj) {
+  function update(countryObj, stateObj, selectedValue) {
     var country = document.forms['contact_address_form'].elements[countryObj].value;
-    if(country == "UNITED STATES" || country == "CANADA"){
-      hideSpan('state2' + stateObj);
-      showSpan('state1' + stateObj);
-    }else{
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=contact_address_form&stateObj=address"+stateObj+"state";
+    window.frames['server_commands'].location.href=url;
+  }
+
+  function continueUpdateState(stateObj, showText) {
+    if(showText == 'true'){
       hideSpan('state1' + stateObj);
       showSpan('state2' + stateObj);
+    } else {
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
     }
   }
 </script>
@@ -83,14 +89,13 @@
   <tr>
     <td class="formLabel" nowrap><dhv:label name="accounts.accounts_add.StateProvince">State</dhv:label></td>
     <td>
-      <span name="state11" ID="state11" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
-        <%= StateSelect.getHtml("address1state", thisAddress.getState()) %>
+      <span name="state11" ID="state11" style="<%= StateSelect.hasCountry(thisAddress.getCountry())? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address1state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state21" ID="state21" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+      <span name="state21" ID="state21" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="address1otherState"  value="<%= toHtmlValue(thisAddress.getOtherState()) %>">
-      </span>
-      <% StateSelect = new StateSelect(systemStatus); %>
+      </span><font color="red">*</font>
     </td>
   </tr>
   <tr>
@@ -100,17 +105,14 @@
   <tr>
     <td class="formLabel" nowrap><dhv:label name="accounts.accounts_add.Country">Country</dhv:label></td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address1country', '1' );\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address1country', '1','' );\"");%>
       <%= CountrySelect.getHtml("address1country", thisAddress.getCountry()) %><font color="red"><%= toHtml((String) errorMap.get("addressError")) %></font>
-      <% if (applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") || applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
-      <script type="text/javascript">
-        update('address1country','1');
-      </script>
-      <% } CountrySelect = new CountrySelect(systemStatus); %>
+      <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
   </tr>
 </table>
 <br />
 <input type="submit" value="<dhv:label name="button.submit">Submit</dhv:label>"/> 
 <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ContactAddressSelector.do?command=List&contactId=<%= (contact != null)?""+contact.getId():"" %>';"/>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>

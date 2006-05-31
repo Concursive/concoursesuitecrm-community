@@ -291,13 +291,13 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
   public static int getItemCount(Connection db, int itemId) throws SQLException {
     int recordCount = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT count(*) as count " +
+        "SELECT count(*) AS thecount " +
         "FROM active_survey_answer_items " +
         "WHERE item_id = ? ");
     pst.setInt(1, itemId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      recordCount = rs.getInt("count");
+      recordCount = rs.getInt("thecount");
     }
     rs.close();
     pst.close();

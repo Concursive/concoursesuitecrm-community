@@ -37,6 +37,7 @@ public class CriteriaList extends ArrayList {
   protected PagedListInfo pagedListInfo = null;
   protected int reportId = -1;
   protected int owner = -1;
+  protected int criteriaId = -1;
 
 
   /**
@@ -107,6 +108,26 @@ public class CriteriaList extends ArrayList {
 
 
   /**
+   *  Sets the criteriaId attribute of the CriteriaList object
+   *
+   *@param  tmp  The new criteriaId value
+   */
+  public void setCriteriaId(int tmp) {
+    this.criteriaId = tmp;
+  }
+
+
+  /**
+   *  Sets the criteriaId attribute of the CriteriaList object
+   *
+   *@param  tmp  The new criteriaId value
+   */
+  public void setCriteriaId(String tmp) {
+    this.criteriaId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Gets the reportId attribute of the CriteriaList object
    *
    * @return The reportId value
@@ -123,6 +144,16 @@ public class CriteriaList extends ArrayList {
    */
   public int getOwner() {
     return owner;
+  }
+
+
+  /**
+   *  Gets the criteriaId attribute of the CriteriaList object
+   *
+   *@return    The criteriaId value
+   */
+  public int getCriteriaId() {
+    return criteriaId;
   }
 
 
@@ -206,6 +237,9 @@ public class CriteriaList extends ArrayList {
     if (owner != -1) {
       sqlFilter.append("AND c.owner = ? ");
     }
+    if (criteriaId != -1) {
+      sqlFilter.append("AND c.criteria_id = ? ");
+    }
   }
 
 
@@ -223,6 +257,9 @@ public class CriteriaList extends ArrayList {
     }
     if (owner != -1) {
       pst.setInt(++i, owner);
+    }
+    if (criteriaId != -1) {
+      pst.setInt(++i, criteriaId);
     }
     return i;
   }

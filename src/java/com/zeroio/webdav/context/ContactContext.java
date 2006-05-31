@@ -80,6 +80,9 @@ public class ContactContext extends BaseWebdavContext
 
     contactList.setAllContacts(true, user.getId(), userRange);
     contactList.addIgnoreTypeId(Contact.LEAD_TYPE);
+    if (user.getSiteId() != -1) {
+      contactList.setSiteId(user.getSiteId());
+    }
     contactList.buildList(db);
     //Add this user's contact record
     contactList.add(user.getContact());

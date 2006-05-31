@@ -37,7 +37,9 @@ public class PhoneNumberList extends Vector {
   protected int orgId = -1;
   protected int type = -1;
   protected int contactId = -1;
-
+  protected String number = null;
+  protected String extension = null;
+  protected boolean usersOnly = false;
 
   /**
    * Sets the PagedListInfo attribute of the AddressList object
@@ -80,6 +82,17 @@ public class PhoneNumberList extends Vector {
     this.type = tmp;
   }
 
+  public void setNumber(String number) {
+    this.number = number;
+  }
+
+  public void setExtension(String extension) {
+    this.extension = extension;
+  }
+
+  public void setUsersOnly(boolean usersOnly) {
+    this.usersOnly = usersOnly;
+  }
 
   /**
    * Gets the PhoneNumber attribute of the PhoneNumberList object
@@ -175,6 +188,15 @@ public class PhoneNumberList extends Vector {
     if (contactId != -1) {
       sqlFilter.append("AND contact_id = ? ");
     }
+    if (number != null) {
+      sqlFilter.append("AND number = ? ");
+    }
+    if (extension != null) {
+      sqlFilter.append("AND extension = ? ");
+    }
+    if (usersOnly) {
+      sqlFilter.append("AND contact_id IN (SELECT contact_id FROM \"access\" WHERE enabled = ? AND (expires IS NULL OR expires < CURRENT_TIMESTAMP)) ");
+    }
   }
 
 
@@ -197,6 +219,15 @@ public class PhoneNumberList extends Vector {
     }
     if (contactId != -1) {
       pst.setInt(++i, contactId);
+    }
+    if (number != null) {
+      pst.setString(++i, number);
+    }
+    if (extension != null) {
+      pst.setString(++i, extension);
+    }
+    if (usersOnly) {
+      pst.setBoolean(++i, true);
     }
     return i;
   }

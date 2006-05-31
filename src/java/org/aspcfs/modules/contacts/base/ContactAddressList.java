@@ -243,5 +243,9 @@ public class ContactAddressList extends AddressList {
     rs.close();
     pst.close();
   }
+  
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 

@@ -17,17 +17,17 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%-- BEGIN DHV CODE ONLY --%>
+<jsp:useBean id="APP_VERSION" class="java.lang.String" scope="application"/>
 <jsp:useBean id="found" class="java.lang.String" scope="request"/>
-<%-- END DHV CODE ONLY --%>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function checkForm(form) {
-    <%-- BEGIN DHV CODE ONLY --%>
+    <dhv:evaluate if="<%= hasText(APP_VERSION) %>">
     if (form.doReg[0].checked == 0 && form.doReg[1].checked == 0 && form.doReg[2].checked == 0) {
       alert(label("check.registration.option","Please select a registration option to continue"));
       return false;
     }
-    <%-- END DHV CODE ONLY --%>
+    </dhv:evaluate>
     return true;
   }
 </script>
@@ -39,7 +39,7 @@
   <tr>
     <td>
       <dhv:label name="setup.welcome.setupProcessGuide.notes">In order to begin using Centric CRM, the setup process will guide you through several steps.<br /><br />Although installation can be completed in just a few minutes, you will have the option at any time during the setup to continue at a later time.<br /></dhv:label><br />
-<%-- BEGIN DHV CODE ONLY --%>
+<dhv:evaluate if="<%= hasText(APP_VERSION) %>">
       <dhv:label name="setup.welcome.setupProcessGuide.text">Registering this application with Dark Horse Ventures is required before installation, whether you already have a license or not, so we have made the registration process very simple.<br /><ul><li>An internet connection is required before continuing</li><li>The freely available version of Centric CRM will entitle this system to a maximum of five (5) users</li><li>You must agree to the Centric CRM License Agreement</li><li>The Centric CRM administrator will receive information about software updates as they become available</li></ul></dhv:label>
     </td>
   </tr>
@@ -55,7 +55,7 @@
       <input type="radio" name="doReg" value="restore" />
       <dhv:label name="setup.restoreBackup">Restore an existing backup<br /></dhv:label>
       <br />
-<%-- END DHV CODE ONLY --%>
+</dhv:evaluate>
       <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>

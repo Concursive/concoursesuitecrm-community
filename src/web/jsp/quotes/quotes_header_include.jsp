@@ -19,7 +19,7 @@
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr>
     <td width="100%" nowrap>
-      <dhv:label name="quotes.header.status">Status:</dhv:label>
+      <dhv:label name="quotes.quotes.header.status">Status:</dhv:label>
       <dhv:evaluate if="<%= quote.getStatusId() == -1 %>"><dhv:label name="quotes.incomplete">Incomplete</dhv:label></dhv:evaluate>
       <dhv:evaluate if="<%= quote.getStatusId() != -1 %>"><font color="red"><%= toHtml(quoteStatusList.getValueFromId(quote.getStatusId())) %></font></dhv:evaluate>
       <dhv:evaluate if="<%= quote.getExpirationDate() == null %>">

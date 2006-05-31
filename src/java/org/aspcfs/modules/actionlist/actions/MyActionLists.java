@@ -17,6 +17,7 @@ package org.aspcfs.modules.actionlist.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.actionlist.base.ActionContactsList;
 import org.aspcfs.modules.actionlist.base.ActionList;
 import org.aspcfs.modules.actionlist.base.ActionLists;
@@ -31,19 +32,19 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author Mathur
- * @version $id:exp$
- * @created April 18, 2003
+ * @author     Mathur
+ * @created    April 18, 2003
+ * @version    $id:exp$
  */
 public final class MyActionLists extends CFSModule {
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
@@ -54,10 +55,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
@@ -119,10 +120,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
@@ -157,10 +158,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-add"))) {
@@ -171,16 +172,17 @@ public final class MyActionLists extends CFSModule {
     if (viewUserId == null || "".equals(viewUserId)) {
       viewUserId = "" + this.getUserId(context);
     }
+    context.getRequest().setAttribute("changeSite","true");
     addModuleBean(context, "My Action Lists", "Add an Action List");
     return "PrepareAddOK";
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
@@ -215,10 +217,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-add"))) {
@@ -279,7 +281,7 @@ public final class MyActionLists extends CFSModule {
           SystemStatus systemStatus = this.getSystemStatus(context);
           errors.put(
               "criteriaError", systemStatus.getLabel(
-                  "object.validation.criteriaNotDefined"));
+              "object.validation.criteriaNotDefined"));
           processErrors(context, errors);
         }
       } else {
@@ -304,10 +306,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-delete"))) {
@@ -359,10 +361,10 @@ public final class MyActionLists extends CFSModule {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-delete"))) {
@@ -397,6 +399,32 @@ public final class MyActionLists extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandGetSiteForUser(ActionContext context) {
+    String userId = (String) context.getRequest().getParameter("userId");
+    String item = context.getRequest().getParameter("item");
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      User user = this.getUser(context, Integer.parseInt(userId));
+      context.getRequest().setAttribute("siteId", String.valueOf(user.getSiteId()));
+      context.getRequest().setAttribute("item", item);
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return "SystemError";
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "GetSiteForUserOK";
   }
 }
 

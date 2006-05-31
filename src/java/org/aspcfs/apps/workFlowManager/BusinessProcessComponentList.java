@@ -16,6 +16,7 @@
 package org.aspcfs.apps.workFlowManager;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -151,7 +152,8 @@ public class BusinessProcessComponentList extends HashMap {
         "SELECT c.id, c.process_id, c.component_id, c.parent_id, " +
         "c.parent_result_id, c.enabled, " +
         "cl.component_name, cl.class_name, cl.description " +
-        "FROM business_process_component c, business_process_component_library cl " +
+        "FROM business_process_component c, " +
+        DatabaseUtils.getTableName(db, "business_process_component_library") + " cl " +
         "WHERE c.id > 0 " +
         "AND c.component_id = cl.component_id ");
     createFilter(sqlFilter);
@@ -218,4 +220,3 @@ public class BusinessProcessComponentList extends HashMap {
     return i;
   }
 }
-

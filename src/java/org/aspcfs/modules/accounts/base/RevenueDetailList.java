@@ -67,7 +67,7 @@ public class RevenueDetailList extends Vector {
         "FROM revenue_detail rd " +
         "LEFT JOIN contact ct_eb ON (rd.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (rd.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN lookup_revenue_types rdt ON (rd.type = rdt.code) " +
+        "LEFT JOIN lookup_revenue_types rdt ON (rd.\"type\" = rdt.code) " +
         "WHERE rd.id > -1 ");
 
     createFilter(sqlFilter);
@@ -121,7 +121,7 @@ public class RevenueDetailList extends Vector {
         "FROM revenue_detail rd " +
         "LEFT JOIN contact ct_eb ON (rd.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (rd.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN lookup_revenuedetail_types rdt ON (rd.type = rdt.code) " +
+        "LEFT JOIN lookup_revenuedetail_types rdt ON (rd.\"type\" = rdt.code) " +
         "WHERE rd.id > -1 ");
 
     pst = db.prepareStatement(

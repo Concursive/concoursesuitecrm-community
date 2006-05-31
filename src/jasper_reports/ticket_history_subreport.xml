@@ -32,14 +32,14 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[SELECT t.ticketid, t.comment, t.entered,
+	<queryString><![CDATA[SELECT t.ticketid, t."comment", t.entered,
 c.namelast AS lastname, 
 c.namefirst AS firstname
 FROM ticketlog t
-LEFT JOIN access a ON (t.enteredby = a.user_id)
+LEFT JOIN "access" a ON (t.enteredby = a.user_id)
 LEFT JOIN contact c ON (a.contact_id = c.contact_id)
 WHERE t.ticketid = $P{ticketid} 
-AND t.comment NOT LIKE '']]></queryString>
+AND t."comment" NOT LIKE '']]></queryString>
 	<field name="comment" class="java.lang.String"/>
 	<field name="entered" class="java.sql.Timestamp"/>
 	<field name="lastname" class="java.lang.String"/>

@@ -1,7 +1,10 @@
 -- PROJECTS
 
-DROP INDEX project_issues_limit_idx;
-DROP INDEX project_issues_idx;
+DROP INDEX project_issues.project_issues_limit_idx;
+DROP INDEX project_issues.project_issues_idx;
+
+-- TODO: rewrite this with a generic drop constraint
+ALTER TABLE project_issues DROP CONSTRAINT FK__project_i__type___2B2A60FE;
 ALTER TABLE project_issues DROP COLUMN type_id;
 DROP TABLE lookup_project_issues;
 
@@ -19,7 +22,7 @@ CREATE TABLE lookup_project_category (
   description VARCHAR(80) NOT NULL,
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true,
+  enabled BIT DEFAULT 1,
   group_id INTEGER NOT NULL DEFAULT 0
 );
 
@@ -93,6 +96,10 @@ CREATE TABLE project_assignments_folder (
   modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
 );
 
+DROP INDEX project_assignments.project_assignments_idx;
+
+-- TODO: replace with generic drop constraint
+ALTER TABLE project_assignments DROP CONSTRAINT FK__project_a__activ__190BB0C3;
 ALTER TABLE project_assignments DROP COLUMN activity_id;
 ALTER TABLE project_assignments ADD folder_id INTEGER NULL REFERENCES project_assignments_folder(folder_id);
 ALTER TABLE project_assignments ADD percent_complete INTEGER NULL;
@@ -339,4 +346,3 @@ UPDATE permission_category SET enabled = 1, active = 1 WHERE category = 'Project
 
 ALTER TABLE access ADD currency VARCHAR(5);
 ALTER TABLE access ADD language VARCHAR(20);
-
