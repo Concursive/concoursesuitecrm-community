@@ -39,6 +39,7 @@ public class CurrencyHandler extends TagSupport {
   private Locale locale = null;
   private boolean fractionDigits = true;
   private boolean truncate = true;
+  private boolean allowNegative = false;
 
 
   /**
@@ -81,6 +82,11 @@ public class CurrencyHandler extends TagSupport {
   }
 
 
+  public void setLocale(String tmp) {
+    this.locale = new Locale(tmp);
+  }
+
+
   /**
    * Sets the fractionDigits attribute of the CurrencyHandler object
    *
@@ -100,6 +106,10 @@ public class CurrencyHandler extends TagSupport {
     this.truncate = tmp;
   }
 
+  public void setAllowNegative(boolean tmp) {
+    this.allowNegative = tmp;
+  }
+
 
   /**
    * Description of the Method
@@ -109,7 +119,7 @@ public class CurrencyHandler extends TagSupport {
    */
   public int doStartTag() throws JspException {
     try {
-      if (value > -1) {
+      if (value > -1 || allowNegative) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         if (!truncate) {
           formatter.setMaximumFractionDigits(4);
@@ -122,7 +132,7 @@ public class CurrencyHandler extends TagSupport {
           formatter.setMaximumFractionDigits(0);
         }
         this.pageContext.getOut().write(
-            StringUtils.toHtmlValue(formatter.format(value)));
+          StringUtils.toHtmlValue(formatter.format(value)));
       } else {
         //no date found, output default
         if (defaultValue != null) {

@@ -70,10 +70,13 @@ function moveDropMenu(mid, id) {
   var x = getPageOffsetLeft(el);
   var y = getPageOffsetTop(el) + el.offsetHeight;
   var c = 0;
+  var e = 0;
   if (document.all) {
     c = document.body.clientHeight;
+    e = document.body.clientWidth;
   } else {
     c = window.innerHeight;
+    e = window.innerWidth;
   }
   var d = null;
   if (document.documentElement && document.documentElement.scrollTop) {
@@ -83,13 +86,20 @@ function moveDropMenu(mid, id) {
   }
   if (window.scrollY) {
     c = c + window.scrollY;
+    e = e + window.scrollX;
   } else {
     c = c + d.scrollTop;
+    e = e + d.scrollLeft;
   }
-  // adjust if offscreen
+  // adjust if offscreen (y)
   var height = mel.offsetHeight;
   if (y + height > c) {
-    y = y - ((y + height) - c);
+    y = y - ((y + height) - c) - 10;
+  }
+  // adjust if offscreen (x)
+  var width = mel.offsetWidth;
+  if (x + width > e) {
+    x = x - ((x + width) - e) - 10;
   }
   mel.style.left = x;
   mel.style.top = y;

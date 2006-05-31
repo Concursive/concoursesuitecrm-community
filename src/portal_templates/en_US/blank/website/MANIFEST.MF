@@ -1,0 +1,8 @@
+Name: Blank
+Version: 1.0
+Vendor: Dark Horse Ventures L.L.C
+Description: This option allows you to build a website from scratch.
+Created: March 1, 2006
+Modified: March 1, 2006
+Layout: 2006051814
+Style: 2006051811

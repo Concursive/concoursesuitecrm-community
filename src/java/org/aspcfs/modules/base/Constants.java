@@ -87,7 +87,10 @@ public final class Constants {
   public final static int DOCUMENTS_QUOTE_LOGO = 126200511;
   public final static int DOCUMENTS_KNOWLEDGEBASE = 104051616;
   public final static int DOCUMENTS_SALES_REPORTS = 2006031313;
-  
+  public final static int DOCUMENTS_PORTFOLIO_ITEM = 223061228;
+  public final static int DOCUMENTS_WEBSITE = 2006051216;
+
+
   //Unsorted -- used for folders, documents, and other
   //TODO: Cleanup this list once modules have been updated
   public final static int ACCOUNTS = 1;

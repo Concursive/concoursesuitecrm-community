@@ -277,6 +277,7 @@
                 <dhv:evaluate if="<%= quoteBean.getHeaderId() == -1 %>">
                   <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
                 </dhv:evaluate>
+              </div>
             </td>
             <td>
               <input type="hidden" name="headerId" id="headerId" value="<%= quoteBean.getHeaderId() %>"/> &nbsp;

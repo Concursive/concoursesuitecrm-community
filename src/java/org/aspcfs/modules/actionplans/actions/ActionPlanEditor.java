@@ -788,6 +788,9 @@ public final class ActionPlanEditor extends CFSModule {
         if (nextPhaseId != null && !"".equals(nextPhaseId.trim())) {
           context.getRequest().setAttribute("nextPhaseId", nextPhaseId);
         }
+        if (previousPhaseId != null && !"".equals(previousPhaseId.trim())) {
+          context.getRequest().setAttribute("previousPhaseId", previousPhaseId);
+        }
         if (phase.getId() > -1) {
           return executeCommandModifyPhase(context);
         } else {

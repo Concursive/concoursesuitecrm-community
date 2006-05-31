@@ -18,26 +18,28 @@ package org.aspcfs.utils;
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author matt rajkowski
- * @version $Id$
- * @created January 15, 2003
+ *@author     matt rajkowski
+ *@created    January 15, 2003
+ *@version    $Id: ZipUtils.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05 Aug
+ *      2005) mrajkowski $
  */
 public class ZipUtils {
 
   /**
-   * Adds a feature to the TextEntry attribute of the ZipUtils class
+   *  Adds a feature to the TextEntry attribute of the ZipUtils class
    *
-   * @param zip      The feature to be added to the TextEntry attribute
-   * @param fileName The feature to be added to the TextEntry attribute
-   * @param data     The feature to be added to the TextEntry attribute
-   * @throws ZipException Description of the Exception
-   * @throws IOException  Description of the Exception
+   *@param  zip            The feature to be added to the TextEntry attribute
+   *@param  fileName       The feature to be added to the TextEntry attribute
+   *@param  data           The feature to be added to the TextEntry attribute
+   *@throws  ZipException  Description of the Exception
+   *@throws  IOException   Description of the Exception
    */
   public static void addTextEntry(ZipOutputStream zip, String fileName, String data) throws ZipException, IOException {
     int bytesRead;
@@ -49,6 +51,14 @@ public class ZipUtils {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  zipFile          Description of the Parameter
+   *@param  destination      Description of the Parameter
+   *@exception  IOException  Description of the Exception
+   */
   public static void extract(File zipFile, String destination) throws IOException {
     ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile));
     ZipEntry entry = null;
@@ -70,5 +80,33 @@ public class ZipUtils {
     zip.close();
   }
 
+
+  /**
+   *  Extracts the specified zipped file to a destination in the filesystem
+   *
+   *@param  zipFile          Description of the Parameter
+   *@param  entry            Description of the Parameter
+   *@param  destination      Description of the Parameter
+   *@exception  IOException  Description of the Exception
+   */
+  public static void extract(ZipFile zipFile, String entry, String destination) throws IOException {
+    ZipEntry zipEntry = zipFile.getEntry(entry);
+    InputStream inputStream = zipFile.getInputStream(zipEntry);
+    byte[] buffer = new byte[inputStream.available()];
+    if (zipEntry != null) {
+      if (zipEntry.isDirectory()) {
+        //do nothing
+      } else {
+        int offset = 0;
+        int numRead = 0;
+        while (offset < buffer.length
+             && (numRead = inputStream.read(buffer, offset, buffer.length - offset)) >= 0) {
+          offset += numRead;
+        }
+        FileUtils.copyBytesToFile(buffer, new File(destination), true);
+      }
+    }
+    inputStream.close();
+  }
 }
 

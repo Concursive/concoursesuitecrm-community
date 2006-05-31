@@ -296,6 +296,8 @@ public class ImportLookupLists {
         "product_option_configurator", "productOptionConfigurator");
     customLookupListHandlers.put("field_types", "fieldTypes");
     customLookupListHandlers.put("survey", "survey");
+		customLookupListHandlers.put("layout","layout");
+		customLookupListHandlers.put("style","style");
 
     //Look up tables where the table name is more than 22 characters long,
     //but the table name is not truncated
@@ -329,7 +331,9 @@ public class ImportLookupLists {
     lookupListsWithNoLevelColumn.add("survey");
     lookupListsWithNoLevelColumn.add("action_plan_constants");
     lookupListsWithNoLevelColumn.add("step_action_map");
-
+		lookupListsWithNoLevelColumn.add("layout");
+		lookupListsWithNoLevelColumn.add("style");
+		
     lookupListsWithNoDescription = new HashMap();
     lookupListsWithNoDescription.put("step_action_map", "step_action_map");
   }

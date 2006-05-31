@@ -146,30 +146,6 @@
   </tag>
 
   <tag>
-    <name>sitename</name> 
-    <tag-class>org.aspcfs.taglib.SiteNameHandler</tag-class>
-    <body-content>empty</body-content>
-    <display-name>
-      Access the Application scope and retrieve site name from siteid or the object's id.
-    </display-name>
-    <attribute>
-      <name>id</name>
-      <required>yes</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <name>objectName</name>
-      <required>no</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <name>default</name>
-      <required>yes</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
-  
-  <tag>
     <name>include</name> 
     <tag-class>org.aspcfs.taglib.FieldHandler</tag-class>
     <body-content>JSP</body-content>
@@ -603,6 +579,7 @@
     <attribute>
       <name>name</name>
       <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
       <name>version</name>
@@ -805,5 +782,23 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+  </tag>
+  <tag>
+    <name>portalTabURL</name>
+    <tag-class>org.aspcfs.taglib.PortalTabURLHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>Constructs a tab url for the website</display-name>
+  </tag>
+  <tag>
+    <name>portalPageGroupURL</name>
+    <tag-class>org.aspcfs.taglib.PortalPageGroupURLHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>Constructs a pageGroup url for the website</display-name>
+  </tag>
+  <tag>
+    <name>portalPageURL</name>
+    <tag-class>org.aspcfs.taglib.PortalPageURLHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>Constructs a page url for the website</display-name>
   </tag>
 </taglib>

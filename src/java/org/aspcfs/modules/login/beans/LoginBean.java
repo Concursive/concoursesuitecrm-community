@@ -16,6 +16,7 @@
 package org.aspcfs.modules.login.beans;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.webdav.WebdavServlet;
 import org.aspcfs.utils.PasswordHash;
 
@@ -32,6 +33,7 @@ public class LoginBean extends GenericBean {
   private String password = "";
   private String webdavPassword = "";
   private String ldapPassword = "";
+  private String redirectTo = null;
 
   /** Field names of this bean, used in place of hard-coded strings in ObjectValidator and /setup/configure_authentication_validate.jsp
    They are set in static {} block, so that their string values are not compiled into class files of jasper-processed JSP.
@@ -137,5 +139,23 @@ public class LoginBean extends GenericBean {
 
   public String getLdapPassword() {
     return ldapPassword;
+  }
+
+  public String getRedirectTo() {
+    return redirectTo;
+  }
+
+  public void setRedirectTo(String redirectTo) {
+    this.redirectTo = redirectTo;
+  }
+
+  public void checkURL(ActionContext context) {
+    if (redirectTo == null) {
+        String requestedURL = (String) context.getRequest().getAttribute("requestedURL");
+        if (requestedURL != null) {
+          redirectTo = requestedURL;
+        }
+      }
+
   }
 }

@@ -19,10 +19,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*" %>
-<%@ page import="org.aspcfs.modules.base.*" %>
-<%@ page import="org.aspcfs.controller.*" %>
-<%@ page import="org.aspcfs.utils.web.*" %>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0

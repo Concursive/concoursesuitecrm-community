@@ -452,7 +452,7 @@
         <exclude name="web.xml"/>
       </fileset>
     </copy>
-    <!-- Copy the language files -->
+    <!-- Copy the dictionary files -->
     <mkdir dir="${CENTRIC_HOME}/WEB-INF/languages"/>
     <copy todir="${CENTRIC_HOME}/WEB-INF/languages">
       <fileset dir="${src.dir}/languages">
@@ -463,6 +463,13 @@
     <copy todir="${CENTRIC_HOME}/javascript/languages">
       <fileset dir="${src.dir}/languages">
         <include name="*.js"/>
+      </fileset>
+    </copy>
+    <!-- Copy the icelet files -->
+    <mkdir dir="${CENTRIC_HOME}/WEB-INF/icelets"/>
+    <copy todir="${CENTRIC_HOME}/WEB-INF/icelets">
+      <fileset dir="${src.dir}/icelets">
+        <include name="*.xml"/>
       </fileset>
     </copy>
     <!-- Copy the font files-->
@@ -611,7 +618,7 @@
   <!-- Copy all data to the web-app folder and finalize any items -->
   <target name="deploy"
     description="Compile, build, copy, and configure web application"
-    depends="log.deploy,classes.prepare,build,keyfile,deploy.delete,deploy.copy,deploy.merge,deploy.jasper,war.create">
+    depends="log.deploy,classes.prepare,build,keyfile,deploy.delete,deploy.copy,deploy.templates,deploy.merge,deploy.jasper,war.create">
 
   </target>
 
@@ -1216,6 +1223,8 @@
       <!--knowledge base-->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_knowledgebase.sql" />
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_netapp.sql" />
+      <!-- web site -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_website.sql" />
       </sql>
     <delete dir="${build.sql.dir}" failonerror="false"/>
   </target>
@@ -1324,7 +1333,75 @@
           <include name="*.jar"/>
         </fileset>
       </classpath>
-      <arg value="${pref.dir}/cfs/system/lookuplists_${LOCALE.NAME}.xml"/>
+      <arg value="${pref.dir}${fs}cfs${fs}system${fs}lookuplists_${LOCALE.NAME}.xml"/>
+      <arg value="${SITE.DRIVER}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
+      <arg value="${SITE.USER}"/>
+      <arg value="${SITE.PASSWORD}"/>
+    </java>
+  </target>
+
+  <target name="deploy.templates" depends="init">
+    <echo message="Deploying Portal Templates"/>
+    <java classname="org.aspcfs.apps.icelets.ExportPortalTemplates" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${src.dir}"/>
+      <arg value="${CENTRIC_HOME}"/>
+    </java>
+  </target>
+
+  <target name="install.icelets" depends="init,install.prepare.dbname">
+    <echo message="Installing Icelets: icelet_${LOCALE.NAME}.xml"/>
+    <java classname="org.aspcfs.apps.icelets.ImportIcelets" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${src.dir}${fs}icelets${fs}icelet_${LOCALE.NAME}.xml"/>
+      <arg value="${SITE.DRIVER}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
+      <arg value="${SITE.USER}"/>
+      <arg value="${SITE.PASSWORD}"/>
+    </java>
+  </target>
+
+  <target name="install.website" depends="init,install.prepare.dbname">
+    <echo message="Importing Website: custom.zip"/>
+    <java classname="org.aspcfs.apps.icelets.ImportWebsite" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${CENTRIC_HOME}${fs}WEB-INF${fs}portal_templates${fs}${LOCALE.NAME}${fs}custom.zip"/>
+      <arg value="${CENTRIC_HOME}"/>
+      <arg value="${SITE.DRIVER}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
+      <arg value="${SITE.USER}"/>
+      <arg value="${SITE.PASSWORD}"/>
+    </java>
+  </target>
+
+  <target name="export.website" depends="init,install.prepare.dbname">
+    <input message="Enter site ID: " addproperty="SITE_ID"/>
+    <echo message="Exporting Website: website.zip"/>
+    <java classname="org.aspcfs.apps.icelets.ExportWebsite" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${SITE_ID}"/>
+      <arg value="${CENTRIC_HOME}"/>
       <arg value="${SITE.DRIVER}"/>
       <arg value="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
       <arg value="${SITE.USER}"/>
@@ -1392,7 +1469,7 @@
 
   <!-- Installs a new database -->
   <!-- Split into multiple calls due to embedded database locking -->
-  <target name="installdb" depends="init,log.installdb,install.gk,install.abortOnDB,install.database,install.abortOnDB,install.system,install.lookup,install.permissions,install.help,install.copyprefs,install.addsite"
+  <target name="installdb" depends="init,log.installdb,install.gk,install.abortOnDB,install.database,install.abortOnDB,install.system,install.lookup,install.permissions,install.help,install.icelets,install.copyprefs,install.addsite"
     description="Create tables, insert base records and permissions into new database, copy XML files">
   </target>
   <target name="installdb1" depends="init,log.installdb,install.database,install.abortOnDB"

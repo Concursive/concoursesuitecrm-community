@@ -33,9 +33,9 @@ public class Template {
   public final static int HTMLEncoding = 1;
   public final static int XMLEncoding = 2;
 
-  HashMap parseElements = null;
-  String text = null;
-  int valueEncoding = -1;
+  private HashMap parseElements = null;
+  private String text = null;
+  private int valueEncoding = -1;
 
 
   /**

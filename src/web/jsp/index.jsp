@@ -11,7 +11,7 @@
     upgrade.forward(request, response);
   } else {
     //During login, check the application locale if needed
-    RequestDispatcher login = getServletConfig().getServletContext().getRequestDispatcher("/Login.do?command=Default");
+    RequestDispatcher login = getServletConfig().getServletContext().getRequestDispatcher("/Portal.do?command=CheckPortal");
     login.forward(request, response);
   }
 %>

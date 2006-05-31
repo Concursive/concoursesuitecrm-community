@@ -32,6 +32,11 @@
     <category id="420041014" name="Products and Services" folders="false" lookups="false" reports="false" enabled="false">
       <permission name="products" attributes="v---" description="Access to Products and Services module"/>
     </category>
+    <category id="223061200" name="Website" folders="false" lookups="true" reports="false" categories="false" products="false">
+      <permission name="website" attributes="v---" description="Access to Website module" enabled="true"/>
+      <permission name="website-portfolio" attributes="vaed" description="Portfolio Editor" enabled="true"/>
+      <permission name="site-editor" attributes="vaed" description="Site Editor" enabled="true"/>
+    </category>
     <category id="228051100" name="Leads" folders="false" lookups="true" reports="false">
       <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="Contact Rating"/>
       <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description="Contact Source"/>

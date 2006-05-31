@@ -175,6 +175,9 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_CONTACTS_RATING = 228051102;
   public final static int LOOKUP_CONTACTS_SOURCE = 228051103;
 
+  //Website module
+  public final static int PERMISSION_CAT_WEBSITE = 223061200;
+
   //NetApp
   public final static int PERMISSION_NET_APP = 1021051129;
 

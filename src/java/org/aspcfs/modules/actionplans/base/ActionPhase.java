@@ -165,7 +165,7 @@ public class ActionPhase extends GenericBean {
       sql.append(
           "INSERT INTO action_phase ( plan_id, phase_name, " +
           "description, ");
-      if (parentId > -1) {
+      if (parentId > 0) {
         sql.append("parent_id, ");
       }
       if (id > -1) {
@@ -176,7 +176,7 @@ public class ActionPhase extends GenericBean {
       }
       sql.append(" enabled, random, \"global\")");
       sql.append(" VALUES (?, ?, ?, ");
-      if (parentId > -1) {
+      if (parentId > 0) {
         sql.append("?, ");
       }
       if (id > -1) {
@@ -191,8 +191,8 @@ public class ActionPhase extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, this.getPlanId());
       pst.setString(++i, this.getName());
       pst.setString(++i, this.getDescription());
-      if (parentId > -1) {
-        DatabaseUtils.setInt(pst, ++i, this.getParentId());
+      if (parentId > 0) {
+        DatabaseUtils.setInt(pst, ++i,  (parentId > 0 ? parentId : -1));
       }
       if (id > -1) {
         pst.setInt(++i, id);
@@ -468,7 +468,7 @@ public class ActionPhase extends GenericBean {
     int result = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT phase_id FROM action_phase WHERE parent_id = ?");
-    pst.setInt(1, parentId);
+    DatabaseUtils.setInt(pst, 1,  (parentId > 0 ? parentId : -1));
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       result = DatabaseUtils.getInt(rs, "phase_id");

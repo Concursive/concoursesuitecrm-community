@@ -18,10 +18,8 @@ package com.zeroio.webutils;
 import com.darkhorseventures.framework.actions.ActionContext;
 
 import javax.servlet.ServletOutputStream;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.StringReader;
+import java.io.*;
+import java.util.zip.ZipFile;
 
 /**
  * Description of the Class
@@ -94,6 +92,91 @@ public class FileDownload {
   }
 
 
+  public static String getContentType(String filename) {
+    String contentType = "application/octet-stream";
+    if (filename.endsWith(".bmp")) {
+      contentType = "image/bmp";
+    } else if (filename.endsWith(".css")) {
+      contentType = "text/plain";
+    } else if (filename.endsWith(".doc")) {
+      contentType = "application/msword";
+    } else if (filename.endsWith(".dot")) {
+      contentType = "application/msword";
+    } else if (filename.endsWith(".eps")) {
+      contentType = "application/postscript";
+    } else if (filename.endsWith(".gif")) {
+      contentType = "image/gif";
+    } else if (filename.endsWith(".htm")) {
+      contentType = "text/html";
+    } else if (filename.endsWith(".html")) {
+      contentType = "text/html";
+    } else if (filename.endsWith(".java")) {
+      contentType = "text/plain";
+    } else if (filename.endsWith(".jpeg")) {
+      contentType = "image/jpeg";
+    } else if (filename.endsWith(".jpg")) {
+      contentType = "image/jpeg";
+    } else if (filename.endsWith(".js")) {
+      contentType = "application/x-javascript";
+    } else if (filename.endsWith(".mdb")) {
+      contentType = "application/x-msaccess";
+    } else if (filename.endsWith(".mid")) {
+      contentType = "audio/mid";
+    } else if (filename.endsWith(".midi")) {
+      contentType = "audio/mid";
+    } else if (filename.endsWith(".mp3")) {
+      contentType = "audio/mpeg";
+    } else if (filename.endsWith(".mpp")) {
+      contentType = "application/vnd.ms-project";
+    } else if (filename.endsWith(".pdf")) {
+      contentType = "application/pdf";
+    } else if (filename.endsWith(".png")) {
+      contentType = "image/png";
+    } else if (filename.endsWith(".pot")) {
+      contentType = "application/vnd.ms-powerpoint";
+    } else if (filename.endsWith(".pps")) {
+      contentType = "application/vnd.ms-powerpoint";
+    } else if (filename.endsWith(".ppt")) {
+      contentType = "application/vnd.ms-powerpoint";
+    } else if (filename.endsWith(".ps")) {
+      contentType = "application/postscript";
+    } else if (filename.endsWith(".rtf")) {
+      contentType = "application/rtf";
+    } else if (filename.endsWith(".sql")) {
+      contentType = "text/plain";
+    } else if (filename.endsWith(".tgz")) {
+      contentType = "application/x-compressed";
+    } else if (filename.endsWith(".tif")) {
+      contentType = "image/tiff";
+    } else if (filename.endsWith(".tiff")) {
+      contentType = "image/tiff";
+    } else if (filename.endsWith(".txt")) {
+      contentType = "text/plain";
+    } else if (filename.endsWith(".wav")) {
+      contentType = "audio/x-wav";
+    } else if (filename.endsWith(".wks")) {
+      contentType = "application/vnd.ms-works";
+    } else if (filename.endsWith(".wps")) {
+      contentType = "application/vnd.ms-works";
+    } else if (filename.endsWith(".xls")) {
+      contentType = "application/vnd.ms-excel";
+    } else if (filename.endsWith(".xml")) {
+      contentType = "text/xml";
+    } else if (filename.endsWith(".xsl")) {
+      contentType = "text/xml";
+    } else if (filename.endsWith(".zip")) {
+      contentType = "application/x-zip-compressed";
+    } else if (filename.endsWith(".vcf")) {
+      contentType = "text/x-vcard";
+    } else if (filename.endsWith("readme")) {
+      contentType = "text/plain";
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("FileDownload-> File type: " + contentType);
+    }
+    return contentType;
+  }
+
   /**
    * Description of the Method
    *
@@ -101,88 +184,7 @@ public class FileDownload {
    * @throws Exception Description of the Exception
    */
   public void streamContent(ActionContext context) throws Exception {
-    String contentType = "application/octet-stream";
-    if (this.getDisplayName().toLowerCase().endsWith(".bmp")) {
-      contentType = "image/bmp";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".css")) {
-      contentType = "text/plain";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".doc")) {
-      contentType = "application/msword";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".dot")) {
-      contentType = "application/msword";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".eps")) {
-      contentType = "application/postscript";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".gif")) {
-      contentType = "image/gif";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".htm")) {
-      contentType = "text/html";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".html")) {
-      contentType = "text/html";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".java")) {
-      contentType = "text/plain";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".jpeg")) {
-      contentType = "image/jpeg";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".jpg")) {
-      contentType = "image/jpeg";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".js")) {
-      contentType = "application/x-javascript";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".mdb")) {
-      contentType = "application/x-msaccess";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".mid")) {
-      contentType = "audio/mid";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".midi")) {
-      contentType = "audio/mid";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".mp3")) {
-      contentType = "audio/mpeg";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".mpp")) {
-      contentType = "application/vnd.ms-project";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".pdf")) {
-      contentType = "application/pdf";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".png")) {
-      contentType = "image/png";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".pot")) {
-      contentType = "application/vnd.ms-powerpoint";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".pps")) {
-      contentType = "application/vnd.ms-powerpoint";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".ppt")) {
-      contentType = "application/vnd.ms-powerpoint";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".ps")) {
-      contentType = "application/postscript";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".rtf")) {
-      contentType = "application/rtf";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".sql")) {
-      contentType = "text/plain";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".tgz")) {
-      contentType = "application/x-compressed";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".tif")) {
-      contentType = "image/tiff";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".tiff")) {
-      contentType = "image/tiff";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".txt")) {
-      contentType = "text/plain";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".wav")) {
-      contentType = "audio/x-wav";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".wks")) {
-      contentType = "application/vnd.ms-works";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".wps")) {
-      contentType = "application/vnd.ms-works";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".xls")) {
-      contentType = "application/vnd.ms-excel";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".xml")) {
-      contentType = "text/xml";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".xsl")) {
-      contentType = "text/xml";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".zip")) {
-      contentType = "application/x-zip-compressed";
-    } else if (this.getDisplayName().toLowerCase().endsWith(".vcf")) {
-      contentType = "text/x-vcard";
-    } else if (this.getDisplayName().toLowerCase().endsWith("README")) {
-      contentType = "text/plain";
-    }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("FileDownload-> File type: " + contentType);
-    }
-    context.getResponse().setContentType(contentType);
+    context.getResponse().setContentType(getContentType(this.getDisplayName().toLowerCase()));
     this.send(context);
   }
 
@@ -301,5 +303,21 @@ public class FileDownload {
     outputStream.close();
   }
 
+  public void sendFileFromZip(ActionContext context, String zipFilename, String filename) throws IOException {
+    context.getResponse().setContentType(getContentType(filename));
+    ZipFile zipFile = new ZipFile(zipFilename);
+    ServletOutputStream outputStream = context.getResponse().getOutputStream();
+    BufferedInputStream inputStream =
+        new BufferedInputStream(zipFile.getInputStream(zipFile.getEntry(filename)));
+    byte[] buf = new byte[4 * 1024];
+    // 4K buffer
+    int len;
+    while ((len = inputStream.read(buf, 0, buf.length)) != -1) {
+      outputStream.write(buf, 0, len);
+    }
+    outputStream.flush();
+    outputStream.close();
+    inputStream.close();
+  }
 }
 

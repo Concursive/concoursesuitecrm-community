@@ -16,7 +16,12 @@
 package org.aspcfs.controller;
 
 import com.darkhorseventures.database.ConnectionPool;
+import org.apache.pluto.PortletContainer;
+import org.apache.pluto.PortletContainerFactory;
+import org.apache.log4j.BasicConfigurator;
 import org.aspcfs.apps.workFlowManager.WorkflowManager;
+import org.aspcfs.modules.website.framework.IceletContainerServices;
+import org.aspcfs.modules.website.framework.IceletManager;
 import org.jcrontab.Crontab;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
@@ -92,6 +97,17 @@ public class ContextListener implements ServletContextListener {
     } catch (Exception e) {
       System.err.println(e.toString());
     }
+    // Portlet container
+    try {
+      IceletContainerServices containerServices = new IceletContainerServices();
+      PortletContainerFactory portletFactory = PortletContainerFactory.getInstance();
+      PortletContainer portletContainer =
+          portletFactory.createContainer("PortletContainer", containerServices, containerServices);
+      portletContainer.init(context);
+      context.setAttribute("PortletContainer", portletContainer);
+    } catch (Exception e) {
+      System.err.println(e.toString());
+    }
     System.out.println("ContextListener-> Initialized");
   }
 
@@ -131,6 +147,17 @@ public class ContextListener implements ServletContextListener {
     if (wfManager != null) {
       context.removeAttribute("WorkflowManager");
     }
+    // Stop the portlet container
+    PortletContainer container = (PortletContainer) context.getAttribute("PortletContainer");
+    if (container != null) {
+      try {
+        container.destroy();
+      } catch (Exception e) {
+        System.err.println(e.toString());
+      }
+      context.removeAttribute("PortletContainer");
+    }
+    IceletManager.destroy(context);
     //Remove the SystemStatus -> this will force a rebuild of any systems that
     //may have been cached
     Hashtable systemStatusList = (Hashtable) context.getAttribute(

@@ -50,6 +50,11 @@ public class FileItemHandler extends TagSupport {
     this.thumbnail = DatabaseUtils.parseBoolean(tmp);
   }
 
+  /**
+   * Sets the thumbnail attribute of the FileItemHandler object
+   *
+   * @param tmp The new thumbnail value
+   */
   public void setThumbnail(boolean tmp) {
     thumbnail = tmp;
   }
@@ -126,8 +131,8 @@ public class FileItemHandler extends TagSupport {
           }
         }
       }
-      allowedImages.add(
-          id + (version != null ? "-" + version : "") + (thumbnail ? "TH" : ""));
+			allowedImages.add(
+					id + (version != null ? "-" + version : "") + (thumbnail ? "TH" : ""));
       this.pageContext.getOut().write(
           "<img src=\"ProcessFileItemImage.do?id=" + id + "&path=" + path + (version != null ? "&version=" + version : "") + (thumbnail ? "&thumbnail=true" : "") + "\" " + (name != null ? "name=\"" + name + "\"" : "") + " border=\"0\"/>");
     } catch (Exception e) {

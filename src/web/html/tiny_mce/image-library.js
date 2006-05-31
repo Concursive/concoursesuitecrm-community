@@ -20,7 +20,8 @@ ImageLibrary.prototype.getScriptPath = function() {
 }
 
 ImageLibrary.prototype.open = function(form_name, element_names, file_url, js) {
-	var url = this.getScriptPath() + "/../Portal.do?command=ImageSelect&popup=true&editor=tinymce&constant=" + ilConstant + "&id=" + ilId;
+	// NOTE: imageLibraryURL MUST be specified in the page that includes the editor
+  var url = this.getScriptPath() + imageLibraryURL;
 	var isMSIE = (navigator.appName == "Microsoft Internet Explorer");
 
 	if (typeof form_name != "undefined")

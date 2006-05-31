@@ -67,6 +67,9 @@
 			<input type="hidden" name="id" value="<%= productCatalog.getId() %>"/>
 			<input type="hidden" name="productId" value="<%= productCatalog.getId() %>"/>
 			<input type="hidden" name="categoryId" value="<%= productCategory.getId() %>"/>
+      <input type="hidden" name="thumbnailImageId" value="<%= productCatalog.getThumbnailImageId() %>"/>
+      <input type="hidden" name="smallImageId" value="<%= productCatalog.getSmallImageId() %>"/>
+      <input type="hidden" name="largeImageId" value="<%= productCatalog.getLargeImageId() %>"/>
       <dhv:evaluate if="<%= (request.getParameter("return") != null) %>">
         <input type="hidden" name="return" value="<%= request.getParameter("return") %>"/>
       </dhv:evaluate>  

@@ -1,0 +1,126 @@
+/* HTML Elements */
+BODY {
+  font-family: verdana, helvetica, arial, sans-serif;
+  background: white;
+  color: #000000;
+}
+TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A {
+  font-family: verdana, helvetica, arial, sans-serif;
+  color: #000000;
+}
+OPTGROUP {
+  font-family: verdana, helvetica, arial, sans-serif;
+  color: #000000;
+}
+
+/* Portal Logo */
+.portalLogo {
+  background-color: #FFFFFF;
+  padding: 6px;
+}
+
+/* Portal Tabs */
+.portalTabs {
+  height: 37px;
+  padding-bottom: 6px;
+}
+.portalTabActive {
+  background: url(../../portal/images/tab-blue-142.gif) no-repeat;
+  width: 142px;
+  height: 37px;
+  text-align: center;
+}
+.portalTabActive a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.portalTabActive a:hover {
+  text-decoration: underline !important;
+}
+.portalTabInactive {
+  background: url(../../portal/images/tab-white-142.gif) no-repeat;
+  width: 142px;
+  height: 37px;
+  text-align: center;
+}
+.portalTabInactive a {
+  color: #3333FF;
+  text-decoration: none;
+}
+.portalTabInactive a:hover {
+  text-decoration: underline !important;
+}
+.portalTabSpace {
+  border-top: 3px solid #FFFFFF;
+  background-color: #999999;
+  border-bottom: 1px solid #666666;
+}
+.portalTabBackground {
+  color: #CCCCCC;
+  background-color: #999999;
+  text-decoration: none;
+}
+.portalTabBackground a {
+  color: #FFFF33;
+  text-decoration: none;
+}
+.portalTabBackground a:hover {
+  text-decoration: underline !important;
+}
+
+/* Portal Body */
+.portalBody {
+  padding-left:8px;
+  padding-right:6px
+}
+
+/* Portal Page Groups */
+.portalPageGroupsColumn{
+  background-color: #CCCCCC;
+  border-right: 1px solid #999999;
+  padding-right: 3px;
+}
+.portalPageGroups {
+  padding: 6px;
+}
+.portalPageGroup {
+  text-align: left;
+  color: #CC3300;
+}
+.portalPageActive {
+  color: #CCCCCC;
+  text-align: left;
+  padding-left: 11px;
+  background: url(../images/indicator-black.gif) center left no-repeat;
+}
+
+.portalPageInactive {
+  color: #CCCCCC;
+  text-align: left;
+  padding-left: 11px;
+}
+
+/* Portal Portlets */
+.portalPortlets {
+
+}
+
+.portalRow {
+
+}
+
+.portalColumn {
+
+}
+
+.portalEditorRow {
+  padding: 3px;
+  background-color: #CCCCCC !important;
+  border: 1px solid #000000 !important;
+}
+
+.portalEditorColumn {
+  padding: 3px;
+  background-color: #CCCCCC !important;
+  border: 1px solid #000000 !important;
+}

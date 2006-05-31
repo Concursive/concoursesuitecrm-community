@@ -28,9 +28,9 @@ import java.util.Iterator;
  *  A generic class that contains a list of LookupElement objects.
  *
  * @author     mrajkowski
+ * @created    September 7, 2001
  * @version    $Id: LookupList.java,v 1.36.12.1 2004/11/29 20:53:42 mrajkowski
  *      Exp $
- * @created September 7, 2001
  */
 public class LookupList extends HtmlSelect implements SyncableList {
   public static String uniqueField = "code";
@@ -54,8 +54,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
    *
    * @since    1.1
    */
-  public LookupList() {
-  }
+  public LookupList() { }
 
 
   /**
@@ -1176,6 +1175,26 @@ public class LookupList extends HtmlSelect implements SyncableList {
       }
     }
     return sb.toString();
+  }
+
+
+  /**
+   *  Gets the defaultElementCode attribute of the LookupList object
+   *
+   * @return    The defaultElementCode value
+   */
+  public int getDefaultElementCode() {
+    int result = -1;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getDefaultItem()) {
+        return thisElement.getCode();
+      } else if (result == -1) {
+        result = thisElement.getCode();
+      }
+    }
+    return result;
   }
 }
 

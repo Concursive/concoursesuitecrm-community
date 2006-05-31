@@ -89,6 +89,7 @@ public final class Login extends CFSModule {
         "applicationPrefs");
     //Process the login request
     LoginBean loginBean = (LoginBean) context.getFormBean();
+    loginBean.checkURL(context);
     String username = loginBean.getUsername();
     String password = loginBean.getPassword();
     String serverName = context.getRequest().getServerName();
@@ -321,12 +322,21 @@ public final class Login extends CFSModule {
     }
     // TODO: Replace this so it does not need to be maintained
     // NOTE: Make sure to update this similar code in the following method
+    String redirectTo = context.getRequest().getParameter("redirectTo");
     if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
+      if (redirectTo != null) {
+        //context.getRequest().removeAttribute("PageLayout");
+        return "RedirectURL";
+      }
       return "LoginOK";
     } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
       return "CustomerPortalLoginOK";
     } else if (thisUser.getRoleType() == Constants.ROLETYPE_PRODUCTS) {
       return "ProductsPortalLoginOK";
+    }
+    if (redirectTo != null) {
+      //context.getRequest().removeAttribute("PageLayout");
+      return "RedirectURL";
     }
     return "LoginOK";
   }
@@ -366,6 +376,11 @@ public final class Login extends CFSModule {
             return "UpgradeCheck";
           }
         }
+        String redirectTo = context.getRequest().getParameter("redirectTo");
+        if (redirectTo != null) {
+          context.getRequest().removeAttribute("PageLayout");
+          return "RedirectURL";
+        }
         return "LoginOK";
       } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
         return "CustomerPortalLoginOK";
@@ -375,6 +390,11 @@ public final class Login extends CFSModule {
     } else {
       //logout user from current session
       return executeCommandLogout(context);
+    }
+    String redirectTo = context.getRequest().getParameter("redirectTo");
+    if (redirectTo != null) {
+      context.getRequest().removeAttribute("PageLayout");
+      return "RedirectURL";
     }
     return "LoginOK";
   }

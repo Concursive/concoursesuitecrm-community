@@ -1,0 +1,87 @@
+<site name="Custom" enabled="true">
+  <internalDescription />
+  <tab displayText="Home" enabled="true">
+    <internalDescription />
+    <pageGroup name="">
+      <internalDescription />
+      <page name="Home" enabled="true">
+        <pageVersion versionNumber="1" type="construction,active">
+          <internalDescription />
+          <notes></notes>
+          <row enabled="true">
+            <column iceletClass="HtmlContentPortlet" width="50" enabled="true">
+              <property constant="6022301"><![CDATA[Welcome! We have a great collection of products and services to offer. You can browse our 
+                past work and contact us with your questions and comments.]]></property>
+            </column>
+          </row>
+        </pageVersion>
+        <tabBanner image="">
+        </tabBanner>
+      </page>
+    </pageGroup>
+  </tab>
+  <tab displayText="Products and Services" enabled="true">
+    <internalDescription />
+    <pageGroup name="">
+      <internalDescription />
+      <page name="Our Products" enabled="true">
+        <pageVersion versionNumber="1" type="construction">
+          <internalDescription />
+          <notes></notes>
+          <row enabled="true">
+            <column iceletClass="ProductCatalogPortlet" width="50" enabled="true">
+              <property constant="6050816"><![CDATA[-1]]></property>
+              <property constant="6051001"><![CDATA[true]]></property>
+              <property constant="6051002"><![CDATA[Item #]]></property>
+              <property constant="6051003"><![CDATA[true]]></property>
+              <property constant="6051004"><![CDATA[]]></property>
+              <property constant="6051005"><![CDATA[true]]></property>
+              <property constant="6051006"><![CDATA[Instant Savings:]]></property>
+            </column>
+          </row>
+        </pageVersion>
+        <tabBanner image="">
+        </tabBanner>
+      </page>
+    </pageGroup>
+  </tab>
+  <tab displayText="Past Work" enabled="true">
+    <internalDescription />
+    <pageGroup name="">
+      <internalDescription />
+      <page name="Past Work" enabled="true">
+        <pageVersion versionNumber="1" type="construction">
+          <internalDescription />
+          <notes></notes>
+          <row enabled="true">
+            <column iceletClass="PortfolioPortlet" width="50" enabled="true">
+              <property constant="6040316"><![CDATA[-1]]></property>
+            </column>
+          </row>
+        </pageVersion>
+        <tabBanner image="">
+        </tabBanner>
+      </page>
+    </pageGroup>
+  </tab>
+  <tab displayText="Contact Us" enabled="true">
+    <internalDescription />
+    <pageGroup name="">
+      <internalDescription />
+      <page name="Contact Us" enabled="true">
+        <pageVersion versionNumber="1" type="construction">
+          <internalDescription />
+          <notes></notes>
+          <row>
+            <column iceletClass="ContactFormPortlet" width="50" enabled="true">
+              <property constant="6022302">Please enter your name and contact information. This would help us serve you better.</property>
+              <property constant="6022303">Thank you for contact us. We will review your message and respond accordingly.</property>
+            </column>
+          </row>
+        </pageVersion>
+        <tabBanner image="">
+        </tabBanner>
+      </page>
+    </pageGroup>
+  </tab>
+</site>

@@ -22,15 +22,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,6 +132,16 @@ public class XMLUtils {
     this.parseXML(xmlFile);
   }
 
+  public XMLUtils(ServletContext context, String filename) throws Exception {
+    InputStream in = context.getResourceAsStream(filename);
+    StringBuffer text = new StringBuffer();
+    byte b[] = new byte[1];
+    while (in.read(b) != -1) {
+      text.append(new String(b));
+    }
+    in.close();
+    this.parseXML(text.toString());
+  }
 
   /**
    * Gets the firstChild attribute of the XMLUtils class
@@ -421,6 +429,7 @@ public class XMLUtils {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
+      transformer.setOutputProperty(OutputKeys.METHOD, "xml");
       //transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       //transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
       //transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-16");

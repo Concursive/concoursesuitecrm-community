@@ -661,16 +661,16 @@
       <permission value=""/>
       <link value="ProductCatalogOptions.do?command=List&amp;productId=${productId}&amp;moduleId=${moduleId}&amp;categoryId=${categoryId}"/>
     </submenu>
+    <submenu name="images">
+      <long_html value="Images"/>
+      <permission value=""/>
+      <link value="ProductCatalogs.do?command=ImageList&amp;productId=${productId}&amp;moduleId=${moduleId}&amp;categoryId=${categoryId}"/>
+    </submenu>
     <!--
     <submenu name="categories">
       <long_html value="Categories"/>
       <permission value=""/>
       <link value="ProductCatalogs.do?command=CategoryList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
-    </submenu>
-    <submenu name="images">
-      <long_html value="Images"/>
-      <permission value=""/>
-      <link value="ProductCatalogs.do?command=ImageList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
     </submenu>
     -->
   </container>

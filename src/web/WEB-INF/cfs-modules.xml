@@ -93,6 +93,27 @@
   </menu>
 
   <menu>
+    <action name="Website"/>
+    <action name="PortfolioEditor"/>
+    <action name="PortfolioItemEditor"/>
+    <action name="WebsiteMedia"/>
+    <action name="WebsiteMediaFolders"/>
+    <page title="Website"/>
+    <permission value="website-view"/>
+    <long_html value="Website"/>
+    <short_html value="Website"/>
+    <link value="Website.do"/>
+    <graphic width="83" height="36" on="menu-website-on.gif" off="menu-website-off.gif" rollover=""/>
+
+    <submenu name="Dashboard">
+      <permission value="website-view"/>
+      <long_html value="Dashboard"/>
+      <short_html value="Dashboard"/>
+      <link value="Website.do"/>
+    </submenu>
+  </menu>
+
+  <menu>
     <action name="Sales"/>
     <action name="SalesImports"/>
     <page title="Leads"/>

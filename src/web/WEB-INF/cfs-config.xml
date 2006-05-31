@@ -71,6 +71,173 @@
              layout="style"/>
   </action>
 
+  <!-- Website -->
+  <action name="Website" class="org.aspcfs.modules.website.actions.Website">
+    <forward name="DashboardOK" resource="/website/dashboard.jsp" layout="nav"/>
+  </action>
+
+  <action name="WebsiteMediaFolders" class="org.aspcfs.modules.website.actions.WebsiteMediaFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder"
+          scope="request"/>
+    <forward name="AddOK"
+             resource="/website/website_documents_folders_add.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK"
+             resource="/website/website_documents_folders_add.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="UpdatePopupOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="InsertOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="InsertPopupOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="DeleteOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="DeletePopupOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="DeleteERROR" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="MoveOK"
+             resource="/website/website_documents_folders_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/website/website_documents_folders_popclose.jsp"/>
+  </action>
+
+  <action name="WebsiteMedia" class="org.aspcfs.modules.website.actions.WebsiteMedia">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem"
+          scope="request"/>
+    <forward name="ViewOK" resource="/website/website_documents_list.jsp"
+             layout="nav"/>
+    <forward name="ViewPopupOK"
+             resource="/website/website_documents_list.jsp"
+             layout="style"/>
+    <forward name="AddOK" resource="/website/website_documents_upload.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK" resource="/website/website_documents_upload.jsp"
+             layout="style"/>
+    <forward name="UploadOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="UploadPopupOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="AddVersionOK"
+             resource="/website/website_documents_upload_version.jsp"
+             layout="nav"/>
+    <forward name="DetailsOK"
+             resource="/website/website_documents_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/website/website_documents_modify.jsp"
+             layout="nav"/>
+    <forward name="UpdateOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="UpdatePopupOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="DeleteOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="DeletePopupOK" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="DeleteERROR" resource="/WebsiteMedia.do?command=View"/>
+    <forward name="MoveOK" resource="/website/website_documents_file_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/website/website_documents_folders_popclose.jsp"/>
+  </action>
+
+
+  <!-- Portfolio Editor -->
+  <action name="PortfolioEditor" class="org.aspcfs.modules.website.actions.PortfolioEditor">
+    <bean name="category" class="org.aspcfs.modules.website.base.PortfolioCategory" scope="request"/>
+    <forward name="ListOK" resource="/website/portfolio_list.jsp" layout="nav"/>
+    <forward name="AddCategoryOK" resource="/website/portfolio_category_add.jsp" layout="nav"/>
+    <forward name="ModifyCategoryOK" resource="/website/portfolio_category_add.jsp" layout="nav"/>
+    <forward name="SaveCategoryOK" resource="/PortfolioEditor.do?command=List"/>
+    <forward name="ReorderOK" resource="/PortfolioEditor.do?command=List"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ListSingleOK" resource="/website/portfolio_category_list_single.jsp" layout="style"/>
+  </action>
+
+  <!-- Portfolio Item Editor -->
+  <action name="PortfolioItemEditor" class="org.aspcfs.modules.website.actions.PortfolioEditor">
+    <bean name="item" class="org.aspcfs.modules.website.base.PortfolioItem" scope="request"/>
+    <forward name="ItemDetailsOK" resource="/website/portfolio_item_details.jsp" layout="nav"/>
+    <forward name="AddItemOK" resource="/website/portfolio_item_add.jsp" layout="nav"/>
+    <forward name="ModifyItemOK" resource="/website/portfolio_item_add.jsp" layout="nav"/>
+    <forward name="SaveItemOK" resource="/PortfolioItemEditor.do?command=ItemDetails"/>
+    <forward name="SaveItemAndListOK" resource="/PortfolioEditor.do?command=List"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="MoveOK" resource="/website/portfolio_item_move.jsp" layout="style"/>
+    <forward name="UpdateMoveOK" resource="/reopen_parent_or_opener.jsp" layout="style"/>
+  </action>
+
+  <!-- Website Editor -->
+  <action name="Editor" class="org.aspcfs.modules.website.actions.Editor">
+    <forward name="SiteListOK" resource="/website/editor_site_list.jsp" layout="nav"/>
+    <forward name="GotoWelcomeOK" resource="/Editor.do?command=Welcome" />
+    <forward name="WelcomeOK" resource="/website/editor_welcome.jsp" layout="nav"/>
+    <forward name="CreateSiteOK" resource="/website/editor_site_add.jsp" layout="nav"/>
+  </action>
+
+  <action name="Sites" class="org.aspcfs.modules.website.actions.Sites">
+    <bean name="site" class="org.aspcfs.modules.website.base.Site" scope="request"/>
+    <forward name="SiteOK" resource="/website/editor_site.jsp" layout="nav"/>
+    <forward name="ListPopupOK" resource="/website/website_list.jsp" layout="style"/>
+    <forward name="GotoTemplateListPopupOK" resource="/Sites.do?command=TemplateList"/>
+    <forward name="GotoSiteListPopupOK" resource="/Sites.do?command=List"/>
+    <forward name="TemplateListPopupOK" resource="/website/website_template_list.jsp" layout="style"/>
+    <forward name="AddPopupOK" resource="/website/website_add.jsp" layout="style"/>
+    <forward name="ModifyPopupOK" resource="/website/website_add.jsp" layout="style"/>
+    <forward name="DetailsPopupOK" resource="/website/website_details.jsp" layout="portal"/>
+    <forward name="ConfirmDeletePopupOK" resource="/dialog.jsp"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ViewLayoutsOK" resource="/website/website_layouts.jsp" layout="style"/>
+    <forward name="UpdateLayoutOK" resource="/Sites.do?command=Details"/>
+    <forward name="ViewStylesOK" resource="/website/website_styles.jsp" layout="style"/>
+    <forward name="UpdateStyleOK" resource="/Sites.do?command=Details"/>
+  </action>
+
+  <action name="Tabs" class="org.aspcfs.modules.website.actions.Tabs">
+    <bean name="tab" class="org.aspcfs.modules.website.base.Tab" scope="request"/>
+    <forward name="AddPopupOK" resource="/website/website_tab_add.jsp" layout="style"/>
+    <forward name="ModifyPopupOK" resource="/website/website_tab_add.jsp" layout="style"/>
+    <forward name="SavePopupOK" resource="/reopen_parent_or_opener.jsp" layout="style"/>
+    <forward name="MovePopupOK" resource="/Sites.do?command=Details"/>
+    <forward name="ConfirmDeletePopupOK" resource="/dialog.jsp"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+
+  <action name="PageGroups" class="org.aspcfs.modules.website.actions.PageGroups">
+    <bean name="pageGroup" class="org.aspcfs.modules.website.base.PageGroup" scope="request"/>
+    <forward name="AddPopupOK" resource="/website/website_page_group_add.jsp" layout="style"/>
+    <forward name="ModifyPopupOK" resource="/website/website_page_group_add.jsp" layout="style"/>
+    <forward name="SavePopupOK" resource="/reopen_parent_or_opener.jsp" layout="style"/>
+    <forward name="MovePopupOK" resource="/website/reopen_website_details.jsp"/>
+    <forward name="ConfirmDeletePopupOK" resource="/dialog.jsp"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+
+  <action name="Pages" class="org.aspcfs.modules.website.actions.Pages">
+    <bean name="page" class="org.aspcfs.modules.website.base.Page" scope="request"/>
+    <forward name="AddPopupOK" resource="/website/website_page_add.jsp" layout="style"/>
+    <forward name="ModifyPopupOK" resource="/website/website_page_add.jsp" layout="style"/>
+    <forward name="SavePopupOK" resource="/reopen_parent_or_opener.jsp" layout="style"/>
+    <forward name="MovePopupOK" resource="/website/reopen_website_details.jsp"/>
+    <forward name="ConfirmDeletePopupOK" resource="/dialog.jsp"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+
+  <action name="PageRows" class="org.aspcfs.modules.website.actions.PageRows">
+    <bean name="pageRow" class="org.aspcfs.modules.website.base.PageRow" scope="request"/>
+    <forward name="SavePopupOK" resource="/website/reopen_website_details.jsp"/>
+    <forward name="MovePopupOK" resource="/website/reopen_website_details.jsp"/>
+    <forward name="ConfirmDeletePopupOK" resource="/dialog.jsp"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="SaveColumnPopupOK" resource="/website/open_icelet_add.jsp" layout="style"/>
+  </action>
+
+  <action name="RowColumns" class="org.aspcfs.modules.website.actions.RowColumns">
+    <bean name="rowColumn" class="org.aspcfs.modules.website.base.RowColumn" scope="request"/>
+    <forward name="SavePopupOK" resource="/website/open_icelet_add.jsp"/>
+    <forward name="MovePopupOK" resource="/website/reopen_website_details.jsp"/>
+    <forward name="ConfirmDeletePopupOK" resource="/dialog.jsp"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="AddIceletPopupOK" resource="/website/website_icelet_add.jsp" layout="style"/>
+    <forward name="ModifyIceletPropertiesPopupOK" resource="/website/website_icelet_properties.jsp" layout="style"/>
+    <forward name="ReplaceIceletPopupOK" resource="/website/website_icelet_add.jsp" layout="style"/>
+    <forward name="SaveIceletPopupOK" resource="/reopen_parent_or_opener.jsp"/>
+  </action>
+
+  <!-- End of the Website Module -->
+
   <!-- Accounts Orders-->
   <action name="AccountOrders"
           class="org.aspcfs.modules.accounts.actions.AccountOrders">
@@ -767,7 +934,7 @@
     <forward name="LoginOK" resource="/MyCFS.do?command=Home"/>
     <forward name="LoginVerifyOK" resource="/mycfs/mycfs_verify.jsp"
              layout="style"/>
-    <forward name="LoginRetry" resource="/index.jsp"/>
+    <forward name="LoginRetry" resource="/Login.do?command=Default"/>
     <forward name="LicenseError" resource="/errors/error_license.jsp"
              layout="centric"/>
     <forward name="CustomerPortalLoginOK"
@@ -775,6 +942,13 @@
     <forward name="ProductsPortalLoginOK" resource="/MyCFS.do?command=Home"/>
     <forward name="PerformUpgradeOK" resource="/Upgrade.do?command=Check"/>
     <forward name="IndexPageOK" resource="/indexPage.jsp"/>
+    <forward name="RedirectURL" resource="/redirect.jsp" />
+  </action>
+
+  <action name="Portal" class="org.aspcfs.modules.website.actions.Portal">
+    <forward name="PortalOK" resource="/website/website_details.jsp" layout="portal" />
+    <forward name="WebsiteFoundOK" resource="/Portal.do?command=Default"/>
+    <forward name="WebsiteNotFoundOK" resource="/Login.do?command=Default"/>
   </action>
 
   <!-- MyCFS Module -->

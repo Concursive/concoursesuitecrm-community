@@ -168,6 +168,9 @@
             </tr>
 <%}%>
             </table>
+            <dhv:evaluate if="<%= LoginBean.getRedirectTo() != null %>">
+              <input type="hidden" name="redirectTo" value="<%= LoginBean.getRedirectTo() %>" />
+            </dhv:evaluate>
           </form>
           </td>
         </tr>

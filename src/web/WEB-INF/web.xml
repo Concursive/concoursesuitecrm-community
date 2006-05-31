@@ -105,6 +105,77 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+
+  <!-- Portlets -->
+  <servlet>
+    <servlet-name>AboutPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>AboutPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>ContactFormPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>ContactFormPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>HtmlContentPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>HtmlContentPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>PortfolioPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>PortfolioPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>ProductCatalogPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>ProductCatalogPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- Portlet Mappings -->
+  <servlet-mapping>
+    <servlet-name>AboutPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/AboutPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ContactFormPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/ContactFormPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HtmlContentPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/HtmlContentPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PortfolioPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/PortfolioPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ProductCatalogPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/ProductCatalogPortlet</url-pattern>
+  </servlet-mapping>
+
+  <!-- Servlet mappings -->
   <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>*.do</url-pattern>

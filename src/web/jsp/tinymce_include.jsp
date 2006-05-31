@@ -1,22 +1,23 @@
-<%-- 
+<%--
   - Copyright Notice: (C) 2000-2004 Team Elements, All Rights Reserved.
   - License: This source code cannot be modified, distributed or used without
   -          written permission from Team Elements. This notice must remain in
   -          place.
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="initPage.jsp" %>
-<% 
+<%
   if (clientType.getType() == -1) {
     clientType.setParameters(request);
   }
 %>
-<script language="javascript" type="text/javascript" src="tiny_mce/tiny_mce_src.js"></script>
+<script language="javascript" type="text/javascript" src="tiny_mce/image-library.js?2"></script>
+<script language="javascript" type="text/javascript" src="tiny_mce/tiny_mce.js?1"></script>
 <script language="javascript" type="text/javascript">
   function initEditor(ta) {
     tinyMCE.init({
@@ -35,6 +36,10 @@
 
       force_p_newlines : "false",
       force_br_newlines : "true",
+
+      external_link_list_url : "example_link_list.js",
+      external_image_list_url : "example_image_list.js",
+      file_browser_callback : "ImageLibrary.imageLibraryCallBack",
 
       verify_css_classes : "false",
 

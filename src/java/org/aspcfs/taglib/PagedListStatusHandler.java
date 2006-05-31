@@ -22,12 +22,14 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import javax.portlet.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.util.HashMap;
 import java.util.Hashtable;
+
 
 /**
  *  Displays the status of the PagedListInfo specified with record counts, next
@@ -423,6 +425,20 @@ public class PagedListStatusHandler extends BodyTagSupport {
     try {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(
           object);
+
+      // To handle PortletSession
+      if (pagedListInfo  == null) {
+				PortletRequest renderRequest = (PortletRequest) pageContext.getRequest().
+					getAttribute(org.apache.pluto.tags.Constants.PORTLET_REQUEST);
+				if (renderRequest != null){
+					pagedListInfo = (PagedListInfo)renderRequest.getPortletSession().getAttribute(object);
+				}
+			}
+
+      RenderResponse renderResponse = (RenderResponse) pageContext.getRequest()
+          .getAttribute(org.apache.pluto.tags.Constants.PORTLET_RESPONSE);
+
+
       if (systemStatus != null) {
         if (systemStatus.getLabel(
             "pagedListInfo.pagedListStatus." + title) != null) {
@@ -612,7 +628,7 @@ public class PagedListStatusHandler extends BodyTagSupport {
             }
           } else {
             // The SystemStatus IS NULL here...
-            if (pagedListInfo.getMaxRecords() > 0) {
+						if (pagedListInfo.getMaxRecords() > 0) {
               if ((pagedListInfo.getCurrentOffset() + 1) <= pagedListInfo.getMaxRecords()) {
                 if (pagedListInfo.getItemsPerPage() == 1) {
                   //1 of 20 [Previous|Next]
@@ -658,12 +674,12 @@ public class PagedListStatusHandler extends BodyTagSupport {
                     pagedListInfo.getPreviousPageLink(
                         "<font class='underline'>" + systemStatus.getLabel(
                             "label.previous") + "</font>", systemStatus.getLabel(
-                                "label.previous"), form) +
+                                "label.previous"), form, renderResponse) +
                     "|" +
                     pagedListInfo.getNextPageLink(
                         "<font class='underline'>" + systemStatus.getLabel(
                             "label.next") + "</font>", systemStatus.getLabel(
-                                "label.next"), form) +
+                                "label.next"), form, renderResponse) +
                     "]");
               } else {
                 out.write(
@@ -672,13 +688,13 @@ public class PagedListStatusHandler extends BodyTagSupport {
                             "<font class='underline'>" + prefs.getLabel(
                                 "label.previous", prefs.get("SYSTEM.LANGUAGE")) + "</font>",
                             prefs.getLabel(
-                                "label.previous", prefs.get("SYSTEM.LANGUAGE")), form) +
+                                "label.previous", prefs.get("SYSTEM.LANGUAGE")), form, renderResponse) +
                     "|" +
                     pagedListInfo.getNextPageLink(
                             "<font class='underline'>" + prefs.getLabel(
                                 "label.next", prefs.get("SYSTEM.LANGUAGE")) + "</font>",
                             prefs.getLabel(
-                                "label.next", prefs.get("SYSTEM.LANGUAGE")), form) +
+                                "label.next", prefs.get("SYSTEM.LANGUAGE")), form, renderResponse) +
                     "]");
               }
               out.write(" ");
@@ -713,7 +729,7 @@ public class PagedListStatusHandler extends BodyTagSupport {
    * @param input Description of the Parameter
    * @return The label value
    */
-  public String getLabel(HashMap map, String input) {
+  public static String getLabel(HashMap map, String input) {
     Template template = new Template(input);
     template.setParseElements(map);
     return template.getParsedText();

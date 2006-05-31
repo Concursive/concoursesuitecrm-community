@@ -159,3 +159,12 @@ WEB-INF/lib/lucene-1.4.2.jar
 ## 2006-03-31 new driver
 WEB-INF/lib/postgresql-8.1-404.jdbc3.jar
 
+## 2006-03-08 full version required for pluto
+WEB-INF/lib/xercesMinimal.jar
+
+## 2006-04-20 pluto beta
+WEB-INF/lib/pluto-container-1.1.0-SNAPSHOT.jar
+WEB-INF/lib/pluto-descriptor-api-1.1.0-SNAPSHOT.jar
+WEB-INF/lib/pluto-descriptor-impl-1.1.0-SNAPSHOT.jar
+WEB-INF/lib/pluto-portal-driver-1.1.0-SNAPSHOT.jar
+WEB-INF/lib/pluto-taglib-1.1.0-SNAPSHOT.jar

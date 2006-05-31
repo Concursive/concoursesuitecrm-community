@@ -18,6 +18,9 @@ package org.aspcfs.controller;
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.hooks.CustomHook;
 import org.aspcfs.modules.system.base.ApplicationVersion;
+import org.aspcfs.modules.website.base.Icelet;
+import org.aspcfs.modules.website.base.IceletList;
+import org.aspcfs.modules.website.base.IceletPropertyMap;
 import org.aspcfs.utils.Dictionary;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.XMLUtils;
@@ -49,6 +52,7 @@ public class ApplicationPrefs {
   private Map prefs = new LinkedHashMap();
   private String filename = null;
   private Map dictionaries = new HashMap();
+  private HashMap icelets = new HashMap();
 
 
   /**
@@ -101,6 +105,8 @@ public class ApplicationPrefs {
       this.populateContext(context);
       // Load the localization prefs
       this.loadApplicationDictionary(context);
+      // Load the icelets
+      this.loadApplicationIcelets(context);
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
@@ -605,6 +611,13 @@ public class ApplicationPrefs {
     addDictionary(context, language);
   }
 
+
+  /**
+   * Adds a feature to the Dictionary attribute of the ApplicationPrefs object
+   *
+   * @param  context   The feature to be added to the Dictionary attribute
+   * @param  language  The feature to be added to the Dictionary attribute
+   */
   public synchronized void addDictionary(ServletContext context, String language) {
     if (language == null) {
       System.out.println("ApplicationPrefs-> addDictionary: language cannot be null");
@@ -633,6 +646,55 @@ public class ApplicationPrefs {
 
 
   /**
+   * Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   */
+  public void loadApplicationIcelets(ServletContext context) {
+    icelets.clear();
+    String language = this.get("SYSTEM.LANGUAGE");
+    if (language == null) {
+      language = "en_US";
+    }
+    addIcelets(context, language);
+  }
+
+
+  /**
+   * Adds a feature to the Icelet attribute of the ApplicationPrefs object
+   *
+   * @param  context   The feature to be added to the Icelet attribute
+   * @param  language  The feature to be added to the Icelet attribute
+   */
+  public synchronized void addIcelets(ServletContext context, String language) {
+    if (language == null) {
+      System.out.println("ApplicationPrefs-> addDictionary: language cannot be null");
+    }
+    HashMap iceletMap = null;
+    if (!icelets.containsKey(language)) {
+      String languagePath = context.getRealPath("/") + "WEB-INF" + fs + "icelets" + fs;
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "ApplicationPrefs-> Loading icelets: " + language);
+      }
+      try {
+        //Create a dictionary with the default language
+        iceletMap = IceletList.load(languagePath + "icelet_en_US.xml");
+        if (language != null && !"en_US".equals(language) && !"".equals(language.trim())) {
+          // Override the text with a selected language
+          iceletMap = IceletList.load(languagePath + "icelet_" + language + ".xml");
+        }
+        icelets.put(language, iceletMap);
+      } catch (Exception e) {
+        e.printStackTrace(System.out);
+        System.out.println(
+            "ApplicationPrefs-> Language Error: " + e.getMessage());
+      }
+    }
+  }
+
+
+  /**
    * Gets the label attribute of the ApplicationPrefs object
    *
    * @param section   Description of the Parameter
@@ -644,6 +706,13 @@ public class ApplicationPrefs {
   }
 
 
+  /**
+   * Gets the label attribute of the ApplicationPrefs object
+   *
+   * @param  parameter  Description of the Parameter
+   * @param  language   Description of the Parameter
+   * @return            The label value
+   */
   public String getLabel(String parameter, String language) {
     return getLabel("system.fields.label", parameter, language);
   }
@@ -655,6 +724,7 @@ public class ApplicationPrefs {
    * @param parameter Description of the Parameter
    * @param tagName   Description of the Parameter
    * @param section   Description of the Parameter
+   * @param  language   Description of the Parameter
    * @return The value value
    */
   public String getValue(String section, String parameter, String tagName, String language) {
@@ -671,6 +741,67 @@ public class ApplicationPrefs {
       if (param != null) {
         return XMLUtils.getNodeText(
             XMLUtils.getFirstChild((Element) param, tagName));
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   * Gets the icelets attribute of the ApplicationPrefs object
+   *
+   * @return    The icelets value
+   */
+  public HashMap getIcelets(String language) {
+    if (icelets == null) {
+      return null;
+    }
+    return (HashMap)icelets.get(language);
+  }
+
+
+  /**
+   * Gets the iceletFromClass attribute of the ApplicationPrefs object
+   *
+   * @param  className  Description of the Parameter
+   * @return            The iceletFromClass value
+   */
+  public Icelet getIceletFromClass(String language, String className) {
+    if (icelets == null) {
+      return null;
+    }
+    //get icelets for the specific language
+    if (icelets.containsKey(language)){
+      HashMap iceletMap = (HashMap)icelets.get(language);
+      //get icelet for the specific class
+      if (iceletMap != null){
+        return (Icelet) iceletMap.get(className);
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   * Gets the iceletProperties attribute of the ApplicationPrefs object
+   *
+   * @param  className  Description of the Parameter
+   * @return            The iceletProperties value
+   */
+  public IceletPropertyMap getIceletPrefs(String language, String className) {
+    if (icelets == null) {
+      return null;
+    }
+    //get icelets for the specific language
+    if (icelets.containsKey(language)){
+      HashMap iceletMap = (HashMap) icelets.get(language);
+      //get icelet for the specific class
+      if (iceletMap != null) {
+        Icelet icelet = (Icelet) iceletMap.get(className);
+        if (icelet != null){
+          //get icelet properties for the specific icelet
+          return icelet.getIceletPropertyMap();
+        }
       }
     }
     return null;

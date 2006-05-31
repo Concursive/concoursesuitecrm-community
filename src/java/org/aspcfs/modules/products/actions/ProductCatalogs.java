@@ -19,6 +19,7 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.isavvix.tools.FileInfo;
 import com.isavvix.tools.HttpMultiPartParser;
 import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.Thumbnail;
 import com.zeroio.webutils.FileDownload;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
@@ -27,10 +28,12 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.products.base.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.ImageUtils;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -1028,14 +1031,18 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(
-          db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute(
-          "PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute("permissionCategory", permissionCategory);
+      String categoryId = context.getRequest().getParameter("categoryId");
+      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId)) {
+        ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+        context.getRequest().setAttribute("productCategory", category);
+      }
+      ProductCategories.buildHierarchy(db, context);
 
-      String catalogId = context.getRequest().getParameter("catalogId");
-      catalog = new ProductCatalog(db, Integer.parseInt(catalogId));
-      context.getRequest().setAttribute("ProductCatalog", catalog);
+      String productId = context.getRequest().getParameter("productId");
+      catalog = new ProductCatalog(db, Integer.parseInt(productId));
+      context.getRequest().setAttribute("productCatalog", catalog);
 
       FileItem thumbnail = null;
       FileItem smallImage = null;
@@ -1087,17 +1094,17 @@ public final class ProductCatalogs extends CFSModule {
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
-          "PermissionCategory", permissionCategory);
+          "permissionCategory", permissionCategory);
 
-      String catalogId = context.getRequest().getParameter("catalogId");
+      String productId = context.getRequest().getParameter("productId");
       String subject = "Attachment";
       ProductCatalog catalog = new ProductCatalog(
-          db, Integer.parseInt(catalogId));
-      context.getRequest().setAttribute("ProductCatalog", catalog);
+          db, Integer.parseInt(productId));
+      context.getRequest().setAttribute("productCatalog", catalog);
 
-      if ((Object) parts.get("id" + catalogId) instanceof FileInfo) {
+      if ((Object) parts.get("id" + productId) instanceof FileInfo) {
         //Update the database with the resulting file
-        FileInfo newFileInfo = (FileInfo) parts.get("id" + catalogId);
+        FileInfo newFileInfo = (FileInfo) parts.get("id" + productId);
 
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.DOCUMENTS_PRODUCT_CATALOG);
@@ -1114,6 +1121,22 @@ public final class ProductCatalogs extends CFSModule {
         if (isValid) {
           recordInserted = thisItem.insert(db);
         }
+        thisItem.setDirectory(filePath);
+        if (thisItem.isImageFormat()) {
+          //Create a thumbnail if this is an image
+          File thumbnailFile = new File(
+            newFileInfo.getLocalFile().getPath() + "TH");
+          ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnailFile, 133d, 133d);
+          //Store thumbnail in database
+          Thumbnail thumbnail = new Thumbnail();
+          thumbnail.setId(thisItem.getId());
+          thumbnail.setFilename(newFileInfo.getRealFilename() + "TH");
+          thumbnail.setVersion(thisItem.getVersion());
+          thumbnail.setSize((int) thumbnailFile.length());
+          thumbnail.setEnteredBy(thisItem.getEnteredBy());
+          thumbnail.setModifiedBy(thisItem.getModifiedBy());
+          thumbnail.insert(db);
+        }
         if (recordInserted && isValid) {
           String imageType = (String) parts.get("imageType");
           if ("thumbnail".equals(imageType)) {
@@ -1123,10 +1146,7 @@ public final class ProductCatalogs extends CFSModule {
           } else if ("large".equals(imageType)) {
             catalog.setLargeImageId(thisItem.getId());
           }
-          isValid = this.validateObject(context, db, catalog);
-          if (isValid) {
-            catalog.update(db);
-          }
+          catalog.updateImages(db);
         }
       } else {
         recordInserted = false;
@@ -1158,11 +1178,15 @@ public final class ProductCatalogs extends CFSModule {
     Connection db = null;
     try {
       String itemId = (String) context.getRequest().getParameter("fid");
-      String catalogId = (String) context.getRequest().getParameter(
-          "catalogId");
+      String productId = (String) context.getRequest().getParameter("productId");
+      String categoryId = context.getRequest().getParameter("categoryId");
+      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId)) {
+        ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+        context.getRequest().setAttribute("productCategory", category);
+      }
       db = getConnection(context);
       ProductCatalog catalog = new ProductCatalog(
-          db, Integer.parseInt(catalogId));
+          db, Integer.parseInt(productId));
       String imageType = context.getRequest().getParameter("imageType");
       catalog.removeFileItem(
           db, Integer.parseInt(itemId), imageType, this.getPath(
@@ -1186,15 +1210,17 @@ public final class ProductCatalogs extends CFSModule {
   public String executeCommandDownloadFile(ActionContext context) {
     Exception errorMessage = null;
     String itemId = (String) context.getRequest().getParameter("fid");
-    String catalogId = (String) context.getRequest().getParameter("catalogId");
+    String productId = (String) context.getRequest().getParameter("productId");
+    String categoryId = context.getRequest().getParameter("categoryId");
     FileItem thisItem = null;
     Connection db = null;
     try {
       db = getConnection(context);
-      ProductCatalog category = new ProductCatalog(
-          db, Integer.parseInt(catalogId));
-      thisItem = new FileItem(
-          db, Integer.parseInt(itemId), Integer.parseInt(catalogId), Constants.DOCUMENTS_PRODUCT_CATALOG);
+      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId)) {
+        ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
+        context.getRequest().setAttribute("productCategory", category);
+      }
+      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(productId), Constants.DOCUMENTS_PRODUCT_CATALOG);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1263,8 +1289,8 @@ public final class ProductCatalogs extends CFSModule {
    *  String moduleId = context.getRequest().getParameter("moduleId");
    *  PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
    *  context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-   *  int catalogId = Integer.parseInt(context.getRequest().getParameter("catalogId"));
-   *  catalog = new ProductCatalog(db, catalogId);
+   *  int productId = Integer.parseInt(context.getRequest().getParameter("productId"));
+   *  catalog = new ProductCatalog(db, productId);
    *  ProductCatalogList mappings = new ProductCatalogList();
    *  mappings.setMasterCategoryId(catalog.getId());
    *  mappings.buildList(db);

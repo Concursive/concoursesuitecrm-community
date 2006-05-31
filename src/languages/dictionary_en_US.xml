@@ -2599,6 +2599,9 @@
     <param name="website.portfolio.portfolioEditor">
       <value><![CDATA[Portfolio Editor]]></value>
     </param>
+    <param name="website.siteEditor">
+      <value><![CDATA[Site Editor]]></value>
+    </param>
     <param name="website.accessToWebsiteModule">
       <value><![CDATA[Access to Website module]]></value>
     </param>
@@ -7502,10 +7505,10 @@ You do not have the permissions to perform this action.]]></value>
     <value><![CDATA[Error. Please assign the component to a user in the manager's hierarchy of users]]></value>
     </param>
     <param name="object.validation.pipeline.noOwnerSelected.text">
-    <value><![CDATA[Please select a user to assign the component. For convenience, it defaults to the opportunity manager or yourself.]]></value>
+    <value><![CDATA[Please select a user to assign the component]]></value>
     </param>
     <param name="object.validation.pipeline.noManagerSelected.text">
-    <value><![CDATA[Please select a user to manage the opportunity. For convenience, it defaults to yourself.]]></value>
+    <value><![CDATA[Please select a user to manage the opportunity]]></value>
     </param>
     <param name="object.validation.checkCriteria.error">
     <value><![CDATA[Error. Please enter valid search criteria.]]></value>
@@ -9664,7 +9667,17 @@ You do not have the permissions to perform this action.]]></value>
     <param name="quickactions.addActivity">
       <value><![CDATA[Add an Activity]]></value>
     </param>
-    
+
+    <param name="quickactions.addAccount">
+      <value><![CDATA[Add an Account]]></value>
+    </param>
+    <param name="quickactions.addContact">
+      <value><![CDATA[Add a Contact]]></value>
+    </param>
+    <param name="quickactions.addActivity">
+      <value><![CDATA[Add an Activity]]></value>
+    </param>
+
     <param name="myitems.header">
       <value><![CDATA[My Items]]></value>
     </param>
@@ -11611,6 +11624,9 @@ You do not have the permissions to perform this action.]]></value>
 		</param>
     <param name="Attachments">
       <value><![CDATA[Attachments]]></value>
+		</param>
+    <param name="Attachments.colon">
+      <value><![CDATA[Attachments:]]></value>
 		</param>
     <param name="Projects">
       <value><![CDATA[Projects]]></value>

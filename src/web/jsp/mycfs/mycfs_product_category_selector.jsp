@@ -217,7 +217,6 @@
   while (i.hasNext()) {
     count++;
     ProductCategory thisCategory = (ProductCategory) i.next();
-    System.out.println("jsp: final category-> " + thisCategory.getName());
 %>
   <script>
     categoryIds[<%= count %>] = "<%= thisCategory.getId() %>";

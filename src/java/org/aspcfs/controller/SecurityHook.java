@@ -73,6 +73,7 @@ public class SecurityHook implements ControllerHook {
 
     //Login and Process modules bypass security and must implement their own
     if (action.toUpperCase().startsWith("LOGIN") ||
+        action.toUpperCase().startsWith("PORTAL") ||
         action.toUpperCase().startsWith("SETUP") ||
         action.toUpperCase().startsWith("UPGRADE") ||
         action.toUpperCase().startsWith("LICENSESERVER") ||
@@ -83,6 +84,16 @@ public class SecurityHook implements ControllerHook {
     if (value != null) {
       return value;
     }
+
+    // URL forwarding
+    String requestedURL = (String) request.getAttribute("requestedURL");
+    if (requestedURL == null && "GET".equals(request.getMethod()) && request.getParameter("redirectTo") == null) {
+      String uri = request.getRequestURI();
+      String queryString = request.getQueryString();
+      requestedURL = uri.substring(uri.lastIndexOf("/") + 1) + (queryString == null ? "" : "?" + queryString);
+      request.setAttribute("requestedURL", requestedURL);
+    }
+
     //User is supposed to have a valid session, so fail security check
     if (userSession == null || userSession.getUserId() == -1) {
       LoginBean failedSession = new LoginBean();
@@ -350,6 +361,7 @@ public class SecurityHook implements ControllerHook {
         newSystemStatus.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
       }
       prefs.addDictionary(context, language);
+      prefs.addIcelets(context, language);
       newSystemStatus.startServers(context);
     }
     return (SystemStatus) statusList.get(ce.getUrl());

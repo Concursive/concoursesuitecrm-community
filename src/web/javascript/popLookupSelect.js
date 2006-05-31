@@ -200,6 +200,26 @@ function popUserGroupsListSingle(hiddenFieldId, displayFieldId, params) {
   }
 }
 
+function popPortfolioCategoryListSingle(hiddenFieldId, displayFieldId, params) {
+  title  = 'PortfolioCategory';
+  width  =  '700';
+  height =  '425';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  var newwin=window.open('PortfolioEditor.do?command=PopupSingleSelector&listType=single&flushtemplist=true&selectedIds='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
 function popActionPlansSelectMultiple(displayFieldId,highLightedId,categoryId,constantId,siteId,currentIds, type) {
   var selectedIds = currentIds;
   window.location.href= 'AdminCategories.do?command=PopupSelector&categoryId='+categoryId+'&siteId='+siteId+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&categoryId=' + categoryId +'&constantId='+ constantId + '&type='+ type+ '';

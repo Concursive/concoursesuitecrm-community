@@ -42,6 +42,8 @@ import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.website.base.Icelet;
+import org.aspcfs.modules.website.base.IceletPropertyMap;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.UserUtils;
@@ -1332,6 +1334,59 @@ public class CFSModule {
         "applicationPrefs");
     if (prefs != null) {
       return prefs.get(param);
+    } else {
+      return null;
+    }
+  }
+
+
+  /**
+   * Gets the specified icelet from the loaded applicationPrefs
+   *
+   * @param  context  The action context
+   * @param  param    The unique class name for the icelet
+   * @return          The icelet
+   */
+  protected Icelet getIclet(ActionContext context, String param) {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
+    if (prefs != null) {
+      return prefs.getIceletFromClass(getUserLanguage(context), param);
+    } else {
+      return null;
+    }
+  }
+
+
+  /**
+   * Gets the specified icelet from the loaded applicationPrefs
+   *
+   * @param  context  The action context
+   * @return          The icelets as a HashMap
+   */
+  protected HashMap getAllIclets(ActionContext context) {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
+    if (prefs != null) {
+      return prefs.getIcelets(getUserLanguage(context));
+    } else {
+      return null;
+    }
+  }
+
+
+  /**
+   * Gets the specified icelet preferences from the loaded applicationPrefs
+   *
+   * @param  context  The action context
+   * @param  param    The unique class name for the icelet
+   * @return          The pref value
+   */
+  protected IceletPropertyMap getIcletPrefs(ActionContext context, String param) {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
+    if (prefs != null) {
+      return prefs.getIceletPrefs(getUserLanguage(context), param);
     } else {
       return null;
     }

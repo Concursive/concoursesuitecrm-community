@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    version="1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+  <portlet>
+    <portlet-name>AboutPortlet</portlet-name>
+    <portlet-class>org.aspcfs.modules.website.icelet.AboutPortlet</portlet-class>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>edit</portlet-mode>
+      <portlet-mode>help</portlet-mode>
+      <portlet-mode>config</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>About</title>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <portlet-name>ContactFormPortlet</portlet-name>
+    <portlet-class>org.aspcfs.modules.website.icelet.ContactFormPortlet</portlet-class>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>config</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Contact Form</title>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <portlet-name>HtmlContentPortlet</portlet-name>
+    <portlet-class>org.aspcfs.modules.website.icelet.HtmlContentPortlet</portlet-class>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>config</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Html Content</title>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <portlet-name>PortfolioPortlet</portlet-name>
+    <portlet-class>org.aspcfs.modules.website.icelet.PortfolioPortlet</portlet-class>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>config</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Portfolio</title>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <portlet-name>ProductCatalogPortlet</portlet-name>
+    <portlet-class>org.aspcfs.modules.website.icelet.ProductCatalogPortlet</portlet-class>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>config</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Product Catalog</title>
+    </portlet-info>
+  </portlet>
+  <custom-portlet-mode>
+      <description>Provides administration functions</description>
+      <name>config</name>
+    </custom-portlet-mode>
+</portlet-app>

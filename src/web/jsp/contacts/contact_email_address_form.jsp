@@ -58,7 +58,6 @@
   <tr>
     <td class="formLabel" nowrap><dhv:label name="contacts.emailAddressType">Email Address Type</dhv:label></td>
     <td align="left"><%= typeSelect.getHtmlSelect("email1type","Business") %></td>
-    </td>
   </tr>
   <tr>
     <td class="formLabel" nowrap><dhv:label name="quotes.emailAddress">Email Adderss</dhv:label></td>
@@ -66,6 +65,7 @@
   </tr>
 </table>
 <br />
-<input type="submit" value="<dhv:label name="button.submit">Submit</dhv:label>"/> 
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ContactEmailAddressSelector.do?command=List&contactId=<%= (contact != null)?""+contact.getId():"" %>&hiddenFieldId=<%= hiddenFieldId!=null?hiddenFieldId:"" %>';"/>
+<input type="submit" value="<dhv:label name="button.submit">Submit</dhv:label>" />
+<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ContactEmailAddressSelector.do?command=List&contactId=<%= (contact != null)?""+contact.getId():"" %>&hiddenFieldId=<%= hiddenFieldId!=null?hiddenFieldId:"" %>';" />
 </form>
+</body>

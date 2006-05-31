@@ -1,0 +1,94 @@
+<icelets>
+  <icelet name="Html Content" class="HtmlContentPortlet" version="4">
+    <description>Create content for your website.
+      Content includes text, images, tables, and more.</description>
+    <property constant="6022301"
+              label="Content"
+              description=""
+              type="htmleditor"
+              defaultValue="Enter and format your content here." />
+  </icelet>
+  <icelet name="Contact Us Form" class="ContactFormPortlet" version="1">
+    <description>Include a contact form in your web page.
+      This form allows web site visitors to fill out contact
+      information which will be saved directly to the Leads module so that you
+      can review and respond.</description>
+    <property constant="6022302"
+              label="Introduction message"
+              description="A brief message which explains that providing contact information can help the user:"
+              type="textarea"
+              defaultValue="Please enter your name and contact information. This will help us to serve you better."
+              additionalText="This introduction will appear at the top of the form." />
+    <property constant="6022303"
+              label="Thank you message"
+              description="Thank the user for providing you with their contact information:"
+              type="textarea"
+              defaultValue="Thank you for contact us. We will review your message and respond accordingly."
+              additionalText="This message will appear after the contact form is submitted by the user."/>
+    <property constant="2006051911"
+              label="Source"
+              type="leadsource"
+              defaultValue="-1"
+              additionalText=""/>
+  </icelet>
+  <icelet name="Portfolio" class="PortfolioPortlet" version="1">
+    <description>Displays the selected portfolio</description>
+    <property constant="6040316"
+              label="Category"
+              description="Select the category to display in your portal"
+              type="portfolioCategory"
+              defaultValue="-1"
+              additionalText=""/>
+  </icelet>
+  <icelet name="Product Catalog" class="ProductCatalogPortlet" version="1">
+    <description>Displays the products for the selected category</description>
+    <property constant="6050816"
+              label="Category"
+              description="Select the category to display in your portal"
+              type="productCategory"
+              defaultValue="-1"
+              additionalText=""/>
+    <property constant="6051001"
+              label="Product"
+              description="Show product SKU"
+              type="checkbox"
+              defaultValue="true"
+              additionalText=""/>
+    <property constant="6051002"
+              label="Product"
+              description="Text to display next to SKU"
+              type="text"
+              defaultValue="Item #"
+              additionalText=""/>
+    <property constant="6051003"
+              label="Product"
+              description="Show product price"
+              type="checkbox"
+              defaultValue="true"
+              additionalText=""/>
+    <property constant="6051004"
+              label="Product"
+              description="Text to display next to price"
+              type="text"
+              defaultValue=""
+              additionalText=""/>
+    <property constant="6051005"
+              label="Product"
+              description="Show price savings between MSRP and price"
+              type="checkbox"
+              defaultValue="true"
+              additionalText=""/>
+    <property constant="6051007"
+              label="Product"
+              description="Text to display next to original price"
+              type="text"
+              defaultValue="Original Price:"
+              additionalText=""/>
+    <property constant="6051006"
+              label="Product"
+              description="Text to display next to savings"
+              type="text"
+              defaultValue="Instant Savings:"
+              additionalText=""/>
+  </icelet>
+</icelets>
