@@ -525,7 +525,7 @@ public class IceletPropertyMap extends LinkedHashMap {
       //value);
 //      tmpIceletProperty.setModifiedBy(property.nextToken());//modifiedBy);
 //      tmpIceletProperty.setRowColumnId(iceletRowColumnId);
-      this.put(tmpIceletProperty.getTypeConstant(), tmpIceletProperty);
+      this.put(new Integer(tmpIceletProperty.getTypeConstant()), tmpIceletProperty);
     }
   }
 

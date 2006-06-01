@@ -258,7 +258,7 @@ public final class RowColumns extends CFSModule {
         columnList.setBuildLastPosition(true);
         columnList.buildList(db);
         rowColumn.setPreviousRowColumnId(columnList.getLastPositionColumnId());
-        context.getRequest().setAttribute("previousRowColumnId", columnList.getLastPositionColumnId());
+        context.getRequest().setAttribute("previousRowColumnId", String.valueOf(columnList.getLastPositionColumnId()));
       } else {
         //If the "Add Column after" is selected from the column dropdown
         String previousRowColumnId = context.getRequest().getParameter("previousRowColumnId");
@@ -267,7 +267,7 @@ public final class RowColumns extends CFSModule {
         }
         if (previousRowColumnId != null && !"".equals(previousRowColumnId)) {
           rowColumn.setPreviousRowColumnId(previousRowColumnId);
-          context.getRequest().setAttribute("previousRowColumnId", previousRowColumnId);
+          context.getRequest().setAttribute("previousRowColumnId", String.valueOf(previousRowColumnId));
         }
       }
       //Build the iceletList
