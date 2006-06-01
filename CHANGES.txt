@@ -26,6 +26,9 @@ If upgrading from a version prior to 3.1, you will need to upgrade to 3.1 first.
 New features:
 - Web site module and portal
 
+Enhancements:
+- Upgraded TinyMCE HTML Editor to 2.0.6.1
+
 
 ----------------------------------------------------------------------------
 Centric CRM 4.0.1

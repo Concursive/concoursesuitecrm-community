@@ -5480,6 +5480,226 @@ CREATE TABLE netapp_contractexpiration_log (
 
 
 
+CREATE TABLE layout (
+    layout_id serial NOT NULL,
+    layout_constant integer,
+    layout_name character varying(300) NOT NULL,
+    jsp character varying(300),
+    thumbnail character varying(300),
+    custom boolean DEFAULT false NOT NULL
+);
+
+
+
+CREATE TABLE style (
+    style_id serial NOT NULL,
+    style_constant integer,
+    style_name character varying(300) NOT NULL,
+    css character varying(300),
+    thumbnail character varying(300),
+    custom boolean DEFAULT false NOT NULL,
+    layout_id integer
+);
+
+
+
+CREATE TABLE site (
+    site_id serial NOT NULL,
+    site_name character varying(300) NOT NULL,
+    internal_description text,
+    hit_count integer,
+    notes text,
+    enabled boolean DEFAULT true NOT NULL,
+    layout_id integer,
+    style_id integer,
+    logo_image_id integer,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE site_log (
+    site_log_id serial NOT NULL,
+    site_id integer,
+    user_id integer,
+    username character varying(80) NOT NULL,
+    ip character varying(80),
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    browser character varying(255)
+);
+
+
+
+CREATE TABLE tab (
+    tab_id serial NOT NULL,
+    display_text character varying(300) NOT NULL,
+    internal_description text,
+    site_id integer,
+    tab_position integer NOT NULL,
+    enabled boolean DEFAULT true NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE page_version (
+    page_version_id serial NOT NULL,
+    version_number integer NOT NULL,
+    internal_description text,
+    notes text,
+    parent_page_version_id integer,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    page_id integer
+);
+
+
+
+CREATE TABLE page_group (
+    page_group_id serial NOT NULL,
+    group_name character varying(300),
+    internal_description text,
+    group_position integer NOT NULL,
+    tab_id integer,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE tab_banner (
+    tab_banner_id serial NOT NULL,
+    tab_id integer,
+    image_id integer,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE page (
+    page_id serial NOT NULL,
+    page_name character varying(300),
+    page_position integer NOT NULL,
+    active_page_version_id integer,
+    construction_page_version_id integer,
+    page_group_id integer,
+    tab_banner_id integer,
+    notes text,
+    enabled boolean DEFAULT true NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE page_row (
+    page_row_id serial NOT NULL,
+    row_position integer NOT NULL,
+    page_version_id integer,
+    enabled boolean DEFAULT true NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    row_column_id integer
+);
+
+
+
+CREATE TABLE icelet (
+    icelet_id serial NOT NULL,
+    icelet_name character varying(300) NOT NULL,
+    icelet_description text,
+    icelet_configurator_class character varying(300) NOT NULL,
+    icelet_version integer,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+
+CREATE TABLE row_column (
+    row_column_id serial NOT NULL,
+    column_position integer NOT NULL,
+    width integer,
+    page_row_id integer,
+    icelet_id integer,
+    enabled boolean DEFAULT true NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE icelet_property (
+    property_id serial NOT NULL,
+    property_type_constant integer,
+    property_value text,
+    row_column_id integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE SEQUENCE portfolio_cat_y_category_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+
+CREATE TABLE portfolio_category (
+    category_id integer DEFAULT nextval('portfolio_cat_y_category_id_seq'::text) NOT NULL,
+    category_name character varying(300) NOT NULL,
+    category_description text,
+    category_position_id integer,
+    parent_category_id integer,
+    enabled boolean DEFAULT true NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE portfolio_item (
+    item_id serial NOT NULL,
+    item_name character varying(300) NOT NULL,
+    item_description text,
+    item_position_id integer,
+    image_id integer,
+    caption character varying(300),
+    portfolio_category_id integer,
+    enabled boolean DEFAULT true NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
 CREATE INDEX orglist_name ON organization USING btree (name);
 
 
@@ -7272,6 +7492,96 @@ ALTER TABLE ONLY netapp_contractexpiration
 
 ALTER TABLE ONLY netapp_contractexpiration_log
     ADD CONSTRAINT netapp_contractexpiration_log_pkey PRIMARY KEY (id);
+
+
+
+ALTER TABLE ONLY layout
+    ADD CONSTRAINT layout_pkey PRIMARY KEY (layout_id);
+
+
+
+ALTER TABLE ONLY layout
+    ADD CONSTRAINT layout_layout_constant_key UNIQUE (layout_constant);
+
+
+
+ALTER TABLE ONLY style
+    ADD CONSTRAINT style_pkey PRIMARY KEY (style_id);
+
+
+
+ALTER TABLE ONLY style
+    ADD CONSTRAINT style_style_constant_key UNIQUE (style_constant);
+
+
+
+ALTER TABLE ONLY site
+    ADD CONSTRAINT site_pkey PRIMARY KEY (site_id);
+
+
+
+ALTER TABLE ONLY site_log
+    ADD CONSTRAINT site_log_pkey PRIMARY KEY (site_log_id);
+
+
+
+ALTER TABLE ONLY tab
+    ADD CONSTRAINT tab_pkey PRIMARY KEY (tab_id);
+
+
+
+ALTER TABLE ONLY page_version
+    ADD CONSTRAINT page_version_pkey PRIMARY KEY (page_version_id);
+
+
+
+ALTER TABLE ONLY page_group
+    ADD CONSTRAINT page_group_pkey PRIMARY KEY (page_group_id);
+
+
+
+ALTER TABLE ONLY tab_banner
+    ADD CONSTRAINT tab_banner_pkey PRIMARY KEY (tab_banner_id);
+
+
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT page_pkey PRIMARY KEY (page_id);
+
+
+
+ALTER TABLE ONLY page_row
+    ADD CONSTRAINT page_row_pkey PRIMARY KEY (page_row_id);
+
+
+
+ALTER TABLE ONLY icelet
+    ADD CONSTRAINT icelet_pkey PRIMARY KEY (icelet_id);
+
+
+
+ALTER TABLE ONLY icelet
+    ADD CONSTRAINT icelet_icelet_configurator_class_key UNIQUE (icelet_configurator_class);
+
+
+
+ALTER TABLE ONLY row_column
+    ADD CONSTRAINT row_column_pkey PRIMARY KEY (row_column_id);
+
+
+
+ALTER TABLE ONLY icelet_property
+    ADD CONSTRAINT icelet_property_pkey PRIMARY KEY (property_id);
+
+
+
+ALTER TABLE ONLY portfolio_category
+    ADD CONSTRAINT portfolio_category_pkey PRIMARY KEY (category_id);
+
+
+
+ALTER TABLE ONLY portfolio_item
+    ADD CONSTRAINT portfolio_item_pkey PRIMARY KEY (item_id);
 
 
 
@@ -11095,6 +11405,246 @@ ALTER TABLE ONLY netapp_contractexpiration_log
 
 
 
+ALTER TABLE ONLY style
+    ADD CONSTRAINT "$1" FOREIGN KEY (layout_id) REFERENCES layout(layout_id);
+
+
+
+ALTER TABLE ONLY site
+    ADD CONSTRAINT "$1" FOREIGN KEY (layout_id) REFERENCES layout(layout_id);
+
+
+
+ALTER TABLE ONLY site
+    ADD CONSTRAINT "$2" FOREIGN KEY (style_id) REFERENCES style(style_id);
+
+
+
+ALTER TABLE ONLY site
+    ADD CONSTRAINT "$3" FOREIGN KEY (logo_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY site
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY site
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY site_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (site_id) REFERENCES site(site_id);
+
+
+
+ALTER TABLE ONLY site_log
+    ADD CONSTRAINT "$2" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY tab
+    ADD CONSTRAINT "$1" FOREIGN KEY (site_id) REFERENCES site(site_id);
+
+
+
+ALTER TABLE ONLY tab
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY tab
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page_version
+    ADD CONSTRAINT "$1" FOREIGN KEY (parent_page_version_id) REFERENCES page_version(page_version_id);
+
+
+
+ALTER TABLE ONLY page_version
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page_version
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page_group
+    ADD CONSTRAINT "$1" FOREIGN KEY (tab_id) REFERENCES tab(tab_id);
+
+
+
+ALTER TABLE ONLY page_group
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page_group
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY tab_banner
+    ADD CONSTRAINT "$1" FOREIGN KEY (tab_id) REFERENCES tab(tab_id);
+
+
+
+ALTER TABLE ONLY tab_banner
+    ADD CONSTRAINT "$2" FOREIGN KEY (image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY tab_banner
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY tab_banner
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT "$1" FOREIGN KEY (active_page_version_id) REFERENCES page_version(page_version_id);
+
+
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT "$2" FOREIGN KEY (construction_page_version_id) REFERENCES page_version(page_version_id);
+
+
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT "$3" FOREIGN KEY (page_group_id) REFERENCES page_group(page_group_id);
+
+
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT "$4" FOREIGN KEY (tab_banner_id) REFERENCES tab_banner(tab_banner_id);
+
+
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page_version
+    ADD CONSTRAINT "$4" FOREIGN KEY (page_id) REFERENCES page(page_id);
+
+
+
+ALTER TABLE ONLY page_row
+    ADD CONSTRAINT "$1" FOREIGN KEY (page_version_id) REFERENCES page_version(page_version_id);
+
+
+
+ALTER TABLE ONLY page_row
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page_row
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY row_column
+    ADD CONSTRAINT "$1" FOREIGN KEY (page_row_id) REFERENCES page_row(page_row_id);
+
+
+
+ALTER TABLE ONLY row_column
+    ADD CONSTRAINT "$2" FOREIGN KEY (icelet_id) REFERENCES icelet(icelet_id);
+
+
+
+ALTER TABLE ONLY row_column
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY row_column
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY page_row
+    ADD CONSTRAINT "$4" FOREIGN KEY (row_column_id) REFERENCES row_column(row_column_id);
+
+
+
+ALTER TABLE ONLY icelet_property
+    ADD CONSTRAINT "$1" FOREIGN KEY (row_column_id) REFERENCES row_column(row_column_id);
+
+
+
+ALTER TABLE ONLY icelet_property
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY icelet_property
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY portfolio_category
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_position_id) REFERENCES portfolio_category(category_id);
+
+
+
+ALTER TABLE ONLY portfolio_category
+    ADD CONSTRAINT "$2" FOREIGN KEY (parent_category_id) REFERENCES portfolio_category(category_id);
+
+
+
+ALTER TABLE ONLY portfolio_category
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY portfolio_category
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY portfolio_item
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_position_id) REFERENCES portfolio_item(item_id);
+
+
+
+ALTER TABLE ONLY portfolio_item
+    ADD CONSTRAINT "$2" FOREIGN KEY (image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY portfolio_item
+    ADD CONSTRAINT "$3" FOREIGN KEY (portfolio_category_id) REFERENCES portfolio_category(category_id);
+
+
+
+ALTER TABLE ONLY portfolio_item
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY portfolio_item
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
 SELECT pg_catalog.setval('lookup_site_id_code_seq', 1, false);
 
 
@@ -12298,6 +12848,64 @@ SELECT pg_catalog.setval('netapp_contractexpiration_expiration_id_seq', 1, false
 SELECT pg_catalog.setval('netapp_contractexpiration_log_id_seq', 1, false);
 
 
+
+SELECT pg_catalog.setval('layout_layout_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('style_style_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('site_site_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('site_log_site_log_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tab_tab_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('page_version_page_version_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('page_group_page_group_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('tab_banner_tab_banner_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('page_page_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('page_row_page_row_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('icelet_icelet_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('row_column_row_column_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('icelet_property_property_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('portfolio_cat_y_category_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('portfolio_item_item_id_seq', 1, false);
 
 
 
