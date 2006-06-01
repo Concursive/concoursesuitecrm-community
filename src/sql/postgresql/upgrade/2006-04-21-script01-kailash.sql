@@ -26,6 +26,7 @@ CREATE TABLE site (
   enabled BOOLEAN NOT NULL DEFAULT true,
   layout_id INT REFERENCES layout(layout_id),
   style_id INT REFERENCES style(style_id),
+  logo_image_id INT REFERENCES project_files(item_id),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -139,6 +140,8 @@ CREATE TABLE row_column (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
+
+ALTER TABLE page_row ADD COLUMN row_column_id INT REFERENCES row_column(row_column_id);
 
 CREATE TABLE icelet_property (
   property_id SERIAL  PRIMARY KEY,

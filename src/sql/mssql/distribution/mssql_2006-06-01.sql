@@ -181,8 +181,3 @@ CREATE TABLE portfolio_item (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
-
-ALTER TABLE page_row ADD row_column_id INT REFERENCES row_column(row_column_id);
-
-ALTER TABLE site ADD logo_image_id INT REFERENCES project_files(item_id);
-
