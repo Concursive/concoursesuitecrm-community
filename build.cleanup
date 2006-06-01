@@ -168,3 +168,7 @@ WEB-INF/lib/pluto-descriptor-api-1.1.0-SNAPSHOT.jar
 WEB-INF/lib/pluto-descriptor-impl-1.1.0-SNAPSHOT.jar
 WEB-INF/lib/pluto-portal-driver-1.1.0-SNAPSHOT.jar
 WEB-INF/lib/pluto-taglib-1.1.0-SNAPSHOT.jar
+
+## 2006-06-01 updated for Java 1.4 fix
+WEB-INF/lib/xercesImpl-2.6.2.jar
+
