@@ -793,6 +793,12 @@
     </copy>
     <copy file="${src.sql.dir}/init/help.xml"
       todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <!-- Copy Icelets -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/icelets" verbose="true">
+      <fileset dir="${src.dir}/icelets">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
     <!-- Copy and compile the reports -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/reports">
