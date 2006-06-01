@@ -799,6 +799,13 @@
         <include name="*.xml"/>
       </fileset>
     </copy>
+    <!-- Copy the .zipped portal templates -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/portal_templates"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/portal_templates">
+      <fileset dir="${CENTRIC_HOME}/WEB-INF/portal_templates">
+        <include name="**/*"/>
+      </fileset>
+    </copy>
     <!-- Copy and compile the reports -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/reports">
