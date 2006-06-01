@@ -23,7 +23,7 @@ if (1 == 1) {
   layout.setConstant(2006051914);
   layout.setCustom(false);
   layout.setName("Top Menu w/Right Aligned Pages");
-  layout.setJsp("layout_2006051813_top_left_narrow.jpg");
+  layout.setJsp("layout_2006051813_top_left_narrow.jsp");
   layout.setThumbnail("layout_2006051813_top_left_narrow.jpg");
   layout.insert(db);
 }
