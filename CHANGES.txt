@@ -1,16 +1,44 @@
 ----------------------------------------------------------------------------
-Centric CRM 4.0.1 beta
+Centric CRM 4.1 beta
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-May 9, 2006
+June 1, 2006
 ----------------------------------------------------------------------------
 
-The maintenance release is still in progress and has not been finalized.
+** New Installs **
+
+The Centric CRM Group edition can be used to install PostgreSQL, MS SQL
+from the web-based installer.
+(NOTE: DaffodilDB has not been updated yet)
+
+The Centric CRM Source Code edition can be used to install PostgreSQL, MS SQL,
+DaffodilDB, Firebird DB, and Oracle DB from the command-line installer.
+(NOTE: Only PostgreSQL and MS SQL have been updated!)
+
+
+** Upgrading **
+
+This version can be used to upgrade PostgreSQL and MS SQL installations from
+Centric CRM 3.1 or 4.0 (Group and Source editions) to Centric CRM 4.1.
+DaffodilDB, Oracle, and Firebird have not been finalized for upgrading.
+If upgrading from a version prior to 3.1, you will need to upgrade to 3.1 first.
+
+New features:
+- Web site module and portal
+
+
+----------------------------------------------------------------------------
+Centric CRM 4.0.1
+Copyright (C) 2006 Dark Horse Ventures, LLC
+Change Log
+June 1, 2006
+----------------------------------------------------------------------------
 
 This is a maintenance release to address issues reported since 4.0.
 
 This release includes the following additions:
 - Australian states/territories have been added
+- Brazilian states/territories have been added
 
 This release includes the following fixes:
 - When using a default country that does not have corresponding "States"
@@ -33,6 +61,7 @@ This release includes the following fixes:
   notification for Action Plans, required for source install
 - User groups could not be created using Firebird, DaffodilDB, or Oracle DB
 - Added UTF-8 to styleContainer and styleNoSession
+- Opera web browser better handled, but still not supported
 
 
 ----------------------------------------------------------------------------
@@ -41,23 +70,6 @@ Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
 April 18, 2006
 ----------------------------------------------------------------------------
-
-** New Installs **
-
-The Centric CRM Group edition can be used to install PostgreSQL, MS SQL, and
-DaffodilDB from the web-based installer.
-
-The Centric CRM Source Code edition can be used to install PostgreSQL, MS SQL,
-DaffodilDB, Firebird DB, and Oracle DB from the command-line installer.
-
-
-** Upgrading **
-
-This version can be used to upgrade PostgreSQL and MS SQL installations from
-Centric Crm 3.1 (Group and Source editions) to Centric CRM 4.0.
-DaffodilDB has not been finalized for upgrading.
-If upgrading from a version prior to 3.1, you will need to upgrade to 3.1 first.
-
 
 This release includes over 70 new features!
 
