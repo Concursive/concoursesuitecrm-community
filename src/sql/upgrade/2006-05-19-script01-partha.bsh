@@ -24,7 +24,7 @@ if (1 == 1) {
   layout.setCustom(false);
   layout.setName("Top Menu w/Right Aligned Pages");
   layout.setJsp("layout_2006051813_top_left_narrow.jpg");
-  layout.setThumbnail("layout_2006051813_top_left_narrow.jsp");
+  layout.setThumbnail("layout_2006051813_top_left_narrow.jpg");
   layout.insert(db);
 }
 
@@ -66,7 +66,7 @@ if (1 == 1) {
   style.setConstant(2006051811);
   style.setName("blue");
   style.setCss("style_2006051811_blue.css");
-  style.setThumbnail("style_2006051909_red_black.jpg");
+  style.setThumbnail("style_2006051811_blue.jpg");
   style.insert(db);
 }
 

@@ -1527,6 +1527,7 @@
       specificDatabase="${arg2}"
       locale="${LOCALE.NAME}"
       languagePath="${src.dir}${fs}languages"
+      iceletsPath="${src.dir}${fs}icelets"
       params="mode=upgrade">
     </upgradeDatabase>
   </target>

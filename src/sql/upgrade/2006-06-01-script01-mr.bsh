@@ -1,0 +1,19 @@
+/*
+ * This script is used by build.xml when installing a new database.
+ *
+ *@author     matt rajkowski
+ *@created    June 1, 2006
+ *@version    $Id: database.bsh 15115 2006-05-31 12:47:51 -0400 (Wed, 31 May 2006) matt $
+ */
+import java.sql.*;
+import java.util.HashMap;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.apps.icelets.*;
+import org.aspcfs.modules.website.base.*;
+
+// Create a default user to relate new data to, bypass user class constraints
+print("Updating default icelets...");
+String filePath = iceletsPath + "icelet_en_US.xml";
+HashMap iceletMap = IceletList.load(filePath);
+ImportIcelets.insertIceletList(db, iceletMap);
+print("Complete.");

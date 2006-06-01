@@ -17,38 +17,34 @@ package org.aspcfs.apps.icelets;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
-import org.aspcfs.modules.website.base.Icelet;
-import org.aspcfs.modules.website.base.IceletList;
-import org.aspcfs.modules.website.base.IceletProperty;
-import org.aspcfs.modules.website.base.IceletPropertyMap;
-import org.aspcfs.modules.website.base.RowColumn;
-import org.aspcfs.modules.website.base.RowColumnList;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.website.base.*;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kbhoopal
- *@created    February 22, 2006
- *@version    $Id: Exp $
+ * @author kbhoopal
+ * @version $Id: Exp $
+ * @created February 22, 2006
  */
 public class ImportIcelets {
 
 
   /**
-   *  Constructor for the ImportIcelets object
+   * Constructor for the ImportIcelets object
    */
-  public ImportIcelets() { }
+  public ImportIcelets() {
+  }
 
 
   /**
-   *  The main program for the ImportIcelets class
+   * The main program for the ImportIcelets class
    *
-   *@param  args  The command line arguments
+   * @param args The command line arguments
    */
   public static void main(String[] args) {
     if ((args.length != 4) && (args.length != 5)) {
@@ -63,9 +59,9 @@ public class ImportIcelets {
 
 
   /**
-   *  Constructor for the ImportIcelets object
+   * Constructor for the ImportIcelets object
    *
-   *@param  args  Description of the Parameter
+   * @param args Description of the Parameter
    */
   public ImportIcelets(String[] args) {
     ConnectionPool sqlDriver = null;
@@ -100,12 +96,12 @@ public class ImportIcelets {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public void insertIceletList(Connection db, HashMap iceletMap) throws Exception {
+  public static void insertIceletList(Connection db, HashMap iceletMap) throws Exception {
     IceletList persistantIceletList = new IceletList();
     persistantIceletList.buildList(db);
     Set iceletSet = iceletMap.keySet();
@@ -150,14 +146,14 @@ public class ImportIcelets {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  persistantIcelet  Description of the Parameter
-   *@param  icelet            Description of the Parameter
-   *@exception  Exception     Description of the Exception
+   * @param db               Description of the Parameter
+   * @param persistantIcelet Description of the Parameter
+   * @param newIcelet        Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public void updateRowColumnProperties(Connection db, Icelet persistantIcelet, Icelet newIcelet) throws Exception {
+  public static void updateRowColumnProperties(Connection db, Icelet persistantIcelet, Icelet newIcelet) throws Exception {
     RowColumnList rowColumnList = new RowColumnList();
     rowColumnList.setBuildIceletPropertyMap(true);
     rowColumnList.setBuildIcelet(true);

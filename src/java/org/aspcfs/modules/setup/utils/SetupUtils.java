@@ -21,12 +21,15 @@ import org.aspcfs.apps.help.ImportHelp;
 import org.aspcfs.apps.lookuplists.ImportLookupLists;
 import org.aspcfs.apps.transfer.reader.cfs.InitPermissionsAndRoles;
 import org.aspcfs.apps.transfer.writer.cfsdatabasewriter.PermissionsAndRolesWriter;
+import org.aspcfs.apps.icelets.ImportIcelets;
 import org.aspcfs.modules.system.base.DatabaseVersion;
+import org.aspcfs.modules.website.base.IceletList;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.HashMap;
 
 /**
  * A utility Class for Setup methods
@@ -71,6 +74,10 @@ public class SetupUtils {
     permissionsReader.execute(permissionsWriter);
     // Workflow
     script.source(setupPath + "workflow.bsh");
+    // Icelets
+    String filePath = setupPath + "../icelets/icelet_en_US.xml";
+    HashMap iceletMap = IceletList.load(filePath);
+    ImportIcelets.insertIceletList(db, iceletMap);
     // Help content
     ImportHelp help = new ImportHelp();
     help.buildHelpInformation(setupPath + "help.xml");
