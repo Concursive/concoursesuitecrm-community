@@ -1,7 +1,7 @@
 Centric CRM Community Edition; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
-Centric CRM 4.0
+Centric CRM 4.1 Beta
 
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |
@@ -260,15 +260,16 @@ DaffodilDB (One$DB Embedded)      LGPL
 gnu.regexp                        LGPL
 HTMLArea                          BSD style
 HTTPMultiPartParser               iSavvix Public License
+IBM DB2 JDBC Driver               -- Unknown --
 iText                             LGPL
 JFreeChart                        LGPL
 Jakarta Commons                   Apache Software License
 Jasper Reports                    LGPL
 Java Activitation Framework       Sun License
 Java Mail                         Sun License
-Jaybird FirebirdSQL JDBC          LGPL
+Jaybird FirebirdSQL JDBC Driver   LGPL
 Jcrontab                          LGPL
-jTDS                              LGPL
+jTDS Microsoft SQL Server Driver  LGPL
 Kafenio                           LGPL
 Log4J                             Apache Software License
 Lucene                            Apache Software License
