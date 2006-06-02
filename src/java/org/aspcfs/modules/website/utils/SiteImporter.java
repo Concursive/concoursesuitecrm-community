@@ -151,7 +151,7 @@ public class SiteImporter {
     int offset = 0;
     int numRead = 0;
     while (offset < contents.length
-      && (numRead = xmlStream.read(contents, offset, contents.length - offset)) >= 0)
+        && (numRead = xmlStream.read(contents, offset, contents.length - offset)) >= 0)
     {
       offset += numRead;
     }
@@ -447,6 +447,9 @@ public class SiteImporter {
                 }
                 if (pageVersion.getIsConstruction()) {
                   page.setConstructionPageVersionId(pageVersion.getId());
+                  if (page.getActivePageVersionId() == -1) {
+                    page.setActivePageVersionId(pageVersion.getId());
+                  }
                 }
               }
               page.setOverride(true);
@@ -484,7 +487,7 @@ public class SiteImporter {
                     Integer key = (Integer) iceletPropertySetIterator.next();
                     IceletProperty iceletProperty = (IceletProperty) iceletPropertyMap.get(key);
                     if (iceletProperty.getValue().indexOf("<img") != -1) {
-                      iceletProperty.setValue(replaceTags(iceletProperty.getValue(), pageRow.getId() ,db));
+                      iceletProperty.setValue(replaceTags(iceletProperty.getValue(), pageRow.getId(), db));
                     }
                     iceletProperty.setEnteredBy(userId);
                     iceletProperty.setModifiedBy(userId);
@@ -635,7 +638,7 @@ public class SiteImporter {
       int offset = 0;
       int numRead = 0;
       while (offset < image.length
-        && (numRead = imageStream.read(image, offset, image.length - offset)) >= 0)
+          && (numRead = imageStream.read(image, offset, image.length - offset)) >= 0)
       {
         offset += numRead;
       }
@@ -646,10 +649,10 @@ public class SiteImporter {
         fileLibraryPath = webappPath + "/WEB-INF/fileLibrary/cdb_actionplans/accounts/";
       }
       String completeImagefilePath = fileLibraryPath + DateUtils.getDatePath(
-        new Timestamp(Calendar.getInstance().getTimeInMillis())) + thisItem.getFilename();
+          new Timestamp(Calendar.getInstance().getTimeInMillis())) + thisItem.getFilename();
 
       boolean success = (new File(fileLibraryPath + DateUtils.getDatePath(
-        new Timestamp(Calendar.getInstance().getTimeInMillis())))).mkdirs();
+          new Timestamp(Calendar.getInstance().getTimeInMillis())))).mkdirs();
 
       System.out.println("IMAGE PATH IN THE FILE LIBRARY ==> " + completeImagefilePath);
       if (success) {
@@ -725,4 +728,3 @@ public class SiteImporter {
     return site;
   }
 }
-
