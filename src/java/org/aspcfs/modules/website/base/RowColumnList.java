@@ -562,7 +562,7 @@ public class RowColumnList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM row_column " +
+        "FROM web_row_column " +
         "WHERE row_column_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -594,7 +594,7 @@ public class RowColumnList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM row_column " +
+        "FROM web_row_column " +
         "WHERE row_column_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -722,12 +722,12 @@ public class RowColumnList extends ArrayList {
   public static void updateRelatedRowColumns(Connection db, int currentId, int adjacentId, int pageRowId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE row_column " +
+          "UPDATE web_row_column " +
           "SET column_position = column_position + 1 " +
           "WHERE row_column_id <> ? " +
           "AND page_row_id = ? " +
           "AND " + (changeAdjacentPosition ? "column_position >= " : "column_position > ") +
-          "(SELECT column_position FROM row_column WHERE row_column_id = ?) ");
+          "(SELECT column_position FROM web_row_column WHERE row_column_id = ?) ");
       pst.setInt(1, currentId);
       pst.setInt(2, pageRowId);
       pst.setInt(3, adjacentId);
@@ -735,11 +735,11 @@ public class RowColumnList extends ArrayList {
       pst.close();
     } else {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE row_column " +
+          "UPDATE web_row_column " +
           "SET column_position = column_position - 1 " +
           "WHERE page_row_id = ? " +
           "AND column_position > " +
-          "(SELECT column_position FROM row_column WHERE row_column_id = ?) ");
+          "(SELECT column_position FROM web_row_column WHERE row_column_id = ?) ");
       pst.setInt(1, pageRowId);
       pst.setInt(2, currentId);
       pst.executeUpdate();

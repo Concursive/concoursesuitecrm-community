@@ -167,7 +167,7 @@ public class TabBannerList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM tab_banner " +
+        "FROM web_tab_banner " +
         "WHERE tab_banner_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -199,7 +199,7 @@ public class TabBannerList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM tab_banner " +
+        "FROM web_tab_banner " +
         "WHERE tab_banner_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

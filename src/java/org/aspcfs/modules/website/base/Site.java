@@ -572,7 +572,7 @@ public class Site extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
       " SELECT * " +
-        " FROM site " +
+        " FROM web_site " +
         " WHERE site_id = ? ");
     pst.setInt(1, tmpSiteId);
     rs = pst.executeQuery();
@@ -607,9 +607,9 @@ public class Site extends GenericBean {
       if (enabled) {
         SiteList.disableOtherSites(db);
       }
-      id = DatabaseUtils.getNextSeq(db, "site_site_id_seq");
+      id = DatabaseUtils.getNextSeq(db, "web_site_site_id_seq");
       PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO site " +
+        "INSERT INTO web_site " +
           "(" + (id > -1 ? "site_id, " : "") +
           "site_name , " +
           "internal_description , " +
@@ -637,7 +637,7 @@ public class Site extends GenericBean {
       pst.setInt(++i, modifiedBy);
       pst.setInt(++i, modifiedBy);
       pst.execute();
-      id = DatabaseUtils.getCurrVal(db, "site_site_id_seq", id);
+      id = DatabaseUtils.getCurrVal(db, "web_site_site_id_seq", id);
       pst.close();
       if (autoCommit) {
         db.commit();
@@ -668,7 +668,7 @@ public class Site extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "UPDATE site " +
+      "UPDATE web_site " +
         "SET " +
         "site_name = ?, " +
         "internal_description = ?, " +
@@ -808,7 +808,7 @@ public class Site extends GenericBean {
       tmpTabList = null;
 
       PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM site " +
+        "DELETE FROM web_site " +
           "WHERE site_id = ? ");
 
       pst.setInt(1, this.getId());
@@ -917,7 +917,7 @@ public class Site extends GenericBean {
 
   public void updateLogoImageId(Connection db, int newLogoImageId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "UPDATE site " +
+      "UPDATE web_site " +
         "SET logo_image_id = ? " +
         "WHERE site_id = ?"
     );
@@ -929,7 +929,7 @@ public class Site extends GenericBean {
 
   public void updateLayoutId(Connection db, int newLayoutId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "UPDATE site " +
+      "UPDATE web_site " +
         "SET layout_id = ? " +
         "WHERE site_id = ?"
     );
@@ -941,7 +941,7 @@ public class Site extends GenericBean {
 
   public void updateStyleId(Connection db, int newStyleId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "UPDATE site " +
+      "UPDATE web_site " +
         "SET style_id = ? " +
         "WHERE site_id = ?"
     );

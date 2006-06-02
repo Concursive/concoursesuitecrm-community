@@ -368,7 +368,7 @@ public class PageGroupList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
       "SELECT COUNT(*) AS recordcount " +
-        "FROM page_group " +
+        "FROM web_page_group " +
         "WHERE page_group_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -400,7 +400,7 @@ public class PageGroupList extends ArrayList {
     }
     sqlSelect.append(
       " * " +
-        "FROM page_group " +
+        "FROM web_page_group " +
         "WHERE page_group_id > -1 ");
     pst = db.prepareStatement(
       sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -508,12 +508,12 @@ public class PageGroupList extends ArrayList {
   public static void updateRelatedPageGroups(Connection db, int currentId, int adjacentId, int tabId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
-        "UPDATE page_group " +
+        "UPDATE web_page_group " +
           "SET group_position = group_position + 1 " +
           "WHERE page_group_id <> ? " +
           "AND tab_id = ? " +
           "AND " + (changeAdjacentPosition ? "group_position >= " : "group_position > ") +
-          "(SELECT group_position FROM page_group WHERE page_group_id = ?) ");
+          "(SELECT group_position FROM web_page_group WHERE page_group_id = ?) ");
       pst.setInt(1, currentId);
       pst.setInt(2, tabId);
       pst.setInt(3, adjacentId);
@@ -521,11 +521,11 @@ public class PageGroupList extends ArrayList {
       pst.close();
     } else {
       PreparedStatement pst = db.prepareStatement(
-        "UPDATE page_group " +
+        "UPDATE web_page_group " +
           "SET group_position = group_position - 1 " +
           "WHERE tab_id = ? " +
           "AND group_position > " +
-          "(SELECT group_position FROM page_group WHERE page_group_id = ?) ");
+          "(SELECT group_position FROM web_page_group WHERE page_group_id = ?) ");
       pst.setInt(1, tabId);
       pst.setInt(2, currentId);
       pst.executeUpdate();

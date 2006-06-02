@@ -485,7 +485,7 @@ public class PageList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM page " +
+        "FROM web_page " +
         "WHERE page_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -517,7 +517,7 @@ public class PageList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM page " +
+        "FROM web_page " +
         "WHERE page_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -655,7 +655,7 @@ public class PageList extends ArrayList {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM page_group " +
+        " FROM web_page_group " +
         " WHERE tab_id = ? " +
         " AND group_position = ? " +
         " ORDER BY group_position ");
@@ -672,7 +672,7 @@ public class PageList extends ArrayList {
     if (defaultPageGroup.getId() != -1) {
       pst = db.prepareStatement(
           " SELECT * " +
-          " FROM page " +
+          " FROM web_page " +
           " WHERE page_group_id = ? " +
           " AND page_position = ? " +
           ((mode == Site.PORTAL_MODE) ? "AND enabled = ? " : "") +
@@ -707,12 +707,12 @@ public class PageList extends ArrayList {
   public static void updateRelatedPages(Connection db, int currentId, int adjacentId, int pageGroupId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE page " +
+          "UPDATE web_page " +
           "SET page_position = page_position + 1 " +
           "WHERE page_id <> ? " +
           "AND page_group_id = ? " +
           "AND " + (changeAdjacentPosition ? "page_position >= " : "page_position > ") +
-          "(SELECT page_position FROM page WHERE page_id = ?) ");
+          "(SELECT page_position FROM web_page WHERE page_id = ?) ");
       pst.setInt(1, currentId);
       pst.setInt(2, pageGroupId);
       pst.setInt(3, adjacentId);
@@ -720,11 +720,11 @@ public class PageList extends ArrayList {
       pst.close();
     } else {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE page " +
+          "UPDATE web_page " +
           "SET page_position = page_position - 1 " +
           "WHERE page_group_id = ? " +
           "AND page_position > " +
-          "(SELECT page_position FROM page WHERE page_id = ?) ");
+          "(SELECT page_position FROM web_page WHERE page_id = ?) ");
       pst.setInt(1, pageGroupId);
       pst.setInt(2, currentId);
       pst.executeUpdate();

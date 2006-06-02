@@ -230,7 +230,7 @@ public class StyleList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM style " +
+        "FROM web_style " +
         "WHERE style_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -262,7 +262,7 @@ public class StyleList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM style " +
+        "FROM web_style " +
         "WHERE style_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

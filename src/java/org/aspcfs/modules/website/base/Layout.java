@@ -287,7 +287,7 @@ public class Layout extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM layout " +
+        " FROM web_layout " +
         " WHERE layout_id = ? ");
     pst.setInt(1, tmpLayoutId);
     rs = pst.executeQuery();
@@ -315,9 +315,9 @@ public class Layout extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "layout_layout_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_layout_layout_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO layout " +
+        "INSERT INTO web_layout " +
         "(" + (id > -1 ? "layout_id, " : "") +
         "layout_constant , " +
         "layout_name , " +
@@ -335,7 +335,7 @@ public class Layout extends GenericBean {
     pst.setString(++i, thumbnail);
     pst.setBoolean(++i, custom);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "layout_layout_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_layout_layout_id_seq", id);
     pst.close();
 
     return true;
@@ -355,7 +355,7 @@ public class Layout extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE layout " +
+        "UPDATE web_layout " +
         "SET " +
         "layout_constant = ? , " +
         "layout_name = ? , " +
@@ -403,7 +403,7 @@ public class Layout extends GenericBean {
       tmpStyleList = null;
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM layout " +
+          "DELETE FROM web_layout " +
           "WHERE layout_id = ? ");
 
       pst.setInt(1, this.getId());

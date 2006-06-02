@@ -550,7 +550,7 @@ public class PageVersion extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM page_version " +
+        " FROM web_page_version " +
         " WHERE page_version_id = ? ");
     pst.setInt(1, tmpPageVersionId);
     rs = pst.executeQuery();
@@ -578,10 +578,10 @@ public class PageVersion extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "page_version_page_version_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_page_version_page_version_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO page_version " +
+        "INSERT INTO web_page_version " +
         "(" + (id > -1 ? "page_version_id, " : "") +
         "version_number , " +
         "internal_description , " +
@@ -603,7 +603,7 @@ public class PageVersion extends GenericBean {
     pst.setInt(++i, modifiedBy);
     DatabaseUtils.setInt(pst, ++i, pageId);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "page_version_page_version_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_page_version_page_version_id_seq", id);
     pst.close();
 
     return true;
@@ -623,7 +623,7 @@ public class PageVersion extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE page_version " +
+        "UPDATE web_page_version " +
         "SET " +
         "version_number = ? , " +
         "internal_description = ? , " +
@@ -701,7 +701,7 @@ public class PageVersion extends GenericBean {
       tmpPageRowList = null;
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM page_version " +
+          "DELETE FROM web_page_version " +
           "WHERE page_version_id =  ? ");
 
       pst.setInt(1, this.getId());
@@ -764,9 +764,9 @@ public class PageVersion extends GenericBean {
   public int getTabIdByPageVersionId(Connection db) throws SQLException {
     int tabId = -1;
     PreparedStatement pst = db.prepareStatement(
-      "SELECT tab_id FROM page_group "+
-      "WHERE page_group_id IN (SELECT page_group_id FROM page " +
-      " WHERE page_id IN (SELECT page_id FROM page_version " +
+      "SELECT tab_id FROM web_page_group "+
+      "WHERE page_group_id IN (SELECT page_group_id FROM web_page " +
+      " WHERE page_id IN (SELECT page_id FROM web_page_version " +
       "  WHERE page_version_id = ? )) ");
     pst.setInt(1, this.getId());
 //System.out.println(pst);

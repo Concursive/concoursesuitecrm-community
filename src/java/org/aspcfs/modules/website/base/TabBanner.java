@@ -337,9 +337,9 @@ public class TabBanner extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "tab_banner_tab_banner_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_tab_banner_tab_banner_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO tab_banner " +
+        "INSERT INTO web_tab_banner " +
         "(" + (id > -1 ? "tab_banner_id, " : "") +
         "tab_id , " +
         "image_id , " +
@@ -355,7 +355,7 @@ public class TabBanner extends GenericBean {
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "tab_banner_tab_banner_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_tab_banner_tab_banner_id_seq", id);
     pst.close();
 
     return true;
@@ -375,7 +375,7 @@ public class TabBanner extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE tab_banner " +
+        "UPDATE web_tab_banner " +
         "SET " +
         "tab_id = ? , " +
         "image_id = ? " );
@@ -428,7 +428,7 @@ public class TabBanner extends GenericBean {
       tmpPageList = null;
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM tab_banner " +
+          "DELETE FROM web_tab_banner " +
           "WHERE tab_banner_id =  ? ");
 
       pst.setInt(1, this.getId());

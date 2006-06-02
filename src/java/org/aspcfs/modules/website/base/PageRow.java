@@ -606,7 +606,7 @@ public class PageRow extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM page_row " +
+        " FROM web_page_row " +
         " WHERE page_row_id = ? ");
     pst.setInt(1, tmpPageRowId);
     rs = pst.executeQuery();
@@ -634,10 +634,10 @@ public class PageRow extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "page_row_page_row_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_page_row_page_row_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO page_row " +
+        "INSERT INTO web_page_row " +
         "(" + (id > -1 ? "page_row_id, " : " ") +
         "row_position , " +
         "page_version_id , " +
@@ -657,7 +657,7 @@ public class PageRow extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "page_row_page_row_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_page_row_page_row_id_seq", id);
     pst.close();
     updateRelatedPageRows(db, true);
     return true;
@@ -677,7 +677,7 @@ public class PageRow extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE page_row " +
+        "UPDATE web_page_row " +
         "SET " +
         "row_position = ? , " +
         "page_version_id = ? , " +
@@ -742,7 +742,7 @@ public class PageRow extends GenericBean {
 
       //Delete the current row
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM page_row " +
+          "DELETE FROM web_page_row " +
           "WHERE page_row_id =  ? ");
 
       pst.setInt(1, this.getId());

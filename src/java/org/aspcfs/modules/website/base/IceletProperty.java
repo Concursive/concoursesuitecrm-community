@@ -487,7 +487,7 @@ public class IceletProperty extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM icelet_property " +
+        " FROM web_icelet_property " +
         " WHERE property_id = ? ");
     pst.setInt(1, tmpIceletPropertyId);
     rs = pst.executeQuery();
@@ -538,10 +538,10 @@ public class IceletProperty extends GenericBean {
    * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    id = DatabaseUtils.getNextSeq(db, "icelet_property_property_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_icelet_property_property_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO icelet_property " +
+        "INSERT INTO web_icelet_property " +
         "(" + (id > -1 ? "property_id, " : "") +
         "property_type_constant , " +
         "property_value , " +
@@ -559,7 +559,7 @@ public class IceletProperty extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "icelet_property_property_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_icelet_property_property_id_seq", id);
     pst.close();
 
     return true;
@@ -597,7 +597,7 @@ public class IceletProperty extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
-          "DELETE FROM icelet_property " +
+          "DELETE FROM web_icelet_property " +
           "WHERE property_id = ? ");
 
       pst = db.prepareStatement(sql.toString());

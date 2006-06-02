@@ -267,7 +267,7 @@ public class SiteLog extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM site_log " +
+        " FROM web_site_log " +
         " WHERE site_log_id = ? ");
     pst.setInt(1, tmpSiteLogId);
     rs = pst.executeQuery();
@@ -290,9 +290,9 @@ public class SiteLog extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "site_log_site_log_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_site_log_site_log_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO site_log " +
+        "INSERT INTO web_site_log " +
         "(" + (id > -1 ? "site_log_id, " : "") +
         "site_id , " +
         "user_id , " +
@@ -310,7 +310,7 @@ public class SiteLog extends GenericBean {
     pst.setString(++i, ip);
     pst.setString(++i, browser);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "site_log_site_log_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_site_log_site_log_id_seq", id);
     pst.close();
 
     return true;
@@ -333,7 +333,7 @@ public class SiteLog extends GenericBean {
       }
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM site_log " +
+          "DELETE FROM web_site_log " +
           "WHERE site_log_id = ? ");
 
       pst.setInt(1, this.getId());

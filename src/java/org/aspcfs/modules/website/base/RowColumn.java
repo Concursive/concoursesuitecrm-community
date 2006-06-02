@@ -814,7 +814,7 @@ public class RowColumn extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM row_column " +
+        " FROM web_row_column " +
         " WHERE row_column_id = ? ");
     pst.setInt(1, tmpRowColumnId);
     rs = pst.executeQuery();
@@ -846,10 +846,10 @@ public class RowColumn extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "row_column_row_column_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_row_column_row_column_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO row_column " +
+        "INSERT INTO web_row_column " +
         "(" + (id > -1 ? "row_column_id, " : "") +
         "column_position , " +
         "page_row_id , " +
@@ -872,7 +872,7 @@ public class RowColumn extends GenericBean {
     pst.setInt(++i, modifiedBy);
 //System.out.println(pst);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "row_column_row_column_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_row_column_row_column_id_seq", id);
     pst.close();
     if (!this.getSwappingRowColumn()) {
       updateRelatedRowColumns(db, true);
@@ -893,7 +893,7 @@ public class RowColumn extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE row_column " +
+        "UPDATE web_row_column " +
         "SET " +
         "column_position = ? , " +
         "width = ? , " +
@@ -966,7 +966,7 @@ public class RowColumn extends GenericBean {
 
       //Delete the column
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM row_column " +
+          "DELETE FROM web_row_column " +
           "WHERE row_column_id =  ? ");
 
       pst.setInt(1, this.getId());
@@ -1019,7 +1019,7 @@ public class RowColumn extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " select count(*) AS numberOfRecords" +
-        " from site s, tab t, page_group pg, page p, " +
+        " from web_site s, web_tab t, web_page_group pg, web_page p, " +
         " page_version pv, page_row pr, row_column rc " +
         " where rc.row_column_id = ? " +
         " and rc.enabled = ? " +

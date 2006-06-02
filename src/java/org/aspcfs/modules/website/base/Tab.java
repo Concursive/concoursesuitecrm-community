@@ -683,7 +683,7 @@ public class Tab extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM tab " +
+        " FROM web_tab " +
         " WHERE tab_id = ? ");
     pst.setInt(1, tmpTabId);
     rs = pst.executeQuery();
@@ -714,9 +714,9 @@ public class Tab extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "tab_tab_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_tab_tab_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO tab " +
+        "INSERT INTO web_tab " +
         "(" + (id > -1 ? "tab_id, " : "") +
         "display_text , " +
         "internal_description , " +
@@ -738,7 +738,7 @@ public class Tab extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "tab_tab_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_tab_tab_id_seq", id);
     pst.close();
 
     updateRelatedTabs(db, true);
@@ -759,7 +759,7 @@ public class Tab extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE tab " +
+        "UPDATE web_tab " +
         "SET " +
         "display_text = ? , " +
         "internal_description = ? , " +
@@ -827,7 +827,7 @@ public class Tab extends GenericBean {
       updateRelatedTabs(db, false);
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM tab " +
+          "DELETE FROM web_tab " +
           "WHERE tab_id =  ? ");
 
       pst.setInt(1, this.getId());

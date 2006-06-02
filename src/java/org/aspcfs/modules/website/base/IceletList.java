@@ -271,7 +271,7 @@ public class IceletList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM icelet " +
+        "FROM web_icelet " +
         "WHERE icelet_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -303,7 +303,7 @@ public class IceletList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM icelet " +
+        "FROM web_icelet " +
         "WHERE icelet_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

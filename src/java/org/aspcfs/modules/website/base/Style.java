@@ -265,7 +265,7 @@ public class Style extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM style " +
+        " FROM web_style " +
         " WHERE style_id = ? ");
     pst.setInt(1, tmpStyleId);
     rs = pst.executeQuery();
@@ -291,9 +291,9 @@ public class Style extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "style_style_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_style_style_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO style " +
+        "INSERT INTO web_style " +
         "(" + (id > -1 ? "style_id, " : "") +
         "style_constant , " +
         "style_name , " +
@@ -313,7 +313,7 @@ public class Style extends GenericBean {
     pst.setBoolean(++i, custom);
     DatabaseUtils.setInt(pst, ++i, layoutId);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "style_style_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_style_style_id_seq", id);
     pst.close();
 
     return true;
@@ -333,7 +333,7 @@ public class Style extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE style " +
+        "UPDATE web_style " +
         "SET " +
         "style_constant = ? , " +
         "style_name = ? , " +
@@ -377,7 +377,7 @@ public class Style extends GenericBean {
       }
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM style " +
+          "DELETE FROM web_style " +
           "WHERE style_id = ? ");
 
       pst.setInt(1, this.getId());

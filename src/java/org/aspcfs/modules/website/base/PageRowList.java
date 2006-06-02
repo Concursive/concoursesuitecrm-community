@@ -528,7 +528,7 @@ public class PageRowList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM page_row " +
+        "FROM web_page_row " +
         "WHERE page_row_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -560,7 +560,7 @@ public class PageRowList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM page_row " +
+        "FROM web_page_row " +
         "WHERE page_row_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -682,12 +682,12 @@ public class PageRowList extends ArrayList {
   public static void updateRelatedPageRows(Connection db, int currentId, int adjacentId, int pageVersionId, int rowColumnId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE page_row " +
+          "UPDATE web_page_row " +
           "SET row_position = row_position + 1 " +
           "WHERE page_row_id <> ? " +
           "AND " +(pageVersionId == -1 ? " row_column_id = ? " : "page_version_id = ? ") +
           "AND " + (changeAdjacentPosition ? "row_position >= " : "row_position > ") +
-          "(SELECT row_position FROM page_row WHERE page_row_id = ?) ");
+          "(SELECT row_position FROM web_page_row WHERE page_row_id = ?) ");
       pst.setInt(1, currentId);
       pst.setInt(2, (pageVersionId == -1 ? rowColumnId : pageVersionId));
       pst.setInt(3, adjacentId);
@@ -695,11 +695,11 @@ public class PageRowList extends ArrayList {
       pst.close();
     } else {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE page_row " +
+          "UPDATE web_page_row " +
           "SET row_position = row_position - 1 " +
           "WHERE " + (pageVersionId == -1 ? " row_column_id = ? " : "page_version_id = ? ") +
           "AND row_position > " +
-          "(SELECT row_position FROM page_row WHERE page_row_id = ?) ");
+          "(SELECT row_position FROM web_page_row WHERE page_row_id = ?) ");
       pst.setInt(1, (pageVersionId == -1 ? rowColumnId : pageVersionId));
       pst.setInt(2, currentId);
       pst.executeUpdate();

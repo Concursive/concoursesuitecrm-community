@@ -1065,7 +1065,7 @@
       <record><![CDATA[Cannot resolve]]></record>
       <record><![CDATA[Duplicate]]></record>
     </lookup>
-	 <lookup table="layout" key="layout_id">
+	 <lookup table="web_layout" key="layout_id">
 		<attribute name="custom" type="boolean" />
 		<attribute name="layout_constant" type="integer" />
 		<record LUID="5190610" custom="false" layout_constant="2006051813">
@@ -1094,7 +1094,7 @@
 			<thumbnail><![CDATA[layout_2006051815_top_top_narrow.jpg]]></thumbnail>
 		</record>
 	 </lookup>
-    <lookup table="style" key="style_id">
+    <lookup table="web_style" key="style_id">
 			<attribute name="custom" type="boolean" />
 			<attribute name="style_constant" type="integer" />
 			<record LUID="5190614" custom="false" style_constant="2006051811">

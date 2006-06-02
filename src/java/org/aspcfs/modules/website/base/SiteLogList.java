@@ -178,7 +178,7 @@ public class SiteLogList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM site_log " +
+        "FROM web_site_log " +
         "WHERE site_log_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -210,7 +210,7 @@ public class SiteLogList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM site_log " +
+        "FROM web_site_log " +
         "WHERE site_log_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

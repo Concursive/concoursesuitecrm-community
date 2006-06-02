@@ -168,7 +168,7 @@ public class SiteList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM site " +
+        "FROM web_site " +
         "WHERE site_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -200,7 +200,7 @@ public class SiteList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM site " +
+        "FROM web_site " +
         "WHERE site_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -285,7 +285,7 @@ public class SiteList extends ArrayList {
    * @exception  SQLException  Description of the Exception
    */
   public static void disableOtherSites(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("UPDATE site SET enabled = ? ");
+    PreparedStatement pst = db.prepareStatement("UPDATE web_site SET enabled = ? ");
     pst.setBoolean(1, false);
     pst.executeUpdate();
     pst.close();

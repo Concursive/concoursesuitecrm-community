@@ -291,7 +291,7 @@ public class TabList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM tab " +
+        "FROM web_tab " +
         "WHERE tab_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -323,7 +323,7 @@ public class TabList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM tab " +
+        "FROM web_tab " +
         "WHERE tab_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -439,7 +439,7 @@ public class TabList extends ArrayList {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT tab_id " +
-        " FROM tab " +
+        " FROM web_tab " +
         " WHERE site_id = ? " +
         ((mode == Site.PORTAL_MODE) ? "AND enabled = ? " : "") +
         " ORDER BY tab_position ");
@@ -471,12 +471,12 @@ public class TabList extends ArrayList {
   public static void updateRelatedTabs(Connection db, int currentId, int adjacentId, int siteId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE tab " +
+          "UPDATE web_tab " +
           "SET tab_position = tab_position + 1 " +
           "WHERE tab_id <> ? " +
           "AND site_id = ? " +
           "AND " + (changeAdjacentPosition ? "tab_position >= " : "tab_position > ") +
-          "(SELECT tab_position FROM tab WHERE tab_id = ?) ");
+          "(SELECT tab_position FROM web_tab WHERE tab_id = ?) ");
       pst.setInt(1, currentId);
       pst.setInt(2, siteId);
       pst.setInt(3, adjacentId);
@@ -484,11 +484,11 @@ public class TabList extends ArrayList {
       pst.close();
     } else {
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE tab " +
+          "UPDATE web_tab " +
           "SET tab_position = tab_position - 1 " +
           "WHERE site_id = ? " +
           "AND tab_position > " +
-          "(SELECT tab_position FROM tab WHERE tab_id = ?) ");
+          "(SELECT tab_position FROM web_tab WHERE tab_id = ?) ");
       pst.setInt(1, siteId);
       pst.setInt(2, currentId);
       pst.executeUpdate();
@@ -502,7 +502,7 @@ public class TabList extends ArrayList {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT enabled " +
-        " FROM tab " +
+        " FROM web_tab " +
         " WHERE tab_id = ? " +
         " AND enabled = ? ");
     int i = 0;

@@ -255,7 +255,7 @@ public class Icelet extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM icelet " +
+        " FROM web_icelet " +
         " WHERE icelet_id = ? ");
     pst.setInt(1, tmpIceletId);
     rs = pst.executeQuery();
@@ -278,10 +278,10 @@ public class Icelet extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "icelet_icelet_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_icelet_icelet_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO icelet " +
+        "INSERT INTO web_icelet " +
         "(" + (id > -1 ? "icelet_id, " : "") +
         "icelet_name , " +
         "icelet_description , " +
@@ -299,7 +299,7 @@ public class Icelet extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, version);
     pst.setBoolean(++i, enabled);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "icelet_icelet_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_icelet_icelet_id_seq", id);
     pst.close();
 
     return true;
@@ -318,7 +318,7 @@ public class Icelet extends GenericBean {
     int resultCount = -1;
 
     PreparedStatement pst = db.prepareStatement(
-        "UPDATE icelet " +
+        "UPDATE web_icelet " +
         "SET " +
         "icelet_name = ? , " +
         "icelet_description = ? , " +
@@ -362,7 +362,7 @@ public class Icelet extends GenericBean {
       tmpRowColumnList = null;
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM icelet " +
+          "DELETE FROM web_icelet " +
           "WHERE icelet_id = ? ");
 
       pst.setInt(1, this.getId());

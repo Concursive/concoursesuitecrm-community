@@ -298,7 +298,7 @@ public class IceletPropertyMap extends LinkedHashMap {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM icelet_property " +
+        "FROM web_icelet_property " +
         "WHERE property_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -330,7 +330,7 @@ public class IceletPropertyMap extends LinkedHashMap {
     }
     sqlSelect.append(
         " * " +
-        "FROM icelet_property " +
+        "FROM web_icelet_property " +
         "WHERE property_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

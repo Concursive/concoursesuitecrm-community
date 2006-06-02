@@ -539,7 +539,7 @@ public class PageGroup extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM page_group " +
+        " FROM web_page_group " +
         " WHERE page_group_id = ? ");
     pst.setInt(1, tmpPageGroupId);
     rs = pst.executeQuery();
@@ -565,10 +565,10 @@ public class PageGroup extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "page_group_page_group_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_page_group_page_group_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO page_group " +
+        "INSERT INTO web_page_group " +
         "(" + (id > -1 ? "page_group_id, " : "") +
         "group_name , " +
         "internal_description , " +
@@ -588,7 +588,7 @@ public class PageGroup extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "page_group_page_group_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_page_group_page_group_id_seq", id);
     pst.close();
 
     updateRelatedPageGroups(db, true);
@@ -610,7 +610,7 @@ public class PageGroup extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE page_group " +
+        "UPDATE web_page_group " +
         "SET " +
         "group_name = ? , " +
         "internal_description = ? , " +
@@ -670,7 +670,7 @@ public class PageGroup extends GenericBean {
       updateRelatedPageGroups(db, false);
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM page_group " +
+          "DELETE FROM web_page_group " +
           "WHERE page_group_id =  ? ");
 
       pst.setInt(1, this.getId());

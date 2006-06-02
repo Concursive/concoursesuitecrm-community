@@ -746,7 +746,7 @@ public class Page extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT * " +
-        " FROM page " +
+        " FROM web_page " +
         " WHERE page_id = ? ");
     pst.setInt(1, tmpPageId);
     rs = pst.executeQuery();
@@ -781,10 +781,10 @@ public class Page extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "page_page_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_page_page_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO page " +
+        "INSERT INTO web_page " +
         "(" + (id > -1 ? "page_id, " : "") +
         "page_name , " +
         "page_position , " +
@@ -812,7 +812,7 @@ public class Page extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "page_page_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_page_page_id_seq", id);
     pst.close();
 
     updateRelatedPages(db, true);
@@ -833,7 +833,7 @@ public class Page extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE page " +
+        "UPDATE web_page " +
         "SET " +
         "page_name = ? , " +
         "page_position = ? , " +
@@ -892,7 +892,7 @@ public class Page extends GenericBean {
         db.setAutoCommit(false);
       }
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE page SET " +
+          "UPDATE web_page SET " +
           "active_page_version_id = ?,  " +
           "construction_page_version_id = ? " +
           "WHERE page_id =  ? ");
@@ -912,7 +912,7 @@ public class Page extends GenericBean {
       updateRelatedPages(db, false);
 
       pst = db.prepareStatement(
-          "DELETE FROM page " +
+          "DELETE FROM web_page " +
           "WHERE page_id =  ? ");
 
       pst.setInt(1, this.getId());

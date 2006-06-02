@@ -229,7 +229,7 @@ public class PageVersionList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM page_version " +
+        "FROM web_page_version " +
         "WHERE page_version_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -261,7 +261,7 @@ public class PageVersionList extends ArrayList {
     }
     sqlSelect.append(
         " * " +
-        "FROM page_version " +
+        "FROM web_page_version " +
         "WHERE page_version_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
