@@ -573,6 +573,7 @@ public class CustomFieldRecord {
   public void buildColumns(Connection db, CustomFieldCategory thisCategory) throws SQLException {
     //Get the first CustomField, then populate it
     String sql =
+        (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? "SELECT * FROM ( " : "") +
         "SELECT " +
         (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
         (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
@@ -593,7 +594,9 @@ public class CustomFieldRecord {
         " ) " +
         "AND enabled = ? " +
         "ORDER BY \"level\", field_id, field_name " +
-        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "");
+        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.DB2 ? "FETCH FIRST 1 ROWS ONLY " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? ") WHERE ROWNUM <= 1 " : "");
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, thisCategory.getId());
     pst.setBoolean(2, true);
