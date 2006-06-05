@@ -1,6 +1,6 @@
 -- Copyright (C) 2006 Dark Horse Ventures LLC, all rights reserved
 
-?SET ANSI_NULLS ON
+SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -10,7 +10,7 @@ CREATE TABLE [lookup_sc_type](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -27,7 +27,7 @@ CREATE TABLE [lookup_title](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -44,7 +44,7 @@ CREATE TABLE [lookup_quote_terms](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -61,7 +61,7 @@ CREATE TABLE [lookup_opportunity_event_compelling](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -78,7 +78,7 @@ CREATE TABLE [lookup_task_priority](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -95,11 +95,11 @@ CREATE TABLE [lookup_ticket_escalation](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[description] ASC
 ) ON [PRIMARY]
@@ -116,7 +116,7 @@ CREATE TABLE [lookup_response_model](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -131,7 +131,7 @@ CREATE TABLE [action_plan_constants](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[constant_id] [int] NOT NULL,
 	[description] [varchar](300) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -139,7 +139,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [action_plan_constant_id] ON [action_plan_constants]
+CREATE NONCLUSTERED INDEX [action_plan_constant_id] ON [action_plan_constants] 
 (
 	[constant_id] ASC
 ) ON [PRIMARY]
@@ -162,7 +162,7 @@ CREATE TABLE [events](
 	[businessDays] [varchar](6) NULL DEFAULT ('true'),
 	[enabled] [bit] NULL DEFAULT ((0)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[event_id] ASC
 ) ON [PRIMARY]
@@ -179,7 +179,7 @@ CREATE TABLE [lookup_quote_source](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -196,7 +196,7 @@ CREATE TABLE [lookup_opportunity_budget](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -213,7 +213,7 @@ CREATE TABLE [lookup_phone_model](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -230,7 +230,7 @@ CREATE TABLE [lookup_task_loe](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -247,7 +247,7 @@ CREATE TABLE [lookup_onsite_model](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -264,7 +264,7 @@ CREATE TABLE [lookup_task_category](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -275,18 +275,18 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [layout](
+CREATE TABLE [web_layout](
 	[layout_id] [int] IDENTITY(1,1) NOT NULL,
 	[layout_constant] [int] NULL,
 	[layout_name] [varchar](300) NOT NULL,
 	[jsp] [varchar](300) NULL,
 	[thumbnail] [varchar](300) NULL,
 	[custom] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[layout_id] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[layout_constant] ASC
 ) ON [PRIMARY]
@@ -303,7 +303,7 @@ CREATE TABLE [lookup_email_model](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -320,7 +320,7 @@ CREATE TABLE [lookup_orderaddress_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -338,7 +338,7 @@ CREATE TABLE [lookup_industry](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -355,7 +355,7 @@ CREATE TABLE [lookup_ticket_task_category](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -372,7 +372,7 @@ CREATE TABLE [lookup_hours_reason](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -394,7 +394,7 @@ CREATE TABLE [sync_client](
 	[anchor] [datetime] NULL DEFAULT (NULL),
 	[enabled] [bit] NULL DEFAULT ((0)),
 	[code] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[client_id] ASC
 ) ON [PRIMARY]
@@ -412,7 +412,7 @@ CREATE TABLE [field_types](
 	[operator] [varchar](50) NULL,
 	[display_text] [varchar](50) NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -429,7 +429,7 @@ CREATE TABLE [lookup_asset_manufacturer](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -443,7 +443,7 @@ GO
 CREATE TABLE [business_process_log](
 	[process_name] [varchar](255) NOT NULL,
 	[anchor] [datetime] NOT NULL,
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[process_name] ASC
 ) ON [PRIMARY]
@@ -463,7 +463,7 @@ CREATE TABLE [search_fields](
 	[table_name] [varchar](80) NULL,
 	[object_class] [varchar](80) NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -481,7 +481,7 @@ CREATE TABLE [usage_log](
 	[action] [int] NOT NULL,
 	[record_id] [int] NULL,
 	[record_size] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[usage_id] ASC
 ) ON [PRIMARY]
@@ -498,7 +498,7 @@ CREATE TABLE [lookup_asset_vendor](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -513,7 +513,7 @@ CREATE TABLE [sync_system](
 	[system_id] [int] IDENTITY(1,1) NOT NULL,
 	[application_name] [varchar](255) NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[system_id] ASC
 ) ON [PRIMARY]
@@ -530,7 +530,7 @@ CREATE TABLE [lookup_payment_methods](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -547,7 +547,7 @@ CREATE TABLE [lookup_duration_type](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -564,7 +564,7 @@ CREATE TABLE [lookup_creditcard_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -581,7 +581,7 @@ CREATE TABLE [lookup_account_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -599,11 +599,11 @@ CREATE TABLE [lookup_step_actions](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[constant_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[constant_id] ASC
 ) ON [PRIMARY]
@@ -621,7 +621,7 @@ CREATE TABLE [lookup_project_permission_category](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -635,7 +635,7 @@ GO
 CREATE TABLE [state](
 	[state_code] [char](2) NOT NULL,
 	[state] [varchar](80) NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[state_code] ASC
 ) ON [PRIMARY]
@@ -652,7 +652,7 @@ CREATE TABLE [lookup_department](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -669,7 +669,7 @@ CREATE TABLE [lookup_orgaddress_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -687,7 +687,7 @@ CREATE TABLE [lookup_document_store_permission_category](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -704,7 +704,7 @@ CREATE TABLE [lookup_orgemail_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -721,7 +721,7 @@ CREATE TABLE [lookup_quote_delivery](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -737,7 +737,7 @@ CREATE TABLE [database_version](
 	[script_filename] [varchar](255) NOT NULL,
 	[script_version] [varchar](255) NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[version_id] ASC
 ) ON [PRIMARY]
@@ -755,7 +755,7 @@ CREATE TABLE [autoguide_make](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[make_id] ASC
 ) ON [PRIMARY]
@@ -772,7 +772,7 @@ CREATE TABLE [lookup_orgphone_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -795,7 +795,7 @@ CREATE TABLE [notification](
 	[message] [text] NULL,
 	[result] [int] NOT NULL,
 	[errorMessage] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[notification_id] ASC
 ) ON [PRIMARY]
@@ -813,7 +813,7 @@ CREATE TABLE [lookup_document_store_role](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -833,7 +833,7 @@ CREATE TABLE [lookup_relationship_types](
 	[level] [int] NULL DEFAULT ((0)),
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[type_id] ASC
 ) ON [PRIMARY]
@@ -850,7 +850,7 @@ CREATE TABLE [lookup_quote_condition](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -867,7 +867,7 @@ CREATE TABLE [lookup_currency](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -884,7 +884,7 @@ CREATE TABLE [lookup_im_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -901,7 +901,7 @@ CREATE TABLE [lookup_order_status](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -915,7 +915,7 @@ GO
 CREATE TABLE [quote_group](
 	[group_id] [int] IDENTITY(1000,1) NOT NULL,
 	[unused] [char](1) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[group_id] ASC
 ) ON [PRIMARY]
@@ -932,7 +932,7 @@ CREATE TABLE [lookup_product_conf_result](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -949,7 +949,7 @@ CREATE TABLE [lookup_product_category_type](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -966,7 +966,7 @@ CREATE TABLE [lookup_im_services](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -997,7 +997,7 @@ CREATE TABLE [permission_category](
 	[constant] [int] NOT NULL,
 	[action_plans] [bit] NOT NULL DEFAULT ((0)),
 	[custom_list_views] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -1014,7 +1014,7 @@ CREATE TABLE [lookup_order_type](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1031,7 +1031,7 @@ CREATE TABLE [lookup_contact_source](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1048,7 +1048,7 @@ CREATE TABLE [lookup_order_terms](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1067,7 +1067,7 @@ CREATE TABLE [lookup_project_activity](
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
 	[template_id] [int] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1084,7 +1084,7 @@ CREATE TABLE [lookup_contact_rating](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1101,7 +1101,7 @@ CREATE TABLE [lookup_order_source](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1118,7 +1118,7 @@ CREATE TABLE [lookup_payment_status](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1135,7 +1135,7 @@ CREATE TABLE [lookup_survey_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1154,7 +1154,7 @@ CREATE TABLE [autoguide_options](
 	[enabled] [bit] NULL DEFAULT ((0)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[option_id] ASC
 ) ON [PRIMARY]
@@ -1174,7 +1174,7 @@ CREATE TABLE [lookup_project_priority](
 	[group_id] [int] NOT NULL DEFAULT ((0)),
 	[graphic] [varchar](75) NULL,
 	[type] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1191,7 +1191,7 @@ CREATE TABLE [lookup_textmessage_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1211,7 +1211,7 @@ CREATE TABLE [lookup_project_status](
 	[group_id] [int] NOT NULL DEFAULT ((0)),
 	[graphic] [varchar](75) NULL,
 	[type] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1228,7 +1228,7 @@ CREATE TABLE [lookup_employment_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1239,18 +1239,18 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [icelet](
+CREATE TABLE [web_icelet](
 	[icelet_id] [int] IDENTITY(1,1) NOT NULL,
 	[icelet_name] [varchar](300) NOT NULL,
 	[icelet_description] [text] NULL,
 	[icelet_configurator_class] [varchar](300) NOT NULL,
 	[icelet_version] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[icelet_id] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[icelet_configurator_class] ASC
 ) ON [PRIMARY]
@@ -1267,7 +1267,7 @@ CREATE TABLE [lookup_quote_remarks](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1284,7 +1284,7 @@ CREATE TABLE [lookup_product_type](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1301,7 +1301,7 @@ CREATE TABLE [lookup_locale](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1320,7 +1320,7 @@ CREATE TABLE [lookup_project_loe](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1337,7 +1337,7 @@ CREATE TABLE [lookup_help_features](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1354,7 +1354,7 @@ CREATE TABLE [lookup_asset_materials](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1371,7 +1371,7 @@ CREATE TABLE [lookup_call_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1388,7 +1388,7 @@ CREATE TABLE [lookup_product_manufacturer](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1407,7 +1407,7 @@ CREATE TABLE [autoguide_ad_run_types](
 	[enabled] [bit] NULL DEFAULT ((0)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1424,7 +1424,7 @@ CREATE TABLE [lookup_contactaddress_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1442,7 +1442,7 @@ CREATE TABLE [lookup_project_role](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1460,7 +1460,7 @@ CREATE TABLE [lookup_call_priority](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[weight] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1477,7 +1477,7 @@ CREATE TABLE [lookup_product_format](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1494,7 +1494,7 @@ CREATE TABLE [lookup_contactemail_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1511,7 +1511,7 @@ CREATE TABLE [lookup_revenue_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1528,7 +1528,7 @@ CREATE TABLE [lookup_ticket_cause](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1545,11 +1545,11 @@ CREATE TABLE [ticket_level](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[description] ASC
 ) ON [PRIMARY]
@@ -1567,7 +1567,7 @@ CREATE TABLE [lookup_stage](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1585,7 +1585,7 @@ CREATE TABLE [lookup_project_category](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1603,7 +1603,7 @@ CREATE TABLE [lookup_call_reminder](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1620,7 +1620,7 @@ CREATE TABLE [lookup_product_shipping](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1637,7 +1637,7 @@ CREATE TABLE [lookup_contactphone_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1654,7 +1654,7 @@ CREATE TABLE [lookup_revenuedetail_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1671,7 +1671,7 @@ CREATE TABLE [lookup_ticket_resolution](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1688,7 +1688,7 @@ CREATE TABLE [lookup_delivery_options](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1706,11 +1706,11 @@ CREATE TABLE [ticket_severity](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[description] ASC
 ) ON [PRIMARY]
@@ -1727,7 +1727,7 @@ CREATE TABLE [lookup_product_ship_time](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1751,7 +1751,7 @@ CREATE TABLE [lookup_news_template](
 	[load_public_projects] [bit] NULL DEFAULT ((0)),
 	[load_article_category_list] [bit] NULL DEFAULT ((0)),
 	[mapped_jsp] [varchar](255) NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1770,7 +1770,7 @@ CREATE TABLE [lookup_access_types](
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[rule_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1788,7 +1788,7 @@ CREATE TABLE [business_process_component_library](
 	[class_name] [varchar](255) NOT NULL,
 	[description] [varchar](510) NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[component_id] ASC
 ) ON [PRIMARY]
@@ -1805,7 +1805,7 @@ CREATE TABLE [lookup_product_keyword](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1822,7 +1822,7 @@ CREATE TABLE [lookup_product_tax](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1839,7 +1839,7 @@ CREATE TABLE [lookup_segments](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1856,11 +1856,11 @@ CREATE TABLE [lookup_ticketsource](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[description] ASC
 ) ON [PRIMARY]
@@ -1878,7 +1878,7 @@ CREATE TABLE [lookup_opportunity_types](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1895,7 +1895,7 @@ CREATE TABLE [lookup_recurring_type](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1913,7 +1913,7 @@ CREATE TABLE [business_process_parameter_library](
 	[description] [varchar](510) NULL,
 	[default_value] [varchar](4000) NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[parameter_id] ASC
 ) ON [PRIMARY]
@@ -1930,7 +1930,7 @@ CREATE TABLE [lookup_account_size](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1947,7 +1947,7 @@ CREATE TABLE [lookup_ticket_state](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1964,7 +1964,7 @@ CREATE TABLE [lookup_quote_status](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -1981,11 +1981,11 @@ CREATE TABLE [lookup_ticket_status](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[description] ASC
 ) ON [PRIMARY]
@@ -2002,7 +2002,7 @@ CREATE TABLE [lookup_opportunity_environment](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -2019,7 +2019,7 @@ CREATE TABLE [lookup_asset_status](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -2037,7 +2037,7 @@ CREATE TABLE [lookup_site_id](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -2061,7 +2061,7 @@ CREATE TABLE [sites](
 	[code] [varchar](255) NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((0)),
 	[language] [varchar](11) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[site_id] ASC
 ) ON [PRIMARY]
@@ -2078,7 +2078,7 @@ CREATE TABLE [lookup_sc_category](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -2095,7 +2095,7 @@ CREATE TABLE [lookup_opportunity_competitors](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -2113,11 +2113,11 @@ CREATE TABLE [ticket_priority](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[description] ASC
 ) ON [PRIMARY]
@@ -2134,7 +2134,7 @@ CREATE TABLE [lookup_quote_type](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -2156,7 +2156,7 @@ CREATE TABLE [help_business_rules](
 	[completedate] [datetime] NULL,
 	[completedby] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[rule_id] ASC
 ) ON [PRIMARY]
@@ -2181,7 +2181,7 @@ CREATE TABLE [project_team](
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [project_team_uni_idx] ON [project_team]
+CREATE UNIQUE NONCLUSTERED INDEX [project_team_uni_idx] ON [project_team] 
 (
 	[project_id] ASC,
 	[user_id] ASC
@@ -2201,7 +2201,7 @@ CREATE TABLE [organization_emailaddress](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[primary_email] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[emailaddress_id] ASC
 ) ON [PRIMARY]
@@ -2222,7 +2222,7 @@ CREATE TABLE [knowledge_base](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[kb_id] ASC
 ) ON [PRIMARY]
@@ -2247,7 +2247,7 @@ CREATE TABLE [report](
 	[modifiedby] [int] NOT NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[custom] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[report_id] ASC
 ) ON [PRIMARY]
@@ -2286,7 +2286,7 @@ CREATE TABLE [product_catalog](
 	[manufacturer_id] [int] NULL,
 	[trashed_date] [datetime] NULL,
 	[active] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[product_id] ASC
 ) ON [PRIMARY]
@@ -2308,7 +2308,7 @@ CREATE TABLE [revenue_detail](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -2376,7 +2376,7 @@ CREATE TABLE [projects](
 	[accounts_enabled] [bit] NOT NULL DEFAULT ((1)),
 	[accounts_label] [varchar](50) NULL,
 	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[project_id] ASC
 ) ON [PRIMARY]
@@ -2384,7 +2384,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [projects_idx] ON [projects]
+CREATE NONCLUSTERED INDEX [projects_idx] ON [projects] 
 (
 	[group_id] ASC,
 	[project_id] ASC
@@ -2427,7 +2427,7 @@ CREATE TABLE [organization_address](
 	[modifiedby] [int] NOT NULL,
 	[primary_address] [bit] NOT NULL DEFAULT ((0)),
 	[addrline4] [varchar](80) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[address_id] ASC
 ) ON [PRIMARY]
@@ -2435,7 +2435,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [organization_address_postalcode_idx] ON [organization_address]
+CREATE NONCLUSTERED INDEX [organization_address_postalcode_idx] ON [organization_address] 
 (
 	[postalcode] ASC
 ) ON [PRIMARY]
@@ -2456,7 +2456,7 @@ CREATE TABLE [help_faqs](
 	[completedate] [datetime] NULL,
 	[completedby] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[faq_id] ASC
 ) ON [PRIMARY]
@@ -2476,7 +2476,7 @@ CREATE TABLE [order_product_status](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[order_product_status_id] ASC
 ) ON [PRIMARY]
@@ -2512,7 +2512,7 @@ CREATE TABLE [portfolio_item](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -2537,7 +2537,7 @@ CREATE TABLE [revenue](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -2558,7 +2558,7 @@ CREATE TABLE [help_related_links](
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[relatedlink_id] ASC
 ) ON [PRIMARY]
@@ -2580,7 +2580,7 @@ CREATE TABLE [portfolio_category](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -2625,7 +2625,7 @@ CREATE TABLE [active_survey](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[active_survey_id] ASC
 ) ON [PRIMARY]
@@ -2651,7 +2651,7 @@ CREATE TABLE [history](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[history_id] ASC
 ) ON [PRIMARY]
@@ -2671,7 +2671,7 @@ CREATE TABLE [viewpoint](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[viewpoint_id] ASC
 ) ON [PRIMARY]
@@ -2700,7 +2700,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [icelet_property](
+CREATE TABLE [web_icelet_property](
 	[property_id] [int] IDENTITY(1,1) NOT NULL,
 	[property_type_constant] [int] NULL,
 	[property_value] [text] NULL,
@@ -2709,7 +2709,7 @@ CREATE TABLE [icelet_property](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[property_id] ASC
 ) ON [PRIMARY]
@@ -2726,7 +2726,7 @@ CREATE TABLE [action_item_work_notes](
 	[description] [varchar](4096) NOT NULL,
 	[submitted] [datetime] NOT NULL DEFAULT (getdate()),
 	[submittedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[note_id] ASC
 ) ON [PRIMARY]
@@ -2745,7 +2745,7 @@ CREATE TABLE [quote_notes](
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[notes_id] ASC
 ) ON [PRIMARY]
@@ -2769,7 +2769,7 @@ CREATE TABLE [help_features](
 	[completedby] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[level] [int] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[feature_id] ASC
 ) ON [PRIMARY]
@@ -2797,7 +2797,7 @@ CREATE TABLE [project_files](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
 	[default_file] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -2805,7 +2805,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [project_files_cidx] ON [project_files]
+CREATE NONCLUSTERED INDEX [project_files_cidx] ON [project_files] 
 (
 	[link_module_id] ASC,
 	[link_item_id] ASC
@@ -2841,7 +2841,7 @@ CREATE TABLE [order_payment_status](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[payment_status_id] ASC
 ) ON [PRIMARY]
@@ -2860,7 +2860,7 @@ CREATE TABLE [webdav](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -2871,7 +2871,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [row_column](
+CREATE TABLE [web_row_column](
 	[row_column_id] [int] IDENTITY(1,1) NOT NULL,
 	[column_position] [int] NOT NULL,
 	[width] [int] NULL,
@@ -2882,7 +2882,7 @@ CREATE TABLE [row_column](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[row_column_id] ASC
 ) ON [PRIMARY]
@@ -2908,7 +2908,7 @@ CREATE TABLE [action_item_work](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_work_id] ASC
 ) ON [PRIMARY]
@@ -2931,7 +2931,7 @@ CREATE TABLE [project_folders](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
 	[display] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[folder_id] ASC
 ) ON [PRIMARY]
@@ -2951,7 +2951,7 @@ CREATE TABLE [ticket_sun_form](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[form_id] ASC
 ) ON [PRIMARY]
@@ -2971,7 +2971,7 @@ CREATE TABLE [help_tableofcontentitem_links](
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[link_id] ASC
 ) ON [PRIMARY]
@@ -3014,7 +3014,7 @@ CREATE TABLE [survey](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[survey_id] ASC
 ) ON [PRIMARY]
@@ -3048,7 +3048,7 @@ CREATE TABLE [order_entry](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[submitted] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[order_id] ASC
 ) ON [PRIMARY]
@@ -3071,7 +3071,7 @@ CREATE TABLE [action_phase_work](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[phase_work_id] ASC
 ) ON [PRIMARY]
@@ -3093,7 +3093,7 @@ CREATE TABLE [project_issue_replies](
 	[enteredBy] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[reply_id] ASC
 ) ON [PRIMARY]
@@ -3111,7 +3111,7 @@ CREATE TABLE [user_group_map](
 	[level] [int] NOT NULL DEFAULT ((10)),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[entered] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[group_map_id] ASC
 ) ON [PRIMARY]
@@ -3128,7 +3128,7 @@ CREATE TABLE [action_plan_work_notes](
 	[description] [varchar](4096) NOT NULL,
 	[submitted] [datetime] NOT NULL DEFAULT (getdate()),
 	[submittedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[note_id] ASC
 ) ON [PRIMARY]
@@ -3139,7 +3139,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [page_row](
+CREATE TABLE [web_page_row](
 	[page_row_id] [int] IDENTITY(1,1) NOT NULL,
 	[row_position] [int] NOT NULL,
 	[page_version_id] [int] NULL,
@@ -3149,7 +3149,7 @@ CREATE TABLE [page_row](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[row_column_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[page_row_id] ASC
 ) ON [PRIMARY]
@@ -3178,7 +3178,7 @@ CREATE TABLE [order_payment](
 	[creditcard_id] [int] NULL,
 	[bank_id] [int] NULL,
 	[status_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[payment_id] ASC
 ) ON [PRIMARY]
@@ -3206,7 +3206,7 @@ CREATE TABLE [quotelog](
 	[issued_date] [datetime] NULL,
 	[submit_action] [int] NULL,
 	[closed] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -3256,7 +3256,7 @@ CREATE TABLE [asset](
 	[parent_id] [int] NULL,
 	[vendor_code] [int] NULL,
 	[manufacturer_code] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[asset_id] ASC
 ) ON [PRIMARY]
@@ -3281,7 +3281,7 @@ CREATE TABLE [help_tableof_contents](
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[content_id] ASC
 ) ON [PRIMARY]
@@ -3308,7 +3308,7 @@ CREATE TABLE [ticket_csstm_form](
 	[travel_towards_sc] [bit] NULL DEFAULT ((1)),
 	[labor_towards_sc] [bit] NULL DEFAULT ((1)),
 	[alert_date_timezone] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[form_id] ASC
 ) ON [PRIMARY]
@@ -3336,7 +3336,7 @@ CREATE TABLE [document_store](
 	[modified] [datetime] NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
 	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[document_store_id] ASC
 ) ON [PRIMARY]
@@ -3366,7 +3366,7 @@ CREATE TABLE [product_category](
 	[start_date] [datetime] NULL DEFAULT (NULL),
 	[expiration_date] [datetime] NULL DEFAULT (NULL),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -3387,7 +3387,7 @@ CREATE TABLE [user_group](
 	[modified] [datetime] NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[group_id] ASC
 ) ON [PRIMARY]
@@ -3398,7 +3398,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [page](
+CREATE TABLE [web_page](
 	[page_id] [int] IDENTITY(1,1) NOT NULL,
 	[page_name] [varchar](300) NULL,
 	[page_position] [int] NOT NULL,
@@ -3412,7 +3412,7 @@ CREATE TABLE [page](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[page_id] ASC
 ) ON [PRIMARY]
@@ -3438,7 +3438,7 @@ CREATE TABLE [project_issues](
 	[reply_count] [int] NOT NULL DEFAULT ((0)),
 	[last_reply_date] [datetime] NOT NULL DEFAULT (getdate()),
 	[last_reply_by] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[issue_id] ASC
 ) ON [PRIMARY]
@@ -3481,7 +3481,7 @@ CREATE TABLE [opportunity_component_log](
 	[enteredby] [int] NOT NULL,
 	[closedate_timezone] [varchar](255) NULL,
 	[closed] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -3504,7 +3504,7 @@ CREATE TABLE [customer_product_history](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[order_item_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[history_id] ASC
 ) ON [PRIMARY]
@@ -3532,7 +3532,7 @@ CREATE TABLE [ticketlog](
 	[modifiedby] [int] NOT NULL,
 	[escalation_code] [int] NULL,
 	[state_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -3556,7 +3556,7 @@ CREATE TABLE [action_plan_work](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[current_phase] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[plan_work_id] ASC
 ) ON [PRIMARY]
@@ -3584,7 +3584,7 @@ CREATE TABLE [help_contents](
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[help_id] ASC
 ) ON [PRIMARY]
@@ -3605,7 +3605,7 @@ CREATE TABLE [role](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[role_type] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[role_id] ASC
 ) ON [PRIMARY]
@@ -3628,7 +3628,7 @@ CREATE TABLE [cfsinbox_message](
 	[type] [int] NOT NULL DEFAULT ((-1)),
 	[modifiedby] [int] NOT NULL,
 	[delete_flag] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -3639,7 +3639,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [tab_banner](
+CREATE TABLE [web_tab_banner](
 	[tab_banner_id] [int] IDENTITY(1,1) NOT NULL,
 	[tab_id] [int] NULL,
 	[image_id] [int] NULL,
@@ -3647,7 +3647,7 @@ CREATE TABLE [tab_banner](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[tab_banner_id] ASC
 ) ON [PRIMARY]
@@ -3673,7 +3673,7 @@ CREATE TABLE [project_issues_categories](
 	[last_post_date] [datetime] NULL,
 	[last_post_by] [int] NULL,
 	[allow_files] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -3688,7 +3688,7 @@ CREATE TABLE [contact_lead_read_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[user_id] [int] NOT NULL,
 	[contact_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -3696,13 +3696,13 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [contact_lead_read_c_idx] ON [contact_lead_read_map]
+CREATE NONCLUSTERED INDEX [contact_lead_read_c_idx] ON [contact_lead_read_map] 
 (
 	[contact_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_lead_read_u_idx] ON [contact_lead_read_map]
+CREATE NONCLUSTERED INDEX [contact_lead_read_u_idx] ON [contact_lead_read_map] 
 (
 	[user_id] ASC
 ) ON [PRIMARY]
@@ -3724,7 +3724,7 @@ CREATE TABLE [customer_product](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[customer_product_id] ASC
 ) ON [PRIMARY]
@@ -3735,7 +3735,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [page_group](
+CREATE TABLE [web_page_group](
 	[page_group_id] [int] IDENTITY(1,1) NOT NULL,
 	[group_name] [varchar](300) NULL,
 	[internal_description] [text] NULL,
@@ -3745,7 +3745,7 @@ CREATE TABLE [page_group](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[page_group_id] ASC
 ) ON [PRIMARY]
@@ -3760,7 +3760,7 @@ CREATE TABLE [contact_lead_skipped_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[user_id] [int] NOT NULL,
 	[contact_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -3768,7 +3768,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [contact_lead_skip_u_idx] ON [contact_lead_skipped_map]
+CREATE NONCLUSTERED INDEX [contact_lead_skip_u_idx] ON [contact_lead_skipped_map] 
 (
 	[user_id] ASC
 ) ON [PRIMARY]
@@ -3783,7 +3783,7 @@ CREATE TABLE [contact_message](
 	[received_date] [datetime] NOT NULL,
 	[received_from] [int] NOT NULL,
 	[received_by] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -3803,7 +3803,7 @@ CREATE TABLE [project_assignments_status](
 	[percent_complete] [int] NULL,
 	[project_status_id] [int] NULL,
 	[user_assign_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[status_id] ASC
 ) ON [PRIMARY]
@@ -3834,7 +3834,7 @@ CREATE TABLE [import](
 	[site_id] [int] NULL,
 	[rating] [int] NULL,
 	[comments] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[import_id] ASC
 ) ON [PRIMARY]
@@ -3842,13 +3842,13 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [import_entered_idx] ON [import]
+CREATE NONCLUSTERED INDEX [import_entered_idx] ON [import] 
 (
 	[entered] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [import_name_idx] ON [import]
+CREATE NONCLUSTERED INDEX [import_name_idx] ON [import] 
 (
 	[name] ASC
 ) ON [PRIMARY]
@@ -3869,7 +3869,7 @@ CREATE TABLE [payment_eft](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[order_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[bank_id] ASC
 ) ON [PRIMARY]
@@ -3890,7 +3890,7 @@ CREATE TABLE [contact_textmessageaddress](
 	[modifiedby] [int] NOT NULL,
 	[primary_textmessage_address] [bit] NOT NULL DEFAULT ((0)),
 	[textmessageaddress_type] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[address_id] ASC
 ) ON [PRIMARY]
@@ -3916,7 +3916,7 @@ CREATE TABLE [package_products_map](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[start_date] [datetime] NULL DEFAULT (NULL),
 	[expiration_date] [datetime] NULL DEFAULT (NULL),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -3958,7 +3958,7 @@ CREATE TABLE [call_log](
 	[reminder_type_id] [int] NULL,
 	[alertdate_timezone] [varchar](255) NULL,
 	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[call_id] ASC
 ) ON [PRIMARY]
@@ -3966,32 +3966,32 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [call_contact_id_idx] ON [call_log]
+CREATE NONCLUSTERED INDEX [call_contact_id_idx] ON [call_log] 
 (
 	[contact_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [call_log_cidx] ON [call_log]
+CREATE NONCLUSTERED INDEX [call_log_cidx] ON [call_log] 
 (
 	[alertdate] ASC,
 	[enteredby] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [call_log_entered_idx] ON [call_log]
+CREATE NONCLUSTERED INDEX [call_log_entered_idx] ON [call_log] 
 (
 	[entered] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [call_opp_id_idx] ON [call_log]
+CREATE NONCLUSTERED INDEX [call_opp_id_idx] ON [call_log] 
 (
 	[opp_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [call_org_id_idx] ON [call_log]
+CREATE NONCLUSTERED INDEX [call_org_id_idx] ON [call_log] 
 (
 	[org_id] ASC
 ) ON [PRIMARY]
@@ -4010,7 +4010,7 @@ CREATE TABLE [service_contract_hours](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[history_id] ASC
 ) ON [PRIMARY]
@@ -4021,7 +4021,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [page_version](
+CREATE TABLE [web_page_version](
 	[page_version_id] [int] IDENTITY(1,1) NOT NULL,
 	[version_number] [int] NOT NULL,
 	[internal_description] [text] NULL,
@@ -4032,7 +4032,7 @@ CREATE TABLE [page_version](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[page_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[page_version_id] ASC
 ) ON [PRIMARY]
@@ -4043,7 +4043,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [tab](
+CREATE TABLE [web_tab](
 	[tab_id] [int] IDENTITY(1,1) NOT NULL,
 	[display_text] [varchar](300) NOT NULL,
 	[internal_description] [text] NULL,
@@ -4054,7 +4054,7 @@ CREATE TABLE [tab](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[tab_id] ASC
 ) ON [PRIMARY]
@@ -4077,7 +4077,7 @@ CREATE TABLE [message_template](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -4099,7 +4099,7 @@ CREATE TABLE [contact_imaddress](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[primary_im] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[address_id] ASC
 ) ON [PRIMARY]
@@ -4124,7 +4124,7 @@ CREATE TABLE [payment_creditcard](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[order_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[creditcard_id] ASC
 ) ON [PRIMARY]
@@ -4144,7 +4144,7 @@ CREATE TABLE [action_item_log](
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[log_id] ASC
 ) ON [PRIMARY]
@@ -4161,7 +4161,7 @@ CREATE TABLE [ticket_category_assignment](
 	[department_id] [int] NULL,
 	[assigned_to] [int] NULL,
 	[group_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -4199,7 +4199,7 @@ CREATE TABLE [project_assignments](
 	[folder_id] [int] NULL,
 	[percent_complete] [int] NULL,
 	[due_date_timezone] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[assignment_id] ASC
 ) ON [PRIMARY]
@@ -4207,13 +4207,13 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [proj_assign_req_id_idx] ON [project_assignments]
+CREATE NONCLUSTERED INDEX [proj_assign_req_id_idx] ON [project_assignments] 
 (
 	[requirement_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [project_assignments_cidx] ON [project_assignments]
+CREATE NONCLUSTERED INDEX [project_assignments_cidx] ON [project_assignments] 
 (
 	[complete_date] ASC,
 	[user_assign_id] ASC
@@ -4274,7 +4274,7 @@ CREATE TABLE [ticket](
 	[resolvedby_department_code] [int] NULL,
 	[state_id] [int] NULL,
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[ticketid] ASC
 ) ON [PRIMARY]
@@ -4282,14 +4282,14 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [ticket_cidx] ON [ticket]
+CREATE NONCLUSTERED INDEX [ticket_cidx] ON [ticket] 
 (
 	[assigned_to] ASC,
 	[closed] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [ticketlist_entered] ON [ticket]
+CREATE NONCLUSTERED INDEX [ticketlist_entered] ON [ticket] 
 (
 	[entered] ASC
 ) ON [PRIMARY]
@@ -4308,7 +4308,7 @@ CREATE TABLE [action_item](
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -4330,7 +4330,7 @@ CREATE TABLE [contact_phone](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[primary_number] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[phone_id] ASC
 ) ON [PRIMARY]
@@ -4338,7 +4338,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [contact_phone_contact_id_idx] ON [contact_phone]
+CREATE NONCLUSTERED INDEX [contact_phone_contact_id_idx] ON [contact_phone] 
 (
 	[contact_id] ASC
 ) ON [PRIMARY]
@@ -4347,7 +4347,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [site_log](
+CREATE TABLE [web_site_log](
 	[site_log_id] [int] IDENTITY(1,1) NOT NULL,
 	[site_id] [int] NULL,
 	[user_id] [int] NULL,
@@ -4355,7 +4355,7 @@ CREATE TABLE [site_log](
 	[ip] [varchar](80) NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[browser] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[site_log_id] ASC
 ) ON [PRIMARY]
@@ -4384,7 +4384,7 @@ CREATE TABLE [package](
 	[start_date] [datetime] NULL DEFAULT (NULL),
 	[expiration_date] [datetime] NULL DEFAULT (NULL),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[package_id] ASC
 ) ON [PRIMARY]
@@ -4411,7 +4411,7 @@ CREATE TABLE [message](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[access_type] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -4449,7 +4449,7 @@ CREATE TABLE [campaign](
 	[cc] [varchar](1024) NULL,
 	[bcc] [varchar](1024) NULL,
 	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[campaign_id] ASC
 ) ON [PRIMARY]
@@ -4471,7 +4471,7 @@ CREATE TABLE [action_list](
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[action_id] ASC
 ) ON [PRIMARY]
@@ -4490,7 +4490,7 @@ CREATE TABLE [lookup_contact_types](
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[user_id] [int] NULL,
 	[category] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -4507,7 +4507,7 @@ CREATE TABLE [ticket_category_draft_assignment](
 	[department_id] [int] NULL,
 	[assigned_to] [int] NULL,
 	[group_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -4546,7 +4546,7 @@ CREATE TABLE [service_contract](
 	[current_start_date_timezone] [varchar](255) NULL,
 	[current_end_date_timezone] [varchar](255) NULL,
 	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[contract_id] ASC
 ) ON [PRIMARY]
@@ -4590,7 +4590,7 @@ CREATE TABLE [opportunity_component](
 	[compelling_event] [int] NULL,
 	[budget] [int] NULL,
 	[status_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -4598,19 +4598,19 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [oppcomplist_closedate] ON [opportunity_component]
+CREATE NONCLUSTERED INDEX [oppcomplist_closedate] ON [opportunity_component] 
 (
 	[closedate] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [oppcomplist_description] ON [opportunity_component]
+CREATE NONCLUSTERED INDEX [oppcomplist_description] ON [opportunity_component] 
 (
 	[description] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [oppcomplist_header_idx] ON [opportunity_component]
+CREATE NONCLUSTERED INDEX [oppcomplist_header_idx] ON [opportunity_component] 
 (
 	[opp_id] ASC
 ) ON [PRIMARY]
@@ -4626,7 +4626,7 @@ CREATE TABLE [access_log](
 	[ip] [varchar](15) NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[browser] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -4647,7 +4647,7 @@ CREATE TABLE [project_assignments_folder](
 	[enteredBy] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[folder_id] ASC
 ) ON [PRIMARY]
@@ -4681,7 +4681,7 @@ CREATE TABLE [task](
 	[duedate_timezone] [varchar](255) NULL,
 	[trashed_date] [datetime] NULL,
 	[ticket_task_category_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[task_id] ASC
 ) ON [PRIMARY]
@@ -4692,7 +4692,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [site](
+CREATE TABLE [web_site](
 	[site_id] [int] IDENTITY(1,1) NOT NULL,
 	[site_name] [varchar](300) NOT NULL,
 	[internal_description] [text] NULL,
@@ -4706,7 +4706,7 @@ CREATE TABLE [site](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[site_id] ASC
 ) ON [PRIMARY]
@@ -4776,7 +4776,7 @@ CREATE TABLE [contact](
 	[no_im] [bit] NULL DEFAULT ((0)),
 	[no_fax] [bit] NULL DEFAULT ((0)),
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[contact_id] ASC
 ) ON [PRIMARY]
@@ -4784,31 +4784,31 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [contact_import_id_idx] ON [contact]
+CREATE NONCLUSTERED INDEX [contact_import_id_idx] ON [contact] 
 (
 	[import_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_islead_idx] ON [contact]
+CREATE NONCLUSTERED INDEX [contact_islead_idx] ON [contact] 
 (
 	[lead] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_org_id_idx] ON [contact]
+CREATE NONCLUSTERED INDEX [contact_org_id_idx] ON [contact] 
 (
 	[org_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_user_id_idx] ON [contact]
+CREATE NONCLUSTERED INDEX [contact_user_id_idx] ON [contact] 
 (
 	[user_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contactlist_company] ON [contact]
+CREATE NONCLUSTERED INDEX [contactlist_company] ON [contact] 
 (
 	[company] ASC,
 	[namelast] ASC,
@@ -4816,7 +4816,7 @@ CREATE NONCLUSTERED INDEX [contactlist_company] ON [contact]
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contactlist_namecompany] ON [contact]
+CREATE NONCLUSTERED INDEX [contactlist_namecompany] ON [contact] 
 (
 	[namelast] ASC,
 	[namefirst] ASC,
@@ -4837,7 +4837,7 @@ CREATE TABLE [saved_criterialist](
 	[name] [varchar](80) NOT NULL,
 	[contact_source] [int] NULL DEFAULT ((-1)),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -4858,7 +4858,7 @@ CREATE TABLE [contact_emailaddress](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[primary_email] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[emailaddress_id] ASC
 ) ON [PRIMARY]
@@ -4866,13 +4866,13 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [contact_email_contact_id_idx] ON [contact_emailaddress]
+CREATE NONCLUSTERED INDEX [contact_email_contact_id_idx] ON [contact_emailaddress] 
 (
 	[contact_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_email_prim_idx] ON [contact_emailaddress]
+CREATE NONCLUSTERED INDEX [contact_email_prim_idx] ON [contact_emailaddress] 
 (
 	[primary_email] ASC
 ) ON [PRIMARY]
@@ -4896,7 +4896,7 @@ CREATE TABLE [order_address](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[address_id] ASC
 ) ON [PRIMARY]
@@ -4932,7 +4932,7 @@ CREATE TABLE [project_requirements](
 	[startdate_timezone] [varchar](255) NULL,
 	[deadline_timezone] [varchar](255) NULL,
 	[due_date_timezone] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[requirement_id] ASC
 ) ON [PRIMARY]
@@ -4952,7 +4952,7 @@ CREATE TABLE [help_tips](
 	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[tip_id] ASC
 ) ON [PRIMARY]
@@ -4973,7 +4973,7 @@ CREATE TABLE [report_queue](
 	[filename] [varchar](256) NULL,
 	[filesize] [int] NULL DEFAULT ((-1)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[queue_id] ASC
 ) ON [PRIMARY]
@@ -5004,7 +5004,7 @@ CREATE TABLE [product_catalog_pricing](
 	[enabled] [bit] NULL DEFAULT ((0)),
 	[cost_currency] [int] NULL,
 	[cost_amount] [float] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[price_id] ASC
 ) ON [PRIMARY]
@@ -5032,7 +5032,7 @@ CREATE TABLE [action_plan](
 	[subcat_code3] [int] NULL,
 	[link_object_id] [int] NULL,
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[plan_id] ASC
 ) ON [PRIMARY]
@@ -5069,7 +5069,7 @@ CREATE TABLE [project_news](
 	[end_date_timezone] [varchar](255) NULL,
 	[classification_id] [int] NOT NULL,
 	[template_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[news_id] ASC
 ) ON [PRIMARY]
@@ -5090,7 +5090,7 @@ CREATE TABLE [custom_field_record](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[record_id] ASC
 ) ON [PRIMARY]
@@ -5098,7 +5098,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [custom_field_rec_idx] ON [custom_field_record]
+CREATE NONCLUSTERED INDEX [custom_field_rec_idx] ON [custom_field_record] 
 (
 	[link_module_id] ASC,
 	[link_item_id] ASC,
@@ -5126,7 +5126,7 @@ CREATE TABLE [contact_address](
 	[modifiedby] [int] NOT NULL,
 	[primary_address] [bit] NOT NULL DEFAULT ((0)),
 	[addrline4] [varchar](80) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[address_id] ASC
 ) ON [PRIMARY]
@@ -5134,25 +5134,25 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [contact_address_contact_id_idx] ON [contact_address]
+CREATE NONCLUSTERED INDEX [contact_address_contact_id_idx] ON [contact_address] 
 (
 	[contact_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_address_postalcode_idx] ON [contact_address]
+CREATE NONCLUSTERED INDEX [contact_address_postalcode_idx] ON [contact_address] 
 (
 	[postalcode] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_address_prim_idx] ON [contact_address]
+CREATE NONCLUSTERED INDEX [contact_address_prim_idx] ON [contact_address] 
 (
 	[primary_address] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [contact_city_idx] ON [contact_address]
+CREATE NONCLUSTERED INDEX [contact_city_idx] ON [contact_address] 
 (
 	[city] ASC
 ) ON [PRIMARY]
@@ -5177,7 +5177,7 @@ CREATE TABLE [opportunity_header](
 	[contact_org_id] [int] NULL,
 	[custom1_integer] [int] NULL,
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[opp_id] ASC
 ) ON [PRIMARY]
@@ -5185,19 +5185,19 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [opp_contactlink_idx] ON [opportunity_header]
+CREATE NONCLUSTERED INDEX [opp_contactlink_idx] ON [opportunity_header] 
 (
 	[contactlink] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [opp_header_contact_org_id_idx] ON [opportunity_header]
+CREATE NONCLUSTERED INDEX [opp_header_contact_org_id_idx] ON [opportunity_header] 
 (
 	[contact_org_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [oppheader_description_idx] ON [opportunity_header]
+CREATE NONCLUSTERED INDEX [oppheader_description_idx] ON [opportunity_header] 
 (
 	[description] ASC
 ) ON [PRIMARY]
@@ -5242,7 +5242,7 @@ CREATE TABLE [quote_entry](
 	[show_subtotal] [bit] NULL DEFAULT ((1)),
 	[logo_file_id] [int] NULL,
 	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[quote_id] ASC
 ) ON [PRIMARY]
@@ -5264,7 +5264,7 @@ CREATE TABLE [help_notes](
 	[completedate] [datetime] NULL,
 	[completedby] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[note_id] ASC
 ) ON [PRIMARY]
@@ -5287,7 +5287,7 @@ CREATE TABLE [netapp_contractexpiration_log](
 	[enteredBy] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -5309,7 +5309,7 @@ CREATE TABLE [organization_phone](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[primary_number] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[phone_id] ASC
 ) ON [PRIMARY]
@@ -5369,7 +5369,7 @@ CREATE TABLE [organization](
 	[direct_bill] [bit] NULL DEFAULT ((0)),
 	[account_size] [int] NULL,
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[org_id] ASC
 ) ON [PRIMARY]
@@ -5377,7 +5377,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [orglist_name] ON [organization]
+CREATE NONCLUSTERED INDEX [orglist_name] ON [organization] 
 (
 	[name] ASC
 ) ON [PRIMARY]
@@ -5396,7 +5396,7 @@ CREATE TABLE [report_criteria](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[criteria_id] ASC
 ) ON [PRIMARY]
@@ -5445,7 +5445,7 @@ CREATE TABLE [netapp_contractexpiration](
 	[enteredBy] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[expiration_id] ASC
 ) ON [PRIMARY]
@@ -5461,7 +5461,7 @@ CREATE TABLE [active_survey_answer_items](
 	[item_id] [int] NOT NULL,
 	[answer_id] [int] NOT NULL,
 	[comments] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -5477,7 +5477,7 @@ CREATE TABLE [active_survey_answer_avg](
 	[question_id] [int] NOT NULL,
 	[item_id] [int] NOT NULL,
 	[total] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -5493,7 +5493,7 @@ CREATE TABLE [report_criteria_parameter](
 	[criteria_id] [int] NOT NULL,
 	[parameter] [varchar](255) NOT NULL,
 	[value] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[parameter_id] ASC
 ) ON [PRIMARY]
@@ -5511,7 +5511,7 @@ CREATE TABLE [active_survey_answers](
 	[comments] [text] NULL,
 	[quant_ans] [int] NULL DEFAULT ((-1)),
 	[text_ans] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[answer_id] ASC
 ) ON [PRIMARY]
@@ -5526,7 +5526,7 @@ CREATE TABLE [step_action_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[constant_id] [int] NOT NULL,
 	[action_constant_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -5545,7 +5545,7 @@ CREATE TABLE [action_plan_editor_lookup](
 	[description] [text] NULL,
 	[entered] [datetime] NULL DEFAULT (getdate()),
 	[category_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -5578,7 +5578,7 @@ CREATE TABLE [autoguide_inventory](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[inventory_id] ASC
 ) ON [PRIMARY]
@@ -5594,7 +5594,7 @@ CREATE TABLE [project_accounts](
 	[project_id] [int] NOT NULL,
 	[org_id] [int] NOT NULL,
 	[entered] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -5602,13 +5602,13 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [proj_acct_org_idx] ON [project_accounts]
+CREATE NONCLUSTERED INDEX [proj_acct_org_idx] ON [project_accounts] 
 (
 	[org_id] ASC
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX [proj_acct_project_idx] ON [project_accounts]
+CREATE NONCLUSTERED INDEX [proj_acct_project_idx] ON [project_accounts] 
 (
 	[project_id] ASC
 ) ON [PRIMARY]
@@ -5640,7 +5640,7 @@ CREATE TABLE [news](
 	[dateEntered] [datetime] NULL,
 	[type] [char](1) NULL,
 	[created] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[rec_id] ASC
 ) ON [PRIMARY]
@@ -5657,7 +5657,7 @@ CREATE TABLE [events_log](
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[status] [int] NULL,
 	[message] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[log_id] ASC
 ) ON [PRIMARY]
@@ -5672,7 +5672,7 @@ CREATE TABLE [ticket_category_plan_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[plan_id] [int] NOT NULL,
 	[category_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -5694,7 +5694,7 @@ CREATE TABLE [custom_field_data](
 
 GO
 
-CREATE NONCLUSTERED INDEX [custom_field_dat_idx] ON [custom_field_data]
+CREATE NONCLUSTERED INDEX [custom_field_dat_idx] ON [custom_field_data] 
 (
 	[record_id] ASC,
 	[field_id] ASC
@@ -5721,7 +5721,7 @@ CREATE TABLE [quote_product](
 	[status_date] [datetime] NULL DEFAULT (getdate()),
 	[estimated_delivery] [text] NULL,
 	[comment] [varchar](300) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -5736,7 +5736,7 @@ CREATE TABLE [quote_condition](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[quote_id] [int] NOT NULL,
 	[condition_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -5751,7 +5751,7 @@ CREATE TABLE [quote_remark](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[quote_id] [int] NOT NULL,
 	[remark_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -5772,7 +5772,7 @@ CREATE TABLE [action_phase](
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[random] [bit] NULL DEFAULT ((0)),
 	[global] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[phase_id] ASC
 ) ON [PRIMARY]
@@ -5787,7 +5787,7 @@ CREATE TABLE [ticket_category_draft_plan_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[plan_id] [int] NOT NULL,
 	[category_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -5813,7 +5813,7 @@ CREATE TABLE [report_queue_criteria](
 	[queue_id] [int] NOT NULL,
 	[parameter] [varchar](255) NOT NULL,
 	[value] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[criteria_id] ASC
 ) ON [PRIMARY]
@@ -5834,7 +5834,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [style](
+CREATE TABLE [web_style](
 	[style_id] [int] IDENTITY(1,1) NOT NULL,
 	[style_constant] [int] NULL,
 	[style_name] [varchar](300) NOT NULL,
@@ -5842,11 +5842,11 @@ CREATE TABLE [style](
 	[thumbnail] [varchar](300) NULL,
 	[custom] [bit] NOT NULL DEFAULT ((0)),
 	[layout_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[style_id] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[style_constant] ASC
 ) ON [PRIMARY]
@@ -5865,7 +5865,7 @@ CREATE TABLE [project_requirements_map](
 	[indent] [int] NOT NULL DEFAULT ((0)),
 	[folder_id] [int] NULL,
 	[assignment_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -5873,7 +5873,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [proj_req_map_pr_req_pos_idx] ON [project_requirements_map]
+CREATE NONCLUSTERED INDEX [proj_req_map_pr_req_pos_idx] ON [project_requirements_map] 
 (
 	[project_id] ASC,
 	[requirement_id] ASC,
@@ -5901,7 +5901,7 @@ CREATE TABLE [sync_log](
 	[client_id] [int] NOT NULL,
 	[ip] [varchar](15) NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[log_id] ASC
 ) ON [PRIMARY]
@@ -5923,7 +5923,7 @@ CREATE TABLE [sync_map](
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [idx_sync_map] ON [sync_map]
+CREATE UNIQUE NONCLUSTERED INDEX [idx_sync_map] ON [sync_map] 
 (
 	[client_id] ASC,
 	[table_id] ASC,
@@ -5955,7 +5955,7 @@ CREATE TABLE [process_log](
 	[process_version] [varchar](20) NULL,
 	[status] [int] NULL,
 	[message] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[process_id] ASC
 ) ON [PRIMARY]
@@ -6038,7 +6038,7 @@ CREATE TABLE [scheduled_recipient](
 	[sent_date] [datetime] NULL DEFAULT (NULL),
 	[reply_date] [datetime] NULL DEFAULT (NULL),
 	[bounce_date] [datetime] NULL DEFAULT (NULL),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6053,7 +6053,7 @@ CREATE TABLE [excluded_recipient](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[campaign_id] [int] NOT NULL,
 	[contact_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6100,7 +6100,7 @@ CREATE TABLE [action_step](
 	[allow_update] [bit] NOT NULL DEFAULT ((1)),
 	[campaign_id] [int] NULL,
 	[allow_duplicate_recipient] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[step_id] ASC
 ) ON [PRIMARY]
@@ -6116,7 +6116,7 @@ CREATE TABLE [business_process_hook_triggers](
 	[action_type_id] [int] NOT NULL,
 	[hook_id] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[trigger_id] ASC
 ) ON [PRIMARY]
@@ -6140,7 +6140,7 @@ CREATE TABLE [quote_product_options](
 	[extended_price] [float] NOT NULL DEFAULT ((0)),
 	[total_price] [float] NOT NULL DEFAULT ((0)),
 	[status_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[quote_product_option_id] ASC
 ) ON [PRIMARY]
@@ -6162,7 +6162,7 @@ CREATE TABLE [sync_table](
 	[order_id] [int] NULL DEFAULT ((-1)),
 	[sync_item] [bit] NULL DEFAULT ((0)),
 	[object_key] [varchar](50) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[table_id] ASC
 ) ON [PRIMARY]
@@ -6177,7 +6177,7 @@ CREATE TABLE [service_contract_products](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[link_contract_id] [int] NULL,
 	[link_product_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6193,7 +6193,7 @@ CREATE TABLE [active_campaign_groups](
 	[campaign_id] [int] NOT NULL,
 	[groupname] [varchar](80) NOT NULL,
 	[groupcriteria] [text] NULL DEFAULT (NULL),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6213,7 +6213,7 @@ CREATE TABLE [campaign_run](
 	[total_sent] [int] NULL DEFAULT ((0)),
 	[total_replied] [int] NULL DEFAULT ((0)),
 	[total_bounced] [int] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6228,7 +6228,7 @@ CREATE TABLE [campaign_group_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[campaign_id] [int] NOT NULL,
 	[user_group_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -6255,7 +6255,7 @@ CREATE TABLE [business_process_hook](
 	[process_id] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((0)),
 	[priority] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6286,11 +6286,11 @@ CREATE TABLE [lookup_project_permission](
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
 	[default_role] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[permission] ASC
 ) ON [PRIMARY]
@@ -6308,7 +6308,7 @@ CREATE TABLE [ticketlink_project](
 
 GO
 
-CREATE NONCLUSTERED INDEX [ticketlink_project_idx] ON [ticketlink_project]
+CREATE NONCLUSTERED INDEX [ticketlink_project_idx] ON [ticketlink_project] 
 (
 	[ticket_id] ASC
 ) ON [PRIMARY]
@@ -6379,7 +6379,7 @@ CREATE TABLE [action_step_lookup](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -6395,7 +6395,7 @@ CREATE TABLE [project_permissions](
 	[project_id] [int] NOT NULL,
 	[permission_id] [int] NOT NULL,
 	[userlevel] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6415,7 +6415,7 @@ CREATE TABLE [lookup_call_result](
 	[next_days] [int] NOT NULL DEFAULT ((0)),
 	[next_call_type_id] [int] NULL,
 	[canceled_type] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[result_id] ASC
 ) ON [PRIMARY]
@@ -6436,7 +6436,7 @@ CREATE TABLE [sync_transaction_log](
 	[status_code] [int] NULL,
 	[record_count] [int] NULL,
 	[message] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[transaction_id] ASC
 ) ON [PRIMARY]
@@ -6457,11 +6457,11 @@ CREATE TABLE [lookup_document_store_permission](
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
 	[default_role] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[permission] ASC
 ) ON [PRIMARY]
@@ -6481,7 +6481,7 @@ CREATE TABLE [autoguide_vehicle](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[vehicle_id] ASC
 ) ON [PRIMARY]
@@ -6500,7 +6500,7 @@ CREATE TABLE [autoguide_model](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[model_id] ASC
 ) ON [PRIMARY]
@@ -6516,7 +6516,7 @@ CREATE TABLE [document_store_permissions](
 	[document_store_id] [int] NOT NULL,
 	[permission_id] [int] NOT NULL,
 	[userlevel] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6539,7 +6539,7 @@ CREATE TABLE [relationship](
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[relationship_id] ASC
 ) ON [PRIMARY]
@@ -6558,7 +6558,7 @@ CREATE TABLE [role_permission](
 	[role_add] [bit] NOT NULL DEFAULT ((0)),
 	[role_edit] [bit] NOT NULL DEFAULT ((0)),
 	[role_delete] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6585,7 +6585,7 @@ CREATE TABLE [order_product](
 	[total_price] [float] NOT NULL DEFAULT ((0)),
 	[status_id] [int] NULL,
 	[status_date] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -6615,7 +6615,7 @@ CREATE TABLE [product_option_values](
 	[range_max] [int] NULL DEFAULT ((1)),
 	[cost_currency] [int] NULL,
 	[cost_amount] [float] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[value_id] ASC
 ) ON [PRIMARY]
@@ -6623,7 +6623,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [idx_pr_opt_val] ON [product_option_values]
+CREATE UNIQUE NONCLUSTERED INDEX [idx_pr_opt_val] ON [product_option_values] 
 (
 	[value_id] ASC,
 	[option_id] ASC,
@@ -6647,7 +6647,7 @@ CREATE TABLE [order_product_options](
 	[extended_price] [float] NOT NULL DEFAULT ((0)),
 	[total_price] [float] NOT NULL DEFAULT ((0)),
 	[status_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[order_product_option_id] ASC
 ) ON [PRIMARY]
@@ -6665,7 +6665,7 @@ CREATE TABLE [product_option_configurator](
 	[class_name] [varchar](255) NULL,
 	[result_type] [int] NOT NULL,
 	[configurator_name] [varchar](300) NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[configurator_id] ASC
 ) ON [PRIMARY]
@@ -6681,7 +6681,7 @@ CREATE TABLE [business_process_hook_library](
 	[link_module_id] [int] NOT NULL,
 	[hook_class] [varchar](255) NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[hook_id] ASC
 ) ON [PRIMARY]
@@ -6697,7 +6697,7 @@ CREATE TABLE [help_module](
 	[category_id] [int] NULL,
 	[module_brief_description] [text] NULL,
 	[module_detail_description] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[module_id] ASC
 ) ON [PRIMARY]
@@ -6715,7 +6715,7 @@ CREATE TABLE [custom_list_view_editor](
 	[description] [text] NULL,
 	[level] [int] NULL DEFAULT ((0)),
 	[category_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[editor_id] ASC
 ) ON [PRIMARY]
@@ -6739,7 +6739,7 @@ CREATE TABLE [permission](
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[active] [bit] NOT NULL DEFAULT ((1)),
 	[viewpoints] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[permission_id] ASC
 ) ON [PRIMARY]
@@ -6760,7 +6760,7 @@ CREATE TABLE [lookup_lists_lookup](
 	[description] [text] NULL,
 	[entered] [datetime] NULL DEFAULT (getdate()),
 	[category_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6781,7 +6781,7 @@ CREATE TABLE [category_editor_lookup](
 	[entered] [datetime] NULL DEFAULT (getdate()),
 	[category_id] [int] NOT NULL,
 	[max_levels] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6799,11 +6799,11 @@ CREATE TABLE [module_field_categorylink](
 	[level] [int] NULL DEFAULT ((0)),
 	[description] [text] NULL,
 	[entered] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -6823,11 +6823,11 @@ CREATE TABLE [business_process](
 	[component_start_id] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[process_id] ASC
 ) ON [PRIMARY],
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[process_name] ASC
 ) ON [PRIMARY]
@@ -6853,7 +6853,7 @@ CREATE TABLE [product_option](
 	[option_name] [varchar](300) NULL,
 	[has_range] [bit] NULL DEFAULT ((0)),
 	[has_multiplier] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[option_id] ASC
 ) ON [PRIMARY]
@@ -6868,7 +6868,7 @@ CREATE TABLE [product_catalog_category_map](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[product_id] [int] NOT NULL,
 	[category_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6883,7 +6883,7 @@ CREATE TABLE [product_category_map](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[category1_id] [int] NOT NULL,
 	[category2_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -6901,7 +6901,7 @@ CREATE TABLE [autoguide_inventory_options](
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [idx_autog_inv_opt] ON [autoguide_inventory_options]
+CREATE UNIQUE NONCLUSTERED INDEX [idx_autog_inv_opt] ON [autoguide_inventory_options] 
 (
 	[inventory_id] ASC,
 	[option_id] ASC
@@ -6923,7 +6923,7 @@ CREATE TABLE [autoguide_ad_run](
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[ad_run_id] ASC
 ) ON [PRIMARY]
@@ -6949,7 +6949,7 @@ CREATE TABLE [product_option_map](
 	[product_option_id] [int] IDENTITY(1,1) NOT NULL,
 	[product_id] [int] NOT NULL,
 	[option_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[product_option_id] ASC
 ) ON [PRIMARY]
@@ -7014,7 +7014,7 @@ CREATE TABLE [ticket_activity_item](
 	[labor_hours] [int] NULL,
 	[labor_minutes] [int] NULL,
 	[activity_date_timezone] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -7031,7 +7031,7 @@ CREATE TABLE [asset_materials_map](
 	[code] [int] NOT NULL,
 	[quantity] [float] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
@@ -7049,7 +7049,7 @@ CREATE TABLE [survey_questions](
 	[description] [varchar](255) NULL,
 	[required] [bit] NOT NULL DEFAULT ((0)),
 	[position] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[question_id] ASC
 ) ON [PRIMARY]
@@ -7075,7 +7075,7 @@ CREATE TABLE [active_survey_questions](
 	[total5] [int] NULL DEFAULT ((0)),
 	[total6] [int] NULL DEFAULT ((0)),
 	[total7] [int] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[question_id] ASC
 ) ON [PRIMARY]
@@ -7093,7 +7093,7 @@ CREATE TABLE [custom_list_view](
 	[description] [text] NULL,
 	[is_default] [bit] NULL DEFAULT ((0)),
 	[entered] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[view_id] ASC
 ) ON [PRIMARY]
@@ -7112,7 +7112,7 @@ CREATE TABLE [viewpoint_permission](
 	[viewpoint_add] [bit] NOT NULL DEFAULT ((0)),
 	[viewpoint_edit] [bit] NOT NULL DEFAULT ((0)),
 	[viewpoint_delete] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[vp_permission_id] ASC
 ) ON [PRIMARY]
@@ -7127,7 +7127,7 @@ CREATE TABLE [custom_list_view_field](
 	[field_id] [int] IDENTITY(1,1) NOT NULL,
 	[view_id] [int] NOT NULL,
 	[name] [varchar](80) NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[field_id] ASC
 ) ON [PRIMARY]
@@ -7143,7 +7143,7 @@ CREATE TABLE [trouble_asset_replacement](
 	[link_form_id] [int] NULL,
 	[part_number] [varchar](256) NULL,
 	[part_description] [text] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[replacement_id] ASC
 ) ON [PRIMARY]
@@ -7158,7 +7158,7 @@ CREATE TABLE [action_item_work_selection](
 	[selection_id] [int] IDENTITY(1,1) NOT NULL,
 	[item_work_id] [int] NOT NULL,
 	[selection] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[selection_id] ASC
 ) ON [PRIMARY]
@@ -7174,7 +7174,7 @@ CREATE TABLE [survey_items](
 	[question_id] [int] NOT NULL,
 	[type] [int] NULL DEFAULT ((-1)),
 	[description] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -7198,7 +7198,7 @@ CREATE TABLE [custom_field_category](
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[multiple_records] [bit] NULL DEFAULT ((0)),
 	[read_only] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -7206,7 +7206,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [custom_field_cat_idx] ON [custom_field_category]
+CREATE NONCLUSTERED INDEX [custom_field_cat_idx] ON [custom_field_category] 
 (
 	[module_id] ASC
 ) ON [PRIMARY]
@@ -7223,7 +7223,7 @@ CREATE TABLE [active_survey_responses](
 	[ip_address] [varchar](15) NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[address_updated] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[response_id] ASC
 ) ON [PRIMARY]
@@ -7244,7 +7244,7 @@ CREATE TABLE [custom_field_group](
 	[end_date] [datetime] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[group_id] ASC
 ) ON [PRIMARY]
@@ -7252,7 +7252,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [custom_field_grp_idx] ON [custom_field_group]
+CREATE NONCLUSTERED INDEX [custom_field_grp_idx] ON [custom_field_group] 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -7268,7 +7268,7 @@ CREATE TABLE [business_process_component](
 	[parent_id] [int] NULL,
 	[parent_result_id] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7286,7 +7286,7 @@ CREATE TABLE [business_process_component_result_lookup](
 	[description] [varchar](255) NULL,
 	[level] [int] NOT NULL DEFAULT ((0)),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[result_id] ASC
 ) ON [PRIMARY]
@@ -7304,7 +7304,7 @@ CREATE TABLE [product_keyword_map](
 
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [idx_pr_key_map] ON [product_keyword_map]
+CREATE UNIQUE NONCLUSTERED INDEX [idx_pr_key_map] ON [product_keyword_map] 
 (
 	[product_id] ASC,
 	[keyword_id] ASC
@@ -7321,7 +7321,7 @@ CREATE TABLE [lookup_sub_segment](
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -7337,7 +7337,7 @@ CREATE TABLE [active_survey_items](
 	[question_id] [int] NOT NULL,
 	[type] [int] NULL DEFAULT ((-1)),
 	[description] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[item_id] ASC
 ) ON [PRIMARY]
@@ -7362,7 +7362,7 @@ CREATE TABLE [custom_field_info](
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[additional_text] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[field_id] ASC
 ) ON [PRIMARY]
@@ -7370,7 +7370,7 @@ PRIMARY KEY CLUSTERED
 
 GO
 
-CREATE NONCLUSTERED INDEX [custom_field_inf_idx] ON [custom_field_info]
+CREATE NONCLUSTERED INDEX [custom_field_inf_idx] ON [custom_field_info] 
 (
 	[group_id] ASC
 ) ON [PRIMARY]
@@ -7385,7 +7385,7 @@ CREATE TABLE [business_process_component_parameter](
 	[parameter_id] [int] NOT NULL,
 	[param_value] [varchar](4000) NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7403,7 +7403,7 @@ CREATE TABLE [project_news_category](
 	[entered] [datetime] NULL DEFAULT (getdate()),
 	[level] [int] NOT NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[category_id] ASC
 ) ON [PRIMARY]
@@ -7417,7 +7417,7 @@ GO
 CREATE TABLE [project_ticket_count](
 	[project_id] [int] NOT NULL,
 	[key_count] [int] NOT NULL DEFAULT ((0)),
-UNIQUE NONCLUSTERED
+UNIQUE NONCLUSTERED 
 (
 	[project_id] ASC
 ) ON [PRIMARY]
@@ -7443,7 +7443,7 @@ CREATE TABLE [business_process_events](
 	[enabled] [bit] NULL DEFAULT ((0)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[process_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[event_id] ASC
 ) ON [PRIMARY]
@@ -7460,7 +7460,7 @@ CREATE TABLE [business_process_parameter](
 	[param_name] [varchar](255) NULL,
 	[param_value] [varchar](4000) NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7481,7 +7481,7 @@ CREATE TABLE [custom_field_lookup](
 	[end_date] [datetime] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
 ) ON [PRIMARY]
@@ -7520,7 +7520,7 @@ CREATE TABLE [access](
 	[site_id] [int] NULL,
 	[allow_webdav_access] [bit] NOT NULL DEFAULT ((1)),
 	[allow_httpapi_access] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[user_id] ASC
 ) ON [PRIMARY]
@@ -7541,7 +7541,7 @@ CREATE TABLE [ticket_category](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7563,7 +7563,7 @@ CREATE TABLE [ticket_category_draft](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7584,7 +7584,7 @@ CREATE TABLE [asset_category](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7606,7 +7606,7 @@ CREATE TABLE [asset_category_draft](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7627,7 +7627,7 @@ CREATE TABLE [action_plan_category](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -7647,7 +7647,7 @@ CREATE TABLE [ticket_defect](
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[trashed_date] [datetime] NULL,
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[defect_id] ASC
 ) ON [PRIMARY]
@@ -7669,7 +7669,7 @@ CREATE TABLE [action_plan_category_draft](
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED
+PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
@@ -8023,14 +8023,14 @@ GO
 ALTER TABLE [document_store_department_member]  WITH CHECK ADD FOREIGN KEY([userlevel])
 REFERENCES [lookup_document_store_role] ([code])
 GO
-ALTER TABLE [icelet_property]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [icelet_property]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [icelet_property]  WITH CHECK ADD FOREIGN KEY([row_column_id])
-REFERENCES [row_column] ([row_column_id])
+ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([row_column_id])
+REFERENCES [web_row_column] ([row_column_id])
 GO
 ALTER TABLE [action_item_work_notes]  WITH CHECK ADD FOREIGN KEY([item_work_id])
 REFERENCES [action_item_work] ([item_work_id])
@@ -8110,17 +8110,17 @@ GO
 ALTER TABLE [webdav]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [row_column]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [row_column]  WITH CHECK ADD FOREIGN KEY([icelet_id])
-REFERENCES [icelet] ([icelet_id])
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([icelet_id])
+REFERENCES [web_icelet] ([icelet_id])
 GO
-ALTER TABLE [row_column]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [row_column]  WITH CHECK ADD FOREIGN KEY([page_row_id])
-REFERENCES [page_row] ([page_row_id])
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([page_row_id])
+REFERENCES [web_page_row] ([page_row_id])
 GO
 ALTER TABLE [action_item_work]  WITH CHECK ADD FOREIGN KEY([action_step_id])
 REFERENCES [action_step] ([step_id])
@@ -8260,17 +8260,17 @@ GO
 ALTER TABLE [action_plan_work_notes]  WITH CHECK ADD FOREIGN KEY([submittedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_row]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_row]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_row]  WITH CHECK ADD FOREIGN KEY([page_version_id])
-REFERENCES [page_version] ([page_version_id])
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([page_version_id])
+REFERENCES [web_page_version] ([page_version_id])
 GO
-ALTER TABLE [page_row]  WITH CHECK ADD FOREIGN KEY([row_column_id])
-REFERENCES [row_column] ([row_column_id])
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([row_column_id])
+REFERENCES [web_row_column] ([row_column_id])
 GO
 ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([bank_id])
 REFERENCES [payment_eft] ([bank_id])
@@ -8434,23 +8434,23 @@ GO
 ALTER TABLE [user_group]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [lookup_site_id] ([code])
 GO
-ALTER TABLE [page]  WITH CHECK ADD FOREIGN KEY([active_page_version_id])
-REFERENCES [page_version] ([page_version_id])
+ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([active_page_version_id])
+REFERENCES [web_page_version] ([page_version_id])
 GO
-ALTER TABLE [page]  WITH CHECK ADD FOREIGN KEY([construction_page_version_id])
-REFERENCES [page_version] ([page_version_id])
+ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([construction_page_version_id])
+REFERENCES [web_page_version] ([page_version_id])
 GO
-ALTER TABLE [page]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page]  WITH CHECK ADD FOREIGN KEY([page_group_id])
-REFERENCES [page_group] ([page_group_id])
+ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([page_group_id])
+REFERENCES [web_page_group] ([page_group_id])
 GO
-ALTER TABLE [page]  WITH CHECK ADD FOREIGN KEY([tab_banner_id])
-REFERENCES [tab_banner] ([tab_banner_id])
+ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([tab_banner_id])
+REFERENCES [web_tab_banner] ([tab_banner_id])
 GO
 ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [project_issues_categories] ([category_id])
@@ -8584,17 +8584,17 @@ GO
 ALTER TABLE [cfsinbox_message]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [tab_banner]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [tab_banner]  WITH CHECK ADD FOREIGN KEY([image_id])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([image_id])
 REFERENCES [project_files] ([item_id])
 GO
-ALTER TABLE [tab_banner]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [tab_banner]  WITH CHECK ADD FOREIGN KEY([tab_id])
-REFERENCES [tab] ([tab_id])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([tab_id])
+REFERENCES [web_tab] ([tab_id])
 GO
 ALTER TABLE [project_issues_categories]  WITH CHECK ADD FOREIGN KEY([enteredBy])
 REFERENCES [access] ([user_id])
@@ -8629,14 +8629,14 @@ GO
 ALTER TABLE [customer_product]  WITH CHECK ADD FOREIGN KEY([status_id])
 REFERENCES [lookup_order_status] ([code])
 GO
-ALTER TABLE [page_group]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_group]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_group]  WITH CHECK ADD FOREIGN KEY([tab_id])
-REFERENCES [tab] ([tab_id])
+ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([tab_id])
+REFERENCES [web_tab] ([tab_id])
 GO
 ALTER TABLE [contact_lead_skipped_map]  WITH CHECK ADD FOREIGN KEY([contact_id])
 REFERENCES [contact] ([contact_id])
@@ -8770,26 +8770,26 @@ GO
 ALTER TABLE [service_contract_hours]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_version]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_version]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [page_version]  WITH CHECK ADD FOREIGN KEY([page_id])
-REFERENCES [page] ([page_id])
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([page_id])
+REFERENCES [web_page] ([page_id])
 GO
-ALTER TABLE [page_version]  WITH CHECK ADD FOREIGN KEY([parent_page_version_id])
-REFERENCES [page_version] ([page_version_id])
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([parent_page_version_id])
+REFERENCES [web_page_version] ([page_version_id])
 GO
-ALTER TABLE [tab]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_tab]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [tab]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_tab]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [tab]  WITH CHECK ADD FOREIGN KEY([site_id])
-REFERENCES [site] ([site_id])
+ALTER TABLE [web_tab]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [web_site] ([site_id])
 GO
 ALTER TABLE [message_template]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -8983,10 +8983,10 @@ GO
 ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([phone_type])
 REFERENCES [lookup_contactphone_types] ([code])
 GO
-ALTER TABLE [site_log]  WITH CHECK ADD FOREIGN KEY([site_id])
-REFERENCES [site] ([site_id])
+ALTER TABLE [web_site_log]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [web_site] ([site_id])
 GO
-ALTER TABLE [site_log]  WITH CHECK ADD FOREIGN KEY([user_id])
+ALTER TABLE [web_site_log]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [package]  WITH CHECK ADD FOREIGN KEY([category_id])
@@ -9142,20 +9142,20 @@ GO
 ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([ticket_task_category_id])
 REFERENCES [lookup_ticket_task_category] ([code])
 GO
-ALTER TABLE [site]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [site]  WITH CHECK ADD FOREIGN KEY([layout_id])
-REFERENCES [layout] ([layout_id])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([layout_id])
+REFERENCES [web_layout] ([layout_id])
 GO
-ALTER TABLE [site]  WITH CHECK ADD FOREIGN KEY([logo_image_id])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([logo_image_id])
 REFERENCES [project_files] ([item_id])
 GO
-ALTER TABLE [site]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [site]  WITH CHECK ADD FOREIGN KEY([style_id])
-REFERENCES [style] ([style_id])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([style_id])
+REFERENCES [web_style] ([style_id])
 GO
 ALTER TABLE [contact]  WITH CHECK ADD FOREIGN KEY([access_type])
 REFERENCES [lookup_access_types] ([code])
@@ -9628,8 +9628,8 @@ GO
 ALTER TABLE [taskcategory_project]  WITH CHECK ADD FOREIGN KEY([project_id])
 REFERENCES [projects] ([project_id])
 GO
-ALTER TABLE [style]  WITH CHECK ADD FOREIGN KEY([layout_id])
-REFERENCES [layout] ([layout_id])
+ALTER TABLE [web_style]  WITH CHECK ADD FOREIGN KEY([layout_id])
+REFERENCES [web_layout] ([layout_id])
 GO
 ALTER TABLE [project_requirements_map]  WITH CHECK ADD FOREIGN KEY([assignment_id])
 REFERENCES [project_assignments] ([assignment_id])
