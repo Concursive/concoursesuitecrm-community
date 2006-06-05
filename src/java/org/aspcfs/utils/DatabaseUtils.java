@@ -71,7 +71,7 @@ public class DatabaseUtils {
       case DatabaseUtils.ORACLE:
         return "1";
       case DatabaseUtils.DB2:
-        return "true";
+        return "'1'";
       case DatabaseUtils.FIREBIRD:
         return "'Y'";
       default:
@@ -97,7 +97,7 @@ public class DatabaseUtils {
       case DatabaseUtils.ORACLE:
         return "0";
       case DatabaseUtils.DB2:
-        return "false";
+        return "'0'";
       case DatabaseUtils.FIREBIRD:
         return "'N'";
       default:
@@ -380,6 +380,14 @@ public class DatabaseUtils {
           sequenceName = seqPart1 + "_" + seqPart2.substring(seqPart2.length() - 16);
         }
         rs = st.executeQuery("SELECT " + sequenceName + ".nextval from dual");
+        break;
+      case DatabaseUtils.DB2:
+        if (sequenceName.length() > 30) {
+          String seqPart1 = sequenceName.substring(0, 13);
+          String seqPart2 = sequenceName.substring(14);
+          sequenceName = seqPart1 + "_" + seqPart2.substring(seqPart2.length() - 16);
+        }
+        rs = st.executeQuery("VALUES NEXTVAL FOR " + sequenceName);
         break;
       default:
         break;
@@ -1118,7 +1126,8 @@ public class DatabaseUtils {
 
   public static String getTableName(Connection db, String tableName) {
     if (DatabaseUtils.getType(db) != FIREBIRD &&
-        DatabaseUtils.getType(db) != ORACLE) {
+        DatabaseUtils.getType(db) != ORACLE &&
+        DatabaseUtils.getType(db) != DB2) {
       return tableName;
     }
     if (tableName.length() < 32) {
@@ -1168,7 +1177,8 @@ public class DatabaseUtils {
 
   public static String parseReservedWord(Connection db, String reservedWord) {
     if (DatabaseUtils.getType(db) == FIREBIRD ||
-        DatabaseUtils.getType(db) == ORACLE) {
+        DatabaseUtils.getType(db) == ORACLE ||
+        DatabaseUtils.getType(db) == DB2) {
       if (reservedWord.indexOf(".") > -1) {
         // Table is being specified with field
         String part1 = reservedWord.substring(0, reservedWord.indexOf("."));
