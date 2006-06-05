@@ -92,13 +92,12 @@ public class HtmlSelectCurrency {
     select.addItem("THB", "Thai Bahts (THB)");
     //select.addItem("AED", "Uae Dirhams (AED)");
     select.addItem("GBP", "UK Pounds Sterling (GBP)");
+    select.addItem("UAH", "Ukrainian Grivna (UAH)");
     select.addItem("USD", "United States Dollar (USD)");
     select.addItem("SIT", "Slovenian Tolar (SIT)");
     select.addItem("THB", "Thai Baht (THB)");
     select.addItem("VEB", StringUtils.toHtml("Venezuelan Bol\u00edvar (VEB)"));
     //select.addItem("WST", "Western Samoa Tala (WST)");
-
-
     if (!select.hasKey(defaultValue)) {
       select.addItem(defaultValue);
     }

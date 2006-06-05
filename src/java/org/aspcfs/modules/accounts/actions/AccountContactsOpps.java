@@ -496,7 +496,7 @@ public final class AccountContactsOpps extends CFSModule {
     Connection db = null;
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
-    PagedListInfo oppPagedListInfo = (PagedListInfo) context.getSession().getAttribute("AccountContactOppsPagedListInfo");
+    PagedListInfo oppPagedListInfo = this.getPagedListInfo(context,"AccountContactOppsPagedListInfo", false);
     PagedListInfo componentListInfo = this.getPagedListInfo(
         context, "AccountContactComponentListInfo");
     componentListInfo.setLink(

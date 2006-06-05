@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aspcfs>
 <config name="system.fields.label">
-<param name="accounts.assets.materials">
-<value><![CDATA[物料]]></value>
+<param name="accounts.accounts_add.primary">
+<value><![CDATA[基本]]></value>
 </param>
 <param name="setup.userPassword.colon">
 <value><![CDATA[Database User Password:]]></value>
@@ -212,141 +212,6 @@
 </param>
 <param name="setup.pleaseWaitUpgrading.text">
 <value><![CDATA[Please Wait... upgrading Centric CRM!]]></value>
-</param>
-<param name="actionPlan.upUserHierarchy.text">
-<value><![CDATA[User assigned and the user's managers]]></value>
-</param>
-<param name="actionPlan.userAssignedToThePlan.text">
-<value><![CDATA[User assigned to the plan]]></value>
-</param>
-<param name="actionPlan.userDelegated">
-<value><![CDATA[User delegated]]></value>
-</param>
-<param name="actionPlan.viewAccount.text">
-<value><![CDATA[View Account]]></value>
-</param>
-<param name="actionPlan.viewActionPlan">
-<value><![CDATA[View Action Plan]]></value>
-</param>
-<param name="actionPlan.weeklyPotential">
-<value><![CDATA[Weekly Potential]]></value>
-</param>
-<param name="actionPlan.whoCanCompleteThisList.question">
-<value><![CDATA[Who can complete this list?]]></value>
-</param>
-<param name="admin.notTheSameSiteAsManager.text">
-<value><![CDATA[The selected manager should belong to the same site as this user, or should have access to all sites]]></value>
-</param>
-<param name="admin.subUserNotTheSameSite.text">
-<value><![CDATA[One or more reporting users do not belong to this site]]></value>
-</param>
-<param name="adminUserGroups.permissionDeniedForUserDetails.text">
-<value><![CDATA[Permission denied to view User details]]></value>
-</param>
-<param name="admin.user.site">
-<value><![CDATA[Site]]></value>
-</param>
-<param name="button.assignAccountR">
-<value><![CDATA[Assign Account >]]></value>
-</param>
-<param name="button.calling.dots">
-<value><![CDATA[Calling...]]></value>
-</param>
-<param name="button.map">
-<value><![CDATA[Map]]></value>
-</param>
-<param name="button.workAsAccount">
-<value><![CDATA[Work as Account]]></value>
-</param>
-<param name="calendar.any.4dashes">
-<value><![CDATA[-- Any --]]></value>
-</param>
-<param name="calendar.opportunitiesBeingManaged.openOnly.brackets">
-<value><![CDATA[Opportunities being Managed (Open Only)]]></value>
-</param>
-<param name="calls.call">
-<value><![CDATA[Call]]></value>
-</param>
-<param name="calls.confirmExtension">
-<value><![CDATA[Confirm Extension]]></value>
-</param>
-<param name="calls.extension">
-<value><![CDATA[Extension]]></value>
-</param>
-<param name="calls.fromExtension">
-<value><![CDATA[From Extension]]></value>
-</param>
-<param name="campaign.contactInfoSubmitted">
-<value><![CDATA[Contact Information Submitted]]></value>
-</param>
-<param name="campaign.contactInfoUpdate">
-<value><![CDATA[Contact Information Update]]></value>
-</param>
-<param name="campaign.contactInfoUpdateThanks">
-<value><![CDATA[Thank you for informing us about changes in your contact information.]]></value>
-</param>
-<param name="campaign.contactUpdate.addressConfirmation">
-<value><![CDATA[Address Confirmation]]></value>
-</param>
-<param name="campaign.contactUpdate.addressInfoConfirmation">
-<value><![CDATA[Please click OK to confirm that your address on file is current and accurate.]]></value>
-</param>
-<param name="campaign.contactUpdate.thankYou">
-<value><![CDATA[Thank you for visiting our contact information update page]]></value>
-</param>
-<param name="categories.categoriesForSite">
-<value><![CDATA[Categories for Site]]></value>
-</param>
-<param name="categories.switchToSite">
-<value><![CDATA[Switch to Site]]></value>
-</param>
-<param name="communications.button.broadcast">
-<value><![CDATA[Broadcast]]></value>
-</param>
-<param name="contacts.add.secretWord">
-<value><![CDATA[Secret Word]]></value>
-</param>
-<param name="contacts.generalContacts.brackets.controlledHierarchy">
-<value><![CDATA[General Contacts (Controlled Hierarchy)]]></value>
-</param>
-<param name="contacts.generalContacts.brackets.personal">
-<value><![CDATA[General Contacts (Personal)]]></value>
-</param>
-<param name="contacts.generalContacts.brackets.public">
-<value><![CDATA[General Contacts (Public)]]></value>
-</param>
-<param name="dependency.actionPhaseRecords">
-<value><![CDATA[Action Phase Records]]></value>
-</param>
-<param name="dependency.actionPhases">
-<value><![CDATA[Action Phases]]></value>
-</param>
-<param name="dependency.actionPlanRecords">
-<value><![CDATA[Action Plan Records]]></value>
-</param>
-<param name="accounts.accounts_contacts.noEmailPlease">
-<value><![CDATA[没有邮件地址]]></value>
-</param>
-<param name="accounts.accounts_contacts_add.Salutation">
-<value><![CDATA[招呼]]></value>
-</param>
-<param name="accounts.accounts_add.Zip">
-<value><![CDATA[区号]]></value>
-</param>
-<param name="accounts.accounts_add.segment">
-<value><![CDATA[片断]]></value>
-</param>
-<param name="accounts.accounts_add.directBill">
-<value><![CDATA[直接帐单]]></value>
-</param>
-<param name="accounts.accounts_add.copyEmailPhoneAddress">
-<value><![CDATA[拷贝Email,电话和邮政编码]]></value>
-</param>
-<param name="accounts.site">
-<value><![CDATA[网址]]></value>
-</param>
-<param name="accounts.organization.colon">
-<value><![CDATA[组织]]></value>
 </param>
 <param name="account.noNameAvailable.quotes">
 <value><![CDATA["没有可用的名字"]]></value>
@@ -599,6 +464,141 @@
 </param>
 <param name="accounts.accounts_contacts_oppcomponent_details.weeks">
 <value><![CDATA[周]]></value>
+</param>
+<param name="accounts.assets.materials">
+<value><![CDATA[物料]]></value>
+</param>
+<param name="actionItem.updateStep.changeStatus">
+<value><![CDATA[改变状态为]]></value>
+</param>
+<param name="actionPlan.actionPlanName">
+<value><![CDATA[活动计划名称]]></value>
+</param>
+<param name="actionPlan.addActionPlan">
+<value><![CDATA[增加活动计划]]></value>
+</param>
+<param name="actionPlan.activePlans">
+<value><![CDATA[活动计划]]></value>
+</param>
+<param name="actionPlan.activationDate">
+<value><![CDATA[激活日期]]></value>
+</param>
+<param name="actionPlan.activateThisPlan">
+<value><![CDATA[激活计划]]></value>
+</param>
+<param name="actionPlan.allActionPlans">
+<value><![CDATA[所有活动计划]]></value>
+</param>
+<param name="actionPlan.categories">
+<value><![CDATA[活动计划分类]]></value>
+</param>
+<param name="actionPlan.modifyActionPlan">
+<value><![CDATA[修改活动计划]]></value>
+</param>
+<param name="accounts.accounts_add.Classification">
+<value><![CDATA[分类]]></value>
+</param>
+<param name="accounts.accounts_add.Email">
+<value><![CDATA[电子邮件]]></value>
+</param>
+<param name="accounts.accounts_add.Email1">
+<value><![CDATA[电子邮件1]]></value>
+</param>
+<param name="accounts.accounts_add.dateOfBirth">
+<value><![CDATA[出生日期]]></value>
+</param>
+<param name="accounts.accounts_add.EmailAddresses">
+<value><![CDATA[电子邮件地址]]></value>
+</param>
+<param name="accounts.accounts_add.directBill">
+<value><![CDATA[直接帐单]]></value>
+</param>
+<param name="accounts.accounts_add.copyEmailPhoneAddress">
+<value><![CDATA[拷贝Email,电话和邮政编码]]></value>
+</param>
+<param name="accounts.accounts_add.City">
+<value><![CDATA[城市]]></value>
+</param>
+<param name="accounts.accounts_add.Email2">
+<value><![CDATA[电子邮件2]]></value>
+</param>
+<param name="accounts.accounts_add.ContractEndDate">
+<value><![CDATA[合同终止日期]]></value>
+</param>
+<param name="accounts.accounts_add.AlertDescription">
+<value><![CDATA[提醒描述]]></value>
+</param>
+<param name="accounts.accounts_add.Country">
+<value><![CDATA[国家]]></value>
+</param>
+<param name="accounts.accounts_add.LastName">
+<value><![CDATA[姓]]></value>
+</param>
+<param name="accounts.accounts_add.MiddleName">
+<value><![CDATA[N/A in Chinese]]></value>
+</param>
+<param name="accounts.accounts_add.nickname">
+<value><![CDATA[昵称]]></value>
+</param>
+<param name="accounts.accounts_add.InstantMessageAddresses">
+<value><![CDATA[即时通讯地址]]></value>
+</param>
+<param name="accounts.accounts_add.InstantMessageAddress">
+<value><![CDATA[即时通讯地址]]></value>
+</param>
+<param name="accounts.accounts_add.EmailOrMessages">
+<value><![CDATA[电子邮件/消息]]></value>
+</param>
+<param name="accounts.accounts_add.ext">
+<value><![CDATA[分机]]></value>
+</param>
+<param name="accounts.accounts_add.Industry">
+<value><![CDATA[行业]]></value>
+</param>
+<param name="accounts.accounts_add.FirstName">
+<value><![CDATA[名]]></value>
+</param>
+<param name="accounts.accounts_add.LastName.colon">
+<value><![CDATA[姓：]]></value>
+</param>
+<param name="accounts.accounts_add.Individual">
+<value><![CDATA[个人]]></value>
+</param>
+<param name="accounts.accounts_add.FirstName.colon">
+<value><![CDATA[名：]]></value>
+</param>
+<param name="accounts.accounts_add.Phone1">
+<value><![CDATA[电话1]]></value>
+</param>
+<param name="accounts.accounts_add.Revenue">
+<value><![CDATA[收入]]></value>
+</param>
+<param name="accounts.accounts_add.Phone">
+<value><![CDATA[电话]]></value>
+</param>
+<param name="accounts.accounts_add.PhoneNumbers">
+<value><![CDATA[电话号码]]></value>
+</param>
+<param name="accounts.accounts_add.Role">
+<value><![CDATA[角色]]></value>
+</param>
+<param name="accounts.accounts_add.Organization">
+<value><![CDATA[组织]]></value>
+</param>
+<param name="accounts.accounts_add.segment">
+<value><![CDATA[片断]]></value>
+</param>
+<param name="accounts.accounts_add.Notes">
+<value><![CDATA[备注]]></value>
+</param>
+<param name="accounts.accounts_add.NoneSelected">
+<value><![CDATA[未选择]]></value>
+</param>
+<param name="accounts.accounts_add.OrganizationName">
+<value><![CDATA[组织名称]]></value>
+</param>
+<param name="accounts.accounts_add.Phone2">
+<value><![CDATA[电话2]]></value>
 </param>
 <param name="quotes.quoteNextVersion">
 <value><![CDATA[Next Version]]></value>
@@ -6739,32 +6739,11 @@ while a Guest has very limited functionality.]]></value>
 <param name="account.relatedQuotes">
 <value><![CDATA[相关报价]]></value>
 </param>
-<param name="accounts.accounts_add.ContractEndDate">
-<value><![CDATA[合同终止日期]]></value>
-</param>
-<param name="accounts.accounts_add.City">
-<value><![CDATA[城市]]></value>
-</param>
-<param name="accounts.accounts_add.Industry">
-<value><![CDATA[行业]]></value>
-</param>
-<param name="accounts.accounts_add.Organization">
-<value><![CDATA[组织]]></value>
-</param>
-<param name="accounts.accounts_add.Individual">
-<value><![CDATA[个人]]></value>
-</param>
-<param name="accounts.accounts_add.OrganizationName">
-<value><![CDATA[组织名称]]></value>
-</param>
 <param name="accounts.accounts_add.StateProvince">
 <value><![CDATA[省]]></value>
 </param>
 <param name="accounts.accounts_add.ZipPostalCode">
 <value><![CDATA[邮政编码]]></value>
-</param>
-<param name="accounts.accounts_add.Revenue">
-<value><![CDATA[收入]]></value>
 </param>
 <param name="accounts.accounts_add.Type">
 <value><![CDATA[类型]]></value>
@@ -6826,41 +6805,14 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.accounts_calls_list_menu.CompleteActivity">
 <value><![CDATA[结束活动]]></value>
 </param>
-<param name="accounts.accounts_add.Country">
-<value><![CDATA[国家]]></value>
-</param>
-<param name="accounts.accounts_add.EmailAddresses">
-<value><![CDATA[电子邮件地址]]></value>
-</param>
-<param name="accounts.accounts_add.Email">
-<value><![CDATA[电子邮件]]></value>
-</param>
-<param name="accounts.accounts_add.ext">
-<value><![CDATA[分机]]></value>
-</param>
-<param name="accounts.accounts_add.PhoneNumbers">
-<value><![CDATA[电话号码]]></value>
-</param>
 <param name="accounts.accounts_asset_list.AddAnAsset">
 <value><![CDATA[添加资产]]></value>
 </param>
 <param name="accounts.accounts_asset_history.NoMaintenanceOrServiceHistory">
 <value><![CDATA[没有可显示的历史条目。]]></value>
 </param>
-<param name="accounts.accounts_add.Phone2">
-<value><![CDATA[电话2]]></value>
-</param>
-<param name="accounts.accounts_add.Notes">
-<value><![CDATA[备注]]></value>
-</param>
 <param name="accounts.accounts_asset_list_include.NoAssetsFound">
 <value><![CDATA[未找到资产]]></value>
-</param>
-<param name="accounts.accounts_add.Phone">
-<value><![CDATA[电话]]></value>
-</param>
-<param name="accounts.accounts_add.Phone1">
-<value><![CDATA[电话1]]></value>
 </param>
 <param name="accounts.accounts_contacts_calls_details_followup_include.Priority">
 <value><![CDATA[优先级]]></value>
@@ -7059,12 +7011,6 @@ while a Guest has very limited functionality.]]></value>
 </param>
 <param name="accounts.accounts_documents_modify.SubjectOfFile">
 <value><![CDATA[文件的主题]]></value>
-</param>
-<param name="accounts.accounts_add.Email1">
-<value><![CDATA[电子邮件1]]></value>
-</param>
-<param name="accounts.accounts_add.Email2">
-<value><![CDATA[电子邮件2]]></value>
 </param>
 <param name="accounts.accounts_contacts_add.SaveClone">
 <value><![CDATA[保存并克隆]]></value>
@@ -8973,24 +8919,6 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.accountasset_include.Notes">
 <value><![CDATA[备注]]></value>
 </param>
-<param name="accounts.accounts_add.NoneSelected">
-<value><![CDATA[未选择]]></value>
-</param>
-<param name="accounts.accounts_add.LastName.colon">
-<value><![CDATA[姓：]]></value>
-</param>
-<param name="accounts.accounts_add.LastName">
-<value><![CDATA[姓]]></value>
-</param>
-<param name="accounts.accounts_add.FirstName.colon">
-<value><![CDATA[名：]]></value>
-</param>
-<param name="accounts.accounts_add.Classification">
-<value><![CDATA[分类]]></value>
-</param>
-<param name="accounts.accounts_add.FirstName">
-<value><![CDATA[名]]></value>
-</param>
 <param name="accounts.accounts_contacts_oppcomponent_add.BestGuess">
 <value><![CDATA[最佳猜测]]></value>
 </param>
@@ -9261,12 +9189,6 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.accounts_asset_history.Resolution">
 <value><![CDATA[决定]]></value>
 </param>
-<param name="accounts.accounts_add.AlertDescription">
-<value><![CDATA[提醒描述]]></value>
-</param>
-<param name="accounts.accounts_add.MiddleName">
-<value><![CDATA[N/A in Chinese]]></value>
-</param>
 <param name="accounts.accounts_reports_generate.ToInclude">
 <value><![CDATA[包含]]></value>
 </param>
@@ -9510,24 +9432,6 @@ while a Guest has very limited functionality.]]></value>
 <param name="campaign.recipients.lowercase">
 <value><![CDATA[收条]]></value>
 </param>
-<param name="accounts.accounts_add.Role">
-<value><![CDATA[角色]]></value>
-</param>
-<param name="accounts.accounts_add.nickname">
-<value><![CDATA[昵称]]></value>
-</param>
-<param name="accounts.accounts_add.InstantMessageAddresses">
-<value><![CDATA[即时通讯地址]]></value>
-</param>
-<param name="accounts.accounts_add.InstantMessageAddress">
-<value><![CDATA[即时通讯地址]]></value>
-</param>
-<param name="accounts.accounts_add.EmailOrMessages">
-<value><![CDATA[电子邮件/消息]]></value>
-</param>
-<param name="accounts.accounts_add.dateOfBirth">
-<value><![CDATA[出生日期]]></value>
-</param>
 <param name="accounts.assets.category.undetermined">
 <value><![CDATA[待定]]></value>
 </param>
@@ -9572,9 +9476,6 @@ while a Guest has very limited functionality.]]></value>
 </param>
 <param name="accounts.accounts_contacts_add.Role">
 <value><![CDATA[角色]]></value>
-</param>
-<param name="accounts.accounts_add.primary">
-<value><![CDATA[基本]]></value>
 </param>
 <param name="admin.logos">
 <value><![CDATA[LOGO]]></value>
@@ -10754,9 +10655,6 @@ while a Guest has very limited functionality.]]></value>
 <param name="actionItem.updateStep.beginNext">
 <value><![CDATA[Begin the next step]]></value>
 </param>
-<param name="actionItem.updateStep.changeStatus">
-<value><![CDATA[Change the status to]]></value>
-</param>
 <param name="actionItem.updateStep.comment">
 <value><![CDATA[Updating this step will]]></value>
 </param>
@@ -10781,26 +10679,11 @@ while a Guest has very limited functionality.]]></value>
 <param name="actionPlan.actionPlanEditors">
 <value><![CDATA[Action Plan Editors]]></value>
 </param>
-<param name="actionPlan.actionPlanName">
-<value><![CDATA[Action Plan Name]]></value>
-</param>
 <param name="actionPlan.actionRequired">
 <value><![CDATA[Action Required]]></value>
 </param>
-<param name="actionPlan.activateThisPlan">
-<value><![CDATA[Activate this plan]]></value>
-</param>
-<param name="actionPlan.activationDate">
-<value><![CDATA[Activation Date]]></value>
-</param>
-<param name="actionPlan.activePlans">
-<value><![CDATA[Active Plans]]></value>
-</param>
 <param name="actionPlan.addActionPhase">
 <value><![CDATA[Add Action Phase]]></value>
-</param>
-<param name="actionPlan.addActionPlan">
-<value><![CDATA[Add Action Plan]]></value>
 </param>
 <param name="actionPlan.addActionStep">
 <value><![CDATA[Add Action Step]]></value>
@@ -10816,9 +10699,6 @@ while a Guest has very limited functionality.]]></value>
 </param>
 <param name="actionPlan.addNote">
 <value><![CDATA[Add Note]]></value>
-</param>
-<param name="actionPlan.allActionPlans">
-<value><![CDATA[All Action Plans]]></value>
 </param>
 <param name="actionPlan.anyStatusPlans">
 <value><![CDATA[Any Status Plans]]></value>
@@ -10870,9 +10750,6 @@ while a Guest has very limited functionality.]]></value>
 </param>
 <param name="actionPlan.businessSegment">
 <value><![CDATA[Business Segment]]></value>
-</param>
-<param name="actionPlan.categories">
-<value><![CDATA[Action Plan Categories]]></value>
 </param>
 <param name="actionPlan.configureCategories">
 <value><![CDATA[Configure Categories]]></value>
@@ -10945,9 +10822,6 @@ while a Guest has very limited functionality.]]></value>
 </param>
 <param name="actionPlan.modifyActionPhase">
 <value><![CDATA[Modify Action Phase]]></value>
-</param>
-<param name="actionPlan.modifyActionPlan">
-<value><![CDATA[Modify Action Plan]]></value>
 </param>
 <param name="actionPlan.modifyActionStep">
 <value><![CDATA[Modify Action Step]]></value>
@@ -11090,6 +10964,132 @@ while a Guest has very limited functionality.]]></value>
 <param name="actionPlan.updateRating.text">
 <value><![CDATA[Update Rating]]></value>
 </param>
+<param name="actionPlan.upUserHierarchy.text">
+<value><![CDATA[User assigned and the user's managers]]></value>
+</param>
+<param name="actionPlan.userAssignedToThePlan.text">
+<value><![CDATA[User assigned to the plan]]></value>
+</param>
+<param name="actionPlan.userDelegated">
+<value><![CDATA[User delegated]]></value>
+</param>
+<param name="actionPlan.viewAccount.text">
+<value><![CDATA[View Account]]></value>
+</param>
+<param name="actionPlan.viewActionPlan">
+<value><![CDATA[View Action Plan]]></value>
+</param>
+<param name="actionPlan.weeklyPotential">
+<value><![CDATA[Weekly Potential]]></value>
+</param>
+<param name="actionPlan.whoCanCompleteThisList.question">
+<value><![CDATA[Who can complete this list?]]></value>
+</param>
+<param name="admin.notTheSameSiteAsManager.text">
+<value><![CDATA[The selected manager should belong to the same site as this user, or should have access to all sites]]></value>
+</param>
+<param name="admin.subUserNotTheSameSite.text">
+<value><![CDATA[One or more reporting users do not belong to this site]]></value>
+</param>
+<param name="adminUserGroups.permissionDeniedForUserDetails.text">
+<value><![CDATA[Permission denied to view User details]]></value>
+</param>
+<param name="admin.user.site">
+<value><![CDATA[Site]]></value>
+</param>
+<param name="button.assignAccountR">
+<value><![CDATA[Assign Account >]]></value>
+</param>
+<param name="button.calling.dots">
+<value><![CDATA[Calling...]]></value>
+</param>
+<param name="button.map">
+<value><![CDATA[Map]]></value>
+</param>
+<param name="button.workAsAccount">
+<value><![CDATA[Work as Account]]></value>
+</param>
+<param name="calendar.any.4dashes">
+<value><![CDATA[-- Any --]]></value>
+</param>
+<param name="calendar.opportunitiesBeingManaged.openOnly.brackets">
+<value><![CDATA[Opportunities being Managed (Open Only)]]></value>
+</param>
+<param name="calls.call">
+<value><![CDATA[Call]]></value>
+</param>
+<param name="calls.confirmExtension">
+<value><![CDATA[Confirm Extension]]></value>
+</param>
+<param name="calls.extension">
+<value><![CDATA[Extension]]></value>
+</param>
+<param name="calls.fromExtension">
+<value><![CDATA[From Extension]]></value>
+</param>
+<param name="campaign.contactInfoSubmitted">
+<value><![CDATA[Contact Information Submitted]]></value>
+</param>
+<param name="campaign.contactInfoUpdate">
+<value><![CDATA[Contact Information Update]]></value>
+</param>
+<param name="campaign.contactInfoUpdateThanks">
+<value><![CDATA[Thank you for informing us about changes in your contact information.]]></value>
+</param>
+<param name="campaign.contactUpdate.addressConfirmation">
+<value><![CDATA[Address Confirmation]]></value>
+</param>
+<param name="campaign.contactUpdate.addressInfoConfirmation">
+<value><![CDATA[Please click OK to confirm that your address on file is current and accurate.]]></value>
+</param>
+<param name="campaign.contactUpdate.thankYou">
+<value><![CDATA[Thank you for visiting our contact information update page]]></value>
+</param>
+<param name="categories.categoriesForSite">
+<value><![CDATA[Categories for Site]]></value>
+</param>
+<param name="categories.switchToSite">
+<value><![CDATA[Switch to Site]]></value>
+</param>
+<param name="communications.button.broadcast">
+<value><![CDATA[Broadcast]]></value>
+</param>
+<param name="contacts.add.secretWord">
+<value><![CDATA[Secret Word]]></value>
+</param>
+<param name="contacts.generalContacts.brackets.controlledHierarchy">
+<value><![CDATA[General Contacts (Controlled Hierarchy)]]></value>
+</param>
+<param name="contacts.generalContacts.brackets.personal">
+<value><![CDATA[General Contacts (Personal)]]></value>
+</param>
+<param name="contacts.generalContacts.brackets.public">
+<value><![CDATA[General Contacts (Public)]]></value>
+</param>
+<param name="dependency.actionPhaseRecords">
+<value><![CDATA[Action Phase Records]]></value>
+</param>
+<param name="dependency.actionPhases">
+<value><![CDATA[Action Phases]]></value>
+</param>
+<param name="dependency.actionPlanRecords">
+<value><![CDATA[Action Plan Records]]></value>
+</param>
+<param name="accounts.accounts_contacts.noEmailPlease">
+<value><![CDATA[没有邮件地址]]></value>
+</param>
+<param name="accounts.accounts_contacts_add.Salutation">
+<value><![CDATA[招呼]]></value>
+</param>
+<param name="accounts.accounts_add.Zip">
+<value><![CDATA[区号]]></value>
+</param>
+<param name="accounts.site">
+<value><![CDATA[网址]]></value>
+</param>
+<param name="accounts.organization.colon">
+<value><![CDATA[组织]]></value>
+</param>
 </config>
 <config name="system.container.menu.label">
 <param name="opportunitiesQuotes.details.long_html">
@@ -11104,80 +11104,11 @@ while a Guest has very limited functionality.]]></value>
 <param name="documents.permissions.long_html">
 <value><![CDATA[Permissions]]></value>
 </param>
-<param name="communications.recipients.long_html">
-<value><![CDATA[收件人]]></value>
-</param>
-<param name="communications.Results.long_html">
-<value><![CDATA[结果]]></value>
-</param>
-<param name="accountstickets.activitylog.long_html">
-<value><![CDATA[活动日志]]></value>
-</param>
-<param name="communications.documents.long_html">
-<value><![CDATA[文档]]></value>
-</param>
-<param name="communications.message.long_html">
-<value><![CDATA[消息]]></value>
-</param>
-<param name="accounts.activities.long_html">
-<value><![CDATA[活动]]></value>
-</param>
-<param name="accountcontactopportunities.quotes.long_html">
-<value><![CDATA[报价]]></value>
-</param>
-<param name="accountstickets.tasks.long_html">
-<value><![CDATA[任务]]></value>
-</param>
-<param name="users.viewpoints.long_html">
-<value><![CDATA[Viewpoints]]></value>
-</param>
-<param name="accountcontactopportunities.details.long_html">
-<value><![CDATA[详情]]></value>
-</param>
-<param name="accounts.history.long_html">
-<value><![CDATA[历史]]></value>
-</param>
-<param name="contacts.opportunities.long_html">
-<value><![CDATA[Opportunities]]></value>
-</param>
-<param name="accountscontacts.history.long_html">
-<value><![CDATA[历史]]></value>
-</param>
-<param name="tickets.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
-<param name="opportunities.documents.long_html">
-<value><![CDATA[Documents]]></value>
-</param>
-<param name="tickets.tasks.long_html">
-<value><![CDATA[Tasks]]></value>
-</param>
-<param name="quotes.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
-<param name="accounts.documents.long_html">
-<value><![CDATA[文档]]></value>
-</param>
-<param name="documents.team.long_html">
-<value><![CDATA[Team]]></value>
-</param>
-<param name="contacts.calls.long_html">
-<value><![CDATA[活动]]></value>
-</param>
-<param name="contacts.messages.long_html">
-<value><![CDATA[Messages]]></value>
-</param>
-<param name="opportunities.folders.long_html">
-<value><![CDATA[Folders]]></value>
-</param>
-<param name="users.details.long_html">
-<value><![CDATA[Details]]></value>
+<param name="accountsassets.details.long_html">
+<value><![CDATA[明细]]></value>
 </param>
 <param name="accounts.details.long_html">
 <value><![CDATA[明细]]></value>
-</param>
-<param name="opportunities.details.long_html">
-<value><![CDATA[Details]]></value>
 </param>
 <param name="accountscontacts.messages.long_html">
 <value><![CDATA[消息]]></value>
@@ -11185,32 +11116,20 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.quotes.long_html">
 <value><![CDATA[报价]]></value>
 </param>
-<param name="contacts.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
 <param name="accountsQuotes.notes.long_html">
 <value><![CDATA[备注]]></value>
 </param>
 <param name="accounts.orders.long_html">
 <value><![CDATA[订单]]></value>
 </param>
-<param name="employees.projects.long_html">
-<value><![CDATA[Projects]]></value>
-</param>
-<param name="employees.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
 <param name="contacts.folders.long_html">
 <value><![CDATA[文件夹]]></value>
 </param>
-<param name="documents.accounts.long_html">
-<value><![CDATA[Accounts]]></value>
-</param>
-<param name="documents.documents.long_html">
-<value><![CDATA[Documents]]></value>
-</param>
 <param name="accountsQuotes.details.long_html">
 <value><![CDATA[明细]]></value>
+</param>
+<param name="users.viewpoints.long_html">
+<value><![CDATA[Viewpoints]]></value>
 </param>
 <param name="accounts.projects.long_html">
 <value><![CDATA[项目]]></value>
@@ -11218,14 +11137,20 @@ while a Guest has very limited functionality.]]></value>
 <param name="accountscontacts.opportunities.long_html">
 <value><![CDATA[商机]]></value>
 </param>
+<param name="contacts.opportunities.long_html">
+<value><![CDATA[Opportunities]]></value>
+</param>
 <param name="accountscontacts.details.long_html">
 <value><![CDATA[明细]]></value>
 </param>
 <param name="accounts.products.long_html">
 <value><![CDATA[产品]]></value>
 </param>
-<param name="quotes.notes.long_html">
-<value><![CDATA[Notes]]></value>
+<param name="tickets.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
+<param name="opportunities.documents.long_html">
+<value><![CDATA[Documents]]></value>
 </param>
 <param name="accounts.opportunities.long_html">
 <value><![CDATA[商机]]></value>
@@ -11233,20 +11158,26 @@ while a Guest has very limited functionality.]]></value>
 <param name="accountstickets.folders.long_html">
 <value><![CDATA[文件夹]]></value>
 </param>
+<param name="tickets.tasks.long_html">
+<value><![CDATA[Tasks]]></value>
+</param>
+<param name="quotes.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
 <param name="accountstickets.history.long_html">
 <value><![CDATA[历史]]></value>
-</param>
-<param name="tickets.documents.long_html">
-<value><![CDATA[Documents]]></value>
 </param>
 <param name="accountstickets.documents.long_html">
 <value><![CDATA[文档]]></value>
 </param>
+<param name="documents.team.long_html">
+<value><![CDATA[Team]]></value>
+</param>
 <param name="accountstickets.maintenancenotes.long_html">
 <value><![CDATA[维护笔记]]></value>
 </param>
-<param name="opportunitiesQuotes.notes.long_html">
-<value><![CDATA[Notes]]></value>
+<param name="contacts.messages.long_html">
+<value><![CDATA[Messages]]></value>
 </param>
 <param name="accountstickets.details.long_html">
 <value><![CDATA[明细]]></value>
@@ -11254,20 +11185,20 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.contacts.long_html">
 <value><![CDATA[联系人]]></value>
 </param>
-<param name="quotes.details.long_html">
+<param name="users.details.long_html">
 <value><![CDATA[Details]]></value>
 </param>
 <param name="accounts.assets.long_html">
 <value><![CDATA[资产]]></value>
 </param>
+<param name="opportunities.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
 <param name="accounts.revenue.long_html">
 <value><![CDATA[收入]]></value>
 </param>
-<param name="users.groups.long_html">
-<value><![CDATA[Groups]]></value>
-</param>
-<param name="users.history.long_html">
-<value><![CDATA[Login History]]></value>
+<param name="contacts.history.long_html">
+<value><![CDATA[History]]></value>
 </param>
 <param name="categories.active categories.long_html">
 <value><![CDATA[活动的分类]]></value>
@@ -11275,59 +11206,53 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.servicecontracts.long_html">
 <value><![CDATA[服务合同]]></value>
 </param>
-<param name="opportunities.calls.long_html">
-<value><![CDATA[Activities]]></value>
+<param name="employees.projects.long_html">
+<value><![CDATA[Projects]]></value>
 </param>
-<param name="tickets.folders.long_html">
-<value><![CDATA[Folders]]></value>
-</param>
-<param name="accountcontactopportunities.folders.long_html">
-<value><![CDATA[文件夹]]></value>
-</param>
-<param name="accounts.tickets.long_html">
-<value><![CDATA[单据]]></value>
-</param>
-<param name="employees.folders.long_html">
-<value><![CDATA[Folders]]></value>
-</param>
-<param name="categories.draft categories.long_html">
-<value><![CDATA[未确认分类]]></value>
-</param>
-<param name="accounts.relationships.long_html">
-<value><![CDATA[关联]]></value>
-</param>
-<param name="tickets.details.long_html">
+<param name="employees.details.long_html">
 <value><![CDATA[Details]]></value>
 </param>
-<param name="opportunities.quotes.long_html">
-<value><![CDATA[Quotes]]></value>
+<param name="documents.accounts.long_html">
+<value><![CDATA[Accounts]]></value>
 </param>
-<param name="accountsassets.details.long_html">
-<value><![CDATA[明细]]></value>
-</param>
-<param name="communications.access.long_html">
-<value><![CDATA[Access]]></value>
-</param>
-<param name="contacts.relationships.long_html">
-<value><![CDATA[Relationships]]></value>
-</param>
-<param name="contacts.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="accountscontacts.calls.long_html">
-<value><![CDATA[活动]]></value>
-</param>
-<param name="tickets.activitylog.long_html">
-<value><![CDATA[Activity Log]]></value>
-</param>
-<param name="tickets.maintenancenotes.long_html">
-<value><![CDATA[Maintenance Notes]]></value>
+<param name="documents.documents.long_html">
+<value><![CDATA[Documents]]></value>
 </param>
 <param name="accountsassets.history.long_html">
 <value><![CDATA[历史]]></value>
 </param>
 <param name="accountscontacts.portal.long_html">
 <value><![CDATA[门户]]></value>
+</param>
+<param name="categories.draft categories.long_html">
+<value><![CDATA[未确认分类]]></value>
+</param>
+<param name="users.groups.long_html">
+<value><![CDATA[Groups]]></value>
+</param>
+<param name="accountcontactopportunities.folders.long_html">
+<value><![CDATA[文件夹]]></value>
+</param>
+<param name="quotes.notes.long_html">
+<value><![CDATA[Notes]]></value>
+</param>
+<param name="tickets.documents.long_html">
+<value><![CDATA[Documents]]></value>
+</param>
+<param name="accountscontacts.calls.long_html">
+<value><![CDATA[活动]]></value>
+</param>
+<param name="opportunitiesQuotes.notes.long_html">
+<value><![CDATA[Notes]]></value>
+</param>
+<param name="communications.access.long_html">
+<value><![CDATA[Access]]></value>
+</param>
+<param name="accountcontactopportunities.quotes.long_html">
+<value><![CDATA[报价]]></value>
+</param>
+<param name="quotes.details.long_html">
+<value><![CDATA[Details]]></value>
 </param>
 <param name="communications.groups.long_html">
 <value><![CDATA[组]]></value>
@@ -11338,31 +11263,103 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.folders.long_html">
 <value><![CDATA[文件夹]]></value>
 </param>
+<param name="users.history.long_html">
+<value><![CDATA[Login History]]></value>
+</param>
 <param name="communications.details.long_html">
 <value><![CDATA[明细]]></value>
+</param>
+<param name="communications.recipients.long_html">
+<value><![CDATA[收件人]]></value>
+</param>
+<param name="opportunities.calls.long_html">
+<value><![CDATA[Activities]]></value>
+</param>
+<param name="tickets.folders.long_html">
+<value><![CDATA[Folders]]></value>
+</param>
+<param name="communications.Results.long_html">
+<value><![CDATA[结果]]></value>
+</param>
+<param name="accountstickets.activitylog.long_html">
+<value><![CDATA[活动日志]]></value>
+</param>
+<param name="communications.documents.long_html">
+<value><![CDATA[文档]]></value>
+</param>
+<param name="employees.folders.long_html">
+<value><![CDATA[Folders]]></value>
+</param>
+<param name="communications.message.long_html">
+<value><![CDATA[消息]]></value>
+</param>
+<param name="accounts.activities.long_html">
+<value><![CDATA[活动]]></value>
+</param>
+<param name="tickets.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="opportunities.quotes.long_html">
+<value><![CDATA[Quotes]]></value>
+</param>
+<param name="accountstickets.tasks.long_html">
+<value><![CDATA[任务]]></value>
+</param>
+<param name="accountcontactopportunities.details.long_html">
+<value><![CDATA[详情]]></value>
+</param>
+<param name="contacts.relationships.long_html">
+<value><![CDATA[Relationships]]></value>
+</param>
+<param name="contacts.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="tickets.activitylog.long_html">
+<value><![CDATA[Activity Log]]></value>
+</param>
+<param name="tickets.maintenancenotes.long_html">
+<value><![CDATA[Maintenance Notes]]></value>
+</param>
+<param name="accounts.history.long_html">
+<value><![CDATA[历史]]></value>
+</param>
+<param name="accounts.tickets.long_html">
+<value><![CDATA[单据]]></value>
+</param>
+<param name="accounts.relationships.long_html">
+<value><![CDATA[关联]]></value>
+</param>
+<param name="accountscontacts.history.long_html">
+<value><![CDATA[历史]]></value>
+</param>
+<param name="accounts.documents.long_html">
+<value><![CDATA[文档]]></value>
 </param>
 <param name="communications.schedule.long_html">
 <value><![CDATA[Schedule]]></value>
 </param>
+<param name="contacts.calls.long_html">
+<value><![CDATA[活动]]></value>
+</param>
+<param name="opportunities.folders.long_html">
+<value><![CDATA[Folders]]></value>
+</param>
 </config>
 <config name="system.submenu.label">
-<param name="Attachments">
-<value><![CDATA[附件]]></value>
+<param name="Mailbox">
+<value><![CDATA[Mailbox]]></value>
 </param>
-<param name="Attachments.colon">
-<value><![CDATA[附件：]]></value>
+<param name="Add">
+<value><![CDATA[添加]]></value>
 </param>
-<param name="Search">
-<value><![CDATA[Search]]></value>
-</param>
-<param name="Roles">
-<value><![CDATA[Roles]]></value>
+<param name="Action Lists">
+<value><![CDATA[动作列表]]></value>
 </param>
 <param name="System">
 <value><![CDATA[System]]></value>
 </param>
-<param name="Re-assignments">
-<value><![CDATA[Re-assignments]]></value>
+<param name="Attachments">
+<value><![CDATA[附件]]></value>
 </param>
 <param name="Campaigns">
 <value><![CDATA[Campaigns]]></value>
@@ -11373,35 +11370,35 @@ while a Guest has very limited functionality.]]></value>
 <param name="Projects">
 <value><![CDATA[Projects]]></value>
 </param>
-<param name="Settings">
-<value><![CDATA[Settings]]></value>
+<param name="Re-assignments">
+<value><![CDATA[Re-assignments]]></value>
 </param>
 <param name="Knowledge Base">
 <value><![CDATA[Knowledge Base]]></value>
 </param>
+<param name="Action Plans">
+<value><![CDATA[Action Plans]]></value>
+</param>
+<param name="Settings">
+<value><![CDATA[Settings]]></value>
+</param>
+<param name="Attachments.colon">
+<value><![CDATA[附件：]]></value>
+</param>
 <param name="Groups">
 <value><![CDATA[Groups]]></value>
-</param>
-<param name="Add">
-<value><![CDATA[添加]]></value>
 </param>
 <param name="Modules">
 <value><![CDATA[Modules]]></value>
 </param>
-<param name="Mailbox">
-<value><![CDATA[Mailbox]]></value>
+<param name="Defects">
+<value><![CDATA[Defects]]></value>
+</param>
+<param name="Search">
+<value><![CDATA[Search]]></value>
 </param>
 <param name="Export">
 <value><![CDATA[Export]]></value>
-</param>
-<param name="List">
-<value><![CDATA[List]]></value>
-</param>
-<param name="Action Plans">
-<value><![CDATA[Action Plans]]></value>
-</param>
-<param name="Dashboard">
-<value><![CDATA[Dashboard]]></value>
 </param>
 <param name="Welcome">
 <value><![CDATA[Welcome]]></value>
@@ -11409,70 +11406,73 @@ while a Guest has very limited functionality.]]></value>
 <param name="Users">
 <value><![CDATA[Users]]></value>
 </param>
-<param name="Invitations">
-<value><![CDATA[Invitations]]></value>
+<param name="Dashboard">
+<value><![CDATA[Dashboard]]></value>
 </param>
 <param name="Messages">
 <value><![CDATA[Messages]]></value>
 </param>
+<param name="List">
+<value><![CDATA[List]]></value>
+</param>
 <param name="Usage">
 <value><![CDATA[Usage]]></value>
-</param>
-<param name="Defects">
-<value><![CDATA[Defects]]></value>
 </param>
 <param name="Headlines">
 <value><![CDATA[Headlines]]></value>
 </param>
-<param name="Tasks">
-<value><![CDATA[Tasks]]></value>
+<param name="Invitations">
+<value><![CDATA[Invitations]]></value>
 </param>
 <param name="View">
 <value><![CDATA[View]]></value>
 </param>
-<param name="Action Lists">
-<value><![CDATA[动作列表]]></value>
+<param name="Tasks">
+<value><![CDATA[Tasks]]></value>
 </param>
 <param name="Import">
 <value><![CDATA[Import]]></value>
 </param>
+<param name="Roles">
+<value><![CDATA[Roles]]></value>
+</param>
 </config>
 <config name="system.modules.label">
-<param name="Website">
-<page_title><![CDATA[Website]]></page_title>
-<menu_title><![CDATA[Website]]></menu_title>
-</param>
-<param name="Leads">
-<page_title><![CDATA[Leads]]></page_title>
-<menu_title><![CDATA[Leads]]></menu_title>
+<param name="Contacts">
+<page_title><![CDATA[联系人]]></page_title>
+<menu_title><![CDATA[联系人]]></menu_title>
 </param>
 <param name="Accounts">
 <page_title><![CDATA[帐号]]></page_title>
 <menu_title><![CDATA[帐号]]></menu_title>
 </param>
-<param name="Communications">
-<page_title><![CDATA[Communications]]></page_title>
-<menu_title><![CDATA[Communications]]></menu_title>
+<param name="My Home Page">
+<page_title><![CDATA[My Home Page]]></page_title>
+<menu_title><![CDATA[My Home Page]]></menu_title>
 </param>
-<param name="Orders">
-<page_title><![CDATA[Orders]]></page_title>
-<menu_title><![CDATA[Orders]]></menu_title>
-</param>
-<param name="Pipeline">
-<page_title><![CDATA[Pipeline]]></page_title>
-<menu_title><![CDATA[Pipeline]]></menu_title>
-</param>
-<param name="Help Desk">
-<page_title><![CDATA[Help Desk]]></page_title>
-<menu_title><![CDATA[Help Desk]]></menu_title>
+<param name="Website">
+<page_title><![CDATA[Website]]></page_title>
+<menu_title><![CDATA[Website]]></menu_title>
 </param>
 <param name="Projects">
 <page_title><![CDATA[Projects]]></page_title>
 <menu_title><![CDATA[Projects]]></menu_title>
 </param>
-<param name="Reports">
-<page_title><![CDATA[Reports]]></page_title>
-<menu_title><![CDATA[Reports]]></menu_title>
+<param name="Help Desk">
+<page_title><![CDATA[Help Desk]]></page_title>
+<menu_title><![CDATA[Help Desk]]></menu_title>
+</param>
+<param name="Pipeline">
+<page_title><![CDATA[Pipeline]]></page_title>
+<menu_title><![CDATA[Pipeline]]></menu_title>
+</param>
+<param name="Communications">
+<page_title><![CDATA[Communications]]></page_title>
+<menu_title><![CDATA[Communications]]></menu_title>
+</param>
+<param name="Leads">
+<page_title><![CDATA[Leads]]></page_title>
+<menu_title><![CDATA[Leads]]></menu_title>
 </param>
 <param name="Quotes">
 <page_title><![CDATA[Quotes]]></page_title>
@@ -11482,21 +11482,21 @@ while a Guest has very limited functionality.]]></value>
 <page_title><![CDATA[管理]]></page_title>
 <menu_title><![CDATA[管理]]></menu_title>
 </param>
-<param name="Employees">
-<page_title><![CDATA[Employees]]></page_title>
-<menu_title><![CDATA[Employees]]></menu_title>
-</param>
 <param name="Documents">
 <page_title><![CDATA[Documents]]></page_title>
 <menu_title><![CDATA[Documents]]></menu_title>
 </param>
-<param name="Contacts">
-<page_title><![CDATA[联系人]]></page_title>
-<menu_title><![CDATA[联系人]]></menu_title>
+<param name="Reports">
+<page_title><![CDATA[Reports]]></page_title>
+<menu_title><![CDATA[Reports]]></menu_title>
 </param>
-<param name="My Home Page">
-<page_title><![CDATA[My Home Page]]></page_title>
-<menu_title><![CDATA[My Home Page]]></menu_title>
+<param name="Employees">
+<page_title><![CDATA[Employees]]></page_title>
+<menu_title><![CDATA[Employees]]></menu_title>
+</param>
+<param name="Orders">
+<page_title><![CDATA[Orders]]></page_title>
+<menu_title><![CDATA[Orders]]></menu_title>
 </param>
 </config>
 </aspcfs>

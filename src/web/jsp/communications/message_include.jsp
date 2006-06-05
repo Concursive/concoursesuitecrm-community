@@ -64,7 +64,7 @@
       <dhv:evaluate if="<%= showCc %>"><tr><td nowrap><dhv:label name="quotes.cc">CC</dhv:label>:</td><td nowrap><input type="text" size="40" maxlength="1024" name="cc" id="cc" value="<%= toHtmlValue((cc != null?cc:"")) %>"/> <dhv:label name="campaign.emailAddress.brackets">(Email address)</dhv:label></td><td nowrap><%= showAttribute(request, "ccError") %></td></tr></dhv:evaluate>
       <dhv:evaluate if="<%= showBcc %>"><tr><td nowrap><dhv:label name="quotes.bcc">BCC</dhv:label>:</td><td nowrap><input type="text" size="40" maxlength="255" name="bcc" id="bcc" value="<%= toHtmlValue((bcc != null?bcc:"")) %>"/> <dhv:label name="campaign.emailAddress.brackets">(Email address)</dhv:label></td><td nowrap><%= showAttribute(request, "bccError") %></td></tr></dhv:evaluate>
       <tr><td nowrap>
-      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>:</td><td nowrap><input type="text" size="50" maxlength="1024" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>:</td><td nowrap><input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
 			<font color="red">*</font></td><td nowrap><%= showAttribute(request, "messageSubjectError") %>
       </td></tr>
       <tr><td colspan="3">

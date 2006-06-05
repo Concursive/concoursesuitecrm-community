@@ -99,6 +99,7 @@ public class HtmlSelectCurrencyCode {
     //select.addItem("AED");
     select.addItem("SIT");
     select.addItem("THB");
+    select.addItem("UAH");
     select.addItem("USD");
     select.addItem("VEB");
     //select.addItem("WST");

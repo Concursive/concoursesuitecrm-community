@@ -256,14 +256,16 @@ Asterisk-Java                     Apache Software License
 Batik                             Apache Software License
 Bean Shell                        Sun Public License
 Bouncy Castle Crypto API          Bouncy Castle Open Source License
+Castor                            Apache Software License 2.0
 DaffodilDB (One$DB Embedded)      LGPL
 gnu.regexp                        LGPL
 HTMLArea                          BSD style
 HTTPMultiPartParser               iSavvix Public License
-IBM DB2 JDBC Driver               -- Unknown --
+IBM DB2 JDBC Driver               IBM DB2 Developers Redistribution
 iText                             LGPL
 JFreeChart                        LGPL
 Jakarta Commons                   Apache Software License
+Jakarta Taglibs JSTL              Apache Software License
 Jasper Reports                    LGPL
 Java Activitation Framework       Sun License
 Java Mail                         Sun License
@@ -277,6 +279,7 @@ NekoHTML                          Apache style
 Oracle JDBC Driver                Oracle Technology Network Development and
                                   Distribution License
 PDFBox                            BSD
+Pluto                             Apache Software License
 POI                               Apache Software License
 PostgreSQL JDBC Driver            BSD
 Quartz                            OpenSymphony Software License
@@ -287,7 +290,3 @@ TMExtractors                      Apache style
 Xerces                            Apache Software License
 Ximian Icons                      LGPL
 ypSlideOutMenu                    Creative Commons Attribution 2.0 license
-
-Pluto
-JSTL
-Castor

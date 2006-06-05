@@ -297,7 +297,7 @@ listOfOperators[2] = numberOperators
       <dhv:label name="admin.groupName">Group Name</dhv:label>
     </td>
     <td>
-      <input type="text" size="40" name="groupName" value="<%= toHtmlValue(SCL.getGroupName()) %>"><font color="red">*</font> <%= showAttribute(request, "groupNameError") %>
+      <input type="text" size="40" maxlength="80" name="groupName" value="<%= toHtmlValue(SCL.getGroupName()) %>"><font color="red">*</font> <%= showAttribute(request, "groupNameError") %>
     </td>
   </tr>
 </table>

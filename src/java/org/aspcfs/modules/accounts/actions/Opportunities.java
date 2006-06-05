@@ -629,7 +629,7 @@ public final class Opportunities extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("AccountsComponentListInfo");
     }
-    PagedListInfo oppPagedInfo = this.getPagedListInfo(context, "OpportunityPagedInfo");
+    PagedListInfo oppPagedInfo = this.getPagedListInfo(context, "OpportunityPagedInfo", false);
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "AccountsComponentListInfo");
     componentListInfo.setLink(
         "Opportunities.do?command=Details&headerId=" + headerId + "&orgId=" + orgId);

@@ -10,6 +10,24 @@
 <param name="tickets.information">
 <value><![CDATA[Ticket Information]]></value>
 </param>
+<param name="actionPlan.folderField.text">
+<value><![CDATA[* Folder Field]]></value>
+</param>
+<param name="actionPlan.folderToUpdate.text">
+<value><![CDATA[* Folder to update]]></value>
+</param>
+<param name="actionPlan.inactivePlans">
+<value><![CDATA[Inactive Plans]]></value>
+</param>
+<param name="actionPlan.mandatory">
+<value><![CDATA[Mandatory]]></value>
+</param>
+<param name="actionPlan.memberOfSpecificRole.text">
+<value><![CDATA[Member of a specific role]]></value>
+</param>
+<param name="actionPlan.memberOfTheDepartment.colon">
+<value><![CDATA[Member of the department:]]></value>
+</param>
 <param name="actionPlan.memberOfTheRole.colon">
 <value><![CDATA[Member of the role:]]></value>
 </param>
@@ -100,26 +118,11 @@
 <param name="accounts.accounts_add.accountSize">
 <value><![CDATA[Account Size]]></value>
 </param>
-<param name="accounts.accounts_add.AddressLine4">
-<value><![CDATA[Address Line 4]]></value>
-</param>
-<param name="accounts.accounts_add.copyEmailPhoneAddress">
-<value><![CDATA[Copy email, phone and postal address]]></value>
-</param>
 <param name="accounts.accounts_add.directBill">
 <value><![CDATA[Direct Bill]]></value>
 </param>
-<param name="accounts.accounts_add.Zip">
-<value><![CDATA[Zip]]></value>
-</param>
 <param name="accounts.accounts_contacts_add.Salutation">
 <value><![CDATA[Salutation]]></value>
-</param>
-<param name="accounts.accounts_contacts.noEmailPlease">
-<value><![CDATA[No Email Please]]></value>
-</param>
-<param name="accounts.accounts_contacts.noFaxPlease">
-<value><![CDATA[No Faxes Please]]></value>
 </param>
 <param name="accounts.accounts_contacts.noIMPlease">
 <value><![CDATA[No Instant Messages Please]]></value>
@@ -132,9 +135,6 @@
 </param>
 <param name="accounts.accounts_contacts.noTextMessagePlease">
 <value><![CDATA[No Text Messages Please]]></value>
-</param>
-<param name="accounts.accounts_contacts_oppcomponent_details.weeks">
-<value><![CDATA[weeks]]></value>
 </param>
 <param name="accounts.accounts_contacts_oppcomponent_modify.UpdateOpportunity">
 <value><![CDATA[Update Opportunity]]></value>
@@ -396,6 +396,9 @@
 </param>
 <param name="accounts.accounts_add.ZipPostalCode">
 <value><![CDATA[Kod pocztowy]]></value>
+</param>
+<param name="accounts.accounts_reports_generate.Employees">
+<value><![CDATA[Pracownicy]]></value>
 </param>
 <param name="button.clone">
 <value><![CDATA[Clone]]></value>
@@ -8764,27 +8767,6 @@ reflect those changes.]]></value>
 <param name="accounts.my.accounts">
 <value><![CDATA[My Accounts]]></value>
 </param>
-<param name="accounts.accounts_fields_modify.ModifyFolderRecord">
-<value><![CDATA[Modify Folder Record]]></value>
-</param>
-<param name="accounts.accounts_fields.NoFieldsAvailable">
-<value><![CDATA[No fields available.]]></value>
-</param>
-<param name="accounts.accounts_importcontact_details_include.AccountContact">
-<value><![CDATA[Account Contact]]></value>
-</param>
-<param name="accounts.accounts_importcontact_details_include.Employee">
-<value><![CDATA[Employee]]></value>
-</param>
-<param name="accounts.accounts_importcontact_details_include.Fax">
-<value><![CDATA[Fax]]></value>
-</param>
-<param name="accounts.accounts_importcontact_details_include.GeneralContact">
-<value><![CDATA[General Contact]]></value>
-</param>
-<param name="accounts.accounts_importcontact_details.NoLongerAccess">
-<value><![CDATA[(No longer has access)]]></value>
-</param>
 <param name="accounts.accounts_list_menu.Archive">
 <value><![CDATA[Archive]]></value>
 </param>
@@ -8833,30 +8815,6 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_quotes_list.QuoteStatus">
 <value><![CDATA[Quote Status]]></value>
 </param>
-<param name="accounts.accounts_relationships_add.AddRelationship">
-<value><![CDATA[Add Relationship]]></value>
-</param>
-<param name="accounts.accounts_relationships_add.RelationshipFrom">
-<value><![CDATA[Relationship From]]></value>
-</param>
-<param name="accounts.accounts_relationships_add.Relationships">
-<value><![CDATA[Relationships]]></value>
-</param>
-<param name="accounts.accounts_relationships_add.RelationshipTo">
-<value><![CDATA[Relationship To]]></value>
-</param>
-<param name="accounts.accounts_relationships_add.RelationshipType">
-<value><![CDATA[Relationship Type]]></value>
-</param>
-<param name="accounts.accounts_relationships_add.SelectAccount">
-<value><![CDATA[Select Account]]></value>
-</param>
-<param name="accounts.accounts_relationships_view.AddARelationship">
-<value><![CDATA[Add a  Relationship]]></value>
-</param>
-<param name="accounts.accounts_relationships_view.ExportData">
-<value><![CDATA[Export Data]]></value>
-</param>
 <param name="accounts.accounts_relationships_view.NoRelationshipsFound">
 <value><![CDATA[No relationships found.]]></value>
 </param>
@@ -8881,29 +8839,8 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_reports_generate.AllAccounts">
 <value><![CDATA[All Accounts]]></value>
 </param>
-<param name="accounts.accounts_reports_generate.AllR">
-<value><![CDATA[All >]]></value>
-</param>
-<param name="accounts.accounts_reports_generate.Criteria">
-<value><![CDATA[Criteria]]></value>
-</param>
-<param name="accounts.accounts_reports_generate.DelL">
-<value><![CDATA[< Del]]></value>
-</param>
-<param name="accounts.accounts_reports_generate.Employees">
-<value><![CDATA[Employees]]></value>
-</param>
-<param name="accounts.accounts_reports_generate.MyAccountHierarchy">
-<value><![CDATA[My Account Hierarchy]]></value>
-</param>
-<param name="accounts.accounts_reports_generate.NewExport">
-<value><![CDATA[New Export]]></value>
-</param>
-<param name="accounts.accounts_reports.GenerateNewExport">
-<value><![CDATA[Generate new export]]></value>
-</param>
-<param name="accounts.accounts_reports_generate.SelectFields">
-<value><![CDATA[Select fields]]></value>
+<param name="accounts.accounts_documents_details.Size">
+<value><![CDATA[Wielkość]]></value>
 </param>
 <param name="accounts.accounts_reports_generate.Ticker">
 <value><![CDATA[Ticker]]></value>
@@ -8913,9 +8850,6 @@ reflect those changes.]]></value>
 </param>
 <param name="accounts.accounts_reports_menu.DownloadCSVFile">
 <value><![CDATA[Download as .CSV File]]></value>
-</param>
-<param name="accounts.accounts_reports_menu.ViewData">
-<value><![CDATA[View Data]]></value>
 </param>
 <param name="accounts.accounts_reports.MyExportedData">
 <value><![CDATA[My Exported Data]]></value>
@@ -8971,21 +8905,6 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_revenue_list.MyRevenue">
 <value><![CDATA[My Revenue]]></value>
 </param>
-<param name="accounts.accounts_contacts_validateimport.AccessType">
-<value><![CDATA[Access Type]]></value>
-</param>
-<param name="accounts.accounts_contacts_validateimport.ChangeOwner">
-<value><![CDATA[Change Owner]]></value>
-</param>
-<param name="accounts.accounts_contacts_validateimport.ErrorsWarnings">
-<value><![CDATA[Errors/Warnings]]></value>
-</param>
-<param name="accounts.accounts_contacts_validateimport.Field">
-<value><![CDATA[Field]]></value>
-</param>
-<param name="accounts.accounts_contacts_validateimport.FieldMappings">
-<value><![CDATA[Field Mappings]]></value>
-</param>
 <param name="accounts.accounts_contacts_validateimport.First5linesImportfile">
 <value><![CDATA[First 5 lines of the import file]]></value>
 </param>
@@ -9013,41 +8932,35 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_dashboard.ContractEndDates">
 <value><![CDATA[Contract End Dates]]></value>
 </param>
-<param name="accounts.accounts_dashboard.ScheduledActionsFor">
-<value><![CDATA[Scheduled Actions for]]></value>
+<param name="accounts.accounts_contacts_validateimport.ErrorsWarnings">
+<value><![CDATA[Błędy/Ostrzeżenia]]></value>
 </param>
-<param name="accounts.accounts_details.DeleteAccount">
-<value><![CDATA[Delete Account]]></value>
+<param name="accounts.accounts_contacts_validateimport.ChangeOwner">
+<value><![CDATA[Znień właśniniela]]></value>
 </param>
-<param name="accounts.accounts_details.PrimaryInformation">
-<value><![CDATA[Primary Information]]></value>
-</param>
-<param name="accounts.accounts_documents_details.AllVersionsDocument">
-<value><![CDATA[All Versions of this Document]]></value>
+<param name="accounts.accounts_documents_details.Submitted">
+<value><![CDATA[Przesłane]]></value>
 </param>
 <param name="accounts.accounts_documents_details.DL">
 <value><![CDATA[D/L]]></value>
 </param>
-<param name="accounts.accounts_documents_details.DocumentDetails">
-<value><![CDATA[Document Details]]></value>
-</param>
-<param name="accounts.accounts_documents_details.Documents">
-<value><![CDATA[Documents]]></value>
-</param>
-<param name="accounts.accounts_documents_details.Download">
-<value><![CDATA[Download]]></value>
+<param name="accounts.accounts_documents_details.SentBy">
+<value><![CDATA[Wysłane przez]]></value>
 </param>
 <param name="accounts.accounts_documents_details.Item">
-<value><![CDATA[Item]]></value>
+<value><![CDATA[Pozycja]]></value>
 </param>
-<param name="accounts.accounts_documents_details.SentBy">
-<value><![CDATA[Sent By]]></value>
+<param name="accounts.accounts_documents_details.Download">
+<value><![CDATA[Pobież]]></value>
 </param>
-<param name="accounts.accounts_documents_details.Size">
-<value><![CDATA[Size]]></value>
+<param name="accounts.accounts_documents_details.Documents">
+<value><![CDATA[Dokumenty]]></value>
 </param>
-<param name="accounts.accounts_documents_details.Submitted">
-<value><![CDATA[Submitted]]></value>
+<param name="accounts.accounts_documents_details.DocumentDetails">
+<value><![CDATA[Szczegoły dokumentu]]></value>
+</param>
+<param name="accounts.accounts_documents_details.AllVersionsDocument">
+<value><![CDATA[Wszystkie wersje tego dokumentu]]></value>
 </param>
 <param name="accounts.accounts_documents_details.Version">
 <value><![CDATA[Version]]></value>
@@ -9082,41 +8995,38 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_documents_list_menu.MoveFile">
 <value><![CDATA[Move File]]></value>
 </param>
-<param name="accounts.accounts_documents_list_menu.MoveFolder">
-<value><![CDATA[Move Folder]]></value>
+<param name="accounts.accounts_details.PrimaryInformation">
+<value><![CDATA[Informacje podstawowe]]></value>
 </param>
-<param name="accounts.accounts_documents_list_menu.RenameFile">
-<value><![CDATA[Rename File]]></value>
+<param name="accounts.accounts_details.DeleteAccount">
+<value><![CDATA[Usuń konto]]></value>
 </param>
-<param name="accounts.accounts_documents_list_menu.RenameFolder">
-<value><![CDATA[Rename Folder]]></value>
+<param name="accounts.accounts_dashboard.ScheduledActionsFor">
+<value><![CDATA[Zaplanowane akcje dla]]></value>
 </param>
 <param name="accounts.accounts_documents_list_menu.ViewFileContents">
-<value><![CDATA[View File Contents]]></value>
+<value><![CDATA[Pokaż zawartość pliku]]></value>
 </param>
-<param name="accounts.accounts_documents_list_menu.ViewFileHistory">
-<value><![CDATA[View File History]]></value>
+<param name="accounts.accounts_documents_list_menu.RenameFolder">
+<value><![CDATA[Zmień nazwę katalogu]]></value>
 </param>
-<param name="accounts.accounts_documents_list_menu.ViewFolder">
-<value><![CDATA[View Folder]]></value>
+<param name="accounts.accounts_documents_list_menu.RenameFile">
+<value><![CDATA[Zmień nazwę pliku]]></value>
 </param>
-<param name="accounts.accounts_documents_modify.Filename">
-<value><![CDATA[Filename]]></value>
-</param>
-<param name="accounts.accounts_documents_modify.ModifyDocument">
-<value><![CDATA[Modify Document]]></value>
-</param>
-<param name="accounts.accounts_documents_modify.ModifyDocumentInformation">
-<value><![CDATA[Modify Document Information]]></value>
-</param>
-<param name="accounts.accounts_documents_modify.SubjectOfFile">
-<value><![CDATA[Subject of file]]></value>
-</param>
-<param name="accounts.accounts_documents_upload.LargeFilesUpload">
-<value><![CDATA[Large files may take awhile to upload.]]></value>
+<param name="accounts.accounts_documents_list_menu.MoveFolder">
+<value><![CDATA[Przenieś folder]]></value>
 </param>
 <param name="accounts.accounts_documents_upload.UploadDocument">
-<value><![CDATA[Upload Document]]></value>
+<value><![CDATA[Wgraj dokument]]></value>
+</param>
+<param name="accounts.accounts_documents_upload.LargeFilesUpload">
+<value><![CDATA[Duże pliki mogą wgrywać się przez dłuższy okres czasu]]></value>
+</param>
+<param name="accounts.accounts_documents_modify.SubjectOfFile">
+<value><![CDATA[Temat pliku]]></value>
+</param>
+<param name="accounts.accounts_documents_modify.ModifyDocumentInformation">
+<value><![CDATA[Modyfikuj informacje o dokumencie]]></value>
 </param>
 <param name="accounts.accounts_documents_upload.UploadNewDocument">
 <value><![CDATA[Upload a New Document]]></value>
@@ -9154,26 +9064,11 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_fields_list.AddRecordToFolder">
 <value><![CDATA[Add a record to this folder]]></value>
 </param>
-<param name="accounts.accounts_fields_list.ModifiedBy">
-<value><![CDATA[Modified By]]></value>
+<param name="accounts.accounts_documents_modify.ModifyDocument">
+<value><![CDATA[Modyfikuj dokument]]></value>
 </param>
-<param name="accounts.accounts_fields_list.NoCustomFoldersAvailable">
-<value><![CDATA[No custom folders available.]]></value>
-</param>
-<param name="accounts.accounts_fields_list.NoRecordsEntered">
-<value><![CDATA[No records have been entered.]]></value>
-</param>
-<param name="accounts.accounts_fields.ListOfFolderRecords">
-<value><![CDATA[List of Folder Records]]></value>
-</param>
-<param name="accounts.accounts_fields_list.Record">
-<value><![CDATA[Record]]></value>
-</param>
-<param name="accounts.accounts_contacts_detailsimport.PhoneBusiness">
-<value><![CDATA[Phone: Business]]></value>
-</param>
-<param name="accounts.accounts_contacts_detailsimport.PhoneMobile">
-<value><![CDATA[Phone: Mobile]]></value>
+<param name="accounts.accounts_documents_modify.Filename">
+<value><![CDATA[Nazwa pliku]]></value>
 </param>
 <param name="accounts.accounts_contacts_detailsimport.Phones">
 <value><![CDATA[Phone (s)]]></value>
@@ -9208,35 +9103,35 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_contacts_messages_details.Campaign">
 <value><![CDATA[Campaign]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_details.MessageName">
-<value><![CDATA[Message Name]]></value>
+<param name="accounts.accounts_documents_list_menu.ViewFolder">
+<value><![CDATA[Pokaż katalog]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_details.MessageSubject">
-<value><![CDATA[Message Subject]]></value>
+<param name="accounts.accounts_documents_list_menu.ViewFileHistory">
+<value><![CDATA[Pokaż hostorię pliku]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_details.MessageText">
-<value><![CDATA[Message Text]]></value>
+<param name="accounts.accounts_importcontact_details.NoLongerAccess">
+<value><![CDATA[Brak dostępności]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_details.ReplyTo">
-<value><![CDATA[Reply To]]></value>
+<param name="accounts.accounts_importcontact_details_include.GeneralContact">
+<value><![CDATA[Kontakt główny]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_details.SelectedMessage">
-<value><![CDATA[Selected message]]></value>
+<param name="accounts.accounts_importcontact_details_include.Fax">
+<value><![CDATA[Fax]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_view.AllMessages">
-<value><![CDATA[All Messages]]></value>
+<param name="accounts.accounts_importcontact_details_include.Employee">
+<value><![CDATA[Pracownicy]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_view.MyMessages">
-<value><![CDATA[My Messages]]></value>
+<param name="accounts.accounts_importcontact_details_include.AccountContact">
+<value><![CDATA[Kontakt konta klienta]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_view.NoMessagesFound">
-<value><![CDATA[No messages found.]]></value>
+<param name="accounts.accounts_fields.NoFieldsAvailable">
+<value><![CDATA[Drak dostępnych pół]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_view.RunDate">
-<value><![CDATA[Run Date]]></value>
+<param name="accounts.accounts_fields_modify.ModifyFolderRecord">
+<value><![CDATA[Modyfikuj rekord folderu]]></value>
 </param>
-<param name="accounts.accounts_contacts_modify.ModifyContact">
-<value><![CDATA[Modify Contact]]></value>
+<param name="accounts.accounts_fields_list.Record">
+<value><![CDATA[Rekord]]></value>
 </param>
 <param name="accounts.accounts_contacts_oppcomponent_add.AdditionalNotes">
 <value><![CDATA[Additional Notes]]></value>
@@ -9262,29 +9157,20 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">
 <value><![CDATA[Low Estimate]]></value>
 </param>
-<param name="accounts.accounts_contacts_oppcomponent_add.Opportunities">
-<value><![CDATA[Opportunities]]></value>
+<param name="accounts.accounts_fields.ListOfFolderRecords">
+<value><![CDATA[Lista wprowadzonych rekordów]]></value>
 </param>
-<param name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">
-<value><![CDATA[Opportunity Details]]></value>
+<param name="accounts.accounts_fields_list.NoRecordsEntered">
+<value><![CDATA[Nie wprowadzono informacji .]]></value>
 </param>
-<param name="accounts.accounts_contacts_oppcomponent_add.OpportunityTypes">
-<value><![CDATA[Opportunity Type(s)]]></value>
+<param name="accounts.accounts_fields_list.NoCustomFoldersAvailable">
+<value><![CDATA[Brak dostępnych folderów dodatkowych]]></value>
 </param>
-<param name="accounts.accounts_contacts_oppcomponent_add.ProbOfClose">
-<value><![CDATA[Prob. of Close]]></value>
-</param>
-<param name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">
-<value><![CDATA[Current Stage]]></value>
-</param>
-<param name="accounts.accounts_contacts_oppcomponent_details.CurrentStageDate">
-<value><![CDATA[Current Stage Date]]></value>
+<param name="accounts.accounts_fields_list.ModifiedBy">
+<value><![CDATA[Modyfikowany przez]]></value>
 </param>
 <param name="accounts.accounts_contacts_oppcomponent_details.EstCommission">
 <value><![CDATA[Est. Commission]]></value>
-</param>
-<param name="accounts.accounts_contacts_oppcomponent_details.months">
-<value><![CDATA[months]]></value>
 </param>
 <param name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">
 <value><![CDATA[Add an Opportunity]]></value>
@@ -9343,20 +9229,17 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_contacts_portal_adderror.NoEmailAddress">
 <value><![CDATA[does not have an email address]]></value>
 </param>
-<param name="accounts.accounts_contacts_portal_include.GenerateNewPassword">
-<value><![CDATA[Generate new password]]></value>
-</param>
 <param name="accounts.accounts_contacts_portal_include.LoginInformationSent">
 <value><![CDATA[Login information would be sent to this email or to the primary email of the contact]]></value>
 </param>
 <param name="accounts.accounts_contacts_portal_include.PortalRole">
 <value><![CDATA[Portal Role]]></value>
 </param>
-<param name="accounts.accounts_contacts_portal_view.UserName">
-<value><![CDATA[User Name]]></value>
+<param name="accounts.accounts_relationships_add.RelationshipFrom">
+<value><![CDATA[Relacja  z ]]></value>
 </param>
-<param name="accounts.accounts_contacts_portal_view.UserName.colon">
-<value><![CDATA[User Name:]]></value>
+<param name="accounts.accounts_relationships_add.AddRelationship">
+<value><![CDATA[Dodaj relację]]></value>
 </param>
 <param name="accounts.accounts_asset_add.AddAsset">
 <value><![CDATA[Add Asset]]></value>
@@ -9391,41 +9274,41 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_asset_modify.ModifyAsset">
 <value><![CDATA[Modify Asset]]></value>
 </param>
-<param name="accounts.accounts_calls_list.Activities">
-<value><![CDATA[Activities]]></value>
+<param name="accounts.accounts_relationships_view.ExportData">
+<value><![CDATA[Export danych]]></value>
 </param>
-<param name="accounts.accounts_calls_list.AssignedTo">
-<value><![CDATA[Assigned To]]></value>
+<param name="accounts.accounts_relationships_view.AddARelationship">
+<value><![CDATA[Dodaj do relacji]]></value>
 </param>
-<param name="accounts.accounts_calls_list.DueDate">
-<value><![CDATA[Due Date]]></value>
+<param name="accounts.accounts_relationships_add.SelectAccount">
+<value><![CDATA[Wybór konta]]></value>
 </param>
-<param name="accounts.accounts_calls_list.Entered">
-<value><![CDATA[Entered]]></value>
+<param name="accounts.accounts_relationships_add.RelationshipType">
+<value><![CDATA[Typ relacji]]></value>
 </param>
-<param name="accounts.accounts_calls_list.EnteredBy">
-<value><![CDATA[Entered By]]></value>
+<param name="accounts.accounts_relationships_add.RelationshipTo">
+<value><![CDATA[Relacja do]]></value>
 </param>
-<param name="accounts.accounts_calls_list_menu.CancelActivity">
-<value><![CDATA[Cancel Activity]]></value>
+<param name="accounts.accounts_relationships_add.Relationships">
+<value><![CDATA[Relacje]]></value>
 </param>
-<param name="accounts.accounts_calls_list_menu.CompleteActivity">
-<value><![CDATA[Complete Activity]]></value>
+<param name="accounts.accounts_reports_generate.DelL">
+<value><![CDATA[<Usuń]]></value>
 </param>
-<param name="accounts.accounts_calls_list_menu.Forward">
-<value><![CDATA[Forward]]></value>
+<param name="accounts.accounts_reports_generate.Criteria">
+<value><![CDATA[kRYTERIA]]></value>
 </param>
-<param name="accounts.accounts_calls_list_menu.ModifyActivity">
-<value><![CDATA[Modify Activity]]></value>
+<param name="accounts.accounts_reports_generate.AllR">
+<value><![CDATA[Wszystkie>]]></value>
 </param>
-<param name="accounts.accounts_calls_list_menu.ViewDetails">
-<value><![CDATA[View Details]]></value>
+<param name="accounts.accounts_reports_menu.ViewData">
+<value><![CDATA[Pokaż dane]]></value>
 </param>
-<param name="accounts.accounts_calls_list.NoActivitiesFound">
-<value><![CDATA[No activities found.]]></value>
+<param name="accounts.accounts_reports_generate.SelectFields">
+<value><![CDATA[Zaznacz pola]]></value>
 </param>
-<param name="accounts.accounts_calls_list.Result">
-<value><![CDATA[Result]]></value>
+<param name="accounts.accounts_reports.GenerateNewExport">
+<value><![CDATA[Generuj nowy export]]></value>
 </param>
 <param name="accounts.accounts_calls_list.Subject">
 <value><![CDATA[Subject]]></value>
@@ -9457,11 +9340,11 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_contacts_calls_add.AddActivity">
 <value><![CDATA[Add Activity]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_confirmsend.ActivitySent">
-<value><![CDATA[Activity Sent]]></value>
+<param name="accounts.accounts_reports_generate.NewExport">
+<value><![CDATA[Nowy export danych]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.AssignedTo">
-<value><![CDATA[Assigned to...]]></value>
+<param name="accounts.accounts_reports_generate.MyAccountHierarchy">
+<value><![CDATA[Kierarchia moich kont]]></value>
 </param>
 <param name="accounts.accounts_contacts_calls_details_followup_include.BeforeDueDate">
 <value><![CDATA[before due date ]]></value>
@@ -9469,29 +9352,29 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_contacts_calls_details_followup_include.FollowupActivityReminder">
 <value><![CDATA[Follow-up Activity Reminder]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.None">
-<value><![CDATA[None]]></value>
+<param name="accounts.accounts_calls_list.EnteredBy">
+<value><![CDATA[Wprowadzono przez]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.Priority">
-<value><![CDATA[Priority]]></value>
+<param name="accounts.accounts_calls_list.Entered">
+<value><![CDATA[Wprowadzono]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.Reminder">
-<value><![CDATA[Reminder]]></value>
+<param name="accounts.accounts_calls_list.DueDate">
+<value><![CDATA[Data zakończenie]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_details_include.Length">
-<value><![CDATA[Length:]]></value>
+<param name="accounts.accounts_calls_list.AssignedTo">
+<value><![CDATA[Przypisany do]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_details_include.Subject">
-<value><![CDATA[Subject]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details.Modified">
-<value><![CDATA[Modified]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details.RecordInformation">
-<value><![CDATA[Record Information]]></value>
+<param name="accounts.accounts_calls_list.Activities">
+<value><![CDATA[Aktywności]]></value>
 </param>
 <param name="accounts.accounts_contacts_calls_forward.ForwardActivity">
-<value><![CDATA[Forward Activity]]></value>
+<value><![CDATA[Przekaż aktywność]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details.RecordInformation">
+<value><![CDATA[Informacje o rekordzie]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details.Modified">
+<value><![CDATA[Modyfikowano]]></value>
 </param>
 <param name="accounts.accounts_contacts_calls_list.AddAnActivity">
 <value><![CDATA[Add an Activity]]></value>
@@ -9523,47 +9406,32 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_contacts_communication_preference_add.TimeZone">
 <value><![CDATA[Time Zone]]></value>
 </param>
-<param name="accounts.accounts_contacts_communication_preference_add.TimeZone.colon">
-<value><![CDATA[Time Zone:]]></value>
-</param>
-<param name="accounts.accounts_contacts_communication_preference_add.to">
-<value><![CDATA[to]]></value>
-</param>
-<param name="accounts.accounts_contacts_detailsimport.Approve">
-<value><![CDATA[Approve]]></value>
-</param>
-<param name="accounts.accounts_contacts_detailsimport.Company">
-<value><![CDATA[Company]]></value>
-</param>
-<param name="accounts.accounts_contacts_detailsimport.DownloadErrorFile">
-<value><![CDATA[Download Error File]]></value>
-</param>
-<param name="accounts.accounts_contacts_detailsimport.DownloadFile">
-<value><![CDATA[Download File]]></value>
+<param name="accounts.accounts_contacts_calls_details_include.Subject">
+<value><![CDATA[Temat]]></value>
 </param>
 <param name="accounts.accounts_contacts_detailsimport.FailedRecords">
 <value><![CDATA[Failed Records]]></value>
 </param>
-<param name="accounts.accounts_contacts_detailsimport.ImportedRecords">
-<value><![CDATA[Imported Records]]></value>
+<param name="accounts.accounts_contacts_calls_details_include.Length">
+<value><![CDATA[czas trwania]]></value>
 </param>
-<param name="accounts.accounts_contacts_detailsimport.NoContactsFound">
-<value><![CDATA[No contacts found.]]></value>
+<param name="accounts.accounts_contacts_calls_details_followup_include.Reminder">
+<value><![CDATA[Przypomnienie]]></value>
 </param>
-<param name="accounts.accounts_contacts_detailsimport.Owner">
-<value><![CDATA[Owner]]></value>
+<param name="accounts.accounts_contacts_calls_details_followup_include.Priority">
+<value><![CDATA[Priorytet]]></value>
 </param>
-<param name="accounts.accountasset_include.Vendor">
-<value><![CDATA[Vendor]]></value>
+<param name="accounts.accounts_contacts_calls_details_followup_include.None">
+<value><![CDATA[Brak]]></value>
 </param>
 <param name="accounts.accountHistory.asset">
 <value><![CDATA[Asset]]></value>
 </param>
-<param name="accounts.accountHistory.cancelledActivity">
-<value><![CDATA[Cancelled Activity]]></value>
+<param name="accounts.accounts_contacts_calls_details_followup_include.AssignedTo">
+<value><![CDATA[Przypisane do]]></value>
 </param>
-<param name="accounts.accountHistory.completeActivity">
-<value><![CDATA[Complete Activity]]></value>
+<param name="accounts.accounts_contacts_calls_confirmsend.ActivitySent">
+<value><![CDATA[Wysłanie aktywności]]></value>
 </param>
 <param name="accounts.accountHistory.contact">
 <value><![CDATA[Contact]]></value>
@@ -9577,23 +9445,23 @@ reflect those changes.]]></value>
 <param name="accounts.accountHistory.quote">
 <value><![CDATA[Quote]]></value>
 </param>
-<param name="accounts.accountHistory.ticket">
-<value><![CDATA[Ticket]]></value>
+<param name="accounts.accounts_contacts_detailsimport.DownloadFile">
+<value><![CDATA[Pobierz plik]]></value>
 </param>
-<param name="accounts.accounts_add.AdditionalDetails">
-<value><![CDATA[Additional Details]]></value>
+<param name="accounts.accounts_contacts_detailsimport.DownloadErrorFile">
+<value><![CDATA[Pobierz plik błędów]]></value>
 </param>
-<param name="accounts.accounts_add.additionalNames">
-<value><![CDATA[Additional Names]]></value>
+<param name="accounts.accounts_contacts_detailsimport.Company">
+<value><![CDATA[Firma]]></value>
 </param>
-<param name="accounts.accounts_add.AddNewAccount">
-<value><![CDATA[Add a New Account]]></value>
+<param name="accounts.accounts_contacts_detailsimport.Approve">
+<value><![CDATA[Akceptacja]]></value>
 </param>
 <param name="accounts.accounts_add.addressRequestMessage">
 <value><![CDATA[Address Update Form. You have received this request to update your contact information from Centric CRM.]]></value>
 </param>
-<param name="accounts.accounts_add.AlertDescription">
-<value><![CDATA[Alert Description]]></value>
+<param name="accounts.accounts_contacts_communication_preference_add.to">
+<value><![CDATA[do]]></value>
 </param>
 <param name="accounts.accounts_add.EmailOrMessages">
 <value><![CDATA[Email/Messages]]></value>
@@ -9616,29 +9484,11 @@ reflect those changes.]]></value>
 <param name="accounts.accounts_add.Organization">
 <value><![CDATA[Organization]]></value>
 </param>
-<param name="accounts.accounts_add.OrganizationName">
-<value><![CDATA[Organization Name]]></value>
-</param>
-<param name="accounts.accounts_add.Phone">
-<value><![CDATA[Phone ]]></value>
-</param>
-<param name="accounts.accounts_add.Phone1">
-<value><![CDATA[Phone 1]]></value>
-</param>
 <param name="accounts.accounts_add.Revenue">
 <value><![CDATA[Revenue]]></value>
 </param>
-<param name="accounts.accounts_add.select">
-<value><![CDATA[Select]]></value>
-</param>
-<param name="accounts.accounts_add.TextMessageAddress">
-<value><![CDATA[Text Message Address]]></value>
-</param>
-<param name="accounts.accounts_add.TextMessageAddresses">
-<value><![CDATA[Text Message Addresses]]></value>
-</param>
-<param name="accounts.accounts_add.TickerSymbol">
-<value><![CDATA[Ticker Symbol]]></value>
+<param name="accounts.accounts_contacts_communication_preference_add.TimeZone.colon">
+<value><![CDATA[Strefa czasowa]]></value>
 </param>
 <param name="account.asset">
 <value><![CDATA[Asset]]></value>
@@ -9730,6 +9580,18 @@ reflect those changes.]]></value>
 <param name="accounts.accountasset_include.PurchasedFrom">
 <value><![CDATA[Purchased From]]></value>
 </param>
+<param name="accounts.accounts_contacts_detailsimport.PhoneMobile">
+<value><![CDATA[Telefon : Komórkowy]]></value>
+</param>
+<param name="accounts.accounts_contacts_detailsimport.PhoneBusiness">
+<value><![CDATA[Telefon : Praca]]></value>
+</param>
+<param name="accounts.accounts_contacts_detailsimport.Owner">
+<value><![CDATA[właściciel]]></value>
+</param>
+<param name="accounts.accounts_contacts_detailsimport.NoContactsFound">
+<value><![CDATA[nie znaleziono kontaktów]]></value>
+</param>
 <param name="accounts.accounts_contacts_add.Role">
 <value><![CDATA[Role]]></value>
 </param>
@@ -9747,6 +9609,9 @@ reflect those changes.]]></value>
 </param>
 <param name="admin.usage.faxsSent.text">
 <value><![CDATA[${number} faxs sent, consisting of ${size} bytes]]></value>
+</param>
+<param name="accounts.accounts_contacts_detailsimport.ImportedRecords">
+<value><![CDATA[Zaimportowane rekordy]]></value>
 </param>
 <param name="admin.usage.fileDownloadedBandwidth.text">
 <value><![CDATA[1 file downloaded, using ${size} bytes of bandwidth]]></value>
@@ -9859,6 +9724,9 @@ reflect those changes.]]></value>
 <param name="project.incompleteItems">
 <value><![CDATA[Incomplete Items]]></value>
 </param>
+<param name="accounts.accounts_contacts_messages_details.MessageName">
+<value><![CDATA[Nazwa wiadomości]]></value>
+</param>
 <param name="project.linkAnAccount">
 <value><![CDATA[Link an Account]]></value>
 </param>
@@ -9928,8 +9796,158 @@ reflect those changes.]]></value>
 <param name="reports.parameter.toDate">
 <value><![CDATA[To Date]]></value>
 </param>
+<param name="accounts.accounts_contacts_modify.ModifyContact">
+<value><![CDATA[Modyfikuj kontakt]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_view.RunDate">
+<value><![CDATA[Data startu]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_view.NoMessagesFound">
+<value><![CDATA[Nie znaleziono wiadomości]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_view.MyMessages">
+<value><![CDATA[Moje wiadomości]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_view.AllMessages">
+<value><![CDATA[Wszystkie wiadomości]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_details.SelectedMessage">
+<value><![CDATA[Zaznaczon wiadomości]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_details.ReplyTo">
+<value><![CDATA[Odpowiedz do]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_details.MessageText">
+<value><![CDATA[Tekst wiadomości]]></value>
+</param>
+<param name="accounts.accounts_contacts_messages_details.MessageSubject">
+<value><![CDATA[Temat wiadomości]]></value>
+</param>
+<param name="accounts.accounts_contacts.noFaxPlease">
+<value><![CDATA[Brak zgody na faxy]]></value>
+</param>
+<param name="accounts.accounts_contacts.noEmailPlease">
+<value><![CDATA[Brak zgody na emaile]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_details.weeks">
+<value><![CDATA[tygodni]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_details.months">
+<value><![CDATA[miesięcy]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_details.CurrentStageDate">
+<value><![CDATA[data aktualnego etapu]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">
+<value><![CDATA[Aktualny etap]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_add.ProbOfClose">
+<value><![CDATA[Status zakończenia]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_add.OpportunityTypes">
+<value><![CDATA[Typ działania]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">
+<value><![CDATA[Szczegóły działania]]></value>
+</param>
+<param name="accounts.accounts_contacts_oppcomponent_add.Opportunities">
+<value><![CDATA[Działania]]></value>
+</param>
+<param name="accounts.accounts_contacts_validateimport.AccessType">
+<value><![CDATA[Typ dostepu]]></value>
+</param>
+<param name="accounts.accounts_contacts_portal_view.UserName.colon">
+<value><![CDATA[Nazwa użytkownika]]></value>
+</param>
 <param name="admin.ldap.container">
 <value><![CDATA[Container:]]></value>
+</param>
+<param name="accounts.accounts_contacts_portal_view.UserName">
+<value><![CDATA[Nazwa użytkownika]]></value>
+</param>
+<param name="accounts.accounts_contacts_portal_include.GenerateNewPassword">
+<value><![CDATA[Generuj nowe hasło]]></value>
+</param>
+<param name="accounts.accounts_contacts_validateimport.FieldMappings">
+<value><![CDATA[Mapowanie pola]]></value>
+</param>
+<param name="accounts.accounts_contacts_validateimport.Field">
+<value><![CDATA[Pola]]></value>
+</param>
+<param name="accounts.accounts_add.Zip">
+<value><![CDATA[Kod pocztowy]]></value>
+</param>
+<param name="accounts.accountasset_include.Vendor">
+<value><![CDATA[Dostawca]]></value>
+</param>
+<param name="accounts.accounts_add.select">
+<value><![CDATA[Wybór]]></value>
+</param>
+<param name="accounts.accountHistory.completeActivity">
+<value><![CDATA[Zakończ aktywność]]></value>
+</param>
+<param name="accounts.accountHistory.cancelledActivity">
+<value><![CDATA[Anuluj aktywność]]></value>
+</param>
+<param name="accounts.accounts_add.AddressLine4">
+<value><![CDATA[Linia adresu 4]]></value>
+</param>
+<param name="accounts.accounts_add.copyEmailPhoneAddress">
+<value><![CDATA[Kopiuj email, telefon, i kod pocztowy]]></value>
+</param>
+<param name="accounts.accounts_add.AlertDescription">
+<value><![CDATA[Opis alarmu]]></value>
+</param>
+<param name="accounts.accounts_add.AddNewAccount">
+<value><![CDATA[Kodaj nowe konto]]></value>
+</param>
+<param name="accounts.accounts_add.additionalNames">
+<value><![CDATA[Dodatkowe nazwy]]></value>
+</param>
+<param name="accounts.accounts_add.AdditionalDetails">
+<value><![CDATA[Dodatkowe szczegóły]]></value>
+</param>
+<param name="accounts.accountHistory.ticket">
+<value><![CDATA[Bilet]]></value>
+</param>
+<param name="accounts.accounts_add.TickerSymbol">
+<value><![CDATA[Symbol biletu]]></value>
+</param>
+<param name="accounts.accounts_add.TextMessageAddresses">
+<value><![CDATA[Adresy do korespondencji]]></value>
+</param>
+<param name="accounts.accounts_add.TextMessageAddress">
+<value><![CDATA[Adres do korespondencji]]></value>
+</param>
+<param name="accounts.accounts_add.Phone1">
+<value><![CDATA[Telefon 1]]></value>
+</param>
+<param name="accounts.accounts_add.Phone">
+<value><![CDATA[Telefon]]></value>
+</param>
+<param name="accounts.accounts_add.OrganizationName">
+<value><![CDATA[Nazwa organizacji]]></value>
+</param>
+<param name="accounts.accounts_calls_list.Result">
+<value><![CDATA[Rezultat]]></value>
+</param>
+<param name="accounts.accounts_calls_list.NoActivitiesFound">
+<value><![CDATA[Nie znaleziono aktywności]]></value>
+</param>
+<param name="accounts.accounts_calls_list_menu.ViewDetails">
+<value><![CDATA[Zobacz szczegóły]]></value>
+</param>
+<param name="accounts.accounts_calls_list_menu.ModifyActivity">
+<value><![CDATA[Modyfikój aktywność]]></value>
+</param>
+<param name="accounts.accounts_calls_list_menu.Forward">
+<value><![CDATA[Przekaż]]></value>
+</param>
+<param name="accounts.accounts_calls_list_menu.CompleteActivity">
+<value><![CDATA[Zakończ aktywność]]></value>
+</param>
+<param name="accounts.accounts_calls_list_menu.CancelActivity">
+<value><![CDATA[Anuluj aktywność]]></value>
 </param>
 <param name="admin.ldap.enabled">
 <value><![CDATA[LDAP Enabled:]]></value>
@@ -11075,41 +11093,47 @@ reflect those changes.]]></value>
 <param name="actionPlan.estimatedStepDuration">
 <value><![CDATA[Estimated Step Duration]]></value>
 </param>
-<param name="actionPlan.folderField.text">
-<value><![CDATA[* Folder Field]]></value>
-</param>
-<param name="actionPlan.folderToUpdate.text">
-<value><![CDATA[* Folder to update]]></value>
-</param>
-<param name="actionPlan.inactivePlans">
-<value><![CDATA[Inactive Plans]]></value>
-</param>
-<param name="actionPlan.mandatory">
-<value><![CDATA[Mandatory]]></value>
-</param>
-<param name="actionPlan.memberOfSpecificRole.text">
-<value><![CDATA[Member of a specific role]]></value>
-</param>
-<param name="actionPlan.memberOfTheDepartment.colon">
-<value><![CDATA[Member of the department:]]></value>
-</param>
 </config>
 <config name="system.modules.label">
-<param name="Leads">
-<page_title><![CDATA[Leads]]></page_title>
-<menu_title><![CDATA[Leads]]></menu_title>
+<param name="Orders">
+<page_title><![CDATA[Orders]]></page_title>
+<menu_title><![CDATA[Orders]]></menu_title>
 </param>
-<param name="Quotes">
-<page_title><![CDATA[Quotes]]></page_title>
-<menu_title><![CDATA[Quotes]]></menu_title>
+<param name="Website">
+<page_title><![CDATA[Website]]></page_title>
+<menu_title><![CDATA[Website]]></menu_title>
 </param>
 <param name="Help Desk">
 <page_title><![CDATA[Help Desk]]></page_title>
 <menu_title><![CDATA[Help Desk]]></menu_title>
 </param>
-<param name="Projects">
-<page_title><![CDATA[Projects]]></page_title>
-<menu_title><![CDATA[Projects]]></menu_title>
+<param name="Communications">
+<page_title><![CDATA[Communications]]></page_title>
+<menu_title><![CDATA[Communications]]></menu_title>
+</param>
+<param name="Admin">
+<page_title><![CDATA[Admin]]></page_title>
+<menu_title><![CDATA[Admin]]></menu_title>
+</param>
+<param name="My Home Page">
+<page_title><![CDATA[My Home Page]]></page_title>
+<menu_title><![CDATA[My Home Page]]></menu_title>
+</param>
+<param name="Accounts">
+<page_title><![CDATA[Konta]]></page_title>
+<menu_title><![CDATA[Konta]]></menu_title>
+</param>
+<param name="Quotes">
+<page_title><![CDATA[Quotes]]></page_title>
+<menu_title><![CDATA[Quotes]]></menu_title>
+</param>
+<param name="Employees">
+<page_title><![CDATA[Employees]]></page_title>
+<menu_title><![CDATA[Employees]]></menu_title>
+</param>
+<param name="Leads">
+<page_title><![CDATA[Leads]]></page_title>
+<menu_title><![CDATA[Leads]]></menu_title>
 </param>
 <param name="Documents">
 <page_title><![CDATA[Documents]]></page_title>
@@ -11119,41 +11143,17 @@ reflect those changes.]]></value>
 <page_title><![CDATA[Pipeline]]></page_title>
 <menu_title><![CDATA[Pipeline]]></menu_title>
 </param>
-<param name="Employees">
-<page_title><![CDATA[Employees]]></page_title>
-<menu_title><![CDATA[Employees]]></menu_title>
-</param>
-<param name="Orders">
-<page_title><![CDATA[Orders]]></page_title>
-<menu_title><![CDATA[Orders]]></menu_title>
-</param>
-<param name="Admin">
-<page_title><![CDATA[Admin]]></page_title>
-<menu_title><![CDATA[Admin]]></menu_title>
+<param name="Reports">
+<page_title><![CDATA[Reports]]></page_title>
+<menu_title><![CDATA[Reports]]></menu_title>
 </param>
 <param name="Contacts">
 <page_title><![CDATA[Contacts]]></page_title>
 <menu_title><![CDATA[Contacts]]></menu_title>
 </param>
-<param name="Communications">
-<page_title><![CDATA[Communications]]></page_title>
-<menu_title><![CDATA[Communications]]></menu_title>
-</param>
-<param name="Accounts">
-<page_title><![CDATA[Konta]]></page_title>
-<menu_title><![CDATA[Konta]]></menu_title>
-</param>
-<param name="Website">
-<page_title><![CDATA[Website]]></page_title>
-<menu_title><![CDATA[Website]]></menu_title>
-</param>
-<param name="My Home Page">
-<page_title><![CDATA[My Home Page]]></page_title>
-<menu_title><![CDATA[My Home Page]]></menu_title>
-</param>
-<param name="Reports">
-<page_title><![CDATA[Reports]]></page_title>
-<menu_title><![CDATA[Reports]]></menu_title>
+<param name="Projects">
+<page_title><![CDATA[Projects]]></page_title>
+<menu_title><![CDATA[Projects]]></menu_title>
 </param>
 </config>
 <config name="system.container.menu.label">
@@ -11187,10 +11187,10 @@ reflect those changes.]]></value>
 <param name="accounts.revenue.long_html">
 <value><![CDATA[Revenue]]></value>
 </param>
-<param name="users.groups.long_html">
-<value><![CDATA[Groups]]></value>
+<param name="opportunitiesQuotes.details.long_html">
+<value><![CDATA[Details]]></value>
 </param>
-<param name="accountscontacts.history.long_html">
+<param name="opportunitiesQuotes.history.long_html">
 <value><![CDATA[History]]></value>
 </param>
 <param name="documents.documents.long_html">
@@ -11199,8 +11199,8 @@ reflect those changes.]]></value>
 <param name="tickets.activitylog.long_html">
 <value><![CDATA[Activity Log]]></value>
 </param>
-<param name="accounts.history.long_html">
-<value><![CDATA[History]]></value>
+<param name="opportunitiesQuotes.notes.long_html">
+<value><![CDATA[Notes]]></value>
 </param>
 <param name="opportunities.calls.long_html">
 <value><![CDATA[Activities]]></value>
@@ -11220,35 +11220,17 @@ reflect those changes.]]></value>
 <param name="accounts.servicecontracts.long_html">
 <value><![CDATA[Service Contracts]]></value>
 </param>
-<param name="accountcontactopportunities.folders.long_html">
-<value><![CDATA[Foldery]]></value>
+<param name="documents.accounts.long_html">
+<value><![CDATA[Accounts]]></value>
 </param>
-<param name="tickets.maintenancenotes.long_html">
-<value><![CDATA[Maintenance Notes]]></value>
-</param>
-<param name="accountstickets.activitylog.long_html">
-<value><![CDATA[Activity Log]]></value>
-</param>
-<param name="tickets.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="tickets.folders.long_html">
-<value><![CDATA[Folders]]></value>
-</param>
-<param name="tickets.documents.long_html">
-<value><![CDATA[Documents]]></value>
-</param>
-<param name="opportunitiesQuotes.history.long_html">
-<value><![CDATA[History]]></value>
+<param name="communications.access.long_html">
+<value><![CDATA[Access]]></value>
 </param>
 <param name="accountscontacts.calls.long_html">
 <value><![CDATA[Activities]]></value>
 </param>
-<param name="opportunitiesQuotes.notes.long_html">
-<value><![CDATA[Notes]]></value>
-</param>
-<param name="communications.access.long_html">
-<value><![CDATA[Access]]></value>
+<param name="users.groups.long_html">
+<value><![CDATA[Groups]]></value>
 </param>
 <param name="tickets.history.long_html">
 <value><![CDATA[History]]></value>
@@ -11282,6 +11264,9 @@ reflect those changes.]]></value>
 </param>
 <param name="accounts.quotes.long_html">
 <value><![CDATA[Quotes]]></value>
+</param>
+<param name="communications.details.long_html">
+<value><![CDATA[Details]]></value>
 </param>
 <param name="communications.documents.long_html">
 <value><![CDATA[Documents]]></value>
@@ -11319,9 +11304,6 @@ reflect those changes.]]></value>
 <param name="accounts.documents.long_html">
 <value><![CDATA[Documents]]></value>
 </param>
-<param name="documents.accounts.long_html">
-<value><![CDATA[Accounts]]></value>
-</param>
 <param name="users.details.long_html">
 <value><![CDATA[Details]]></value>
 </param>
@@ -11343,14 +11325,14 @@ reflect those changes.]]></value>
 <param name="employees.details.long_html">
 <value><![CDATA[Details]]></value>
 </param>
+<param name="contacts.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
 <param name="contacts.opportunities.long_html">
 <value><![CDATA[Opportunities]]></value>
 </param>
 <param name="employees.folders.long_html">
 <value><![CDATA[Folders]]></value>
-</param>
-<param name="accountcontactopportunities.quotes.long_html">
-<value><![CDATA[Quotes]]></value>
 </param>
 <param name="employees.projects.long_html">
 <value><![CDATA[Projects]]></value>
@@ -11370,11 +11352,26 @@ reflect those changes.]]></value>
 <param name="accounts.folders.long_html">
 <value><![CDATA[Folders]]></value>
 </param>
-<param name="opportunitiesQuotes.details.long_html">
+<param name="accountcontactopportunities.quotes.long_html">
+<value><![CDATA[Quotes]]></value>
+</param>
+<param name="accountcontactopportunities.folders.long_html">
+<value><![CDATA[Foldery]]></value>
+</param>
+<param name="tickets.maintenancenotes.long_html">
+<value><![CDATA[Maintenance Notes]]></value>
+</param>
+<param name="accountstickets.activitylog.long_html">
+<value><![CDATA[Activity Log]]></value>
+</param>
+<param name="tickets.details.long_html">
 <value><![CDATA[Details]]></value>
 </param>
-<param name="contacts.history.long_html">
-<value><![CDATA[History]]></value>
+<param name="tickets.folders.long_html">
+<value><![CDATA[Folders]]></value>
+</param>
+<param name="tickets.documents.long_html">
+<value><![CDATA[Documents]]></value>
 </param>
 <param name="accounts.details.long_html">
 <value><![CDATA[Details]]></value>
@@ -11391,11 +11388,17 @@ reflect those changes.]]></value>
 <param name="accountstickets.folders.long_html">
 <value><![CDATA[Folders]]></value>
 </param>
+<param name="accountscontacts.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
 <param name="accountstickets.history.long_html">
 <value><![CDATA[History]]></value>
 </param>
 <param name="contacts.details.long_html">
 <value><![CDATA[Details]]></value>
+</param>
+<param name="accounts.history.long_html">
+<value><![CDATA[History]]></value>
 </param>
 <param name="accounts.tickets.long_html">
 <value><![CDATA[Tickets]]></value>
@@ -11406,19 +11409,43 @@ reflect those changes.]]></value>
 <param name="accountstickets.maintenancenotes.long_html">
 <value><![CDATA[Maintenance Notes]]></value>
 </param>
-<param name="communications.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
 </config>
 <config name="system.submenu.label">
-<param name="Campaigns">
-<value><![CDATA[Campaigns]]></value>
+<param name="Knowledge Base">
+<value><![CDATA[Knowledge Base]]></value>
 </param>
-<param name="Action Lists">
-<value><![CDATA[Action Lists]]></value>
+<param name="Action Plans">
+<value><![CDATA[Action Plans]]></value>
+</param>
+<param name="Users">
+<value><![CDATA[Users]]></value>
+</param>
+<param name="Roles">
+<value><![CDATA[Roles]]></value>
+</param>
+<param name="Tasks">
+<value><![CDATA[Tasks]]></value>
+</param>
+<param name="System">
+<value><![CDATA[System]]></value>
+</param>
+<param name="Re-assignments">
+<value><![CDATA[Re-assignments]]></value>
+</param>
+<param name="Add">
+<value><![CDATA[Add]]></value>
+</param>
+<param name="Modules">
+<value><![CDATA[Modules]]></value>
 </param>
 <param name="Search">
 <value><![CDATA[Search]]></value>
+</param>
+<param name="Messages">
+<value><![CDATA[Messages]]></value>
+</param>
+<param name="Export">
+<value><![CDATA[Export]]></value>
 </param>
 <param name="View">
 <value><![CDATA[View]]></value>
@@ -11426,20 +11453,14 @@ reflect those changes.]]></value>
 <param name="Welcome">
 <value><![CDATA[Welcome]]></value>
 </param>
-<param name="Re-assignments">
-<value><![CDATA[Re-assignments]]></value>
+<param name="Mailbox">
+<value><![CDATA[Mailbox]]></value>
 </param>
 <param name="Import">
 <value><![CDATA[Import]]></value>
 </param>
 <param name="Invitations">
 <value><![CDATA[Invitations]]></value>
-</param>
-<param name="Projects">
-<value><![CDATA[Projects]]></value>
-</param>
-<param name="Modules">
-<value><![CDATA[Modules]]></value>
 </param>
 <param name="Attachments">
 <value><![CDATA[Attachments]]></value>
@@ -11450,56 +11471,35 @@ reflect those changes.]]></value>
 <param name="Headlines">
 <value><![CDATA[Headlines]]></value>
 </param>
-<param name="Messages">
-<value><![CDATA[Messages]]></value>
-</param>
-<param name="Roles">
-<value><![CDATA[Roles]]></value>
-</param>
 <param name="Attachments.colon">
 <value><![CDATA[Attachments:]]></value>
 </param>
-<param name="Settings">
-<value><![CDATA[Settings]]></value>
-</param>
-<param name="Defects">
-<value><![CDATA[Defects]]></value>
-</param>
-<param name="Knowledge Base">
-<value><![CDATA[Knowledge Base]]></value>
-</param>
-<param name="Action Plans">
-<value><![CDATA[Action Plans]]></value>
-</param>
-<param name="Export">
-<value><![CDATA[Export]]></value>
-</param>
-<param name="Usage">
-<value><![CDATA[Usage]]></value>
-</param>
-<param name="Mailbox">
-<value><![CDATA[Mailbox]]></value>
-</param>
-<param name="Tasks">
-<value><![CDATA[Tasks]]></value>
-</param>
-<param name="Users">
-<value><![CDATA[Users]]></value>
+<param name="Projects">
+<value><![CDATA[Projects]]></value>
 </param>
 <param name="List">
 <value><![CDATA[List]]></value>
 </param>
-<param name="System">
-<value><![CDATA[System]]></value>
+<param name="Settings">
+<value><![CDATA[Settings]]></value>
 </param>
 <param name="Revenue">
 <value><![CDATA[Revenue]]></value>
 </param>
+<param name="Campaigns">
+<value><![CDATA[Campaigns]]></value>
+</param>
+<param name="Defects">
+<value><![CDATA[Defects]]></value>
+</param>
 <param name="Dashboard">
 <value><![CDATA[Dashboard]]></value>
 </param>
-<param name="Add">
-<value><![CDATA[Add]]></value>
+<param name="Usage">
+<value><![CDATA[Usage]]></value>
+</param>
+<param name="Action Lists">
+<value><![CDATA[Action Lists]]></value>
 </param>
 </config>
 </aspcfs>

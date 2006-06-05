@@ -63,7 +63,14 @@
       <dhv:permission name="help-view">
       <img src="images/icons/stock_help-16.gif" border="0" align="absmiddle" height="16" width="16" />
       <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %><%= request.getAttribute("moduleCommand") != null ? "&section=" + (String) request.getAttribute("moduleCommand") : ""%><%= request.getAttribute("moduleSection") != null ? "&sub=" + (String) request.getAttribute("moduleSection") : "" %>&popup=true','CRM_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;"><dhv:label name="global.button.Help">Help</dhv:label></a>
-      |</dhv:permission><dhv:permission name="qa-view">
+      |</dhv:permission>
+      <%--
+      <dhv:permission name="help-view">
+      <img src="images/icons/stock_help-16.gif" border="0" align="absmiddle" height="16" width="16" />
+      <a href="javascript:popURL('tutorials/index.html','CRM_Tutorials','1024','700','yes','yes');" class="s" onMouseOver="window.status='Tutorials';return true;" onMouseOut="window.status='';return true;">Tutorials</a>
+      |</dhv:permission>
+      --%>
+      <dhv:permission name="qa-view">
       <img src="images/icons/stock_glue-16.gif" border="0" align="absmiddle" height="16" width="16" />
       <dhv:label name="admin.qa.colon">QA:</dhv:label>
       <a href="javascript:popURL('QA.do?module=<%= request.getAttribute("moduleAction") %><%= request.getAttribute("moduleCommand") != null ? "&section=" + (String) request.getAttribute("moduleCommand") : ""%><%= request.getAttribute("moduleSection") != null ? "&sub=" + (String) request.getAttribute("moduleSection") : "" %>&popup=true','CRM_QA','450','550','yes','yes');" class="s" onMouseOver="window.status='Pop-up QA';return true;" onMouseOut="window.status='';return true;"><dhv:label name="admin.page">Page</dhv:label></a>

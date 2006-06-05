@@ -139,7 +139,7 @@
           </td>
           <td valign="top" width="100%" nowrap>
             <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-            [<a href="javascript:popContactsListSingle('contactLink','changecontact','&listView=contacts<%= User.getUserRecord().getSiteId() == -1?"&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&nonUsersOnly=true&reset=true&filters=all|accountcontacts|mycontacts');"><dhv:label name="admin.selectContact">Select Contact</dhv:label></a>]
+            [<a href="javascript:popContactsListSingle('contactLink','changecontact','listView=mycontacts<%= User.getUserRecord().getSiteId() == -1?"&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&nonUsersOnly=true&reset=true&filters=all|accountcontacts|mycontacts');"><dhv:label name="admin.selectContact">Select Contact</dhv:label></a>]
             <input type="hidden" name="contactId" id="contactLink" value="<%= ContactDetails.getId() %>">
             [<a href="javascript:popURL('ExternalContacts.do?command=Prepare&source=addactivity&actionSource=GlobalItem&popup=true', 'New_Contact','600','550','yes','yes');"><dhv:label name="admin.createContact">Create new contact</dhv:label></a>]
           </td>

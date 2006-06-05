@@ -228,7 +228,7 @@ public class TicketDefect extends GenericBean {
       }
       id = DatabaseUtils.getNextSeq(db, "ticket_defect_defect_id_seq");
       sql.append(
-          "INSERT INTO ticket_defect (" + (id > -1 ? "id," : "") + " title, description, " +
+          "INSERT INTO ticket_defect (" + (id > -1 ? "defect_id," : "") + " title, description, " +
           (startDate != null ? " start_date, " : ""));
       if (endDate != null) {
         sql.append("end_date, ");

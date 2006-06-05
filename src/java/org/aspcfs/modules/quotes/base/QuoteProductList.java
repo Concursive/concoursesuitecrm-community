@@ -18,7 +18,9 @@ package org.aspcfs.modules.quotes.base;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.products.base.ProductCatalog;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -28,6 +30,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.text.NumberFormat;
 
 /**
  * This represents a list of quote products
@@ -475,7 +478,9 @@ public class QuoteProductList extends ArrayList {
    * @param context Description of the Parameter
    * @throws SQLException Description of the Exception
    */
-  public void populate(Connection db, ActionContext context) throws SQLException {
+  public void populate(Connection db, ActionContext context, User user) throws Exception {
+    NumberFormat nf = null;
+    nf = NumberFormat.getInstance(user.getLocale());
     for (int i = 1; ; i++) {
       String productIdString = (String) context.getRequest().getParameter(
           "product_" + i);
@@ -497,7 +502,7 @@ public class QuoteProductList extends ArrayList {
           quoteProduct.setQuantity(Integer.parseInt(quantityString));
           quoteProduct.buildPricing(db);
           if ((priceString != null) && !"".equals(priceString)) {
-            quoteProduct.setPriceAmount(Double.parseDouble(priceString));
+            quoteProduct.setPriceAmount((nf.parse(StringUtils.replace(priceString," ",""))).doubleValue());
           } else {
             quoteProduct.setPriceAmount(0.0);
           }

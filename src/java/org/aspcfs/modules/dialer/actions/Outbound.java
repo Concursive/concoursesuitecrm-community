@@ -40,6 +40,7 @@ public class Outbound extends CFSModule {
       response = AsteriskManager.call(connection, client.getExtension(), client.getNumber(), contextName);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
+      // TODO: GO to a useful error page to let user know why call could not be made
       return ("SystemError");
     } finally {
       client.setLastResponse(response);

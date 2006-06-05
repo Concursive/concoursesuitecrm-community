@@ -70,7 +70,7 @@ function sendMessage() {
   <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
-      <input type="text" name="subject" value="<%=Note.getSubject().equals("")?"":Note.getSubject()%>" size="50">
+      <input type="text" name="subject" value="<%=Note.getSubject().equals("")?"":Note.getSubject()%>" size="50" maxlength="255">
       <font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %>
     </td>
   </tr>

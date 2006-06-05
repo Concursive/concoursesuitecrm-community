@@ -227,7 +227,7 @@ public final class ProductsCatalog extends CFSModule {
       context.getRequest().setAttribute("quote", quote);
 
       quoteProductList = new QuoteProductList();
-      quoteProductList.populate(db, context);
+      quoteProductList.populate(db, context, this.getUser(context, this.getUserId(context)));
       context.getRequest().setAttribute("quoteProductList", quoteProductList);
 
       String categoryId = context.getRequest().getParameter("categoryId");

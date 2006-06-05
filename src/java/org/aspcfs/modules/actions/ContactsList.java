@@ -194,7 +194,6 @@ public final class ContactsList extends CFSModule {
       }
       //Set ContactList Parameters and build the list
       setParameters(contactList, context, db);
-      contactList.setLeadsOnly(Constants.FALSE);
       contactList.buildList(db);
       LookupList siteList = new LookupList(db, "lookup_site_id");
       siteList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
@@ -326,7 +325,6 @@ public final class ContactsList extends CFSModule {
 
     //  set Filter for retrieving addresses depending on typeOfContact
     String firstFilter = filters.getFirstFilter(contactListInfo.getListView());
-
     if (firstFilter.equalsIgnoreCase("all")) {
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.addIgnoreTypeId(Contact.LEAD_TYPE);

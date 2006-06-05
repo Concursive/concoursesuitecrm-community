@@ -437,8 +437,7 @@ public final class Leads extends CFSModule {
       return ("PermissionError");
     }
     int headerId = -1;
-    PagedListInfo searchOppListInfo = this.getPagedListInfo(
-        context, "SearchOppListInfo");
+    PagedListInfo searchOppListInfo = this.getPagedListInfo(context, "SearchOppListInfo", false);
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
     addModuleBean(context, "View Opportunities", "View Opportunity Details");

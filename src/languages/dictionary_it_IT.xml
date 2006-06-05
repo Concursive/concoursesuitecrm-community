@@ -4,15 +4,6 @@
 <param name="tickets.defects.active">
 <value><![CDATA[Attivo]]></value>
 </param>
-<param name="website.products.setupProductsAndServices">
-<value><![CDATA[Imposta prodotti e servizi]]></value>
-</param>
-<param name="website.visitors">
-<value><![CDATA[Visitatori]]></value>
-</param>
-<param name="website.website">
-<value><![CDATA[Sito Web]]></value>
-</param>
 <param name="website.portfolio.numberOfItems">
 <value><![CDATA[${items} Elementi]]></value>
 </param>
@@ -128,6 +119,9 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaigns.accessToActiveCampaigns">
 <value><![CDATA[Accesso alle Campagne Attive]]></value>
 </param>
+<param name="project.allNewsArticles">
+<value><![CDATA[Tutti gli Articoli di Notizie]]></value>
+</param>
 <param name="accounts.accounts_contacts_oppcomponent_add.ComponentHistory">
 <value><![CDATA[Storico]]></value>
 </param>
@@ -161,33 +155,45 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="admin.addClient">
 <value><![CDATA[Aggiungli Client]]></value>
 </param>
-<param name="reports.helpdesk.ticket.ticketSource">
-<value><![CDATA[Origine Ticket]]></value>
+<param name="project.lastThreeArticles">
+<value><![CDATA[Ultimi 3 Articoli]]></value>
 </param>
-<param name="quotes.quotelog.quoteSourceChangedFrom.text">
-<value><![CDATA[Origine cambiata da ${previousName} a ${currentName}]]></value>
+<param name="pagedListInfo.pagedListControlHandler.notAbbreviation">
+<value><![CDATA[      Pagina ${pagedListInfo.numericalPageEntry} di ${pagedListInfo.numberOfPages}, Elementi per pagina: ${pagedListInfo.itemsPerPageEntry} 
+    ]]></value>
 </param>
-<param name="quotes.quotelog.sourceIs.text">
-<value><![CDATA[L'origine è ${name}]]></value>
+<param name="dependency.items">
+<value><![CDATA[Totale Elementi]]></value>
 </param>
-<param name="pipeline.source">
-<value><![CDATA[Provenienza]]></value>
+<param name="calendar.pendingItems">
+<value><![CDATA[Elementi in attesa]]></value>
 </param>
-<param name="qa.feature">
-<value><![CDATA[Caratteristiche]]></value>
+<param name="campaign.itemList">
+<value><![CDATA[Lista Elementi]]></value>
 </param>
-<param name="setup.systemUpgraded.notes">
-<value><![CDATA[<ul>
-        <li>Revisiona i ruoli nel modulo di amministrazione, poichè l'aggiornamento potrebbe aver aggiunto
-        funzioni addizionali con le quali è possibile fornire accesso agli utenti abilitando questi permessi</li>
-        <li>Controlla i vari moduli e accertati che ogni cosa funzioni</li>
-      </ul>]]></value>
+<param name="dynamicForm.lastModifiedBy">
+<value><![CDATA[Numero di elementi]]></value>
 </param>
-<param name="qa.noFeaturesFound">
-<value><![CDATA[Nessuna delle caratteristiche trovate]]></value>
+<param name="button.moreItems">
+<value><![CDATA[Altri elementi>>]]></value>
 </param>
-<param name="project.acctContactTeamNotDefined">
-<value><![CDATA[il contatto account del team non è stato definito]]></value>
+<param name="dynamicForm.numberOfItems">
+<value><![CDATA[Numero di elementi]]></value>
+</param>
+<param name="dynamicForm.survey.editItems">
+<value><![CDATA[Modifica Elementi]]></value>
+</param>
+<param name="project.updateNewsArticle">
+<value><![CDATA[Aggiorna Articolo delle Notizie]]></value>
+</param>
+<param name="website.website">
+<value><![CDATA[Sito Web]]></value>
+</param>
+<param name="website.visitors">
+<value><![CDATA[Visitatori]]></value>
+</param>
+<param name="website.products.setupProductsAndServices">
+<value><![CDATA[Imposta prodotti e servizi]]></value>
 </param>
 <param name="website.portfolio.setupExamplesOfPastWork">
 <value><![CDATA[Imposta esempi di lavori eseguiti]]></value>
@@ -264,8 +270,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="confirmdelete.unableToRevertAccountsToLeads">
 <value><![CDATA[Impossibile riconvertire i Contatti Account a Leads perchè esistono le seguenti dipendenze all'interno di Centric CRM:]]></value>
 </param>
-<param name="quotes.estimatedDelivery">
-<value><![CDATA[Consegna${break}Prevista]]></value>
+<param name="account.revertToLeadDependencies">
+<value><![CDATA[Dipendenze dell'Account per riconvertire a Lead]]></value>
 </param>
 <param name="confirmdelete.ticketActionPlansCanNotRevertAccounts">
 <value><![CDATA[I Ticket dei Piani Azione non possono essere utilizzati per riconvertire Contatti Account in Leads all'interno di Centric CRM]]></value>
@@ -372,17 +378,45 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="account.products.onlineTool">
 <value><![CDATA[Strumento in linea]]></value>
 </param>
-<param name="account.product.noProductsFound">
-<value><![CDATA[Nessun prodotto trovato.]]></value>
+<param name="quotes.number">
+<value><![CDATA[Numero]]></value>
 </param>
 <param name="account.product.label">
 <value><![CDATA[Prodotto]]></value>
 </param>
-<param name="account.revertToLeadDependencies">
-<value><![CDATA[Dipendenze dell'Account per riconvertire a Lead]]></value>
+<param name="account.product.noProductsFound">
+<value><![CDATA[Nessun prodotto trovato.]]></value>
 </param>
-<param name="quotes.openOrClosed">
-<value><![CDATA[Aperto/Chiuso]]></value>
+<param name="reports.helpdesk.ticket.ticketSource">
+<value><![CDATA[Origine Ticket]]></value>
+</param>
+<param name="quotes.quotelog.quoteSourceChangedFrom.text">
+<value><![CDATA[Origine cambiata da ${previousName} a ${currentName}]]></value>
+</param>
+<param name="quotes.quotelog.sourceIs.text">
+<value><![CDATA[L'origine è ${name}]]></value>
+</param>
+<param name="pipeline.source">
+<value><![CDATA[Provenienza]]></value>
+</param>
+<param name="qa.feature">
+<value><![CDATA[Caratteristiche]]></value>
+</param>
+<param name="setup.systemUpgraded.notes">
+<value><![CDATA[<ul>
+        <li>Revisiona i ruoli nel modulo di amministrazione, poichè l'aggiornamento potrebbe aver aggiunto
+        funzioni addizionali con le quali è possibile fornire accesso agli utenti abilitando questi permessi</li>
+        <li>Controlla i vari moduli e accertati che ogni cosa funzioni</li>
+      </ul>]]></value>
+</param>
+<param name="qa.noFeaturesFound">
+<value><![CDATA[Nessuna delle caratteristiche trovate]]></value>
+</param>
+<param name="project.acctContactTeamNotDefined">
+<value><![CDATA[il contatto account del team non è stato definito]]></value>
+</param>
+<param name="quotes.estimatedDelivery">
+<value><![CDATA[Consegna${break}Prevista]]></value>
 </param>
 <param name="search.header">
 <value><![CDATA[Ricerca Dati...]]></value>
@@ -441,8 +475,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="reports.accounts.current.title">
 <value><![CDATA[Account di]]></value>
 </param>
-<param name="project.proximitySearch">
-<value><![CDATA[Ricerca di prossimità]]></value>
+<param name="project.recentlyAccessedProjects">
+<value><![CDATA[Progetti Recentemente Acceduti]]></value>
 </param>
 <param name="reports.accounts.expiry.title">
 <value><![CDATA[Account per termine contratto]]></value>
@@ -600,8 +634,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_contacts_listimports.MyImports">
 <value><![CDATA[Le mie importazioni]]></value>
 </param>
-<param name="accounts.accounts_contacts_listimports.NoImportsFound">
-<value><![CDATA[Nessuna importazione trovata.]]></value>
+<param name="setup.centricCRM.step2of4">
+<value><![CDATA[Centric CRM configurazione (Passo 2 di 4)<br />Impostazioni Server]]></value>
 </param>
 <param name="accounts.accounts_contacts_listimports.Results">
 <value><![CDATA[Risultati]]></value>
@@ -612,8 +646,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_contacts_listimports.Total">
 <value><![CDATA[Totale]]></value>
 </param>
-<param name="accounts.accounts_contacts_messages_details.Campaign">
-<value><![CDATA[Campagna]]></value>
+<param name="quotes.showVersions">
+<value><![CDATA[Visualizza Versioni]]></value>
 </param>
 <param name="accounts.accounts_contacts_messages_details.MessageName">
 <value><![CDATA[Nome messaggio]]></value>
@@ -645,8 +679,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_contacts_detailsimport.NoContactsFound">
 <value><![CDATA[Nessun contatto trovato.]]></value>
 </param>
-<param name="project.contributor.colon">
-<value><![CDATA[Contribuenti:]]></value>
+<param name="accounts.accounts_contacts_detailsimport.Owner">
+<value><![CDATA[Proprietario]]></value>
 </param>
 <param name="accounts.accounts_contacts_detailsimport.PhoneBusiness">
 <value><![CDATA[Telefono: lavoro]]></value>
@@ -657,8 +691,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_contacts_detailsimport.Phones">
 <value><![CDATA[Telefono (i)]]></value>
 </param>
-<param name="quotes.open">
-<value><![CDATA[Aperto]]></value>
+<param name="accounts.accounts_contacts_detailsimport.Process">
+<value><![CDATA[Processo]]></value>
 </param>
 <param name="accounts.accounts_contacts_list.AddAContact">
 <value><![CDATA[Aggiungi contatto]]></value>
@@ -1218,14 +1252,14 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="project.updateItem">
 <value><![CDATA[Aggiorna Elemento]]></value>
 </param>
-<param name="quotes.owner">
-<value><![CDATA[Proprietario]]></value>
+<param name="project.invited">
+<value><![CDATA[Invitato ${time}]]></value>
 </param>
 <param name="reports.parameter.addDateFrom">
 <value><![CDATA[Aggiungi Data da]]></value>
 </param>
-<param name="reports.parameter.addDateTo">
-<value><![CDATA[Aggingi Data a]]></value>
+<param name="project.itemIsIncomplete">
+<value><![CDATA[L'oggetto è incompleto]]></value>
 </param>
 <param name="reports.parameter.beginDate">
 <value><![CDATA[Data Inizio]]></value>
@@ -1233,17 +1267,17 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="reports.parameter.closeDateBegin">
 <value><![CDATA[Chiudi Data Inizio]]></value>
 </param>
-<param name="reports.viewAsPDF">
-<value><![CDATA[Mostra come PDF]]></value>
+<param name="project.linkAnAccount">
+<value><![CDATA[Collega un Account]]></value>
 </param>
 <param name="project.linktoList">
 <value><![CDATA[Collega una lista]]></value>
 </param>
-<param name="search.results.searchString">
-<value><![CDATA[La ricerca per <b>${searchText}</b> ha trovato:]]></value>
-</param>
 <param name="pipeline.probabilityOfClose">
 <value><![CDATA[Prob. di chiusura]]></value>
+</param>
+<param name="quotes.sendingEmail.label">
+<value><![CDATA[Invio e-mail in corso...]]></value>
 </param>
 <param name="pagedListInfo.pagedListStatus.AccountContacts">
 <value><![CDATA[Contatti Account]]></value>
@@ -1269,11 +1303,11 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="pagedListInfo.pagedListStatus.Lists">
 <value><![CDATA[Liste]]></value>
 </param>
-<param name="quotes.number">
-<value><![CDATA[Numero]]></value>
+<param name="pagedListInfo.pagedListStatus.Topics">
+<value><![CDATA[Argomenti]]></value>
 </param>
-<param name="project.proximitySearch.text">
-<value><![CDATA[Per effettuare una ricerca di prossimità, usa il simbolo tilde ${quot}~${quot} alla fine di una frase. Per esempio, per cercare ${quot}fall${quot} e ${quot}campaign${quot} distanti al massimo 10 parole l'un l'altro in un documento, usa la ricerca:${break}${break}${quot}fall campaign${quot}~10]]></value>
+<param name="project.item.lowercase">
+<value><![CDATA[oggetto]]></value>
 </param>
 <param name="object.validation.duplicateViewpointUserCanNotBeInserted">
 <value><![CDATA[Un duplicato del punto di vista non può essere creato]]></value>
@@ -1362,8 +1396,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="mail.body.loginInformationChanged">
 <value><![CDATA[La vostra informazione sel service di login è cambiata.<br /><br />]]></value>
 </param>
-<param name="project.quoteThisMessage">
-<value><![CDATA[Commenta questo messaggio]]></value>
+<param name="project.itemNotApproved">
+<value><![CDATA[L'oggetto non è stato approvato]]></value>
 </param>
 <param name="employees.view">
 <value><![CDATA[Visualizza impiegati]]></value>
@@ -1377,8 +1411,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="employees.updateEmployeeRecord">
 <value><![CDATA[Aggiorna record impiegato]]></value>
 </param>
-<param name="quotes.showVersions">
-<value><![CDATA[Visualizza Versioni]]></value>
+<param name="quotes.selectPhoneNumber">
+<value><![CDATA[Seleziona Numero Telefono]]></value>
 </param>
 <param name="contacts.NoInstantMessageAdresses">
 <value><![CDATA[Nessun indirizzo per messaggi istantanei inserito]]></value>
@@ -1482,8 +1516,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
       Il Team di Centric CRM
     ]]></value>
 </param>
-<param name="mail.body.accountLoginUpdated">
-<value><![CDATA[Il tuo account è stato aggiornato così che adesso puoi collegarti.<br /><br />]]></value>
+<param name="project.itemOnHold">
+<value><![CDATA[L'oggetto è sospeso]]></value>
 </param>
 <param name="global.notUpdateMessage">
 <value><![CDATA[<b>Quesot record non può essere aggiornato perchè qualcun'altro lo ha aggiornato prima.</b><p> Puoi premere il pulsante 'indietro' per rivedere le modifiche che non possono essere accettate, ma devi ricaricare il record e rieffettuare le modifiche.]]></value>
@@ -1493,8 +1527,9 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
       ${li}Acquista una licenza che aumenta il numero massimo di utenti${sli}
       ${li}Per maggiori informazioni vedi ${urlStart}www.centriccrm.com${urlEnd}${sli}]]></value>
 </param>
-<param name="project.recentlyAccessedProjects">
-<value><![CDATA[Progetti Recentemente Acceduti]]></value>
+<param name="errors.systemAdminNotified.text">
+<value><![CDATA[L'amministratore di sistema è stato avvertito.{p}
+Non hai i diritti per effettuare questa operazione.]]></value>
 </param>
 <param name="object.validation.actionError.canNotDeleteSurvey">
 <value><![CDATA[
@@ -1894,8 +1929,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.SearchResults">
 <value><![CDATA[Risultati ricerca]]></value>
 </param>
-<param name="setup.centricCRM.step2of4">
-<value><![CDATA[Centric CRM configurazione (Passo 2 di 4)<br />Impostazioni Server]]></value>
+<param name="project.items">
+<value><![CDATA[Oggetti]]></value>
 </param>
 <param name="reports.accounts.contractEnd">
 <value><![CDATA[Termine Contratto]]></value>
@@ -1987,8 +2022,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="actionList.resetUser">
 <value><![CDATA[Azzera Utente]]></value>
 </param>
-<param name="quotes.sendingEmail.label">
-<value><![CDATA[Invio e-mail in corso...]]></value>
+<param name="quotes.selectFaxNumber">
+<value><![CDATA[Seleziona Numero Fax]]></value>
 </param>
 <param name="actionlists.actionListsInProgress">
 <value><![CDATA[Liste azione (in corso)]]></value>
@@ -1996,8 +2031,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="actionList.showContactRecord">
 <value><![CDATA[Mostra il record del contatto]]></value>
 </param>
-<param name="project.invited">
-<value><![CDATA[Invitato ${time}]]></value>
+<param name="project.items.lowercase">
+<value><![CDATA[oggetti]]></value>
 </param>
 <param name="admin.accessView">
 <value><![CDATA[ Accesso/${break}Vista]]></value>
@@ -2008,20 +2043,20 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.tickets.details">
 <value><![CDATA[Dettagli Ticket]]></value>
 </param>
-<param name="project.itemIsIncomplete">
-<value><![CDATA[L'oggetto è incompleto]]></value>
+<param name="setup.compileJsps">
+<value><![CDATA[Compila JSPs]]></value>
 </param>
 <param name="account.yes">
 <value><![CDATA[Si]]></value>
 </param>
-<param name="quotes.selectPhoneNumber">
-<value><![CDATA[Seleziona Numero Telefono]]></value>
+<param name="quotes.sku">
+<value><![CDATA[SKU]]></value>
 </param>
 <param name="action.contacts.Note.text">
 <value><![CDATA[Nota: Le informazioni sul contatto ricevente saranno allegate con il messaggio prescelto]]></value>
 </param>
-<param name="project.item.lowercase">
-<value><![CDATA[oggetto]]></value>
+<param name="project.label">
+<value><![CDATA[Etichetta]]></value>
 </param>
 <param name="accounts.tickets.historyLog">
 <value><![CDATA[Storico Log Ticket]]></value>
@@ -2031,6 +2066,9 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 </param>
 <param name="accounts.type">
 <value><![CDATA[Tipo Cliente]]></value>
+</param>
+<param name="project.lastSixArticles">
+<value><![CDATA[Ultimi 6 Articoli]]></value>
 </param>
 <param name="admin.editCategories">
 <value><![CDATA[Modifica categorie]]></value>
@@ -2110,8 +2148,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="admin.addNewLogo">
 <value><![CDATA[Aggiungi un nuovo Logo]]></value>
 </param>
-<param name="project.itemNotApproved">
-<value><![CDATA[L'oggetto non è stato approvato]]></value>
+<param name="project.latestItems.text">
+<value><![CDATA[I seguenti oggetti sono gli ultimi di ogni tuo progetto.]]></value>
 </param>
 <param name="admin.access">
 <value><![CDATA[Accesso]]></value>
@@ -2182,11 +2220,11 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.tickets.information">
 <value><![CDATA[Informazione sul ticket]]></value>
 </param>
-<param name="quotes.selectFaxNumber">
-<value><![CDATA[Seleziona Numero Fax]]></value>
+<param name="reports.admin.users.username">
+<value><![CDATA[Nome utente]]></value>
 </param>
-<param name="project.itemOnHold">
-<value><![CDATA[L'oggetto è sospeso]]></value>
+<param name="project.levelOfEffort">
+<value><![CDATA[Livello di Sforzo]]></value>
 </param>
 <param name="accounts.tickets.modify">
 <value><![CDATA[Modifica ticket]]></value>
@@ -2206,20 +2244,20 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.tickets.symbol.number">
 <value><![CDATA[Ticket #]]></value>
 </param>
-<param name="project.items">
-<value><![CDATA[Oggetti]]></value>
+<param name="actionItem.updateStep.changeStatus">
+<value><![CDATA[Cambia stato a]]></value>
 </param>
 <param name="accounts.portalAccessDisabled">
 <value><![CDATA[L'accesso al portale è stato disabilitato per questo contatto.]]></value>
 </param>
-<param name="quotes.sku">
-<value><![CDATA[SKU]]></value>
+<param name="reports.admin.users.totalUsers">
+<value><![CDATA[Totale Utenti]]></value>
 </param>
-<param name="project.items.lowercase">
-<value><![CDATA[oggetti]]></value>
+<param name="project.loe.colon">
+<value><![CDATA[LOE: ${date}]]></value>
 </param>
-<param name="setup.compileJsps">
-<value><![CDATA[Compila JSPs]]></value>
+<param name="setup.chooseLanguageToContinue.colon">
+<value><![CDATA[Scegli una lingua per continuare:]]></value>
 </param>
 <param name="reports.queuePosition">
 <value><![CDATA[Posizione Coda]]></value>
@@ -2245,23 +2283,23 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.revenue.dashboard.notFound">
 <value><![CDATA[Nessun cliente trovato con ricavi.]]></value>
 </param>
-<param name="reports.admin.users.username">
-<value><![CDATA[Nome utente]]></value>
+<param name="reports.admin.users.title">
+<value><![CDATA[Lista Utenti]]></value>
 </param>
 <param name="accounts.disabled.accounts">
 <value><![CDATA[Contatto inattivi]]></value>
 </param>
-<param name="project.label">
-<value><![CDATA[Etichetta]]></value>
+<param name="setup.databaseCreationSuccessful">
+<value><![CDATA[Creazione database avvenuta!]]></value>
 </param>
-<param name="project.latestItems.text">
-<value><![CDATA[I seguenti oggetti sono gli ultimi di ogni tuo progetto.]]></value>
+<param name="setup.databaseConnectionSuccessful">
+<value><![CDATA[Connessione al database avvenuta!]]></value>
 </param>
 <param name="accounts.contacts.moveTitle">
 <value><![CDATA[Centric CRM: sposta contatto]]></value>
 </param>
-<param name="reports.admin.users.totalUsers">
-<value><![CDATA[Totale Utenti]]></value>
+<param name="reports.admin.users.lastLogin">
+<value><![CDATA[Ultimo Accesso]]></value>
 </param>
 <param name="account.sc.adjust">
 <value><![CDATA[Agiiusta]]></value>
@@ -2284,32 +2322,32 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="account.sc.currentEndDate">
 <value><![CDATA[Data corrente di termine]]></value>
 </param>
-<param name="account.sc.emailSercive">
-<value><![CDATA[Servizio email]]></value>
+<param name="project.lowerNumberedMesg.text">
+<value><![CDATA[I Messaggi con un numero più basso appaiono prima dei messaggi con un numero più alto]]></value>
 </param>
 <param name="account.sc.initialContractDate">
 <value><![CDATA[Data iniziale di contratto]]></value>
 </param>
-<param name="accounts.account.types">
-<value><![CDATA[Tpo(i) cliente]]></value>
+<param name="setup.defaultEmailAddress">
+<value><![CDATA[Indirizzo Email predefinito]]></value>
 </param>
 <param name="accounts.accounts_revenue_dashboard.MyDashboard">
 <value><![CDATA[Mio cruscotto]]></value>
 </param>
-<param name="project.levelOfEffort">
-<value><![CDATA[Livello di Sforzo]]></value>
+<param name="pipeline.alertDate">
+<value><![CDATA[Data allarme]]></value>
 </param>
 <param name="accounts.accounts_revenue_dashboard.UpOneLevel">
 <value><![CDATA[Su un livello]]></value>
 </param>
-<param name="actionItem.updateStep.changeStatus">
-<value><![CDATA[Cambia stato a]]></value>
+<param name="accounts.accounts_revenue_details.RevenueDetails">
+<value><![CDATA[Dettagli ricavi]]></value>
 </param>
 <param name="accounts.accounts_revenue_list.AllRevenue">
 <value><![CDATA[Tutti i ricavi]]></value>
 </param>
-<param name="pipeline.alertDate">
-<value><![CDATA[Data allarme]]></value>
+<param name="accounts.accounts_revenue_list.MyRevenue">
+<value><![CDATA[I miei ricavi]]></value>
 </param>
 <param name="accounts.accounts_revenue_modify.ModifyRevenue">
 <value><![CDATA[Modifica ricavo]]></value>
@@ -2320,8 +2358,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_reports.CreatedBy">
 <value><![CDATA[Creato da]]></value>
 </param>
-<param name="accounts.accounts_reports_generate.AccountID">
-<value><![CDATA[ID cliente]]></value>
+<param name="reports.admin.users.expires">
+<value><![CDATA[Scaduto]]></value>
 </param>
 <param name="accounts.accounts_reports_generate.AddR">
 <value><![CDATA[Aggiungi >]]></value>
@@ -2332,8 +2370,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_reports_generate.Criteria">
 <value><![CDATA[Criterio]]></value>
 </param>
-<param name="reports.admin.users.title">
-<value><![CDATA[Lista Utenti]]></value>
+<param name="accounts.accounts_reports_generate.DelL">
+<value><![CDATA[< Elimina]]></value>
 </param>
 <param name="accounts.accounts_reports_generate.Employees">
 <value><![CDATA[Impiegati]]></value>
@@ -2356,14 +2394,14 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_fields.NoFieldsAvailable">
 <value><![CDATA[Nessun campo disponibile.]]></value>
 </param>
-<param name="accounts.accounts_importcontact_details_include.AccountContact">
-<value><![CDATA[Contatto cliente]]></value>
+<param name="setup.licenseAccepted">
+<value><![CDATA[Licensa aggiornata!]]></value>
 </param>
 <param name="accounts.accounts_importcontact_details_include.Employee">
 <value><![CDATA[Impiegato]]></value>
 </param>
-<param name="accounts.account.squareBrackets">
-<value><![CDATA[ [Cliente]]]></value>
+<param name="setup.nextSteps">
+<value><![CDATA[Passi Successivi]]></value>
 </param>
 <param name="accounts.accounts_quotes_list.QuoteStatus">
 <value><![CDATA[Stato offerta]]></value>
@@ -2374,8 +2412,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_importcontact_details_include.GeneralContact">
 <value><![CDATA[Contatto generale]]></value>
 </param>
-<param name="project.loe.colon">
-<value><![CDATA[LOE: ${date}]]></value>
+<param name="reports.contacts.phone">
+<value><![CDATA[Telefono]]></value>
 </param>
 <param name="accounts.accounts_list_menu.Archive">
 <value><![CDATA[Archivia]]></value>
@@ -2386,8 +2424,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_documents_list_menu.ViewFileContents">
 <value><![CDATA[Visualizza contenuto del file]]></value>
 </param>
-<param name="setup.chooseLanguageToContinue.colon">
-<value><![CDATA[Scegli una lingua per continuare:]]></value>
+<param name="accounts.accounts_documents_list_menu.ViewFileHistory">
+<value><![CDATA[Visualizza storia del file]]></value>
 </param>
 <param name="accounts.accounts_documents_details.DocumentDetails">
 <value><![CDATA[Dettagli documento]]></value>
@@ -2398,8 +2436,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_documents_details.Download">
 <value><![CDATA[Scarica]]></value>
 </param>
-<param name="reports.admin.users.lastLogin">
-<value><![CDATA[Ultimo Accesso]]></value>
+<param name="accounts.accounts_documents_details.Item">
+<value><![CDATA[Elemento]]></value>
 </param>
 <param name="accounts.accounts_documents_details.SentBy">
 <value><![CDATA[Inviato da]]></value>
@@ -2410,8 +2448,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_documents_details.Submitted">
 <value><![CDATA[Sottoposto]]></value>
 </param>
-<param name="accounts.accounts_documents_details.Version">
-<value><![CDATA[Versione]]></value>
+<param name="project.lowestRole">
+<value><![CDATA[Ruolo Inferiore]]></value>
 </param>
 <param name="accounts.accounts_documents_file_move.CurrentFolder">
 <value><![CDATA[(cartella corrente)]]></value>
@@ -2422,8 +2460,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_contacts_portal_adderror.NoEmailAddress">
 <value><![CDATA[non ha un indirizzo email]]></value>
 </param>
-<param name="setup.databaseCreationSuccessful">
-<value><![CDATA[Creazione database avvenuta!]]></value>
+<param name="accounts.accounts_contacts_portal_include.GenerateNewPassword">
+<value><![CDATA[Genera nuova password]]></value>
 </param>
 <param name="actionList.addTask">
 <value><![CDATA[Aggiungi attività]]></value>
@@ -2458,8 +2496,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.contacts.contactIndividualAccount.title">
 <value><![CDATA[Questo contatto non può essere spostato perchè un cliente individuale]]></value>
 </param>
-<param name="actionList.addContactsToList">
-<value><![CDATA[Aggiungi contatto alla lista]]></value>
+<param name="project.maintainFiles.text">
+<value><![CDATA[Mantieni i tuoi files cancellando le vecchie versioni dello stesso file, e cancellando i files vecchi o non usati.]]></value>
 </param>
 <param name="product.noProductOptionsFound">
 <value><![CDATA[Opzioni del Prodotto non trovate.]]></value>
@@ -2470,8 +2508,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_nofields.CustomfoldersConfiguredAdministrator">
 <value><![CDATA[Le cartelle personali possono essere configurate dall'amministratore]]></value>
 </param>
-<param name="setup.databaseConnectionSuccessful">
-<value><![CDATA[Connessione al database avvenuta!]]></value>
+<param name="accounts.accounts_nofields.NoCustomFoldersConfigured">
+<value><![CDATA[Non ci sono attualmente cartelle personali configurate per questo modulo.]]></value>
 </param>
 <param name="accounts.accounts_opportunities_addoppcomponent.AddComponent">
 <value><![CDATA[Aggiungi componente]]></value>
@@ -2518,26 +2556,26 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_documents_upload.WaitForUpload">
 <value><![CDATA[Attendere il messaggio di completamento fino a che il caricamento è completo]]></value>
 </param>
-<param name="accounts.accounts_fields_add.AddFolderRecord">
-<value><![CDATA[Aggiunegre un record nella cartella]]></value>
+<param name="reports.deleteThisCriteria">
+<value><![CDATA[Cancella questo criterio]]></value>
 </param>
 <param name="accounts.accounts_fields_add.NoGroupsAvailable">
 <value><![CDATA[Nessun gruppo disponibile]]></value>
 </param>
-<param name="accounts.accounts_fields.FolderHaveMultipleRecords">
-<value><![CDATA[Questa cartella può avere record multipli]]></value>
+<param name="pipeline.addAQuoteQuestion">
+<value><![CDATA[Aggiungere una offerta?]]></value>
 </param>
 <param name="accounts.accounts_fields.FolderOneRecord">
 <value><![CDATA[Questa cartella può avere un solo record]]></value>
 </param>
-<param name="reports.deleteThisCriteria">
-<value><![CDATA[Cancella questo criterio]]></value>
+<param name="reports.contacts.name">
+<value><![CDATA[Nome]]></value>
 </param>
 <param name="accounts.accounts_documents_folders_add.Folder">
 <value><![CDATA[Cartella]]></value>
 </param>
-<param name="pipeline.addAQuoteQuestion">
-<value><![CDATA[Aggiungere una offerta?]]></value>
+<param name="project.myAssignments">
+<value><![CDATA[Le mie Assegnazioni]]></value>
 </param>
 <param name="accounts.accounts_documents_folders_add.ModifyFolder">
 <value><![CDATA[Modifica cartella]]></value>
@@ -2548,8 +2586,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_documents_list_menu.AddVersion">
 <value><![CDATA[Aggiungi versione]]></value>
 </param>
-<param name="reports.admin.users.expires">
-<value><![CDATA[Scaduto]]></value>
+<param name="accounts.accounts_documents_list_menu.DeleteFolderMoveContents">
+<value><![CDATA[Elimina la cartella e sposta i contatti nella cartella corrente]]></value>
 </param>
 <param name="accounts.accounts_documents_list_menu.MoveFile">
 <value><![CDATA[Sposta file]]></value>
@@ -2566,8 +2604,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_documents_file_move.SelectFolderToMove">
 <value><![CDATA[Selezionare una cartella nella quale spostare l'elemento]]></value>
 </param>
-<param name="project.lowerNumberedMesg.text">
-<value><![CDATA[I Messaggi con un numero più basso appaiono prima dei messaggi con un numero più alto]]></value>
+<param name="accounts.accounts_contacts_validateimport.NoErrorsWarningsFound">
+<value><![CDATA[Nessun Errore/Avviso presente]]></value>
 </param>
 <param name="accounts.accounts_contacts_validateimport.ProcessImport">
 <value><![CDATA[Processa l'importazione]]></value>
@@ -2614,6 +2652,9 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="account.fromOrganization">
 <value><![CDATA[Organizzazione di provenienza]]></value>
 </param>
+<param name="dependency.quotesWithVersions">
+<value><![CDATA[Offerte & versioni di Offerte]]></value>
+</param>
 <param name="product.noProductOptionsExist">
 <value><![CDATA[Non esistono Opzioni del Prodotto.]]></value>
 </param>
@@ -2641,14 +2682,14 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="button.createOption">
 <value><![CDATA[Crea Opzione]]></value>
 </param>
-<param name="setup.defaultEmailAddress">
-<value><![CDATA[Indirizzo Email predefinito]]></value>
+<param name="project.newOutline">
+<value><![CDATA[Nuovi Profili]]></value>
 </param>
-<param name="reports.contacts.phone">
-<value><![CDATA[Telefono]]></value>
+<param name="reports.contacts.email">
+<value><![CDATA[E-mail]]></value>
 </param>
-<param name="button.activateNow">
-<value><![CDATA[Attiva Adesso]]></value>
+<param name="project.newProjectInformation">
+<value><![CDATA[Nuove informazioni sul progetto]]></value>
 </param>
 <param name="button.add">
 <value><![CDATA[Aggiungi]]></value>
@@ -2686,8 +2727,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="admin.url.note.2">
 <value><![CDATA[La URL deve essere specificata e deve esistere nel vostro DNS]]></value>
 </param>
-<param name="setup.licenseAccepted">
-<value><![CDATA[Licensa aggiornata!]]></value>
+<param name="admin.usageFor">
+<value><![CDATA[Utilizzo per periodo ${startDate} - ${endDate}]]></value>
 </param>
 <param name="admin.show">
 <value><![CDATA[Mostra]]></value>
@@ -2791,8 +2832,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="admin.end.colon">
 <value><![CDATA[Fine:]]></value>
 </param>
-<param name="admin.endOfStep">
-<value><![CDATA[ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fine passaggio]]></value>
+<param name="project.noAssignmentsFound">
+<value><![CDATA[Nessuna Assegnazione trovata.]]></value>
 </param>
 <param name="admin.existingField">
 <value><![CDATA[Campo esistente]]></value>
@@ -2830,8 +2871,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="calendar.hours">
 <value><![CDATA[Ore]]></value>
 </param>
-<param name="setup.nextSteps">
-<value><![CDATA[Passi Successivi]]></value>
+<param name="calendar.incompleteTasks">
+<value><![CDATA[Incarichi Completati]]></value>
 </param>
 <param name="calendar.login">
 <value><![CDATA[Accesso]]></value>
@@ -2839,8 +2880,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="calendar.messageSentConfirmation.text">
 <value><![CDATA[Il messaggio è stato inviato ai seguenti destinatari]]></value>
 </param>
-<param name="calendar.body">
-<value><![CDATA[Corpo]]></value>
+<param name="object.validation.userHasAssociations.text">
+<value><![CDATA[Questo utente è associato con molteplici elementi. Questi elementi necessitano di essere assegnati ad un altro utente prima che questo sito possa essere cambiato.]]></value>
 </param>
 <param name="calendar.calendar">
 <value><![CDATA[Calendario]]></value>
@@ -2878,8 +2919,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="button.sendMessage">
 <value><![CDATA[Invia Messaggio]]></value>
 </param>
-<param name="object.validation.userHasAssociations.text">
-<value><![CDATA[Questo utente è associato con molteplici elementi. Questi elementi necessitano di essere assegnati ad un altro utente prima che questo sito possa essere cambiato.]]></value>
+<param name="button.skipThisLeadR">
+<value><![CDATA[Salta questo editore]]></value>
 </param>
 <param name="button.submit">
 <value><![CDATA[Invia]]></value>
@@ -2904,9 +2945,6 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 </param>
 <param name="button.modify">
 <value><![CDATA[Modifica]]></value>
-</param>
-<param name="button.moreItems">
-<value><![CDATA[Altri articoli >>]]></value>
 </param>
 <param name="button.nextR">
 <value><![CDATA[Successivo >]]></value>
@@ -3058,8 +3096,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.myRunningCampaigns">
 <value><![CDATA[Le mie campagne correnti]]></value>
 </param>
-<param name="campaign.itemList">
-<value><![CDATA[Lista Articoli]]></value>
+<param name="quotes.listOfItems">
+<value><![CDATA[Lista degli articoli]]></value>
 </param>
 <param name="campaign.lastModifiedBy">
 <value><![CDATA[Ultima modifica di]]></value>
@@ -3082,8 +3120,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.fileAttachments">
 <value><![CDATA[File allegati]]></value>
 </param>
-<param name="campaign.file.lowercase">
-<value><![CDATA[file]]></value>
+<param name="reports.contacts.address">
+<value><![CDATA[Indirizzi]]></value>
 </param>
 <param name="campaign.files">
 <value><![CDATA[File]]></value>
@@ -3106,8 +3144,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.configureAttachments.text">
 <value><![CDATA[Allegati configurati per questa campagna]]></value>
 </param>
-<param name="campaign.contactList">
-<value><![CDATA[Lista Contatti]]></value>
+<param name="project.noOutlinesToDisplay">
+<value><![CDATA[Nessun profilo da mostrare.]]></value>
 </param>
 <param name="campaign.contactsInTheGroup">
 <value><![CDATA[Contatti in questo gruppo]]></value>
@@ -3118,8 +3156,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.created">
 <value><![CDATA[Creato]]></value>
 </param>
-<param name="reports.contacts.name">
-<value><![CDATA[Nome]]></value>
+<param name="campaign.campaignName">
+<value><![CDATA[Nome Campagna]]></value>
 </param>
 <param name="campaign.changeFileAttachments">
 <value><![CDATA[Cambia file allegato]]></value>
@@ -3130,8 +3168,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.avg">
 <value><![CDATA[Avg]]></value>
 </param>
-<param name="campaign.campaignDetails">
-<value><![CDATA[Dettagli Campagna]]></value>
+<param name="project.noProjectsAwaitingReply.text">
+<value><![CDATA[Non ci sono al momento progetti che aspettano una tua risposta.${break}Puoi vedere i progetti che ti appartegono navigando fino al ]]></value>
 </param>
 <param name="campaign.campaignList">
 <value><![CDATA[Lista Campagna]]></value>
@@ -3142,8 +3180,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.allIncompleteCampaigns">
 <value><![CDATA[Tutte le aziende incomplete]]></value>
 </param>
-<param name="project.lowestRole">
-<value><![CDATA[Ruolo Inferiore]]></value>
+<param name="campaign.allInstantCampaigns">
+<value><![CDATA[Tutte le aziende urgenti]]></value>
 </param>
 <param name="campaign.addCampaign">
 <value><![CDATA[Aggiungi una azienda]]></value>
@@ -3154,8 +3192,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.addMessage">
 <value><![CDATA[Aggiungi Messaggio]]></value>
 </param>
-<param name="calendar.time">
-<value><![CDATA[Ora]]></value>
+<param name="reports.communications.campaigns.surveyDescription">
+<value><![CDATA[Descrizione]]></value>
 </param>
 <param name="calendar.Today">
 <value><![CDATA[Tempo]]></value>
@@ -3166,8 +3204,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="calendar.updatePersonalInformation">
 <value><![CDATA[Aggiorna il mio profilo]]></value>
 </param>
-<param name="project.maintainFiles.text">
-<value><![CDATA[Mantieni i tuoi files cancellando le vecchie versioni dello stesso file, e cancellando i files vecchi o non usati.]]></value>
+<param name="calendar.UserAccountExpires">
+<value><![CDATA[Scadenza account utente]]></value>
 </param>
 <param name="calendar.userLoginExpires">
 <value><![CDATA[Scadenza login utente]]></value>
@@ -3181,17 +3219,14 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="calendar.Projects">
 <value><![CDATA[Progetti]]></value>
 </param>
-<param name="calendar.Quotes">
-<value><![CDATA[Citazioni]]></value>
-</param>
 <param name="calendar.received">
 <value><![CDATA[Ricevuti]]></value>
 </param>
 <param name="calendar.redirectingToSecureLogin.text">
 <value><![CDATA[Reindirizzato all'accesso sicuro]]></value>
 </param>
-<param name="reports.contacts.email">
-<value><![CDATA[E-mail]]></value>
+<param name="calendar.replyMessage">
+<value><![CDATA[Rispondi al messaggio]]></value>
 </param>
 <param name="calendar.requestNumber.symbol">
 <value><![CDATA[Richiesto #]]></value>
@@ -3199,8 +3234,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="calendar.secureLogin">
 <value><![CDATA[Accesso Sicuro]]></value>
 </param>
-<param name="project.myAssignments">
-<value><![CDATA[Le mie Assegnazioni]]></value>
+<param name="project.notesForActivity">
+<value><![CDATA[Sono state inserite le seguenti note per questa assegnazione "${assignmentRole}"]]></value>
 </param>
 <param name="contact.searchContacts">
 <value><![CDATA[Ricerca Contatti]]></value>
@@ -3223,8 +3258,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="contact.relationship">
 <value><![CDATA[Relazione]]></value>
 </param>
-<param name="project.newOutline">
-<value><![CDATA[Nuovi Profili]]></value>
+<param name="project.notesForThisActivity">
+<value><![CDATA[Sono state inserite le seguenti note per questa attività:]]></value>
 </param>
 <param name="contacts.addRemove">
 <value><![CDATA[Aggiungi/Rimuovi Contatti]]></value>
@@ -3316,26 +3351,26 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="object.validation.theSelectedUserHasIncompatibleSite">
 <value><![CDATA[L'utente selezionato ha un sito incompatibile]]></value>
 </param>
-<param name="reports.contacts.address">
-<value><![CDATA[Indirizzi]]></value>
+<param name="reports.contacts.title">
+<value><![CDATA[Titolo]]></value>
 </param>
-<param name="project.newProjectInformation">
-<value><![CDATA[Nuove informazioni sul progetto]]></value>
+<param name="project.noTicketsToDisplay">
+<value><![CDATA[Nessun ticket da mostrare.]]></value>
 </param>
-<param name="project.noAssignmentsFound">
-<value><![CDATA[Nessuna Assegnazione trovata.]]></value>
+<param name="project.customizeProject">
+<value><![CDATA[Personalizza Progetto]]></value>
 </param>
-<param name="reports.communications.campaigns.surveyDescription">
-<value><![CDATA[Descrizione]]></value>
+<param name="reports.email">
+<value><![CDATA[E-mail]]></value>
 </param>
 <param name="campaign.viewItemDetails">
 <value><![CDATA[Mostra Dettagli Articolo]]></value>
 </param>
-<param name="project.noOutlinesToDisplay">
-<value><![CDATA[Nessun profilo da mostrare.]]></value>
+<param name="project.deleteFolderShiftLeft">
+<value><![CDATA[Elimina Cartella sposta a sinistra i contenuti]]></value>
 </param>
-<param name="project.noProjectsAwaitingReply.text">
-<value><![CDATA[Non ci sono al momento progetti che aspettano una tua risposta.${break}Puoi vedere i progetti che ti appartegono navigando fino al ]]></value>
+<param name="project.deleteOutline">
+<value><![CDATA[Elimina Profilo]]></value>
 </param>
 <param name="object.validation.siteChangeNotAllowed.text">
 <value><![CDATA[Il cambio di sito non è permesso]]></value>
@@ -3373,8 +3408,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.responseDetails">
 <value><![CDATA[Dettaglio Replica]]></value>
 </param>
-<param name="reports.contacts.title">
-<value><![CDATA[Titolo]]></value>
+<param name="reports.downloadAsPDF">
+<value><![CDATA[Scarica PDF]]></value>
 </param>
 <param name="campaign.searchCriteria.label">
 <value><![CDATA[----------------Criterio di ricerca---------------- ]]></value>
@@ -3448,8 +3483,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="documents.details.unapprovedMessage">
 <value><![CDATA[Questo archivio documenti è attualmente sotto revisione e non è stato approvato]]></value>
 </param>
-<param name="project.notesForActivity">
-<value><![CDATA[Sono state inserite le seguenti note per questa assegnazione "${assignmentRole}"]]></value>
+<param name="project.deleteTopic">
+<value><![CDATA[Elimina argomento]]></value>
 </param>
 <param name="documents.details.modified">
 <value><![CDATA[Modificato]]></value>
@@ -3475,8 +3510,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="dependency.subcategories">
 <value><![CDATA[Sotto-Categorie]]></value>
 </param>
-<param name="project.notesForThisActivity">
-<value><![CDATA[Sono state inserite le seguenti note per questa attività:]]></value>
+<param name="project.department">
+<value><![CDATA[Dipartimento]]></value>
 </param>
 <param name="documents.add.cancel">
 <value><![CDATA[Annulla]]></value>
@@ -3514,14 +3549,11 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="dependency.images">
 <value><![CDATA[Immagini]]></value>
 </param>
-<param name="dependency.items">
-<value><![CDATA[Totale Articoli]]></value>
-</param>
 <param name="dependency.maintenanceNotes">
 <value><![CDATA[Note Conversazione]]></value>
 </param>
-<param name="reports.email">
-<value><![CDATA[E-mail]]></value>
+<param name="reports.helpdesk.beginDate">
+<value><![CDATA[Data Inizio]]></value>
 </param>
 <param name="contact.updateContact">
 <value><![CDATA[Aggiorna un Contatto]]></value>
@@ -3550,11 +3582,11 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="contacts.emailAddressType">
 <value><![CDATA[Tipo indirizzo E-mail]]></value>
 </param>
-<param name="project.noTicketsToDisplay">
-<value><![CDATA[Nessun ticket da mostrare.]]></value>
+<param name="project.doesNotBelongToYou.text">
+<value><![CDATA[Questo progetto non ti appartiene, oppure non esiste!]]></value>
 </param>
-<param name="project.customizeProject">
-<value><![CDATA[Personalizza Progetto]]></value>
+<param name="project.editOutlineDetails">
+<value><![CDATA[Modifica Dettagli Profilo]]></value>
 </param>
 <param name="contacts.name">
 <value><![CDATA[Nome]]></value>
@@ -3604,8 +3636,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="help.noIntroductionAvailable">
 <value><![CDATA[Nessuna introduzione disponibile]]></value>
 </param>
-<param name="help.section.colon">
-<value><![CDATA[Sezione: <b>${help.section}</b>]]></value>
+<param name="reports.helpdesk.assetsContract.assetModel">
+<value><![CDATA[Modello]]></value>
 </param>
 <param name="help.subsection.colon">
 <value><![CDATA[Sotto-Sezione: <b>${help.subsection}</b> ]]></value>
@@ -3628,14 +3660,14 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="global.label.allRightsReserved">
 <value><![CDATA[Tutti i diritti riservati]]></value>
 </param>
-<param name="reports.downloadAsPDF">
-<value><![CDATA[Scarica PDF]]></value>
+<param name="project.effort">
+<value><![CDATA[Rinforzo]]></value>
 </param>
-<param name="project.deleteFolderShiftLeft">
-<value><![CDATA[Elimina Cartella sposta a sinistra i contenuti]]></value>
+<param name="project.emailAdderssOfContactToAdd.colon">
+<value><![CDATA[Indirizoz Email del contatto da aggiungere:]]></value>
 </param>
-<param name="project.deleteOutline">
-<value><![CDATA[Elimina Profilo]]></value>
+<param name="global.button.Disable">
+<value><![CDATA[Disabilita]]></value>
 </param>
 <param name="global.button.Down">
 <value><![CDATA[Inattivo]]></value>
@@ -3673,14 +3705,18 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="errors.reportErrorTo">
 <value><![CDATA[Prego segnalare il seguente errore a]]></value>
 </param>
-<param name="reports.helpdesk.beginDate">
-<value><![CDATA[Data Inizio]]></value>
+<param name="reports.helpdesk.assetsContract.assetDescription">
+<value><![CDATA[Descrizion]]></value>
 </param>
 <param name="documents.team.user.cancelChanges">
 <value><![CDATA[Annulla Modifiche]]></value>
 </param>
-<param name="project.deleteTopic">
-<value><![CDATA[Elimina argomento]]></value>
+<param name="project.emailAddressNotFound.text">
+<value><![CDATA[Se l'indirizzo email non viene trovato nel${break}
+                sistema quando il team è aggiornato,${break}
+                comparirà una schermata aggiuntiva${break}
+                con l'opzione di invitare la persona${break}
+                al progetto.]]></value>
 </param>
 <param name="documents.team.roleList">
 <value><![CDATA[Lista Regole]]></value>
@@ -3712,8 +3748,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="documents.team.accessLevel">
 <value><![CDATA[Livello Accesso]]></value>
 </param>
-<param name="documents.team.accountContacts">
-<value><![CDATA[Contatti Account]]></value>
+<param name="project.fuzzySearch.example">
+<value><![CDATA[Per effettuare una ricerca libera, usa il simbolo tilde ${quot}~${quot} alla fine di una singola parola. Per esempio, per cercare un termine simile a ${quot}vaghi${quot}, usa la ricerca :${break}${break}vaghi~${break}${break}Questa ricerca troverà termini come vago.]]></value>
 </param>
 <param name="documents.team.accounts">
 <value><![CDATA[Accounts]]></value>
@@ -3733,8 +3769,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="documents.permissions.configurePermissions">
 <value><![CDATA[Configura Permessi]]></value>
 </param>
-<param name="project.department">
-<value><![CDATA[Dipartimento]]></value>
+<param name="object.validation.project.estimatedEndDateNotLTStartDate">
+<value><![CDATA[La data finale è antecedente alla data iniziale]]></value>
 </param>
 <param name="documents.permissions.permissions">
 <value><![CDATA[Permessi]]></value>
@@ -3742,8 +3778,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="documents.permissions.setup">
 <value><![CDATA[Installazione]]></value>
 </param>
-<param name="object.validation.project.estimatedEndDateNotLTStartDate">
-<value><![CDATA[La data finale è antecedente alla data iniziale]]></value>
+<param name="documents.permissions.update">
+<value><![CDATA[Aggiorna]]></value>
 </param>
 <param name="documents.documents.subject">
 <value><![CDATA[Oggetto]]></value>
@@ -3796,20 +3832,20 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="campaign.deleteSurvey">
 <value><![CDATA[Cancella Stima]]></value>
 </param>
-<param name="campaign.deliveryMethod">
-<value><![CDATA[Metodo di spedizione]]></value>
+<param name="reports.helpdesk.age">
+<value><![CDATA[Età]]></value>
 </param>
 <param name="campaign.deliveryOptions">
 <value><![CDATA[Opzioni di spedizione]]></value>
 </param>
-<param name="campaign.delivery.question">
-<value><![CDATA[Spedire?]]></value>
+<param name="project.guest.text">
+<value><![CDATA[Tipicamente una regola di sola lettura... quelli che non sono direttamente parte di un progetto ma hanno accesso a rivedere qualche informazione sul progetto]]></value>
 </param>
 <param name="campaign.emailAddress.brackets">
 <value><![CDATA[(Indirizzo E-mail)]]></value>
 </param>
-<param name="campaign.allRunningCampaigns">
-<value><![CDATA[Tutte le campagne attive]]></value>
+<param name="project.hideAssignments">
+<value><![CDATA[Nascondi Assegnazioni]]></value>
 </param>
 <param name="campaign.allSurveys">
 <value><![CDATA[Tutte le stime]]></value>
@@ -3826,20 +3862,20 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="calendar.viewContactHistory">
 <value><![CDATA[Mostra storico contatto]]></value>
 </param>
-<param name="reports.helpdesk.assetsContract.assetModel">
-<value><![CDATA[Modello]]></value>
+<param name="calendar.toUser">
+<value><![CDATA[All'utente]]></value>
 </param>
 <param name="campaign.activate">
 <value><![CDATA[Attivare]]></value>
 </param>
-<param name="project.doesNotBelongToYou.text">
-<value><![CDATA[Questo progetto non ti appartiene, oppure non esiste!]]></value>
+<param name="campaign.activate.question">
+<value><![CDATA[Attivare?]]></value>
 </param>
 <param name="campaign.active.question">
 <value><![CDATA[Attivo?]]></value>
 </param>
-<param name="project.editOutlineDetails">
-<value><![CDATA[Modifica Dettagli Profilo]]></value>
+<param name="campaign.addADocument">
+<value><![CDATA[Aggiungi un documento]]></value>
 </param>
 <param name="calendar.sent">
 <value><![CDATA[Spedito]]></value>
@@ -3849,9 +3885,6 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 </param>
 <param name="calendar.PendingActivities">
 <value><![CDATA[Attività in sospeso]]></value>
-</param>
-<param name="calendar.pendingItems">
-<value><![CDATA[Articoli in sospeso]]></value>
 </param>
 <param name="calendar.personalInformation">
 <value><![CDATA[Informazioni personali]]></value>
@@ -3931,8 +3964,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_contacts.noPhonePlease">
 <value><![CDATA[No Chiamate Telefonche Prego]]></value>
 </param>
-<param name="accounts.accounts_contacts.noTextMessagePlease">
-<value><![CDATA[No Messaggi Testuali Prego]]></value>
+<param name="reports.helpdesk.contractType">
+<value><![CDATA[Tipo Contratto]]></value>
 </param>
 <param name="actionPlan.configureMappings">
 <value><![CDATA[Configura Mappature]]></value>
@@ -3958,8 +3991,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="actionPlan.day">
 <value><![CDATA[giorno]]></value>
 </param>
-<param name="reports.helpdesk.assetsContract.assetDescription">
-<value><![CDATA[Descrizion]]></value>
+<param name="actionPlan.attachNoteSingle.text">
+<value><![CDATA[Allega un singola Nota]]></value>
 </param>
 <param name="actionPlan.attachOpportunity.text">
 <value><![CDATA[Allega opportunità]]></value>
@@ -4249,8 +4282,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="documents.documents.deleteFile">
 <value><![CDATA[Cancella File]]></value>
 </param>
-<param name="project.effort">
-<value><![CDATA[Rinforzo]]></value>
+<param name="setup.organizationName.colon">
+<value><![CDATA[Nome Organizzazione:]]></value>
 </param>
 <param name="documents.documents.majorUpdate">
 <value><![CDATA[Aggiornamenti Maggiori]]></value>
@@ -4269,12 +4302,6 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 </param>
 <param name="dependency.quotenotes">
 <value><![CDATA[Note]]></value>
-</param>
-<param name="dependency.quotes">
-<value><![CDATA[Citazioni]]></value>
-</param>
-<param name="dependency.quotesWithVersions">
-<value><![CDATA[Citazioni & Versioni delle citazioni]]></value>
 </param>
 <param name="dependency.relationships">
 <value><![CDATA[Relazioni]]></value>
@@ -4303,29 +4330,29 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.assets.noMaterialsPresent.text">
 <value><![CDATA[Nessun materiale presente per il bene]]></value>
 </param>
-<param name="accounts.contactInformationFilters">
-<value><![CDATA[Filtri Informazioni Contatto]]></value>
+<param name="project.hideTopics">
+<value><![CDATA[Nascondi Argomenti]]></value>
 </param>
 <param name="accounts.contacts.folders.Permission">
 <value><![CDATA[Cartelle Contatto]]></value>
 </param>
-<param name="accounts.contacts.opportunities.folders.Permission">
-<value><![CDATA[Cartelle Opportunità Contatto]]></value>
-</param>
-<param name="project.emailAdderssOfContactToAdd.colon">
-<value><![CDATA[Indirizoz Email del contatto da aggiungere:]]></value>
-</param>
-<param name="accounts.organization.colon">
-<value><![CDATA[Organizzazione:]]></value>
-</param>
 <param name="reports.queue">
 <value><![CDATA[Coda]]></value>
+</param>
+<param name="accounts.contacts.opportunities.quotes.Permission">
+<value><![CDATA[Offerte Opportunità Contatto]]></value>
+</param>
+<param name="reports.contacts.usercontacts.title">
+<value><![CDATA[Contatti per]]></value>
+</param>
+<param name="dependency.revenue">
+<value><![CDATA[Revisioni]]></value>
 </param>
 <param name="dependency.tasks">
 <value><![CDATA[Incarichi]]></value>
 </param>
-<param name="reports.contacts.usercontacts.title">
-<value><![CDATA[Contatti per]]></value>
+<param name="accounts.accountInformationFilters">
+<value><![CDATA[Filtri informazione Account]]></value>
 </param>
 <param name="accounts.accounts_add.accountSize">
 <value><![CDATA[Dimensione Account]]></value>
@@ -4360,11 +4387,11 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="dependency.HistoryOfThisQuote">
 <value><![CDATA[Storico di questa citazione]]></value>
 </param>
-<param name="dependency.components">
-<value><![CDATA[Componenti]]></value>
-</param>
 <param name="tickets.defects.defect">
 <value><![CDATA[Difetto]]></value>
+</param>
+<param name="reports.helpdesk.contractNumberSymbol">
+<value><![CDATA[Contatto #]]></value>
 </param>
 <param name="contacts.companydirectory_confirm_importupload.File">
 <value><![CDATA[File]]></value>
@@ -4372,8 +4399,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="contacts.companydirectory_confirm_importupload.FileSize">
 <value><![CDATA[Dimensione File]]></value>
 </param>
-<param name="reports.helpdesk.age">
-<value><![CDATA[Età]]></value>
+<param name="contacts.companydirectory_confirm_importupload.Import">
+<value><![CDATA[Importa]]></value>
 </param>
 <param name="contacts.companydirectory_confirm_importupload.NewImport">
 <value><![CDATA[Nuova Importazione]]></value>
@@ -4387,8 +4414,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="contacts.companydirectory_confirm_importupload.NotProcessed">
 <value><![CDATA[Il file di importazione è stato ricevuto, ma non è stato processato.]]></value>
 </param>
-<param name="contacts.companydirectory_confirm_importupload.UploadComplete">
-<value><![CDATA[Caricamento Completato]]></value>
+<param name="project.indentLevel">
+<value><![CDATA[Livello di Indentazione]]></value>
 </param>
 <param name="button.edit">
 <value><![CDATA[Modifica]]></value>
@@ -4396,12 +4423,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="contacts.contactAddressList">
 <value><![CDATA[Lista Indirizzo Contatti]]></value>
 </param>
-<param name="project.emailAddressNotFound.text">
-<value><![CDATA[Se l'indirizzo email non viene trovato nel${break}
-                sistema quando il team è aggiornato,${break}
-                comparirà una schermata aggiuntiva${break}
-                con l'opzione di invitare la persona${break}
-                al progetto.]]></value>
+<param name="contacts.contactEmailAddressList">
+<value><![CDATA[Lista E-mail Contatti]]></value>
 </param>
 <param name="contacts.contactsPhoneNumberList">
 <value><![CDATA[Lista Telefono Contatti]]></value>
@@ -4409,8 +4432,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="accounts.accounts_add.Zip">
 <value><![CDATA[Codice avviamento postale]]></value>
 </param>
-<param name="contact.import.status.approved">
-<value><![CDATA[Approvato]]></value>
+<param name="setup.registration">
+<value><![CDATA[Registrazione]]></value>
 </param>
 <param name="contact.import.status.cancelled">
 <value><![CDATA[Cancellato]]></value>
@@ -4418,8 +4441,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="contact.archivedContacts">
 <value><![CDATA[Contatti Archiviati]]></value>
 </param>
-<param name="project.fuzzySearch.example">
-<value><![CDATA[Per effettuare una ricerca libera, usa il simbolo tilde ${quot}~${quot} alla fine di una singola parola. Per esempio, per cercare un termine simile a ${quot}vaghi${quot}, usa la ricerca :${break}${break}vaghi~${break}${break}Questa ricerca troverà termini come vago.]]></value>
+<param name="contact.authorOf">
+<value><![CDATA[Autore di]]></value>
 </param>
 <param name="contact.beforeDueDate">
 <value><![CDATA[prima della data di scandenza]]></value>
@@ -4469,23 +4492,23 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="object.validation.customField.maxLengthNumber">
 <value><![CDATA[La massima lunghezza deve essere un numero]]></value>
 </param>
-<param name="object.validation.customField.recordIdNotPresent">
-<value><![CDATA[Errore ID Record del form]]></value>
+<param name="product.deleteProduct">
+<value><![CDATA[Cancella Prodotto]]></value>
 </param>
 <param name="object.validation.customField.typeNotPresent">
 <value><![CDATA[Errore Tipo campo del form]]></value>
 </param>
-<param name="object.validation.defaultNumberNotGTMaxNumber">
-<value><![CDATA[il valore del numero di default non può essere più grande del numero massimo]]></value>
+<param name="setup.profile.colon">
+<value><![CDATA[Profilo:]]></value>
 </param>
-<param name="reports.helpdesk.contractType">
-<value><![CDATA[Tipo Contratto]]></value>
+<param name="actionPlan.numberPhasePlans">
+<value><![CDATA[Numero di piani ciascuna Fase]]></value>
 </param>
 <param name="object.validation.defaultNumberNotLTMinNumber">
 <value><![CDATA[il valore del numero di default non può essere più piccolo del numero minimo]]></value>
 </param>
-<param name="project.guest.text">
-<value><![CDATA[Tipicamente una regola di sola lettura... quelli che non sono direttamente parte di un progetto ma hanno accesso a rivedere qualche informazione sul progetto]]></value>
+<param name="object.validation.defaultTextLengthNotGTMaxChars">
+<value><![CDATA[la lunghezza del testo di default non può essere più grande del numero massimo di caratteri]]></value>
 </param>
 <param name="object.validation.defaultTextLengthNotLTMinChars">
 <value><![CDATA[la lunghezza del testo di default non può essere più piccola del numero minimo di caratteri]]></value>
@@ -4493,8 +4516,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="actionPlan.myWaitingActionPlans">
 <value><![CDATA[Piani Azione che mi attendono]]></value>
 </param>
-<param name="actionPlan.phase">
-<value><![CDATA[Fase]]></value>
+<param name="setup.sendmailHelp">
+<value><![CDATA[Aiuto Sendmail]]></value>
 </param>
 <param name="actionItem.updateStep.beginNext">
 <value><![CDATA[Avvia prossimo passaggio]]></value>
@@ -4514,8 +4537,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="object.validation.actionError.unspecifiedErrorNoResponse">
 <value><![CDATA[Errore sconosciuto: Centric CRM Server non risponde.]]></value>
 </param>
-<param name="project.hideAssignments">
-<value><![CDATA[Nascondi Assegnazioni]]></value>
+<param name="object.validation.actionError.userDeletion">
+<value><![CDATA[L' utente non può essere cancellato perchè non esiste ancora.]]></value>
 </param>
 <param name="object.validation.actionError.userNotDisabled">
 <value><![CDATA[L' utente non può essere disabilitato perchè non esiste ancora.]]></value>
@@ -4601,8 +4624,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="global.button.move">
 <value><![CDATA[Sposta]]></value>
 </param>
-<param name="reports.helpdesk.contractNumberSymbol">
-<value><![CDATA[Contatto #]]></value>
+<param name="product.deleteCategory">
+<value><![CDATA[Cancella Categoria]]></value>
 </param>
 <param name="global.button.cancel">
 <value><![CDATA[Annulla]]></value>
@@ -4610,8 +4633,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="global.button.DeleteFolderRecord">
 <value><![CDATA[Cancella Cartella Record]]></value>
 </param>
-<param name="setup.organizationName.colon">
-<value><![CDATA[Nome Organizzazione:]]></value>
+<param name="setup.setupExternalServers">
+<value><![CDATA[Installa servers esterni (mail, fax)]]></value>
 </param>
 <param name="product.noItemsMsg">
 <value><![CDATA[Nessun articolo mostrato.]]></value>
@@ -4637,11 +4660,11 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="user.userCanNotReportToSelf">
 <value><![CDATA[Gli utenti non possono riportarsi a se stessi]]></value>
 </param>
-<param name="project.hideTopics">
-<value><![CDATA[Nascondi Argomenti]]></value>
+<param name="setup.setupDatabase">
+<value><![CDATA[Installa database]]></value>
 </param>
-<param name="product.deleteProduct">
-<value><![CDATA[Cancella Prodotto]]></value>
+<param name="product.createOption">
+<value><![CDATA[crea una opzione]]></value>
 </param>
 <param name="ticket.task">
 <value><![CDATA[Compiti]]></value>
@@ -4652,8 +4675,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="tickets.view">
 <value><![CDATA[Visualizza Ticket]]></value>
 </param>
-<param name="project.indentLevel">
-<value><![CDATA[Livello di Indentazione]]></value>
+<param name="project.indexingComplete">
+<value><![CDATA[Indicizzazione Completata]]></value>
 </param>
 <param name="user.canNotCreateCircularHierarchy.text">
 <value><![CDATA[Non è possibile creare una gerarchia circolare, controllare la gerachia corrente:]]></value>
@@ -4661,8 +4684,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="user.lessThan.withSpaces.symbol">
 <value><![CDATA[<]]></value>
 </param>
-<param name="setup.registration">
-<value><![CDATA[Registrazione]]></value>
+<param name="project.introPageOne">
+<value><![CDATA[Introduzione (Pagina 1)]]></value>
 </param>
 <param name="ticket.task.noTaskEntries">
 <value><![CDATA[Nessun Incarico]]></value>
@@ -4733,8 +4756,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="product.categoryType">
 <value><![CDATA[Tipo Categoria]]></value>
 </param>
-<param name="product.createANewProduct">
-<value><![CDATA[crea un nuovo prodotto]]></value>
+<param name="reports.helpdesk.accountName">
+<value><![CDATA[Nome Cliente]]></value>
 </param>
 <param name="product.cloneProduct">
 <value><![CDATA[Clona Prodotto]]></value>
@@ -4754,8 +4777,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="product.configuratorName">
 <value><![CDATA[Configuratore${break}Nome]]></value>
 </param>
-<param name="reports.helpdesk.accountName">
-<value><![CDATA[Nome Cliente]]></value>
+<param name="product.mappings">
+<value><![CDATA[Associazioni]]></value>
 </param>
 <param name="product.largeFileUploadStatement">
 <value><![CDATA[* File di grandi dimensioni possono richiedere tempo per essere caricati.${break}Aspetta il messaggio di avvenuto caricamento quando l'operazione è completata.]]></value>
@@ -4883,11 +4906,11 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="opp.addAComponent">
 <value><![CDATA[Aggiungi un componente]]></value>
 </param>
-<param name="product.deleteCategory">
-<value><![CDATA[Cancella Categoria]]></value>
+<param name="product.category.topCategories">
+<value><![CDATA[Categorie Principali]]></value>
 </param>
-<param name="setup.profile.colon">
-<value><![CDATA[Profilo:]]></value>
+<param name="project.invalidSearch.text">
+<value><![CDATA[E' stata fatta un richiesta di ricerca non valida.${break}Per favore controlla il criterio di ricerca e riprova.]]></value>
 </param>
 <param name="pipeline.searchPipeline">
 <value><![CDATA[Cerca Procedura]]></value>
@@ -4910,8 +4933,8 @@ E' possibile organizzare gli esempi per categorie per raggrupparli. E' possibile
 <param name="product.selectOptionConfigurator.text">
 <value><![CDATA[Seleziona un'Opzione di Configurazione dal menu a tendina per procedere]]></value>
 </param>
-<param name="setup.sendmailHelp">
-<value><![CDATA[Aiuto Sendmail]]></value>
+<param name="project.invitationCouldNotBeSent">
+<value><![CDATA[L'invito non può essere inviato all'indirizzo email]]></value>
 </param>
 <param name="product.selectedCategory.text">
 <value><![CDATA[La categoria selezionata, i suoi prodotti e le sue sottocategorie]]></value>
@@ -5036,8 +5059,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.andOrNotOperators.text">
 <value><![CDATA[Usa gli operatori AND, OR, NOT quando cerchi]]></value>
 </param>
-<param name="object.validation.leadsSearchActionError">
-<value><![CDATA[Fine range ricerca raggiunto]]></value>
+<param name="product.categoryNumber.symbol">
+<value><![CDATA[Categoria #]]></value>
 </param>
 <param name="project.andOrNot.example">
 <value><![CDATA[${quot}campagna di caduta${quot} AND ${quot}idea di campagna&quot;${break}${quot}campagna di caduta${quot} OR idea${break}${break}Nota: AND, OR, NOT possono essere in maiscole o in minuscole.]]></value>
@@ -5048,8 +5071,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="setup.youWereHere.label">
 <value><![CDATA[Voi siete qui...]]></value>
 </param>
-<param name="setup.targetDirectory.colon">
-<value><![CDATA[Cartella Destinazione:]]></value>
+<param name="project.invitationRefused">
+<value><![CDATA[Inviti rifiutati ${time}]]></value>
 </param>
 <param name="setup.step2.colon">
 <value><![CDATA[Passo 2:]]></value>
@@ -5057,59 +5080,38 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="object.validation.maxNumberNotLTMinNumber">
 <value><![CDATA[il numero massimo non può essere più piccolo del numero minimo]]></value>
 </param>
-<param name="product.createOption">
-<value><![CDATA[crea una opzione]]></value>
-</param>
 <param name="project.advancedQuerySyntax">
 <value><![CDATA[Sintassi Avanzata della Query]]></value>
-</param>
-<param name="project.adjustProjectProp.text">
-<value><![CDATA[Per correggere le prorpietà di un progetto scegli Personalizza Progetto.  I tab del Progetto possono essere abilitati/disabilitati così come rinominati.]]></value>
-</param>
-<param name="project.addOutline">
-<value><![CDATA[Aggiungi Profilo]]></value>
-</param>
-<param name="setup.setupExternalServers">
-<value><![CDATA[Installa servers esterni (mail, fax)]]></value>
-</param>
-<param name="product.viewProduct">
-<value><![CDATA[Vedi Prodotti]]></value>
-</param>
-<param name="product.viewPricings">
-<value><![CDATA[Vedi Prezzi]]></value>
-</param>
-<param name="product.valueExistsFor.Text">
-<value><![CDATA[Esiste il seguente valore per "${displayText}". Seleziona un valore esistente o aggiungi un nuovo valore]]></value>
-</param>
-<param name="setup.setupDatabase">
-<value><![CDATA[Installa database]]></value>
-</param>
-<param name="project.invitationsList.text">
-<value><![CDATA[Gli inviti ad unirsi ad un progetto sono elencati qui.]]></value>
-</param>
-<param name="project.invitationSent">
-<value><![CDATA[Invito inviato]]></value>
 </param>
 <param name="project.invitationResults">
 <value><![CDATA[Risultato degli Inviti]]></value>
 </param>
-<param name="product.category.topCategories">
-<value><![CDATA[Categorie Principali]]></value>
+<param name="project.addOutline">
+<value><![CDATA[Aggiungi Profilo]]></value>
 </param>
-<param name="project.indexingComplete">
-<value><![CDATA[Indicizzazione Completata]]></value>
+<param name="project.accountFileSizeLimit.text">
+<value><![CDATA[I limiti sulla dimensione dei file di questo account sono stati superati.]]></value>
 </param>
-<param name="project.introPageOne">
-<value><![CDATA[Introduzione (Pagina 1)]]></value>
+<param name="product.viewProduct">
+<value><![CDATA[Vedi Prodotti]]></value>
 </param>
-<param name="product.categoryNumber.symbol">
-<value><![CDATA[Categoria #]]></value>
+<param name="product.productCategories">
+<value><![CDATA[Categorie Prodotti]]></value>
 </param>
-<param name="project.invalidSearch.text">
-<value><![CDATA[E' stata fatta un richiesta di ricerca non valida.${break}Per favore controlla il criterio di ricerca e riprova.]]></value>
+<param name="project.invitationSent">
+<value><![CDATA[Invito inviato]]></value>
 </param>
-<param name="project.invitationCouldNotBeSent">
-<value><![CDATA[L'invito non può essere inviato all'indirizzo email]]></value>
+<param name="project.invitationsList.text">
+<value><![CDATA[Gli inviti ad unirsi ad un progetto sono elencati qui.]]></value>
+</param>
+<param name="product.priceNumber.symbol">
+<value><![CDATA[Prezzo#]]></value>
+</param>
+<param name="product.submitProductsToQuote">
+<value><![CDATA[Per favore cliccka sul pulsanste Invio per ${break}aggiungere i prodotti selezionati e le loro opzioni all'offerta.]]></value>
+</param>
+<param name="product.valueExistsFor.Text">
+<value><![CDATA[Esiste il seguente valore per "${displayText}". Seleziona un valore esistente o aggiungi un nuovo valore]]></value>
 </param>
 <param name="tickets.fileDetails">
 <value><![CDATA[Dettagli file]]></value>
@@ -5123,44 +5125,44 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="reports.generateReport">
 <value><![CDATA[Crea Report]]></value>
 </param>
-<param name="product.productCategories">
-<value><![CDATA[Categorie Prodotti]]></value>
-</param>
-<param name="project.invitationRefused">
-<value><![CDATA[Inviti rifiutati ${time}]]></value>
-</param>
-<param name="product.priceNumber.symbol">
-<value><![CDATA[Prezzo#]]></value>
-</param>
 <param name="product.priceNotConfigured">
 <value><![CDATA[Prezzo non confugurato]]></value>
 </param>
-<param name="product.submitProductsToQuote">
-<value><![CDATA[Per favore cliccka sul pulsanste Invio per ${break}aggiungere i prodotti selezionati e le loro opzioni all'offerta.]]></value>
+<param name="product.viewPricings">
+<value><![CDATA[Vedi Prezzi]]></value>
 </param>
 <param name="product.priceId">
 <value><![CDATA[ID Prezzo]]></value>
 </param>
-<param name="reports.generatedBy">
-<value><![CDATA[Creato da]]></value>
-</param>
 <param name="product.priceDetails">
 <value><![CDATA[Dettagli Prezzo]]></value>
 </param>
-<param name="project.accountFileSizeLimit.text">
-<value><![CDATA[I limiti sulla dimensione dei file di questo account sono stati superati.]]></value>
+<param name="project.adjustProjectProp.text">
+<value><![CDATA[Per correggere le prorpietà di un progetto scegli Personalizza Progetto.  I tab del Progetto possono essere abilitati/disabilitati così come rinominati.]]></value>
 </param>
 <param name="product.productNoConfigurableOptions">
 <value><![CDATA[Questo prodotto non ha opzioni configurabili.]]></value>
 </param>
+<param name="reports.generatedBy">
+<value><![CDATA[Creato da]]></value>
+</param>
 <param name="products.SKU">
 <value><![CDATA[SKU]]></value>
 </param>
-<param name="project.allNewsArticles">
-<value><![CDATA[Tutti gli Articoli di Notizie]]></value>
+<param name="setup.targetDirectory.colon">
+<value><![CDATA[Cartella Destinazione:]]></value>
 </param>
 <param name="products.productName">
 <value><![CDATA[Nome Prodotto]]></value>
+</param>
+<param name="product.smallImage">
+<value><![CDATA[Immagine Piccola]]></value>
+</param>
+<param name="object.validation.leadsSearchActionError">
+<value><![CDATA[Fine range ricerca raggiunto]]></value>
+</param>
+<param name="project.accounts">
+<value><![CDATA[Accounts]]></value>
 </param>
 <param name="reports.processed">
 <value><![CDATA[Processato]]></value>
@@ -5171,26 +5173,14 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="tickets.automaticallyPopulateAssignment.text">
 <value><![CDATA[popola automaticamente l'assegnazione basata sulle categorie]]></value>
 </param>
-<param name="product.smallImage">
-<value><![CDATA[Immagine Piccola]]></value>
-</param>
-<param name="project.accounts">
-<value><![CDATA[Accounts]]></value>
-</param>
-<param name="tickets.addDocumentToKnowledgeBase.text">
-<value><![CDATA[Aggiungi nuovo documento alla knoledge Base]]></value>
-</param>
 <param name="product.versionDetails">
 <value><![CDATA[Dettagli Versione]]></value>
 </param>
 <param name="project.activities">
 <value><![CDATA[Attività]]></value>
 </param>
-<param name="reports.employees.employees.title">
-<value><![CDATA[Impiegati]]></value>
-</param>
-<param name="tickets.addDefect">
-<value><![CDATA[Aggiungi difetto]]></value>
+<param name="tickets.addDocumentToKnowledgeBase.text">
+<value><![CDATA[Aggiungi nuovo documento alla knoledge Base]]></value>
 </param>
 <param name="project.activity">
 <value><![CDATA[Attività]]></value>
@@ -5198,14 +5188,26 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.closedActivities">
 <value><![CDATA[Attività Chiuse]]></value>
 </param>
-<param name="pipeline.businessType.existing">
-<value><![CDATA[Existing]]></value>
+<param name="reports.employees.employees.title">
+<value><![CDATA[Impiegati]]></value>
+</param>
+<param name="tickets.addDefect">
+<value><![CDATA[Aggiungi difetto]]></value>
 </param>
 <param name="project.deleteThisArticle">
 <value><![CDATA[Cancella questo articolo]]></value>
 </param>
 <param name="project.deleteProject">
 <value><![CDATA[Cancella Progetto]]></value>
+</param>
+<param name="pipeline.businessType.existing">
+<value><![CDATA[Existing]]></value>
+</param>
+<param name="project.deleteMessage">
+<value><![CDATA[Cencella Messaggio]]></value>
+</param>
+<param name="project.deleteList">
+<value><![CDATA[Cancella Lista]]></value>
 </param>
 <param name="project.listView">
 <value><![CDATA[Ultima Visita]]></value>
@@ -5219,26 +5221,14 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="object.validation.unacceptableImageFileFormat">
 <value><![CDATA[Please upload an acceptable image file format.]]></value>
 </param>
-<param name="project.deleteMessage">
-<value><![CDATA[Cencella Messaggio]]></value>
-</param>
-<param name="project.deleteList">
-<value><![CDATA[Cancella Lista]]></value>
-</param>
-<param name="object.validation.workflowUploadError">
-<value><![CDATA[Error occured while uploading the custom workflow.]]></value>
-</param>
 <param name="project.editItem">
 <value><![CDATA[Modifica Articolo]]></value>
 </param>
 <param name="project.expectedDates">
 <value><![CDATA[Previsione Date]]></value>
 </param>
-<param name="reports.employees.employees.department">
-<value><![CDATA[Dipartimento]]></value>
-</param>
-<param name="project.team">
-<value><![CDATA[Team]]></value>
+<param name="object.validation.workflowUploadError">
+<value><![CDATA[Error occured while uploading the custom workflow.]]></value>
 </param>
 <param name="project.end">
 <value><![CDATA[Fine]]></value>
@@ -5246,14 +5236,26 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.emailError">
 <value><![CDATA[Errore E-mail]]></value>
 </param>
-<param name="projecttickets.symbol.number">
-<value><![CDATA[Project Ticket #${number}]]></value>
+<param name="reports.employees.employees.department">
+<value><![CDATA[Dipartimento]]></value>
+</param>
+<param name="project.team">
+<value><![CDATA[Team]]></value>
 </param>
 <param name="project.lastTwentyFourHours">
 <value><![CDATA[Ultimi 24 Ore]]></value>
 </param>
 <param name="project.modifyForum">
 <value><![CDATA[Modifica Forum]]></value>
+</param>
+<param name="projecttickets.symbol.number">
+<value><![CDATA[Project Ticket #${number}]]></value>
+</param>
+<param name="accounts.assetsUnderContract">
+<value><![CDATA[Beni sotto contratto]]></value>
+</param>
+<param name="accounts.assetSerial.number.symbol">
+<value><![CDATA[Numero di serie bene#]]></value>
 </param>
 <param name="reports.pipeline.probability">
 <value><![CDATA[Probabilità]]></value>
@@ -5264,20 +5266,20 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="reports.refresh">
 <value><![CDATA[Refresh]]></value>
 </param>
-<param name="accounts.assetsUnderContract">
-<value><![CDATA[Beni sotto contratto]]></value>
-</param>
-<param name="accounts.assetSerial.number.symbol">
-<value><![CDATA[Numero di serie bene#]]></value>
-</param>
-<param name="sales.allLeads">
-<value><![CDATA[All Leads]]></value>
-</param>
 <param name="accounts.assets.contractDefault">
 <value><![CDATA[-- Standard di contratto -- ]]></value>
 </param>
 <param name="accounts.assets.category.undetermined">
 <value><![CDATA[Indeterminato]]></value>
+</param>
+<param name="sales.allLeads">
+<value><![CDATA[All Leads]]></value>
+</param>
+<param name="accounts.servicecontracts.noAdjustment">
+<value><![CDATA[Nessun aggiustamento]]></value>
+</param>
+<param name="accounts.disabledAccounts">
+<value><![CDATA[Accounts disabilitati]]></value>
 </param>
 <param name="reports.helpdesk.severity">
 <value><![CDATA[Urgenze]]></value>
@@ -5285,8 +5287,26 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="sales.continueToNextLead.text">
 <value><![CDATA[Continue to next lead after assigning, trashing or skipping lead]]></value>
 </param>
-<param name="accounts.servicecontracts.noAdjustment">
-<value><![CDATA[Nessun aggiustamento]]></value>
+<param name="account.sc.blockHourInformation">
+<value><![CDATA[Informazioni sul blocco ore]]></value>
+</param>
+<param name="project.quoteThisMessage">
+<value><![CDATA[Commenta questo messaggio]]></value>
+</param>
+<param name="project.proximitySearch.text">
+<value><![CDATA[Per effettuare una ricerca di prossimità, usa il simbolo tilde ${quot}~${quot} alla fine di una frase. Per esempio, per cercare ${quot}fall${quot} e ${quot}campaign${quot} distanti al massimo 10 parole l'un l'altro in un documento, usa la ricerca:${break}${break}${quot}fall campaign${quot}~10]]></value>
+</param>
+<param name="search.results.searchString">
+<value><![CDATA[La ricerca per <b>${searchText}</b> ha trovato:]]></value>
+</param>
+<param name="reports.viewAsPDF">
+<value><![CDATA[Mostra come PDF]]></value>
+</param>
+<param name="project.contributor.colon">
+<value><![CDATA[Contribuenti:]]></value>
+</param>
+<param name="project.proximitySearch">
+<value><![CDATA[Ricerca di prossimità]]></value>
 </param>
 <param name="project.projectUnderReview.text">
 <value><![CDATA[Questo progetto è al momento in fase di revisione e non è stato approvato]]></value>
@@ -5339,8 +5359,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.outlineApproved">
 <value><![CDATA[Profili Approvati]]></value>
 </param>
-<param name="project.openOutlines">
-<value><![CDATA[Profili Aperti]]></value>
+<param name="account.sc.adjustmentHours">
+<value><![CDATA[Ore intervento]]></value>
 </param>
 <param name="project.on">
 <value><![CDATA[su]]></value>
@@ -5357,8 +5377,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.observer.colon">
 <value><![CDATA[Osservatore:]]></value>
 </param>
-<param name="accounts.disabledAccounts">
-<value><![CDATA[Accounts disabilitati]]></value>
+<param name="project.noTopicsFound">
+<value><![CDATA[Nessun Argomento trovato.]]></value>
 </param>
 <param name="project.viewOutlineDetails">
 <value><![CDATA[Vedi dettagli del profilo]]></value>
@@ -5605,8 +5625,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.youAreMemberOfProjects.text">
 <value><![CDATA[Sei membro dei seguenti progetti.  Scegli un progetto per vedere dettagli addizionali.]]></value>
 </param>
-<param name="quotes.quotelog.quoteIssuedToCustomer">
-<value><![CDATA[Offerta inviato al cliente]]></value>
+<param name="tickets.all">
+<value><![CDATA[All Tickets]]></value>
 </param>
 <param name="quotes.quotelog.quoteCreated">
 <value><![CDATA[Offerta Creato]]></value>
@@ -5623,8 +5643,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="quotes.quotelog.grandTotalChangedFrom.text">
 <value><![CDATA[Il Valore Totale dell'offerta è stato cambiato da ${previousValue} a ${currentValue}]]></value>
 </param>
-<param name="tickets.all">
-<value><![CDATA[All Tickets]]></value>
+<param name="reports.helpdesk.ticket.location">
+<value><![CDATA[Collocazione]]></value>
 </param>
 <param name="reports.helpdesk.ticket.location.colon">
 <value><![CDATA[Collocazione:]]></value>
@@ -5701,8 +5721,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="actionPlan.actionPlanDetails">
 <value><![CDATA[Dettaglia Piano Azione]]></value>
 </param>
-<param name="quotes.noRemarks">
-<value><![CDATA[Nessuna osservazione trovata per l'offerta]]></value>
+<param name="actionList.noActionContactsFound">
+<value><![CDATA[Nessun azione di contatto in questa vista]]></value>
 </param>
 <param name="campaign.groupDetails">
 <value><![CDATA[Dettagli Gruppo]]></value>
@@ -5719,8 +5739,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="calendar.newPassword">
 <value><![CDATA[Nuova Password]]></value>
 </param>
-<param name="account.sc.blockHourInformation">
-<value><![CDATA[Informazioni sul blocco ore]]></value>
+<param name="calendar.next7daysView">
+<value><![CDATA[Visualizza prossimi 7 giorni]]></value>
 </param>
 <param name="admin.scheduledEvents">
 <value><![CDATA[Eventi Programmati]]></value>
@@ -5848,8 +5868,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="quotes.itemName">
 <value><![CDATA[Nome Articolo]]></value>
 </param>
-<param name="quotes.listOfItems">
-<value><![CDATA[Lista degli articoli]]></value>
+<param name="reports.quotes.quote.quotation">
+<value><![CDATA[OFFERTA]]></value>
 </param>
 <param name="reports.helpdesk.callHistory.callDate">
 <value><![CDATA[Data Chiamata]]></value>
@@ -5977,9 +5997,6 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="reports.helpdesk.ticket.activity.alertDate">
 <value><![CDATA[Data di Avviso]]></value>
 </param>
-<param name="project.updateNewsArticle">
-<value><![CDATA[Aggiorna Articoli]]></value>
-</param>
 <param name="reports.helpdesk.ticket.activity.activityLog">
 <value><![CDATA[Log delle Attività]]></value>
 </param>
@@ -6046,14 +6063,14 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.severity">
 <value><![CDATA[Severità]]></value>
 </param>
-<param name="reports.helpdesk.ticket.engineerSignature">
-<value><![CDATA[Firma del tecnico]]></value>
+<param name="accounts.accounts_contacts_listimports.NoImportsFound">
+<value><![CDATA[Nessuna importazione trovata.]]></value>
 </param>
 <param name="project.startAProject">
 <value><![CDATA[Inizia un progetto]]></value>
 </param>
-<param name="reports.helpdesk.ticket.callStatus">
-<value><![CDATA[Call Status]]></value>
+<param name="accounts.accounts_contacts_messages_details.Campaign">
+<value><![CDATA[Campagna]]></value>
 </param>
 <param name="reports.helpdesk.ticket.assignmentInfo">
 <value><![CDATA[Informazioni di Assegnazione]]></value>
@@ -6067,14 +6084,14 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="project.noProjectsToDisplay">
 <value><![CDATA[Attualmente non cisono progetti da mostrare in questa vista.]]></value>
 </param>
-<param name="accounts.accounts_contacts_detailsimport.Owner">
-<value><![CDATA[Proprietario]]></value>
+<param name="reports.pipeline.commission">
+<value><![CDATA[Commissioni]]></value>
 </param>
 <param name="reports.pipeline.amount">
 <value><![CDATA[Importo]]></value>
 </param>
-<param name="accounts.accounts_contacts_detailsimport.Process">
-<value><![CDATA[Processo]]></value>
+<param name="reports.parametersMustBeSpecified.text">
+<value><![CDATA[I seguenti parametri devono essere specificati per questo report:]]></value>
 </param>
 <param name="reports.overwritePreviousCriteria.text">
 <value><![CDATA[Sovrascrivi i criteri precedentemente salvati]]></value>
@@ -6189,9 +6206,6 @@ mentre un ospite ha diritti molto limitati.]]></value>
 </param>
 <param name="reports.quotes.quote.quotedBy">
 <value><![CDATA[Citato da]]></value>
-</param>
-<param name="reports.quotes.quote.quotation">
-<value><![CDATA[CITAZIONI]]></value>
 </param>
 <param name="reports.quotes.quote.itemEstimatedDelivery">
 <value><![CDATA[Consegna Prevista]]></value>
@@ -6360,11 +6374,11 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="contacts.NoEmailAdresses">
 <value><![CDATA[Nessun indirizzo e-mail inserito.]]></value>
 </param>
-<param name="contacts.NoPhoneNumbers">
-<value><![CDATA[Nessun numero telefonico inserito.]]></value>
+<param name="quotes.owner">
+<value><![CDATA[Proprietario]]></value>
 </param>
-<param name="project.linkAnAccount">
-<value><![CDATA[Collega un Account]]></value>
+<param name="reports.parameter.addDateTo">
+<value><![CDATA[Aggingi Data a]]></value>
 </param>
 <param name="setup.administrativeAccessAvailable.text">
 <value><![CDATA[<ul><li>Fai una copia del database Centric CRM</li><li>Fai una copia della libreria dei file di Centric CRM</li></ul>]]></value>
@@ -6383,8 +6397,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="search.totalResultsInOpportunities.text">
 <value><![CDATA[<strong>${OppSize}</strong> risultato/i in <strong>Opportunità</strong>.]]></value>
 </param>
-<param name="pagedListInfo.pagedListStatus.Topics">
-<value><![CDATA[Argomenti]]></value>
+<param name="search.totalResultsInEmployees.text">
+<value><![CDATA[<strong>${EmployeeSize}</strong> risultato/i in <strong>Impiegati</strong>.]]></value>
 </param>
 <param name="contact.source">
 <value><![CDATA[Risorsa]]></value>
@@ -6485,9 +6499,8 @@ mentre un ospite ha diritti molto limitati.]]></value>
 <param name="documents.team.lastAccessed">
 <value><![CDATA[Ultimo Accesso]]></value>
 </param>
-<param name="errors.systemAdminNotified.text">
-<value><![CDATA[L'amministratore di sistema è stato avvertito.{p}
-Non hai i diritti per effettuare questa operazione.]]></value>
+<param name="mail.body.accountLoginUpdated">
+<value><![CDATA[Il tuo account è stato aggiornato così che adesso puoi collegarti.<br /><br />]]></value>
 </param>
 <param name="documents.team.modify">
 <value><![CDATA[Modificato]]></value>
@@ -6891,14 +6904,14 @@ Non hai i diritti per effettuare questa operazione.]]></value>
 <param name="account.ticket.hoursRemaining.colon">
 <value><![CDATA[Ore rimanenti:]]></value>
 </param>
+<param name="account.sc.emailSercive">
+<value><![CDATA[Servizio email]]></value>
+</param>
+<param name="accounts.account.types">
+<value><![CDATA[Tpo(i) cliente]]></value>
+</param>
 <param name="accounts.accounts_revenue_dashboard.RevenueDashboard">
 <value><![CDATA[Cruscotto ricavi]]></value>
-</param>
-<param name="accounts.accounts_revenue_details.RevenueDetails">
-<value><![CDATA[Dettagli ricavi]]></value>
-</param>
-<param name="accounts.accounts_revenue_list.MyRevenue">
-<value><![CDATA[I miei ricavi]]></value>
 </param>
 <param name="accounts.ImportDetails">
 <value><![CDATA[Dettagli importazione]]></value>
@@ -6909,8 +6922,8 @@ Non hai i diritti per effettuare questa operazione.]]></value>
 <param name="accounts.MessageDetails">
 <value><![CDATA[Dettagli messaggio]]></value>
 </param>
-<param name="accounts.accounts_reports_generate.DelL">
-<value><![CDATA[< Elimina]]></value>
+<param name="accounts.accounts_reports_generate.AccountID">
+<value><![CDATA[ID cliente]]></value>
 </param>
 <param name="accounts.search">
 <value><![CDATA[Cerca cliente]]></value>
@@ -6927,23 +6940,23 @@ Non hai i diritti per effettuare questa operazione.]]></value>
 <param name="actionPlan.accountTypes">
 <value><![CDATA[Tipi Account]]></value>
 </param>
-<param name="accounts.Folders">
-<value><![CDATA[Cartelle]]></value>
+<param name="accounts.accounts_importcontact_details_include.AccountContact">
+<value><![CDATA[Contatto cliente]]></value>
 </param>
-<param name="accounts.accounts_importcontact_details.NoLongerAccess">
-<value><![CDATA[(non ha più accesso)]]></value>
+<param name="accounts.account.squareBrackets">
+<value><![CDATA[ [Cliente]]]></value>
 </param>
 <param name="accounts.Contacts">
 <value><![CDATA[Contatti]]></value>
 </param>
-<param name="accounts.accounts_documents_list_menu.ViewFileHistory">
-<value><![CDATA[Visualizza storia del file]]></value>
+<param name="accounts.accounts_importcontact_details.NoLongerAccess">
+<value><![CDATA[(non ha più accesso)]]></value>
 </param>
 <param name="accounts.accounts_revenue_dashboard.YTD">
 <value><![CDATA[YTD]]></value>
 </param>
-<param name="accounts.accounts_documents_details.Item">
-<value><![CDATA[Elemento]]></value>
+<param name="actionPlan.phases">
+<value><![CDATA[Fasi]]></value>
 </param>
 <param name="actionPlan.planManager">
 <value><![CDATA[Manager Piani]]></value>
@@ -6954,8 +6967,8 @@ Non hai i diritti per effettuare questa operazione.]]></value>
 <param name="actionPlan.prospect">
 <value><![CDATA[Prospect]]></value>
 </param>
-<param name="accounts.accounts_contacts_portal_include.GenerateNewPassword">
-<value><![CDATA[Genera nuova password]]></value>
+<param name="accounts.accounts_documents_details.Version">
+<value><![CDATA[Versione]]></value>
 </param>
 <param name="accounts.contacts.unableToMoveHeader">
 <value><![CDATA[Questo contatto non può essere spostato su un cliente differente perchè ha le seguenti dipendenze in Centric CRM:
@@ -6979,8 +6992,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.Action">
 <value><![CDATA[Azione]]></value>
 </param>
-<param name="accounts.accounts_nofields.NoCustomFoldersConfigured">
-<value><![CDATA[Non ci sono attualmente cartelle personali configurate per questo modulo.]]></value>
+<param name="actionList.addContactsToList">
+<value><![CDATA[Aggiungi contatto alla lista]]></value>
 </param>
 <param name="account.sc.reason">
 <value><![CDATA[Motivo]]></value>
@@ -7009,17 +7022,17 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.Assets">
 <value><![CDATA[Beni]]></value>
 </param>
+<param name="accounts.accounts_fields_add.AddFolderRecord">
+<value><![CDATA[Aggiunegre un record nella cartella]]></value>
+</param>
+<param name="accounts.accounts_fields.FolderHaveMultipleRecords">
+<value><![CDATA[Questa cartella può avere record multipli]]></value>
+</param>
 <param name="accounts.accounts_fields.FolderRecordDetails">
 <value><![CDATA[Dettagli del record della cartella]]></value>
 </param>
 <param name="accounts.accounts_documents_folders_add.Folder.colon">
 <value><![CDATA[Cartella:]]></value>
-</param>
-<param name="accounts.add">
-<value><![CDATA[Aggiungi cliente]]></value>
-</param>
-<param name="accounts.accounts_documents_list_menu.DeleteFolderMoveContents">
-<value><![CDATA[Elimina la cartella e sposta i contatti nella cartella corrente]]></value>
 </param>
 <param name="account.sc.addServiceContract">
 <value><![CDATA[Aggiungi un contratto di servizio]]></value>
@@ -7027,8 +7040,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="account.sc.noAdjustment">
 <value><![CDATA[Nessun aggiustamento]]></value>
 </param>
-<param name="accounts.accounts_contacts_validateimport.NoErrorsWarningsFound">
-<value><![CDATA[Nessun Errore/Avviso presente]]></value>
+<param name="account.sc.modifyServiceContract">
+<value><![CDATA[Modifica un contratto di servizio]]></value>
 </param>
 <param name="accounts.accounts_revenue_list.NoRevenueFound">
 <value><![CDATA[Nessun ricavo trovato.]]></value>
@@ -7075,8 +7088,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.accounts_relationships_view.ExportData">
 <value><![CDATA[Esporta dati]]></value>
 </param>
-<param name="accounts.accounts_fields.ListOfFolderRecords">
-<value><![CDATA[Lista di record di cartella]]></value>
+<param name="button.activateNow">
+<value><![CDATA[Attiva Adesso]]></value>
 </param>
 <param name="accounts.accounts_relationships_view.NoRelationshipsFound">
 <value><![CDATA[Nessuna relazione trovata]]></value>
@@ -7087,8 +7100,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.accounts_reports.AllExportedData">
 <value><![CDATA[Tutti i dati esportati]]></value>
 </param>
-<param name="admin.usageFor">
-<value><![CDATA[Utilizzo per periodo ${startDate} - ${endDate}]]></value>
+<param name="accounts.accounts_revenue_add.Amount">
+<value><![CDATA[Importo]]></value>
 </param>
 <param name="accounts.accounts_revenue_add.Month">
 <value><![CDATA[Mese]]></value>
@@ -7147,8 +7160,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.accounts_details.PrimaryInformation">
 <value><![CDATA[Informazione primaria]]></value>
 </param>
-<param name="accounts.accounts_documents_details.AllVersionsDocument">
-<value><![CDATA[Tutte le versioni di questo documento]]></value>
+<param name="admin.endOfStep">
+<value><![CDATA[ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fine passaggio]]></value>
 </param>
 <param name="accounts.accounts_documents_details.DL">
 <value><![CDATA[D/L]]></value>
@@ -7159,8 +7172,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.accounts_documents_upload.UploadDocument">
 <value><![CDATA[Carica documento]]></value>
 </param>
-<param name="calendar.incompleteTasks">
-<value><![CDATA[Incarichi Completati]]></value>
+<param name="accounts.accounts_documents_upload.UploadNewDocument">
+<value><![CDATA[Carica un nuovo documento]]></value>
 </param>
 <param name="accounts.accounts_documents_upload_version.CurrentVersion">
 <value><![CDATA[Versione corrente]]></value>
@@ -7171,8 +7184,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.accounts_contacts_validateimport.ChangeOwner">
 <value><![CDATA[Modifica proprietario]]></value>
 </param>
-<param name="accounts.accounts_contacts_validateimport.ErrorsWarnings">
-<value><![CDATA[Errori/Avvisi]]></value>
+<param name="calendar.body">
+<value><![CDATA[Corpo]]></value>
 </param>
 <param name="accounts.accounts_contacts_portal_include.LoginInformationSent">
 <value><![CDATA[Le informazioni di Login verranno mandate a questo indirizzo o all'indirizzo primario del contatto]]></value>
@@ -7183,8 +7196,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.accounts_documents_file_move.Home">
 <value><![CDATA[Home]]></value>
 </param>
-<param name="button.skipThisLeadR">
-<value><![CDATA[Salta questo editore]]></value>
+<param name="accounts.accounts_documents_modify.SubjectOfFile">
+<value><![CDATA[Soggetto del file]]></value>
 </param>
 <param name="accounts.accounts_documents_list_menu.ViewFolder">
 <value><![CDATA[Visualizza cartella]]></value>
@@ -7291,8 +7304,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="actionPlan.myActionPlans">
 <value><![CDATA[I miei Piani Azione]]></value>
 </param>
-<param name="actionPlan.myHierarchyActionPlans">
-<value><![CDATA[I Piani Azione nella mia gerarchia]]></value>
+<param name="campaign.file.lowercase">
+<value><![CDATA[file]]></value>
 </param>
 <param name="actionPlan.myManagedActionPlans">
 <value><![CDATA[I Piani Azione gestiti da me]]></value>
@@ -7303,8 +7316,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="actionPlan.attachAccountContact.text">
 <value><![CDATA[Allega Contatto Account]]></value>
 </param>
-<param name="campaign.campaignName">
-<value><![CDATA[Nome Campagna]]></value>
+<param name="campaign.contactList">
+<value><![CDATA[Lista Contatti]]></value>
 </param>
 <param name="actionPlan.attachContact">
 <value><![CDATA[Allega Contatto]]></value>
@@ -7315,8 +7328,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="actionPlan.attachFolder.text">
 <value><![CDATA[Allega Folder]]></value>
 </param>
-<param name="campaign.allInstantCampaigns">
-<value><![CDATA[Tutte le aziende urgenti]]></value>
+<param name="campaign.campaignDetails">
+<value><![CDATA[Dettagli Campagna]]></value>
 </param>
 <param name="actionPlan.attachmentMandatory">
 <value><![CDATA[Allegato Obbligatorio]]></value>
@@ -7327,8 +7340,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="actionPlan.actionRequired">
 <value><![CDATA[Azione Richiesta]]></value>
 </param>
-<param name="calendar.UserAccountExpires">
-<value><![CDATA[Scadenza account utente]]></value>
+<param name="calendar.time">
+<value><![CDATA[Ora]]></value>
 </param>
 <param name="setup.requestNewLicense.text">
 <value><![CDATA[Richiedi una <b>nuova</b> licenza per questa installazione<br />]]></value>
@@ -7339,8 +7352,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="setup.systemEmailURL.question">
 <value><![CDATA[Per le email di sistema, quale URL deve essere incluso per ritornare al sito?]]></value>
 </param>
-<param name="calendar.replyMessage">
-<value><![CDATA[Rispondi al messaggio]]></value>
+<param name="setup.systemAlreadyUpgraded.text">
+<value><![CDATA[Questo sistema sembra essere già stato aggiornato. Continuando smarcherà questo sistema come aggiornato, permettendo agli utenti di collegarsi.]]></value>
 </param>
 <param name="setup.suggestions">
 <value><![CDATA[Suggerimenti]]></value>
@@ -7390,23 +7403,14 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="dynamicForm.type">
 <value><![CDATA[tipo]]></value>
 </param>
-<param name="dynamicForm.survey.editItems">
-<value><![CDATA[Modifica Articoli]]></value>
-</param>
 <param name="dynamicForm.date">
 <value><![CDATA[Data]]></value>
 </param>
 <param name="dynamicForm.description">
 <value><![CDATA[Descrizione]]></value>
 </param>
-<param name="dynamicForm.lastModifiedBy">
-<value><![CDATA[Numero di articoli]]></value>
-</param>
 <param name="dynamicForm.name">
 <value><![CDATA[Nome]]></value>
-</param>
-<param name="dynamicForm.numberOfItems">
-<value><![CDATA[Numero di articoli]]></value>
 </param>
 <param name="documents.documents.moveFolder">
 <value><![CDATA[Sposta Cartella]]></value>
@@ -7558,11 +7562,11 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="admin.actionPlan.attachNoteSingle.text">
 <value><![CDATA[Richiedi all'utente di allegare o creare Note singola]]></value>
 </param>
-<param name="admin.ldap.enabled">
-<value><![CDATA[LDAP Attivato:]]></value>
+<param name="help.section.colon">
+<value><![CDATA[Sezione: <b>${help.section}</b>]]></value>
 </param>
-<param name="global.button.Disable">
-<value><![CDATA[Disabilita]]></value>
+<param name="admin.actionPlan.attachOpportunity.text">
+<value><![CDATA[Richiedi all'utente di allegare o creare una Opportunità]]></value>
 </param>
 <param name="admin.actionPlan.attachRelationship.text">
 <value><![CDATA[Richiedi all'utente di allegare o creare una Relazione Account]]></value>
@@ -7572,6 +7576,9 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 </param>
 <param name="admin.actionPlan.addStepBeforeStep.text">
 <value><![CDATA[Aggiungi un passaggio prima di questo passaggio]]></value>
+</param>
+<param name="dependency.quotes">
+<value><![CDATA[Offerte]]></value>
 </param>
 <param name="admin.ldap.factory">
 <value><![CDATA[LDAP Factory:]]></value>
@@ -7609,14 +7616,14 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="actionPlan.updateRating.text">
 <value><![CDATA[Aggiorna Punteggio]]></value>
 </param>
-<param name="actionPlan.upUserHierarchy.text">
-<value><![CDATA[Utente assegnato ed manager dell'utente]]></value>
+<param name="documents.team.accountContacts">
+<value><![CDATA[Contatti Account]]></value>
 </param>
 <param name="global.button.RenameOpportunity">
 <value><![CDATA[Rinomina Opportunità]]></value>
 </param>
-<param name="documents.permissions.update">
-<value><![CDATA[Aggiorna]]></value>
+<param name="actionPlan.userAssignedToThePlan.text">
+<value><![CDATA[Utente assegnato al Piano]]></value>
 </param>
 <param name="actionPlan.userDelegated">
 <value><![CDATA[Utente delegato]]></value>
@@ -7651,20 +7658,20 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="actionPlan.noPhasesFound.text">
 <value><![CDATA[Nessuna Fase trovata]]></value>
 </param>
-<param name="actionPlan.noStepsForPhase.text">
-<value><![CDATA[Nessun passaggio trovato per questa fase]]></value>
+<param name="campaign.deliveryMethod">
+<value><![CDATA[Metodo di spedizione]]></value>
 </param>
-<param name="actionPlan.notAvailable">
-<value><![CDATA[Non disponibile]]></value>
+<param name="campaign.delivery.question">
+<value><![CDATA[Spedire?]]></value>
 </param>
-<param name="calendar.toUser">
-<value><![CDATA[All'utente]]></value>
+<param name="campaign.allRunningCampaigns">
+<value><![CDATA[Tutte le campagne attive]]></value>
 </param>
-<param name="campaign.activate.question">
-<value><![CDATA[Attivare?]]></value>
+<param name="actionPlan.folderField.text">
+<value><![CDATA[ * Campo Cartella]]></value>
 </param>
-<param name="campaign.addADocument">
-<value><![CDATA[Aggiungi un documento]]></value>
+<param name="actionPlan.folderToUpdate.text">
+<value><![CDATA[ * Cartella da aggiornare  ]]></value>
 </param>
 <param name="admin.actionPlan.deletePhase">
 <value><![CDATA[Elimina Fase]]></value>
@@ -7717,14 +7724,14 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="filter.closedOnly">
 <value><![CDATA[Solo Chiusi]]></value>
 </param>
-<param name="documents.search.details">
-<value><![CDATA[Dettagli]]></value>
+<param name="accounts.accounts_contacts.noTextMessagePlease">
+<value><![CDATA[No Messaggi Testuali Prego]]></value>
 </param>
 <param name="campaign.selected">
 <value><![CDATA[${number} selezionati]]></value>
 </param>
-<param name="actionPlan.attachNoteSingle.text">
-<value><![CDATA[Allega un singola Nota]]></value>
+<param name="campaign.summary">
+<value><![CDATA[Sommario]]></value>
 </param>
 <param name="campaign.noFilesAttached">
 <value><![CDATA[Nessun file allegato.]]></value>
@@ -7900,14 +7907,14 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="pagedListInfo.pagedListStatus.Records">
 <value><![CDATA[Records]]></value>
 </param>
-<param name="accounts.contacts.opportunities.quotes.Permission">
-<value><![CDATA[Offerte Opportunità Contatto]]></value>
+<param name="accounts.contactInformationFilters">
+<value><![CDATA[Filtri Informazioni Contatto]]></value>
 </param>
-<param name="dependency.revenue">
-<value><![CDATA[Revisioni]]></value>
+<param name="accounts.contacts.opportunities.folders.Permission">
+<value><![CDATA[Cartelle Opportunità Contatto]]></value>
 </param>
-<param name="accounts.accountInformationFilters">
-<value><![CDATA[Filtri informazione Account]]></value>
+<param name="accounts.organization.colon">
+<value><![CDATA[Organizzazione:]]></value>
 </param>
 <param name="object.validation.invalidEmailAddress">
 <value><![CDATA[L'indirizzo e-mail deve essere nel formato corretto]]></value>
@@ -7930,8 +7937,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="myitems.settings">
 <value><![CDATA[Impostazioni]]></value>
 </param>
-<param name="contacts.companydirectory_confirm_importupload.Import">
-<value><![CDATA[Importa]]></value>
+<param name="dependency.components">
+<value><![CDATA[Componenti]]></value>
 </param>
 <param name="accounts.allTypes">
 <value><![CDATA[Tutti i Tipi]]></value>
@@ -7942,8 +7949,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="quotes.notes.addNewNote">
 <value><![CDATA[Aggiungi una nuova nota]]></value>
 </param>
-<param name="contacts.contactEmailAddressList">
-<value><![CDATA[Lista E-mail Contatti]]></value>
+<param name="contacts.companydirectory_confirm_importupload.UploadComplete">
+<value><![CDATA[Caricamento Completato]]></value>
 </param>
 <param name="quotes.logo">
 <value><![CDATA[Logo]]></value>
@@ -7951,8 +7958,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="quotes.date">
 <value><![CDATA[Data]]></value>
 </param>
-<param name="contact.authorOf">
-<value><![CDATA[Autore di]]></value>
+<param name="contact.import.status.approved">
+<value><![CDATA[Approvato]]></value>
 </param>
 <param name="quotes.all">
 <value><![CDATA[Tutti]]></value>
@@ -7981,11 +7988,11 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="project.role.colon">
 <value><![CDATA[Ruolo:]]></value>
 </param>
-<param name="actionPlan.numberPhasePlans">
-<value><![CDATA[Numero di piani ciascuna Fase]]></value>
+<param name="object.validation.customField.recordIdNotPresent">
+<value><![CDATA[Errore ID Record del form]]></value>
 </param>
-<param name="object.validation.defaultTextLengthNotGTMaxChars">
-<value><![CDATA[la lunghezza del testo di default non può essere più grande del numero massimo di caratteri]]></value>
+<param name="object.validation.defaultNumberNotGTMaxNumber">
+<value><![CDATA[il valore del numero di default non può essere più grande del numero massimo]]></value>
 </param>
 <param name="project.readMore">
 <value><![CDATA[Leggi tutto]]></value>
@@ -7993,14 +8000,14 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="project.replies">
 <value><![CDATA[Repliche]]></value>
 </param>
-<param name="project.reply">
-<value><![CDATA[Replica]]></value>
+<param name="actionPlan.phase">
+<value><![CDATA[Fase]]></value>
 </param>
 <param name="project.projectName">
 <value><![CDATA[Nome Progetto]]></value>
 </param>
-<param name="object.validation.actionError.userDeletion">
-<value><![CDATA[L' utente non può essere cancellato perchè non esiste ancora.]]></value>
+<param name="project.progress.colon">
+<value><![CDATA[Progressi:]]></value>
 </param>
 <param name="project.project">
 <value><![CDATA[Progetto]]></value>
@@ -8113,14 +8120,14 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="project.author">
 <value><![CDATA[Autore]]></value>
 </param>
-<param name="project.activityFolder">
-<value><![CDATA[Cartella Attività]]></value>
+<param name="product.createANewProduct">
+<value><![CDATA[crea un nuovo prodotto]]></value>
 </param>
 <param name="project.actual">
 <value><![CDATA[Attuale:]]></value>
 </param>
-<param name="product.mappings">
-<value><![CDATA[Associazioni]]></value>
+<param name="project.addActivityFolder">
+<value><![CDATA[Aggiungi Cartella Attività]]></value>
 </param>
 <param name="project.addActivityLog">
 <value><![CDATA[Aggiungi Log Attività]]></value>
@@ -8182,14 +8189,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="admin.config.workflow">
 <value><![CDATA[Processo]]></value>
 </param>
-<param name="admin.customFoldersAndFields">
-<value><![CDATA[Campi ${amp} cartelle personalizzate]]></value>
-</param>
-<param name="admin.enterValuesSeparateLine.text">
-<value><![CDATA[Inserire i valori perchè appaiono nella lista di selezione, ciascuno in un riga separata]]></value>
-</param>
-<param name="account.sc.adjustmentHours">
-<value><![CDATA[Ore intervento]]></value>
+<param name="admin.license.notes">
+<value><![CDATA[Usare HTTP/S per salvare il sistema in e scaricare una licenza aggiornata]]></value>
 </param>
 <param name="setup.centricCRMUpgrade">
 <value><![CDATA[Centric CRM Aggiornamento]]></value>
@@ -8209,11 +8210,11 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="tickets.other">
 <value><![CDATA[Other Tickets in My Department]]></value>
 </param>
-<param name="actionList.noActionContactsFound">
-<value><![CDATA[Nessun azione di contatto in questa vista]]></value>
+<param name="admin.enterValuesSeparateLine.text">
+<value><![CDATA[Inserire i valori perchè appaiono nella lista di selezione, ciascuno in un riga separata]]></value>
 </param>
-<param name="admin.license.notes">
-<value><![CDATA[Usare HTTP/S per salvare il sistema in e scaricare una licenza aggiornata]]></value>
+<param name="admin.customFoldersAndFields">
+<value><![CDATA[Campi ${amp} cartelle personalizzate]]></value>
 </param>
 <param name="tickets.symbol.number">
 <value><![CDATA[Ticket #${number}]]></value>
@@ -8278,8 +8279,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="pipeline.highEstimate">
 <value><![CDATA[Stima Massima]]></value>
 </param>
-<param name="project.addActivityFolder">
-<value><![CDATA[Aggiungi Cartella Attività]]></value>
+<param name="project.activityFolder">
+<value><![CDATA[Cartella Attività]]></value>
 </param>
 <param name="tickets.created.by.me">
 <value><![CDATA[Tickets Creato da Me]]></value>
@@ -8386,6 +8387,12 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="tickets.ticketCategoryDraftAssignment.invalidUserAssignment.text">
 <value><![CDATA[Selezione sito utente non valida]]></value>
 </param>
+<param name="quotes.open">
+<value><![CDATA[Aperto]]></value>
+</param>
+<param name="quotes.openOrClosed">
+<value><![CDATA[Aperto/Chiuso]]></value>
+</param>
 <param name="quotes.opportunity">
 <value><![CDATA[Opportunità]]></value>
 </param>
@@ -8413,14 +8420,14 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="quotes.fromEmailAddress">
 <value><![CDATA[Da indirizzo e-mail]]></value>
 </param>
-<param name="quotes.address">
-<value><![CDATA[Indirizzi]]></value>
+<param name="project.openOutlines">
+<value><![CDATA[Profili Aperti]]></value>
 </param>
 <param name="quotes.checkAll">
 <value><![CDATA[Seleziona Tutti]]></value>
 </param>
-<param name="project.noTopicsFound">
-<value><![CDATA[Nessun Argomento trovato.]]></value>
+<param name="quotes.clearAll">
+<value><![CDATA[Rimuovi Tutti]]></value>
 </param>
 <param name="quotes.closed">
 <value><![CDATA[Chiuso]]></value>
@@ -8481,10 +8488,6 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 </param>
 <param name="pagedListInfo.pagedListControlHandler.abbreviation">
 <value><![CDATA[      Pagina ${pagedListInfo.numericalPageEntry} di ${pagedListInfo.numberOfPages} 
-    ]]></value>
-</param>
-<param name="pagedListInfo.pagedListControlHandler.notAbbreviation">
-<value><![CDATA[      Pagina ${pagedListInfo.numericalPageEntry} di ${pagedListInfo.numberOfPages}, Articoli per pagina: ${pagedListInfo.itemsPerPageEntry} 
     ]]></value>
 </param>
 <param name="pagedListInfo.pagedListStatus.itemsPerPageData">
@@ -8552,11 +8555,11 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="contacts.messageConfirmation">
 <value><![CDATA[Messaggio di Conferma]]></value>
 </param>
-<param name="contact.objectType.brackets">
-<value><![CDATA[(Tipo Oggetto)]]></value>
+<param name="quotes.quotelog.quoteIssuedToCustomer">
+<value><![CDATA[Offerta inviato al cliente]]></value>
 </param>
-<param name="reports.helpdesk.ticket.location">
-<value><![CDATA[Collocazione]]></value>
+<param name="communications.campaign.broadCastInvalidPasswordMessage">
+<value><![CDATA[Richiesta Broadcast negata: Password Invalida.]]></value>
 </param>
 <param name="campaign.removeRecipient.text">
 <value><![CDATA[Un destinatario può essere rimosso da questa campagna]]></value>
@@ -8600,11 +8603,11 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="accounts.active.accounts">
 <value><![CDATA[Account Attivi]]></value>
 </param>
-<param name="accounts.allAssets">
-<value><![CDATA[Tutte le Risorse]]></value>
+<param name="quotes.noRemarks">
+<value><![CDATA[Nessuna osservazione trovata per l'offerta]]></value>
 </param>
-<param name="calendar.next7daysView">
-<value><![CDATA[Visualizza prossimi 7 giorni]]></value>
+<param name="reports.helpdesk.contractValue">
+<value><![CDATA[Valore Contratto]]></value>
 </param>
 <param name="reports.helpdesk.description">
 <value><![CDATA[Descrizione]]></value>
@@ -8621,14 +8624,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="reports.helpdesk.closed">
 <value><![CDATA[Chiuso]]></value>
 </param>
-<param name="project.lastSixArticles">
-<value><![CDATA[Ultimi 6 articoli]]></value>
-</param>
 <param name="project.lastThirtyDays">
 <value><![CDATA[Ultimi 30 giorni]]></value>
-</param>
-<param name="project.lastThreeArticles">
-<value><![CDATA[Ultimi 3 articoli]]></value>
 </param>
 <param name="project.lastSevenDays">
 <value><![CDATA[Ultimi 7 giorni]]></value>
@@ -8777,11 +8774,11 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="object.validation.actionError.activeUsersAssignedToRole">
 <value><![CDATA[Il ruolo non può essere cancellato... ci sono utenti attivi assegnati a questo ruolo.]]></value>
 </param>
-<param name="reports.pipeline.commission">
-<value><![CDATA[Commissioni]]></value>
+<param name="reports.helpdesk.ticket.engineerSignature">
+<value><![CDATA[Firma del tecnico]]></value>
 </param>
-<param name="reports.parametersMustBeSpecified.text">
-<value><![CDATA[I seguenti parametri devono essere specificati per questo report:]]></value>
+<param name="reports.helpdesk.ticket.callStatus">
+<value><![CDATA[Call Status]]></value>
 </param>
 <param name="mail.body.newPasswordIs">
 <value><![CDATA[La tua nuova password è: ${password} <br /><br />]]></value>
@@ -8933,8 +8930,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="quotes.productName">
 <value><![CDATA[Nome]]></value>
 </param>
-<param name="search.totalResultsInEmployees.text">
-<value><![CDATA[<strong>${EmployeeSize}</strong> risultato/i in <strong>Impiegati</strong>.]]></value>
+<param name="contacts.NoPhoneNumbers">
+<value><![CDATA[Nessun numero telefonico inserito.]]></value>
 </param>
 <param name="quotes.header.title">
 <value><![CDATA[Titolo:]]></value>
@@ -9107,6 +9104,9 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="tasks.myTasks">
 <value><![CDATA[I Mei Tasks]]></value>
 </param>
+<param name="calendar.Quotes">
+<value><![CDATA[Offerte]]></value>
+</param>
 <param name="tasks.linkContact">
 <value><![CDATA[Link dei Contati]]></value>
 </param>
@@ -9203,8 +9203,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="admin.usage.faxsSent.text">
 <value><![CDATA[${number} fax inviati, per un totale di ${size} bytes]]></value>
 </param>
-<param name="actionPlan.phases">
-<value><![CDATA[Fasi]]></value>
+<param name="accounts.Folders">
+<value><![CDATA[Cartelle]]></value>
 </param>
 <param name="admin.usage.communicationManagerEmails.text">
 <value><![CDATA[${number} emails inviate, consistenti di ${size} bytes]]></value>
@@ -9245,8 +9245,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="account.createNewContact">
 <value><![CDATA[Crea un nuovo contatto]]></value>
 </param>
-<param name="account.sc.modifyServiceContract">
-<value><![CDATA[Modifica un contratto di servizio]]></value>
+<param name="accounts.add">
+<value><![CDATA[Aggiungi cliente]]></value>
 </param>
 <param name="account.disabled.brackets">
 <value><![CDATA[(disabilitato)]]></value>
@@ -9275,8 +9275,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="account.assetSerialNumber">
 <value><![CDATA[Numero di serie del bene]]></value>
 </param>
-<param name="accounts.accounts_revenue_add.Amount">
-<value><![CDATA[Importo]]></value>
+<param name="accounts.accounts_fields.ListOfFolderRecords">
+<value><![CDATA[Lista di record di cartella]]></value>
 </param>
 <param name="account.canceled.brackets">
 <value><![CDATA[(Cancellato)]]></value>
@@ -9311,8 +9311,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="setup.useSSLportForSendingInformation.text">
 <value><![CDATA[Usa SSL (porta 443) per inviare informazioni]]></value>
 </param>
-<param name="accounts.accounts_documents_upload.UploadNewDocument">
-<value><![CDATA[Carica un nuovo documento]]></value>
+<param name="accounts.accounts_documents_details.AllVersionsDocument">
+<value><![CDATA[Tutte le versioni di questo documento]]></value>
 </param>
 <param name="setup.userCapabilitySendFaxes.text">
 <value><![CDATA[GLi utenti avranno la possibilità di inviare fax usando Centric CRM.]]></value>
@@ -9323,8 +9323,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="ticket.noAssetProvided.text">
 <value><![CDATA[Nel ticket non è stata fornita una disponibilità.${break}Quando tutte le informazioni necessarie vengono inserite, questa pagina mostra le note di manutenzione.]]></value>
 </param>
-<param name="accounts.accounts_documents_modify.SubjectOfFile">
-<value><![CDATA[Soggetto del file]]></value>
+<param name="accounts.accounts_contacts_validateimport.ErrorsWarnings">
+<value><![CDATA[Errori/Avvisi]]></value>
 </param>
 <param name="ticketloglist.reassignedFrom">
 <value><![CDATA[Riassegnato da ${ticketLogList.previousAssignedToName} a ${ticketLogList.currentAssignedToName}]]></value>
@@ -9383,26 +9383,26 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="contacts.generalContacts.brackets.controlledHierarchy">
 <value><![CDATA[Contatti generali (Gerarchia controllata)]]></value>
 </param>
-<param name="actionPlan.attachActivity.text">
-<value><![CDATA[Allega Attività]]></value>
+<param name="actionPlan.myHierarchyActionPlans">
+<value><![CDATA[I Piani Azione nella mia gerarchia]]></value>
 </param>
 <param name="admin.actionPlan.modifyStep">
 <value><![CDATA[Modifica passaggio]]></value>
 </param>
-<param name="actionPlan.attachLookupListMultiple.text">
-<value><![CDATA[Allega una lista di lookup]]></value>
+<param name="actionPlan.attachActivity.text">
+<value><![CDATA[Allega Attività]]></value>
 </param>
 <param name="actionstep.dependencies">
 <value><![CDATA[L'azione che state richiedendo di cancellare ha le seguenti dipendenze in centric CRM:]]></value>
 </param>
-<param name="account.emails">
-<value><![CDATA[E-mail]]></value>
+<param name="actionPlan.attachLookupListMultiple.text">
+<value><![CDATA[Allega una lista di lookup]]></value>
 </param>
 <param name="admin.actionPlan.addPhaseBeforePhase.text">
 <value><![CDATA[Aggiungi fase prima di questa fase]]></value>
 </param>
-<param name="setup.systemAlreadyUpgraded.text">
-<value><![CDATA[Questo sistema sembra essere già stato aggiornato. Continuando smarcherà questo sistema come aggiornato, permettendo agli utenti di collegarsi.]]></value>
+<param name="account.emails">
+<value><![CDATA[E-mail]]></value>
 </param>
 <param name="admin.actionPlan.addStep">
 <value><![CDATA[Aggiungi passaggio]]></value>
@@ -9516,8 +9516,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="usergroups.groupUsers.colon">
 <value><![CDATA[Utenti di gruppo:]]></value>
 </param>
-<param name="admin.actionPlan.attachOpportunity.text">
-<value><![CDATA[Richiedi all'utente di allegare o creare una Opportunità]]></value>
+<param name="admin.ldap.enabled">
+<value><![CDATA[LDAP Attivato:]]></value>
 </param>
 <param name="usergroups.userGroup">
 <value><![CDATA[Gruppo utente]]></value>
@@ -9543,8 +9543,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="usergroup.dependencies">
 <value><![CDATA[Dipendenze di gruppo]]></value>
 </param>
-<param name="actionPlan.userAssignedToThePlan.text">
-<value><![CDATA[Utente assegnato al Piano]]></value>
+<param name="actionPlan.upUserHierarchy.text">
+<value><![CDATA[Utente assegnato ed manager dell'utente]]></value>
 </param>
 <param name="tickets.resolution">
 <value><![CDATA[Risoluzione Ticket]]></value>
@@ -9564,11 +9564,11 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="setup.LDAPFailed.text">
 <value><![CDATA[LDAP non riuscito. L'errore è il seguente:]]></value>
 </param>
-<param name="actionPlan.numberOfDays.symbol">
-<value><![CDATA[# Giorni]]></value>
+<param name="actionPlan.noStepsForPhase.text">
+<value><![CDATA[Nessun passaggio trovato per questa fase]]></value>
 </param>
-<param name="actionPlan.folderField.text">
-<value><![CDATA[ * Campo Cartella]]></value>
+<param name="actionPlan.notAvailable">
+<value><![CDATA[Non disponibile]]></value>
 </param>
 <param name="setup.ldapLoginSuccessful">
 <value><![CDATA[L'autenticazione su LDAP è avvenuta con successo]]></value>
@@ -9597,8 +9597,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="sales.leads">
 <value><![CDATA[Leads]]></value>
 </param>
-<param name="campaign.summary">
-<value><![CDATA[Sommario]]></value>
+<param name="documents.search.details">
+<value><![CDATA[Dettagli]]></value>
 </param>
 <param name="setup.centricCRMLDAPTest">
 <value><![CDATA[Test Centric CRM LDAP]]></value>
@@ -9750,8 +9750,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="tickets.ticketCategoryDraftAssignment.invalidAssignment.text">
 <value><![CDATA[Selezione data non valida]]></value>
 </param>
-<param name="project.progress.colon">
-<value><![CDATA[Progressi:]]></value>
+<param name="project.reply">
+<value><![CDATA[Replica]]></value>
 </param>
 <param name="tickets.perDayDescription">
 <value><![CDATA[Descrzione giornaliera del Servizio]]></value>
@@ -9912,8 +9912,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="setup.information">
 <value><![CDATA[Informazioni]]></value>
 </param>
-<param name="actionPlan.folderToUpdate.text">
-<value><![CDATA[ * Cartella da aggiornare  ]]></value>
+<param name="actionPlan.numberOfDays.symbol">
+<value><![CDATA[# Giorni]]></value>
 </param>
 <param name="ticket.serialNumber.colon">
 <value><![CDATA[Numero Seriale:]]></value>
@@ -9945,8 +9945,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="admin.subUserNotTheSameSite.text">
 <value><![CDATA[Uno o più utenti a riporto non appartengono a questo sito]]></value>
 </param>
-<param name="quotes.clearAll">
-<value><![CDATA[Rimuovi Tutti]]></value>
+<param name="quotes.address">
+<value><![CDATA[Indirizzi]]></value>
 </param>
 <param name="leads.size.text">
 <value><![CDATA[Mostrati <strong>${LeadSize}</strong> risultato(i) di ${totalEmployees} nei <strong>Leads</strong>.]]></value>
@@ -10011,8 +10011,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="global.button.saveAndAddAnotherLead">
 <value><![CDATA[Salva e Aggiungi un altro Lead]]></value>
 </param>
-<param name="communications.campaign.broadCastInvalidPasswordMessage">
-<value><![CDATA[Richiesta Broadcast negata: Password Invalida.]]></value>
+<param name="contact.objectType.brackets">
+<value><![CDATA[(Tipo Oggetto)]]></value>
 </param>
 <param name="global.trashed">
 <value><![CDATA[Cestinato]]></value>
@@ -10035,8 +10035,8 @@ Prego cancellare o reassegnare le dipendenze per spostare questo contatto]]></va
 <param name="employees.employee">
 <value><![CDATA[Dipendente]]></value>
 </param>
-<param name="reports.helpdesk.contractValue">
-<value><![CDATA[Valore Contratto]]></value>
+<param name="accounts.allAssets">
+<value><![CDATA[Tutte le Risorse]]></value>
 </param>
 <param name="documents.team.groupMembershipRoles">
 <value><![CDATA[Gruppo Iscritti (regole utente)]]></value>
@@ -11145,8 +11145,8 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="tickets.tasks.long_html">
 <value><![CDATA[Tasks]]></value>
 </param>
-<param name="accounts.assets.long_html">
-<value><![CDATA[Beni]]></value>
+<param name="accountsassets.details.long_html">
+<value><![CDATA[Dettagli]]></value>
 </param>
 <param name="accountscontacts.calls.long_html">
 <value><![CDATA[Attività]]></value>
@@ -11157,8 +11157,8 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="accountstickets.activitylog.long_html">
 <value><![CDATA[Log attività]]></value>
 </param>
-<param name="communications.access.long_html">
-<value><![CDATA[Accesso]]></value>
+<param name="documents.accounts.long_html">
+<value><![CDATA[Account]]></value>
 </param>
 <param name="accounts.orders.long_html">
 <value><![CDATA[Ordini]]></value>
@@ -11175,14 +11175,14 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="accountstickets.maintenancenotes.long_html">
 <value><![CDATA[Note assisitenza]]></value>
 </param>
-<param name="contacts.relationships.long_html">
-<value><![CDATA[Relazioni]]></value>
+<param name="documents.documents.long_html">
+<value><![CDATA[Documenti]]></value>
 </param>
 <param name="accountstickets.history.long_html">
 <value><![CDATA[Storia]]></value>
 </param>
-<param name="accountscontacts.portal.long_html">
-<value><![CDATA[Portale]]></value>
+<param name="communications.access.long_html">
+<value><![CDATA[Accesso]]></value>
 </param>
 <param name="documents.details.long_html">
 <value><![CDATA[Dettagli]]></value>
@@ -11202,41 +11202,41 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="documents.team.long_html">
 <value><![CDATA[Team]]></value>
 </param>
-<param name="tickets.history.long_html">
-<value><![CDATA[Storico]]></value>
+<param name="documents.permissions.long_html">
+<value><![CDATA[Permessi]]></value>
 </param>
-<param name="users.groups.long_html">
-<value><![CDATA[Gruppi]]></value>
+<param name="contacts.folders.long_html">
+<value><![CDATA[Cartelle]]></value>
 </param>
 <param name="accountstickets.details.long_html">
 <value><![CDATA[Dettagli]]></value>
 </param>
-<param name="documents.accounts.long_html">
-<value><![CDATA[Account]]></value>
-</param>
-<param name="documents.documents.long_html">
-<value><![CDATA[Documenti]]></value>
-</param>
-<param name="tickets.maintenancenotes.long_html">
-<value><![CDATA[Note di Manutenzione]]></value>
+<param name="opportunitiesQuotes.history.long_html">
+<value><![CDATA[Storico]]></value>
 </param>
 <param name="accountscontacts.details.long_html">
 <value><![CDATA[Dettagli]]></value>
 </param>
-<param name="opportunitiesQuotes.notes.long_html">
-<value><![CDATA[Note]]></value>
+<param name="tickets.maintenancenotes.long_html">
+<value><![CDATA[Note di Manutenzione]]></value>
 </param>
-<param name="employees.projects.long_html">
-<value><![CDATA[Progetti]]></value>
+<param name="accounts.assets.long_html">
+<value><![CDATA[Beni]]></value>
 </param>
 <param name="accountstickets.tasks.long_html">
 <value><![CDATA[Attività]]></value>
+</param>
+<param name="employees.projects.long_html">
+<value><![CDATA[Progetti]]></value>
 </param>
 <param name="accountcontactopportunities.folders.long_html">
 <value><![CDATA[Cartelle]]></value>
 </param>
 <param name="quotes.details.long_html">
 <value><![CDATA[Dettagli]]></value>
+</param>
+<param name="communications.message.long_html">
+<value><![CDATA[Messaggio]]></value>
 </param>
 <param name="accounts.documents.long_html">
 <value><![CDATA[Documenti]]></value>
@@ -11247,17 +11247,14 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="opportunities.quotes.long_html">
 <value><![CDATA[Code]]></value>
 </param>
-<param name="communications.message.long_html">
-<value><![CDATA[Messaggio]]></value>
+<param name="accountsQuotes.notes.long_html">
+<value><![CDATA[Note]]></value>
 </param>
-<param name="accounts.contacts.long_html">
-<value><![CDATA[Contatti]]></value>
+<param name="accounts.activities.long_html">
+<value><![CDATA[Attività]]></value>
 </param>
 <param name="accounts.opportunities.long_html">
 <value><![CDATA[Opportunità]]></value>
-</param>
-<param name="accountsQuotes.notes.long_html">
-<value><![CDATA[Note]]></value>
 </param>
 <param name="accountstickets.folders.long_html">
 <value><![CDATA[Cartelle]]></value>
@@ -11268,8 +11265,8 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="accountcontactopportunities.details.long_html">
 <value><![CDATA[Dettagli]]></value>
 </param>
-<param name="contacts.folders.long_html">
-<value><![CDATA[Cartelle]]></value>
+<param name="contacts.relationships.long_html">
+<value><![CDATA[Relazioni]]></value>
 </param>
 <param name="accounts.quotes.long_html">
 <value><![CDATA[Offerte]]></value>
@@ -11283,8 +11280,8 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="categories.draft categories.long_html">
 <value><![CDATA[Categorie Bozze]]></value>
 </param>
-<param name="opportunitiesQuotes.history.long_html">
-<value><![CDATA[Storico]]></value>
+<param name="contacts.opportunities.long_html">
+<value><![CDATA[Opportunità]]></value>
 </param>
 <param name="accounts.projects.long_html">
 <value><![CDATA[Progetti]]></value>
@@ -11298,14 +11295,17 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="communications.documents.long_html">
 <value><![CDATA[Documenti]]></value>
 </param>
+<param name="accountsQuotes.details.long_html">
+<value><![CDATA[Dettagli]]></value>
+</param>
 <param name="accounts.tickets.long_html">
 <value><![CDATA[Ticket]]></value>
 </param>
 <param name="communications.Results.long_html">
 <value><![CDATA[Risultati]]></value>
 </param>
-<param name="accounts.activities.long_html">
-<value><![CDATA[Attività]]></value>
+<param name="accountscontacts.portal.long_html">
+<value><![CDATA[Portale]]></value>
 </param>
 <param name="accounts.folders.long_html">
 <value><![CDATA[Cartelle]]></value>
@@ -11322,11 +11322,8 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="users.details.long_html">
 <value><![CDATA[Dettagli]]></value>
 </param>
-<param name="accountsQuotes.details.long_html">
-<value><![CDATA[Dettagli]]></value>
-</param>
-<param name="accountsassets.details.long_html">
-<value><![CDATA[Dettagli]]></value>
+<param name="accountsassets.history.long_html">
+<value><![CDATA[Storia]]></value>
 </param>
 <param name="communications.groups.long_html">
 <value><![CDATA[Gruppi]]></value>
@@ -11334,20 +11331,20 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="contacts.calls.long_html">
 <value><![CDATA[Attività]]></value>
 </param>
+<param name="accounts.products.long_html">
+<value><![CDATA[Prodotti]]></value>
+</param>
 <param name="opportunities.folders.long_html">
 <value><![CDATA[Cartelle]]></value>
 </param>
 <param name="accountscontacts.messages.long_html">
 <value><![CDATA[Messaggi]]></value>
 </param>
-<param name="accountsassets.history.long_html">
-<value><![CDATA[Storia]]></value>
+<param name="accounts.contacts.long_html">
+<value><![CDATA[Contatti]]></value>
 </param>
-<param name="contacts.opportunities.long_html">
-<value><![CDATA[Opportunità]]></value>
-</param>
-<param name="accounts.products.long_html">
-<value><![CDATA[Prodotti]]></value>
+<param name="quotes.history.long_html">
+<value><![CDATA[Storico]]></value>
 </param>
 <param name="communications.schedule.long_html">
 <value><![CDATA[Schedule]]></value>
@@ -11364,11 +11361,14 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="opportunities.details.long_html">
 <value><![CDATA[Dettagli]]></value>
 </param>
-<param name="accounts.history.long_html">
-<value><![CDATA[Storia]]></value>
+<param name="users.groups.long_html">
+<value><![CDATA[Gruppi]]></value>
 </param>
 <param name="accountstickets.documents.long_html">
 <value><![CDATA[Documenti]]></value>
+</param>
+<param name="accounts.history.long_html">
+<value><![CDATA[Storia]]></value>
 </param>
 <param name="communications.details.long_html">
 <value><![CDATA[Dettagli]]></value>
@@ -11382,14 +11382,14 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="categories.active categories.long_html">
 <value><![CDATA[Categorie Attive]]></value>
 </param>
-<param name="quotes.history.long_html">
-<value><![CDATA[Storico]]></value>
+<param name="opportunitiesQuotes.notes.long_html">
+<value><![CDATA[Note]]></value>
 </param>
 <param name="tickets.details.long_html">
 <value><![CDATA[Dettagli]]></value>
 </param>
-<param name="documents.permissions.long_html">
-<value><![CDATA[Permessi]]></value>
+<param name="tickets.history.long_html">
+<value><![CDATA[Storico]]></value>
 </param>
 <param name="accounts.revenue.long_html">
 <value><![CDATA[Ricavi]]></value>
@@ -11399,8 +11399,8 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="Messages">
 <value><![CDATA[Messaggi]]></value>
 </param>
-<param name="List">
-<value><![CDATA[Lista]]></value>
+<param name="Groups">
+<value><![CDATA[Gruppi]]></value>
 </param>
 <param name="Action Lists">
 <value><![CDATA[Liste azione]]></value>
@@ -11408,14 +11408,20 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="Modules">
 <value><![CDATA[Moduli]]></value>
 </param>
-<param name="Dashboard">
-<value><![CDATA[Cruscotto]]></value>
+<param name="Attachments.colon">
+<value><![CDATA[Allegati:]]></value>
 </param>
-<param name="Tasks">
-<value><![CDATA[Tasks]]></value>
+<param name="Export">
+<value><![CDATA[Esporta]]></value>
 </param>
-<param name="Defects">
-<value><![CDATA[Difetti]]></value>
+<param name="Invitations">
+<value><![CDATA[Inviti]]></value>
+</param>
+<param name="Welcome">
+<value><![CDATA[Benvenuto]]></value>
+</param>
+<param name="Re-assignments">
+<value><![CDATA[Riassegnazioni]]></value>
 </param>
 <param name="View">
 <value><![CDATA[Visualizza]]></value>
@@ -11423,65 +11429,59 @@ Una volta che l'accesso a web folder è attivato, crea un volume condiviso alla 
 <param name="Revenue">
 <value><![CDATA[Redditi]]></value>
 </param>
-<param name="Export">
-<value><![CDATA[Esporta]]></value>
-</param>
-<param name="Usage">
-<value><![CDATA[Uso]]></value>
-</param>
-<param name="Attachments.colon">
-<value><![CDATA[Allegati:]]></value>
-</param>
-<param name="Attachments">
-<value><![CDATA[Allegati]]></value>
+<param name="Roles">
+<value><![CDATA[Ruoli]]></value>
 </param>
 <param name="Projects">
 <value><![CDATA[Progetti]]></value>
 </param>
+<param name="Users">
+<value><![CDATA[Utenti]]></value>
+</param>
 <param name="System">
 <value><![CDATA[Sistema]]></value>
 </param>
-<param name="Invitations">
-<value><![CDATA[Inviti]]></value>
+<param name="Dashboard">
+<value><![CDATA[Cruscotto]]></value>
 </param>
 <param name="Knowledge Base">
 <value><![CDATA[Knowledge Base]]></value>
 </param>
-<param name="Users">
-<value><![CDATA[Utenti]]></value>
-</param>
-<param name="Roles">
-<value><![CDATA[Ruoli]]></value>
-</param>
-<param name="Groups">
-<value><![CDATA[Gruppi]]></value>
-</param>
-<param name="Import">
-<value><![CDATA[Importa]]></value>
-</param>
-<param name="Action Plans">
-<value><![CDATA[Piani Azione]]></value>
-</param>
-<param name="Headlines">
-<value><![CDATA[Testata]]></value>
-</param>
-<param name="Welcome">
-<value><![CDATA[Benvenuto]]></value>
-</param>
-<param name="Add">
-<value><![CDATA[Aggiungi]]></value>
+<param name="Attachments">
+<value><![CDATA[Allegati]]></value>
 </param>
 <param name="Mailbox">
 <value><![CDATA[Casella postale]]></value>
 </param>
-<param name="Re-assignments">
-<value><![CDATA[Riassegnazioni]]></value>
+<param name="Action Plans">
+<value><![CDATA[Piani Azione]]></value>
+</param>
+<param name="Tasks">
+<value><![CDATA[Tasks]]></value>
+</param>
+<param name="Usage">
+<value><![CDATA[Uso]]></value>
+</param>
+<param name="List">
+<value><![CDATA[Lista]]></value>
+</param>
+<param name="Defects">
+<value><![CDATA[Difetti]]></value>
+</param>
+<param name="Add">
+<value><![CDATA[Aggiungi]]></value>
 </param>
 <param name="Settings">
 <value><![CDATA[Impostazioni]]></value>
 </param>
+<param name="Headlines">
+<value><![CDATA[Testata]]></value>
+</param>
 <param name="Campaigns">
 <value><![CDATA[Campagne]]></value>
+</param>
+<param name="Import">
+<value><![CDATA[Importa]]></value>
 </param>
 <param name="Search">
 <value><![CDATA[Ricerca]]></value>

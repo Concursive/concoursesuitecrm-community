@@ -63,6 +63,7 @@ This release includes the following fixes:
 - Added a script to update existing Template files to contain email
   notification for Action Plans, required for source install
 - User groups could not be created using Firebird, DaffodilDB, or Oracle DB
+- Defects could not be inserted using Firebird, DaffodilDB, or Oracle DB
 - Added UTF-8 to styleContainer and styleNoSession
 - Opera web browser better handled, but still not supported
 

@@ -560,7 +560,7 @@ public final class ExternalContactsOpps extends CFSModule {
     OpportunityComponentList componentList = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
 
-    PagedListInfo oppPagedListInfo = (PagedListInfo) context.getSession().getAttribute("ExternalOppsPagedListInfo");
+    PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "ExternalOppsPagedListInfo", false);
     PagedListInfo componentListInfo = this.getPagedListInfo(
         context, "ComponentListInfo");
     componentListInfo.setLink(
