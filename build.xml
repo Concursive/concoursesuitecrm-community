@@ -1007,7 +1007,6 @@
         />
       <zipfileset
         dir="lib"
-        excludes="oracle*.jar"
         prefix="${zip.dir}/lib"/>
     </zip>
     <!-- delete temporary files -->
@@ -1287,8 +1286,7 @@
       <arg value="${src.sql.dir}${fs}init${fs}permissions-dataimport.xml"/>
     </java>
   </target>
-  
-  
+
   <!-- Upgrade help contents by deleting all help and then inserting -->
   <target name="upgradedb.help" depends="init,install.prepare,install.deletehelp,install.help"/>
   
@@ -1494,6 +1492,22 @@
   <target name="installdb3" depends="init,log.installdb,install.prepare.dbname,install.lookup,install.permissions,install.help,install.copyprefs,install.addsite"
     description="Create tables, insert base records and permissions into new database, copy XML files">
   </target>
+
+  <!-- Test the database by inserting sample CRM data -->
+  <target name="installdb.test" depends="init,install.prepare,taskdef.upgradeDatabase">
+    <upgradeDatabase
+      sitecode="${SITE.APPCODE}"
+      driver="${SITE.DRIVER}"
+      url="${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"
+      user="${SITE.USER}"
+      password="${SITE.PASSWORD}"
+      servletJar="${servletJar}"
+      fileLibraryPath="${CENTRIC_FILELIBRARY}"
+      baseFile="${src.sql.dir}${fs}init${fs}testDatabase.bsh"
+      specificDatabase="${DATABASE.NAME}">
+    </upgradeDatabase>
+  </target>
+
 
   <!-- Programmatically upgrades installed databases for
        the specified appcode and file, runs against the build code,

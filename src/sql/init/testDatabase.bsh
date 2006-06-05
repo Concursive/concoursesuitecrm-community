@@ -1,0 +1,30 @@
+/*
+ * This script is used by build.xml when installing a new database.
+ *
+ *@author     matt rajkowski
+ *@created    June 8, 2005
+ *@version    $Id: database.bsh 14600 2006-03-28 15:06:27 -0500 (Tue, 28 Mar 2006) mrajkowski $
+ */
+import java.sql.*;
+import java.io.File;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.service.base.DemoAccount;
+import org.aspcfs.modules.service.base.DemoData;
+
+if (1==1) {
+  System.setProperty("DEBUG", "2");
+  print("Testing the database by inserting sample CRM data...");
+  DemoAccount demoAccount = new DemoAccount();
+  demoAccount.setNameFirst("First");
+  demoAccount.setNameLast("Last");
+  demoAccount.setOrganization("Database Test");
+  demoAccount.setPhone("800-555-1212");
+  demoAccount.setEmail("test@centriccrm.com");
+  demoAccount.setIpAddress("127.0.0.1");
+  demoAccount.setLanguage("en_US");
+  demoAccount.setBrowser("Centric CRM Database Test");
+  // Install on the given database
+  DemoData.install(db, demoAccount);
+  print("Test complete.");
+}
+
