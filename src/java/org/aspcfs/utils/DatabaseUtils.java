@@ -217,6 +217,10 @@ public class DatabaseUtils {
         return ("DATE(" + date + ")");
         //case DatabaseUtils.ORACLE:
         //  return ("CAST(" + date + " AS DATE)");
+      case DatabaseUtils.DB2:
+        return ("CAST(" + date + " AS DATE)");
+        //case DatabaseUtils.ORACLE:
+        //  return ("CAST(" + date + " AS DATE)");
       default:
         return "";
     }
@@ -224,8 +228,8 @@ public class DatabaseUtils {
 
 
   /**
-   * Adds a feature to the TimestampInterval attribute of the DatabaseUtils
-   * class
+   * Database specific method of adding an interval in one field to a date field
+   * of the same record, using the specified units
    *
    * @param db                  The feature to be added to the
    *                            TimestampInterval attribute
@@ -238,6 +242,7 @@ public class DatabaseUtils {
    * @return Description of the Return Value
    */
   public static String addTimestampInterval(Connection db, int units, String termsColumnName, String timestampColumnName) {
+    // TODO: report why +1 is being used
     String addTimestampIntervalString = "";
     String customUnits = "";
     switch (DatabaseUtils.getType(db)) {
@@ -270,8 +275,10 @@ public class DatabaseUtils {
         } else if (units == WEEK) {
           addTimestampIntervalString = " (" + timestampColumnName + " + (" + termsColumnName + " * 7)) ";
         } else if (units == MONTH) {
+          // NOTE: approximate function to add a month
           addTimestampIntervalString = " (" + timestampColumnName + " + (" + termsColumnName + " * 30)) ";
         } else if (units == YEAR) {
+          // NOTE: approximate function to add a year
           addTimestampIntervalString = " (" + timestampColumnName + " + (" + termsColumnName + " * 365)) ";
         }
         break;
@@ -286,6 +293,17 @@ public class DatabaseUtils {
         }
         addTimestampIntervalString = " TIMESTAMPADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timestampColumnName + ")";
         break;
+      case DatabaseUtils.DB2:
+        if (units == DAY) {
+          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) + day ";
+        } else if (units == WEEK) {
+          addTimestampIntervalString = timestampColumnName + " + ((" + termsColumnName + "+1)*7) + day ";
+        } else if (units == MONTH) {
+          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) + month ";
+        } else if (units == YEAR) {
+          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) + year ";
+        }
+        break;
       case DatabaseUtils.ORACLE:
         break;
     }
@@ -294,8 +312,8 @@ public class DatabaseUtils {
 
 
   /**
-   * Adds a feature to the TimestampInterval attribute of the DatabaseUtils
-   * class
+   * Database specific method of adding an interval in one field to a date field
+   * of the same record, using the specified units
    *
    * @param db                  The feature to be added to the
    *                            TimestampInterval attribute
@@ -335,6 +353,11 @@ public class DatabaseUtils {
           customUnits = "SQL_TSI_WEEK";
         }
         addTimestampIntervalString = " TIMESTAMPADD(" + customUnits + ",(" + termsColumnName + " + " + (defaultTerms + 1) + ")," + timestampColumnName + ")";
+        break;
+      case DatabaseUtils.DB2:
+        if (units == WEEK) {
+          addTimestampIntervalString = timestampColumnName + " + ((" + termsColumnName + "+" + defaultTerms + "+1)*7) + day ";
+        }
         break;
       case DatabaseUtils.ORACLE:
         break;
@@ -458,6 +481,8 @@ public class DatabaseUtils {
         return "YEAR(" + fieldname + ")";
       case DatabaseUtils.ORACLE:
         return "EXTRACT(YEAR FROM " + fieldname + ")";
+      case DatabaseUtils.DB2:
+        return "YEAR(" + fieldname + ")";
       default:
         return "";
     }
@@ -484,6 +509,8 @@ public class DatabaseUtils {
         return "MONTH(" + fieldname + ")";
       case DatabaseUtils.ORACLE:
         return "EXTRACT(MONTH FROM " + fieldname + ")";
+      case DatabaseUtils.DB2:
+        return "MONTH(" + fieldname + ")";
       default:
         return "";
     }
@@ -510,6 +537,8 @@ public class DatabaseUtils {
         return "DAYOFWEEK(" + fieldname + ")";
       case DatabaseUtils.ORACLE:
         return "EXTRACT(DAY FROM " + fieldname + ")";
+      case DatabaseUtils.DB2:
+        return "DAY(" + fieldname + ")";
       default:
         return "";
     }
@@ -537,6 +566,8 @@ public class DatabaseUtils {
         //return "DAYOFWEEK(" + fieldname + ")";
       case DatabaseUtils.ORACLE:
         return "EXTRACT(HOUR FROM " + fieldname + ")";
+      case DatabaseUtils.DB2:
+        return "HOUR(" + fieldname + ")";
       default:
         return "";
     }
@@ -564,6 +595,8 @@ public class DatabaseUtils {
         return "DAYOFWEEK(" + fieldname + ")";
       case DatabaseUtils.ORACLE:
         return "EXTRACT(MINUTE FROM " + fieldname + ")";
+      case DatabaseUtils.DB2:
+        return "MINUTE(" + fieldname + ")";
       default:
         return "";
     }
@@ -588,6 +621,8 @@ public class DatabaseUtils {
         return "lower";
       case DatabaseUtils.DAFFODILDB:
         return "lcase";
+      case DatabaseUtils.DB2:
+        return "lower";
       default:
         return "lower";
     }
@@ -613,6 +648,8 @@ public class DatabaseUtils {
         return "lower(" + field + ")";
       case DatabaseUtils.DAFFODILDB:
         return "lcase(" + field + ")";
+      case DatabaseUtils.DB2:
+        return "lower(" + field + ")";
       default:
         return "lower(" + field + ")";
     }
@@ -640,6 +677,8 @@ public class DatabaseUtils {
         return "substr(" + field + " FROM " + first + (size < 0 ? "" : " FOR " + size) + " ) ";
       case DatabaseUtils.DAFFODILDB:
         return "substring(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
+      case DatabaseUtils.DB2:
+        return "substr(" + field + "," + (first + 1) + (size < 0 ? "" : "," + size) + ") ";
       default:
         return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
     }
@@ -647,7 +686,7 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   * If a text column needs to be sorted, then in some databases it must be converted to something sortable
    *
    * @param db    Description of the Parameter
    * @param field Description of the Parameter
@@ -663,6 +702,8 @@ public class DatabaseUtils {
         return "SUBSTR(" + field + ", 2000, 1)";
       case DatabaseUtils.FIREBIRD:
         return field;
+      case DatabaseUtils.DB2:
+        return "SUBSTR(" + field + ", 2000, 1)";
       case DatabaseUtils.DAFFODILDB:
         // TODO: This doesn't work for DaffodilDB, so use a VARCHAR(4192) instead of CLOB
         return field;
