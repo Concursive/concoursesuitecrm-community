@@ -62,7 +62,7 @@ public class PortalPageURLHandler extends TagSupport {
         //do nothing
       } else {
         buffer.append("&nbsp;<a href=\"javascript:displayMenuPage('selectpage" + page.getId() + "','menuPage','" + page.getId() + "','" + pageGroup.getId() + "','" + site.getId() + "','" + tabId + "','" + site.getTabToDisplay().getThisPageToBuild().getId() + "');\"");
-        buffer.append("onMouseOver=\"over(0, page" + page.getId() + ")\" onmouseout=\"out(0, page" + page.getId() + "); hideMenu('menuPage');\">");
+        buffer.append("onMouseOver=\"over(0, 'page" + page.getId() + "')\" onmouseout=\"out(0, 'page" + page.getId() + "'); hideMenu('menuPage');\">");
         buffer.append("<img src=\"images/select.gif\" name=\"selectpage" + page.getId() + "\" id=\"selectpage" + page.getId() + "\" align=\"absmiddle\" border=\"0\"></a>");
       }
       this.pageContext.getOut().write(buffer.toString());

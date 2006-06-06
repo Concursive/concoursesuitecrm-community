@@ -75,7 +75,7 @@ public class PortalTabURLHandler extends TagSupport {
         //do nothing
       } else {
         buffer.append("&nbsp;<a href=\"javascript:displayMenuTab('selecttab" + tabId + "','menuTab','" + tabId + "','" + siteId + "');\"");
-        buffer.append("onMouseOver=\"over(0, tab" + tabId + ")\" onmouseout=\"out(0, tab" + tabId + "); hideMenu('menuTab');\">");
+        buffer.append("onMouseOver=\"over(0, 'tab" + tabId + "')\" onmouseout=\"out(0, 'tab" + tabId + "'); hideMenu('menuTab');\">");
         buffer.append("<img src=\"images/select.gif\" name=\"selecttab" + tabId + "\" id=\"selecttab" + tabId + "\" align=\"absmiddle\" border=\"0\"></a>");
       }
       this.pageContext.getOut().write(buffer.toString());

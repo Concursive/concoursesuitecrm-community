@@ -239,6 +239,9 @@ public class PortfolioCategoryList extends ArrayList {
     while (iter.hasNext()) {
       PortfolioCategory category = (PortfolioCategory) iter.next();
       String position = context.getRequest().getParameter("category" + category.getId());
+      if (position.indexOf(".") > -1) {
+        position = (new Integer((int) Math.ceil(Double.parseDouble(context.getRequest().getParameter("category" + category.getId()))))).toString();
+      }
       if (position == null || "".equals(position)) {
         position = (String) oldOrder.get(String.valueOf(category.getId()));
       }

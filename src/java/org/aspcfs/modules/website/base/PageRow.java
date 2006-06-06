@@ -41,7 +41,7 @@ public class PageRow extends GenericBean {
   private int position = -1;
   private int pageVersionId = -1;
   private int rowColumnId = -1;
-  private boolean enabled = false;
+  private boolean enabled = true;
   private int enteredBy = -1;
   private java.sql.Timestamp entered = null;
   private int modifiedBy = -1;

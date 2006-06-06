@@ -52,7 +52,7 @@ public class PortalPageGroupURLHandler extends TagSupport {
         //do nothing
       } else {
         buffer.append("&nbsp;<a href=\"javascript:displayMenuPageGroup('selectpagegroup" + pageGroup.getId() + "','menuPageGroup','" + pageGroup.getId() + "','" + site.getId() + "','" + site.getTabToDisplay().getId() + "');\"");
-        buffer.append("onMouseOver=\"over(0, pagegroup" + pageGroup.getId() + ")\" onmouseout=\"out(0, pagegroup" + pageGroup.getId() + "); hideMenu('menuPageGroup');\">");
+        buffer.append("onMouseOver=\"over(0, 'pagegroup" + pageGroup.getId() + "')\" onmouseout=\"out(0, 'pagegroup" + pageGroup.getId() + "'); hideMenu('menuPageGroup');\">");
         buffer.append("<img src=\"images/select.gif\" name=\"selectpagegroup" + pageGroup.getId() + "\" id=\"selectpagegroup" + pageGroup.getId() + "\" align=\"absmiddle\" border=\"0\"></a>");
       }
       this.pageContext.getOut().write(buffer.toString());

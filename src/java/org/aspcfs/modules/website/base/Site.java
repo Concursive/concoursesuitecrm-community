@@ -664,6 +664,9 @@ public class Site extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
+    if (this.getEnabled()) {
+      SiteList.disableOtherSites(db);
+    }
     int resultCount = -1;
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();

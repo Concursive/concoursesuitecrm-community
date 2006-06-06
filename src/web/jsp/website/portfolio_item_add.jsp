@@ -151,10 +151,14 @@ function extract(what) {
     * <dhv:label name="accounts.accounts_documents_upload.LargeFilesUpload">Large files may take a while to upload.</dhv:label><br>
     <dhv:label name="accounts.accounts_documents_upload.WaitForUpload">Wait for file completion message when upload is complete.</dhv:label>
   </p>
-<table border="0" style="empty">
+<table border="0">
 <tr id="saveButton"><td>
 <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="window.location.href='PortfolioItemEditor.do?command=ItemDetails&categoryId=<%= item.getCategoryId() %>&itemId=<%= item.getId() %>';"/>
+  <dhv:evaluate if="<%= item.getId() == -1 %>">
+    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="window.location.href='PortfolioEditor.do?command=List&categoryId=<%= item.getCategoryId() %>';"/>
+  </dhv:evaluate><dhv:evaluate if="<%= item.getId() != -1 %>">
+    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="window.location.href='PortfolioItemEditor.do?command=ItemDetails&categoryId=<%= item.getCategoryId() %>&itemId=<%= item.getId() %>';"/>
+  </dhv:evaluate>
 </td>
 </tr>
 <tr id="savingInfo"><td><dhv:label name="">Saving the Information...</dhv:label></td></tr>

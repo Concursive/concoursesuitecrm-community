@@ -37,7 +37,7 @@
 	}
 </script>
 <body onLoad="javascript:document.website.name.focus();">
-<form name="website" action="Sites.do?command=Save&auto-populate=true&popup=true" onSubmit="return doCheck(this);" method="post">
+<form name="website" action="Sites.do?command=Save&auto-populate=true&popup=true" onSubmit="return checkForm(this);" method="post">
 <!-- Trails -->
 <table class="trails" cellspacing="0"><tr><td>
   <a href="Sites.do?command=List&popup=true"><dhv:label name="">Sites</dhv:label></a> >
@@ -109,10 +109,11 @@
 <br />
 <dhv:evaluate if="<%= site.getId() > -1 %>">
   <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>" name="Save"/>
+  <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Sites.do?command=List&popup=true';"/>
 </dhv:evaluate><dhv:evaluate if="<%= site.getId() == -1 %>">
   <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" name="Save"/>
+  <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Sites.do?command=TemplateList<%= (fromList != null?"&fromList="+fromList:"") %>&popup=true';">
 </dhv:evaluate>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Sites.do?command=TemplateList<%= (fromList != null?"&fromList="+fromList:"") %>&popup=true';">
 </form>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </body>

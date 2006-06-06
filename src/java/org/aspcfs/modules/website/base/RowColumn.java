@@ -45,7 +45,7 @@ public class RowColumn extends GenericBean {
   private int width = -1;
   private int pageRowId = -1;
   private int iceletId = -1;
-  private boolean enabled = false;
+  private boolean enabled = true;
   private int enteredBy = -1;
   private java.sql.Timestamp entered = null;
   private int modifiedBy = -1;
