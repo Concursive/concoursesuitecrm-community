@@ -136,8 +136,8 @@ public final class Constants {
   public final static int TASK_CATEGORY_PROJECTS = 4;
 
   //TODO: Add lookup lists here...
-  
-  //Action Lists 
+
+  //Action Lists
   public final static int ACTIONLISTS_CONTACTS = 2;
 
   //User types
@@ -156,6 +156,7 @@ public final class Constants {
   public final static int IMPORT_ACCOUNT_CONTACTS = 33020043;
   public final static int IMPORT_SALES = 324200544;
   public final static int IMPORT_NETAPP_EXPIRATION = 917200409;
+  public final static int IMPORT_PRODUCT_CATALOG = 33020045;
 
   //System cache names
   public static final String SYSTEM_PROJECT_NAME_LIST = "200401202226";
@@ -167,7 +168,7 @@ public final class Constants {
 
   //Error messages
   public final static String NOT_FOUND_ERROR = "NOT_FOUND_ERROR";
-  
+
   //invalid site id
   public final static int INVALID_SITE = -2;
 

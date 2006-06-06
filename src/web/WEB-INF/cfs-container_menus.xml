@@ -674,7 +674,34 @@
     </submenu>
     -->
   </container>
-	
+	 
+  <container name="productcatalogimports">
+    <properties>
+      <label>${name}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="ProductCatalogs.do?command=Details&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="price">
+      <long_html value="Price"/>
+      <permission value=""/>
+      <link value="ProductCatalogPricings.do?command=PricingList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="images">
+      <long_html value="Images"/>
+      <permission value=""/>
+      <link value="ProductCatalogs.do?command=ImageList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <!--
+    <submenu name="categories">
+      <long_html value="Categories"/>
+      <permission value=""/>
+      <link value="ProductCatalogs.do?command=CategoryList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    -->
+  </container>
   <container name="productoptions">
     <properties>
       <label>${name}</label>

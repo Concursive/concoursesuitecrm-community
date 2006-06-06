@@ -16,6 +16,7 @@
 package org.aspcfs.modules.products.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Import;
 import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -67,14 +68,16 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private String typeName = null;
   private int categoryId = -1;
   private int serviceContractId = -1;
-
+  private int importId = -1;
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
 
+  private boolean excludeUnapprovedProducts = true;
+  
   //resources
   private boolean buildResources = false;
   private boolean buildActivePrice = false;
-
+  
   private String optionText = null;
   // this will have a valid value if all the products have the same option
   private String optionPrice = null;
@@ -91,6 +94,64 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   protected int buildTopLevelOnly = Constants.UNDEFINED;
   // display enabled products that have a valid price only
   protected int buildActiveProductsOnly = Constants.UNDEFINED;
+
+  /**
+ * Gets the excludeUnapprovedProducts attribute of the ProductCatalogList object
+ *
+ * @return excludeUnapprovedProducts The excludeUnapprovedProducts value
+ */
+public boolean isExcludeUnapprovedProducts() {
+	return excludeUnapprovedProducts;
+}
+
+
+/**
+ * Sets the excludeUnapprovedProducts attribute of the ProductCatalogList object
+ *
+ * @param excludeUnapprovedProducts The new excludeUnapprovedProducts value
+ */
+public void setExcludeUnapprovedProducts(boolean excludeUnapprovedProducts) {
+	this.excludeUnapprovedProducts = excludeUnapprovedProducts;
+}
+
+
+/**
+ * Sets the excludeUnapprovedProducts attribute of the ProductCatalogList object
+ *
+ * @param excludeUnapprovedProducts The new excludeUnapprovedProducts value
+ */
+public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
+	this.excludeUnapprovedProducts = Boolean.parseBoolean(excludeUnapprovedProducts);
+}
+
+
+/**
+   * Gets the importId attribute of the ProductCatalogList object
+   *
+   * @return importId The importId value
+   */
+  public int getImportId() {
+    return importId;
+  }
+
+
+  /**
+   * Sets the importId attribute of the ProductCatalogList object
+   *
+   * @param importId The new importId value
+   */
+  public void setImportId(int importId) {
+    this.importId = importId;
+  }
+
+  /**
+   * Sets the importId attribute of the ProductCatalogList object
+   *
+   * @param importId The new importId value
+   */
+  public void setImportId(String importId) {
+    this.importId = Integer.parseInt(importId);
+  }
 
 
   /**
@@ -1101,16 +1162,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     rs.close();
     pst.close();
     // Each product's option list is generated
-    if (buildResources || buildActivePrice) {
-      Iterator i = this.iterator();
-      while (i.hasNext()) {
-        ProductCatalog thisProduct = (ProductCatalog) i.next();
-        if (buildResources) {
-          thisProduct.buildOptions(db);
-        }
-        if (buildActivePrice) {
-          thisProduct.buildActivePrice(db);
-        }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCatalog thisProduct = (ProductCatalog) i.next();
+      thisProduct.determineCategory(db);
+      if (buildResources) {
+        thisProduct.buildOptions(db);
+      }
+      if (buildActivePrice) {
+        thisProduct.buildActivePrice(db);
       }
       //TODO: remove this adsjet specific stuff
       //determineMatch();
@@ -1240,6 +1300,13 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (typeId > -1) {
       sqlFilter.append(" AND pctlg.type_id = ? ");
     }
+    if (importId > -1) {
+        sqlFilter.append(" AND pctlg.import_id = ? ");
+      }
+
+    if (excludeUnapprovedProducts) {
+    	sqlFilter.append("AND (pctlg.status_id IS NULL OR pctlg.status_id = ?) ");
+      }
 
     if (name != null) {
       if (name.indexOf("%") >= 0) {
@@ -1402,7 +1469,13 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (typeId > -1) {
       pst.setInt(++i, typeId);
     }
-
+    
+    if (importId > -1) {
+			pst.setInt(++i, importId);
+		}
+    if (excludeUnapprovedProducts) {
+        pst.setInt(++i, Import.PROCESSED_APPROVED);
+      }
     if (name != null) {
       pst.setString(++i, name.toLowerCase());
     }
@@ -1623,4 +1696,5 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     }
   }
 }
+
 

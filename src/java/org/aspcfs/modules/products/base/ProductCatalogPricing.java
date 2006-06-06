@@ -56,7 +56,7 @@ public class ProductCatalogPricing extends GenericBean {
   private boolean enabled = false;
   private int costCurrency = -1;
   private double costAmount = 0.0;
-
+ 
   //other supplimentary fields
   private String productName = null;
   private String taxName = null;
@@ -65,7 +65,7 @@ public class ProductCatalogPricing extends GenericBean {
   private String recurringCurrencyName = null;
   private String recurringTypeName = null;
   private String costCurrencyName = null;
-
+  
 
   /**
    * Sets the enabled attribute of the ProductCatalogPricing object
@@ -1429,5 +1429,29 @@ public class ProductCatalogPricing extends GenericBean {
     return true;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db         Description of the Parameter
+   * @param productId  Description of the Parameter
+   * @param enteredBy  Description of the Parameter
+   * @param modifiedBy Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void process(Connection db, int productId, int enteredBy, int modifiedBy) throws SQLException {
+    if (this.getEnabled()) {
+      if (this.getId() == -1) {
+        this.setProductId(productId);
+        this.setEnteredBy(enteredBy);
+        this.setModifiedBy(modifiedBy);
+        this.insert(db);
+      } else {
+        this.setModifiedBy(modifiedBy);
+        this.update(db);
+      }
+    } else {
+      this.delete(db, "");
+    }
+  }
 }
 

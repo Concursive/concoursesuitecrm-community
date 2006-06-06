@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- 
+<!--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -13,7 +13,7 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id$
   - Description: Generated default US/English file with all application text to
   - be used for translating.
@@ -361,6 +361,9 @@
     </param>
     <param name="accounts.accounts_asset_history.Issue">
       <value><![CDATA[Issue]]></value>
+    </param>
+    <param name="global.button.Approve">
+      <value><![CDATA[Approve]]></value>
     </param>
     <param name="global.button.ProcessNow">
       <value><![CDATA[Process Now]]></value>
@@ -3604,6 +3607,132 @@
     <param name="products.productCategory">
       <value><![CDATA[Product Category]]></value>
     </param>
+    <param name="products.productCatalog">
+      <value><![CDATA[Product Catalog]]></value>
+    </param>
+    <param name="products.newImport">
+      <value><![CDATA[New Import]]></value>
+    </param>
+    <param name="products.import">
+      <value><![CDATA[Import]]></value>
+    </param>
+    <param name="products.viewImports">
+      <value><![CDATA[View Imports]]></value>
+    </param>
+    <param name="products.allImports">
+      <value><![CDATA[All Imports]]></value>
+    </param>
+    <param name="products.myImports">
+      <value><![CDATA[My Imports]]></value>
+    </param>
+    <param name="products.importDetails">
+      <value><![CDATA[Import Details]]></value>
+    </param>
+    <param name="products.importProperties">
+      <value><![CDATA[Import Properties]]></value>
+    </param>
+    <param name="products.uploadComplete">
+      <value><![CDATA[Upload Complete]]></value>
+    </param>
+    <param name="products.downloadFile">
+      <value><![CDATA[Download File]]></value>
+    </param>
+    <param name="products.viewDetails">
+      <value><![CDATA[View Details]]></value>
+    </param>
+    <param name="products.results">
+      <value><![CDATA[Results]]></value>
+    </param>
+    <param name="products.process">
+      <value><![CDATA[Process]]></value>
+    </param>
+    <param name="products.fileSize">
+      <value><![CDATA[File Size]]></value>
+    </param>
+    <param name="products.imageFileSize">
+      <value><![CDATA[Image File Size]]></value>
+    </param>
+    <param name="products.importedRecords">
+      <value><![CDATA[Imported Records]]></value>
+    </param>
+    <param name="products.failedRecords">
+      <value><![CDATA[Failed Records]]></value>
+    </param>
+    <param name="products.downloadErrorFile">
+      <value><![CDATA[Download Error File]]></value>
+    </param>
+    <param name="products.entered">
+      <value><![CDATA[Entered]]></value>
+    </param>
+    <param name="products.modified">
+      <value><![CDATA[Modified]]></value>
+    </param>
+    <param name="products.owner">
+      <value><![CDATA[Owner]]></value>
+    </param>
+    <param name="products.changeOwner">
+      <value><![CDATA[Change Owner]]></value>
+    </param>
+    <param name="products.accessType">
+      <value><![CDATA[Access Type]]></value>
+    </param>
+    <param name="products.site">
+      <value><![CDATA[Site]]></value>
+    </param>
+    <param name="products.file">
+      <value><![CDATA[File]]></value>
+    </param>
+    <param name="products.images">
+      <value><![CDATA[Images]]></value>
+    </param>
+    <param name="products.line">
+      <value><![CDATA[Line]]></value>
+    </param>
+    <param name="products.generalErrorsWarnings">
+      <value><![CDATA[General Errors/Warnings]]></value>
+    </param>
+    <param name="products.fieldMappings">
+      <value><![CDATA[Field Mappings]]></value>
+    </param>
+    <param name="products.field">
+      <value><![CDATA[Field]]></value>
+    </param>
+    <param name="products.mapsTo">
+      <value><![CDATA[Maps to...]]></value>
+    </param>
+    <param name="products.errorsWarnings">
+      <value><![CDATA[Errors/Warnings]]></value>
+    </param>
+    <param name="products.product_catalog_listimports.total">
+      <value><![CDATA[Total]]></value>
+    </param>
+    <param name="products.product_catalog_listimports.success">
+      <value><![CDATA[Success]]></value>
+    </param>
+    <param name="products.product_catalog_listimports.failed">
+      <value><![CDATA[Failed]]></value>
+    </param>
+    <param name="products.product_catalog_listimports.noImportsFound.text">
+      <value><![CDATA[No imports found.]]></value>
+    </param>
+    <param name="products.fileShouldBeInCSVformat.text">
+      <value><![CDATA[* File should be in CSV format.]]></value>
+    </param>
+    <param name="products.largeFilesUpload.text">
+      <value><![CDATA[Large files may take a while to upload.]]></value>
+    </param>
+    <param name="products.importNotProcessed.text">
+      <value><![CDATA[Your file to import has been received, but has not been processed.]]></value>
+    </param>
+    <param name="products.toBeginProcessingUseProccessNow.text">
+      <value><![CDATA[To begin processing, use the &quot;Process Now&quot; button.  However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.]]></value>
+    </param>
+    <param name="products.first5linesImportfile.text">
+      <value><![CDATA[First 5 lines of the import file]]></value>
+    </param>
+    <param name="products.noErrorsWarningsFound.text">
+      <value><![CDATA[No errors/warnings found.]]></value>
+    </param>
     <param name="products.productName">
       <value><![CDATA[Product Name]]></value>
     </param>
@@ -3807,6 +3936,21 @@
     </param>
     <param name="product.description">
       <value><![CDATA[Description]]></value>
+    </param>
+    <param name="product.details">
+      <value><![CDATA[Details]]></value>
+    </param>
+    <param name="product.status">
+      <value><![CDATA[Status]]></value>
+    </param>
+    <param name="product.description">
+      <value><![CDATA[Description]]></value>
+    </param>
+    <param name="product.comments">
+      <value><![CDATA[Comments]]></value>
+    </param>
+    <param name="product.name">
+      <value><![CDATA[Name]]></value>
     </param>
     <param name="product.searchProducts">
       <value><![CDATA[Search Products]]></value>
@@ -4200,6 +4344,9 @@
     </param>
     <param name="product.addCategoryLink">
       <value><![CDATA[Add Category Link]]></value>
+    </param>
+    <param name="product.productCatalogImport">
+      <value><![CDATA[Product Catalog Import]]></value>
     </param>
     <param name="button.createMapping">
       <value><![CDATA[Create Mapping]]></value>
@@ -5955,6 +6102,9 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="admin.productCatalogEditor">
       <value><![CDATA[Product Catalog Editor]]></value>
+    </param>
+    <param name="admin.productCatalogImporter">
+      <value><![CDATA[Product Catalog Importer]]></value>
     </param>
     <param name="admin.nothingToConfigure.text">
       <value><![CDATA[Nothing to configure in this module.]]></value>

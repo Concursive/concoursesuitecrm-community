@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -12,9 +12,9 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%-- TODO: Show 'nothing to configure' if none available AND no permissions --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -25,7 +25,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> > 
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
 <a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <%= PermissionCategory.getCategory() %>
 </td>
@@ -38,7 +38,7 @@
       <strong><dhv:label name="admin.configureOptions">Configuration Options</dhv:label></strong>
     </th>
   </tr>
-<% 
+<%
   int count = 0;
   int rowid = 0;
 %>
@@ -56,8 +56,8 @@
   </dhv:permission>
 <%}%>
 <%-- Categories --%>
-<% 
-  if (PermissionCategory.getCategories()) { 
+<%
+  if (PermissionCategory.getCategories()) {
 %>
   <dhv:permission name="admin-sysconfig-categories-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
@@ -67,7 +67,7 @@
   </dhv:permission>
 <%}%>
 <%-- Folders --%>
-<% 
+<%
   if (PermissionCategory.getFolders()) {
 %>
   <dhv:permission name="admin-sysconfig-folders-view">
@@ -89,8 +89,8 @@
   </dhv:permission>
 <%}%>
 <%-- Object Events --%>
-<% 
-  if (PermissionCategory.getObjectEvents()) { 
+<%
+  if (PermissionCategory.getObjectEvents()) {
 %>
   <dhv:permission name="admin-object-workflow-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
@@ -103,8 +103,8 @@
   </dhv:permission>
 <%}%>
 <%-- Scheduled Events --%>
-<% 
-  if (PermissionCategory.getScheduledEvents()) { 
+<%
+  if (PermissionCategory.getScheduledEvents()) {
 %>
   <dhv:permission name="admin-object-workflow-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
@@ -117,10 +117,10 @@
   </dhv:permission>
 <%}%>
 <%-- Logos --%>
-<% 
-  if (PermissionCategory.getLogos()) { 
+<%
+  if (PermissionCategory.getLogos()) {
 %>
-  <dhv:permission name="admin-sysconfig-logos-view"> 
+  <dhv:permission name="admin-sysconfig-logos-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
   <tr class="row<%= rowid %>">
     <td>
@@ -130,8 +130,8 @@
   </dhv:permission>
 <%}%>
 <%-- Product Catalog Editor --%>
-<% 
-  if (PermissionCategory.getProducts()) { 
+<%
+  if (PermissionCategory.getProducts()) {
 %>
   <dhv:permission name="admin-sysconfig-products-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
@@ -142,9 +142,22 @@
 	</tr>
   </dhv:permission>
 <%}%>
+<%-- Product Catalog Imports --%>
+<%
+  if (PermissionCategory.getImporter()) {
+%>
+  <dhv:permission name="product-catalog-product-imports-view">
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
+    <td>
+      <a href="ProductCatalogImports.do?command=View&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.productCatalogImporter">Product Catalog Importer</dhv:label></a>
+    </td>
+  </tr>
+  </dhv:permission>
+<%}%>
 <%-- Custom List View Editor --%>
-<% 
-  if (PermissionCategory.getCustomListViews()) { 
+<%
+  if (PermissionCategory.getCustomListViews()) {
 %>
   <dhv:permission name="admin-sysconfig-customlistviews-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>

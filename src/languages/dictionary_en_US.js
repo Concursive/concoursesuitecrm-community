@@ -3,6 +3,7 @@ if (!FrameworkI18N) {
     message:
     {
       "file.required":                  "- File is required\r\n",
+      "imageFile.required":             "- File with images is required\r\n",
       "organization.required":          "- Organization name is required\r\n",
       "specify.alert.description":      "- Please specify an alert description\r\n",
       "data.list.required":             "- Date Listed is required\r\n",

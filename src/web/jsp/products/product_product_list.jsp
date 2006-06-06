@@ -75,5 +75,4 @@
   %>
 </table>
 </dhv:evaluate>
-</form>
 

@@ -13,7 +13,7 @@
     <td width="100%">
       Products And Services >
       Publications > 
-      <%= toHtml(product.getCategoryName()) %></a> >
+      <%= toHtml(product.getCategoryName()) %> >
       <%= toHtml(product.getName()) %> >
       Order
     </td>

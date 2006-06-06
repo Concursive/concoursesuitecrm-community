@@ -105,6 +105,22 @@ public class FileItem extends GenericBean {
     queryRecord(db, itemId);
   }
 
+  /**
+   * Constructor for the FileItem object
+   *
+   * @param db           Description of the Parameter
+   * @param fileName       Description of the Parameter
+   * @param moduleItemId Description of the Parameter
+   * @param moduleId     Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public FileItem(Connection db, String fileName, int moduleItemId, int moduleId) throws SQLException {
+    this.linkModuleId = moduleId;
+    this.linkItemId = moduleItemId;
+    this.filename = fileName;
+    queryRecord(db, -1);
+  }
+  
 
   /**
    * Constructor for the FileItem object when the linkItemId is programmed to
@@ -145,6 +161,9 @@ public class FileItem extends GenericBean {
     if (linkItemId > -1) {
       sql.append("AND f.link_item_id = ? ");
     }
+    if (!filename.equals("")) {
+      sql.append("AND client_filename like ? ");
+    }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     if (itemId > -1) {
@@ -156,6 +175,9 @@ public class FileItem extends GenericBean {
     if (linkItemId > -1) {
       pst.setInt(++i, linkItemId);
     }
+    if (!filename.equals("")) {
+      pst.setString(++i, filename);
+    }    
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs, false);
@@ -1675,6 +1697,55 @@ public class FileItem extends GenericBean {
     }
     return success;
   }
+  /**
+   * Find nomber of files with specified parameters
+   *
+   * @param db     Description of the Parameter
+   * @param itemId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public static int fileExists(Connection db, int itemId, String fileName, int moduleItemId, int moduleId) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    int result=0;
+    sql.append(
+        "SELECT count('x') AS file_count " +
+        "FROM project_files f " +
+        "WHERE f.item_id > 0 ");
+    if (itemId > -1) {
+      sql.append("AND f.item_id = ? ");
+    }
+    if (moduleId > -1) {
+      sql.append("AND f.link_module_id = ? ");
+    }
+    if (moduleItemId > -1) {
+      sql.append("AND f.link_item_id = ? ");
+    }
+    if (!fileName.equals("")) {
+      sql.append("AND client_filename like ? ");
+    }
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    if (itemId > -1) {
+      pst.setInt(++i, itemId);
+    }
+    if (moduleId > -1) {
+      pst.setInt(++i, moduleId);
+    }
+    if (moduleItemId > -1) {
+      pst.setInt(++i, moduleItemId);
+    }
+    if (!fileName.equals("")) {
+      pst.setString(++i, fileName);
+    }    
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      result = rs.getInt(1);
+    } 
+    rs.close();
+    pst.close();
+    return result;
+  }
+
 
 
   /**

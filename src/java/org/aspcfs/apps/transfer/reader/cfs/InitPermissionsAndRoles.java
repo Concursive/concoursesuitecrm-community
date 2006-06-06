@@ -181,6 +181,8 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.addField(
             "products", (String) category.getAttribute("products"));
         thisRecord.addField(
+            "importer", (String) category.getAttribute("importer"));
+        thisRecord.addField(
             "webdav", (String) category.getAttribute("webdav"));
         thisRecord.addField("logos", (String) category.getAttribute("logos"));
         thisRecord.addField("actionPlans", (String) category.getAttribute("actionPlans"));

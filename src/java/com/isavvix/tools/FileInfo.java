@@ -28,9 +28,7 @@ import java.io.File;
  * @see com.isavvix.tools.HttpMultiPartParser
  */
 public class FileInfo {
-  private String name = null,
-  clientFileName = null,
-  fileContentType = null;
+  private String name = null,  clientFileName = null,  fileContentType = null;
   private byte[] fileContents = null;
   private File file = null;
   private StringBuffer sb = new StringBuffer(100);

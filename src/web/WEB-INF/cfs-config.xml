@@ -8,8 +8,8 @@
     This allows you to have one action method return a result that forwards to
     another (or possibly the same) action. This is in effect servlet chaining.
   -->
-  <!-- 
-  Web default 
+  <!--
+  Web default
   -->
   <action name="ProcessImage"
           class="org.aspcfs.modules.communications.actions.ProcessImage">
@@ -597,6 +597,56 @@
     <forward name="PopupProductListOK"
              resource="/products/products_all_products_popup.jsp"
              layout="style"/>
+  </action>
+
+
+  <!-- Product Catalog  Imports -->
+  <action name="ProductCatalogImports"
+          class="org.aspcfs.modules.products.actions.ProductCatalogImports">
+    <bean name="ImportDetails"
+          class="org.aspcfs.modules.products.base.ProductCatalogImport"
+          scope="request"/>
+    <forward name="ViewOK"
+             resource="/products/product_catalog_listimports.jsp"
+             layout="nav"/>
+    <forward name="DetailsOK"
+             resource="/products/product_catalog_detailsimport.jsp"
+             layout="nav"/>
+    <forward name="NewOK" resource="/products/product_catalog_newimport.jsp"
+             layout="nav"/>
+    <forward name="SaveOK"
+             resource="/products/product_catalog_confirm_importupload.jsp"
+             layout="nav"/>
+    <forward name="InitValidateOK"
+             resource="/products/product_catalog_validateimport.jsp"
+             layout="nav"/>
+    <forward name="ValidateOK"
+             resource="/products/product_catalog_validateimport.jsp"
+             layout="nav"/>
+    <forward name="ProcessOK"
+             resource="/ProductCatalogImports.do?command=View"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp"/>
+    <forward name="CancelOK"
+             resource="/ProductCatalogImports.do?command=View"/>
+    <forward name="CancelDetailsOK"
+             resource="/ProductCatalogImports.do?command=Details"/>
+    <forward name="ApproveOK"
+             resource="/ProductCatalogImports.do?command=Details"/>
+    <forward name="ViewResultsOK"
+             resource="/products/product_catalog_importresults.jsp"
+             layout="nav"/>
+    <forward name="ProductDetailsOK"
+             resource="/products/product_importcatalog_details.jsp"
+             layout="nav"/>
+    <forward name="DeleteContactOK"
+             resource="/ProductCatalogImports.do?command=ViewResults"/>
+    <forward name="DeleteProductFailedListOK"
+             resource="/ProductCatalogImports.do?command=ViewResults"
+             layout="nav"/>
+    <forward name="DeleteProductFailedDetailsOK"
+             resource="/products/products_importcontact_details.jsp"
+             layout="nav"/>
   </action>
 
   <action name="ProductCatalogEditor"
@@ -1560,7 +1610,7 @@
     <forward name="CloseAndReloadOK" resource="/reopen_on_delete_or_close.jsp"
              layout="style"/>
     <forward name="CloseInsertContactPopup" resource="/contacts/close_insertcontact_popup.jsp"/>
-             
+
   </action>
   <action name="ExternalContactsOpps"
           class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
@@ -1641,9 +1691,9 @@
     <forward name="DetailsComponentPopupOK"
              resource="/contacts/companydirectory_detailsoppcomponent.jsp"
              layout="style"/>
-    <forward name="ComponentHistoryPopupOK" 
+    <forward name="ComponentHistoryPopupOK"
              resource="/contacts/companydirectory_opp_components_history.jsp" layout="style"/>
-    <forward name="ComponentHistoryDetailsPopupOK" 
+    <forward name="ComponentHistoryDetailsPopupOK"
              resource="/contacts/companydirectory_opp_component_details.jsp" layout="style"/>
   </action>
 
@@ -2232,7 +2282,7 @@
     <forward name="DeletedFieldPopupOK"
              resource="/accounts/accounts_folders_closepopup.jsp"
              layout="style"/>
-    <forward name="ClosePopup" resource="/closepopup.jsp"/>        
+    <forward name="ClosePopup" resource="/closepopup.jsp"/>
   </action>
   <action name="AccountsCalls"
           class="org.aspcfs.modules.accounts.actions.AccountsCalls">
@@ -3105,9 +3155,9 @@
              resource="/ActionPlans.do?command=RevertStatus&amp;actionSource=AccountTicketActionPlans"/>
     <forward name="RevertStatusDetailsOK"
              resource="/AccountTicketActionPlans.do?command=Details"/>
-    <forward name="UpdateGlobalStatusOK" 
+    <forward name="UpdateGlobalStatusOK"
       			 resource="/ActionPlans.do?command=UpdateGlobalStatus&amp;actionSource=AccountTicketActionPlans"/>
-    <forward name="UpdateGlobalStatusDetailsOK" 
+    <forward name="UpdateGlobalStatusDetailsOK"
 			       resource="/AccountTicketActionPlans.do?command=Details"/>
     <forward name="ViewNotesOK"
              resource="/ActionPlanNotes.do?command=ViewNotes"/>
@@ -3414,7 +3464,7 @@
     <forward name="DeleteOK" resource="/CampaignDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/CampaignDocuments.do?command=View"/>
   </action>
-  
+
   <action name="CampaignUserGroups" class="org.aspcfs.modules.communications.actions.CampaignUserGroups">
     <forward name="ViewActiveOK" resource="/communications/campaign_user_group_maps_view_active.jsp" layout="nav"/>
     <forward name="ListGroupsOK" resource="/communications/campaign_user_group_maps_view.jsp" layout="style"/>
@@ -4125,9 +4175,9 @@
              resource="/ActionPlans.do?command=RevertStatus&amp;actionSource=TroubleTicketActionPlans"/>
     <forward name="RevertStatusDetailsOK"
              resource="/TroubleTicketActionPlans.do?command=Details"/>
-    <forward name="UpdateGlobalStatusOK" 
+    <forward name="UpdateGlobalStatusOK"
       			 resource="/ActionPlans.do?command=UpdateGlobalStatus&amp;actionSource=TroubleTicketActionPlans"/>
-    <forward name="UpdateGlobalStatusDetailsOK" 
+    <forward name="UpdateGlobalStatusDetailsOK"
 			       resource="/TroubleTicketActionPlans.do?command=Details"/>
     <forward name="ViewNotesOK"
              resource="/ActionPlanNotes.do?command=ViewNotes"/>

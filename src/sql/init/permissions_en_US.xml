@@ -268,10 +268,11 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Projects"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Employees" description="Who are the employees in my organization?"/>
     </category>
-    <category id="330041409" name="Product Catalog" folders="true" lookups="true" reports="false" categories="false" products="true">
+    <category id="330041409" name="Product Catalog" folders="true" lookups="true" reports="false" categories="false" importer="true" products="true">
       <folder constantId="200403192" description="Product Catalog Categories" enabled="false"/>
       <permission name="product-catalog" attributes="v---" description="Access to Product Catalog module" enabled="false"/>
       <permission name="product-catalog-product" attributes="vaed" description="Products" enabled="false"/>
+      <permission name="product-catalog-product-imports" attributes="vaed" description="Product Catalog Import" enabled="true"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Product Types"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product Format Types"/>
       <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Product Shipping Types"/>
@@ -427,6 +428,7 @@
       <permission name="projects-projects" attributes="vaed" />
       <permission name="documents" attributes="v---" />
       <permission name="documents_documentstore" attributes="vaed" />
+      <permission name="product-catalog-product-imports" attributes="vaed" />
     </role>
     <role name="Operations Manager" description="Manages operations">
        <permission name="myhomepage" attributes="v---"/>
@@ -487,6 +489,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -582,6 +585,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -679,6 +683,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -753,6 +758,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -819,6 +825,7 @@
        <permission name="portal-user" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -905,6 +912,7 @@
        <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>              
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -987,6 +995,7 @@
        <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>              
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -1034,6 +1043,7 @@
        <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>

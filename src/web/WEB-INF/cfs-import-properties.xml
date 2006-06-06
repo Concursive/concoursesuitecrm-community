@@ -176,5 +176,94 @@
         <property aliases="agreement company" displayName="Agreement Company">agreementCompany</property>
       </properties>
     </map>
+    <map class="org.aspcfs.modules.products.base.ProductCatalog" id="productCatalog" displayName="Product Catalog">
+      <properties>
+        <property>id</property>
+        <property aliases="parent_id,parentid" displayName="Parent">parentId</property>
+        <property aliases="type_id,typeid,product_catalog_type" multiple="true" tokenizer="," displayName="Type" isForPrompting="false">typeId</property>
+        <property aliases="format_id,formatid" displayName="Format">formatId</property>
+        <property aliases="shipping_id,shippingid" displayName="Shipping">shippingId</property>
+        <property aliases="estimated_ship_time,estimatedshiptime,ship_time,shiptime" displayName="Estimated Ship Time">estimatedShipTime</property>
+        <property aliases="thumbnail_image_id,thumbnailimageid" displayName="Thumbnail Image" isForPrompting="false">thumbnailImageId</property>
+        <property aliases="small_image_id,smallimageid" displayName="Small Image" isForPrompting="false">smallImageId</property>
+        <property aliases="large_image_id,largeimageid" displayName="Large Image" isForPrompting="false">largeImageId</property>
+        <property aliases="small_image,smallimage,small image" displayName="Small Image Name" >smallImageName</property>
+        <property aliases="large_image,largeimage,large image" displayName="Large Image Name" >largeImageName</property>
+        <property aliases="list_order,listorder" displayName="List Order">listOrder</property>
+        <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
+        <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
+        <property aliases="productname,product_name" displayName="Product Name" required="true">productName</property>
+        <property aliases="abbreviation" displayName="Abbreviation">abbreviation</property>
+        <property aliases="short_description,shortdescription" displayName="Short Description">shortDescription</property>
+        <property aliases="long_description,longdescription" displayName="Long Description">longDescription</property>
+        <property aliases="special_notes,specialnotes,notes" displayName="Special Notes">specialNotes</property>
+        <property aliases="sku,productcode,product_code" displayName="SKU" >sku</property>
+        <property aliases="enabled" displayName="Enabled" isForPrompting="false">enabled</property>
+        <property aliases="in_stock,instock" displayName="In Stock">inStock</property>
+        <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered" isForPrompting="false">entered</property>
+        <property aliases="modified,modified_date,date_modified" displayName="Modified" isForPrompting="false">modified</property>
+        <property aliases="start_date,startdate" displayName="Start Date">startDate</property>
+        <property aliases="expiration_date,expirationdate" displayName="Expiration Date">expirationDate</property>
+        <property aliases="trashed_date,trasheddate" displayName="Trashed Date">trashedDate</property>
+        <property aliases="active" displayName="Active">active</property>
+      </properties>
+      <dependencies>
+       <dependency id="productCatalogPricing">
+         <properties>priceAmount</properties>
+         <displayName>Price</displayName>
+       </dependency>
+       <dependency id="productCategory">
+         <properties>name</properties>
+         <displayName>Category</displayName>
+       </dependency>
+      </dependencies>
+    </map>
+    <map class="org.aspcfs.modules.products.base.ProductCatalogPricing" id="productCatalogPricing" displayName="Product Catalog Pricing">
+      <properties>
+        <property>id</property>
+        <property aliases="product_id,productid" displayName="Product">productId</property>
+        <property aliases="tax_id,taxid" displayName="Tax">taxId</property>
+        <property aliases="msrp_currency,msrpcurrency" displayName="MSRP Currency">msrpCurrency</property>
+        <property aliases="msrp_amount,msrpamount" displayName="MSRP Amount">msrpAmount</property>
+        <property aliases="price_currency,pricecurrency" displayName="Price Currency">priceCurrency</property>
+        <property aliases="price_amount,priceamount,price" displayName="Price Amount">priceAmount</property>
+        <property aliases="recurring_currency,recurringcurrency" displayName="Recurring Currency">recurringCurrency</property>
+        <property aliases="recurring_amount,recurringamount" displayName="Recurring Amount">recurringAmount</property>
+        <property aliases="recurring_type,recurringtype" displayName="Recurring Type">recurringType</property>
+        <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
+        <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered" isForPrompting="false">entered</property>
+        <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
+        <property aliases="modified,modified_date,date_modified" displayName="Modified" isForPrompting="false">modified</property>
+        <property aliases="start_date,startdate" displayName="Start Date">startDate</property>
+        <property aliases="expiration_date,expirationdate" displayName="Expiration Date">expirationDate</property>
+        <property aliases="enabled" displayName="Enabled">enabled</property>
+        <property aliases="cost_currency,costcurrency" displayName="Cost Currency">costCurrency</property>
+        <property aliases="cost_amount,costamount" displayName="Cost Amount">costAmount</property>
+      </properties>
+    </map>
+    <map class="org.aspcfs.modules.products.base.ProductCategory" id="productCategory" displayName="Product Category">
+      <properties>
+        <property>id</property>
+        <property aliases="parentid" displayName="Parent">parentId</property>
+        <property aliases="name,category"  displayName="Category Name">name</property>
+        <property aliases="abbreviation" displayName="Abbreviation">abbreviation</property>
+        <property aliases="shortDescription" displayName="Short Description">shortDescription</property>
+        <property aliases="longdescription" displayName="Long Description">longDescription</property>
+        <property aliases="typeid" displayName="Type">typeId</property>
+        <property aliases="thumbnailimageid" displayName="Thumbnail Image">thumbnailImageId</property>
+        <property aliases="smallimageid" displayName="Small Image">smallImageId</property>
+        <property aliases="largeimageid" displayName="Large Image">largeImageId</property>
+        <property aliases="listorder" displayName="List Order">listOrder</property>
+        <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
+        <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
+        <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered" isForPrompting="false">entered</property>
+        <property aliases="modified,modified_date,date_modified" displayName="Modified" isForPrompting="false">modified</property>
+        <property aliases="start_date,startdate" displayName="Start Date">startDate</property>
+        <property aliases="expiration_date,expirationdate" displayName="Expiration Date">expirationDate</property>
+        <property aliases="enabled" displayName="Enabled">enabled</property>
+        <property aliases="parentname" displayName="Parent Name">parentName</property>
+        <property aliases="typename" displayName="Type Name">typeName</property>
+      </properties>
+    </map>
   </mappings>
 </CFSImportReader>

@@ -6,38 +6,22 @@ import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.accounts.base.Revenue;
 import org.aspcfs.modules.accounts.base.RevenueList;
 import org.aspcfs.modules.actionlist.base.ActionLists;
-import org.aspcfs.modules.actionplans.base.ActionPhase;
-import org.aspcfs.modules.actionplans.base.ActionStep;
+import org.aspcfs.modules.actionplans.base.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.assets.base.Asset;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.CustomField;
-import org.aspcfs.modules.base.CustomFieldCategory;
-import org.aspcfs.modules.base.CustomFieldGroup;
-import org.aspcfs.modules.base.Import;
-import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.contacts.base.Call;
-import org.aspcfs.modules.contacts.base.CallList;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.contacts.base.ContactImport;
-import org.aspcfs.modules.contacts.base.ContactList;
-import org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList;
+import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
+import org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.pipeline.base.OpportunityComponent;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.pipeline.beans.OpportunityBean;
-import org.aspcfs.modules.products.base.ProductCatalog;
-import org.aspcfs.modules.products.base.ProductCatalogPricing;
-import org.aspcfs.modules.products.base.ProductCategory;
-import org.aspcfs.modules.products.base.ProductOption;
+import org.aspcfs.modules.products.base.*;
 import org.aspcfs.modules.products.configurator.NumericalConfigurator;
 import org.aspcfs.modules.products.configurator.StringConfigurator;
-import org.aspcfs.modules.actionplans.base.ActionPlanWork;
-import org.aspcfs.modules.actionplans.base.ActionPlanWorkNote;
-import org.aspcfs.modules.actionplans.base.ActionItemWorkNote;
 import org.aspcfs.modules.quotes.base.*;
 import org.aspcfs.modules.relationships.base.Relationship;
 import org.aspcfs.modules.reports.base.Criteria;
@@ -47,14 +31,9 @@ import org.aspcfs.modules.servicecontracts.base.ServiceContractHours;
 import org.aspcfs.modules.setup.beans.DatabaseBean;
 import org.aspcfs.modules.setup.beans.ServerBean;
 import org.aspcfs.modules.tasks.base.Task;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.troubletickets.base.TicketDefect;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryAssignment;
 import org.aspcfs.modules.tasks.base.TaskCategory;
-import org.aspcfs.modules.tasks.base.TaskCategoryList;
+import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.website.base.*;
-import org.aspcfs.modules.service.base.SyncClient;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.ObjectUtils;
@@ -63,7 +42,7 @@ import org.aspcfs.utils.StringUtils;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -71,21 +50,14 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     matt rajkowski
- * @created    September 3, 2004
- * @version    $Id: ObjectValidator.java,v 1.1.2.3 2004/09/08 16:37:11 partha
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: ObjectValidator.java,v 1.1.2.3 2004/09/08 16:37:11 partha
+ *          Exp $
+ * @created September 3, 2004
  */
 public class ObjectValidator {
 
@@ -100,13 +72,13 @@ public class ObjectValidator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  systemStatus   Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  object         Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param systemStatus Description of the Parameter
+   * @param db           Description of the Parameter
+   * @param object       Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static boolean validate(SystemStatus systemStatus, Connection db, Object object) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -160,10 +132,11 @@ public class ObjectValidator {
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "secretWord", 255);
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "accountNumber", 50);
       // Check for site consistancy with account
-      if (thisContact.getOrgId() > 0){
-        if (thisContact.getSiteId() != Organization.getOrganizationSiteId(db, thisContact.getOrgId())){
-            addError(
-                systemStatus, object, "siteId", "object.validation.contact.siteIncompatibleWithAccount");
+      if (thisContact.getOrgId() > 0) {
+        if (thisContact.getSiteId() != Organization.getOrganizationSiteId(db, thisContact.getOrgId()))
+        {
+          addError(
+              systemStatus, object, "siteId", "object.validation.contact.siteIncompatibleWithAccount");
         }
       }
       // Check for either last name or company
@@ -188,12 +161,14 @@ public class ObjectValidator {
       if (thisContact.getAccessType() != -1) {
         AccessType thisType = new AccessType(db, thisContact.getAccessType());
         //all account contacts are public
-        if (thisContact.getOrgId() > 0 && thisType.getRuleId() != AccessType.PUBLIC) {
+        if (thisContact.getOrgId() > 0 && thisType.getRuleId() != AccessType.PUBLIC)
+        {
           addError(
               systemStatus, object, "accountAccess", PUBLIC_ACCESS_REQUIRED);
         }
         //personal contacts should be owned by the user who enters it i.e they cannot be reassigned
-        if (thisType.getRuleId() == AccessType.PERSONAL && thisContact.getOwner() != thisContact.getEnteredBy()) {
+        if (thisType.getRuleId() == AccessType.PERSONAL && thisContact.getOwner() != thisContact.getEnteredBy())
+        {
           addError(
               systemStatus, object, "accessReassign", "object.validation.OwnerMustBeEnteredBy");
         }
@@ -224,7 +199,8 @@ public class ObjectValidator {
             systemStatus, object, "orgId", "object.validation.ticket.organizationRequired");
       }
       // If ticket is being closed, check if resolution date is before assignmented date
-      if (thisTicket.getEstimatedResolutionDate() != null && thisTicket.getAssignedDate() != null) {
+      if (thisTicket.getEstimatedResolutionDate() != null && thisTicket.getAssignedDate() != null)
+      {
         if (thisTicket.getEstimatedResolutionDate().before(
             thisTicket.getAssignedDate())) {
           addError(
@@ -235,27 +211,33 @@ public class ObjectValidator {
       categoryList.setExclusiveToSite(true);
       categoryList.setSiteId(thisTicket.getSiteId());
       categoryList.buildList(db);
-      if (thisTicket.getCatCode() > 0 && categoryList.getValueFromId(thisTicket.getCatCode()) == null) {
+      if (thisTicket.getCatCode() > 0 && categoryList.getValueFromId(thisTicket.getCatCode()) == null)
+      {
         addError(systemStatus, object, "catCode", "tickets.invalidCategorySelected.text");
       }
-      if (thisTicket.getSubCat1() > 0 && categoryList.getValueFromId(thisTicket.getSubCat1()) == null) {
+      if (thisTicket.getSubCat1() > 0 && categoryList.getValueFromId(thisTicket.getSubCat1()) == null)
+      {
         addError(systemStatus, object, "subCat1", "tickets.invalidCategorySelected.text");
       }
-      if (thisTicket.getSubCat2() > 0 && categoryList.getValueFromId(thisTicket.getSubCat2()) == null) {
+      if (thisTicket.getSubCat2() > 0 && categoryList.getValueFromId(thisTicket.getSubCat2()) == null)
+      {
         addError(systemStatus, object, "subCat2", "tickets.invalidCategorySelected.text");
       }
-      if (thisTicket.getSubCat3() > 0 && categoryList.getValueFromId(thisTicket.getSubCat3()) == null) {
+      if (thisTicket.getSubCat3() > 0 && categoryList.getValueFromId(thisTicket.getSubCat3()) == null)
+      {
         addError(systemStatus, object, "subCat3", "tickets.invalidCategorySelected.text");
       }
       if (thisTicket.getAssignedTo() > -1) {
         User user = new User(db, thisTicket.getAssignedTo());
-        if (user.getSiteId() != -1 && thisTicket.getSiteId() != user.getSiteId() && thisTicket.getProjectId() == -1) {
+        if (user.getSiteId() != -1 && thisTicket.getSiteId() != user.getSiteId() && thisTicket.getProjectId() == -1)
+        {
           addError(systemStatus, object, "assignedTo", "tickets.ticketCategoryDraftAssignment.invalidUserAssignment.text");
         }
       }
       if (thisTicket.getUserGroupId() > -1) {
         UserGroup group = new UserGroup(db, thisTicket.getUserGroupId());
-        if (group.getSiteId() != -1 && group.getSiteId() != thisTicket.getSiteId()) {
+        if (group.getSiteId() != -1 && group.getSiteId() != thisTicket.getSiteId())
+        {
           addError(systemStatus, object, "userGroupId", "tickets.ticketCategoryDraftAssignment.invalidUserGroupAssignment.text");
         }
       }
@@ -266,7 +248,8 @@ public class ObjectValidator {
         "org.aspcfs.modules.troubletickets.base.TicketLog")) {
       TicketLog thisTicketLog = (TicketLog) object;
       if (thisTicketLog.getTicketId() == -1 || (thisTicketLog.getEntryText() == null || thisTicketLog.getEntryText().trim().equals(
-          "")) || thisTicketLog.getEnteredBy() == -1 || thisTicketLog.getModifiedBy() == -1) {
+          "")) || thisTicketLog.getEnteredBy() == -1 || thisTicketLog.getModifiedBy() == -1)
+      {
         return false;
       }
     }
@@ -278,18 +261,20 @@ public class ObjectValidator {
       if (thisLog.getFollowUpRequired() || (thisLog.getAlertDate() != null && !"".equals(
           thisLog.getAlertDate())) ||
           (thisLog.getFollowUpDescription() != null && !"".equals(
-          thisLog.getFollowUpDescription()))) {
+              thisLog.getFollowUpDescription()))) {
         if (!thisLog.getFollowUpRequired()) {
           addError(systemStatus, object, "followUpRequired", REQUIRED_FIELD);
         }
         checkError(systemStatus, object, "alertDate", INVALID_DATE);
         checkError(
             systemStatus, object, "followUpDescription", REQUIRED_FIELD);
-      } else if (!thisLog.getFollowUpRequired() && (thisLog.getAlertDate() == null || "".equals(
+      } else
+      if (!thisLog.getFollowUpRequired() && (thisLog.getAlertDate() == null || "".equals(
           thisLog.getAlertDate())) &&
           (thisLog.getFollowUpDescription() == null || "".equals(
-          thisLog.getFollowUpDescription()))) {
-        if (thisLog.getTicketPerDayDescriptionList() == null || thisLog.getTicketPerDayDescriptionList().size() == 0) {
+              thisLog.getFollowUpDescription()))) {
+        if (thisLog.getTicketPerDayDescriptionList() == null || thisLog.getTicketPerDayDescriptionList().size() == 0)
+        {
           addError(
               systemStatus, object, "action", "object.validation.actionError.blankFormCanNotBeSaved");
         }
@@ -298,43 +283,47 @@ public class ObjectValidator {
     }
 
     //  OpportunityHeader
-    if (object.getClass().getName().equals("org.aspcfs.modules.pipeline.base.OpportunityHeader")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.pipeline.base.OpportunityHeader"))
+    {
       OpportunityHeader oppHeader = (OpportunityHeader) object;
 
       if (oppHeader.getManager() == -1) {
         addError(systemStatus, object, "manager", "object.validation.pipeline.noManagerSelected.text");
       }
-      if (oppHeader.getDescription() == null || "".equals(oppHeader.getDescription().trim())) {
+      if (oppHeader.getDescription() == null || "".equals(oppHeader.getDescription().trim()))
+      {
         addError(systemStatus, object, "description", REQUIRED_FIELD);
       }
-      if (oppHeader.getContactLink() == -1 && oppHeader.getAccountLink() == -1) {
+      if (oppHeader.getContactLink() == -1 && oppHeader.getAccountLink() == -1)
+      {
         addError(systemStatus, object, "acctContact", "object.validation.opportunity.accountContactRequired");
       }
       // 1. site compliance check between oppheader (i.e., account and contact link) and manager
-      if (oppHeader.getContactLink() != -1 || oppHeader.getAccountLink() != -1){
+      if (oppHeader.getContactLink() != -1 || oppHeader.getAccountLink() != -1)
+      {
         int oppSiteId = -1;
-        if (oppHeader.getContactLink() != -1){
+        if (oppHeader.getContactLink() != -1) {
           oppSiteId = Contact.getContactSiteId(db, oppHeader.getContactLink());
         } else {
           oppSiteId = Organization.getOrganizationSiteId(db, oppHeader.getAccountLink());
         }
 
         // if opp has a site
-        if (oppSiteId != -1){
+        if (oppSiteId != -1) {
           //the manager can be from null site or from the same site
-          if (oppHeader.getManager() != -1){
+          if (oppHeader.getManager() != -1) {
             int managerSiteId = systemStatus.getUser(oppHeader.getManager()).getSiteId();
-            if (managerSiteId != -1 && (managerSiteId != oppSiteId)){
+            if (managerSiteId != -1 && (managerSiteId != oppSiteId)) {
               addError(systemStatus, object, "manager", "object.validation.opportunity.permissionNotAllowedForThisSite");
             }
           }
         }
         // if link contact is null site
-        if (oppSiteId == -1){
+        if (oppSiteId == -1) {
           //the manager can only be from null site
-          if (oppHeader.getManager() != -1){
+          if (oppHeader.getManager() != -1) {
             int managerSiteId = systemStatus.getUser(oppHeader.getManager()).getSiteId();
-            if (managerSiteId != -1){
+            if (managerSiteId != -1) {
               addError(systemStatus, object, "manager", "object.validation.opportunity.permissionNotAllowedForThisSite");
             }
           }
@@ -343,12 +332,14 @@ public class ObjectValidator {
     }
 
     // OpportunityBean
-    if (object.getClass().getName().equals("org.aspcfs.modules.pipeline.beans.OpportunityBean")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.pipeline.beans.OpportunityBean"))
+    {
       OpportunityBean bean = (OpportunityBean) object;
       OpportunityComponent oppComponent = bean.getComponent();
       OpportunityHeader oppHeader = bean.getHeader();
       AccessTypeList accessTypes = systemStatus.getAccessTypeList(db, AccessType.OPPORTUNITIES);
-      if (oppHeader.getAccessType() == accessTypes.getCode(AccessType.CONTROLLED_HIERARCHY)) {
+      if (oppHeader.getAccessType() == accessTypes.getCode(AccessType.CONTROLLED_HIERARCHY))
+      {
         if (oppHeader.getManager() != -1) {
           User userRecord = systemStatus.getUser(oppHeader.getManager());
           userRecord.setBuildHierarchy(true);
@@ -372,30 +363,31 @@ public class ObjectValidator {
       }
       //Check that the 'assigned to/owner' person has the same site Id as
       //the contact or the account.
-      if (oppComponent != null){
+      if (oppComponent != null) {
         int ownerSiteId = -1;
-        if (oppComponent.getOwner() != -1){
+        if (oppComponent.getOwner() != -1) {
           ownerSiteId = systemStatus.getUser(oppComponent.getOwner()).getSiteId();
 
-          if (oppHeader.getContactLink() != -1 || oppHeader.getAccountLink() != -1){
+          if (oppHeader.getContactLink() != -1 || oppHeader.getAccountLink() != -1)
+          {
 
             int oppSiteId = -1;
-            if (oppHeader.getContactLink() != -1){
+            if (oppHeader.getContactLink() != -1) {
               oppSiteId = Contact.getContactSiteId(db, oppHeader.getContactLink());
             } else {
               oppSiteId = Organization.getOrganizationSiteId(db, oppHeader.getAccountLink());
             }
             // if link contact has a site
-            if (oppSiteId != -1){
+            if (oppSiteId != -1) {
               //the owner can be from null site or from the same site
-              if (ownerSiteId != -1 && (ownerSiteId != oppSiteId)){
+              if (ownerSiteId != -1 && (ownerSiteId != oppSiteId)) {
                 addError(systemStatus, object, "owner", "object.validation.opportunity.permissionNotAllowedForThisSite");
               }
             }
             // if link contact is null site
-            if (oppSiteId == -1){
+            if (oppSiteId == -1) {
               //the owner can only be from null site
-              if (ownerSiteId != -1){
+              if (ownerSiteId != -1) {
                 addError(systemStatus, object, "owner", "object.validation.opportunity.permissionNotAllowedForThisSite");
               }
             }
@@ -425,8 +417,9 @@ public class ObjectValidator {
         addWarning(
             systemStatus, object, "owner", "object.validation.disabledUser");
       }
-      if (!systemStatus.hasField("pipeline-compDescription")){
-        if (oppComponent.getDescription() == null || "".equals(oppComponent.getDescription().trim())) {
+      if (!systemStatus.hasField("pipeline-compDescription")) {
+        if (oppComponent.getDescription() == null || "".equals(oppComponent.getDescription().trim()))
+        {
           addError(systemStatus, object, "componentDescription", REQUIRED_FIELD);
         }
       }
@@ -441,7 +434,8 @@ public class ObjectValidator {
               systemStatus, object, "closeProb", "object.validation.opportunityComponent.closeProbNotLTZero");
         }
       }
-      if (!systemStatus.hasField("pipeline-lowEstimate") && !systemStatus.hasField("opportunity.lowEstimateCanNotBeZero")){
+      if (!systemStatus.hasField("pipeline-lowEstimate") && !systemStatus.hasField("opportunity.lowEstimateCanNotBeZero"))
+      {
         if (oppComponent.getLow() > oppComponent.getHigh()) {
           addError(
               systemStatus, object, "low", "object.validation.opportunityComponent.lowNotGTHigh");
@@ -451,7 +445,7 @@ public class ObjectValidator {
           "")) {
         addError(systemStatus, object, "closeDate", REQUIRED_FIELD);
       }
-      if (!systemStatus.hasField("pipeline-bestGuessEstimate")){
+      if (!systemStatus.hasField("pipeline-bestGuessEstimate")) {
         if (oppComponent.getGuess() == 0) {
           addError(systemStatus, object, "guess", REQUIRED_FIELD);
         }
@@ -468,7 +462,7 @@ public class ObjectValidator {
       if (oppComponent.getGuess() == 0) {
         addError(systemStatus, object, "guess", REQUIRED_FIELD);
       }
-      if (!systemStatus.hasField("opportunity.termsAndUnits")){
+      if (!systemStatus.hasField("opportunity.termsAndUnits")) {
         if (oppComponent.getTerms() == 0) {
           addError(systemStatus, object, "terms", REQUIRED_FIELD);
         } else {
@@ -517,7 +511,8 @@ public class ObjectValidator {
       }
 
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
-      if (call.getContactId() == -1 && call.getOrgId() == -1 && call.getOppHeaderId() == -1) {
+      if (call.getContactId() == -1 && call.getOrgId() == -1 && call.getOppHeaderId() == -1)
+      {
         addError(
             systemStatus, object, "link", "object.validation.call.notAssociated");
       }
@@ -562,9 +557,11 @@ public class ObjectValidator {
     }
 
     //  FileFolder
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.FileFolder")) {
+    if (object.getClass().getName().equals("com.zeroio.iteam.base.FileFolder"))
+    {
       FileFolder fileFolder = (FileFolder) object;
-      if (fileFolder.getLinkModuleId() == -1 || fileFolder.getLinkItemId() == -1) {
+      if (fileFolder.getLinkModuleId() == -1 || fileFolder.getLinkItemId() == -1)
+      {
         addError(systemStatus, object, "action", "object.validation.noId");
       }
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
@@ -675,7 +672,8 @@ public class ObjectValidator {
     }
 
     //  SearchCriteriaElement
-    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.SearchCriteriaElement")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.communications.base.SearchCriteriaElement"))
+    {
       //checkError(systemStatus, object, "groupName", REQUIRED_FIELD);
       SearchCriteriaElement element = (SearchCriteriaElement) object;
       StringTokenizer splitted = new StringTokenizer(element.getText(), "[*^|]");
@@ -684,7 +682,7 @@ public class ObjectValidator {
       }
       if (element.getFieldId() == 4) {
         try {
-          Timestamp tmp = DateUtils.getUserToServerDateTime((TimeZone)null, DateFormat.SHORT, DateFormat.LONG, element.getText(), new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY")));
+          Timestamp tmp = DateUtils.getUserToServerDateTime((TimeZone) null, DateFormat.SHORT, DateFormat.LONG, element.getText(), new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY")));
           String date = null;
           if (tmp == null) {
             addError(systemStatus, object, "text", INVALID_DATE);
@@ -724,7 +722,8 @@ public class ObjectValidator {
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.communications.base.Message")) {
       Message message = (Message) object;
-      if ((message.getName() == null || message.getName().trim().equals("")) && !message.getDisableNameValidation()) {
+      if ((message.getName() == null || message.getName().trim().equals("")) && !message.getDisableNameValidation())
+      {
         addError(systemStatus, object, "name", REQUIRED_FIELD);
       }
       checkError(systemStatus, object, "messageSubject", REQUIRED_FIELD);
@@ -741,7 +740,8 @@ public class ObjectValidator {
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.communications.base.SurveyQuestion")) {
       SurveyQuestion question = (SurveyQuestion) object;
-      if (question.getRequired() && question.getDescription() == null || "".equals(question.getDescription().trim())) {
+      if (question.getRequired() && question.getDescription() == null || "".equals(question.getDescription().trim()))
+      {
         addError(systemStatus, object, "description", REQUIRED_FIELD);
       }
       if (question.getType() == -1) {
@@ -760,7 +760,8 @@ public class ObjectValidator {
       if (project.getRequestDate() == null) {
         addError(systemStatus, object, "requestDate", REQUIRED_FIELD);
       }
-      if ((project.getEstimatedCloseDate() != null) && (project.getRequestDate() != null)) {
+      if ((project.getEstimatedCloseDate() != null) && (project.getRequestDate() != null))
+      {
         if (project.getEstimatedCloseDate().before(project.getRequestDate())) {
           addWarning(
               systemStatus, object, "estimatedCloseDate", "object.validation.project.estimatedCloseDateNotLTRequestDate");
@@ -783,7 +784,8 @@ public class ObjectValidator {
             "") || newsArticle.getIntro().equals(" \r\n<br />\r\n ")) {
           addError(systemStatus, object, "intro", REQUIRED_FIELD);
         }
-        if ((newsArticle.getEndDate() != null) && (newsArticle.getStartDate() != null)) {
+        if ((newsArticle.getEndDate() != null) && (newsArticle.getStartDate() != null))
+        {
           if (newsArticle.getEndDate().before(newsArticle.getStartDate())) {
             // TODO: Should be archive date is earlier than start date
             addWarning(
@@ -826,7 +828,8 @@ public class ObjectValidator {
       ActionPlanWorkNote thisNote = (ActionPlanWorkNote) object;
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
       checkError(systemStatus, object, "submitted", REQUIRED_FIELD);
-      if (thisNote.getDescription() != null && thisNote.getDescription().length() > 300) {
+      if (thisNote.getDescription() != null && thisNote.getDescription().length() > 300)
+      {
         addError(systemStatus, object, "description", "object.validation.exceedsMaxLength.300.text");
       }
     }
@@ -848,7 +851,8 @@ public class ObjectValidator {
         addError(systemStatus, object, "owner", REQUIRED_FIELD);
       }
       //If task is marked personal and the owner is different from the user entering the task, throw an error
-      if (thisTask.getSharing() == 1 && thisTask.getOwner() != thisTask.getModifiedBy()) {
+      if (thisTask.getSharing() == 1 && thisTask.getOwner() != thisTask.getModifiedBy())
+      {
         addError(
             systemStatus, object, "sharing", "object.validation.task.ownerPersonal");
       }
@@ -870,7 +874,8 @@ public class ObjectValidator {
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.tasks.base.TaskCategory")) {
       TaskCategory thisCategory = (TaskCategory) object;
-      if ((thisCategory.getLinkModuleId() == -1) || (thisCategory.getLinkItemId() == -1)) {
+      if ((thisCategory.getLinkModuleId() == -1) || (thisCategory.getLinkItemId() == -1))
+      {
         addError(systemStatus, object, "linkModuleId", REQUIRED_FIELD);
       }
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
@@ -886,7 +891,8 @@ public class ObjectValidator {
       }
       checkError(systemStatus, object, "shortDescription", REQUIRED_FIELD);
       checkError(systemStatus, object, "description", REQUIRED_FIELD);
-      if (requirement.getDeadline() != null && requirement.getStartDate() != null) {
+      if (requirement.getDeadline() != null && requirement.getStartDate() != null)
+      {
         if (requirement.getDeadline().before(requirement.getStartDate())) {
           addWarning(
               systemStatus, object, "deadline", "object.validation.project.requirements.deadlineNotLTStartDate");
@@ -895,7 +901,8 @@ public class ObjectValidator {
     }
 
     // Assignment
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.Assignment")) {
+    if (object.getClass().getName().equals("com.zeroio.iteam.base.Assignment"))
+    {
       Assignment assignment = (Assignment) object;
       if (assignment.getProjectId() == -1) {
         addError(
@@ -945,7 +952,8 @@ public class ObjectValidator {
       }
       //If this folder is being updated such that it can have only one record per link_item, then
       //make sure it previously does not have multiple records for any of the link_items
-      if (thisCategory.getId() != -1 && !thisCategory.getAllowMultipleRecords()) {
+      if (thisCategory.getId() != -1 && !thisCategory.getAllowMultipleRecords())
+      {
         if (thisCategory.hasMultipleRecords(db)) {
           addError(
               systemStatus, object, "allowMultipleRecords", "object.validation.customFieldCategory.hasMultipleRecords");
@@ -1024,7 +1032,8 @@ public class ObjectValidator {
           thisField.setError(
               systemStatus.getLabel("object.validation.required"));
         }
-        if (thisField.getType() == CustomField.SELECT && thisField.getRequired() && thisField.getSelectedItemId() == -1) {
+        if (thisField.getType() == CustomField.SELECT && thisField.getRequired() && thisField.getSelectedItemId() == -1)
+        {
           addError(systemStatus, object, "selectedItemId", REQUIRED_FIELD);
           thisField.setError(
               systemStatus.getLabel("object.validation.required"));
@@ -1032,11 +1041,11 @@ public class ObjectValidator {
         if (thisField.getRequired() &&
             thisField.getType() == CustomField.STATE_SELECT && (
             thisField.getEnteredValue() == null ||
-            "".equals(thisField.getEnteredValue().trim()) ||
-            "-1".equals(thisField.getEnteredValue().trim()) ||
-            "--".equals(thisField.getEnteredValue().trim()))) {
-            addError(systemStatus, object, "enteredValue", REQUIRED_FIELD);
-            thisField.setError(systemStatus.getLabel("object.validation.required"));
+                "".equals(thisField.getEnteredValue().trim()) ||
+                "-1".equals(thisField.getEnteredValue().trim()) ||
+                "--".equals(thisField.getEnteredValue().trim()))) {
+          addError(systemStatus, object, "enteredValue", REQUIRED_FIELD);
+          thisField.setError(systemStatus.getLabel("object.validation.required"));
         }
         //Type mis-match
         if (thisField.getEnteredValue() != null && !thisField.getEnteredValue().equals(
@@ -1079,7 +1088,8 @@ public class ObjectValidator {
             }
           }
 
-          if (thisField.getRequired() && thisField.getType() == CustomField.CHECKBOX) {
+          if (thisField.getRequired() && thisField.getType() == CustomField.CHECKBOX)
+          {
             boolean testFlag = DatabaseUtils.parseBoolean(thisField.getEnteredValue());
             if (!testFlag) {
               addError(systemStatus, object, "enteredValue", REQUIRED_FIELD);
@@ -1091,7 +1101,7 @@ public class ObjectValidator {
             try {
               Locale locale = new Locale(
                   System.getProperty("LANGUAGE"), System.getProperty(
-                      "COUNTRY"));
+                  "COUNTRY"));
               NumberFormat nf = NumberFormat.getInstance(locale);
               thisField.setEnteredDouble(
                   nf.parse(thisField.getEnteredValue()).doubleValue());
@@ -1109,7 +1119,7 @@ public class ObjectValidator {
             try {
               Locale locale = new Locale(
                   System.getProperty("LANGUAGE"), System.getProperty(
-                      "COUNTRY"));
+                  "COUNTRY"));
               DateFormat localeFormatter = DateFormat.getDateInstance(
                   DateFormat.SHORT, locale);
               localeFormatter.setLenient(false);
@@ -1132,7 +1142,8 @@ public class ObjectValidator {
              *  }
             */
             if (!checkError(
-                systemStatus, object, "enteredValue", INVALID_EMAIL_NOT_REQUIRED)) {
+                systemStatus, object, "enteredValue", INVALID_EMAIL_NOT_REQUIRED))
+            {
               thisField.setError(
                   systemStatus.getLabel(
                       "object.validation.communications.fullEmailAddress"));
@@ -1190,7 +1201,8 @@ public class ObjectValidator {
     }
 
     //  Invitation
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.Invitation")) {
+    if (object.getClass().getName().equals("com.zeroio.iteam.base.Invitation"))
+    {
       checkError(systemStatus, object, "email", REQUIRED_FIELD);
       checkError(systemStatus, object, "firstName", REQUIRED_FIELD);
       checkError(systemStatus, object, "lastName", REQUIRED_FIELD);
@@ -1219,7 +1231,8 @@ public class ObjectValidator {
     }
 
     //  IssueReply
-    if (object.getClass().getName().equals("com.zeroio.iteam.base.IssueReply")) {
+    if (object.getClass().getName().equals("com.zeroio.iteam.base.IssueReply"))
+    {
       IssueReply issueReply = (IssueReply) object;
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
       checkError(systemStatus, object, "body", REQUIRED_FIELD);
@@ -1252,7 +1265,7 @@ public class ObjectValidator {
       if (thisImport.getType() < 0) {
         addError(systemStatus, object, "type", REQUIRED_FIELD);
       }
-      if (thisImport.getSiteId() == Constants.INVALID_SITE){
+      if (thisImport.getSiteId() == Constants.INVALID_SITE) {
         addError(systemStatus, object, "siteId", REQUIRED_FIELD);
       }
     }
@@ -1341,14 +1354,16 @@ public class ObjectValidator {
         "org.aspcfs.modules.products.base.ProductCatalog")) {
       ProductCatalog productCatalog = (ProductCatalog) object;
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
-      if (productCatalog.getStartDate() != null && productCatalog.getExpirationDate() != null) {
+      if (productCatalog.getStartDate() != null && productCatalog.getExpirationDate() != null)
+      {
         if (productCatalog.getStartDate().after(
             productCatalog.getExpirationDate())) {
           addError(
               systemStatus, object, "startDate", "object.validation.startAfterExpiration");
         }
       }
-      if (productCatalog.getStartDate() == null && productCatalog.getExpirationDate() != null) {
+      if (productCatalog.getStartDate() == null && productCatalog.getExpirationDate() != null)
+      {
         addError(
             systemStatus, object, "startDate", "object.validation.startAfterExpiration");
       }
@@ -1359,7 +1374,18 @@ public class ObjectValidator {
         }
       }
     }
-
+    //  ProductCatalogImport
+    if (object.getClass().getName().equals(
+        "org.aspcfs.modules.products.base.ProductCatalogImport")) {
+      ProductCatalogImport thisImport = (ProductCatalogImport) object;
+      checkError(systemStatus, object, "name", REQUIRED_FIELD);
+      if (thisImport.getType() < 0) {
+        addError(systemStatus, object, "type", REQUIRED_FIELD);
+      }
+      if (thisImport.getSiteId() == Constants.INVALID_SITE) {
+        addError(systemStatus, object, "siteId", REQUIRED_FIELD);
+      }
+    }
     // ProductOption
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.products.base.ProductOption")) {
@@ -1381,7 +1407,8 @@ public class ObjectValidator {
         "org.aspcfs.modules.products.base.ProductCategory")) {
       ProductCategory productCategory = (ProductCategory) object;
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
-      if (productCategory.getStartDate() != null && productCategory.getExpirationDate() != null) {
+      if (productCategory.getStartDate() != null && productCategory.getExpirationDate() != null)
+      {
         if (productCategory.getStartDate().after(
             productCategory.getExpirationDate())) {
           addError(
@@ -1413,14 +1440,14 @@ public class ObjectValidator {
       }
       checkError(systemStatus, object, "shortDescription", REQUIRED_FIELD);
 
-      if (quote.getHeaderId() != -1){
+      if (quote.getHeaderId() != -1) {
         String allowMultipleQuotes = systemStatus.getValue(Quote.QUOTE_CONFIG_NAME, Quote.MULTIPLE_QUOTE_CONFIG_PARAM);
-        if (allowMultipleQuotes != null){
-          if (!Quote.allowMultipleQuotesPerOpportunity(allowMultipleQuotes)){
+        if (allowMultipleQuotes != null) {
+          if (!Quote.allowMultipleQuotesPerOpportunity(allowMultipleQuotes)) {
             QuoteList tmpQuoteList = new QuoteList();
             tmpQuoteList.setHeaderId(quote.getHeaderId());
             tmpQuoteList.buildList(db);
-            if (quote.getId() == -1){
+            if (quote.getId() == -1) {
               // Check when a quote is created
               if (tmpQuoteList.size() > 0) {
                 addError(systemStatus, object, "headerId", "object.validation.opportunityHasQuotes");
@@ -1428,9 +1455,9 @@ public class ObjectValidator {
             } else {
               // Check when a quote is modified
               Iterator tmpQuoteIterator = tmpQuoteList.iterator();
-              while (tmpQuoteIterator.hasNext()){
-                Quote tmpQuote = (Quote)tmpQuoteIterator.next();
-                if (tmpQuote.getId() != quote.getId()){
+              while (tmpQuoteIterator.hasNext()) {
+                Quote tmpQuote = (Quote) tmpQuoteIterator.next();
+                if (tmpQuote.getId() != quote.getId()) {
                   addError(systemStatus, object, "headerId", "object.validation.opportunityHasQuotes");
                 }
               }
@@ -1438,9 +1465,9 @@ public class ObjectValidator {
           }
         }
         String allowMultipleVersion = systemStatus.getValue(Quote.QUOTE_CONFIG_NAME, Quote.MULTIPLE_VERSION_CONFIG_PARAM);
-        if (allowMultipleVersion != null){
-          if (quote.getVersionNumber() > 1){
-                addError(systemStatus, object, "headerId", "object.validation.noMultipleVersionQuoteForOpportunity");
+        if (allowMultipleVersion != null) {
+          if (quote.getVersionNumber() > 1) {
+            addError(systemStatus, object, "headerId", "object.validation.noMultipleVersionQuoteForOpportunity");
           }
         }
       }
@@ -1530,7 +1557,8 @@ public class ObjectValidator {
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.products.base.ProductCatalogPricing")) {
       ProductCatalogPricing pricing = (ProductCatalogPricing) object;
-      if (pricing.getStartDate() != null && pricing.getExpirationDate() != null) {
+      if (pricing.getStartDate() != null && pricing.getExpirationDate() != null)
+      {
         if (pricing.getStartDate().after(pricing.getExpirationDate())) {
           addError(
               systemStatus, object, "startDate", "object.validation.productPricing.startDateNotGTExpirationDate");
@@ -1543,21 +1571,26 @@ public class ObjectValidator {
         "org.aspcfs.modules.products.configurator.NumericalConfigurator")) {
       NumericalConfigurator configurator = (NumericalConfigurator) object;
       boolean valid = true;
-      if (configurator.getMinNum() != -1 && configurator.getMaxNum() != -1 && configurator.getMinNum() > configurator.getMaxNum()) {
+      if (configurator.getMinNum() != -1 && configurator.getMaxNum() != -1 && configurator.getMinNum() > configurator.getMaxNum())
+      {
         configurator.getPropertyList().getOptionProperty("number_max").setErrorMsg(
             systemStatus.getLabel("object.validation.maxNumberNotLTMinNumber"));//"max number cannot be lesser than min number");
         valid = false;
       }
-      if (configurator.getMinNum() != -1 && configurator.getDefaultNum() < configurator.getMinNum()) {
-        if (configurator.getPropertyList().getOptionProperty("number_default") != null) {
+      if (configurator.getMinNum() != -1 && configurator.getDefaultNum() < configurator.getMinNum())
+      {
+        if (configurator.getPropertyList().getOptionProperty("number_default") != null)
+        {
           configurator.getPropertyList().getOptionProperty("number_default").setErrorMsg(
               systemStatus.getLabel(
                   "object.validation.defaultNumberNotLTMinNumber"));//"default number value cannot be lesser than min number");
           valid = false;
         }
       }
-      if (configurator.getMaxNum() != -1 && configurator.getDefaultNum() > configurator.getMaxNum()) {
-        if (configurator.getPropertyList().getOptionProperty("number_default") != null) {
+      if (configurator.getMaxNum() != -1 && configurator.getDefaultNum() > configurator.getMaxNum())
+      {
+        if (configurator.getPropertyList().getOptionProperty("number_default") != null)
+        {
           configurator.getPropertyList().getOptionProperty("number_default").setErrorMsg(
               systemStatus.getLabel(
                   "object.validation.defaultNumberNotGTMaxNumber"));//"default number value cannot be greater than max number");
@@ -1573,7 +1606,8 @@ public class ObjectValidator {
       StringConfigurator configurator = (StringConfigurator) object;
       boolean valid = true;
       if (configurator.getDefaultText().length() < configurator.getMinChars()) {
-        if (configurator.getPropertyList().getOptionProperty("text_default") != null) {
+        if (configurator.getPropertyList().getOptionProperty("text_default") != null)
+        {
           //"default text length cannot be lesser than min chars");
           configurator.getPropertyList().getOptionProperty("text_default").setErrorMsg(
               systemStatus.getLabel(
@@ -1582,7 +1616,8 @@ public class ObjectValidator {
         }
       }
       if (configurator.getDefaultText().length() > configurator.getMaxChars()) {
-        if (configurator.getPropertyList().getOptionProperty("text_default") != null) {
+        if (configurator.getPropertyList().getOptionProperty("text_default") != null)
+        {
           //"default text length cannot be greater than max chars");
           configurator.getPropertyList().getOptionProperty("text_default").setErrorMsg(
               systemStatus.getLabel(
@@ -1602,20 +1637,23 @@ public class ObjectValidator {
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.relationships.base.Relationship")) {
       Relationship relationship = (Relationship) object;
-      if (relationship.getObjectIdMapsFrom() == -1 || relationship.getObjectIdMapsTo() == -1) {
+      if (relationship.getObjectIdMapsFrom() == -1 || relationship.getObjectIdMapsTo() == -1)
+      {
         addError(
             systemStatus, object, "objectIdMapsTo", "relationships.bothObjectsAreRequired");
-      } else if (relationship.getObjectIdMapsFrom() == relationship.getObjectIdMapsTo()) {
+      } else
+      if (relationship.getObjectIdMapsFrom() == relationship.getObjectIdMapsTo())
+      {
         addError(
             systemStatus, object, "objectIdMapsTo", "relationships.orgCanNotBeRelatedToItself");
       }
 
       if ((relationship.getCategoryIdMapsFrom() == Constants.ACCOUNT_OBJECT) &&
-          (relationship.getCategoryIdMapsTo() == Constants.ACCOUNT_OBJECT)){
+          (relationship.getCategoryIdMapsTo() == Constants.ACCOUNT_OBJECT)) {
 
         int fromSiteId = Organization.getOrganizationSiteId(db, relationship.getObjectIdMapsFrom());
         int toSiteId = Organization.getOrganizationSiteId(db, relationship.getObjectIdMapsTo());
-        if (fromSiteId != toSiteId){
+        if (fromSiteId != toSiteId) {
           addError(
               systemStatus, object, "objectIdMapsTo", "relationships.orgFromDifferentSitesCanNotBeRelated");
         }
@@ -1653,180 +1691,186 @@ public class ObjectValidator {
       if (step.getId() != -1 && step.getId() == step.getParentId()) {
         addError(systemStatus, object, "parentId", "object.validation.actionObjectCanNotBeItsOwnParentError.text");
       }
-      if (step.getPermissionType() == ActionStep.SPECIFIC_USER_GROUP && (step.getUserGroupId() == -1 || step.getDepartmentId() > -1 || step.getRoleId() > -1)) {
+      if (step.getPermissionType() == ActionStep.SPECIFIC_USER_GROUP && (step.getUserGroupId() == -1 || step.getDepartmentId() > -1 || step.getRoleId() > -1))
+      {
         addError(systemStatus, object, "userGroupId", "object.validation.invalidUserGroupIdError.text");
       }
-      if (step.getPermissionType() == ActionStep.DEPARTMENT && (step.getUserGroupId() > -1 || step.getDepartmentId() == -1 || step.getRoleId() > -1)) {
+      if (step.getPermissionType() == ActionStep.DEPARTMENT && (step.getUserGroupId() > -1 || step.getDepartmentId() == -1 || step.getRoleId() > -1))
+      {
         addError(systemStatus, object, "departmentId", "object.validation.invalidDepartmentIdError.text");
       }
-      if (step.getPermissionType() == ActionStep.ROLE && (step.getUserGroupId() > -1 || step.getDepartmentId() > -1 || step.getRoleId() == -1)) {
+      if (step.getPermissionType() == ActionStep.ROLE && (step.getUserGroupId() > -1 || step.getDepartmentId() > -1 || step.getRoleId() == -1))
+      {
         addError(systemStatus, object, "roleId", "object.validation.invalidRoleIdError.text");
       }
     }
 
     //User
-    if (object.getClass().getName().equals("org.aspcfs.modules.admin.base.User")) {
-        User user = (User) object;
-        int userId = user.getId();
-        OrganizationList sourceAccounts = new OrganizationList();
-        sourceAccounts.setOwnerId(userId);
-        sourceAccounts.buildList(db);
-        if (sourceAccounts.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+    if (object.getClass().getName().equals("org.aspcfs.modules.admin.base.User"))
+    {
+      User user = (User) object;
+      int userId = user.getId();
+      OrganizationList sourceAccounts = new OrganizationList();
+      sourceAccounts.setOwnerId(userId);
+      sourceAccounts.buildList(db);
+      if (sourceAccounts.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        ContactList sourcePublicContacts = new ContactList();
-        sourcePublicContacts.setOwner(userId);
-        sourcePublicContacts.setLeadsOnly(Constants.FALSE);
-        sourcePublicContacts.setEmployeesOnly(Constants.FALSE);
-        sourcePublicContacts.setBuildDetails(false);
-        sourcePublicContacts.setBuildTypes(false);
-        sourcePublicContacts.setRuleId(AccessType.PUBLIC);
-        sourcePublicContacts.setExcludeAccountContacts(true);
-        sourcePublicContacts.setIncludeAllSites(true);
-        sourcePublicContacts.buildList(db);
-        if (sourcePublicContacts.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      ContactList sourcePublicContacts = new ContactList();
+      sourcePublicContacts.setOwner(userId);
+      sourcePublicContacts.setLeadsOnly(Constants.FALSE);
+      sourcePublicContacts.setEmployeesOnly(Constants.FALSE);
+      sourcePublicContacts.setBuildDetails(false);
+      sourcePublicContacts.setBuildTypes(false);
+      sourcePublicContacts.setRuleId(AccessType.PUBLIC);
+      sourcePublicContacts.setExcludeAccountContacts(true);
+      sourcePublicContacts.setIncludeAllSites(true);
+      sourcePublicContacts.buildList(db);
+      if (sourcePublicContacts.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        ContactList sourceHierarchyContacts = new ContactList();
-        sourceHierarchyContacts.setOwner(userId);
-        sourceHierarchyContacts.setLeadsOnly(Constants.FALSE);
-        sourceHierarchyContacts.setEmployeesOnly(Constants.FALSE);
-        sourceHierarchyContacts.setBuildDetails(false);
-        sourceHierarchyContacts.setBuildTypes(false);
-        sourceHierarchyContacts.setRuleId(AccessType.CONTROLLED_HIERARCHY);
-        sourceHierarchyContacts.setIncludeAllSites(true);
-        sourceHierarchyContacts.buildList(db);
-        if (sourceHierarchyContacts.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      ContactList sourceHierarchyContacts = new ContactList();
+      sourceHierarchyContacts.setOwner(userId);
+      sourceHierarchyContacts.setLeadsOnly(Constants.FALSE);
+      sourceHierarchyContacts.setEmployeesOnly(Constants.FALSE);
+      sourceHierarchyContacts.setBuildDetails(false);
+      sourceHierarchyContacts.setBuildTypes(false);
+      sourceHierarchyContacts.setRuleId(AccessType.CONTROLLED_HIERARCHY);
+      sourceHierarchyContacts.setIncludeAllSites(true);
+      sourceHierarchyContacts.buildList(db);
+      if (sourceHierarchyContacts.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        ContactList sourceAccountContacts = new ContactList();
-        sourceAccountContacts.setOwner(userId);
-        sourceAccountContacts.setLeadsOnly(Constants.FALSE);
-        sourceAccountContacts.setEmployeesOnly(Constants.FALSE);
-        sourceAccountContacts.setBuildDetails(false);
-        sourceAccountContacts.setBuildTypes(false);
-        sourceAccountContacts.setWithAccountsOnly(true);
-        sourceAccountContacts.setIncludeAllSites(true);
-        sourceAccountContacts.buildList(db);
-        if (sourceAccountContacts.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      ContactList sourceAccountContacts = new ContactList();
+      sourceAccountContacts.setOwner(userId);
+      sourceAccountContacts.setLeadsOnly(Constants.FALSE);
+      sourceAccountContacts.setEmployeesOnly(Constants.FALSE);
+      sourceAccountContacts.setBuildDetails(false);
+      sourceAccountContacts.setBuildTypes(false);
+      sourceAccountContacts.setWithAccountsOnly(true);
+      sourceAccountContacts.setIncludeAllSites(true);
+      sourceAccountContacts.buildList(db);
+      if (sourceAccountContacts.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        ContactList sourceLeads = new ContactList();
-        sourceLeads.setOwner(userId);
-        sourceLeads.setLeadsOnly(Constants.TRUE);
-        sourceLeads.setEmployeesOnly(Constants.FALSE);
-        sourceLeads.setBuildDetails(false);
-        sourceLeads.setBuildTypes(false);
-        sourceLeads.setIncludeAllSites(true);
-        sourceLeads.buildList(db);
-        if (sourceLeads.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      ContactList sourceLeads = new ContactList();
+      sourceLeads.setOwner(userId);
+      sourceLeads.setLeadsOnly(Constants.TRUE);
+      sourceLeads.setEmployeesOnly(Constants.FALSE);
+      sourceLeads.setBuildDetails(false);
+      sourceLeads.setBuildTypes(false);
+      sourceLeads.setIncludeAllSites(true);
+      sourceLeads.buildList(db);
+      if (sourceLeads.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        UserList sourceUsers = new UserList();
-        sourceUsers.setManagerId(userId);
-        sourceUsers.buildList(db);
-        if (sourceUsers.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      UserList sourceUsers = new UserList();
+      sourceUsers.setManagerId(userId);
+      sourceUsers.buildList(db);
+      if (sourceUsers.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        TicketList sourceOpenTickets = new TicketList();
-        sourceOpenTickets.setAssignedTo(userId);
-        sourceOpenTickets.setIncludeAllSites(true);
-        sourceOpenTickets.setOnlyOpen(true);
-        sourceOpenTickets.buildList(db);
-        if (sourceOpenTickets.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      TicketList sourceOpenTickets = new TicketList();
+      sourceOpenTickets.setAssignedTo(userId);
+      sourceOpenTickets.setIncludeAllSites(true);
+      sourceOpenTickets.setOnlyOpen(true);
+      sourceOpenTickets.buildList(db);
+      if (sourceOpenTickets.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        TaskList incompleteTicketTasks = new TaskList();
-        incompleteTicketTasks.setOwner(userId);
-        incompleteTicketTasks.setHasLinkedTicket(Constants.TRUE);
-        incompleteTicketTasks.setComplete(Constants.FALSE);
-        incompleteTicketTasks.buildList(db);
-        if (incompleteTicketTasks.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      TaskList incompleteTicketTasks = new TaskList();
+      incompleteTicketTasks.setOwner(userId);
+      incompleteTicketTasks.setHasLinkedTicket(Constants.TRUE);
+      incompleteTicketTasks.setComplete(Constants.FALSE);
+      incompleteTicketTasks.buildList(db);
+      if (incompleteTicketTasks.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        RevenueList sourceRevenue = new RevenueList();
-        sourceRevenue.setOwner(userId);
-        sourceRevenue.buildList(db);
-        if (sourceRevenue.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      RevenueList sourceRevenue = new RevenueList();
+      sourceRevenue.setOwner(userId);
+      sourceRevenue.buildList(db);
+      if (sourceRevenue.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        AssignmentList sourceAssignments = new AssignmentList();
-        sourceAssignments.setAssignmentsForUser(userId);
-        sourceAssignments.setIncompleteOnly(true);
-        sourceAssignments.buildList(db);
-        if (sourceAssignments.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      AssignmentList sourceAssignments = new AssignmentList();
+      sourceAssignments.setAssignmentsForUser(userId);
+      sourceAssignments.setIncompleteOnly(true);
+      sourceAssignments.buildList(db);
+      if (sourceAssignments.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        OpportunityList managingOpportunities = new OpportunityList();
-        managingOpportunities.setManager(userId);
-        managingOpportunities.setQueryOpenOnly(true);
-        managingOpportunities.setControlledHierarchyOnly(Constants.FALSE);
-        AccessTypeList accessTypeList = systemStatus.getAccessTypeList(db, AccessType.OPPORTUNITIES);
-        managingOpportunities.setAccessType(accessTypeList.getCode(AccessType.PUBLIC));
-        managingOpportunities.buildList(db);
-        if (managingOpportunities.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      OpportunityList managingOpportunities = new OpportunityList();
+      managingOpportunities.setManager(userId);
+      managingOpportunities.setQueryOpenOnly(true);
+      managingOpportunities.setControlledHierarchyOnly(Constants.FALSE);
+      AccessTypeList accessTypeList = systemStatus.getAccessTypeList(db, AccessType.OPPORTUNITIES);
+      managingOpportunities.setAccessType(accessTypeList.getCode(AccessType.PUBLIC));
+      managingOpportunities.buildList(db);
+      if (managingOpportunities.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        OpportunityList sourceOpportunities = new OpportunityList();
-        sourceOpportunities.setOwner(userId);
-        sourceOpportunities.buildList(db);
-        if (sourceOpportunities.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      OpportunityList sourceOpportunities = new OpportunityList();
+      sourceOpportunities.setOwner(userId);
+      sourceOpportunities.buildList(db);
+      if (sourceOpportunities.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        OpportunityList sourceOpenOpportunities = new OpportunityList();
-        sourceOpenOpportunities.setOwner(userId);
-        sourceOpenOpportunities.setQueryOpenOnly(true);
-        sourceOpenOpportunities.buildList(db);
-        if (sourceOpenOpportunities.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      OpportunityList sourceOpenOpportunities = new OpportunityList();
+      sourceOpenOpportunities.setOwner(userId);
+      sourceOpenOpportunities.setQueryOpenOnly(true);
+      sourceOpenOpportunities.buildList(db);
+      if (sourceOpenOpportunities.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        DocumentStoreTeamMemberList sourceDocumentStoreTeamMemberList = new DocumentStoreTeamMemberList();
-        sourceDocumentStoreTeamMemberList.setForDocumentStoreUser(userId);
-        sourceDocumentStoreTeamMemberList.setMemberType(
-            DocumentStoreTeamMemberList.USER);
-        sourceDocumentStoreTeamMemberList.setUserLevel(
-            DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
-        sourceDocumentStoreTeamMemberList.buildList(db);
-        if (sourceDocumentStoreTeamMemberList.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      DocumentStoreTeamMemberList sourceDocumentStoreTeamMemberList = new DocumentStoreTeamMemberList();
+      sourceDocumentStoreTeamMemberList.setForDocumentStoreUser(userId);
+      sourceDocumentStoreTeamMemberList.setMemberType(
+          DocumentStoreTeamMemberList.USER);
+      sourceDocumentStoreTeamMemberList.setUserLevel(
+          DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
+      sourceDocumentStoreTeamMemberList.buildList(db);
+      if (sourceDocumentStoreTeamMemberList.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        CallList sourcePendingActivities = new CallList();
-        sourcePendingActivities.setOwner(userId);
-        sourcePendingActivities.setOnlyPending(true);
-        sourcePendingActivities.buildList(db);
-        if (sourcePendingActivities.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      CallList sourcePendingActivities = new CallList();
+      sourcePendingActivities.setOwner(userId);
+      sourcePendingActivities.setOnlyPending(true);
+      sourcePendingActivities.buildList(db);
+      if (sourcePendingActivities.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
 
-        ActionLists sourceActionLists = new ActionLists();
-        sourceActionLists.setOwner(userId);
-        sourceActionLists.setInProgressOnly(true);
-        sourceActionLists.buildList(db);
-        if (sourceActionLists.size() > 0){
-          addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
-        }
+      ActionLists sourceActionLists = new ActionLists();
+      sourceActionLists.setOwner(userId);
+      sourceActionLists.setInProgressOnly(true);
+      sourceActionLists.buildList(db);
+      if (sourceActionLists.size() > 0) {
+        addError(systemStatus, object, "siteId", "object.validation.userHasAssociations.text");
+      }
     }
     //UserGroup
-    if (object.getClass().getName().equals("org.aspcfs.modules.admin.base.UserGroup")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.admin.base.UserGroup"))
+    {
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }
 
     //TicketDefect
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketDefect")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketDefect"))
+    {
       checkError(systemStatus, object, "title", REQUIRED_FIELD);
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "title", 255);
       checkError(systemStatus, object, "startDate", INVALID_DATE);
@@ -1834,30 +1878,33 @@ public class ObjectValidator {
       TicketDefect defect = (TicketDefect) object;
       if (defect.getStartDate() != null && defect.getEndDate() != null &&
           defect.getStartDate().after(defect.getEndDate())) {
-          addError(systemStatus, object, "endDate", "object.validation.project.estimatedEndDateNotLTStartDate");
+        addError(systemStatus, object, "endDate", "object.validation.project.estimatedEndDateNotLTStartDate");
       }
-      if (defect.getSiteId() == Constants.INVALID_SITE){
+      if (defect.getSiteId() == Constants.INVALID_SITE) {
         addError(systemStatus, object, "siteId", REQUIRED_FIELD);
       }
     }
 
     //SyncClient
-    if (object.getClass().getName().equals("org.aspcfs.modules.service.base.SyncClient")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.service.base.SyncClient"))
+    {
       checkError(systemStatus, object, "type", REQUIRED_FIELD);
       checkError(systemStatus, object, "code", REQUIRED_FIELD);
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "type", 100);
-      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "code",255);
+      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "code", 255);
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "version", 50);
     }
 
     //KnowledgeBase
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.KnowledgeBase")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.KnowledgeBase"))
+    {
       checkError(systemStatus, object, "title", REQUIRED_FIELD);
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "title", 255);
     }
 
     //TicketCategoryDraftAssignment
-    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketCategoryDraftAssignment")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.troubletickets.base.TicketCategoryDraftAssignment"))
+    {
       TicketCategoryDraftAssignment assignment = (TicketCategoryDraftAssignment) object;
       if (assignment.getCategoryId() == -1) {
         addError(systemStatus, object, "categoryId", REQUIRED_FIELD);
@@ -1865,46 +1912,51 @@ public class ObjectValidator {
         TicketCategoryDraft draftCategory = new TicketCategoryDraft(db, assignment.getCategoryId(), "ticket_category");
         if (assignment.getAssignedTo() > -1) {
           User user = new User(db, assignment.getAssignedTo());
-          if (draftCategory.getSiteId() != user.getSiteId() && user.getSiteId() != -1) {
+          if (draftCategory.getSiteId() != user.getSiteId() && user.getSiteId() != -1)
+          {
             addError(systemStatus, object, "assignedTo", "tickets.ticketCategoryDraftAssignment.invalidUserAssignment.text");
           }
         }
         if (assignment.getUserGroupId() > -1) {
           UserGroup group = new UserGroup(db, assignment.getUserGroupId());
-          if (draftCategory.getSiteId() != group.getSiteId() && group.getSiteId() != -1) {
+          if (draftCategory.getSiteId() != group.getSiteId() && group.getSiteId() != -1)
+          {
             addError(systemStatus, object, "userGroupId", "tickets.ticketCategoryDraftAssignment.invalidUserGroupAssignment.text");
           }
         }
-        if (assignment.getAssignedTo() == -1 && assignment.getUserGroupId() == -1 && assignment.getDepartmentId() == -1) {
+        if (assignment.getAssignedTo() == -1 && assignment.getUserGroupId() == -1 && assignment.getDepartmentId() == -1)
+        {
           addError(systemStatus, object, "categoryId", "tickets.ticketCategoryDraftAssignment.invalidAssignment.text");
         }
       }
     }
 
-    if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Site")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Site"))
+    {
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }
 
-    if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Tab")) {
+    if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Tab"))
+    {
       checkError(systemStatus, object, "displayText", REQUIRED_FIELD);
     }
 
     // Invoke custom validators
-    try{
+    try {
       Map customValidators = systemStatus.getCustomValidators();
       Set keySet = customValidators.keySet();
       Iterator customValidatorIterator = keySet.iterator();
-      while (customValidatorIterator.hasNext()){
-        String validator =  (String)customValidatorIterator.next();
+      while (customValidatorIterator.hasNext()) {
+        String validator = (String) customValidatorIterator.next();
         Class customValidatorClass = Class.forName(validator);
 
         Class[] argTypes = new Class[]{Class.forName("org.aspcfs.controller.SystemStatus"), Class.forName("java.sql.Connection"), Class.forName("java.lang.Object")};
         Object[] params = new Object[]{systemStatus, db, object};
 
-        Method method = customValidatorClass.getMethod("validate",argTypes);
+        Method method = customValidatorClass.getMethod("validate", argTypes);
         method.invoke(customValidatorClass, params);
       }
-    }catch (Exception e){
+    } catch (Exception e) {
       //e.printStackTrace();
     }
     return true;
@@ -1991,7 +2043,7 @@ public class ObjectValidator {
    * @param object       The feature to be added to the Error attribute
    * @param field        The feature to be added to the Error attribute
    * @param errorType    The feature to be added to the Error attribute
-   * @return               Description of the Return Value
+   * @return Description of the Return Value
    */
   public static boolean checkError(SystemStatus systemStatus, Object object, String field, int errorType) {
     boolean returnValue = true;
@@ -2286,13 +2338,13 @@ public class ObjectValidator {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  systemStatus  Description of the Parameter
-   * @param  object        Description of the Parameter
-   * @param  errorName     Description of the Parameter
-   * @param  fieldName     Description of the Parameter
-   * @param  length        Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @param object       Description of the Parameter
+   * @param errorName    Description of the Parameter
+   * @param fieldName    Description of the Parameter
+   * @param length       Description of the Parameter
    */
   public static void checkLength(SystemStatus systemStatus, Object object, String errorName, String fieldName, int length) {
     String value = (String) ObjectUtils.getObject(object, fieldName);

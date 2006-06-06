@@ -16,6 +16,7 @@
 package org.aspcfs.modules.products.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Import;
 import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
@@ -74,9 +75,38 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private int buildEnabledProducts = Constants.UNDEFINED;
   private int buildActiveProducts = Constants.UNDEFINED;
   private boolean buildActivePrice = false;
-
+  private boolean excludeUnapprovedCategories = true;
 
   /**
+ * Gets the excludeUnapprovedCategories attribute of the ProductCategoryList object
+ *
+ * @return excludeUnapprovedCategories The excludeUnapprovedCategories value
+ */
+public boolean getExcludeUnapprovedCategories() {
+	return excludeUnapprovedCategories;
+}
+
+
+/**
+ * Sets the excludeUnapprovedCategories attribute of the ProductCategoryList object
+ *
+ * @param excludeUnapprovedCategories The new excludeUnapprovedCategories value
+ */
+public void setExcludeUnapprovedCategories(boolean excludeUnapprovedCategories) {
+	this.excludeUnapprovedCategories = excludeUnapprovedCategories;
+}
+
+/**
+ * Sets the excludeUnapprovedCategories attribute of the ProductCategoryList object
+ *
+ * @param excludeUnapprovedCategories The new excludeUnapprovedCategories value
+ */
+public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
+	this.excludeUnapprovedCategories = Boolean.parseBoolean(excludeUnapprovedCategories);
+}
+
+
+/**
    * Gets the serviceContractId attribute of the ProductCategoryList object
    *
    * @return The serviceContractId value
@@ -1141,6 +1171,10 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
             "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
       }
     }
+    if (excludeUnapprovedCategories) {
+    	sqlFilter.append("AND (pctgy.status_id IS NULL OR pctgy.status_id = ?) ");
+      }
+
   }
 
 
@@ -1215,6 +1249,9 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     if (masterCategoryId > -1) {
       pst.setInt(++i, masterCategoryId);
     }
+    if (excludeUnapprovedCategories) {
+        pst.setInt(++i, Import.PROCESSED_APPROVED);
+      }
     return i;
   }
 

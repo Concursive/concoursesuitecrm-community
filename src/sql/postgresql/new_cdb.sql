@@ -433,7 +433,8 @@ CREATE TABLE permission_category (
 	logos BOOLEAN NOT NULL DEFAULT false,
   constant INT NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
-  custom_list_views BOOLEAN NOT NULL DEFAULT false
+  custom_list_views BOOLEAN NOT NULL DEFAULT false,
+  importer bool NOT NULL DEFAULT false
 );
 
 CREATE TABLE permission (

@@ -22,6 +22,8 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.netapps.base.ContractExpiration;
+import org.aspcfs.modules.products.base.ProductCatalog;
+import org.aspcfs.modules.products.base.ProductCategory;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
@@ -942,6 +944,12 @@ public class Import extends GenericBean {
             Organization.updateImportStatus(
                 db, this.getId(), PROCESSED_APPROVED);
           }
+        }
+        if (type == Constants.IMPORT_PRODUCT_CATALOG) {
+          ProductCatalog.updateImportStatus(
+              db, this.getId(), PROCESSED_APPROVED);
+          ProductCategory.updateImportStatus(
+                  db, this.getId(), PROCESSED_APPROVED);
         }
         if (type == Constants.IMPORT_NETAPP_EXPIRATION) {
           ContractExpiration.updateImportStatus(db, this.getId(), PROCESSED_APPROVED);

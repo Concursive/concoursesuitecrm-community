@@ -3,21 +3,21 @@
 
  Notes:
    This script builds the Centric Suite
-   
+
    The easiest way to get started is to run "ant deploy"
 
    The build process will instruct you to have several environment variables
    and to customize the build.properties.  The build will fail until all
    installation conditions are met.
-   
+
    Do not edit master.properties in this folder, a copy will be
    made by the installation and you will be notified of the file to modify.
-   
+
    The build process needs write access to the destination web-app folder and
    the fileLibrary configured in Centric CRM
 -->
 <project name="Centric Suite" default="usage" basedir=".">
-  
+
   <!-- enable environment variables -->
   <property environment="env"/>
 
@@ -42,7 +42,11 @@
   <property name="build.pref.dir" value="${build.dir}${fs}pref"/>
   <property name="pref.dir" value="${base.dir}${fs}pref"/>
   <property name="dist.dir" value="${base.dir}${fs}dist"/>
-
+  <property name="unittests.src.dir" value="${src.dir}${fs}testcases"/>
+  <property name="unittests.build.dir" value="${build.dir}${fs}testcases"/>
+  <property name="unittests.build.classes.dir" value="${unittests.build.dir}${fs}classes"/>
+  <property name="unittests.build.lib.dir" value="${unittests.build.dir}${fs}lib"/>
+  <property name="unittests.reports.dir" value="${unittests.build.dir}${fs}results"/>
   <!-- Typical usage -->
   <target name="usage">
     <echo message="Further instructions will appear if settings are missing"/>
@@ -58,7 +62,7 @@
     <echo message="ant war: generate a .war file for manual deployment"/>
     <echo message="ant clean: delete the temporary build folder used by the install"/>
   </target>
-  
+
   <!-- Environment variables must be set before continuing -->
   <target name="init.environment">
     <tstamp>
@@ -70,7 +74,7 @@
     <!-- log the build -->
     <record name="${base.dir}/build.log" append="no"/>
   </target>
-  
+
   <!-- See if servlet API file exists -->
   <target name="init.servlet4.exists" depends="init.environment">
     <available file="${CATALINA_HOME}/common/lib/servlet.jar"
@@ -88,7 +92,7 @@
     <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet-api.jar"/>
     <echo message="Web Server: Tomcat 5.x"/>
   </target>
-  
+
   <!-- See where the build.properties file exists -->
   <target name="init.buildfile.exists">
     <property file="${base.dir}/home.properties"/>
@@ -153,7 +157,7 @@
     <mkdir dir="${CENTRIC_HOME}/WEB-INF"/>
     <mkdir dir="${CENTRIC_FILELIBRARY}"/>
   </target>
-  
+
   <!-- Create the properties file if not exists -->
   <target name="init.buildfile.create" depends="init.buildfile.exists, init.buildfile.type, init.home.setup"
     unless="build.config.present">
@@ -222,7 +226,7 @@
 
   SOLUTION: Edit the properties file at ${build.config.filename}, make sure to configure the SYSTEM.LANGUAGE parameter in this file</fail>
   </target>
-  
+
   <!-- Copy the common jars -->
   <target name="init.classpath.uptodate" unless="build.config.war">
     <mkdir dir="${CENTRIC_HOME}/WEB-INF/lib"/>
@@ -245,11 +249,12 @@
     </path>
     <property name="CLASSPATH" refid="cfs2.classpath"/>
   </target>
-  
+
   <!-- Prepare ant for processing -->
   <target name="init" depends="init.loadproperties,init.classpath,init.servlet4.set,init.servlet5.set"
     description="Verify system environment needed by install">
     <!-- Default properties if not otherwise specified in build.properties -->
+    <property name="DEBUG" value="false"/>
     <property name="DEBUGLEVEL" value="none"/>
     <property name="build.config.filename" value="${base.dir}/build.properties"/>
     <property name="build.config.present" value="ERROR: UNDEFINED"/>
@@ -271,7 +276,7 @@
     <!-- External Servers -->
     <property name="MAILSERVER" value="127.0.0.1"/>
     <property name="FAXSERVER" value="127.0.0.1"/>
-    
+
     <!-- Begin output -->
     <echo message="Project: ${ant.project.name}"/>
     <echo message="Date: ${date.long}"/>
@@ -323,7 +328,7 @@
       <mapper type="merge" to="${CENTRIC_HOME}/WEB-INF/lib/aspcfs.jar"/>
     </uptodate>
   </target>
-  
+
   <!-- Check to see if previously compiled classes should be deleted -->
   <target name="compile.checkdelete" depends="init">
     <condition property="compile.donotdelete">
@@ -349,7 +354,7 @@
     <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
   </target>
-  
+
   <!-- Compile the Java source code -->
   <target name="compile"
     description="Compile all .java source files"
@@ -357,13 +362,14 @@
     unless="classes.uptodate">
     <!-- Compile the code -->
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off"
-      fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
+      fork="true" memoryInitialSize="168m" memoryMaximumSize="168m"
+    	debug="${DEBUG}" debuglevel="${DEBUGLEVEL}">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
     </javac>
   </target>
-  
+
   <!-- Generate the .jar files -->
   <target name="jar"
     depends="init"
@@ -410,7 +416,7 @@
     depends="init,compile,jar">
     <mkdir dir="${build.lib.dir}"/>
   </target>
-  
+
   <!-- Delete outdated files -->
   <target name="deploy.delete" description="Removes outdated files from web application"
       unless="build.config.war">
@@ -624,6 +630,8 @@
 
   <target name="dev.configure">
     <property name="compile.donotdelete.property" value="true"/>
+  	<property name="DEBUG" value="true"/>
+    <property name="DEBUGLEVEL" value="lines,vars,source"/>
   </target>
 
   <target name="dev"
@@ -858,7 +866,7 @@
     <delete dir="${dist.dir}/cfs"/>
     <echo message=".war file created: ${dist.dir}${fs}centric.war"/>
   </target>
-  
+
   <!-- Create sourcecode distribution -->
   <target name="source"
     description="Compile, build, and generate source archive"
@@ -1132,7 +1140,7 @@
     <echo message="URL: ${SITE.URL}${DATABASE.NAME}${SITE.APPEND}"/>
     <echo message="Username: ${SITE.USER}"/>
   </target>
-  
+
   <!-- Ask about gatekeeper record -->
   <target name="install.gatekeeper.init" depends="init" if="WEBSERVER.ASPMODE">
     <input message="Add a gatekeeper site record? "
@@ -1163,7 +1171,7 @@
       </fileset>
     </copy>
   </target>
-  
+
   <target name="install.abortOnDB">
     <condition property="ABORT">
       <equals arg1="${SITE.DBTYPE}" arg2="daffodildb" casesensitive="false" trim="true"/>
@@ -1289,7 +1297,7 @@
 
   <!-- Upgrade help contents by deleting all help and then inserting -->
   <target name="upgradedb.help" depends="init,install.prepare,install.deletehelp,install.help"/>
-  
+
   <!-- Upgrade help contents by deleting all help and then inserting -->
   <target name="install.deletehelp" depends="init,install.prepare">
     <echo message="Deleting existing help contents..."/>
@@ -1316,7 +1324,7 @@
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
     </sql>
   </target>
-  
+
   <!-- Install help contents into blank database -->
   <target name="install.help" depends="init,install.prepare">
     <echo message="Installing help contents from: ${src.sql.dir}${fs}init${fs}help.xml"/>
@@ -1568,7 +1576,7 @@
       </classpath>
     </javadoc>
   </target>
-  
+
   <!-- General Contact Importer based on CSV spec -->
   <target name="import.generalcontacts" depends="init">
     <fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
@@ -1596,7 +1604,7 @@
       <arg value="${build.pref.dir}${fs}import-generalcontacts.xml"/>
     </java>
   </target>
-  
+
   <!-- Account Contact Importer based on CSV spec -->
   <target name="import.accountcontacts" depends="init">
     <fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
@@ -1626,7 +1634,7 @@
       <arg value="${build.pref.dir}${fs}import-accountcontacts.xml"/>
     </java>
   </target>
-  
+
   <!-- Accounts Importer based on CSV spec -->
   <target name="import.accounts" depends="init">
     <fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
@@ -1733,5 +1741,66 @@
       <arg value="${arg1}"/>
       <arg value="${arg2}"/>
     </java>
+  </target>
+
+  <!-- See if files are up-to-date so only new files are installed during development -->
+  <target name="unittests.classes.prepare">
+    <uptodate property="unittests.classes.uptodate">
+      <srcfiles dir="${unittests.src.dir}" includes="**/*.java"/>
+      <mapper type="merge" to="${unittests.build.lib.dir}/unit-tests.jar"/>
+    </uptodate>
+  </target>
+
+  <!-- Compile the Unit tests source code -->
+  <target name="unittests.jar" depends="unittests.classes.prepare"
+          unless="unittests.classes.uptodate">
+    <delete dir="${unittests.build.dir}" failonerror="false"/>
+    <mkdir dir="${unittests.build.dir}"/>
+    <mkdir dir="${unittests.build.classes.dir}"/>
+    <mkdir dir="${unittests.build.lib.dir}"/>
+    <javac srcdir="${unittests.src.dir}" destdir="${unittests.build.classes.dir}" verbose="off" deprecation="off"
+           fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+    <jar jarfile="${unittests.build.lib.dir}/unit-tests.jar"
+         basedir="${unittests.build.classes.dir}"
+         includes="**/*.class"/>
+  </target>
+
+  <!-- Run Unit tests -->
+  <target name="unittests.runner" depends="init,unittests.jar">
+    <delete dir="${unittests.reports.dir}" failonerror="false"/>
+    <mkdir dir="${unittests.reports.dir}"/>
+    <echo message="+-----------------------" />
+    <echo message="| Tests are runnitng... See full-length results in '${unittests.reports.dir}'." />
+    <echo message="+---------------------" />
+    <junit printsummary="yes" haltonfailure="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${unittests.build.lib.dir}">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <batchtest fork="yes" todir="${unittests.reports.dir}">
+        <formatter type="xml"/>
+        <fileset dir="${unittests.src.dir}">
+          <include name="**/*Test.java" />
+          <exclude name="**/AllTests.java" />
+          <exclude name="**/*TestSuite.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="unittests" depends="init,dev,unittests.runner"
+          description="Deploy without deleting previously compiled source and run Unit tests">
   </target>
 </project>
