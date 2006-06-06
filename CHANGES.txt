@@ -2,7 +2,7 @@
 Centric CRM 4.1 beta
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-June 1, 2006
+June 6, 2006
 ----------------------------------------------------------------------------
 
 ** New Installs **
@@ -23,11 +23,18 @@ Centric CRM 3.1 or 4.0 (Group and Source editions) to Centric CRM 4.1.
 DaffodilDB, Oracle, and Firebird have not been finalized for upgrading.
 If upgrading from a version prior to 3.1, you will need to upgrade to 3.1 first.
 
+The following is a running list until release...
+
 New features:
 - Web site module and portal
+- Product Importer
+- DB2 Database Support
 
 Enhancements:
 - Upgraded TinyMCE HTML Editor to 2.0.6.1
+
+Developer changes:
+- JUnit added with tests
 
 
 ----------------------------------------------------------------------------

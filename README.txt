@@ -272,6 +272,7 @@ Java Mail                         Sun License
 Jaybird FirebirdSQL JDBC Driver   LGPL
 Jcrontab                          LGPL
 jTDS Microsoft SQL Server Driver  LGPL
+JUnit                             Common Public License 1.0
 Kafenio                           LGPL
 Log4J                             Apache Software License
 Lucene                            Apache Software License
