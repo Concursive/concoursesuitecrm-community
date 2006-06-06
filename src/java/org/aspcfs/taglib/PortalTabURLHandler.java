@@ -64,13 +64,13 @@ public class PortalTabURLHandler extends TagSupport {
       }
 
       StringBuffer buffer = new StringBuffer();
-      buffer.append("<a href=");
+      buffer.append("<a href=\"");
       if (portal != null && "true".equals(portal)) {
         buffer.append("Portal.do?command=Default");
       } else {
         buffer.append("Sites.do?command=Details");
       }
-      buffer.append("&siteId=" + siteId + "&tabId=" + tabId + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + ">" + StringUtils.toHtml(displayText) + "</a>");
+      buffer.append("&siteId=" + siteId + "&tabId=" + tabId + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + "\">" + StringUtils.toHtml(displayText) + "</a>");
       if (portal != null && "true".equals(portal)) {
         //do nothing
       } else {
