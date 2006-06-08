@@ -45,6 +45,8 @@ CREATE TABLE product_category(
     start_date TIMESTAMP,
     expiration_date TIMESTAMP,
     enabled CHAR(1) DEFAULT '1' NOT NULL,
+    import_id INTEGER REFERENCES import(import_id),
+    status_id INTEGER,
     PRIMARY KEY(category_id)
 );
 
@@ -182,6 +184,9 @@ CREATE TABLE product_catalog(
     manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code),
     trashed_date TIMESTAMP,
     "active" CHAR(1) DEFAULT '1' NOT NULL,
+    comments VARGRAPHIC(255),
+    import_id INTEGER REFERENCES import(import_id),
+    status_id INTEGER,
     PRIMARY KEY(product_id)
 );
 

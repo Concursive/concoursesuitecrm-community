@@ -30,6 +30,7 @@ if (orSequenceName.length() > 30) {
 print("PostgreSQL:   " + psSequenceName);
 print("Firebird SQL: " + fbSequenceName);
 print("Oracle:       " + orSequenceName);
+print("DB2:          " + orSequenceName);
 
 System.exit(0);
 

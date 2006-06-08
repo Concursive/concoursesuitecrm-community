@@ -482,7 +482,8 @@ CREATE TABLE permission_category (
   constant INTEGER NOT NULL,
   action_plans CHAR(1) DEFAULT 0 NOT NULL,
   custom_list_views CHAR(1) DEFAULT 0 NOT NULL,
-  PRIMARY KEY (CATEGORY_ID)
+  importer CHAR(1) DEFAULT 0 NOT NULL,
+  PRIMARY KEY(category_id)
 );
 
 

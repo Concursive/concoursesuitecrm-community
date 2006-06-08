@@ -582,6 +582,7 @@ CREATE TABLE permission_category(
     constant INTEGER NOT NULL,
     action_plans CHAR(1) DEFAULT '0' NOT NULL,
     custom_list_views CHAR(1) DEFAULT '0' NOT NULL,
+    importer CHAR(1) DEFAULT '0' NOT NULL,
     PRIMARY KEY(category_id)
 );
 
@@ -888,7 +889,6 @@ CREATE TABLE cfsinbox_message(
     PRIMARY KEY(id)
 );
 
-
 CREATE TABLE cfsinbox_messagelink(
     id INTEGER NOT NULL  REFERENCES cfsinbox_message(id),
     sent_to INTEGER NOT NULL  REFERENCES contact(contact_id),
@@ -905,7 +905,6 @@ CREATE TABLE account_type_levels(
     entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-
 
 CREATE TABLE contact_type_levels(
     contact_id INTEGER NOT NULL  REFERENCES contact(contact_id),
