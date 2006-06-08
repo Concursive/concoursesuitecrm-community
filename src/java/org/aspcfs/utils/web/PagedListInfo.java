@@ -60,6 +60,7 @@ public class PagedListInfo implements Serializable {
   private String id = null;
   private String columnToSortBy = null;
   private String sortOrder = null;
+  private String orderByStatement = null;
   private int itemsPerPage = DEFAULT_ITEMS_PER_PAGE;
   private int maxRecords = 0;
   private String currentLetter = "";
@@ -1422,6 +1423,9 @@ public class PagedListInfo implements Serializable {
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE &&
         this.getItemsPerPage() > 0) {
       sqlStatement.append("SELECT * FROM (SELECT ");
+    } else if (DatabaseUtils.getType(db) == DatabaseUtils.DB2 &&
+        this.getItemsPerPage() > 0) {
+      sqlStatement.append("SELECT * FROM (SELECT ROW_NUMBER() OVER (" + orderByStatement + ") AS db_row, ");
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD &&
       this.getItemsPerPage() > 0) {
       sqlStatement.append("SELECT FIRST " + this.getItemsPerPage() + " ");
@@ -1440,9 +1444,10 @@ public class PagedListInfo implements Serializable {
    * Description of the Method
    *
    * @param db           Description of Parameter
-   * @param sqlStatement Description of Parameter
+   * @param appendedSqlStatement Description of Parameter
    */
-  public void appendSqlTail(Connection db, StringBuffer sqlStatement) {
+  public void appendSqlTail(Connection db, StringBuffer appendedSqlStatement) {
+    StringBuffer sqlStatement = new StringBuffer();
     sqlStatement.append("ORDER BY ");
     //Determine sort order
     //If multiple columns are being sorted, then the sort order applies to all columns
@@ -1464,6 +1469,8 @@ public class PagedListInfo implements Serializable {
         sqlStatement.append(this.getSortOrder() + " ");
       }
     }
+    // Keep a handle on just the order by clause for use by appendSqlHead
+    orderByStatement = sqlStatement.toString();
 
     //Determine items per page for PostgreSQL
     if (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL) {
@@ -1484,9 +1491,11 @@ public class PagedListInfo implements Serializable {
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.DB2) {
       if (this.getItemsPerPage() > 0) {
         sqlStatement.append(
-          "FETCH FIRST " + (this.getItemsPerPage() + this.getCurrentOffset()) + " ROWS ONLY ");
+          "FETCH FIRST " + (this.getItemsPerPage() + this.getCurrentOffset()) + " ROWS ONLY) AS db_row_numbers " +
+          "WHERE db_row > " + this.getCurrentOffset() + " AND db_row <= " + (this.getCurrentOffset() + this.getItemsPerPage()) + " ");
       }
     }
+    appendedSqlStatement.append(sqlStatement);
   }
 
 
@@ -1501,7 +1510,6 @@ public class PagedListInfo implements Serializable {
     if (this.getItemsPerPage() > 0 &&
       (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ||
         DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ||
-        DatabaseUtils.getType(db) == DatabaseUtils.DB2 ||
         DatabaseUtils.getType(db) == DatabaseUtils.ORACLE)) {
       for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++)
       {
