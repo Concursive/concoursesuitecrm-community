@@ -1484,7 +1484,7 @@ public class PagedListInfo implements Serializable {
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.DB2) {
       if (this.getItemsPerPage() > 0) {
         sqlStatement.append(
-          "FETCH FIRST " + this.getItemsPerPage() + " ROWS ONLY ");
+          "FETCH FIRST " + (this.getItemsPerPage() + this.getCurrentOffset()) + " ROWS ONLY ");
       }
     }
   }
