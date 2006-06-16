@@ -17,8 +17,8 @@ package org.aspcfs.controller;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
-import com.darkhorseventures.framework.servlets.ControllerHook;
 import com.darkhorseventures.framework.hooks.CustomHook;
+import com.darkhorseventures.framework.servlets.ControllerHook;
 import com.zeroio.iteam.base.ProjectList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.Constants;
@@ -37,11 +37,11 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
- *  Every request to the ServletController executes this code.
+ * Every request to the ServletController executes this code.
  *
- * @author     mrajkowski
+ * @author mrajkowski
  * @version $Id$
- * @created    July 9, 2001
+ * @created July 9, 2001
  */
 public class SecurityHook implements ControllerHook {
 
@@ -49,22 +49,23 @@ public class SecurityHook implements ControllerHook {
 
 
   /**
-   *  Checks to see if a User session object exists, if not then the security
-   *  check fails.<p>
-   *  <p/>
-   *  The security check also compares the date/time of the user's permissions
-   *  to the date/time someone changed the user's permissions in the database.
+   * Checks to see if a User session object exists, if not then the security
+   * check fails.<p>
+   * <p/>
+   * The security check also compares the date/time of the user's permissions
+   * to the date/time someone changed the user's permissions in the database.
    *
-   * @param  request  Description of Parameter
-   * @param  servlet  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.1
+   * @param request Description of Parameter
+   * @param servlet Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.1
    */
   public String securityCheck(Servlet servlet, HttpServletRequest request) {
     UserBean userSession = (UserBean) request.getSession().getAttribute(
         "User");
+    ConnectionElement ceSession = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
 
-    // Get the intended action, if going to the login module, then let it proceed
+    // Get the intended action, if going to a public module or the login module, then let it proceed
     String action = request.getServletPath();
     int slash = action.lastIndexOf("/");
     action = action.substring(slash + 1);
@@ -73,13 +74,47 @@ public class SecurityHook implements ControllerHook {
 
     //Login and Process modules bypass security and must implement their own
     if (action.toUpperCase().startsWith("LOGIN") ||
-        action.toUpperCase().startsWith("PORTAL") ||
         action.toUpperCase().startsWith("SETUP") ||
         action.toUpperCase().startsWith("UPGRADE") ||
         action.toUpperCase().startsWith("LICENSESERVER") ||
         action.toUpperCase().startsWith("PROCESS")) {
       return null;
     }
+
+    // Special handling for Portal because the user interacts with database-
+    // driven site
+    if (action.toUpperCase().startsWith("PORTAL")) {
+      Site thisSite = SecurityHook.retrieveSite(servlet.getServletConfig().getServletContext(), request);
+      if (userSession == null || ceSession == null) {
+        // Give them a connection element to snoop around the portal
+        ceSession = thisSite.getConnectionElement();
+        request.getSession().setAttribute("ConnectionElement", ceSession);
+        // Allow portal mode to create a default session with guest capabilities
+        userSession = new UserBean();
+        userSession.setUserId(-2);
+        userSession.setActualUserId(-2);
+        userSession.setIdRange("-2");
+        userSession.setConnectionElement(ceSession);
+        userSession.setClientType(request);
+        // TODO: Set a default time zone for user
+        // TODO: Set a default currency for user
+        // TODO: Set default locale: language, country
+        // Trigger the tracker now that a ConnectionElement is in place...
+        request.getSession().setAttribute("User", userSession);
+      }
+      Connection db = null;
+      try {
+        db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+            "ConnectionPool")).getConnection(ceSession);
+        SecurityHook.retrieveSystemStatus(servlet.getServletConfig().getServletContext(), db, ceSession, thisSite.getLanguage());
+      } catch (Exception e) {
+      } finally {
+        ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+            "ConnectionPool")).free(db);
+      }
+      return null;
+    }
+
     String value = CustomHook.populateSecurityHook(applicationPrefs);
     if (value != null) {
       return value;
@@ -87,7 +122,8 @@ public class SecurityHook implements ControllerHook {
 
     // URL forwarding
     String requestedURL = (String) request.getAttribute("requestedURL");
-    if (requestedURL == null && "GET".equals(request.getMethod()) && request.getParameter("redirectTo") == null) {
+    if (requestedURL == null && "GET".equals(request.getMethod()) && request.getParameter("redirectTo") == null)
+    {
       String uri = request.getRequestURI();
       String queryString = request.getQueryString();
       requestedURL = uri.substring(uri.lastIndexOf("/") + 1) + (queryString == null ? "" : "?" + queryString);
@@ -95,7 +131,7 @@ public class SecurityHook implements ControllerHook {
     }
 
     //User is supposed to have a valid session, so fail security check
-    if (userSession == null || userSession.getUserId() == -1) {
+    if (userSession == null || userSession.getUserId() < 0) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* Please login, your session has expired");
       request.setAttribute("LoginBean", failedSession);
@@ -105,7 +141,7 @@ public class SecurityHook implements ControllerHook {
     //Check to see if this site requires SSL
     if ("true".equals(
         (String) servlet.getServletConfig().getServletContext().getAttribute(
-        "ForceSSL")) &&
+            "ForceSSL")) &&
         "http".equals(request.getScheme())) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* A secure connection is required");
@@ -196,7 +232,7 @@ public class SecurityHook implements ControllerHook {
       if (userSession.getHierarchyCheck().before(
           systemStatus.getHierarchyCheck()) ||
           userSession.getPermissionCheck().before(
-          systemStatus.getPermissionCheck())) {
+              systemStatus.getPermissionCheck())) {
         Connection db = null;
         try {
           db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
@@ -245,11 +281,11 @@ public class SecurityHook implements ControllerHook {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  request  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @param request Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Site retrieveSite(ServletContext context, HttpServletRequest request) {
     String serverName = request.getServerName();
@@ -266,11 +302,11 @@ public class SecurityHook implements ControllerHook {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  ce       Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @param ce      Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Site retrieveSite(ServletContext context, ConnectionElement ce) {
     ConnectionPool sqlDriver =
@@ -285,14 +321,14 @@ public class SecurityHook implements ControllerHook {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context        Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  ce             Description of the Parameter
-   * @param  language       Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param context  Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param ce       Description of the Parameter
+   * @param language Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static synchronized SystemStatus retrieveSystemStatus(ServletContext context, Connection db, ConnectionElement ce, String language) throws SQLException {
     //SystemStatusList is created in InitHook

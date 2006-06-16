@@ -20,8 +20,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
-<%@ page import="java.text.DateFormat" %>
+<%@ page import="org.aspcfs.controller.SubmenuItem,java.text.DateFormat,java.util.Iterator" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <jsp:useBean id="GlobalItems" class="java.lang.String" scope="request"/>
@@ -96,6 +95,8 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
         <br />
+        Users logged in: <span class="highlight"><%= User.getSystemStatus(getServletConfig()).getTracker().getUserCount() %></span>
+        Website visitors: <span class="highlight"><%= User.getSystemStatus(getServletConfig()).getTracker().getGuestCount() %></span>
         <dhv:label name="admin.actionTook.colon" param="<%= "time=" + request.getAttribute("debug.action.time") %>">Action took:</dhv:label>
       </dhv:evaluate>
     </th>

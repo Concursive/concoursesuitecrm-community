@@ -18,12 +18,15 @@ package org.aspcfs.controller;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.controller.Tracker;
 import com.zeroio.webdav.WebdavManager;
 import net.sf.asterisk.manager.ManagerConnection;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
 import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.utils.*;
+import org.aspcfs.utils.AsteriskListener;
+import org.aspcfs.utils.AsteriskManager;
 import org.aspcfs.utils.XMLUtils;
+import org.aspcfs.utils.XMPPManager;
 import org.aspcfs.utils.web.LookupList;
 import org.jivesoftware.smack.XMPPConnection;
 import org.w3c.dom.Element;
@@ -94,6 +97,9 @@ public class SystemStatus {
 
   //Cached access types
   private HashMap accessTypes = new HashMap();
+
+  //Portal Tracker
+  private Tracker tracker = new Tracker();
 
   //Access to applicationPrefs (readOnly)
   private ApplicationPrefs applicationPrefs = null;
@@ -972,6 +978,9 @@ public class SystemStatus {
     return (AccessTypeList) accessTypes.get(new Integer(accessId));
   }
 
+  public Tracker getTracker() {
+    return tracker;
+  }
 
   /**
    * A presentation object (.jsp) can see if a field should be ignored in the

@@ -36,7 +36,6 @@ public class SiteLog extends GenericBean {
   private int id = -1;
   private int siteId = -1;
   private int userId = -1;
-  private String username = "";
   private String ip = "";
   private java.sql.Timestamp entered = null;
   private String browser = "";
@@ -134,16 +133,6 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the username attribute of the SiteLog object
-   *
-   *@param  tmp  The new username value
-   */
-  public void setUsername(String tmp) {
-    this.username = tmp;
-  }
-
-
-  /**
    *  Sets the ip attribute of the SiteLog object
    *
    *@param  tmp  The new ip value
@@ -214,16 +203,6 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Gets the username attribute of the SiteLog object
-   *
-   *@return    The username value
-   */
-  public String getUsername() {
-    return username;
-  }
-
-
-  /**
    *  Gets the ip attribute of the SiteLog object
    *
    *@return    The ip value
@@ -266,9 +245,9 @@ public class SiteLog extends GenericBean {
     PreparedStatement pst = null;
     ResultSet rs = null;
     pst = db.prepareStatement(
-        " SELECT * " +
-        " FROM web_site_log " +
-        " WHERE site_log_id = ? ");
+        "SELECT wsal.* " +
+        "FROM web_site_access_log wsal " +
+        "WHERE site_log_id = ? ");
     pst.setInt(1, tmpSiteLogId);
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -290,27 +269,25 @@ public class SiteLog extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    id = DatabaseUtils.getNextSeq(db, "web_site_log_site_log_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "web_site_access_log_site_log_id_seq");
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO web_site_log " +
+        "INSERT INTO web_site_access_log " +
         "(" + (id > -1 ? "site_log_id, " : "") +
         "site_id , " +
         "user_id , " +
-        "username , " +
         "ip , " +
         "browser ) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?)");
+        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
     }
     DatabaseUtils.setInt(pst, ++i, siteId);
     DatabaseUtils.setInt(pst, ++i, userId);
-    pst.setString(++i, username);
     pst.setString(++i, ip);
     pst.setString(++i, browser);
     pst.execute();
-    id = DatabaseUtils.getCurrVal(db, "web_site_log_site_log_id_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "web_site_access_log_site_log_id_seq", id);
     pst.close();
 
     return true;
@@ -333,7 +310,7 @@ public class SiteLog extends GenericBean {
       }
 
       PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM web_site_log " +
+          "DELETE FROM web_site_access_log " +
           "WHERE site_log_id = ? ");
 
       pst.setInt(1, this.getId());
@@ -367,7 +344,6 @@ public class SiteLog extends GenericBean {
     id = rs.getInt("site_log_id");
     siteId = rs.getInt("site_id");
     userId = rs.getInt("user_id");
-    username = rs.getString("username");
     ip = rs.getString("ip");
     entered = rs.getTimestamp("entered");
     browser = rs.getString("browser");

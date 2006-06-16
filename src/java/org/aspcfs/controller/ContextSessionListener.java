@@ -15,6 +15,7 @@
  */
 package org.aspcfs.controller;
 
+import com.zeroio.controller.Tracker;
 import org.aspcfs.modules.login.beans.UserBean;
 
 import javax.servlet.ServletContext;
@@ -62,12 +63,19 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
    * This method is invoked when an attribute is added to the ServletContext
    * object
    *
-   * @param se Description of the Parameter
+   * @param event Description of the Parameter
    */
-  public void attributeAdded(HttpSessionBindingEvent se) {
-    /*if (System.getProperty("DEBUG") != null) {
-      System.out.println("ContextSessionListener-> attributeAdded");
-    }*/
+  public void attributeAdded(HttpSessionBindingEvent event) {
+    ServletContext context = event.getSession().getServletContext();
+    if ("User".equals(event.getName())) {
+      // A user session has been created, can be a portal user of system user
+      UserBean thisUser = (UserBean) event.getValue();
+      thisUser.setSessionId(event.getSession().getId());
+      // Track website users
+      Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
+              "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
+      tracker.add(thisUser.getSessionId(), thisUser);
+    }
   }
 
 
@@ -83,6 +91,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
       if (se.getName().equals("User")) {
         UserBean thisUser = (UserBean) se.getValue();
         if (thisUser != null) {
+          // Internal SessionManager
           int userId = thisUser.getActualUserId();
           if (System.getProperty("DEBUG") != null) {
             System.out.println(
@@ -98,6 +107,10 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
                   "ContextSessionListener-> User removed from valid user list");
             }
           }
+          // Website Tracker
+          Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
+              "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
+          tracker.remove(thisUser.getSessionId());
         }
       }
     } catch (Exception e) {
@@ -110,10 +123,20 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
    * This method is invoked when an attribute is replaced in the ServletContext
    * object
    *
-   * @param se Description of the Parameter
+   * @param event Description of the Parameter
    */
-  public void attributeReplaced(HttpSessionBindingEvent se) {
-    //System.out.println("An attribute was replaced in the ServletContext object");
+  public void attributeReplaced(HttpSessionBindingEvent event) {
+    // This event has a handle to the old User object
+    ServletContext context = event.getSession().getServletContext();
+    // The user has logged in
+    if ("User".equals(event.getName())) {
+      UserBean thisUser = (UserBean) event.getValue();
+      thisUser.setSessionId(event.getSession().getId());
+      Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
+              "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
+      tracker.remove(event.getSession().getId());
+      tracker.add(thisUser.getSessionId(), thisUser);
+    }
   }
 
 }

@@ -44,17 +44,9 @@ public final class Portal extends CFSModule {
 
   public String executeCommandCheckPortal(ActionContext context) {
       // Will need to use the following objects in some way...
-      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
       Connection db = null;
       try {
-        org.aspcfs.modules.system.base.Site thisSite = SecurityHook.retrieveSite(context.getServletContext(), context.getRequest());
-        // Store a ConnectionElement in session for the LabelHandler to find the corresponding language
-        ConnectionElement ce = thisSite.getConnectionElement();
-        context.getSession().setAttribute("ConnectionElement", ce);
-        db = getConnection(context, ce);
-        // Load the system status for the corresponding site w/specified language
-        SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce, thisSite.getLanguage());
-
+        db = this.getConnection(context);
         // If an active website exists, redirect to the portal
         org.aspcfs.modules.website.base.SiteList websiteList = new org.aspcfs.modules.website.base.SiteList();
         websiteList.setEnabled(Constants.TRUE);
