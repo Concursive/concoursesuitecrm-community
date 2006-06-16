@@ -102,7 +102,7 @@ public void setExcludeUnapprovedCategories(boolean excludeUnapprovedCategories) 
  * @param excludeUnapprovedCategories The new excludeUnapprovedCategories value
  */
 public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
-	this.excludeUnapprovedCategories = Boolean.parseBoolean(excludeUnapprovedCategories);
+	this.excludeUnapprovedCategories = DatabaseUtils.parseBoolean(excludeUnapprovedCategories);
 }
 
 
