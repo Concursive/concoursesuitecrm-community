@@ -1382,9 +1382,6 @@ public class ObjectValidator {
       if (thisImport.getType() < 0) {
         addError(systemStatus, object, "type", REQUIRED_FIELD);
       }
-      if (thisImport.getSiteId() == Constants.INVALID_SITE) {
-        addError(systemStatus, object, "siteId", REQUIRED_FIELD);
-      }
     }
     // ProductOption
     if (object.getClass().getName().equals(

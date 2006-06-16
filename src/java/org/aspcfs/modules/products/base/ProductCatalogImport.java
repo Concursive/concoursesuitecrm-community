@@ -759,9 +759,17 @@ public class ProductCatalogImport extends Import implements Runnable {
                   if (recordInserted) {
                     // saving smallImage
                     if (!imageList.isEmpty()) {
-                      FileItem smallImage = imageList.saveImage(db, thisProductCatalog.getSmallImageName(), thisProductCatalog.getId(), userId);
+                      FileItem smallImage = null;
+                      FileItem largeImage = null;
+                      if (!"".equals(StringUtils.toString(thisProductCatalog.getSmallImageName())))
+                      {
+                        smallImage = imageList.saveImage(db, thisProductCatalog.getSmallImageName(), thisProductCatalog.getId(), userId);
+                      }
                       // saving LargeImage
-                      FileItem largeImage = imageList.saveImage(db, thisProductCatalog.getLargeImageName(), thisProductCatalog.getId(), userId);
+                      if (!"".equals(StringUtils.toString(thisProductCatalog.getLargeImageName())))
+                      {
+                        largeImage = imageList.saveImage(db, thisProductCatalog.getLargeImageName(), thisProductCatalog.getId(), userId);
+                      }
 
                       if (smallImage != null && largeImage != null) {
                         thisProductCatalog.setSmallImageId(smallImage.getId());

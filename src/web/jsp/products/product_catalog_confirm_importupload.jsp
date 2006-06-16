@@ -43,6 +43,7 @@
     </td>
   </tr>
 </table>
+<%= showWarning(request, "imagesWarning") %>
 <%-- Import Details --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>

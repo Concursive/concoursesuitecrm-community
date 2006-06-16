@@ -35,15 +35,29 @@
     message = "";
     if(checkNullString(document.inputForm.newImport.value)) {
        message += label("name.required", "- Name is a required field.\r\n");
-			 formTest = false;
+       formTest = false;
     }
-    
+
+    if (form.newImport.value.length > 250) {
+      message += label("check.products.import.name.long", "- Import name is too long\r\n");
+      formTest = false;
+    }
+
     if (form.id.value.length < 5) {
       message += label("file.required", "- File is required\r\n");
       formTest = false;
     }
-    
-    
+
+    if (form.imageId.value.length > 250) {
+      message += label("file.name.long", "- File name is too long\r\n");
+      formTest = false;
+    }
+
+    if (form.id.value.length > 250) {
+      message += label("file.name.long", "- File name is too long\r\n");
+      formTest = false;
+    }
+
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
@@ -67,12 +81,13 @@
     <a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
     <a href="Admin.do?command=ConfigDetails&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="product.ProductCatalog">Product Catalog</dhv:label></a> >
     <a href="ProductCatalogImports.do?command=View&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
-    <dhv:label name="products.companydirectory_confirm_importupload.NewImport">New Import</dhv:label>
+    <dhv:label name="products.newImport">New Import</dhv:label>
   </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <%= showError(request, "actionError", false) %>
+<%= showWarning(request, "actionWarning") %>
 <%--  include basic product form --%>
 <%@ include file="product_catalog_import_include.jsp" %>
 <br />

@@ -27,7 +27,7 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    <dhv:label name="products.newImport">New Import</dhv:label>
+    <dhv:label name="products.name">Name</dhv:label>
   </td>
   <td class="containerBody">
     <input type="text" name="newImport" value="<%= toString(ImportDetails.getName()) %>" maxlength="250" size="65"><font color="red">*</font>
@@ -59,7 +59,8 @@
         <tr>
           <td valign="top">
             <input type="file" name="imageId" size="45">
-            <%= showAttribute(request, "imagesError") %>
+            <%= showError(request, "imagesError") %>
+            <%= showWarning(request, "imagesWarning") %>
           </td>
         </tr>
         <tr>
@@ -78,7 +79,7 @@
         <tr>
           <td valign="top">
             <input type="file" name="id" size="45"><font color="red">*</font>
-            <%= showAttribute(request, "fileError") %>
+            <%= showError(request, "fileError", true) %>
           </td>
         </tr>
         <tr>

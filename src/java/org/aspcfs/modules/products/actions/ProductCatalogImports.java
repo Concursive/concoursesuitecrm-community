@@ -103,11 +103,9 @@ public class ProductCatalogImports extends CFSModule {
         thisList.setType(Constants.IMPORT_PRODUCT_CATALOG);
         thisList.setPagedListInfo(pagedListInfo);
         if ("my".equals(pagedListInfo.getListView())) {
-          thisList.setEnteredIdRange(this.getUserRange(context));
-        } else {
           thisList.setEnteredBy(this.getUserId(context));
-        }
-        thisList.setManager(manager);
+				}
+				thisList.setManager(manager);
         thisList.setSystemStatus(systemStatus);
         thisList.buildList(db);
 
@@ -166,6 +164,7 @@ public class ProductCatalogImports extends CFSModule {
         return ("PermissionError");
       }
       HashMap errors = new HashMap();
+      HashMap warnings = new HashMap();
       Connection db = null;
       boolean productCatalogRecordInserted = false;
       boolean isValid = false;
@@ -204,7 +203,7 @@ public class ProductCatalogImports extends CFSModule {
                 
         if (!((Object) parts.get("id") instanceof FileInfo)) {
           fileRecordInserted = false;
-          errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+          errors.put("fileError", systemStatus.getLabel("object.validation.incorrectFileName"));
           processErrors(context, errors);
           isValid = this.validateObject(context, db, thisImport);
           context.getRequest().setAttribute("name", subject);
@@ -240,6 +239,8 @@ public class ProductCatalogImports extends CFSModule {
         isValid = false;
         if (!((Object) parts.get("imageId") instanceof FileInfo)) {
           zipFileRecordInserted = false;
+          warnings.put("imagesWarning", systemStatus.getLabel("object.validation.incorrectImagesFile"));
+          processWarnings(context, warnings);
         } else {
           isValid = this.validateObject(context, db, thisImport);
           if (isValid) {
@@ -269,11 +270,27 @@ public class ProductCatalogImports extends CFSModule {
         
         if (productCatalogRecordInserted && fileRecordInserted ) {
           thisImport = new ProductCatalogImport(db, thisImport.getId());
-          thisImport.buildFileDetails(db);
+          try{
+            thisImport.buildFileDetails(db);
+          } catch(SQLException e) {
+            thisImport.delete(db);
+            thisImport.setId(-1);
+            errors.put("fileError", systemStatus.getLabel("object.validation.badFileFormat"));
+            processErrors(context, errors);     
+            return executeCommandNew(context);
+          }
           if(zipFileRecordInserted){
-          thisImport.buildZipFileDetails(db);}          
+            try{
+              thisImport.buildZipFileDetails(db);
+            } catch(SQLException e) {
+                thisImport.delete(db);
+                thisImport.setId(-1);
+                errors.put("imagesError", systemStatus.getLabel("object.validation.badImagesFileFormat"));
+                processErrors(context, errors);     
+                return executeCommandNew(context);
+            }
+          }          
           thisImport.setSystemStatus(systemStatus);
-         
         } else if (productCatalogRecordInserted) {
           thisImport.delete(db);
           thisImport.setId(-1);
@@ -317,9 +334,6 @@ public class ProductCatalogImports extends CFSModule {
         String importId = context.getRequest().getParameter("importId");
         ProductCatalogImport thisImport = new ProductCatalogImport(
             db, Integer.parseInt(importId));
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
         thisImport.buildFileDetails(db);
         if(FileItem.fileExists(db,-1,"%.zip", thisImport.getId(), thisImport.getType())>0)
         { thisImport.buildZipFileDetails(db);}
@@ -371,9 +385,6 @@ public class ProductCatalogImports extends CFSModule {
         //build the import
         String importId = context.getRequest().getParameter("importId");
         ProductCatalogImport thisImport = new ProductCatalogImport(db, Integer.parseInt(importId));
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
         thisImport.buildFileDetails(db);
         if(FileItem.fileExists(db,-1,"%.zip", thisImport.getId(), thisImport.getType())>0){
         thisImport.buildZipFileDetails(db);        }
@@ -448,12 +459,10 @@ public class ProductCatalogImports extends CFSModule {
         String importId = context.getRequest().getParameter("importId");
         ProductCatalogImport thisImport = new ProductCatalogImport(
             db, Integer.parseInt(importId));
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
         thisImport.buildFileDetails(db);
-        if(FileItem.fileExists(db,-1,"%.zip", thisImport.getId(), thisImport.getType())>0)
-        {thisImport.buildZipFileDetails(db);        }
+        if(FileItem.fileExists(db,-1,"%.zip", thisImport.getId(), thisImport.getType())>0){
+					thisImport.buildZipFileDetails(db);
+        }
         thisImport.setProperties(context.getRequest());
         context.getRequest().setAttribute("ImportDetails", thisImport);
 
@@ -525,9 +534,6 @@ public class ProductCatalogImports extends CFSModule {
             "ImportValidator");
         ProductCatalogImport thisImport = (ProductCatalogImport) context.getRequest().getAttribute(
             "ImportDetails");
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
         FileItem thisItem = (FileItem) context.getRequest().getAttribute("FileItem");
 
         //get the database elements
@@ -632,9 +638,6 @@ public class ProductCatalogImports extends CFSModule {
         SystemStatus systemStatus = this.getSystemStatus(context);
         ProductCatalogImport thisImport = new ProductCatalogImport(
             db, Integer.parseInt(importId));
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
         DependencyList dependencies = thisImport.processDependencies(db);
         dependencies.setSystemStatus(systemStatus);
         htmlDialog.addMessage(
@@ -684,9 +687,6 @@ public class ProductCatalogImports extends CFSModule {
             "permissionCategory", permissionCategory);
         ProductCatalogImport thisImport = new ProductCatalogImport(
             db, Integer.parseInt(importId));
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
         int recordDeleted = thisImport.updateStatus(db, Import.DELETED);
 
         if (recordDeleted > 0) {
@@ -839,9 +839,6 @@ public class ProductCatalogImports extends CFSModule {
             "permissionCategory", permissionCategory);
         ProductCatalogImport thisImport = new ProductCatalogImport(
             db, Integer.parseInt(importId));
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
 
         if (thisImport.canApprove()) {
           thisImport.updateStatus(db, Import.PROCESSED_APPROVED);
@@ -888,9 +885,6 @@ public class ProductCatalogImports extends CFSModule {
             "permissionCategory", permissionCategory);
         ProductCatalogImport thisImport = new ProductCatalogImport(
             db, Integer.parseInt(importId));
-        if (!isRecordAccessPermitted(context, thisImport)){
-          return ("PermissionError");
-        }
         context.getRequest().setAttribute("ImportDetails", thisImport);
 
         ProductCatalogList thisList = new  ProductCatalogList();
@@ -937,9 +931,6 @@ public class ProductCatalogImports extends CFSModule {
         thisProductCatalog.setBuildCategories(true);
         thisProductCatalog.setBuildPriceList(true);
         thisProductCatalog.queryRecord(db, Integer.parseInt(productId));
-        if (!isRecordAccessPermitted(context, thisProductCatalog)){
-          return ("PermissionError");
-        }
         context.getRequest().setAttribute("ProductDetails", thisProductCatalog);
         FileItem thumbnail = null;
         FileItem smallImage = null;
@@ -990,9 +981,6 @@ public class ProductCatalogImports extends CFSModule {
         context.getRequest().setAttribute(
             "permissionCategory", permissionCategory);
         ProductCatalog thisProductCatalog = new ProductCatalog(db, Integer.parseInt(productId));
-        if (!isRecordAccessPermitted(context, thisProductCatalog)){
-          return ("PermissionError");
-        }
         if (thisProductCatalog.getStatusId() != Import.PROCESSED_APPROVED) {
           recordDeleted = thisProductCatalog.delete(
               db, this.getPath(context, "products"));

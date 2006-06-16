@@ -3613,6 +3613,9 @@
     <param name="products.productCatalog">
       <value><![CDATA[Product Catalog]]></value>
     </param>
+    <param name="products.name">
+      <value><![CDATA[Name]]></value>
+    </param>
     <param name="products.newImport">
       <value><![CDATA[New Import]]></value>
     </param>
@@ -3717,6 +3720,9 @@
     </param>
     <param name="products.product_catalog_listimports.noImportsFound.text">
       <value><![CDATA[No imports found.]]></value>
+    </param>
+    <param name="products.fileShouldBeInZIPformat.text">
+      <value><![CDATA[* File should be in ZIP format.]]></value>
     </param>
     <param name="products.fileShouldBeInCSVformat.text">
       <value><![CDATA[* File should be in CSV format.]]></value>
@@ -9455,8 +9461,17 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.incorrectFileName">
       <value><![CDATA[The file could not be sent by your computer, make sure the file exists]]></value>
     </param>
+    <param name="object.validation.incorrectImagesFile">
+      <value><![CDATA[The Images file could not be sent by your computer, make sure the file exists]]></value>
+    </param>
     <param name="object.validation.incorrectFileNameSpecified">
       <value><![CDATA[The file could not be sent by your computer, make sure the file exists and is in the requested format]]></value>
+    </param>
+    <param name="object.validation.badFileFormat">
+      <value><![CDATA[Check the file data format]]></value>
+    </param>
+    <param name="object.validation.badImagesFileFormat">
+      <value><![CDATA[Check the Images file data format]]></value>
     </param>
     <param name="object.validation.contact.lastCompanyRequired">
       <value><![CDATA[Either company or last name is required]]></value>
