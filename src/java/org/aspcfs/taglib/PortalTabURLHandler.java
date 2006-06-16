@@ -52,17 +52,6 @@ public class PortalTabURLHandler extends TagSupport {
 
       String popup = (String) pageContext.getRequest().getParameter("popup");
 
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("popup ==> " + popup);
-        if (tab != null) {
-          System.out.println("Tab ==> " + tab.getId());
-        }
-        System.out.println("Portal ==> " + portal);
-        if (site != null) {
-          System.out.println("site ==> " + site.getId());
-        }
-      }
-
       StringBuffer buffer = new StringBuffer();
       buffer.append("<a href=\"");
       if (portal != null && "true".equals(portal)) {

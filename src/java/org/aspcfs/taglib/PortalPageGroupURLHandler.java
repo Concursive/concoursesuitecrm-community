@@ -68,17 +68,6 @@ public class PortalPageGroupURLHandler extends TagSupport {
 
       String popup = (String) pageContext.getRequest().getParameter("popup");
 
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("popup ==> " + popup);
-        if (pageGroup != null) {
-          System.out.println("PageGroup ==> " + pageGroup.getId());
-        }
-        System.out.println("Portal ==> " + portal);
-        if (site != null) {
-          System.out.println("site ==> " + site.getId());
-        }
-      }
-
       StringBuffer buffer = new StringBuffer();
       if (this.getShowLink()) {
         buffer.append("<a href=\"");
