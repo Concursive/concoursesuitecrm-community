@@ -18,6 +18,25 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class PortalPageURLHandler extends TagSupport {
 
+  private String page = null;
+  private String pageGroup = null;
+
+  public void setPage(String page) {
+    this.page = page;
+  }
+
+  public void setPageGroup(String pageGroup) {
+    this.pageGroup = pageGroup;
+  }
+
+  public String getPage() {
+    return page;
+  }
+
+  public String getPageGroup() {
+    return pageGroup;
+  }
+
   /**
    * Description of the Method
    *
@@ -31,24 +50,23 @@ public class PortalPageURLHandler extends TagSupport {
       int siteId = site.getId();
       int tabId = site.getTabToDisplay().getId();
 
-      PageGroup pageGroup = (PageGroup) pageContext.getAttribute("pageGroup");
+      PageGroup pageGroup = null;
+      if (this.getPageGroup() != null) {
+        pageGroup = (PageGroup) pageContext.getAttribute(this.getPageGroup());
+      } else {
+        pageGroup = (PageGroup) pageContext.getAttribute("pageGroup");
+      }
 
-      Page page = (Page) pageContext.getAttribute("page");
+      Page page = null;
+      if (this.getPage() != null) {
+        page = (Page) pageContext.getAttribute(this.getPage());
+      } else {
+        page = (Page) pageContext.getAttribute("page");
+      }
 
       String portal = (String) pageContext.getRequest().getAttribute("portal");
 
-      String popup = (String) pageContext.getRequest().getParameter("popup");
-
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("popup ==> " + popup);
-        if (page != null) {
-          System.out.println("Page ==> " + page.getId());
-        }
-        System.out.println("Portal ==> " + portal);
-        if (site != null) {
-          System.out.println("site ==> " + site.getId());
-        }
-      }
+      String popup = pageContext.getRequest().getParameter("popup");
 
       StringBuffer buffer = new StringBuffer();
       buffer.append("<a href=\"");

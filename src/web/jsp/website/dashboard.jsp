@@ -38,6 +38,7 @@
   </tr>
 </table>
 <%-- End Trails --%>
+<!--
 <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
     <td width="100%" valign="top">
@@ -63,6 +64,7 @@
     </td>
   </tr>
 </table>
+-->
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
@@ -76,20 +78,24 @@
     <td><strong><a href="javascript:popURL('Sites.do?command=List&popup=true','Sites','800','600','yes','yes');"><dhv:label name="website.editor.setupPublicWebsite">Setup Public Website</dhv:label></a></strong></td>
   </tr>
 </dhv:permission>
+<!--
   <tr>
     <td><strong><a href="javascript:alert('This takes the user to setup business locations');"><dhv:label name="website.locations.setupBusinessLocations">Setup Business Locations</dhv:label></a></strong></td>
   </tr>
+-->
   <dhv:permission name="website-portfolio-view"><tr>
     <td><strong><a href="PortfolioEditor.do?command=List"><dhv:label name="website.portfolio.setupExamplesOfPastWork">Setup Examples of Past Work</dhv:label></a></strong></td>
   </tr></dhv:permission>
   <dhv:permission name="admin-sysconfig-products-view"><tr>
     <td><strong><a href="ProductCatalogEditor.do?command=List&moduleId=<%= moduleId %>"><dhv:label name="website.products.setupProductsAndServices">Setup Products and Services</dhv:label></a></strong></td>
   </tr></dhv:permission>
+<!--
   <tr>
     <td><strong><a href="javascript:alert('This takes the user to the coupon editor');"><dhv:label name="">Setup Coupons</dhv:label></a></strong></td>
   </tr>
   <tr>
     <td><strong><a href="WebsiteMedia.do?command=View">Setup Media</a></strong></td>
   </tr>
+-->
 </table>
 

@@ -805,5 +805,15 @@
     <tag-class>org.aspcfs.taglib.PortalPageURLHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>Constructs a page url for the website</display-name>
+    <attribute>
+      <name>page</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>pageGroup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
 </taglib>
