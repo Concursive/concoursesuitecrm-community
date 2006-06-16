@@ -9,16 +9,12 @@ import org.aspcfs.modules.reports.base.Report;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.Permission;
 
-
 int categoryId = PermissionCategory.lookupId(db, 33020043); //Product catalog
 
-
 if (categoryId == -1) {
-
-  
   //Update the Product catalog category
-    PermissionCategory.updateImporterAttribute(db, categoryId, true);
-  } else {
-    print("Product catalog does not exist.");
-  }
+  PermissionCategory.updateImporterAttribute(db, categoryId, true);
+} else {
+  print("Product catalog does not exist.");
 }
+
