@@ -58,6 +58,8 @@ public class Page extends GenericBean {
   private boolean buildPageVersionToView = false;
   private PageVersion pageVersionToView = null;
 
+  private PageGroup pageGroup = null;
+
   private int previousPageId = -1;
   private int nextPageId = -1;
 
@@ -733,6 +735,26 @@ public class Page extends GenericBean {
 
 
   /**
+   *  Gets the pageGroup attribute of the Page object
+   *
+   * @return    The pageGroup value
+   */
+  public PageGroup getPageGroup() {
+    return pageGroup;
+  }
+
+
+  /**
+   *  Sets the pageGroup attribute of the Page object
+   *
+   * @param  tmp  The new pageGroup value
+   */
+  public void setPageGroup(PageGroup tmp) {
+    this.pageGroup = tmp;
+  }
+
+
+  /**
    *  Description of the Method
    *
    * @param  db             Description of the Parameter
@@ -745,8 +767,8 @@ public class Page extends GenericBean {
     PreparedStatement pst = null;
     ResultSet rs = null;
     pst = db.prepareStatement(
-        " SELECT * " +
-        " FROM web_page " +
+        " SELECT wp.* " +
+        " FROM web_page wp " +
         " WHERE page_id = ? ");
     pst.setInt(1, tmpPageId);
     rs = pst.executeQuery();

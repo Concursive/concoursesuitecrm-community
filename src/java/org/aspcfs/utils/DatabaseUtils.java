@@ -295,13 +295,13 @@ public class DatabaseUtils {
         break;
       case DatabaseUtils.DB2:
         if (units == DAY) {
-          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) + day ";
+          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) day ";
         } else if (units == WEEK) {
-          addTimestampIntervalString = timestampColumnName + " + ((" + termsColumnName + "+1)*7) + day ";
+          addTimestampIntervalString = timestampColumnName + " + ((" + termsColumnName + "+1)*7) day ";
         } else if (units == MONTH) {
-          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) + month ";
+          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) month ";
         } else if (units == YEAR) {
-          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) + year ";
+          addTimestampIntervalString = timestampColumnName + " + (" + termsColumnName + "+1) year ";
         }
         break;
       case DatabaseUtils.ORACLE:
@@ -356,7 +356,7 @@ public class DatabaseUtils {
         break;
       case DatabaseUtils.DB2:
         if (units == WEEK) {
-          addTimestampIntervalString = timestampColumnName + " + ((" + termsColumnName + "+" + defaultTerms + "+1)*7) + day ";
+          addTimestampIntervalString = timestampColumnName + " + ((" + termsColumnName + "+" + defaultTerms + "+1)*7) day ";
         }
         break;
       case DatabaseUtils.ORACLE:

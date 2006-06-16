@@ -1226,6 +1226,9 @@
     <param name="admin.subUserNotTheSameSite.text">
       <value><![CDATA[One or more reporting users do not belong to this site]]></value>
     </param>
+    <param name="admin.generatePasswordError.text">
+      <value><![CDATA[The Contact does not have an email address. A new password can not be automatically generated. Please add the new password.]]></value>
+    </param>
     <param name="accounts.Assets">
       <value><![CDATA[Assets]]></value>
     </param>
@@ -10408,7 +10411,8 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[
       A self-service account has been created for you.<br /><br />
       Your account username is: ${user.username}<br />
-      Your password is: ${password}<br />
+      Your password is: ${password}<br /><br />
+      Click ${url}here${endUrl} to visit the site.
     ]]></value>
     </param>
     <param name="mail.subject.loginInformation">
@@ -10428,6 +10432,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="mail.body.newPasswordIs">
       <value><![CDATA[Your new password is: ${password} <br /><br />]]></value>
+    </param>
+    <param name="mail.body.thisIsTheURL">
+      <value><![CDATA[Click ${url}here${endUrl} to visit the site<br />]]></value>
     </param>
     <param name="mail.body.accountDisabled">
       <value><![CDATA[Your self-service account has been disabled<br /><br />]]></value>

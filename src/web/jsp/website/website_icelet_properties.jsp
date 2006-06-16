@@ -70,10 +70,10 @@
 }
 </script>
 <form name="icelet" action="RowColumns.do?command=SaveIcelet&rowColumnId=<%= rowColumn.getId() %>&popup=true&auto-populate=true" onSubmit="return checkForm(this);" method="post">
-<br /><dhv:formMessage showSpace="true"/>
+<dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
-    <th colspan="2"><strong><dhv:label name="">Configure the icelet properties for <%= toHtml(icelet.getName()) %></dhv:label></strong></th>
+    <th colspan="2"><strong><dhv:label name="">Configure the portlet properties for <%= toHtml(icelet.getName()) %></dhv:label></strong></th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">

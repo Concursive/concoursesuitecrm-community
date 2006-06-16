@@ -30,7 +30,8 @@ import java.util.Iterator;
  *
  * @author     partha
  * @created    August 17, 2005
- * @version    $Id$
+ * @version    $Id: ActionPhase.java 15121 2006-05-31 20:35:05 +0000 (Wed, 31
+ *      May 2006) matt $
  */
 public class ActionPhase extends GenericBean {
   // fields
@@ -192,7 +193,7 @@ public class ActionPhase extends GenericBean {
       pst.setString(++i, this.getName());
       pst.setString(++i, this.getDescription());
       if (parentId > 0) {
-        DatabaseUtils.setInt(pst, ++i,  (parentId > 0 ? parentId : -1));
+        DatabaseUtils.setInt(pst, ++i, (parentId > 0 ? parentId : -1));
       }
       if (id > -1) {
         pst.setInt(++i, id);
@@ -330,10 +331,11 @@ public class ActionPhase extends GenericBean {
   public void buildSteps(Connection db) throws SQLException {
     //This needs to be uncommented on creating the ActionPhaseList class
     steps = new ActionStepList();
-    steps.setBuildCompleteStepList(true);
+//    steps.setBuildCompleteStepList(true);
     steps.setParentId(0);
     steps.setPhaseId(this.getId());
     steps.buildList(db);
+    steps = steps.reorder();
   }
 
 
@@ -468,7 +470,7 @@ public class ActionPhase extends GenericBean {
     int result = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT phase_id FROM action_phase WHERE parent_id = ?");
-    DatabaseUtils.setInt(pst, 1,  (parentId > 0 ? parentId : -1));
+    DatabaseUtils.setInt(pst, 1, (parentId > 0 ? parentId : -1));
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       result = DatabaseUtils.getInt(rs, "phase_id");
@@ -589,13 +591,31 @@ public class ActionPhase extends GenericBean {
     Iterator i = actionPlan.getPhases().iterator();
     while (i.hasNext()) {
       ActionPhase thisPhase = (ActionPhase) i.next();
-      if (thisPhase.isCurrent(actionPlan)) break;
-      if (thisPhase.getId() == this.getId()) { 
+      if (thisPhase.isCurrent(actionPlan)) {
+        break;
+      }
+      if (thisPhase.getId() == this.getId()) {
         before = true;
         break;
       }
     }
     return before;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public String toString() {
+    StringBuffer str = new StringBuffer();
+    str.append("Name == " + this.getName());
+    str.append(".....id == " + this.getId());
+    str.append(".....random? == " + this.getRandom());
+    str.append(".....tparentId == " + this.getParentId());
+    str.append(".....planId == " + this.getPlanId());
+    return str.toString();
   }
 
 

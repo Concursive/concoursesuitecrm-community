@@ -1,3 +1,4 @@
+<%@ include file="initPage.jsp" %>
 <html>
 <head>
   <title>Centric CRM</title>

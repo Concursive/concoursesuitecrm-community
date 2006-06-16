@@ -44,13 +44,7 @@
 <input type="hidden" name="nextTabId" value="<%= tab.getNextTabId() %>"/>
 <input type="hidden" name="modified" value="<%= tab.getModified() %>">
 <input type="hidden" name="previousTabId" value="<%= tab.getPreviousTabId() %>"/>
-<dhv:evaluate if="<%= tab.getId() > -1 %>">
-  <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>" name="Save"/>
-</dhv:evaluate><dhv:evaluate if="<%= tab.getId() == -1 %>">
-  <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" name="Save"/>
-</dhv:evaluate>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Sites.do?command=Details&siteId=<%= site.getId() %>&popup=true';">
-<br /><dhv:formMessage showSpace="true"/>
+<dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -96,6 +90,7 @@
 </dhv:evaluate><dhv:evaluate if="<%= tab.getId() == -1 %>">
   <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" name="Save"/>
 </dhv:evaluate>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Sites.do?command=Details&siteId=<%= site.getId() %>&popup=true';">
+<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();">
 </form>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+</body>

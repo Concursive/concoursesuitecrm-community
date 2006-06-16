@@ -629,6 +629,7 @@ public final class ExternalContacts extends CFSModule {
       //Check the dropdown
       if ("all".equals(view)) {
         campaignList.setOwnerIdRange(this.getUserRange(context));
+        campaignList.setUserGroupUserId(this.getUserId(context));
       } else {
         campaignList.setOwner(this.getUserId(context));
       }

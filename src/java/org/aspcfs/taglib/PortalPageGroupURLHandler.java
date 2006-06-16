@@ -2,27 +2,60 @@ package org.aspcfs.taglib;
 
 import org.aspcfs.modules.website.base.Site;
 import org.aspcfs.modules.website.base.PageGroup;
-import org.aspcfs.modules.website.base.Page;
 import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.JspException;
 
 /**
- * This Class outs a calendar field based on the user's locale information for
- * the current UserBean session.
+ *  This Class outs a calendar field based on the user's locale information for
+ *  the current UserBean session.
  *
- * @author Matt Rajkowski
- * @version $Id: Exp $
- * @created May 19, 2006
+ * @author     Matt Rajkowski
+ * @created    May 19, 2006
+ * @version    $Id: Exp $
  */
 public class PortalPageGroupURLHandler extends TagSupport {
+  private boolean showLink = false;
+
 
   /**
-   * Description of the Method
+   *  Gets the showLink attribute of the PortalPageGroupURLHandler object
    *
-   * @return Description of the Return Value
-   * @throws javax.servlet.jsp.JspException Description of the Exception
+   * @return    The showLink value
+   */
+  public boolean getShowLink() {
+    return showLink;
+  }
+
+
+  /**
+   *  Sets the showLink attribute of the PortalPageGroupURLHandler object
+   *
+   * @param  tmp  The new showLink value
+   */
+  public void setShowLink(boolean tmp) {
+    this.showLink = tmp;
+  }
+
+
+  /**
+   *  Sets the showLink attribute of the PortalPageGroupURLHandler object
+   *
+   * @param  tmp  The new showLink value
+   */
+  public void setShowLink(String tmp) {
+    this.showLink = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return                                  Description of the Return Value
+   * @exception  JspException                 Description of the Exception
+   * @throws  javax.servlet.jsp.JspException  Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -47,7 +80,18 @@ public class PortalPageGroupURLHandler extends TagSupport {
       }
 
       StringBuffer buffer = new StringBuffer();
-      buffer.append(StringUtils.toHtml(pageGroup.getName()) + "</a>");
+      if (this.getShowLink()) {
+        buffer.append("<a href=\"");
+        if (portal != null && "true".equals(portal)) {
+          buffer.append("Portal.do?command=Default");
+        } else {
+          buffer.append("Sites.do?command=Details");
+        }
+        buffer.append("&siteId=" + site.getId() + "&tabId=" + site.getTabToDisplay().getId() + "&pageId=" + pageGroup.getPageList().getDefaultPageId() + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + "\">"+pageGroup.getName()+"</a>");
+      } else {
+        buffer.append(StringUtils.toHtml(pageGroup.getName()));
+      }
+
       if (portal != null && "true".equals(portal)) {
         //do nothing
       } else {
@@ -64,9 +108,9 @@ public class PortalPageGroupURLHandler extends TagSupport {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

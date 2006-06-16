@@ -55,7 +55,7 @@
     <jsp:useBean id="pageGroupList" type="org.aspcfs.modules.website.base.PageGroupList" />
     <dhv:evaluate if="<%= pageGroupList.canDisplay() || !"true".equals(portal) %>">
       <%-- PageGroup along the right --%>
-      <td width="200" style="padding-left:6px;" valign="top">
+      <td width="200" style="padding-left:6px;" valign="top" nowrap>
         <table cellpadding="0" cellspacing="0" width="100%" class="portalPageGroups">
           <c:forEach items="${site.tabToDisplay.pageGroupList}" var="pageGroup">
             <c:set var="pageGroup" value="${pageGroup}"/>

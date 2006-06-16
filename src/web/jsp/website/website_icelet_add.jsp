@@ -41,23 +41,22 @@
 	}
 </script>
 <form name="icelet" action="RowColumns.do?command=ModifyIceletProperties&rowColumnId=<%= rowColumn.getId() %>&popup=true&auto-populate=true" onSubmit="return checkForm(this);" method="post">
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();" />
-<br /><dhv:formMessage showSpace="true"/>
+<dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
-    <th colspan="2"><strong><dhv:label name="">Add Icelet</dhv:label></strong></th>
+    <th colspan="2"><strong><dhv:label name="">Column Properties</dhv:label></strong></th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="">Column Width</dhv:label>
+      <dhv:label name="">Width</dhv:label>
     </td>
-		<td><input type="text" name="width" value="<%= (rowColumn.getWidth() > -1? rowColumn.getWidth(): 100) %>"/></td>
+		<td><input type="text" name="width" value="<%= (rowColumn.getWidth() > -1? rowColumn.getWidth(): 100) %>" /></td>
   </tr>
 </table>
 &nbsp;<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
-    <th colspan="2"><strong><dhv:label name="">Choose an Icelet</dhv:label></strong></th>
+    <th colspan="2"><strong><dhv:label name="">Choose a Portlet</dhv:label></strong></th>
   </tr>
 <tr class="containerBody">
   <td>
@@ -76,11 +75,11 @@
       </dhv:evaluate>
       <a href="javascript:document.forms['icelet'].action += '&iceletId=<%= thisIcelet.getId() %>';document.forms['icelet'].submit();">
         <div><%=  toHtml(thisIcelet.getName()) %></div></a>
-      <dhv:evaluate if="<%= icelet != null && icelet.getId() == thisIcelet.getId() %>">
-        </th>
-      </dhv:evaluate>
       <dhv:evaluate if="<%= icelet == null || icelet.getId() != thisIcelet.getId() %>">
         </td>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= icelet != null && icelet.getId() == thisIcelet.getId() %>">
+        </th>
       </dhv:evaluate>
       </tr>
     </table>
@@ -89,13 +88,13 @@
 </td></tr>
 </table>
 <br />
-<input type="hidden" name="id" value="<%= rowColumn.getId() %>"/>
-<input type="hidden" name="position" value="<%= rowColumn.getPosition() %>"/>
-<input type="hidden" name="pageRowId" value="<%= rowColumn.getPageRowId() %>"/>
-<input type="hidden" name="enabled" value="<%= rowColumn.getEnabled() %>"/>
-<input type="hidden" name="modified" value="<%= rowColumn.getModified() %>"/>
-<input type="hidden" name="nextRowColumnId" value="<%= rowColumn.getNextRowColumnId() %>"/>
-<input type="hidden" name="previousRowColumnId" value="<%= rowColumn.getPreviousRowColumnId() %>"/>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();">
+<input type="hidden" name="id" value="<%= rowColumn.getId() %>" />
+<input type="hidden" name="position" value="<%= rowColumn.getPosition() %>" />
+<input type="hidden" name="pageRowId" value="<%= rowColumn.getPageRowId() %>" />
+<input type="hidden" name="enabled" value="<%= rowColumn.getEnabled() %>" />
+<input type="hidden" name="modified" value="<%= rowColumn.getModified() %>" />
+<input type="hidden" name="nextRowColumnId" value="<%= rowColumn.getNextRowColumnId() %>" />
+<input type="hidden" name="previousRowColumnId" value="<%= rowColumn.getPreviousRowColumnId() %>" />
+<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();" />
 </form>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

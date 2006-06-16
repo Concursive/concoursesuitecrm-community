@@ -90,7 +90,7 @@
           <img src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add tab to the left</dhv:label>
+          <dhv:label name="">Add a tab to the left</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -100,7 +100,7 @@
           <img src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add tab to the right</dhv:label>
+          <dhv:label name="">Add a tab to the right</dhv:label>
         </td>
       </tr>
     </dhv:permission>

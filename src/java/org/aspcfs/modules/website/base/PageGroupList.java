@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author kailash
+ * @author     kailash
  * @version $Id: Exp $
- * @created February 10, 2006
+ * @created    February 10, 2006
  */
 public class PageGroupList extends ArrayList {
 
@@ -49,16 +49,15 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Constructor for the PageGroupList object
+   *  Constructor for the PageGroupList object
    */
-  public PageGroupList() {
-  }
+  public PageGroupList() { }
 
 
   /**
-   * Sets the id attribute of the PageGroupList object
+   *  Sets the id attribute of the PageGroupList object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -66,9 +65,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the id attribute of the PageGroupList object
+   *  Sets the id attribute of the PageGroupList object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -76,9 +75,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the tabId attribute of the PageGroupList object
+   *  Sets the tabId attribute of the PageGroupList object
    *
-   * @param tmp The new tabId value
+   * @param  tmp  The new tabId value
    */
   public void setTabId(int tmp) {
     this.tabId = tmp;
@@ -86,9 +85,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the tabId attribute of the PageGroupList object
+   *  Sets the tabId attribute of the PageGroupList object
    *
-   * @param tmp The new tabId value
+   * @param  tmp  The new tabId value
    */
   public void setTabId(String tmp) {
     this.tabId = Integer.parseInt(tmp);
@@ -96,9 +95,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the buildPages attribute of the PageGroupList object
+   *  Sets the buildPages attribute of the PageGroupList object
    *
-   * @param tmp The new buildPages value
+   * @param  tmp  The new buildPages value
    */
   public void setBuildPages(boolean tmp) {
     this.buildPages = tmp;
@@ -106,9 +105,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the buildPages attribute of the PageGroupList object
+   *  Sets the buildPages attribute of the PageGroupList object
    *
-   * @param tmp The new buildPages value
+   * @param  tmp  The new buildPages value
    */
   public void setBuildPages(String tmp) {
     this.buildPages = DatabaseUtils.parseBoolean(tmp);
@@ -116,9 +115,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the pageToBuild attribute of the PageGroupList object
+   *  Sets the pageToBuild attribute of the PageGroupList object
    *
-   * @param tmp The new pageToBuild value
+   * @param  tmp  The new pageToBuild value
    */
   public void setPageToBuild(int tmp) {
     this.pageToBuild = tmp;
@@ -126,9 +125,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the pageToBuild attribute of the PageGroupList object
+   *  Sets the pageToBuild attribute of the PageGroupList object
    *
-   * @param tmp The new pageToBuild value
+   * @param  tmp  The new pageToBuild value
    */
   public void setPageToBuild(String tmp) {
     this.pageToBuild = Integer.parseInt(tmp);
@@ -136,9 +135,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the mode attribute of the PageGroupList object
+   *  Sets the mode attribute of the PageGroupList object
    *
-   * @param tmp The new mode value
+   * @param  tmp  The new mode value
    */
   public void setMode(int tmp) {
     this.mode = tmp;
@@ -146,9 +145,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the mode attribute of the PageGroupList object
+   *  Sets the mode attribute of the PageGroupList object
    *
-   * @param tmp The new mode value
+   * @param  tmp  The new mode value
    */
   public void setMode(String tmp) {
     this.mode = Integer.parseInt(tmp);
@@ -156,9 +155,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the id attribute of the PageGroupList object
+   *  Gets the id attribute of the PageGroupList object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -166,9 +165,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the tabId attribute of the PageGroupList object
+   *  Gets the tabId attribute of the PageGroupList object
    *
-   * @return The tabId value
+   * @return    The tabId value
    */
   public int getTabId() {
     return tabId;
@@ -176,9 +175,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the buildPages attribute of the PageGroupList object
+   *  Gets the buildPages attribute of the PageGroupList object
    *
-   * @return The buildPages value
+   * @return    The buildPages value
    */
   public boolean getBuildPages() {
     return buildPages;
@@ -186,9 +185,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the pageToBuild attribute of the PageGroupList object
+   *  Gets the pageToBuild attribute of the PageGroupList object
    *
-   * @return The pageToBuild value
+   * @return    The pageToBuild value
    */
   public int getPageToBuild() {
     return pageToBuild;
@@ -196,9 +195,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the mode attribute of the PageGroupList object
+   *  Gets the mode attribute of the PageGroupList object
    *
-   * @return The mode value
+   * @return    The mode value
    */
   public int getMode() {
     return mode;
@@ -206,9 +205,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the thisPageToBuild attribute of the PageGroupList object
+   *  Gets the thisPageToBuild attribute of the PageGroupList object
    *
-   * @return The thisPageToBuild value
+   * @return    The thisPageToBuild value
    */
   public Page getThisPageToBuild() {
     return thisPageToBuild;
@@ -216,9 +215,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the thisPageToBuild attribute of the PageGroupList object
+   *  Sets the thisPageToBuild attribute of the PageGroupList object
    *
-   * @param tmp The new thisPageToBuild value
+   * @param  tmp  The new thisPageToBuild value
    */
   public void setThisPageToBuild(Page tmp) {
     this.thisPageToBuild = tmp;
@@ -226,9 +225,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the afterPosition attribute of the PageGroupList object
+   *  Gets the afterPosition attribute of the PageGroupList object
    *
-   * @return The afterPosition value
+   * @return    The afterPosition value
    */
   public int getAfterPosition() {
     return afterPosition;
@@ -236,9 +235,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the afterPosition attribute of the PageGroupList object
+   *  Sets the afterPosition attribute of the PageGroupList object
    *
-   * @param tmp The new afterPosition value
+   * @param  tmp  The new afterPosition value
    */
   public void setAfterPosition(int tmp) {
     this.afterPosition = tmp;
@@ -246,9 +245,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the afterPosition attribute of the PageGroupList object
+   *  Sets the afterPosition attribute of the PageGroupList object
    *
-   * @param tmp The new afterPosition value
+   * @param  tmp  The new afterPosition value
    */
   public void setAfterPosition(String tmp) {
     this.afterPosition = Integer.parseInt(tmp);
@@ -256,9 +255,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the beforePosition attribute of the PageGroupList object
+   *  Gets the beforePosition attribute of the PageGroupList object
    *
-   * @return The beforePosition value
+   * @return    The beforePosition value
    */
   public int getBeforePosition() {
     return beforePosition;
@@ -266,9 +265,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the beforePosition attribute of the PageGroupList object
+   *  Sets the beforePosition attribute of the PageGroupList object
    *
-   * @param tmp The new beforePosition value
+   * @param  tmp  The new beforePosition value
    */
   public void setBeforePosition(int tmp) {
     this.beforePosition = tmp;
@@ -276,9 +275,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the beforePosition attribute of the PageGroupList object
+   *  Sets the beforePosition attribute of the PageGroupList object
    *
-   * @param tmp The new beforePosition value
+   * @param  tmp  The new beforePosition value
    */
   public void setBeforePosition(String tmp) {
     this.beforePosition = Integer.parseInt(tmp);
@@ -286,9 +285,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the position attribute of the PageGroupList object
+   *  Gets the position attribute of the PageGroupList object
    *
-   * @return The position value
+   * @return    The position value
    */
   public int getPosition() {
     return position;
@@ -296,9 +295,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the position attribute of the PageGroupList object
+   *  Sets the position attribute of the PageGroupList object
    *
-   * @param tmp The new position value
+   * @param  tmp  The new position value
    */
   public void setPosition(int tmp) {
     this.position = tmp;
@@ -306,9 +305,9 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Sets the position attribute of the PageGroupList object
+   *  Sets the position attribute of the PageGroupList object
    *
-   * @param tmp The new position value
+   * @param  tmp  The new position value
    */
   public void setPosition(String tmp) {
     this.position = Integer.parseInt(tmp);
@@ -316,10 +315,10 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -348,12 +347,12 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
 
@@ -399,11 +398,11 @@ public class PageGroupList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-      " * " +
-        "FROM web_page_group " +
+      "wpg.* " +
+        "FROM web_page_group wpg " +
         "WHERE page_group_id > -1 ");
     pst = db.prepareStatement(
-      sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -415,11 +414,11 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param sqlFilter Description of the Parameter
-   * @param db        Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  sqlFilter      Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) throws SQLException {
     if (id != -1) {
@@ -441,11 +440,11 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -469,11 +468,11 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Gets the object attribute of the PageGroupList object
+   *  Gets the object attribute of the PageGroupList object
    *
-   * @param rs Description of the Parameter
-   * @return The object value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @return                The object value
+   * @throws  SQLException  Description of the Exception
    */
   public PageGroup getObject(ResultSet rs) throws SQLException {
     return new PageGroup(rs);
@@ -481,10 +480,10 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator pageGroupIterator = this.iterator();
@@ -496,14 +495,15 @@ public class PageGroupList extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db                     Description of the Parameter
-   * @param currentId              Description of the Parameter
-   * @param adjacentId             Description of the Parameter
-   * @param changeAdjacentPosition Description of the Parameter
-   * @param addition               Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                      Description of the Parameter
+   * @param  currentId               Description of the Parameter
+   * @param  adjacentId              Description of the Parameter
+   * @param  changeAdjacentPosition  Description of the Parameter
+   * @param  addition                Description of the Parameter
+   * @param  tabId                   Description of the Parameter
+   * @throws  SQLException           Description of the Exception
    */
   public static void updateRelatedPageGroups(Connection db, int currentId, int adjacentId, int tabId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
     if (addition) {
@@ -534,10 +534,10 @@ public class PageGroupList extends ArrayList {
   }
 
   /**
-   * The pageGroupList is a secondary menu that is always shown in edit mode,
-   * but ownly shown in portal mode under certain conditions
+   *  The pageGroupList is a secondary menu that is always shown in edit mode,
+   *  but ownly shown in portal mode under certain conditions
    *
-   * @return true if the secondary menu should be shown in portal mode
+   * @return    true if the secondary menu should be shown in portal mode
    */
   public boolean canDisplay() {
     // The seconday menu can be shown if there is more than 1 pageGroup,
@@ -555,12 +555,44 @@ public class PageGroupList extends ArrayList {
     return false;
   }
 
+
+  /**
+   *  Gets the canDisplay attribute of the PageGroupList object
+   *
+   * @return    The canDisplay value
+   */
   public boolean getCanDisplay() {
     return canDisplay();
   }
 
+
+  /**
+   *  Gets the count attribute of the PageGroupList object
+   *
+   * @return    The count value
+   */
   public int getCount() {
     return this.size();
+  }
+
+
+  /**
+   *  Gets the PageGroup by the groupId from the list of page groups
+   *
+   * @param  groupId  Description of the Parameter
+   * @return          The groupById value
+   */
+  public PageGroup getGroupById(int groupId) {
+    PageGroup result = null;
+    Iterator pageGroupIterator = this.iterator();
+    while (pageGroupIterator.hasNext()) {
+      PageGroup thisPageGroup = (PageGroup) pageGroupIterator.next();
+      if (thisPageGroup.getId() == groupId) {
+        result = thisPageGroup;
+        break;
+      }
+    }
+    return result;
   }
 }
 

@@ -90,7 +90,7 @@
           <img src="images/icons/stock_up-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add page group above this page group</dhv:label>
+          <dhv:label name="">Add a page group before this page group</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -100,7 +100,7 @@
           <img src="images/icons/stock_down-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add page group below this page group</dhv:label>
+          <dhv:label name="">Add a page group after this page group</dhv:label>
         </td>
       </tr>
     </dhv:permission>

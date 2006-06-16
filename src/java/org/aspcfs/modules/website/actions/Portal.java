@@ -17,6 +17,7 @@ package org.aspcfs.modules.website.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.website.base.*;
 import org.aspcfs.modules.website.base.Site;
@@ -81,6 +82,8 @@ public final class Portal extends CFSModule {
     // Show the site...
     Site site = null;
     Connection db = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("url", systemStatus.getUrl());
     ArrayList rowColumnList = null;
     try {
       // Load the site

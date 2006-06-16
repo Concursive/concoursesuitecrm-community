@@ -172,3 +172,8 @@ WEB-INF/lib/pluto-taglib-1.1.0-SNAPSHOT.jar
 ## 2006-06-01 updated for Java 1.4 fix
 WEB-INF/lib/xercesImpl-2.6.2.jar
 
+## 2006-06-15 unused, causing test errors
+website/website_row_add.jsp
+website/website_template_blank.jsp
+website/website_template_blank_1.jsp
+

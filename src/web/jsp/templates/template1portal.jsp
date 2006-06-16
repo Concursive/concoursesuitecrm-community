@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="portal/styles/<%= style.getCss() %>" type="text/css">
 </head>
 <body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">
-<table border="0" width="100%">
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td valign="top">
 <% String includeModule = (String) request.getAttribute("IncludeModule"); %>

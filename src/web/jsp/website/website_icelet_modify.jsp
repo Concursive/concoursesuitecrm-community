@@ -77,7 +77,7 @@
 <br /><dhv:formMessage showSpace="true"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
-    <th colspan="2"><strong><dhv:label name="">Modify Icelet</dhv:label></strong></th>
+    <th colspan="2"><strong><dhv:label name="">Modify Portlet</dhv:label></strong></th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -87,7 +87,7 @@
   </tr>
 	<tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="">Icelet</dhv:label>
+      <dhv:label name="">Portlet</dhv:label>
     </td>
 		<td>
       <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">

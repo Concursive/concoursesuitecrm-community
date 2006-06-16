@@ -60,23 +60,23 @@
   }
 
   function addIcelet(addendum) {
-    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&popup=true','AddIcelet',600,400,'yes','yes');
+    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&popup=true','AddIcelet',700,500,'yes','yes');
   }
 
   function modifyIcelet() {
-    popURL('RowColumns.do?command=ModifyIceletProperties&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&iceletId=' + thisIceletId +'&popup=true','ModifyProperties',600,400,'yes','yes');
+    popURL('RowColumns.do?command=ModifyIceletProperties&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&iceletId=' + thisIceletId +'&popup=true','ModifyProperties',700,500,'yes','yes');
   }
 
   function replaceIcelet() {
-    popURL('RowColumns.do?command=ReplaceIcelet&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&popup=true','ReplaceIcelet',600,400,'yes','yes');
+    popURL('RowColumns.do?command=ReplaceIcelet&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&popup=true','ReplaceIcelet',700,500,'yes','yes');
   }
 
   function addColumnLeft() {
-    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId +'&nextRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',600,400,'yes','yes');
+    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId +'&nextRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',700,500,'yes','yes');
   }
 
   function addColumnRight() {
-    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId +'&previousRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',600,400,'yes','yes');
+    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId +'&previousRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',700,500,'yes','yes');
   }
 
   function moveColumnLeft() {
@@ -115,7 +115,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add Icelet</dhv:label>
+          <dhv:label name="">Add Portlet</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -125,7 +125,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Edit Icelet</dhv:label>
+          <dhv:label name="">Edit Portlet</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -135,7 +135,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Replace Icelet</dhv:label>
+          <dhv:label name="">Replace Portlet</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -145,7 +145,7 @@
           <img src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add column to the left</dhv:label>
+          <dhv:label name="">Add a column to the left</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -155,7 +155,7 @@
           <img src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add column to the right</dhv:label>
+          <dhv:label name="">Add a column to the right</dhv:label>
         </td>
       </tr>
     </dhv:permission>

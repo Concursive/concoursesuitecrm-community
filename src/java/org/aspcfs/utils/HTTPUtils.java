@@ -244,6 +244,11 @@ public class HTTPUtils {
         return httpConnection.getHeaderField("Server");
       }
     } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("HTTPUtils-> getServerName error: " + e.getMessage());
+        e.printStackTrace(System.out);
+      }
+
     }
     return null;
   }

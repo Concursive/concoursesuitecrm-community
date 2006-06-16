@@ -36,7 +36,7 @@
 		}
 	}
 </script>
-<body onLoad="javascript:document.website.displayText.focus();">
+<body onLoad="javascript:document.website.name.focus();">
 <form name="website" action="Pages.do?command=Save&auto-populate=true&popup=true" onSubmit="return checkForm(this);" method="post">
 <input type="hidden" name="id" value="<%= thisPage.getId() %>"/>
 <input type="hidden" name="pageGroupId" value="<%= thisPage.getPageGroupId() %>"/>
@@ -47,13 +47,7 @@
 <input type="hidden" name="activePageVersionId" value="<%= thisPage.getActivePageVersionId() %>">
 <input type="hidden" name="constructionPageVersionId" value="<%= thisPage.getConstructionPageVersionId() %>">
 <input type="hidden" name="previousPageId" value="<%= thisPage.getPreviousPageId() %>"/>
-<dhv:evaluate if="<%= thisPage.getId() > -1 %>">
-  <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>" name="Save"/>
-</dhv:evaluate><dhv:evaluate if="<%= thisPage.getId() == -1 %>">
-  <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" name="Save"/>
-</dhv:evaluate>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();">
-<br /><dhv:formMessage showSpace="true"/>
+<dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

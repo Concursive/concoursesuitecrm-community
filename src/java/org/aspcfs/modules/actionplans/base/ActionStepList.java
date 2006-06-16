@@ -23,6 +23,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -294,6 +295,127 @@ public class ActionStepList extends ArrayList {
       step.setAllowDuplicateRecipient(false);
       step.update(db);
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public ActionStepList reorder() {
+    HashMap positionMap = this.getStepIdsAsHashMap();
+    HashMap steps = this.getStepsByParentAsHashMap();
+    ActionStepList reorderedList = new ActionStepList();
+    reorderedList.setPhaseId(this.getPhaseId());
+    String tempStepId = "0";
+    for (int i = 0; i < this.size(); i++) {
+      ActionStep thisStep = (ActionStep) steps.get(tempStepId);
+      if (thisStep != null) {
+        tempStepId = (String) positionMap.get(tempStepId);
+        reorderedList.add(thisStep);
+      }
+    }
+    return reorderedList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  list  Description of the Parameter
+   * @return       Description of the Return Value
+   */
+  public String printArray(ArrayList list) {
+    StringBuffer str = new StringBuffer();
+    for (int i = 0; i < list.size(); i++) {
+      str.append("\nActionStepList:: list[" + i + "] = " + list.get(i));
+    }
+    return str.toString();
+  }
+
+
+  /**
+   *  Gets the stepIdsAsHashMap attribute of the ActionStepList object
+   *
+   * @return    The stepIdsAsHashMap value
+   */
+  public HashMap getStepIdsAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionStep step = (ActionStep) iter.next();
+      map.put(String.valueOf(step.getParentId()), String.valueOf(step.getId()));
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the stepsByParentAsHashMap attribute of the ActionStepList object
+   *
+   * @return    The stepsByParentAsHashMap value
+   */
+  public HashMap getStepsByParentAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionStep step = (ActionStep) iter.next();
+      map.put(String.valueOf(step.getParentId()), step);
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the stepsAsHashMap attribute of the ActionStepList object
+   *
+   * @return    The stepsAsHashMap value
+   */
+  public HashMap getStepsAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionStep step = (ActionStep) iter.next();
+      map.put(String.valueOf(step.getId()), step);
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the stepParentsAsHashMap attribute of the ActionStepList object
+   *
+   * @return    The stepParentsAsHashMap value
+   */
+  public HashMap getStepParentsAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    for (int i = 1; iter.hasNext(); i++) {
+      ActionStep step = (ActionStep) iter.next();
+      map.put(String.valueOf(step.getId()), String.valueOf(i));
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the stepById attribute of the ActionStepList object
+   *
+   * @param  id  Description of the Parameter
+   * @return     The stepById value
+   */
+  public ActionStep getStepById(int id) {
+    ActionStep result = null;
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionStep step = (ActionStep) iter.next();
+      if (step.getId() == id) {
+        result = step;
+        break;
+      }
+    }
+    return result;
   }
 
 

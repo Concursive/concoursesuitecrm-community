@@ -17,6 +17,7 @@ package org.aspcfs.modules.website.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.DependencyList;
@@ -376,6 +377,13 @@ public final class Sites extends CFSModule {
     }
     ArrayList rowColumnList = null;
     Site site = null;
+    SystemStatus systemStatus =  this.getSystemStatus(context);
+    if (systemStatus != null) {
+      context.getRequest().setAttribute("url", systemStatus.getUrl());
+    } else {
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      context.getRequest().setAttribute("url", prefs.get("WEBSERVER.URL"));
+    }
     Connection db = null;
     try {
       db = this.getConnection(context);

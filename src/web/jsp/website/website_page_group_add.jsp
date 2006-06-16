@@ -36,7 +36,7 @@
 		}
 	}
 </script>
-<body onLoad="javascript:document.website.displayText.focus();">
+<body onLoad="javascript:document.website.name.focus();">
 <form name="website" action="PageGroups.do?command=Save&auto-populate=true&popup=true" onSubmit="return checkForm(this);" method="post">
 <input type="hidden" name="id" value="<%= thisPageGroup.getId() %>"/>
 <input type="hidden" name="tabId" value="<%= thisPageGroup.getTabId() %>"/>
@@ -44,13 +44,7 @@
 <input type="hidden" name="nextPageGroupId" value="<%= thisPageGroup.getNextPageGroupId() %>"/>
 <input type="hidden" name="modified" value="<%= thisPageGroup.getModified() %>">
 <input type="hidden" name="previousPageGroupId" value="<%= thisPageGroup.getPreviousPageGroupId() %>"/>
-<dhv:evaluate if="<%= thisPageGroup.getId() > -1 %>">
-  <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>" name="Save"/>
-</dhv:evaluate><dhv:evaluate if="<%= thisPageGroup.getId() == -1 %>">
-  <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" name="Save"/>
-</dhv:evaluate>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();">
-<br /><dhv:formMessage showSpace="true"/>
+<dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

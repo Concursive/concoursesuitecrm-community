@@ -612,7 +612,7 @@ public class User extends GenericBean {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public int generateRandomPassword(Connection db, ActionContext context) throws SQLException {
+  public String generateRandomPassword(Connection db, ActionContext context) throws SQLException {
     int resultCount = -1;
     User modUser = null;
     Contact targetContact = null;
@@ -621,80 +621,7 @@ public class User extends GenericBean {
     this.setPassword1(newPassword);
     this.setPassword2(newPassword);
     resultCount = this.newPassword(db, context);
-
-    if (resultCount > -1) {
-      modUser = new User();
-      modUser.setBuildContact(true);
-      modUser.setBuildContactDetails(false);
-      modUser.buildRecord(db, modifiedBy);
-
-      targetContact = new Contact(db, this.getContactId());
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
-          "SystemStatus")).get(
-          ((ConnectionElement) context.getSession().getAttribute(
-              "ConnectionElement")).getUrl());
-
-      //send email
-      SMTPMessage mail = new SMTPMessage();
-      mail.setHost(
-          ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
-      mail.setFrom(
-          ApplicationPrefs.getPref(
-              context.getServletContext(), "EMAILADDRESS"));
-      mail.setType("text/html");
-      mail.setTo(targetContact.getPrimaryEmailAddress());
-      if (systemStatus != null) {
-        String message = systemStatus.getLabel(
-            "mail.subject.accountInformation");
-        if (message != null) {
-          mail.setSubject(message);
-        } else {
-          mail.setSubject("Centric CRM Account Information");
-        }
-        message = systemStatus.getLabel("mail.body.newLoginInformation");
-        if (message != null) {
-          HashMap map = new HashMap();
-          map.put("${username}", this.username);
-          map.put("${password}", newPassword);
-          map.put("${nameLastFirst}", modUser.getContact().getNameLastFirst());
-          Template template = new Template(message);
-          template.setParseElements(map);
-          mail.setBody(template.getParsedText());
-        } else {
-          mail.setBody(
-              "This message details information about your Centric CRM account.<br />" +
-                  "<br />" +
-                  "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
-                  "<br />" +
-                  "Please login with the following information:<br />" +
-                  "<br />" +
-                  "User Name: " + this.username + "<br />" +
-                  "Password: " + newPassword + "<br />" +
-                  "<br />" +
-                  "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
-                  "<br />");
-        }
-      } else {
-        mail.setSubject("Centric CRM Account Information");
-        mail.setBody(
-            "This message details information about your Centric CRM account.<br />" +
-                "<br />" +
-                "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
-                "<br />" +
-                "Please login with the following information:<br />" +
-                "<br />" +
-                "User Name: " + this.username + "<br />" +
-                "Password: " + newPassword + "<br />" +
-                "<br />" +
-                "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
-                "<br />");
-      }
-      if (mail.send() == 2) {
-        System.err.println(mail.getErrorMsg());
-      }
-    }
-
-    return resultCount;
+    return newPassword;
   }
 
 

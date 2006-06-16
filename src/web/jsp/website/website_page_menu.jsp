@@ -114,7 +114,7 @@
           <img src="images/icons/stock_up-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add page above this page</dhv:label>
+          <dhv:label name="">Add a page above this page</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -124,7 +124,7 @@
           <img src="images/icons/stock_down-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="">Add page below this page</dhv:label>
+          <dhv:label name="">Add a page below this page</dhv:label>
         </td>
       </tr>
     </dhv:permission>
@@ -138,6 +138,7 @@
         </td>
       </tr>
     </dhv:permission>
+<%--
     <dhv:permission name="site-editor-edit">
       <tr id="menuModifyTabBanner" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modifyTabBanner();">
         <th>
@@ -158,6 +159,7 @@
         </td>
       </tr>
     </dhv:permission>
+--%>
     <dhv:permission name="site-editor-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deletePage();">
         <th>

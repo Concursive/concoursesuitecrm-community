@@ -50,11 +50,12 @@
       message += label("check.username", "- Check that a Username is entered\r\n");
       formTest = false;
     }
-    if ((form.password1.value == "") || (form.password2.value == "") || (form.password1.value != form.password2.value)) {
-      message += label("check.bothpasswords.match", "- Check that both Passwords are entered correctly\r\n");
-      formTest = false;
+    if (!form.generatePassword.checked) {
+      if ((form.password1.value == "") || (form.password2.value == "") || (form.password1.value != form.password2.value)) {
+        message += label("check.bothpasswords.match", "- Check that both Passwords are entered correctly\r\n");
+        formTest = false;
+      }
     }
-
     if (form.roleId.value == "-1") {
       message += label("check.role.selected", "- Check that a Role is selected\r\n");
       formTest = false;
@@ -71,6 +72,21 @@
     var value = sel.options[sel.selectedIndex].value;
     var url = "Users.do?command=ReportsToJSList&form=addUser&widget=managerId&siteId=" + escape(value);
     window.frames['server_commands'].location.href = url;
+  }
+  
+  function updatePassword(form) {
+    var password1 = form.password1;
+    var password2 = form.password2;
+    var generatePasswd = form.generatePassword;
+    if (generatePasswd.checked) {
+      password1.value="";
+      password2.value="";
+      password1.disabled=true;
+      password2.disabled=true;
+    } else {
+      password1.disabled=false;
+      password2.disabled=false;
+    }
   }
 </script>
 
@@ -145,6 +161,23 @@
            value="<%= toHtmlValue(UserRecord.getUsername()) %>"><font color=red>
     *</font>
     <%= showAttribute(request, "usernameError") %>
+  </td>
+</tr>
+<tr>
+  <td class="formLabel">
+    <dhv:label name="">Generate new Password</dhv:label>
+  </td>
+  <td>
+    <table border="0" cellspacing="0" cellpadding="4" class="empty">
+      <tr>
+        <td valign="top" nowrap>
+          <input type="checkbox" name="generatePassword" id="generatePassword" value="true" <%= request.getAttribute("generatePassword") != null?"checked":"" %> onClick="javascript:updatePassword(this.form);" />
+        </td>
+        <td valign="top">
+          <dhv:label name="">A new password will be created and emailed to the user. Contact email address is required for this option.</dhv:label>
+        </td>
+      </tr>
+    </table>
   </td>
 </tr>
 <tr>
@@ -244,4 +277,7 @@
 <iframe src="empty.html" name="server_commands" id="server_commands"
         style="visibility:hidden" height="0"></iframe>
 </form>
+<script type="text/javascript">
+updatePassword(document.forms['addUser']);
+</script>
 

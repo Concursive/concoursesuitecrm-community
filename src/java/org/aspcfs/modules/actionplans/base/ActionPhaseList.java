@@ -24,6 +24,7 @@ import org.aspcfs.utils.web.HtmlSelect;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -308,6 +309,127 @@ public class ActionPhaseList extends ArrayList {
       }
     }
     return false;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public ActionPhaseList reorder() {
+    HashMap positionMap = this.getPhaseIdsAsHashMap();
+    HashMap phases = this.getPhasesByParentAsHashMap();
+    ActionPhaseList reorderedList = new ActionPhaseList();
+    reorderedList.setPlanId(this.getPlanId());
+    String tempPhaseId = "0";
+    for (int i = 0; i < this.size(); i++) {
+      ActionPhase thisPhase = (ActionPhase) phases.get(tempPhaseId);
+      if (thisPhase != null) {
+        tempPhaseId = (String) positionMap.get(tempPhaseId);
+        reorderedList.add(thisPhase);
+      }
+    }
+    return reorderedList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  list  Description of the Parameter
+   * @return       Description of the Return Value
+   */
+  public String printArray(ArrayList list) {
+    StringBuffer str = new StringBuffer();
+    for (int i = 0; i < list.size(); i++) {
+      str.append("\nActionPhaseList:: list[" + i + "] = " + list.get(i));
+    }
+    return str.toString();
+  }
+
+
+  /**
+   *  Gets the phaseIdsAsHashMap attribute of the ActionPhaseList object
+   *
+   * @return    The phaseIdsAsHashMap value
+   */
+  public HashMap getPhaseIdsAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionPhase phase = (ActionPhase) iter.next();
+      map.put(String.valueOf(phase.getParentId()), String.valueOf(phase.getId()));
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the phasesByParentAsHashMap attribute of the ActionPhaseList object
+   *
+   * @return    The phasesByParentAsHashMap value
+   */
+  public HashMap getPhasesByParentAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionPhase phase = (ActionPhase) iter.next();
+      map.put(String.valueOf(phase.getParentId()), phase);
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the phasesAsHashMap attribute of the ActionPhaseList object
+   *
+   * @return    The phasesAsHashMap value
+   */
+  public HashMap getPhasesAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionPhase phase = (ActionPhase) iter.next();
+      map.put(String.valueOf(phase.getId()), phase);
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the phaseParentsAsHashMap attribute of the ActionPhaseList object
+   *
+   * @return    The phaseParentsAsHashMap value
+   */
+  public HashMap getPhaseParentsAsHashMap() {
+    HashMap map = new HashMap();
+    Iterator iter = (Iterator) this.iterator();
+    for (int i = 1; iter.hasNext(); i++) {
+      ActionPhase phase = (ActionPhase) iter.next();
+      map.put(String.valueOf(phase.getId()), String.valueOf(i));
+    }
+    return map;
+  }
+
+
+  /**
+   *  Gets the phaseById attribute of the ActionPhaseList object
+   *
+   * @param  id  Description of the Parameter
+   * @return     The phaseById value
+   */
+  public ActionPhase getPhaseById(int id) {
+    ActionPhase result = null;
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionPhase phase = (ActionPhase) iter.next();
+      if (phase.getId() == id) {
+        result = phase;
+        break;
+      }
+    }
+    return result;
   }
 
 

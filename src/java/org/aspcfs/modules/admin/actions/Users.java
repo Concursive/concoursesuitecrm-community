@@ -24,11 +24,15 @@ import org.aspcfs.modules.admin.base.AccessLogList;
 import org.aspcfs.modules.admin.base.RoleList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.admin.base.UserEmail;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.utils.FileUtils;
+import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.Template;
+import org.aspcfs.utils.SMTPMessage;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.BatchInfo;
@@ -41,16 +45,17 @@ import java.util.HashMap;
 /**
  *  Methods for managing users
  *
- * @author mrajkowski
- * @version $Id$
- * @created September 17, 2001
+ * @author     mrajkowski
+ * @created    September 17, 2001
+ * @version    $Id: Users.java 15115 2006-05-31 16:47:51 +0000 (Wed, 31 May
+ *      2006) matt $
  */
 public final class Users extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandListUsers(context);
@@ -60,9 +65,9 @@ public final class Users extends CFSModule {
   /**
    *  Lists the users in the system that have a corresponding contact record
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.6
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.6
    */
   public String executeCommandListUsers(ActionContext context) {
     if (!hasPermission(context, "admin-users-view")) {
@@ -78,7 +83,7 @@ public final class Users extends CFSModule {
     //Configure batch feature
     BatchInfo batchInfo = new BatchInfo("batchUsers");
     batchInfo.setAction("Users.do?command=ProcessBatch");
-    
+
     try {
       db = getConnection(context);
       if ("disabled".equals(listInfo.getListView())) {
@@ -95,7 +100,8 @@ public final class Users extends CFSModule {
       list.setBuildContact(false);
       list.setBuildContactDetails(false);
       list.setBuildHierarchy(false);
-      list.setRoleType(Constants.ROLETYPE_REGULAR); //fetch only regular users
+      list.setRoleType(Constants.ROLETYPE_REGULAR);
+      //fetch only regular users
       list.setRoleId(listInfo.getFilterKey("listFilter1"));
       list.setSiteId(this.getUserSiteId(context));
       list.buildList(db);
@@ -109,11 +115,11 @@ public final class Users extends CFSModule {
       roleList.buildList(db);
       context.getRequest().setAttribute(
           "roleList", roleList);
-          
+
       batchInfo.setSize(list.size());
       context.getRequest().setAttribute(
           "userListBatchInfo", batchInfo);
-      
+
       context.getRequest().setAttribute(
           "systemStatus", this.getSystemStatus(context));
     } catch (Exception e) {
@@ -135,8 +141,8 @@ public final class Users extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandViewLog(ActionContext context) {
 
@@ -190,9 +196,9 @@ public final class Users extends CFSModule {
   /**
    *  Action that loads a user for display
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.6
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.6
    */
   public String executeCommandUserDetails(ActionContext context) {
 
@@ -244,9 +250,9 @@ public final class Users extends CFSModule {
   /**
    *  Action that generates the form data for inserting a new user
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.6
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.6
    */
   public String executeCommandInsertUserForm(ActionContext context) {
     if (!hasPermission(context, "admin-users-add")) {
@@ -308,9 +314,9 @@ public final class Users extends CFSModule {
   /**
    *  Action that adds a user to the database based on submitted html form
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.7
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.7
    */
   public String executeCommandAddUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-add")) {
@@ -319,7 +325,9 @@ public final class Users extends CFSModule {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
         "applicationPrefs");
     Connection db = null;
+    String generatePassword = context.getRequest().getParameter("generatePassword");
     boolean recordInserted = false;
+    boolean hasEmailAddress = false;
     User insertedUser = null;
     try {
       synchronized (this) {
@@ -351,6 +359,9 @@ public final class Users extends CFSModule {
             }
             context.getRequest().setAttribute("UserRecord", thisUser);
             processErrors(context, errors);
+            if (generatePassword != null && "true".equals(generatePassword)) {
+              context.getRequest().setAttribute("generatePassword", generatePassword);
+            }
             return (executeCommandInsertUserForm(context));
           } else if (manager.getSiteId() != -1) {
             /*
@@ -368,15 +379,40 @@ public final class Users extends CFSModule {
               }
               context.getRequest().setAttribute("UserRecord", thisUser);
               processErrors(context, errors);
+              if (generatePassword != null && "true".equals(generatePassword)) {
+                context.getRequest().setAttribute("generatePassword", generatePassword);
+              }
               return (executeCommandInsertUserForm(context));
             }
+          }
+        }
+        Contact contactForUser = new Contact(db, thisUser.getContactId());
+        /*
+         *  Check if the new user's contact has an email address
+         */
+        //TODO Add code to check for the contact's email adderss.
+        //Add error if the generatePassword is true and contact does not have email address.
+        if (contactForUser.getPrimaryEmailAddress() != null && !"".equals(contactForUser.getPrimaryEmailAddress())) {
+          hasEmailAddress = true;
+        }
+        if (generatePassword != null && "true".equals(generatePassword)) {
+          if (!hasEmailAddress) {
+            errors.put("password1Error", systemStatus.getLabel("admin.generatePasswordError.text"));
+            errors.putAll(thisUser.getErrors());
+            processErrors(context, errors);
+            return (executeCommandInsertUserForm(context));
+          } else {
+            //has password been generated?
+            String password = null;
+            password = StringUtils.randomString(6, 8) + String.valueOf(StringUtils.rand(1, 9999));
+            thisUser.setPassword1(password);
+            thisUser.setPassword2(password);
           }
         }
         /*
          *  Check compatibility between the site id of the contact record
          *  and the user record
          */
-        Contact contactForUser = new Contact(db, thisUser.getContactId());
         if (contactForUser.getSiteId() != thisUser.getSiteId()) {
           errors.put(
               "actionError", systemStatus.getLabel(
@@ -387,6 +423,9 @@ public final class Users extends CFSModule {
             thisUser.setContact(contactForUser);
           }
           context.getRequest().setAttribute("UserRecord", thisUser);
+          if (generatePassword != null && "true".equals(generatePassword)) {
+            context.getRequest().setAttribute("generatePassword", generatePassword);
+          }
           return (executeCommandInsertUserForm(context));
         }
 
@@ -399,11 +438,24 @@ public final class Users extends CFSModule {
         if (recordInserted) {
           insertedUser = new User();
           insertedUser.setBuildContact(true);
+          insertedUser.setBuildContactDetails(true);
           insertedUser.buildRecord(db, thisUser.getId());
           addRecentItem(context, insertedUser);
           context.getRequest().setAttribute("UserRecord", insertedUser);
           updateSystemHierarchyCheck(db, context);
+          String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(context) + ".xml";
+          if (!FileUtils.fileExists(templateFile)) {
+            templateFile = getDbNamePath(context) + "templates_en_US.xml";
+          }
+          User modifiedByUser = new User();
+          modifiedByUser.setBuildContact(true);
+          modifiedByUser.setBuildContactDetails(true);
+          modifiedByUser.buildRecord(db, this.getUserId(context));
+          sendEmail(context, insertedUser, modifiedByUser, templateFile, thisUser.getPassword1());
         } else {
+          if (generatePassword != null && "true".equals(generatePassword)) {
+            context.getRequest().setAttribute("generatePassword", generatePassword);
+          }
           if (thisUser.getContactId() != -1) {
             thisUser.setContact(new Contact(db, thisUser.getContactId()));
           }
@@ -429,9 +481,9 @@ public final class Users extends CFSModule {
    *  Action that deletes a user from the database. No longer used because
    *  referential integrity is kept.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.12
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.12
    * @deprecated
    */
   public String executeCommandDeleteUser(ActionContext context) {
@@ -468,8 +520,8 @@ public final class Users extends CFSModule {
   /**
    *  Action to disable a user that is currently enabled.
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDisableUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-delete")) {
@@ -543,8 +595,8 @@ public final class Users extends CFSModule {
   /**
    *  Action to enable a user that is currently disabled.
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandEnableUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-edit")) {
@@ -596,8 +648,8 @@ public final class Users extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @return Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDisableUserConfirm(ActionContext context) {
     if (!hasPermission(context, "admin-users-delete")) {
@@ -634,9 +686,9 @@ public final class Users extends CFSModule {
   /**
    *  Action to generate the form for modifying a user
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.12
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.12
    */
   public String executeCommandModifyUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-edit")) {
@@ -700,9 +752,9 @@ public final class Users extends CFSModule {
   /**
    *  Action that updates the user record based on the submitted form
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.12
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.12
    */
   public String executeCommandUpdateUser(ActionContext context) {
     if (!hasPermission(context, "admin-users-edit")) {
@@ -811,26 +863,26 @@ public final class Users extends CFSModule {
       // the user can change to the new site and to start with, the user
       // would not have any other users reporting to him in the new site
       /*
-      if ((newUser.getSiteId() != -1) && isValid){
-        UserList reportingUserList = new UserList();
-        reportingUserList.setManagerId(newUser.getId());
-        reportingUserList.buildList(db);
-        Iterator userItr = reportingUserList.iterator();
-        while (userItr.hasNext()) {
-          User subUser = (User) userItr.next();
-          if ((subUser.getSiteId() == -1) ||
-              (subUser.getSiteId() != newUser.getSiteId())) {
-            newUser.getErrors().put(
-                "actionError", systemStatus.getLabel(
-                "object.validation.genericActionError"));
-            newUser.getErrors().put(
-                "siteIdError", systemStatus.getLabel(
-                "admin.subUserNotTheSameSite.text"));
-            isValid = false;
-            break;
-          }
-        }
-      }
+       *  if ((newUser.getSiteId() != -1) && isValid){
+       *  UserList reportingUserList = new UserList();
+       *  reportingUserList.setManagerId(newUser.getId());
+       *  reportingUserList.buildList(db);
+       *  Iterator userItr = reportingUserList.iterator();
+       *  while (userItr.hasNext()) {
+       *  User subUser = (User) userItr.next();
+       *  if ((subUser.getSiteId() == -1) ||
+       *  (subUser.getSiteId() != newUser.getSiteId())) {
+       *  newUser.getErrors().put(
+       *  "actionError", systemStatus.getLabel(
+       *  "object.validation.genericActionError"));
+       *  newUser.getErrors().put(
+       *  "siteIdError", systemStatus.getLabel(
+       *  "admin.subUserNotTheSameSite.text"));
+       *  isValid = false;
+       *  break;
+       *  }
+       *  }
+       *  }
        */
       if (isValid) {
         resultCount = newUser.update(db, context);
@@ -873,7 +925,19 @@ public final class Users extends CFSModule {
         context.getRequest().setAttribute("SiteIdList", siteid);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("generatePass") != null) {
-          resultCount = newUser.generateRandomPassword(db, context);
+          String password = newUser.generateRandomPassword(db, context);
+          newUser.setBuildContact(true);
+          newUser.setBuildContactDetails(true);
+          newUser.buildRecord(db, newUser.getId());
+          String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(context) + ".xml";
+          if (!FileUtils.fileExists(templateFile)) {
+            templateFile = getDbNamePath(context) + "templates_en_US.xml";
+          }
+          User modifiedByUser = new User();
+          modifiedByUser.setBuildContact(true);
+          modifiedByUser.setBuildContactDetails(true);
+          modifiedByUser.buildRecord(db, this.getUserId(context));
+          sendEmail(context, newUser, modifiedByUser, templateFile, password);
         }
         // Change site information of the contact record of site information
         // of the user was changed.
@@ -917,9 +981,9 @@ public final class Users extends CFSModule {
   /**
    *  fetches the user list based on site id
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.12
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since           1.12
    */
   public String executeCommandReportsToJSList(ActionContext context) {
 
@@ -931,12 +995,12 @@ public final class Users extends CFSModule {
     if (!isSiteAccessPermitted(context, String.valueOf(siteId))) {
       return ("PermissionError");
     }
-/*
-    User user = this.getUser(context, this.getUserId(context));
-    if (user.getSiteId() != -1 && user.getSiteId() != siteId) {
-      return ("PermissionError");
-    }
-*/
+    /*
+     *  User user = this.getUser(context, this.getUserId(context));
+     *  if (user.getSiteId() != -1 && user.getSiteId() != siteId) {
+     *  return ("PermissionError");
+     *  }
+     */
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -972,14 +1036,14 @@ public final class Users extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandProcessBatch(ActionContext context) {
     if (!hasPermission(context, "admin-users-edit")) {
       return ("PermissionError");
     }
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -1005,7 +1069,7 @@ public final class Users extends CFSModule {
 
       for (int i = 0; i < selection.size(); i++) {
         int id = Integer.parseInt(
-              (String) selection.get(i));
+            (String) selection.get(i));
         User thisUser = new User(db, id);
         if (action != null && status != null) {
           if ("webdav".equals(action.toLowerCase())) {
@@ -1027,4 +1091,48 @@ public final class Users extends CFSModule {
     }
     return (executeCommandListUsers(context));
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context         Description of the Parameter
+   * @param  thisUser        Description of the Parameter
+   * @param  modifiedByUser  Description of the Parameter
+   * @param  template        Description of the Parameter
+   * @param  password        Description of the Parameter
+   * @return                 Description of the Return Value
+   * @exception  Exception   Description of the Exception
+   */
+  public boolean sendEmail(ActionContext context, User thisUser, User modifiedByUser, String template, String password) throws Exception {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    UserEmail userEmail = new UserEmail(context, thisUser, modifiedByUser.getContact().getNameLastFirst(), password, systemStatus.getUrl(), template);
+    // Prepare the email
+    SMTPMessage mail = new SMTPMessage();
+    mail.setHost(prefs.get("MAILSERVER"));
+    mail.setFrom(prefs.get("EMAILADDRESS"));
+    mail.addReplyTo(prefs.get("EMAILADDRESS"));
+    mail.setType("text/html");
+    mail.setSubject(userEmail.getSubject());
+    mail.setBody(userEmail.getBody());
+    if (thisUser.getContact().getPrimaryEmailAddress() != null && !"".equals(thisUser.getContact().getPrimaryEmailAddress())) {
+      mail.addTo(thisUser.getContact().getPrimaryEmailAddress());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ADDING: " + thisUser.getContact().getPrimaryEmailAddress());
+      }
+    }
+    int result = mail.send();
+    if (result == 2) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Users-> Send error: " + mail.getErrorMsg() + "\n");
+      }
+    } else {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Users-> Sending message...");
+      }
+    }
+    return true;
+  }
 }
+

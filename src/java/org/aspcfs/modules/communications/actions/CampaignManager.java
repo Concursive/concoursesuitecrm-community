@@ -90,6 +90,7 @@ public final class CampaignManager extends CFSModule {
         campaignList.setType(Campaign.GENERAL);
       } else if ("instant".equals(pagedListInfo.getListView())) {
         campaignList.setOwnerIdRange(this.getUserRange(context));
+        campaignList.setUserGroupUserId(this.getUserId(context));
         campaignList.setType(Campaign.INSTANT);
       } else if ("trashed".equals(pagedListInfo.getListView())) {
         campaignList.setOwnerIdRange(this.getUserRange(context));

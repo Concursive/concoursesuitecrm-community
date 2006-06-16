@@ -892,6 +892,7 @@ public class Tab extends GenericBean {
 
     if (pageToBuild != -1 && pageGroupList.getThisPageToBuild() != null) {
       this.setThisPageToBuild(pageGroupList.getThisPageToBuild());
+      this.getThisPageToBuild().setPageGroup(pageGroupList.getGroupById(this.getThisPageToBuild().getPageGroupId()));
     }
   }
 

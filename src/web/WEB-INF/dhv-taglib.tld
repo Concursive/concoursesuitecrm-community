@@ -794,6 +794,11 @@
     <tag-class>org.aspcfs.taglib.PortalPageGroupURLHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>Constructs a pageGroup url for the website</display-name>
+    <attribute>
+      <name>showLink</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
   <tag>
     <name>portalPageURL</name>

@@ -14,7 +14,7 @@
     Iterator nextIter = rowsColumns.iterator();
     Object nextObj = (Object) nextIter.next();
     Iterator rowColumnIterator = rowsColumns.iterator();
-    int i = 1000;
+    int pb_i = 1000;
     while (rowColumnIterator.hasNext()) {
       Object object = (Object) rowColumnIterator.next();
       if (nextIter.hasNext()) {
@@ -22,7 +22,7 @@
       } else {
         nextObj = null;
       }
-      i++;
+      pb_i++;
       if (object instanceof PageRow) {
         PageRow pageRow = (PageRow) object;
 %>
@@ -30,29 +30,32 @@
         <tr>
           <td class="portalRow" valign="top" colspan="<%= (pageRow.getPageVersionId() != -1? pageVersion.getPageRowList().getMaxColumns(): pageRow.getRowColumnList().size()) %>">
             <div class="portalEditorRow">
-              Row: <a href="javascript:displayMenuRow('select<%= i %>','menuRow','<%= pageRow.getId() %>','<%= pageRow.getPageVersionId() %>','<%= pageRow.getRowColumnId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>');"
-               onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuRow');">
-               <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+              Row: <a href="javascript:displayMenuRow('select<%= pb_i %>','menuRow','<%= pageRow.getId() %>','<%= pageRow.getPageVersionId() %>','<%= pageRow.getRowColumnId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>');"
+               onMouseOver="over(0, <%= pb_i %>)" onmouseout="out(0, <%= pb_i %>); hideMenu('menuRow');">
+               <img src="images/select.gif" name="select<%= pb_i %>" id="select<%= pb_i %>" align="absmiddle" border="0"></a>
             </div>
           </td>
         </tr>
         </dhv:evaluate>
-        <tr><td colspan="<%= (pageRow.getPageVersionId() != -1? pageVersion.getPageRowList().getMaxColumns(): pageRow.getRowColumnList().size()) %>" width="100%" valign="top"><table cellpadding="4" cellspacing="0" width="100%"><tr>
+        <tr>
+          <td colspan="<%= (pageRow.getPageVersionId() != -1? pageVersion.getPageRowList().getMaxColumns(): pageRow.getRowColumnList().size()) %>" width="100%" valign="top">
+            <table cellpadding="4" cellspacing="0" width="100%">
+              <tr>
 <%-- Row...<br /> --%>
 <%
       } else if (object instanceof RowColumn) {
         RowColumn rowColumn = (RowColumn) object;
         Icelet thisIcelet = rowColumn.getIcelet();
-        i++;
+        pb_i++;
 %>
-        <td class="portalColumn" width="<%= (rowColumn.getParentRow().getTotalColumnWidth() != 0? String.valueOf((double)(rowColumn.getWidth() * 100)/(double)rowColumn.getParentRow().getTotalColumnWidth())+"%": String.valueOf(rowColumn.getWidth())) %>" valign="top">
-          <dhv:evaluate if="<%= !"true".equals(portal) %>">
-            <div class="portalEditorColumn">
-            Column: <a href="javascript:displayMenuColumn('select<%= i %>','menuColumn','<%= rowColumn.getId() %>','<%= rowColumn.getParentRow().getId() %>','<%= rowColumn.getParentRow().getPageVersionId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>','<%= rowColumn.getIceletId() %>','<%= (rowColumn.getSubRows() != null && rowColumn.getSubRows().size() > 0) %>');"
-            onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuColumn');">
-              <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-            </div>
-          </dhv:evaluate>
+                <td class="portalColumn" width="<%= (rowColumn.getParentRow().getTotalColumnWidth() != 0? String.valueOf((double)(rowColumn.getWidth() * 100)/(double)rowColumn.getParentRow().getTotalColumnWidth())+"%": String.valueOf(rowColumn.getWidth())) %>" valign="top">
+                  <dhv:evaluate if="<%= !"true".equals(portal) %>">
+                    <div class="portalEditorColumn">
+                    Column: <a href="javascript:displayMenuColumn('select<%= pb_i %>','menuColumn','<%= rowColumn.getId() %>','<%= rowColumn.getParentRow().getId() %>','<%= rowColumn.getParentRow().getPageVersionId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>','<%= rowColumn.getIceletId() %>','<%= (rowColumn.getSubRows() != null && rowColumn.getSubRows().size() > 0) %>');"
+                    onMouseOver="over(0, <%= pb_i %>)" onmouseout="out(0, <%= pb_i %>); hideMenu('menuColumn');">
+                      <img src="images/select.gif" name="select<%= pb_i %>" id="select<%= pb_i %>" align="absmiddle" border="0"></a>
+                    </div>
+                  </dhv:evaluate>
 <%
         if (thisIcelet != null) {
           PortalServletResponse portalResponse =

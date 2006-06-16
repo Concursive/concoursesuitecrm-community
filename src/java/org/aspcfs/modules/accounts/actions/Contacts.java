@@ -675,17 +675,15 @@ public final class Contacts extends CFSModule {
       thisContact = new Contact(db, contactId);
       campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-
+      if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
+        return ("PermissionError");
+      }
       thisOrganization = new Organization(db, thisContact.getOrgId());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
-    }
-
-    if (!hasAuthority(context, campaign.getEnteredBy())) {
-      return ("PermissionError");
     }
 
     context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -731,6 +729,7 @@ public final class Contacts extends CFSModule {
 
       if ("all".equals(pagedListInfo.getListView())) {
         campaignList.setOwnerIdRange(this.getUserRange(context));
+        campaignList.setUserGroupUserId(this.getUserId(context));
       } else {
         campaignList.setOwner(this.getUserId(context));
       }

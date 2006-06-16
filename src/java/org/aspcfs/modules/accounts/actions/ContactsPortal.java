@@ -546,6 +546,8 @@ public final class ContactsPortal extends CFSModule {
         HashMap map = new HashMap();
         map.put("${user.username}", newUser.getUsername());
         map.put("${password}", password);
+        map.put("${url}", "<a href=\""+systemStatus.getUrl()+"\">");
+        map.put("${endUrl}", "</a>");
         Template template = new Template(message);
         template.setParseElements(map);
         mail.setBody(template.getParsedText());
@@ -554,7 +556,8 @@ public final class ContactsPortal extends CFSModule {
             "A self-service account has been created for you.<br />" +
             "<br />" +
             "Your account username is: " + newUser.getUsername() + "<br />" +
-            "Your password is: " + password + "<br />");
+            "Your password is: " + password + "<br /><br />"+
+            "Click <a href=\""+systemStatus.getUrl()+"\">here</a> to visit the site");
       }
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
@@ -689,6 +692,19 @@ public final class ContactsPortal extends CFSModule {
         Template template = new Template(message);
         template.setParseElements(map);
         mailBody = mailBody + template.getParsedText();
+      }
+      if (1==1) {
+        String url = systemStatus.getLabel("mail.body.thisIsTheURL");
+        if (url != null && !"".equals(url)) {
+          HashMap map = new HashMap();
+          map.put("${url}", "<a href=\""+systemStatus.getUrl()+"\">");
+          map.put("${endUrl}","</a>");
+          Template template = new Template(url);
+          template.setParseElements(map);
+          mailBody = mailBody + template.getParsedText();
+        } else {
+          mailBody = mailBody + "Click <a href=\""+systemStatus.getUrl()+"\">here</a> to visit the site.<br />";
+        }
       }
       mail.setBody(mailBody);
       if (mail.send() == 2) {
