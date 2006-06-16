@@ -47,7 +47,9 @@ CREATE TABLE product_category (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   start_date DATETIME DEFAULT NULL,
   expiration_date DATETIME DEFAULT NULL,
-  enabled BIT NOT NULL DEFAULT 1
+  enabled BIT NOT NULL DEFAULT 1,
+  import_id INTEGER REFERENCES import(import_id),
+  status_id INTEGER
 );
 
 -- Each category can be associated with multiple categories
@@ -155,7 +157,10 @@ CREATE TABLE product_catalog (
   enabled BIT NOT NULL DEFAULT 1,
   manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code),
   trashed_date DATETIME,
-  active BIT NOT NULL DEFAULT 1
+  active BIT NOT NULL DEFAULT 1,
+  comments VARCHAR(255) DEFAULT NULL,
+  import_id INTEGER REFERENCES import(import_id),
+  status_id INTEGER
 );
 
 -- Each product can have a price, which can change over time

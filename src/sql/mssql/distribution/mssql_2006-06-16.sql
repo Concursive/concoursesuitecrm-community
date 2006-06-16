@@ -4,24 +4,9 @@ ALTER TABLE product_catalog ADD comments varchar(255);
 
 ALTER TABLE product_catalog ADD import_id INT;
 
-ALTER TABLE product_catalog ADD site_id INT;
+alter table  product_catalog add status_id INTEGER;
 
-ALTER TABLE [product_catalog]  ADD
-        FOREIGN KEY
-        (
-                [site_id]
-        ) REFERENCES [lookup_site_id] (
-                [code]
-        )
-GO
+alter table  product_category add import_id INTEGER REFERENCES import(import_id);
 
-ALTER TABLE [product_catalog] ADD
-        FOREIGN KEY
-        (
-                [import_id]
-        ) REFERENCES [import] (
-                [import_id]
-        )
-GO
+alter table  product_category add status_id INTEGER;
 
-ALTER TABLE product_catalog ADD status_id INT;
