@@ -798,12 +798,14 @@ public class Site extends GenericBean {
         db.setAutoCommit(false);
       }
 
+      //TODO: enable once access log is finished
+      /*
       SiteLogList tmpSiteLogList = new SiteLogList();
       tmpSiteLogList.setSiteId(this.getId());
       tmpSiteLogList.buildList(db);
       tmpSiteLogList.delete(db);
       tmpSiteLogList = null;
-
+      */
       TabList tmpTabList = new TabList();
       tmpTabList.setSiteId(this.getId());
       tmpTabList.buildList(db);
