@@ -52,7 +52,7 @@
   <jsp:useBean id="pageGroupList" type="org.aspcfs.modules.website.base.PageGroupList" />
   <tr>
     <td width="8" class="portalTabBackground" nowrap>&nbsp;</td>
-    <td colspan="<c:out value="${tabListCount}"/>" class="portalTabBackground" width="100%">
+    <td colspan="<c:out value="${tabListCount}"/>" class="portalTabBackground" nowrap>
       <c:forEach items="${site.tabToDisplay.pageGroupList}" var="pageGroup">
         <c:set var="pageGroup" value="${pageGroup}"/>
         <dhv:evaluate if="<%= site.getTabToDisplay().getPageGroupList().size() > 1 || !"true".equals(portal) %>">
@@ -67,7 +67,7 @@
         </dhv:evaluate>
       </c:forEach>&nbsp;
     </td>
-    <td width="8" class="portalTabBackground" nowrap>&nbsp;</td>
+    <td width="100%" class="portalTabBackground" nowrap>&nbsp;</td>
   </tr>
 </table>
 <%-- Portlets --%>
