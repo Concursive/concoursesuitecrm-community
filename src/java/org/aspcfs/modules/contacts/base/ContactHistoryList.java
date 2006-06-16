@@ -700,8 +700,8 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
-        "FROM history " +
+        "ch.* " +
+        "FROM history ch " +
         "WHERE history_id > 0 " +
         "AND org_id IS NULL ");
     pst = db.prepareStatement(

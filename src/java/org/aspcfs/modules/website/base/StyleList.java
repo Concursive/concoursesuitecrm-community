@@ -261,8 +261,8 @@ public class StyleList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_style " +
+        "ws.* " +
+        "FROM web_style ws " +
         "WHERE style_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

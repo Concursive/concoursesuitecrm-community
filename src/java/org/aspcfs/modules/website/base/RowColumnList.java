@@ -593,8 +593,8 @@ public class RowColumnList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_row_column " +
+        "wrc.* " +
+        "FROM web_row_column wrc " +
         "WHERE row_column_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

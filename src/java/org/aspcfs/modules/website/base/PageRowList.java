@@ -559,8 +559,8 @@ public class PageRowList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_page_row " +
+        "wpr.* " +
+        "FROM web_page_row wpr " +
         "WHERE page_row_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

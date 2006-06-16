@@ -106,7 +106,7 @@ public class AssignmentNoteList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
+        "s.* " +
         "FROM project_assignments_status s " +
         "WHERE s.status_id > 0 ");
     pst = db.prepareStatement(

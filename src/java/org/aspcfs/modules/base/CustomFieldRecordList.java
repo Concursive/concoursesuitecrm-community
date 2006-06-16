@@ -129,7 +129,7 @@ public class CustomFieldRecordList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
+        "cfr.* " +
         "FROM custom_field_record cfr " +
         "WHERE cfr.link_module_id > -1 ");
     pst = db.prepareStatement(

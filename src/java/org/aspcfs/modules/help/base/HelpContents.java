@@ -208,7 +208,7 @@ public class HelpContents extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "* " +
+        "hc.* " +
         "FROM help_contents hc " +
         "WHERE hc.help_id > -1 ");
 

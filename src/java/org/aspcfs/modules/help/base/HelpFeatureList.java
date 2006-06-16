@@ -180,7 +180,7 @@ public class HelpFeatureList extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "* " +
+        "hf.* " +
         "FROM help_features hf " +
         "WHERE hf.feature_id > -1 ");
 

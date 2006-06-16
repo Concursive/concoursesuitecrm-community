@@ -578,7 +578,7 @@ public class CustomFieldRecord {
         (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
         (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
         (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD ? "FIRST 1 " : "") +
-        "* " +
+        "cfi.* " +
         "FROM custom_field_info cfi " +
         "WHERE cfi.group_id IN " +
         " (SELECT " +

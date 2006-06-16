@@ -230,8 +230,8 @@ public class LayoutList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_layout " +
+        "wl.* " +
+        "FROM web_layout wl " +
         "WHERE layout_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

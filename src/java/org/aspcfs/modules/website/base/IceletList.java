@@ -302,8 +302,8 @@ public class IceletList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_icelet " +
+        "wi.* " +
+        "FROM web_icelet wi " +
         "WHERE icelet_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

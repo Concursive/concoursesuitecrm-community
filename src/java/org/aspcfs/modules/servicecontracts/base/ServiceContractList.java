@@ -398,8 +398,8 @@ public class ServiceContractList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM service_contract " +
+        "sc.* " +
+        "FROM service_contract sc " +
         "WHERE contract_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -260,7 +260,7 @@ public class CustomFieldDataList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
+        "cfd.* " +
         "FROM custom_field_data cfd " +
         "WHERE cfd.record_id > -1 ");
     pst = db.prepareStatement(

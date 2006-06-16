@@ -173,7 +173,7 @@ public class FileFolderList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
+        "f.* " +
         "FROM project_folders f " +
         "WHERE f.link_module_id > -1 ");
     pst = db.prepareStatement(

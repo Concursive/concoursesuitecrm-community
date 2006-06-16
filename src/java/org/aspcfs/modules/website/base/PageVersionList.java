@@ -260,8 +260,8 @@ public class PageVersionList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_page_version " +
+        "wpv.* " +
+        "FROM web_page_version wpv " +
         "WHERE page_version_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

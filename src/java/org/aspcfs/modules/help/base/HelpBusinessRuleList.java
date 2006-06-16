@@ -180,7 +180,7 @@ public class HelpBusinessRuleList extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "* " +
+        "hf.* " +
         "FROM help_business_rules hf " +
         "WHERE hf.rule_id > -1 ");
 

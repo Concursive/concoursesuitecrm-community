@@ -1188,7 +1188,7 @@ public class ServiceContract extends GenericBean {
         "current_end_date = ? , " +
         "current_end_date_timezone = ? , " +
         "category = ? , " +
-        "type = ? , " +
+        "\"type\" = ? , " +
         "contact_id = ? , " +
         "description = ? , " +
         "contract_billing_notes = ? , " +
@@ -1533,7 +1533,7 @@ public class ServiceContract extends GenericBean {
         "current_end_date , " +
         "current_end_date_timezone , " +
         "category , " +
-        "type , " +
+        "\"type\" , " +
         "contact_id , " +
         "description , " +
         "contract_billing_notes , " +

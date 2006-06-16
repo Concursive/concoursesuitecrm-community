@@ -343,7 +343,7 @@ public class PermissionCategoryList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
+        "pc.* " +
         "FROM permission_category pc " +
         "WHERE pc.category_id > 0 ");
     pst = db.prepareStatement(

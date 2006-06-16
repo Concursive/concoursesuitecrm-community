@@ -322,8 +322,8 @@ public class TabList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_tab " +
+        "wt.* " +
+        "FROM web_tab wt " +
         "WHERE tab_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

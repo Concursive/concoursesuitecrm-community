@@ -329,8 +329,8 @@ public class IceletPropertyMap extends LinkedHashMap {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_icelet_property " +
+        "wip.* " +
+        "FROM web_icelet_property wip " +
         "WHERE property_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

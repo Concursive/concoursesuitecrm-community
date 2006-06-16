@@ -99,7 +99,7 @@ public class CustomListViewFieldList extends ArrayList {
 
     sqlSelect.append("SELECT ");
     sqlSelect.append(
-        "* FROM custom_list_view_field clvf " +
+        "clvf.* FROM custom_list_view_field clvf " +
         "WHERE clvf.field_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -158,8 +158,8 @@ public class AccessTypeList extends LookupList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
-            "FROM lookup_access_types " +
+        "at.* " +
+            "FROM lookup_access_types at " +
             "WHERE code > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -366,8 +366,8 @@ public class TicketPerDayDescriptionList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM ticket_activity_item " +
+        "tai.* " +
+        "FROM ticket_activity_item tai " +
         "WHERE item_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

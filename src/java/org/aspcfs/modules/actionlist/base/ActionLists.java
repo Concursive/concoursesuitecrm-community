@@ -223,7 +223,7 @@ public class ActionLists extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "* " +
+        "al.* " +
         "FROM action_list al " +
         "WHERE al.action_id > -1 ");
 

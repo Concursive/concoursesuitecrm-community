@@ -516,8 +516,8 @@ public class PageList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_page " +
+        "wp.* " +
+        "FROM web_page wp " +
         "WHERE page_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -702,6 +702,7 @@ public class PageList extends ArrayList {
    * @param  adjacentId              Description of the Parameter
    * @param  changeAdjacentPosition  Description of the Parameter
    * @param  addition                Description of the Parameter
+   * @param  pageGroupId             Description of the Parameter
    * @exception  SQLException        Description of the Exception
    */
   public static void updateRelatedPages(Connection db, int currentId, int adjacentId, int pageGroupId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
@@ -732,8 +733,33 @@ public class PageList extends ArrayList {
     }
   }
 
+
+  /**
+   *  Gets the count attribute of the PageList object
+   *
+   * @return    The count value
+   */
   public int getCount() {
     return this.size();
+  }
+
+
+  /**
+   *  Gets the defaultPageId attribute of the PageList object
+   *
+   * @return    The defaultPageId value
+   */
+  public int getDefaultPageId() {
+    int result = -1;
+    Iterator pageIterator = this.iterator();
+    while (pageIterator.hasNext()) {
+      Page thisPage = (Page) pageIterator.next();
+      if (thisPage.getPosition() == 0) {
+        result = thisPage.getId();
+        break;
+      }
+    }
+    return result;
   }
 }
 

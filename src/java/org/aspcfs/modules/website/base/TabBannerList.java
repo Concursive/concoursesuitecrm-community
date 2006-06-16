@@ -198,8 +198,8 @@ public class TabBannerList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_tab_banner " +
+        "wtb.* " +
+        "FROM web_tab_banner wtb " +
         "WHERE tab_banner_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

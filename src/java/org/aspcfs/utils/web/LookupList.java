@@ -870,8 +870,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
-        "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
+        "lt.* " +
+        "FROM " + DatabaseUtils.getTableName(db, tableName) + " lt " +
         "WHERE code > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -786,7 +786,7 @@ public class ProjectList extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "* " +
+        "p.* " +
         "FROM projects p " +
         "WHERE project_id > -1 ");
     pst = db.prepareStatement(

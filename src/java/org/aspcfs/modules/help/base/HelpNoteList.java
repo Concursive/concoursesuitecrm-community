@@ -264,7 +264,7 @@ public class HelpNoteList extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "* " +
+        "hf.* " +
         "FROM help_notes hf " +
         "WHERE hf.note_id > -1 ");
 

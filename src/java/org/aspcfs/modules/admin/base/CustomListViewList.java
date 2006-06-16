@@ -130,7 +130,7 @@ public class CustomListViewList extends ArrayList {
 
     sqlSelect.append("SELECT ");
     sqlSelect.append(
-        "* FROM custom_list_view clv " +
+        "clv.* FROM custom_list_view clv " +
         "WHERE clv.view_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

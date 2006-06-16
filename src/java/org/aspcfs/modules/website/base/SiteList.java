@@ -199,8 +199,8 @@ public class SiteList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_site " +
+        "w.* " +
+        "FROM web_site w " +
         "WHERE site_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

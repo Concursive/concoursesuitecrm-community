@@ -144,7 +144,7 @@ public class IssueCategoryList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
+        "c.* " +
         "FROM project_issues_categories c " +
         "WHERE c.category_id > 0 ");
     pst = db.prepareStatement(

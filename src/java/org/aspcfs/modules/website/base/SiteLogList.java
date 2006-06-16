@@ -209,8 +209,8 @@ public class SiteLogList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM web_site_log " +
+        "wsl.* " +
+        "FROM web_site_log wsl " +
         "WHERE site_log_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

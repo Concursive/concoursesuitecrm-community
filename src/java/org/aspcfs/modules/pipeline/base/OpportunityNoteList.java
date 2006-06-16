@@ -129,7 +129,7 @@ public class OpportunityNoteList extends NoteList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
+        "n.* " +
         "FROM note n " +
         "WHERE subject != '' ");
     pst = db.prepareStatement(

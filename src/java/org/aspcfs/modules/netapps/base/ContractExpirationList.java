@@ -583,8 +583,8 @@ public class ContractExpirationList extends Vector implements SyncableList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "* " +
-        "FROM netapp_contractexpiration " +
+        "ce.* " +
+        "FROM netapp_contractexpiration ce " +
         "WHERE expiration_id >= 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

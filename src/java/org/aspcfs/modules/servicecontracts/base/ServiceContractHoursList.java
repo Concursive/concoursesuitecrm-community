@@ -207,8 +207,8 @@ public class ServiceContractHoursList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " * " +
-        "FROM service_contract_hours " +
+        "sch.* " +
+        "FROM service_contract_hours sch " +
         "WHERE history_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -736,7 +736,7 @@ public class DocumentStoreList extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "* " +
+        "ds.* " +
         "FROM document_store ds " +
         "WHERE ds.document_store_id > -1 ");
 
