@@ -121,7 +121,7 @@ public void setExcludeUnapprovedProducts(boolean excludeUnapprovedProducts) {
  * @param excludeUnapprovedProducts The new excludeUnapprovedProducts value
  */
 public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
-	this.excludeUnapprovedProducts = Boolean.parseBoolean(excludeUnapprovedProducts);
+	this.excludeUnapprovedProducts = DatabaseUtils.parseBoolean(excludeUnapprovedProducts);
 }
 
 
