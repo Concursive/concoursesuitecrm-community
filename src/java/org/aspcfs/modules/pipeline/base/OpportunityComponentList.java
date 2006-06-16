@@ -878,12 +878,6 @@ public class OpportunityComponentList extends ArrayList {
             "LEFT JOIN lookup_stage y ON (oc.stage = y.code) " +
             "WHERE y.code = oc.stage " +
             "AND oc.opp_id > -1 ");
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("OpportunityComponentList-> " + sqlSelect.toString() +
-            sqlFilter.toString() +
-            sqlOrder.toString());
-    }
-
     pst = db.prepareStatement(
         sqlSelect.toString() +
             sqlFilter.toString() +
