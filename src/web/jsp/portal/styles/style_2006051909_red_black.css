@@ -26,16 +26,18 @@ OPTGROUP {
   border-left: 1px solid #FFFFFF;
   border-top: 1px solid #FFFFFF;
   border-bottom: 1px solid #FFFFFF;
+  border-right: 1px solid #FFFFFF;
   height: 20px;
   background-color: #000000;
-  border-right: 1px solid #FFFFFF;
+  padding-top: 3px;
 }
 .portalTabActive {
   height: 20px;
 	text-align: left;
   border-top: 1px solid #000000;
   border-bottom: 1px solid #000000;
-  padding-right: 20px;
+  padding-right: 3px;
+  font-weight: normal;
 }
 .portalTabActive a {
   color: #FFFFFF;
@@ -53,7 +55,8 @@ OPTGROUP {
   text-align: left;
   border-top: 1px solid #000000;
   border-bottom: 1px solid #000000;
-  padding-right: 20px;
+  padding-right: 3px;
+  font-weight: normal;
 }
 .portalTabInactive a {
   color: #FFFFFF;
@@ -90,13 +93,28 @@ OPTGROUP {
   border-right: 1px solid #FFFFFF;
 }
 
+/* Login and other static links */
+.portalLogin td {
+  text-align: right;
+  padding-bottom: 3px;
+}
+.portalLogin a, .portalLogin a:hover {
+  color: #666666;
+  text-decoration: none;
+}
+.portalLogin a:hover {
+  text-decoration: underline !important;
+}
+
 
 /* Portal Page Groups */
 .portalPageGroupsColumn{
   background-color: #CC3300;
   border-right: 1px solid #CC3300;
+  border-left: 1px solid #CC3300;
   padding-top: 15px;
-  padding-left: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .portalPageGroups {

@@ -12,6 +12,16 @@
 <jsp:useBean id="site" type="org.aspcfs.modules.website.base.Site" />
 <jsp:useBean id="portal" class="java.lang.String" scope="request"/>
 <center>
+<%-- Login Link --%>
+<dhv:evaluate if="<%= "true".equals(portal) %>">
+<table width="768" border="0" cellpadding="0" cellspacing="0" class="portalLogin">
+	<tr>
+    <td>
+      <a href="Login.do?command=Default">Login</a>
+    </td>
+	</tr>
+</table>
+</dhv:evaluate>
 <%-- Logo at top left --%>
 <c:if test="${site.logoImageId > -1}">
 <table border="0" cellpadding="0" cellspacing="0" width="768" class="portalLogo" style="padding-bottom: 6px;">
@@ -27,7 +37,7 @@
 </table>
 </c:if>
 <%-- Tabs across the top --%>
-<table border="0" cellpadding="0" cellspacing="0" width="768" class="portalTabs" style="padding-bottom: 6px;">
+<table border="0" cellpadding="0" cellspacing="0" width="768" class="portalTabs">
   <tr>
     <td width="8" class="portalTabSpace" nowrap>&nbsp;</td>
     <c:forEach items="${site.tabList}" var="tab" varStatus="status">
@@ -45,9 +55,11 @@
         <c:set var="tabListCount" value="${status.count}"/>
       </c:if>
     </c:forEach>
-    <td width="8" class="portalTabSpace" nowrap>&nbsp;</td>
+     <td width="100%" class="portalTabSpace">&nbsp;</td>
   </tr>
-  <%-- PageGroup under the tabs --%>
+</table>
+<%-- PageGroup under the tabs --%>
+<table border="0" cellpadding="0" cellspacing="0" width="768" class="portalTabs" style="padding-bottom: 6px;">
   <c:set var="pageGroupList" value="${site.tabToDisplay.pageGroupList}"/>
   <jsp:useBean id="pageGroupList" type="org.aspcfs.modules.website.base.PageGroupList" />
   <tr>

@@ -83,15 +83,6 @@
 </table>
 </dhv:evaluate>
 <!-- End Sub Trails -->
-<table width="100%" border="0" cellspacing="0">
-	<tr>
-		<dhv:evaluate if="<%= !isPopup(request) %>">
-			<td align="right">
-				<a href="Login.do?command=Default">Login</a>
-			</td>
-		</dhv:evaluate>
-	</tr>
-</table>
 <%
   PortalEnvironment portalEnvironment = PortalEnvironment.getPortalEnvironment(request);
   PortalURL portalURL = portalEnvironment.getRequestedPortalURL();

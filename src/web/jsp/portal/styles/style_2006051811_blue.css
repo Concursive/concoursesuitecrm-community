@@ -1,7 +1,7 @@
 /* HTML Elements */
 BODY {
   font-family: verdana, helvetica, arial, sans-serif;
-  background: white;
+  background: #FFFFFF;
   color: #000000;
 }
 TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A {
@@ -22,7 +22,6 @@ OPTGROUP {
 /* Portal Tabs */
 .portalTabs {
   height: 37px;
-  padding-bottom: 6px;
 }
 .portalTabActive {
   background: url(../../portal/images/tab-blue-142.gif) no-repeat;
@@ -70,18 +69,33 @@ OPTGROUP {
 
 /* Portal Body */
 .portalBody {
-  padding-left:8px;
+  padding-left:6px;
   padding-right:6px
 }
 
+/* Login and other static links */
+.portalLogin td {
+  text-align: right;
+  padding-bottom: 3px;
+}
+.portalLogin a, .portalLogin a:hover {
+  color: #CCCCCC;
+  text-decoration: none;
+}
+.portalLogin a:hover {
+  text-decoration: underline !important;
+}
+
+
 /* Portal Page Groups */
-.portalPageGroupsColumn{
-  background-color: #CCCCCC;
-  border-right: 1px solid #999999;
+.portalPageGroupsColumn {
+  padding-left: 3px;
   padding-right: 3px;
 }
 .portalPageGroups {
   padding: 6px;
+  background-color: #CCCCCC;
+  border: 1px solid #999999;
 }
 .portalPageGroup {
   text-align: left;
@@ -102,7 +116,7 @@ OPTGROUP {
 
 /* Portal Portlets */
 .portalPortlets {
-
+  background-color: #FFFFFF;
 }
 
 .portalRow {
