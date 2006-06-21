@@ -79,7 +79,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
 	<tr>
 		<th>
-			<dhv:pagedListStatus title="<%= StringUtils.toHtml(parentCategory.getName()) %>" object="productCatalogListInfo"/>
+			<dhv:pagedListStatus title="<%= StringUtils.toHtml(parentCategory.getName()) %>" object="productCatalogListInfo" label="Items"/>
 		</th>
 	</tr>
 	<tr>
