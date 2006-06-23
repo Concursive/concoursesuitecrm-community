@@ -1750,7 +1750,7 @@ public class ProductCategory extends GenericBean {
       throw new SQLException("Invalid Product Category Name");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT count(pctgy.*) " +
+        "SELECT count(*) " +
             " FROM product_category pctgy " +
             " WHERE pctgy.category_NAME = ? ");
     pst.setString(1, categoryName);
