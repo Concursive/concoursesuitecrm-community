@@ -145,7 +145,7 @@ public class SiteImporter {
     ZipFile zipFile = new ZipFile(zipfilePath);
 
     //Reading from content.xml
-    InputStream xmlStream = zipFile.getInputStream(zipFile.getEntry("website" + fs + "content.xml"));
+    InputStream xmlStream = zipFile.getInputStream(zipFile.getEntry("website/content.xml"));
     byte[] contents = new byte[xmlStream.available()];
     //reading xml into a byte array
     int offset = 0;
@@ -633,7 +633,7 @@ public class SiteImporter {
 
       ZipFile zipFile = new ZipFile(zipfilePath);
 
-      InputStream imageStream = zipFile.getInputStream(zipFile.getEntry("website" + fs + "resources" + fs + "images" + fs + imageName));
+      InputStream imageStream = zipFile.getInputStream(zipFile.getEntry("website/resources/images/" + imageName));
       byte[] image = new byte[imageStream.available()];
       int offset = 0;
       int numRead = 0;

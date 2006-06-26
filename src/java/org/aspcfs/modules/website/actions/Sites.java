@@ -537,7 +537,7 @@ public final class Sites extends CFSModule {
         Template thisTemplate = (Template) templateList.get(0);
         FileDownload fileDownload = new FileDownload();
         fileDownload.setDisplayName(thisTemplate.getName());
-        fileDownload.sendFileFromZip(context, templateList.getZipPath() + System.getProperty("file.separator") + thisTemplate.getFilename() + ".zip", "website" + System.getProperty("file.separator") + "thumbnail.gif");
+        fileDownload.sendFileFromZip(context, templateList.getZipPath() + System.getProperty("file.separator") + thisTemplate.getFilename() + ".zip", "website/thumbnail.gif");
       }
     } catch (Exception e) {
       e.printStackTrace();
