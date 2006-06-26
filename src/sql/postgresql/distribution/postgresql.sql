@@ -637,7 +637,8 @@ CREATE TABLE permission_category (
     logos boolean DEFAULT false NOT NULL,
     constant integer NOT NULL,
     action_plans boolean DEFAULT false NOT NULL,
-    custom_list_views boolean DEFAULT false NOT NULL
+    custom_list_views boolean DEFAULT false NOT NULL,
+    importer boolean DEFAULT false NOT NULL
 );
 
 
@@ -2145,7 +2146,9 @@ CREATE TABLE product_category (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     start_date timestamp(3) without time zone,
     expiration_date timestamp(3) without time zone,
-    enabled boolean DEFAULT true NOT NULL
+    enabled boolean DEFAULT true NOT NULL,
+    import_id integer,
+    status_id integer
 );
 
 
@@ -2282,7 +2285,10 @@ CREATE TABLE product_catalog (
     enabled boolean DEFAULT true NOT NULL,
     manufacturer_id integer,
     trashed_date timestamp(3) without time zone,
-    active boolean DEFAULT true NOT NULL
+    active boolean DEFAULT true NOT NULL,
+    comments character varying(255),
+    import_id integer,
+    status_id integer
 );
 
 
@@ -8810,6 +8816,11 @@ ALTER TABLE ONLY product_category
 
 
 
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$8" FOREIGN KEY (import_id) REFERENCES import(import_id);
+
+
+
 ALTER TABLE ONLY product_category_map
     ADD CONSTRAINT "$1" FOREIGN KEY (category1_id) REFERENCES product_category(category_id);
 
@@ -8872,6 +8883,11 @@ ALTER TABLE ONLY product_catalog
 
 ALTER TABLE ONLY product_catalog
     ADD CONSTRAINT "$11" FOREIGN KEY (manufacturer_id) REFERENCES lookup_product_manufacturer(code);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$12" FOREIGN KEY (import_id) REFERENCES import(import_id);
 
 
 
