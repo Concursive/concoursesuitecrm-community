@@ -34,8 +34,9 @@ public class Template extends GenericBean {
   public Template(ZipFile zipFile) throws IOException {
     filename = zipFile.getName().substring(zipFile.getName().lastIndexOf(System.getProperty("file.separator")) + 1, zipFile.getName().lastIndexOf(".zip"));
     // Read the details from the zip file
+    // NOTE: getEntry retrieves fileseparator based on the system that CREATED the entry, NOT the target system
     InputStream manifestStream = zipFile.getInputStream(
-      zipFile.getEntry("website" + System.getProperty("file.separator") + "MANIFEST.MF"));
+      zipFile.getEntry("website/MANIFEST.MF"));
     byte[] manifest = new byte[manifestStream.available()];
     int offset = 0;
     int numRead = 0;
