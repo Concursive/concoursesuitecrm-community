@@ -15,6 +15,10 @@
  */
 package org.aspcfs.modules.setup.utils;
 
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.utils.StringUtils;
+
+import javax.servlet.ServletContext;
 import java.util.prefs.Preferences;
 
 /**
@@ -27,6 +31,26 @@ import java.util.prefs.Preferences;
  */
 public class Prefs {
 
+  public static String retrieveContextPrefName(ServletContext context) {
+    String dir = ApplicationPrefs.getRealPath(context);
+    try {
+      // Some containers return null so use the specified instance
+      if (dir == null) {
+        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
+      }
+      // Apache Geronimo uses a temporary store for a webapp, which
+      // would prevent a redeployed/upgraded Centric from finding itself
+      if (dir != null && dir.indexOf("config-store") > -1) {
+        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
+      }
+      System.out.println("Prefs-> Instance name: " + dir);
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+    return dir;
+  }
+
+
   /**
    * Saves the specified preference name and value to the store
    *
@@ -37,10 +61,15 @@ public class Prefs {
   public static boolean savePref(String name, String value) {
     try {
       Preferences prefs = Preferences.userNodeForPackage(Prefs.class);
-      prefs.put(name, value);
+      if (name.length() <= Preferences.MAX_KEY_LENGTH) {
+        prefs.put(name, value);
+      } else {
+        prefs.put(name.substring(name.length() - Preferences.MAX_KEY_LENGTH), value);
+      }
       prefs.flush();
       return true;
     } catch (Exception e) {
+      e.printStackTrace(System.out);
       return false;
     }
   }

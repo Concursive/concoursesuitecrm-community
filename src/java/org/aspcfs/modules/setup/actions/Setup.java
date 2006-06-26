@@ -142,16 +142,23 @@ public class Setup extends CFSModule {
     }
     //Display a default recommended file path
     if (path == null) {
-      File instance = new File(context.getServletContext().getRealPath("/"));
+      // Use the .war name if there is one, otherwise default to centric
+      String instanceName = context.getServletContext().getRealPath("/");
+      if (instanceName != null) {
+        File instance = new File(instanceName);
+        instanceName = instance.getName();
+      } else {
+        instanceName = "centric";
+      }
       if (os.startsWith("Windows")) {
         //Windows
-        path = "c:\\CentricCRM\\fileLibrary\\" + instance.getName() + "\\";
+        path = "c:\\CentricCRM\\fileLibrary\\" + instanceName + "\\";
       } else if (os.startsWith("Mac")) {
         //Mac OSX
-        path = "/Library/Application Support/CentricCRM/fileLibrary/" + instance.getName() + "/";
+        path = "/Library/Application Support/CentricCRM/fileLibrary/" + instanceName + "/";
       } else {
         //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
-        path = "/var/lib/centric_crm/fileLibrary/" + instance.getName() + "/";
+        path = "/var/lib/centric_crm/fileLibrary/" + instanceName + "/";
       }
     }
     context.getRequest().setAttribute("fileLibrary", path);
@@ -201,6 +208,8 @@ public class Setup extends CFSModule {
           prefs.add("FILELIBRARY", fileLibrary);
           prefs.save();
         }
+        //Save the instance against the build.properties file for next time
+
         return "ConfigureDirectoryOK";
       } else {
         //Confirm with the user that the directory does not exist and it will be created
@@ -280,8 +289,8 @@ public class Setup extends CFSModule {
         return "ConfigureDirectoryERROR";
       }
       //Add fileLibrary pref to registry so that this page can be skipped in the future
-      Prefs.savePref(
-          context.getServletContext().getRealPath("/"), userFileLibrary);
+      String dir = Prefs.retrieveContextPrefName(context.getServletContext());
+      Prefs.savePref(dir, userFileLibrary);
     } catch (Exception e) {
       context.getRequest().setAttribute(
           "actionError", prefs.getLabel(

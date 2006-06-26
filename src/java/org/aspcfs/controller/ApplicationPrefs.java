@@ -21,6 +21,7 @@ import org.aspcfs.modules.system.base.ApplicationVersion;
 import org.aspcfs.modules.website.base.Icelet;
 import org.aspcfs.modules.website.base.IceletList;
 import org.aspcfs.modules.website.base.IceletPropertyMap;
+import org.aspcfs.modules.setup.utils.Prefs;
 import org.aspcfs.utils.Dictionary;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.XMLUtils;
@@ -68,18 +69,8 @@ public class ApplicationPrefs {
    * @param context Description of the Parameter
    */
   public ApplicationPrefs(ServletContext context) {
-    String dir = ApplicationPrefs.getRealPath(context);
     try {
-      // Some containers return null so use the specified instance
-      if (dir == null) {
-        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
-      }
-      // Apache Geronimo uses a temporary store for a webapp, which
-      // would prevent a redeployed/upgraded Centric from finding itself
-      if (dir != null && dir.indexOf("config-store") > -1) {
-        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
-      }
-      System.out.println("ApplicationPrefs-> Instance name: " + dir);
+      String dir = Prefs.retrieveContextPrefName(context);
       Preferences prefs = Preferences.userNodeForPackage(
           org.aspcfs.modules.setup.utils.Prefs.class);
       // Check "dir" prefs first, based on the installed directory of this webapp
@@ -89,15 +80,15 @@ public class ApplicationPrefs {
         fileLibrary = context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs;
         File propertyFile = new File(fileLibrary + "build.properties");
         if (propertyFile.exists()) {
-          savePref(dir, fileLibrary);
+          Prefs.savePref(dir, fileLibrary);
         } else {
           // check in "root", for backwards compatibility
           fileLibrary = prefs.get("cfs.fileLibrary", null);
           if (fileLibrary != null) {
             // Save these prefs under the "dir" prefs for next time
-            savePref(dir, fileLibrary);
+            Prefs.savePref(dir, fileLibrary);
             // erase "root" since a "dir" pref has been configured and saved
-            savePref("cfs.fileLibrary", null);
+            Prefs.savePref("cfs.fileLibrary", null);
           }
         }
       }
@@ -561,26 +552,6 @@ public class ApplicationPrefs {
 
 
   /**
-   * Save a name/value pair to the Java Preferences store
-   *
-   * @param name  Description of the Parameter
-   * @param value Description of the Parameter
-   * @return Description of the Return Value
-   */
-  private static boolean savePref(String name, String value) {
-    try {
-      Preferences prefs = Preferences.userNodeForPackage(
-          org.aspcfs.modules.setup.utils.Prefs.class);
-      prefs.put(name, value);
-      prefs.flush();
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
-  }
-
-
-  /**
    * Shows all of the preferences that have been cached
    *
    * @return Description of the Return Value
@@ -625,8 +596,8 @@ public class ApplicationPrefs {
   /**
    * Adds a feature to the Dictionary attribute of the ApplicationPrefs object
    *
-   * @param  context   The feature to be added to the Dictionary attribute
-   * @param  language  The feature to be added to the Dictionary attribute
+   * @param context  The feature to be added to the Dictionary attribute
+   * @param language The feature to be added to the Dictionary attribute
    */
   public synchronized void addDictionary(ServletContext context, String language) {
     if (language == null) {
@@ -658,7 +629,7 @@ public class ApplicationPrefs {
   /**
    * Description of the Method
    *
-   * @param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public void loadApplicationIcelets(ServletContext context) {
     icelets.clear();
@@ -673,8 +644,8 @@ public class ApplicationPrefs {
   /**
    * Adds a feature to the Icelet attribute of the ApplicationPrefs object
    *
-   * @param  context   The feature to be added to the Icelet attribute
-   * @param  language  The feature to be added to the Icelet attribute
+   * @param context  The feature to be added to the Icelet attribute
+   * @param language The feature to be added to the Icelet attribute
    */
   public synchronized void addIcelets(ServletContext context, String language) {
     if (language == null) {
@@ -690,7 +661,8 @@ public class ApplicationPrefs {
       try {
         //Create a dictionary with the default language
         iceletMap = IceletList.load(languagePath + "icelet_en_US.xml");
-        if (language != null && !"en_US".equals(language) && !"".equals(language.trim())) {
+        if (language != null && !"en_US".equals(language) && !"".equals(language.trim()))
+        {
           // Override the text with a selected language
           iceletMap = IceletList.load(languagePath + "icelet_" + language + ".xml");
         }
@@ -719,9 +691,9 @@ public class ApplicationPrefs {
   /**
    * Gets the label attribute of the ApplicationPrefs object
    *
-   * @param  parameter  Description of the Parameter
-   * @param  language   Description of the Parameter
-   * @return            The label value
+   * @param parameter Description of the Parameter
+   * @param language  Description of the Parameter
+   * @return The label value
    */
   public String getLabel(String parameter, String language) {
     return getLabel("system.fields.label", parameter, language);
@@ -734,7 +706,7 @@ public class ApplicationPrefs {
    * @param parameter Description of the Parameter
    * @param tagName   Description of the Parameter
    * @param section   Description of the Parameter
-   * @param  language   Description of the Parameter
+   * @param language  Description of the Parameter
    * @return The value value
    */
   public String getValue(String section, String parameter, String tagName, String language) {
@@ -760,31 +732,31 @@ public class ApplicationPrefs {
   /**
    * Gets the icelets attribute of the ApplicationPrefs object
    *
-   * @return    The icelets value
+   * @return The icelets value
    */
   public HashMap getIcelets(String language) {
     if (icelets == null) {
       return null;
     }
-    return (HashMap)icelets.get(language);
+    return (HashMap) icelets.get(language);
   }
 
 
   /**
    * Gets the iceletFromClass attribute of the ApplicationPrefs object
    *
-   * @param  className  Description of the Parameter
-   * @return            The iceletFromClass value
+   * @param className Description of the Parameter
+   * @return The iceletFromClass value
    */
   public Icelet getIceletFromClass(String language, String className) {
     if (icelets == null) {
       return null;
     }
     //get icelets for the specific language
-    if (icelets.containsKey(language)){
-      HashMap iceletMap = (HashMap)icelets.get(language);
+    if (icelets.containsKey(language)) {
+      HashMap iceletMap = (HashMap) icelets.get(language);
       //get icelet for the specific class
-      if (iceletMap != null){
+      if (iceletMap != null) {
         return (Icelet) iceletMap.get(className);
       }
     }
@@ -795,20 +767,20 @@ public class ApplicationPrefs {
   /**
    * Gets the iceletProperties attribute of the ApplicationPrefs object
    *
-   * @param  className  Description of the Parameter
-   * @return            The iceletProperties value
+   * @param className Description of the Parameter
+   * @return The iceletProperties value
    */
   public IceletPropertyMap getIceletPrefs(String language, String className) {
     if (icelets == null) {
       return null;
     }
     //get icelets for the specific language
-    if (icelets.containsKey(language)){
+    if (icelets.containsKey(language)) {
       HashMap iceletMap = (HashMap) icelets.get(language);
       //get icelet for the specific class
       if (iceletMap != null) {
         Icelet icelet = (Icelet) iceletMap.get(className);
-        if (icelet != null){
+        if (icelet != null) {
           //get icelet properties for the specific icelet
           return icelet.getIceletPropertyMap();
         }
