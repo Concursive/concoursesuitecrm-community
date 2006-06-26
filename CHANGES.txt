@@ -2,33 +2,24 @@
 Centric CRM 4.1 beta
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-June 6, 2006
+June 26, 2006
 ----------------------------------------------------------------------------
 
-** New Installs **
-
-The Centric CRM Group edition can be used to install PostgreSQL, MS SQL
-from the web-based installer.
-(NOTE: DaffodilDB has not been updated yet)
-
-The Centric CRM Source Code edition can be used to install PostgreSQL, MS SQL,
-DaffodilDB, Firebird DB, and Oracle DB from the command-line installer.
-(NOTE: Only PostgreSQL and MS SQL have been updated!)
-
-
-** Upgrading **
-
-This version can be used to upgrade PostgreSQL and MS SQL installations from
-Centric CRM 3.1 or 4.0 (Group and Source editions) to Centric CRM 4.1.
-DaffodilDB, Oracle, and Firebird have not been finalized for upgrading.
-If upgrading from a version prior to 3.1, you will need to upgrade to 3.1 first.
+** UNDER DEVELOPMENT **
 
 The following is a running list until release...
 
 New features:
-- Web site module and portal
+- Web Content Management module and Portal using Apache Pluto JSR-168 Embedded
+  Portlet Container
+- Added the following portlets:
+  - HTML Content portlet
+  - Contact Us Form portlet
+  - Image Gallery portlet
+  - Product Catalog portlet
 - Product Importer
-- DB2 Database Support
+- IBM DB2 Database support
+- IBM WAS-CE Websphere Application Server Community Edition support
 
 Enhancements:
 - Upgraded TinyMCE HTML Editor to 2.0.6.1
