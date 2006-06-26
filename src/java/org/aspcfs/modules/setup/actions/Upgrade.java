@@ -102,6 +102,9 @@ public class Upgrade extends CFSModule {
         // Get a connection from the connection pool for this user
         db = this.getConnection(context);
         CustomHook.verifyDatabase(context, db, prefs, installLog, getDbNamePath(context));
+        // Upgrade might be in a new place
+        prefs.add(
+          "WEB-INF", context.getServletContext().getRealPath("/") + "WEB-INF" + fs);
         if (!prefs.save()) {
           context.getRequest().setAttribute(
               "errorMessage", "No write permission on file library, build.properties");

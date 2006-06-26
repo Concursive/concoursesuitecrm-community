@@ -807,6 +807,9 @@
         <include name="*.xml"/>
       </fileset>
     </copy>
+    <!-- Copy the instance property -->
+    <copy file="${pref.dir}/cfs/war/instance.property"
+          todir="${dist.dir}/cfs/WEB-INF"/>
     <!-- Copy the .zipped portal templates -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/portal_templates"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/portal_templates">

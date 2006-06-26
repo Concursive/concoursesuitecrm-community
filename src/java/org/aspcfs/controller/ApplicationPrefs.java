@@ -68,8 +68,18 @@ public class ApplicationPrefs {
    * @param context Description of the Parameter
    */
   public ApplicationPrefs(ServletContext context) {
-    String dir = context.getRealPath("/");
+    String dir = ApplicationPrefs.getRealPath(context);
     try {
+      // Some containers return null so use the specified instance
+      if (dir == null) {
+        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
+      }
+      // Apache Geronimo uses a temporary store for a webapp, which
+      // would prevent a redeployed/upgraded Centric from finding itself
+      if (dir != null && dir.indexOf("config-store") > -1) {
+        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
+      }
+      System.out.println("ApplicationPrefs-> Instance name: " + dir);
       Preferences prefs = Preferences.userNodeForPackage(
           org.aspcfs.modules.setup.utils.Prefs.class);
       // Check "dir" prefs first, based on the installed directory of this webapp
@@ -805,5 +815,13 @@ public class ApplicationPrefs {
       }
     }
     return null;
+  }
+
+  public static String getRealPath(ServletContext context) {
+    String dir = context.getRealPath("/");
+    if (dir != null && !dir.endsWith(fs)) {
+      dir += fs;
+    }
+    return dir;
   }
 }
