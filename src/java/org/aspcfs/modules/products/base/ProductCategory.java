@@ -15,25 +15,30 @@
  */
 package org.aspcfs.modules.products.base;
 
-import com.darkhorseventures.framework.beans.GenericBean;
-import com.zeroio.iteam.base.FileItem;
-import com.zeroio.iteam.base.FileItemList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
 
 /**
  * This is a generic Product Category that contains Product Catalogs.
  *
  * @author partha
- * @version $Id: ProductCategory.java 15067 2006-05-26 15:00:35Z
- *          Olga.Kaptyug@corratech.com $
+ * @version $Id$
  * @created March 18, 2004
  */
 public class ProductCategory extends GenericBean {
@@ -61,6 +66,7 @@ public class ProductCategory extends GenericBean {
   private String parentName = null;
   private String typeName = null;
   private boolean buildChildList = false;
+  private boolean buildChildCount = false;
   private boolean buildProductList = false;
   private int buildEnabledProducts = Constants.UNDEFINED;
   private int buildActiveProducts = Constants.UNDEFINED;
@@ -70,11 +76,83 @@ public class ProductCategory extends GenericBean {
   private boolean buildActivePrice = false;
   private int statusId = -1;
   private int importId = -1;
-
+  private ProductCategoryList fullPath=null;
+  private int childCount=-1;
+  
   // hierarchy builder helper
   private int level = -1;
 
   /**
+ * Gets the buildChildCount attribute of the ProductCategory object
+ *
+ * @return buildChildCount The buildChildCount value
+ */
+public boolean getBuildChildCount() {
+	return this.buildChildCount;
+}
+
+/**
+ * Sets the buildChildCount attribute of the ProductCategory object
+ *
+ * @param buildChildCount The new buildChildCount value
+ */
+public void setBuildChildCount(boolean buildChildCount) {
+	this.buildChildCount = buildChildCount;
+}
+/**
+ * Sets the buildChildCount attribute of the ProductCategory object
+ *
+ * @param buildChildCount The new buildChildCount value
+ */
+public void setBuildChildCount(String buildChildCount) {
+	this.buildChildCount = Boolean.parseBoolean(buildChildCount);
+}
+
+/**
+ * Gets the childCount attribute of the ProductCategory object
+ *
+ * @return childCount The childCount value
+ */
+public int getChildCount() {
+	return this.childCount;
+}
+
+/**
+ * Sets the childCount attribute of the ProductCategory object
+ *
+ * @param childCount The new childCount value
+ */
+public void setChildCount(int childCount) {
+	this.childCount = childCount;
+}
+
+/**
+ * Sets the childCount attribute of the ProductCategory object
+ *
+ * @param childCount The new childCount value
+ */
+public void setChildCount(String childCount) {
+	this.childCount = Integer.parseInt(childCount);
+}
+/**
+ * Gets the fullPath attribute of the ProductCategory object
+ *
+ * @return fullPath The fullPath value
+ */
+public ProductCategoryList getFullPath() {
+	return fullPath;
+}
+
+/**
+ * Sets the fullPath attribute of the ProductCategory object
+ *
+ * @param fullPath The new fullPath value
+ */
+public void setFullPath(ProductCategoryList fullPath) {
+	this.fullPath = fullPath;
+}
+
+/**
    * Gets the importId attribute of the ProductCategory object
    *
    * @return importId The importId value
@@ -923,10 +1001,39 @@ public class ProductCategory extends GenericBean {
       throw new SQLException("Product Category not found");
     }
     if (buildChildList) {
-      this.buildChildList(db);
-    }
+        this.buildChildList(db);
+      }
+    if (buildChildCount ) {
+        this.buildChildCount(db);
+      }
     if (buildProductList) {
       this.buildProductList(db);
+    }
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void buildChildCount(Connection db) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("Invalid Product Category Number");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+        "select count('X') AS child_count from product_category where parent_id=?");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.childCount=DatabaseUtils.getInt(rs, "child_count");
+    }
+    rs.close();
+    pst.close();
+    if (this.id == -1) {
+      throw new SQLException("Product Category not found");
     }
   }
 
@@ -1797,5 +1904,34 @@ public class ProductCategory extends GenericBean {
     }
     return count;
   }
+  public static ProductCategoryList buildFullName(Connection db, ProductCategoryList fullName, int currentId, boolean includeCurrent)
+			throws SQLException {
 
+		PreparedStatement pst = db
+				.prepareStatement(
+            "SELECT parent_id, category_name, category_id " +
+						"FROM product_category " +
+            "WHERE category_id = ? ");
+		pst.setInt(1, currentId);
+		ResultSet rs = pst.executeQuery();
+		int parentId = 0;
+		String name = null;
+		if (rs.next()) {
+			parentId = DatabaseUtils.getInt(rs, "parent_id");
+			name = rs.getString("category_name");
+		}
+		rs.close();
+		pst.close();
+		ProductCategory pc = new ProductCategory();
+		pc.setId(currentId);
+		pc.setName(name);
+	
+		if (parentId > -1) {
+			 fullName=ProductCategory.buildFullName(db, fullName, parentId, true);
+		}
+		if(includeCurrent)
+		{fullName.add(pc);}
+		return fullName;
+	}
 }
+

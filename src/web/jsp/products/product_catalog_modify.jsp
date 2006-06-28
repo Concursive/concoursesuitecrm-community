@@ -98,5 +98,8 @@
       </td>
     </tr>
 </table>
+<script type="text/javascript">
+  refreshCategories();
+</script>
 </dhv:container>
 </body>

@@ -763,6 +763,41 @@
     </attribute>
   </tag>
   <tag>
+    <name>productCategoryTree</name>
+    <tag-class>org.aspcfs.taglib.ProductCategoryTreeHandler</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <name>items</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+     <attribute>
+      <name>checked</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+     <attribute>
+      <name>parentItemProperty</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>home</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
     <name>batchItem</name>
     <tag-class>org.aspcfs.taglib.BatchItemHandler</tag-class>
     <body-content>empty</body-content>

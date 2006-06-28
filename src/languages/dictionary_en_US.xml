@@ -4102,11 +4102,14 @@
     <param name="product.cloneProduct">
       <value><![CDATA[Clone Product]]></value>
     </param>
-    <param name="product.moveProduct">
-      <value><![CDATA[Move Product]]></value>
+    <param name="product.manageCategoryAssociations">
+      <value><![CDATA[Manage Category Associations]]></value>
     </param>
     <param name="product.deleteProduct">
       <value><![CDATA[Delete Product]]></value>
+    </param>
+    <param name="product.productCount">
+      <value><![CDATA[Products Count]]></value>
     </param>
     <param name="product.options">
       <value><![CDATA[Options]]></value>
@@ -6798,6 +6801,9 @@ reflect those changes.]]></value>
     </param>
     <param name="product.noItemsFoundInCatalog">
       <value><![CDATA[No items found in catalog]]></value>
+    </param>
+    <param name="products.detail.otherCategories">
+      <value><![CDATA[Other categories in which this product is included]]></value>
     </param>
     <param name="admin.step">
       <value><![CDATA[Step]]></value>

@@ -164,13 +164,13 @@
             <td class="formLabel">
               <dhv:label name="documents.details.startDate">Start Date</dhv:label>
             </td>
-            <td><zeroio:tz timestamp="<%= productCatalog.getStartDate() %>" /></td>
+            <td><zeroio:tz timestamp="<%= productCatalog.getStartDate() %>" />&nbsp;</td>
           </tr>
           <tr class="containerBody">
             <td class="formLabel">
               <dhv:label name="accounts.accountasset_include.ExpirationDate">Expiration Date</dhv:label>
             </td>
-            <td><zeroio:tz timestamp="<%= productCatalog.getExpirationDate() %>" /></td>
+            <td><zeroio:tz timestamp="<%= productCatalog.getExpirationDate() %>" />&nbsp;</td>
           </tr>
         </table>
         <br />

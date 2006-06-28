@@ -36,6 +36,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.io.File;
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
@@ -76,7 +77,7 @@ public final class ProductCatalogs extends CFSModule {
 
       if (!"".equals(
           catalogListInfo.getSearchOptionValue("searchcodeCategoryId")) && !"-1".equals(
-              catalogListInfo.getSearchOptionValue("searchcodeCategoryId"))) {
+          catalogListInfo.getSearchOptionValue("searchcodeCategoryId"))) {
         String categoryId = catalogListInfo.getSearchOptionValue(
             "searchcodeCategoryId");
         ProductCategory category = new ProductCategory(
@@ -208,7 +209,7 @@ public final class ProductCatalogs extends CFSModule {
       context.getRequest().setAttribute(
           "PermissionCategory", permissionCategory);
 
-      String catalogId = context.getRequest().getParameter("catalogId");
+      String catalogId = context.getRequest().getParameter("productId");
       ProductCatalog catalog = new ProductCatalog(
           db, Integer.parseInt(catalogId));
       context.getRequest().setAttribute("ProductCatalog", catalog);
@@ -237,25 +238,43 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
-      PermissionCategory permissionCategory = new PermissionCategory(
-          db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute(
-          "PermissionCategory", permissionCategory);
+      PermissionCategory permissionCategory = new PermissionCategory(db,
+          Integer.parseInt(moduleId));
+      context.getRequest().setAttribute("PermissionCategory",
+          permissionCategory);
 
-      String catalogId = context.getRequest().getParameter("catalogId");
-      ProductCatalog catalog = new ProductCatalog(
-          db, Integer.parseInt(catalogId));
-      context.getRequest().setAttribute("ProductCatalog", catalog);
+      String catalogId = context.getRequest().getParameter("productId");
+      String categoryId = context.getRequest().getParameter("categoryId");
+      ProductCatalog catalog = new ProductCatalog(db, Integer
+          .parseInt(catalogId));
+      catalog.setCategoryId(categoryId);
+      context.getRequest().setAttribute("productCatalog", catalog);
 
       // Generate a list of categories that have this product
-      PagedListInfo categoryListInfo = this.getPagedListInfo(
-          context, "CategoryListInfo");
+      PagedListInfo categoryListInfo = this.getPagedListInfo(context,
+          "CategoryListInfo");
       ProductCategoryList categoryList = new ProductCategoryList();
       categoryList.setProductId(catalogId);
       categoryList.setPagedListInfo(categoryListInfo);
       categoryList.buildList(db);
+
+      Iterator iter = (Iterator) categoryList.iterator();
+      while (iter.hasNext()) {
+        ProductCategory ctgry = (ProductCategory) iter.next();
+        ProductCategoryList fullName = new ProductCategoryList();
+        fullName = ctgry.buildFullName(db, fullName, ctgry.getId(), true);
+        ctgry.setFullPath(fullName);
+        ctgry.buildProductList(db);
+      }
       context.getRequest().setAttribute("CategoryList", categoryList);
 
+      if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
+          categoryId) != -1) {
+        ProductCategory parentCategory = new ProductCategory(
+            db, Integer.parseInt(categoryId));
+        ProductCategories.buildHierarchy(db, context);
+        context.getRequest().setAttribute("productCategory", parentCategory);
+      }
       ProductCategoryList completeList = new ProductCategoryList();
       completeList.setProductId(catalogId);
       completeList.buildList(db);
@@ -543,14 +562,31 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      String returnAction = context.getRequest().getParameter("returnAction");
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
           "permissionCategory", permissionCategory);
-
+      ProductCategoryList selectedList = new ProductCategoryList();
       String productId = context.getRequest().getParameter("productId");
-      product = new ProductCatalog(db, Integer.parseInt(productId));
-      context.getRequest().setAttribute("productCatalog", product);
+      String parentId = context.getRequest().getParameter("parentId") != null
+          && !"".equals(context.getRequest().getParameter("parentId"))
+          ? context.getRequest().getParameter("parentId") : "-1";
+      if (Integer.parseInt(productId) != -1) {
+        product = new ProductCatalog(db, Integer.parseInt(productId));
+        product.buildCategories(db);
+        context.getRequest().setAttribute("productCatalog", product);
+        selectedList = product.getCategoryList();
+        context.getRequest().setAttribute("checkedList", product.getCategoryList());
+      } else {
+        String selected = context.getRequest().getParameter("selected");
+        selectedList = new ProductCategoryList();
+        if (selected != null && !"".equals(selected)) {
+          selectedList = selectedList.buildListFromIds(db, selected);
+          context.getRequest().setAttribute("checkedList", selectedList);
+        }
+
+      }
 
       String categoryId = context.getRequest().getParameter("categoryId");
       if (Integer.parseInt(categoryId) != -1) {
@@ -559,14 +595,27 @@ public final class ProductCatalogs extends CFSModule {
       }
 
       ProductCategoryList categoryList = new ProductCategoryList();
-      categoryList.setTopOnly(Constants.TRUE);
+      categoryList.setParentId(parentId);
+      if ("-1".equals(parentId)) {
+        categoryList.setTopOnly(Constants.TRUE);
+      }
+      categoryList.setBuildChildCount(true);
       categoryList.buildList(db);
-      categoryList.setLevel(1);
-      //populate the hierarchy with initial level 1
-      ProductCategoryList.buildHierarchy(db, categoryList);
-      categoryList.buildCompleteHierarchy();
+      if ("-1".equals(parentId)) {
+        ProductCategoryList tmpList = new ProductCategoryList();
+        Iterator i = selectedList.iterator();
+        while (i.hasNext()) {
+          ProductCategory thisCategory = (ProductCategory) i.next();
+          ProductCategoryList parentList = new ProductCategoryList();
+          parentList = ProductCategory.buildFullName(db, parentList, thisCategory.getId(), false);
+          tmpList.addAll(parentList);
+        }
+        ProductCategoryList.buildHierarchyFromSelectedIds(db, categoryList, tmpList);
+      }
       context.getRequest().setAttribute("categoryHierarchy", categoryList);
       context.getRequest().setAttribute("action", "moveProduct");
+      context.getRequest().setAttribute("returnAction", returnAction);
+      context.getRequest().setAttribute("parentId", parentId);
     } catch (Exception e) {
       e.printStackTrace(System.out);
       errorMessage = e;
@@ -574,7 +623,10 @@ public final class ProductCatalogs extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      return "MoveOK";
+      if (context.getRequest().getParameter("mode") != null)
+        return "MoveChunkOK";
+      else
+        return "MoveOK";
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return "SystemError";
@@ -594,16 +646,33 @@ public final class ProductCatalogs extends CFSModule {
     }
     Connection db = null;
     String id = (String) context.getRequest().getParameter("id");
-    String categoryId = (String) context.getRequest().getParameter(
-        "categoryId");
+//    String categoryId = (String) context.getRequest().getParameter(
+//        "categoryId");
+    String returnAction = (String) context.getRequest().getParameter(
+        "returnAction");
+    String[] category = context.getRequest().getParameterValues(
+        "categoryElt");
+
     try {
       db = this.getConnection(context);
-      ProductCatalog thisProduct = new ProductCatalog(
-          db, Integer.parseInt(id));
-      if (context.getRequest().getParameter("categoryId") != null) {
-        thisProduct.addCategoryMapping(db, Integer.parseInt(categoryId));
+      String ids = "";
+      if (category != null) {
+        for (int i = 0; i < category.length; i++) {
+          ids += category[i] + "|";
+        }
       }
-      return "PopupCloseOK";
+      ProductCategoryList newList = new ProductCategoryList();
+      newList = newList.buildListFromIds(db, ids);
+      if (!"set".equals(returnAction)) {
+        ProductCatalog thisProduct = new ProductCatalog(db, Integer
+            .parseInt(id));
+        thisProduct.buildCategories(db);
+        newList.addProductMapping(db, thisProduct.getCategoryList(),
+            thisProduct.getId());
+        return "PopupCloseOK";
+      }
+      context.getRequest().setAttribute("categoryList", newList);
+      return "MultiselectCloseOK";
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return "SystemError";
@@ -637,8 +706,9 @@ public final class ProductCatalogs extends CFSModule {
 
       int productId = Integer.parseInt(
           context.getRequest().getParameter("productId"));
-      thisProduct = new ProductCatalog(db, productId);
 
+      thisProduct = new ProductCatalog(db, productId);
+      thisProduct.buildCategories(db);
       String categoryId = context.getRequest().getParameter("categoryId");
       if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
           categoryId) != -1) {
@@ -713,6 +783,7 @@ public final class ProductCatalogs extends CFSModule {
         int productId = Integer.parseInt(
             context.getRequest().getParameter("productId"));
         catalog = new ProductCatalog(db, productId);
+        catalog.buildCategories(db);
         context.getRequest().setAttribute("productCatalog", catalog);
       }
 
@@ -756,7 +827,6 @@ public final class ProductCatalogs extends CFSModule {
     ProductCatalog updatedCatalog = null;
     ProductCatalog catalog = (ProductCatalog) context.getFormBean();
     catalog.setModifiedBy(getUserId(context));
-
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
@@ -771,7 +841,9 @@ public final class ProductCatalogs extends CFSModule {
         recordUpdated = catalog.update(db);
       }
       if (recordUpdated > 0 && isValid) {
+
         updatedCatalog = new ProductCatalog(db, catalog.getId());
+        updatedCatalog.buildCategories(db);
         context.getRequest().setAttribute("productCatalog", updatedCatalog);
 
         String categoryId = context.getRequest().getParameter("categoryId");
@@ -886,7 +958,8 @@ public final class ProductCatalogs extends CFSModule {
         if (((String) context.getRequest().getParameter("action")).equals(
             "delete")) {
           recordDeleted = thisProduct.delete(db, this.getDbNamePath(context));
-        } else if (((String) context.getRequest().getParameter("action")).equals(
+        } else
+        if (((String) context.getRequest().getParameter("action")).equals(
             "disable")) {
           thisProduct.setEnabled(false);
           int resultCount = thisProduct.update(db);
@@ -912,7 +985,7 @@ public final class ProductCatalogs extends CFSModule {
     } else {
       context.getRequest().setAttribute(
           "actionError", this.getSystemStatus(context).getLabel(
-              "object.validation.actionError.productDeletion"));
+          "object.validation.actionError.productDeletion"));
       context.getRequest().setAttribute("refreshUrl", returnUrl);
       return ("DeleteError");
     }
@@ -968,7 +1041,7 @@ public final class ProductCatalogs extends CFSModule {
     } else {
       context.getRequest().setAttribute(
           "actionError", this.getSystemStatus(context).getLabel(
-              "object.validation.actionError.productDeletion"));
+          "object.validation.actionError.productDeletion"));
       context.getRequest().setAttribute("refreshUrl", returnUrl);
       return ("DeleteError");
     }
@@ -1013,7 +1086,7 @@ public final class ProductCatalogs extends CFSModule {
     } else {
       context.getRequest().setAttribute(
           "actionError", this.getSystemStatus(context).getLabel(
-              "object.validation.actionError.productDeletion"));
+          "object.validation.actionError.productDeletion"));
       return ("DeleteError");
     }
   }
@@ -1034,7 +1107,8 @@ public final class ProductCatalogs extends CFSModule {
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("permissionCategory", permissionCategory);
       String categoryId = context.getRequest().getParameter("categoryId");
-      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId)) {
+      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId))
+      {
         ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
         context.getRequest().setAttribute("productCategory", category);
       }
@@ -1125,7 +1199,7 @@ public final class ProductCatalogs extends CFSModule {
         if (thisItem.isImageFormat()) {
           //Create a thumbnail if this is an image
           File thumbnailFile = new File(
-            newFileInfo.getLocalFile().getPath() + "TH");
+              newFileInfo.getLocalFile().getPath() + "TH");
           ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnailFile, 133d, 133d);
           //Store thumbnail in database
           Thumbnail thumbnail = new Thumbnail();
@@ -1154,7 +1228,7 @@ public final class ProductCatalogs extends CFSModule {
         SystemStatus systemStatus = this.getSystemStatus(context);
         errors.put(
             "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileName"));
+            "object.validation.incorrectFileName"));
         processErrors(context, errors);
       }
     } catch (Exception e) {
@@ -1180,7 +1254,8 @@ public final class ProductCatalogs extends CFSModule {
       String itemId = (String) context.getRequest().getParameter("fid");
       String productId = (String) context.getRequest().getParameter("productId");
       String categoryId = context.getRequest().getParameter("categoryId");
-      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId)) {
+      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId))
+      {
         ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
         context.getRequest().setAttribute("productCategory", category);
       }
@@ -1190,7 +1265,7 @@ public final class ProductCatalogs extends CFSModule {
       String imageType = context.getRequest().getParameter("imageType");
       catalog.removeFileItem(
           db, Integer.parseInt(itemId), imageType, this.getPath(
-              context, "products"));
+          context, "products"));
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -1216,7 +1291,8 @@ public final class ProductCatalogs extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId)) {
+      if (categoryId != null && !"".equals(categoryId) && !"-1".equals(categoryId))
+      {
         ProductCategory category = new ProductCategory(db, Integer.parseInt(categoryId));
         context.getRequest().setAttribute("productCategory", category);
       }
@@ -1271,13 +1347,11 @@ public final class ProductCatalogs extends CFSModule {
     }
   }
 
-
-
   /**
    *  Description of the Method
    *
    *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   *@return Description of the Return Value
    */
   /*
    *  public String executeCommandViewMappings(ActionContext context) {
@@ -1310,6 +1384,7 @@ public final class ProductCatalogs extends CFSModule {
    *  }
    *  }
    */
+
   /**
    * Description of the Method
    *
@@ -1800,7 +1875,7 @@ public final class ProductCatalogs extends CFSModule {
       if (!status) {
         context.getRequest().setAttribute(
             "actionError", this.getSystemStatus(context).getLabel(
-                "product.priceNotActivated"));
+            "product.priceNotActivated"));
       }
 
       String categoryId = context.getRequest().getParameter("categoryId");
@@ -1882,6 +1957,37 @@ public final class ProductCatalogs extends CFSModule {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return "UserError";
     }
+  }
+
+  public String executeCommandViewCategories(ActionContext context) {
+    Connection db = null;
+    ProductCategoryList list = new ProductCategoryList();
+    try {
+      String ctgId = context.getRequest().getParameter("categoryId");
+      if (ctgId == null || "".equals(ctgId)) {
+        ctgId = (String) context.getRequest().getAttribute("categoryId");
+      }
+      String categories = context.getRequest().getParameter("categories");
+      db = this.getConnection(context);
+      if (categories != null && !"".equals(categories)) {
+        list = list.buildListFromIds(db, categories);
+      }
+      Iterator iter = (Iterator) list.iterator();
+      while (iter.hasNext()) {
+        ProductCategory ctgry = (ProductCategory) iter.next();
+        ProductCategoryList fullName = new ProductCategoryList();
+        fullName = ctgry.buildFullName(db, fullName, ctgry.getId(), true);
+        ctgry.setFullPath(fullName);
+        ctgry.buildProductList(db);
+      }
+      context.getRequest().setAttribute("categoryList", list);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ViewCategoriesOK");
   }
 }
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+*  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
  *  rights reserved. This material cannot be distributed without written
  *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
  *  this material for internal use is hereby granted, provided that the above
@@ -25,6 +25,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  * The List class of Product Category.
@@ -36,7 +37,7 @@ import java.util.Iterator;
  */
 public class ProductCategoryList extends ArrayList implements SyncableList {
 
-  //sync api
+  // sync api
   /**
    * Description of the Field
    */
@@ -49,7 +50,7 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
 
-  //filters
+  // filters
   private PagedListInfo pagedListInfo = null;
   private int enteredBy = -1;
   private int id = -1;
@@ -61,7 +62,7 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private int topOnly = Constants.UNDEFINED;
   private int masterCategoryId = -1;
   private int serviceContractId = -1;
-  //other descriptors
+  // other descriptors
   private String name = null;
   private String abbreviation = null;
   private String parentName = null;
@@ -70,6 +71,7 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private int hasProducts = Constants.UNDEFINED;
   private boolean buildProducts = false;
   private boolean buildChildList = false;
+  private boolean buildChildCount = false;
   private boolean include = true;
   private boolean buildCompleteHierarchy = false;
   private int buildEnabledProducts = Constants.UNDEFINED;
@@ -78,35 +80,63 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private boolean excludeUnapprovedCategories = true;
 
   /**
- * Gets the excludeUnapprovedCategories attribute of the ProductCategoryList object
- *
- * @return excludeUnapprovedCategories The excludeUnapprovedCategories value
- */
-public boolean getExcludeUnapprovedCategories() {
-	return excludeUnapprovedCategories;
-}
+   * Gets the buildChildCount attribute of the ProductCategory object
+   *
+   * @return buildChildCount The buildChildCount value
+   */
+  public boolean getBuildChildCount() {
+    return this.buildChildCount;
+  }
 
+  /**
+   * Sets the buildChildCount attribute of the ProductCategory object
+   *
+   * @param buildChildCount The new buildChildCount value
+   */
+  public void setBuildChildCount(boolean buildChildCount) {
+    this.buildChildCount = buildChildCount;
+  }
 
-/**
- * Sets the excludeUnapprovedCategories attribute of the ProductCategoryList object
- *
- * @param excludeUnapprovedCategories The new excludeUnapprovedCategories value
- */
-public void setExcludeUnapprovedCategories(boolean excludeUnapprovedCategories) {
-	this.excludeUnapprovedCategories = excludeUnapprovedCategories;
-}
+  /**
+   * Sets the buildChildCount attribute of the ProductCategory object
+   *
+   * @param buildChildCount The new buildChildCount value
+   */
+  public void setBuildChildCount(String buildChildCount) {
+    this.buildChildCount = Boolean.parseBoolean(buildChildCount);
+  }
 
-/**
- * Sets the excludeUnapprovedCategories attribute of the ProductCategoryList object
- *
- * @param excludeUnapprovedCategories The new excludeUnapprovedCategories value
- */
-public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
-	this.excludeUnapprovedCategories = DatabaseUtils.parseBoolean(excludeUnapprovedCategories);
-}
+  /**
+   * Gets the excludeUnapprovedCategories attribute of the ProductCategoryList
+   * object
+   *
+   * @return excludeUnapprovedCategories The excludeUnapprovedCategories value
+   */
+  public boolean getExcludeUnapprovedCategories() {
+    return excludeUnapprovedCategories;
+  }
 
+  /**
+   * Sets the excludeUnapprovedCategories attribute of the ProductCategoryList
+   * object
+   *
+   * @param excludeUnapprovedCategories The new excludeUnapprovedCategories value
+   */
+  public void setExcludeUnapprovedCategories(
+      boolean excludeUnapprovedCategories) {
+    this.excludeUnapprovedCategories = excludeUnapprovedCategories;
+  }
 
-/**
+  /**
+   * Sets the excludeUnapprovedCategories attribute of the ProductCategoryList object
+   *
+   * @param excludeUnapprovedCategories The new excludeUnapprovedCategories value
+   */
+  public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
+    this.excludeUnapprovedCategories = DatabaseUtils.parseBoolean(excludeUnapprovedCategories);
+  }
+
+  /**
    * Gets the serviceContractId attribute of the ProductCategoryList object
    *
    * @return The serviceContractId value
@@ -114,7 +144,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public int getServiceContractId() {
     return serviceContractId;
   }
-
 
   /**
    * Sets the serviceContractId attribute of the ProductCategoryList object
@@ -125,7 +154,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.serviceContractId = tmp;
   }
 
-
   /**
    * Sets the serviceContractId attribute of the ProductCategoryList object
    *
@@ -134,7 +162,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setServiceContractId(String tmp) {
     this.serviceContractId = Integer.parseInt(tmp);
   }
-
 
   /**
    * Gets the buildActivePrice attribute of the ProductCategoryList object
@@ -145,7 +172,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return buildActivePrice;
   }
 
-
   /**
    * Sets the buildActivePrice attribute of the ProductCategoryList object
    *
@@ -154,7 +180,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setBuildActivePrice(boolean tmp) {
     this.buildActivePrice = tmp;
   }
-
 
   /**
    * Sets the buildActivePrice attribute of the ProductCategoryList object
@@ -165,7 +190,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.buildActivePrice = DatabaseUtils.parseBoolean(tmp);
   }
 
-
   /**
    * Sets the productId attribute of the ProductCategoryList object
    *
@@ -174,7 +198,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setProductId(int tmp) {
     this.productId = tmp;
   }
-
 
   /**
    * Sets the productId attribute of the ProductCategoryList object
@@ -185,7 +208,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.productId = Integer.parseInt(tmp);
   }
 
-
   /**
    * Gets the productId attribute of the ProductCategoryList object
    *
@@ -194,7 +216,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public int getProductId() {
     return productId;
   }
-
 
   /**
    * Sets the name attribute of the ProductCategoryList object
@@ -205,7 +226,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.name = tmp;
   }
 
-
   /**
    * Sets the abbreviation attribute of the ProductCategoryList object
    *
@@ -214,7 +234,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setAbbreviation(String tmp) {
     this.abbreviation = tmp;
   }
-
 
   /**
    * Gets the name attribute of the ProductCategoryList object
@@ -225,7 +244,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return name;
   }
 
-
   /**
    * Gets the abbreviation attribute of the ProductCategoryList object
    *
@@ -234,7 +252,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public String getAbbreviation() {
     return abbreviation;
   }
-
 
   /**
    * Sets the include attribute of the ProductCategoryList object
@@ -245,7 +262,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.include = tmp;
   }
 
-
   /**
    * Sets the include attribute of the ProductCategoryList object
    *
@@ -255,7 +271,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.include = DatabaseUtils.parseBoolean(tmp);
   }
 
-
   /**
    * Gets the include attribute of the ProductCategoryList object
    *
@@ -264,7 +279,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public boolean getInclude() {
     return include;
   }
-
 
   /**
    * Sets the excludeMappedCategories attribute of the ProductCategoryList
@@ -276,7 +290,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.excludeMappedCategories = tmp;
   }
 
-
   /**
    * Sets the excludeMappedCategories attribute of the ProductCategoryList
    * object
@@ -286,7 +299,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setExcludeMappedCategories(String tmp) {
     this.excludeMappedCategories = DatabaseUtils.parseBoolean(tmp);
   }
-
 
   /**
    * Gets the excludeMappedCategories attribute of the ProductCategoryList
@@ -298,7 +310,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return excludeMappedCategories;
   }
 
-
   /**
    * Sets the buildChildList attribute of the ProductCategoryList object
    *
@@ -307,7 +318,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setBuildChildList(boolean tmp) {
     this.buildChildList = tmp;
   }
-
 
   /**
    * Sets the buildChildList attribute of the ProductCategoryList object
@@ -318,7 +328,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.buildChildList = DatabaseUtils.parseBoolean(tmp);
   }
 
-
   /**
    * Sets the buildProducts attribute of the ProductCategoryList object
    *
@@ -328,7 +337,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.buildProducts = tmp;
   }
 
-
   /**
    * Sets the buildProducts attribute of the ProductCategoryList object
    *
@@ -337,7 +345,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setBuildProducts(String tmp) {
     this.buildProducts = DatabaseUtils.parseBoolean(tmp);
   }
-
 
   /**
    * Sets the buildCompleteHierarchy attribute of the ProductCategoryList
@@ -349,7 +356,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.buildCompleteHierarchy = tmp;
   }
 
-
   /**
    * Sets the buildCompleteHierarchy attribute of the ProductCategoryList
    * object
@@ -359,7 +365,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setBuildCompleteHierarchy(String tmp) {
     this.buildCompleteHierarchy = DatabaseUtils.parseBoolean(tmp);
   }
-
 
   /**
    * Gets the buildCompleteHierarchy attribute of the ProductCategoryList
@@ -371,7 +376,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return buildCompleteHierarchy;
   }
 
-
   /**
    * Gets the buildEnabledProducts attribute of the ProductCategoryList object
    *
@@ -380,7 +384,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public int getBuildEnabledProducts() {
     return buildEnabledProducts;
   }
-
 
   /**
    * Sets the buildEnabledProducts attribute of the ProductCategoryList object
@@ -391,7 +394,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.buildEnabledProducts = tmp;
   }
 
-
   /**
    * Sets the buildEnabledProducts attribute of the ProductCategoryList object
    *
@@ -400,7 +402,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setBuildEnabledProducts(String tmp) {
     this.buildEnabledProducts = Integer.parseInt(tmp);
   }
-
 
   /**
    * Gets the buildActiveProducts attribute of the ProductCategoryList object
@@ -411,7 +412,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return buildActiveProducts;
   }
 
-
   /**
    * Sets the buildActiveProducts attribute of the ProductCategoryList object
    *
@@ -420,7 +420,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setBuildActiveProducts(int tmp) {
     this.buildActiveProducts = tmp;
   }
-
 
   /**
    * Sets the buildActiveProducts attribute of the ProductCategoryList object
@@ -431,7 +430,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.buildActiveProducts = Integer.parseInt(tmp);
   }
 
-
   /**
    * Gets the buildChildList attribute of the ProductCategoryList object
    *
@@ -440,7 +438,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public boolean getBuildChildList() {
     return buildChildList;
   }
-
 
   /**
    * Gets the buildProducts attribute of the ProductCategoryList object
@@ -451,9 +448,7 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return buildProducts;
   }
 
-
   private String emptyHtmlSelectRecord = null;
-
 
   /**
    * Gets the tableName attribute of the ProductCategoryList object
@@ -464,7 +459,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return tableName;
   }
 
-
   /**
    * Gets the uniqueField attribute of the ProductCategoryList object
    *
@@ -473,7 +467,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public String getUniqueField() {
     return uniqueField;
   }
-
 
   /**
    * Gets the lastAnchor attribute of the ProductCategoryList object
@@ -484,7 +477,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return lastAnchor;
   }
 
-
   /**
    * Gets the nextAnchor attribute of the ProductCategoryList object
    *
@@ -493,7 +485,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public Timestamp getNextAnchor() {
     return nextAnchor;
   }
-
 
   /**
    * Gets the syncType attribute of the ProductCategoryList object
@@ -504,7 +495,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return syncType;
   }
 
-
   /**
    * Gets the pagedListInfo attribute of the ProductCategoryList object
    *
@@ -513,7 +503,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
-
 
   /**
    * Gets the enteredBy attribute of the ProductCategoryList object
@@ -524,7 +513,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return enteredBy;
   }
 
-
   /**
    * Gets the id attribute of the ProductCategoryList object
    *
@@ -533,7 +521,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public int getId() {
     return id;
   }
-
 
   /**
    * Gets the enabled attribute of the ProductCategoryList object
@@ -544,7 +531,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return enabled;
   }
 
-
   /**
    * Gets the parentName attribute of the ProductCategoryList object
    *
@@ -553,7 +539,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public String getParentName() {
     return parentName;
   }
-
 
   /**
    * Gets the typeId attribute of the ProductCategoryList object
@@ -564,7 +549,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return typeId;
   }
 
-
   /**
    * Gets the parentId attribute of the ProductCategoryList object
    *
@@ -573,7 +557,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public int getParentId() {
     return parentId;
   }
-
 
   /**
    * Gets the topOnly attribute of the ProductCategoryList object
@@ -584,7 +567,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return topOnly;
   }
 
-
   /**
    * Gets the masterCategoryId attribute of the ProductCategoryList object
    *
@@ -593,7 +575,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public int getMasterCategoryId() {
     return masterCategoryId;
   }
-
 
   /**
    * Gets the typeName attribute of the ProductCategoryList object
@@ -604,7 +585,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return typeName;
   }
 
-
   /**
    * Gets the hasProducts attribute of the ProductCategoryList object
    *
@@ -614,16 +594,15 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return hasProducts;
   }
 
-
   /**
-   * Gets the emptyHtmlSelectRecord attribute of the ProductCategoryList object
+   * Gets the emptyHtmlSelectRecord attribute of the ProductCategoryList
+   * object
    *
    * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
   }
-
 
   /**
    * Gets the htmlSelect attribute of the RoleList object
@@ -634,7 +613,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
   }
-
 
   /**
    * Gets the htmlSelect attribute of the ProductCategoryList object
@@ -656,11 +634,11 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
         type = thisCategory.getTypeId();
         categoryListSelect.addGroup(thisCategory.getTypeName());
       }
-      categoryListSelect.addItem(thisCategory.getId(), thisCategory.getName());
+      categoryListSelect.addItem(thisCategory.getId(), thisCategory
+          .getName());
     }
     return categoryListSelect.getHtml(selectName, defaultKey);
   }
-
 
   /**
    * Sets the lastAnchor attribute of the ProductCategoryList object
@@ -671,7 +649,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.lastAnchor = tmp;
   }
 
-
   /**
    * Sets the lastAnchor attribute of the ProductCategoryList object
    *
@@ -680,7 +657,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setLastAnchor(String tmp) {
     this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
   }
-
 
   /**
    * Sets the nextAnchor attribute of the ProductCategoryList object
@@ -691,7 +667,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.nextAnchor = tmp;
   }
 
-
   /**
    * Sets the nextAnchor attribute of the ProductCategoryList object
    *
@@ -700,7 +675,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setNextAnchor(String tmp) {
     this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
   }
-
 
   /**
    * Sets the syncType attribute of the ProductCategoryList object
@@ -711,7 +685,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.syncType = tmp;
   }
 
-
   /**
    * Sets the syncType attribute of the ProductCategoryList object
    *
@@ -720,7 +693,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
   }
-
 
   /**
    * Sets the pagedListInfo attribute of the ProductCategoryList object
@@ -731,7 +703,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.pagedListInfo = tmp;
   }
 
-
   /**
    * Sets the enteredBy attribute of the ProductCategoryList object
    *
@@ -740,7 +711,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-
 
   /**
    * Sets the enteredBy attribute of the ProductCategoryList object
@@ -751,7 +721,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.enteredBy = Integer.parseInt(tmp);
   }
 
-
   /**
    * Sets the id attribute of the ProductCategoryList object
    *
@@ -760,7 +729,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setId(int tmp) {
     this.id = tmp;
   }
-
 
   /**
    * Sets the id attribute of the ProductCategoryList object
@@ -771,7 +739,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.id = Integer.parseInt(tmp);
   }
 
-
   /**
    * Sets the enabled attribute of the ProductCategoryList object
    *
@@ -780,7 +747,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setEnabled(int tmp) {
     this.enabled = tmp;
   }
-
 
   /**
    * Sets the enabled attribute of the ProductCategoryList object
@@ -791,7 +757,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.enabled = Integer.parseInt(tmp);
   }
 
-
   /**
    * Sets the parentName attribute of the ProductCategoryList object
    *
@@ -800,7 +765,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setParentName(String tmp) {
     this.parentName = tmp;
   }
-
 
   /**
    * Sets the typeId attribute of the ProductCategoryList object
@@ -811,7 +775,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.typeId = tmp;
   }
 
-
   /**
    * Sets the typeId attribute of the ProductCategoryList object
    *
@@ -820,7 +783,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
   }
-
 
   /**
    * Sets the parentId attribute of the ProductCategoryList object
@@ -831,7 +793,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.parentId = tmp;
   }
 
-
   /**
    * Sets the parentId attribute of the ProductCategoryList object
    *
@@ -840,7 +801,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
   }
-
 
   /**
    * Sets the topOnly attribute of the ProductCategoryList object
@@ -851,7 +811,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.topOnly = tmp;
   }
 
-
   /**
    * Sets the topOnly attribute of the ProductCategoryList object
    *
@@ -860,7 +819,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setTopOnly(String tmp) {
     this.topOnly = Integer.parseInt(tmp);
   }
-
 
   /**
    * Sets the masterCategoryId attribute of the ProductCategoryList object
@@ -871,7 +829,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.masterCategoryId = tmp;
   }
 
-
   /**
    * Sets the masterCategoryId attribute of the ProductCategoryList object
    *
@@ -880,7 +837,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void setMasterCategoryId(String tmp) {
     this.masterCategoryId = Integer.parseInt(tmp);
   }
-
 
   /**
    * Sets the typeName attribute of the ProductCategoryList object
@@ -891,16 +847,15 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.typeName = tmp;
   }
 
-
   /**
-   * Sets the emptyHtmlSelectRecord attribute of the ProductCategoryList object
+   * Sets the emptyHtmlSelectRecord attribute of the ProductCategoryList
+   * object
    *
    * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
   }
-
 
   /**
    * Sets the hasProducts attribute of the ProductCategoryList object
@@ -911,7 +866,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.hasProducts = tmp;
   }
 
-
   /**
    * Sets the hasProducts attribute of the ProductCategoryList object
    *
@@ -921,13 +875,11 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     this.hasProducts = Integer.parseInt(tmp);
   }
 
-
   /**
    * Constructor for the ProductCategoryList object
    */
   public ProductCategoryList() {
   }
-
 
   /**
    * Description of the Method
@@ -945,19 +897,19 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     StringBuffer sqlFilter = new StringBuffer("");
     StringBuffer sqlOrder = new StringBuffer("");
 
-    //Need to build a base SQL statement for counting records
-    sqlCount.append(
-        " SELECT COUNT(*) AS recordcount " +
-        " FROM product_category pctgy " +
-        " LEFT JOIN product_category pctgy2 " +
-        " ON ( pctgy.parent_id = pctgy2.category_id ) " +
-        " LEFT JOIN lookup_product_category_type pctgytype " +
-        " ON ( pctgy.type_id = pctgytype.code ) " +
-        " WHERE pctgy.category_id > 0 ");
+    // Need to build a base SQL statement for counting records
+    sqlCount.append(" SELECT COUNT(*) AS recordcount "
+        + " FROM product_category pctgy "
+        + " LEFT JOIN product_category pctgy2 "
+        + " ON ( pctgy.parent_id = pctgy2.category_id ) "
+        + " LEFT JOIN lookup_product_category_type pctgytype "
+        + " ON ( pctgy.type_id = pctgytype.code ) "
+        + " WHERE pctgy.category_id > 0 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
-      //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      // Get the total number of records matching filter
+      pst = db.prepareStatement(sqlCount.toString()
+          + sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -967,14 +919,16 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
       rs.close();
       pst.close();
 
-      //Determine the offset, based on the filter, for the first record to show
+      // Determine the offset, based on the filter, for the first record
+      // to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(
-            sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.category_name) < ? ");
+        pst = db.prepareStatement(sqlCount.toString()
+            + sqlFilter.toString() + "AND "
+            + DatabaseUtils.toLowerCase(db)
+            + "(pctgy.category_name) < ? ");
         items = prepareFilter(pst);
-        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        pst.setString(++items, pagedListInfo.getCurrentLetter()
+            .toLowerCase());
         rs = pst.executeQuery();
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
@@ -983,30 +937,28 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
         rs.close();
         pst.close();
       }
-      //Determine column to sort by
+      // Determine column to sort by
       pagedListInfo.setDefaultSort("pctgy.category_name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY pctgy.type_id, pctgy.category_name ");
     }
-    //Need to build a base SQL statement for returning records
+    // Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append(
-        " pctgy.*, " +
-        " pctgy2.category_name AS parent_name," +
-        " pctgytype.description AS type_name " +
-        " FROM product_category pctgy " +
-        " LEFT JOIN product_category pctgy2 " +
-        " ON ( pctgy.parent_id = pctgy2.category_id ) " +
-        " LEFT JOIN lookup_product_category_type pctgytype " +
-        " ON ( pctgy.type_id = pctgytype.code ) " +
-        " WHERE pctgy.category_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    sqlSelect.append(" pctgy.*, " + " pctgy2.category_name AS parent_name,"
+        + " pctgytype.description AS type_name "
+        + " FROM product_category pctgy "
+        + " LEFT JOIN product_category pctgy2 "
+        + " ON ( pctgy.parent_id = pctgy2.category_id ) "
+        + " LEFT JOIN lookup_product_category_type pctgytype "
+        + " ON ( pctgy.type_id = pctgytype.code ) "
+        + " WHERE pctgy.category_id > -1 ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
+        + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -1015,7 +967,8 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     while (rs.next()) {
       ProductCategory productCategory = new ProductCategory(rs);
       if (serviceContractId > -1) {
-        if (productCategory.hasServiceContractProducts(db, serviceContractId)) {
+        if (productCategory.hasServiceContractProducts(db,
+            serviceContractId)) {
           this.add(productCategory);
         }
       } else {
@@ -1032,6 +985,13 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
         thisCategory.buildProductList(db);
       }
     }
+    if (buildChildCount) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        ProductCategory thisCategory = (ProductCategory) i.next();
+        thisCategory.buildChildCount(db);
+      }
+    }
     if (buildChildList || buildCompleteHierarchy) {
       int size = this.size();
       for (int i = 0; i < size; i++) {
@@ -1041,13 +1001,13 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
         thisCategory.setBuildActiveProducts(this.buildActiveProducts);
         thisCategory.setBuildActivePrice(buildActivePrice);
         thisCategory.buildChildList(db);
-        if (buildCompleteHierarchy && thisCategory.getChildList().size() != 0) {
+        if (buildCompleteHierarchy
+            && thisCategory.getChildList().size() != 0) {
           this.addAll(this.size(), thisCategory.getChildList());
         }
       }
     }
   }
-
 
   /**
    * Description of the Method
@@ -1059,11 +1019,11 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public void delete(Connection db, String basePath) throws SQLException {
     Iterator categories = this.iterator();
     while (categories.hasNext()) {
-      ProductCategory productCategory = (ProductCategory) categories.next();
+      ProductCategory productCategory = (ProductCategory) categories
+          .next();
       productCategory.delete(db, basePath);
     }
   }
-
 
   /**
    * Description of the Method
@@ -1085,9 +1045,9 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
       }
     }
     if (productId > -1) {
-      sqlFilter.append(
-          "AND pctgy.category_id IN (SELECT category_id FROM product_catalog_category_map " +
-          " WHERE product_id = ?) ");
+      sqlFilter
+          .append("AND pctgy.category_id IN (SELECT category_id FROM product_catalog_category_map "
+              + " WHERE product_id = ?) ");
     }
     if (topOnly == Constants.TRUE) {
       sqlFilter.append("AND pctgy.parent_id IS NULL ");
@@ -1102,20 +1062,20 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     }
     if (name != null) {
       if (name.indexOf("%") >= 0) {
-        sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.category_name) LIKE ? ");
+        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
+            + "(pctgy.category_name) LIKE ? ");
       } else {
-        sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.category_name) = ? ");
+        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
+            + "(pctgy.category_name) = ? ");
       }
     }
     if (abbreviation != null) {
       if (abbreviation.indexOf("%") >= 0) {
-        sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.abbreviation) LIKE ? ");
+        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
+            + "(pctgy.abbreviation) LIKE ? ");
       } else {
-        sqlFilter.append(
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctgy.abbreviation) = ? ");
+        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
+            + "(pctgy.abbreviation) = ? ");
       }
     }
     if (parentName != null) {
@@ -1125,19 +1085,17 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
       sqlFilter.append("AND pctgytype.description = ? ");
     }
     if (hasProducts == Constants.TRUE) {
-      sqlFilter.append(
-          " AND pctgy.category_id IN ( " +
-          " SELECT category_id " +
-          " FROM product_catalog_category_map " +
-          " WHERE id > -1 ) ");
+      sqlFilter.append(" AND pctgy.category_id IN ( "
+          + " SELECT category_id "
+          + " FROM product_catalog_category_map "
+          + " WHERE id > -1 ) ");
     } else if (hasProducts == Constants.FALSE) {
-      sqlFilter.append(
-          " AND pctgy.category_id NOT IN ( " +
-          " SELECT category_id " +
-          " FROM product_catalog_category_map " +
-          " WHERE id > -1 ) ");
+      sqlFilter.append(" AND pctgy.category_id NOT IN ( "
+          + " SELECT category_id "
+          + " FROM product_catalog_category_map "
+          + " WHERE id > -1 ) ");
     }
-    //Sync API
+    // Sync API
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         sqlFilter.append("AND pctgy.entered >= ? ");
@@ -1160,23 +1118,23 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     }
     if (excludeMappedCategories) {
       if (masterCategoryId > -1) {
-        sqlFilter.append(
-            "AND pctgy.category_id NOT IN " +
-            "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
+        sqlFilter
+            .append("AND pctgy.category_id NOT IN "
+                + "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
       }
     } else {
       if (masterCategoryId > -1) {
-        sqlFilter.append(
-            "AND pctgy.category_id IN " +
-            "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
+        sqlFilter
+            .append("AND pctgy.category_id IN "
+                + "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
       }
     }
     if (excludeUnapprovedCategories) {
-    	sqlFilter.append("AND (pctgy.status_id IS NULL OR pctgy.status_id = ?) ");
-      }
+      sqlFilter
+          .append("AND (pctgy.status_id IS NULL OR pctgy.status_id = ?) ");
+    }
 
   }
-
 
   /**
    * Description of the Method
@@ -1223,7 +1181,7 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
       pst.setString(++i, typeName);
     }
 
-    //Sync API
+    // Sync API
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         pst.setTimestamp(++i, lastAnchor);
@@ -1250,11 +1208,10 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
       pst.setInt(++i, masterCategoryId);
     }
     if (excludeUnapprovedCategories) {
-        pst.setInt(++i, Import.PROCESSED_APPROVED);
-      }
+      pst.setInt(++i, Import.PROCESSED_APPROVED);
+    }
     return i;
   }
-
 
   /**
    * Iterates through this list and returns the first category with the
@@ -1267,14 +1224,14 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
   public ProductCategory getCategoryByName(String name) throws SQLException {
     Iterator categories = this.iterator();
     while (categories.hasNext()) {
-      ProductCategory productCategory = (ProductCategory) categories.next();
+      ProductCategory productCategory = (ProductCategory) categories
+          .next();
       if (name.equals(productCategory.getName())) {
         return productCategory;
       }
     }
     return null;
   }
-
 
   /**
    * Gets the htmlSelect attribute of the ProductCategoryList object
@@ -1298,7 +1255,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return select;
   }
 
-
   /**
    * Description of the Method
    *
@@ -1314,7 +1270,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
       }
     }
   }
-
 
   /**
    * Description of the Method
@@ -1334,7 +1289,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return false;
   }
 
-
   /**
    * Iterates through all the categories and checks if a category's type
    * matches the typeId parameter
@@ -1353,18 +1307,16 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     return false;
   }
 
-
   /**
    * Adds a feature to the ProductMapping attribute of the ProductCategoryList
    * object
    *
-   * @param db        The feature to be added to the ProductMapping
-   *                  attribute
-   * @param productId The feature to be added to the ProductMapping
-   *                  attribute
+   * @param db        The feature to be added to the ProductMapping attribute
+   * @param productId The feature to be added to the ProductMapping attribute
    * @throws SQLException Description of the Exception
    */
-  public void addProductMapping(Connection db, int productId) throws SQLException {
+  public void addProductMapping(Connection db, int productId)
+      throws SQLException {
     if (productId == -1) {
       throw new SQLException("Invalid category ID specified");
     }
@@ -1377,25 +1329,23 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
 
   }
 
-
   /**
    * Adds a feature to the ProductMapping attribute of the ProductCategoryList
    * object
    *
-   * @param db        The feature to be added to the ProductMapping
-   *                  attribute
-   * @param productId The feature to be added to the ProductMapping
-   *                  attribute
-   * @param oldList   The feature to be added to the ProductMapping
-   *                  attribute
+   * @param db        The feature to be added to the ProductMapping attribute
+   * @param productId The feature to be added to the ProductMapping attribute
+   * @param oldList   The feature to be added to the ProductMapping attribute
    * @throws SQLException Description of the Exception
    */
-  public void addProductMapping(Connection db, ProductCategoryList oldList, int productId) throws SQLException {
+  public void addProductMapping(Connection db, ProductCategoryList oldList,
+                                int productId) throws SQLException {
     ProductCatalog product = null;
     try {
       db.setAutoCommit(false);
       product = new ProductCatalog(db, productId);
-      // Remove the mappings of elements present in the oldList and not this list
+      // Remove the mappings of elements present in the oldList and not
+      // this list
       Iterator i = oldList.iterator();
       while (i.hasNext()) {
         ProductCategory oldCategory = (ProductCategory) i.next();
@@ -1410,7 +1360,8 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
           }
         }
         if (!exists) {
-          // old category does not exist in the new list. hence remove the mapping
+          // old category does not exist in the new list. hence remove
+          // the mapping
           product.removeCategoryMapping(db, oldCategory.getId());
         }
       }
@@ -1427,7 +1378,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     }
   }
 
-
   /**
    * Description of the Method
    *
@@ -1435,7 +1385,8 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
    * @param categoryList Description of the Parameter
    * @throws SQLException Description of the Exception
    */
-  public static void buildHierarchy(Connection db, ProductCategoryList categoryList) throws SQLException {
+  public static void buildHierarchy(Connection db,
+                                    ProductCategoryList categoryList) throws SQLException {
     Iterator i = categoryList.iterator();
     while (i.hasNext()) {
       ProductCategory thisCategory = (ProductCategory) i.next();
@@ -1448,6 +1399,23 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     }
   }
 
+  public static void buildHierarchyFromSelectedIds(Connection db,
+                                                   ProductCategoryList categoryList, ProductCategoryList selectedList) throws SQLException {
+
+    Iterator i = categoryList.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      if (selectedList.hasCategory(thisCategory.getId())) {
+        ProductCategoryList childList = new ProductCategoryList();
+        childList.setParentId(thisCategory.getId());
+        childList.setBuildChildCount(true);
+        childList.buildList(db);
+        childList.setLevel(thisCategory.getLevel() + 1);
+        buildHierarchyFromSelectedIds(db, childList, selectedList);
+        thisCategory.setChildList(childList);
+      }
+    }
+  }
 
   /**
    * Sets the level attribute of the ProductCategoryList object
@@ -1462,7 +1430,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     }
   }
 
-
   /**
    * Description of the Method
    */
@@ -1474,7 +1441,6 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
       }
     }
   }
-
 
   /**
    * Description of the Method
@@ -1492,5 +1458,57 @@ public void setExcludeUnapprovedCategories(String excludeUnapprovedCategories) {
     }
     return false;
   }
-}
 
+  public ProductCategoryList buildListFromIds(Connection db, String ids)
+      throws SQLException {
+
+    ProductCategoryList result = new ProductCategoryList();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    StringBuffer sqlSelect = new StringBuffer();
+    if (ids != null && !"".equals(ids)) {
+      sqlSelect
+          .append("select category_id, category_name from product_category");
+
+      StringTokenizer st = new StringTokenizer(ids, "|");
+
+      if (st.hasMoreTokens()) {
+        sqlSelect.append(" where category_id in (").append(
+            st.nextToken());
+        while (st.hasMoreTokens()) {
+          sqlSelect.append(",").append(st.nextToken());
+        }
+        sqlSelect.append(")");
+      }
+
+      pst = db.prepareStatement(sqlSelect.toString());
+      rs = pst.executeQuery();
+      while (rs.next()) {
+        ProductCategory category = new ProductCategory();
+        category.setId(rs.getInt("category_id"));
+        category.setName(rs.getString("category_name"));
+        result.add(category);
+      }
+      rs.close();
+      pst.close();
+    }
+    return result;
+  }
+
+  /**
+   *  Sets the elements attribute of the AssetMaterialList object
+   *
+   * @param  categories  The new elements value
+   */
+  public void setElements(String categories) {
+    StringTokenizer str = new StringTokenizer(categories, "|");
+    while (str.hasMoreTokens()) {
+      ProductCategory category = new ProductCategory();
+      String temp = str.nextToken();
+      if (temp != null && !"".equals(temp)) {
+        category.setId(temp);
+	        this.add(category);
+	      }
+	    }
+	  }
+}

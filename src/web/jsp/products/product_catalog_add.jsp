@@ -68,3 +68,6 @@
     <input type="hidden" name="dosubmit" value="true" />
 </form>
 </body>
+<script type="text/javascript">
+  refreshCategories();
+</script>

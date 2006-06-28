@@ -1,0 +1,92 @@
+BODY
+{
+  PADDING-RIGHT: 0px;
+  PADDING-LEFT: 2px;
+  FONT-SIZE: 9pt;
+  PADDING-BOTTOM: 0px;
+  MARGIN: 0px;
+  CURSOR: default;
+  COLOR: #303070;
+  PADDING-TOP: 2px;
+  FONT-FAMILY: tahoma,arial;
+  
+}
+A
+{
+  COLOR: #303070;
+  cursor: pointer; cursor: hand;
+  BORDER: none;
+  MARGIN: 0px;
+  PADDING: 0px;
+  TEXT-DECORATION: none
+}
+A:visited
+{
+  COLOR: #707090
+}
+IMG
+{
+  BORDER: none;
+  MARGIN: 0px;
+  PADDING: 0px;
+  cursor: pointer; cursor: hand;
+
+}
+A:hover
+{
+  COLOR: #b0b0d0
+}
+A.Current
+{
+  FONT-WEIGHT: bolder;
+  BACKGROUND-COLOR: #d0e0f0
+}
+IFRAME
+{
+  DISPLAY: none
+}
+UL
+{
+  MARGIN: 0px;
+  PADDING: 0px;
+  BORDER: none;
+  LIST-STYLE-TYPE: none
+}
+LI
+{
+  MARGIN: 0px;
+  BORDER: none;
+  PADDING: 0px
+}
+FONT.SELECTED
+{
+  BACKGROUND-COLOR: #fff7bd;
+  
+}
+LI UL, UL UL
+{
+  padding-right: 0px;
+  padding-left: 0px;
+  padding-bottom: 0px;
+  margin: 0px 0px 0px 16px;
+  padding-top: 0px;
+}
+UL.Shown
+{
+  DISPLAY: block
+}
+UL.Hidden
+{
+  DISPLAY: none
+}
+DIV.loadMsg
+{
+ 
+  BORDER: black 1px solid;
+  PADDING-LEFT: 4px;
+}
+UL#ULRoot
+{
+  WHITE-SPACE: nowrap;
+  BEHAVIOR: url('#default#saveSnapshot')
+}

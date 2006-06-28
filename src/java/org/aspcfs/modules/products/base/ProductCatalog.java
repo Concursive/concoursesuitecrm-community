@@ -1593,20 +1593,10 @@ public class ProductCatalog extends GenericBean {
 		// exactly
 		// the path from the root of the tree which is the category trail
 		if (categoryId != -1) {
-			StringBuffer sb = new StringBuffer();
-			sb.append(this.getCategoryName());
-
-			ProductCategory category = new ProductCategory(db, this.categoryId);
-			int ctgyParentId = category.getParentId();
-			while (ctgyParentId != -1) {
-				ProductCategory parent = new ProductCategory(db, ctgyParentId);
-				sb.insert(0, parent.getName() + ", ");
-				ctgyParentId = parent.getParentId();
-			}
 			// TODO: determine if the following line needs to be changed
 			// eg: Currently it eliminates "Publications, " from "Publications,
 			// Flagship, Broadsheet"
-			String str = sb.toString().trim();
+			String str =determineActualCategoryName(db,categoryId);
 			if (str.indexOf("Publications,") > -1) {
 				str = str.substring(str.indexOf(",") + 1);
 			}
@@ -2114,13 +2104,15 @@ public class ProductCatalog extends GenericBean {
 			int thisCategoryId = -1;
 			while (j.hasNext()) {
 				ProductCategory thisCategory = (ProductCategory) j.next();
-				int count = thisCategory.getCategoryCountByName(db,
-						thisCategory.getName());
-				if (thisCategory.getId() == -1 && count <= 0) {
-					thisCategory.process(db, -1, this.enteredBy,
-							this.modifiedBy);
-					thisCategoryId = DatabaseUtils.getCurrVal(db,
-							"product_category_category_id_seq", id);
+				if (thisCategory.getId() == -1) {
+					int count = thisCategory.getCategoryCountByName(db,
+							thisCategory.getName());
+					if (count <= 0) {
+						thisCategory.process(db, -1, this.enteredBy,
+								this.modifiedBy);
+						thisCategoryId = DatabaseUtils.getCurrVal(db,
+								"product_category_category_id_seq", id);
+					}
 				} else {
 					thisCategoryId = thisCategory.getId();
 				}
@@ -2584,9 +2576,8 @@ public class ProductCatalog extends GenericBean {
 			if (commit) {
 				db.setAutoCommit(false);
 			}
-			String sql = "UPDATE product_catalog " +
-          "SET status_id = ? " +
-					"WHERE import_id = ? ";
+			String sql = "UPDATE product_catalog " + "SET status_id = ? "
+					+ "WHERE import_id = ? ";
 			int i = 0;
 			PreparedStatement pst = db.prepareStatement(sql);
 			pst.setInt(++i, status);
@@ -2607,6 +2598,24 @@ public class ProductCatalog extends GenericBean {
 			}
 		}
 		return count;
+	}
+	public String determineActualCategoryName(Connection db, int ctgyId) throws SQLException {
+		// Product categories is a tree of categories and products can exist
+		// at any level in the category list. Hence a product needs to know
+		// exactly
+		// the path from the root of the tree which is the category trail
+		StringBuffer sb = new StringBuffer();
+		if (ctgyId != -1) {
+			ProductCategory category = new ProductCategory(db, ctgyId);
+			sb.append( category.getName());
+			int ctgyParentId = category.getParentId();
+			while (ctgyParentId != -1) {
+				ProductCategory  parent = new ProductCategory(db, ctgyParentId);
+				sb.insert(0, parent.getName() + ", ");
+				ctgyParentId = parent.getParentId();
+			}
+		}
+		return sb.toString();
 	}
 
     /**

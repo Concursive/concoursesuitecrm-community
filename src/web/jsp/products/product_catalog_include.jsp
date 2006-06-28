@@ -1,3 +1,5 @@
+<%@ page import="org.aspcfs.modules.products.base.ProductCategory" %>
+<%@ page import="org.aspcfs.modules.products.base.ProductCatalog" %>
 <%-- 
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
@@ -28,6 +30,56 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript">
+  var categories = '';
+  var currentCategoriesIds = '';
+  
+<%
+  Iterator iter = productCatalog.getCategoryList().iterator();
+  while (iter.hasNext()) {
+    ProductCategory category = iter.next();
+%>
+      categories = categories+'<%= category.getId()%>|';
+      currentCategoriesIds = currentCategoriesIds + '<%= category.getId() %>|';
+<%}%>
+ function resetCategories(elts) {
+    var url = 'ProductCatalogs.do?command=ViewCategories&categories=' + elts;
+    document.forms['addCatalog'].categoryList_elements.value=elts;
+    categories = elts;
+    currentCategoriesIds = '';
+    var entry = elts.split("|");
+    for (i=0;i<entry.length;i++) {
+      if (entry[i] != '') {
+          currentCategoriesIds = currentCategoriesIds + entry[i] +'|';
+      }
+    }
+    window.frames['server_list'].location.href = url;
+  }
+
+  function removeCategory(code) {
+    var copyCategories = '';
+    var entry = categories.split("|");
+    for (i=0;i<entry.length;i++) {
+      if (entry[i] != '') {
+        if (entry[i] != '' && entry[i] != code) {
+          copyCategories = copyCategories+ entry[i]+"|";
+        }
+      }
+    }
+    resetCategories(copyCategories);
+  }
+  function popCategories ()
+ { var url = 'ProductCatalogs.do?command=Move&productId=' + <%=productCatalog.getId()%> + '&categoryId=' +
+                    + <%=productCatalog.getCategoryId()%> + '&moduleId=<%= permissionCategory.getId() %>&returnAction=set&selected='+categories;
+  popURL(url, 'Products', '400', '375', 'yes', 'yes');
+  }
+  
+  function refreshCategories() {
+    var url = 'ProductCatalogs.do?command=ViewCategories&categories='+categories;
+    if(document.forms['addCatalog'].categoryList_elements){
+    document.forms['addCatalog'].categoryList_elements.value=categories;
+    window.frames['server_list'].location.href = url;}
+  }
+  
 	function doCheck(form) {
 		if (form.dosubmit.value == "false") {
 			return true;
@@ -248,4 +300,24 @@
 		</td>
   </tr>
 </table>
+<br/>
+<dhv:evaluate if="<%= (productCatalog.getId() == -1) %>">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong><dhv:label name="products.detail.otherCategories">Other categories in which this product is included</dhv:label></strong>
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td valign="top" class="formLabel">
+      <dhv:label name="products.detail.categories">Categories</dhv:label>
+    </td>
+    <td>
+      <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript: popCategories();" /><br />
+      <iframe src="../empty.html" name="server_list" id="server_list" border="0" frameborder="0" width="100%" height="0"></iframe>
+      <input type="hidden" name="categoryList_elements" id="categoryList_elements" value="" />
+    </td>
+  </tr>
+</table>
+</dhv:evaluate>
 <input type="hidden" name="onlyWarnings" value="<%= (productCatalog.getOnlyWarnings()? "on" : "off") %>">

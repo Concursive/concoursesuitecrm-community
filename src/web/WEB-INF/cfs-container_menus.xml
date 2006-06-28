@@ -666,13 +666,11 @@
       <permission value=""/>
       <link value="ProductCatalogs.do?command=ImageList&amp;productId=${productId}&amp;moduleId=${moduleId}&amp;categoryId=${categoryId}"/>
     </submenu>
-    <!--
     <submenu name="categories">
       <long_html value="Categories"/>
       <permission value=""/>
-      <link value="ProductCatalogs.do?command=CategoryList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
+      <link value="ProductCatalogs.do?command=CategoryList&amp;productId=${productId}&amp;moduleId=${moduleId}&amp;categoryId=${categoryId}"/>
     </submenu>
-    -->
   </container>
 	 
   <container name="productcatalogimports">
@@ -694,13 +692,6 @@
       <permission value=""/>
       <link value="ProductCatalogs.do?command=ImageList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
     </submenu>
-    <!--
-    <submenu name="categories">
-      <long_html value="Categories"/>
-      <permission value=""/>
-      <link value="ProductCatalogs.do?command=CategoryList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
-    </submenu>
-    -->
   </container>
   <container name="productoptions">
     <properties>
