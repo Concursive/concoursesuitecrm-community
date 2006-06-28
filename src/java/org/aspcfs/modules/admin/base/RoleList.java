@@ -252,7 +252,7 @@ public class RoleList extends ArrayList {
     }
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-        "SELECT * " +
+        "SELECT r.* " +
             "FROM \"role\" r " +
             "WHERE r.role_id > -1 ");
     pst = db.prepareStatement(
