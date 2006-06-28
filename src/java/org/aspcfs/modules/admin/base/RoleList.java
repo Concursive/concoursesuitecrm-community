@@ -49,7 +49,8 @@ public class RoleList extends ArrayList {
   /**
    * Constructor for the RoleList object
    */
-  public RoleList() { }
+  public RoleList() {
+  }
 
 
   /**
@@ -251,8 +252,13 @@ public class RoleList extends ArrayList {
       sqlOrder.append("ORDER BY \"role\" ");
     }
     //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
     sqlSelect.append(
-        "SELECT r.* " +
+        "r.* " +
             "FROM \"role\" r " +
             "WHERE r.role_id > -1 ");
     pst = db.prepareStatement(
