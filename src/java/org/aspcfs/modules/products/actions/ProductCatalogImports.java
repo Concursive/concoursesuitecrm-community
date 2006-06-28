@@ -170,6 +170,7 @@ public class ProductCatalogImports extends CFSModule {
       boolean isValid = false;
       boolean fileRecordInserted = false;
       boolean zipFileRecordInserted = false;
+      boolean zipFileErrors = false;
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       ProductCatalogImport thisImport = (ProductCatalogImport) context.getFormBean();
@@ -200,10 +201,14 @@ public class ProductCatalogImports extends CFSModule {
         thisImport.setName(subject);
         thisImport.setDescription(description);
         thisImport.setComments(comments);
-                
-        if (!((Object) parts.get("id") instanceof FileInfo)) {
+
+        if (!((Object) parts.get("id") instanceof FileInfo) || (((FileInfo)parts.get("id")).getClientFileName().length() > 250)) {
           fileRecordInserted = false;
-          errors.put("fileError", systemStatus.getLabel("object.validation.incorrectFileName"));
+          if(!((Object) parts.get("id") instanceof FileInfo)){
+            errors.put("fileError", systemStatus.getLabel("object.validation.incorrectFileName"));
+          }else{
+          	errors.put("fileError", systemStatus.getLabel("object.validation.longFileName"));
+          }
           processErrors(context, errors);
           isValid = this.validateObject(context, db, thisImport);
           context.getRequest().setAttribute("name", subject);
@@ -239,8 +244,6 @@ public class ProductCatalogImports extends CFSModule {
         isValid = false;
         if (!((Object) parts.get("imageId") instanceof FileInfo)) {
           zipFileRecordInserted = false;
-          warnings.put("imagesWarning", systemStatus.getLabel("object.validation.incorrectImagesFile"));
-          processWarnings(context, warnings);
         } else {
           isValid = this.validateObject(context, db, thisImport);
           if (isValid) {
@@ -268,7 +271,7 @@ public class ProductCatalogImports extends CFSModule {
           }
         }      
         
-        if (productCatalogRecordInserted && fileRecordInserted ) {
+        if (productCatalogRecordInserted && fileRecordInserted) { 
           thisImport = new ProductCatalogImport(db, thisImport.getId());
           try{
             thisImport.buildFileDetails(db);
@@ -277,7 +280,7 @@ public class ProductCatalogImports extends CFSModule {
             thisImport.setId(-1);
             errors.put("fileError", systemStatus.getLabel("object.validation.badFileFormat"));
             processErrors(context, errors);     
-            return executeCommandNew(context);
+            //return executeCommandNew(context);
           }
           if(zipFileRecordInserted){
             try{
@@ -285,9 +288,10 @@ public class ProductCatalogImports extends CFSModule {
             } catch(SQLException e) {
                 thisImport.delete(db);
                 thisImport.setId(-1);
+                zipFileErrors = true;
                 errors.put("imagesError", systemStatus.getLabel("object.validation.badImagesFileFormat"));
                 processErrors(context, errors);     
-                return executeCommandNew(context);
+                //return executeCommandNew(context);
             }
           }          
           thisImport.setSystemStatus(systemStatus);
@@ -303,7 +307,7 @@ public class ProductCatalogImports extends CFSModule {
         freeConnection(context, db);
       }
 
-      if (fileRecordInserted && productCatalogRecordInserted) {
+      if (fileRecordInserted && productCatalogRecordInserted && !zipFileErrors) {
         return getReturn(context, "Save");
       }
       return executeCommandNew(context);

@@ -3718,6 +3718,9 @@
     <param name="products.product_catalog_listimports.failed">
       <value><![CDATA[Failed]]></value>
     </param>
+    <param name="products.long_import_name.text">
+      <value><![CDATA[Import name is too long]]></value>
+    </param>
     <param name="products.product_catalog_listimports.noImportsFound.text">
       <value><![CDATA[No imports found.]]></value>
     </param>
@@ -9467,8 +9470,14 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.incorrectFileName">
       <value><![CDATA[The file could not be sent by your computer, make sure the file exists]]></value>
     </param>
+    <param name="object.validation.longFileName">
+      <value><![CDATA[Filename is too long]]></value>
+    </param>
     <param name="object.validation.incorrectImagesFile">
       <value><![CDATA[The Images file could not be sent by your computer, make sure the file exists]]></value>
+    </param>
+    <param name="object.validation.longImagesFile">
+      <value><![CDATA[Image filename is too long]]></value>
     </param>
     <param name="object.validation.incorrectFileNameSpecified">
       <value><![CDATA[The file could not be sent by your computer, make sure the file exists and is in the requested format]]></value>

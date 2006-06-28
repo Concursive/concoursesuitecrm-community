@@ -32,6 +32,7 @@
   <td class="containerBody">
     <input type="text" name="newImport" value="<%= toString(ImportDetails.getName()) %>" maxlength="250" size="65"><font color="red">*</font>
     <%= showAttribute(request, "nameError") %>
+    <%= showWarning(request, "nameWarning") %>
   </td>
   </tr>
   <tr class="containerBody">
