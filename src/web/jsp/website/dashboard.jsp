@@ -93,9 +93,9 @@
   <tr>
     <td><strong><a href="javascript:alert('This takes the user to the coupon editor');"><dhv:label name="">Setup Coupons</dhv:label></a></strong></td>
   </tr>
+-->
   <tr>
     <td><strong><a href="WebsiteMedia.do?command=View">Setup Media</a></strong></td>
   </tr>
--->
 </table>
 
