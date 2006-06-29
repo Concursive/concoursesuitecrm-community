@@ -16,7 +16,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -26,13 +26,13 @@
 <jsp:useBean id="CatalogShipTimeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProductCatalogs.js"></script> 
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProductCatalogs.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript">
   var categories = '';
   var currentCategoriesIds = '';
-  
+
 <%
   Iterator iter = productCatalog.getCategoryList().iterator();
   while (iter.hasNext()) {
@@ -72,14 +72,14 @@
                     + <%=productCatalog.getCategoryId()%> + '&moduleId=<%= permissionCategory.getId() %>&returnAction=set&selected='+categories;
   popURL(url, 'Products', '400', '375', 'yes', 'yes');
   }
-  
+
   function refreshCategories() {
     var url = 'ProductCatalogs.do?command=ViewCategories&categories='+categories;
     if(document.forms['addCatalog'].categoryList_elements){
     document.forms['addCatalog'].categoryList_elements.value=categories;
     window.frames['server_list'].location.href = url;}
   }
-  
+
 	function doCheck(form) {
 		if (form.dosubmit.value == "false") {
 			return true;

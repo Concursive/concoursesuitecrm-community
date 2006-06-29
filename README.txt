@@ -288,6 +288,7 @@ Smack and Smackx                  Apache Software License
 Team Elements Project Management  Centric Public License
 TinyMCE                           LGPL
 TMExtractors                      Apache style
+WebFX Cross Browser Tree Widget   Apache Software License 2.0
 Xerces                            Apache Software License
 Ximian Icons                      LGPL
 ypSlideOutMenu                    Creative Commons Attribution 2.0 license

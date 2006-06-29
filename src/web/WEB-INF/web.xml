@@ -174,7 +174,6 @@
     <servlet-name>ProductCatalogPortlet</servlet-name>
     <url-pattern>/PlutoInvoker/ProductCatalogPortlet</url-pattern>
   </servlet-mapping>
-
   <!-- Servlet mappings -->
   <servlet-mapping>
         <servlet-name>Controller</servlet-name>

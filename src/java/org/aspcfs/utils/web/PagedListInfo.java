@@ -677,11 +677,21 @@ public class PagedListInfo implements Serializable {
         "ConnectionElement");
     }
     if (ce != null) {
-      this.setSystemStatus(
-        (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
-          "SystemStatus")).get(ce.getUrl()));
+			SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
+      this.setSystemStatus(systemStatus);
     }
-    Locale locale = UserUtils.getUserLocale(context.getRequest());
+		return setSearchCriteria(obj,context.getRequest(),systemStatus);
+	}
+	
+  public boolean setSearchCriteria(Object obj, HttpServletRequest request, SystemStatus systemStatus) {
+    return this.setSearchCriteria(obj,request,systemStatus, UserUtils.getUserLocale(request));
+  }
+    
+  public boolean setSearchCriteria(Object obj, HttpServletRequest request, SystemStatus systemStatus, Locale locale) {
+		if (locale == null) {
+			locale = Locale.getDefault();
+		}
     if (!this.getSavedCriteria().isEmpty()) {
       Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
       while (hashIterator.hasNext()) {
@@ -695,33 +705,53 @@ public class PagedListInfo implements Serializable {
                 tempKey));
           }
           if (tempKey.startsWith("searchcode")) {
-            ObjectUtils.setParam(
-              obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
+            ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
           } else if (tempKey.startsWith("searchdate")) {
-            Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(
-              null, DateFormat.SHORT, DateFormat.LONG, this.getCriteriaValue(
-              tempKey), locale);
+            Timestamp tmpTimestamp = 
+                DateUtils.getUserToServerDateTime(null, 
+                                                  DateFormat.SHORT, 
+                                                  DateFormat.LONG, 
+                                                  this.getCriteriaValue(tempKey), 
+                                                  locale);
             if (tmpTimestamp != null) {
               boolean modified = false;
               java.sql.Date tmpDate = new java.sql.Date(
                 tmpTimestamp.getTime());
-              modified = ObjectUtils.setParam(
-                obj, tempKey.substring(10), tmpDate);
-              if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(
-                this.getCriteriaValue(tempKey))) {
+              modified = ObjectUtils.setParam( obj, tempKey.substring(10), tmpDate);
+              if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey))) {
                 isValid = false;
-                addError(obj, "getErrors", tempKey, context);
+                addError(obj, "getErrors", tempKey, systemStatus);
               }
             }
             if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(
               this.getCriteriaValue(tempKey))) {
               isValid = false;
-              addError(obj, "getErrors", tempKey, context);
+              addError(obj, "getErrors", tempKey, systemStatus);
             }
+          } else if(tempKey.startsWith("searchtimestamp")) {
+            Timestamp tmpTimestamp = 
+              DateUtils.getUserToServerDateTime(null, 
+                                                DateFormat.SHORT, 
+                                                DateFormat.LONG, 
+                                                this.getCriteriaValue(tempKey), 
+                                                locale);
+          if (tmpTimestamp != null) {
+            boolean modified = false;
+            modified = ObjectUtils.setParam( obj, tempKey.substring(15), tmpTimestamp);
+            if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey))) {
+              isValid = false;
+              addError(obj, "getErrors", tempKey, systemStatus);
+            }
+          }
+          if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(
+            this.getCriteriaValue(tempKey))) {
+            isValid = false;
+            addError(obj, "getErrors", tempKey, systemStatus);
+          }  
           } else {
-            ObjectUtils.setParam(
-              obj, tempKey.substring(6), "%" + this.getCriteriaValue(
-              tempKey) + "%");
+            ObjectUtils.setParam(obj, 
+                                 tempKey.substring(6), 
+                                 "%" + this.getCriteriaValue(tempKey) + "%");
           }
         }
       }
@@ -736,17 +766,10 @@ public class PagedListInfo implements Serializable {
    * @param obj     The feature to be added to the Error attribute
    * @param param   The feature to be added to the Error attribute
    * @param field   The feature to be added to the Error attribute
-   * @param context The feature to be added to the Error attribute
+   * @param systemStatus The feature to be added to the Error attribute
    */
-  private static void addError(Object obj, String param, String field, ActionContext context) {
+  private static void addError(Object obj, String param, String field, SystemStatus systemStatus) {
     try {
-      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
-        "ConnectionElement");
-      SystemStatus systemStatus = null;
-      if (ce != null) {
-        systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
-          "SystemStatus")).get(ce.getUrl());
-      }
       Method method = obj.getClass().getMethod(
         param, (java.lang.Class[]) null);
       if (systemStatus == null) {

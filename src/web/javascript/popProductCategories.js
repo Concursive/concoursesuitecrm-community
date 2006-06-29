@@ -22,6 +22,24 @@ function popProductCategoriesListSingle(hiddenFieldId, displayFieldId, params) {
   }
 }
 
+function popIceProductMultiCategoriesList(popupUrl,categoryIds) {
+  title = 'ProductCategories';
+	width = '500';
+	height = '425';
+	resize = 'yes';
+	bars = 'yes';
+	var posx = (screen.width - width)/2;
+	var posy = (screen.width - width)/2;
+	var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+
+  var newwin=window.open(popupUrl+"&selected="+categoryIds, title, windowParams);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
 function popProductCategoriesListSingleExclude(excludeIds, hiddenFieldId, displayFieldId, params) {
 	title = 'ProductCategories';
 	width = '700';

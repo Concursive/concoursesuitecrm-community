@@ -1005,6 +1005,12 @@
     <forward name="PortalOK" resource="/website/website_details.jsp" layout="portal" />
     <forward name="WebsiteFoundOK" resource="/Portal.do?command=Default"/>
     <forward name="WebsiteNotFoundOK" resource="/Login.do?command=Default"/>
+    <forward name="MoveOK" resource="/portlets/products/product_category_multi_selector.jsp"
+             layout="style"/>    
+    <forward name="MoveChunkOK" resource="/portlets/products/product_category_multiselect_chunk.jsp"
+             layout="style"/>
+    <forward name="MultiselectCloseOK" resource="/portlets/products/product_category_multi_selector.jsp"
+             layout="style"/>    
   </action>
 
   <!-- MyCFS Module -->

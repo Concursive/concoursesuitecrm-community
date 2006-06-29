@@ -12,7 +12,7 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
  --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv"%>
 <%@ page import="org.aspcfs.modules.products.base.*"%>

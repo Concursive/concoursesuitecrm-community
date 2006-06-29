@@ -1,7 +1,7 @@
 package org.aspcfs.modules.website.framework;
 
+import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.login.beans.UserBean;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
 import org.apache.pluto.driver.core.PortalEnvironment;
@@ -10,22 +10,26 @@ import org.apache.pluto.driver.core.PortalServletResponse;
 import org.apache.pluto.driver.core.PortletWindowImpl;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
 import org.apache.pluto.driver.url.PortalURL;
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.website.base.*;
+import org.quartz.Scheduler;
 
 import javax.portlet.PortletException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.sql.Connection;
-import java.util.Iterator;
 import java.util.HashMap;
-import org.quartz.Scheduler;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
- *  Server side preparation for portlets
+ * Server side preparation for portlets
  *
- * @author     mrajkowski
- * @created    Feb 27, 2006
- * @version    $Id: Exp $
+ * @author mrajkowski
+ * @version $Id: Exp $
+ * @created Feb 27, 2006
  */
 
 public class IceletManager {
@@ -35,15 +39,16 @@ public class IceletManager {
 
 
   /**
-   *  Constructor for the IceletManager object
+   * Constructor for the IceletManager object
    */
-  public IceletManager() { }
+  public IceletManager() {
+  }
 
 
   /**
-   *  Constructor for the IceletManager object
+   * Constructor for the IceletManager object
    *
-   * @param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public IceletManager(ServletContext context) {
     if (System.getProperty("DEBUG") != null) {
@@ -60,10 +65,10 @@ public class IceletManager {
 
 
   /**
-   *  Gets the manager attribute of the IceletManager class
+   * Gets the manager attribute of the IceletManager class
    *
-   * @param  actionContext  Description of the Parameter
-   * @return                The manager value
+   * @param actionContext Description of the Parameter
+   * @return The manager value
    */
   public static synchronized IceletManager getManager(ActionContext actionContext) {
     ServletContext context = actionContext.getServletContext();
@@ -78,9 +83,9 @@ public class IceletManager {
 
 
   /**
-   *  Gets the configured attribute of the IceletManager object
+   * Gets the configured attribute of the IceletManager object
    *
-   * @return    The configured value
+   * @return The configured value
    */
   public boolean isConfigured() {
     return container != null;
@@ -88,9 +93,9 @@ public class IceletManager {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public static void destroy(ServletContext context) {
     IceletManager manager = (IceletManager) context.getAttribute("iceletManager");
@@ -102,15 +107,15 @@ public class IceletManager {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context        Description of the Parameter
-   * @param  site           Description of the Parameter
-   * @param  tabId          Description of the Parameter
-   * @param  pageId         Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @param site    Description of the Parameter
+   * @param tabId   Description of the Parameter
+   * @param pageId  Description of the Parameter
+   * @param db      Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean prepare(ActionContext context, Site site, int tabId, int pageId, Connection db) throws Exception {
     if (System.getProperty("DEBUG") != null) {
@@ -166,14 +171,14 @@ public class IceletManager {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  rowColumn      Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param rowColumn Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public boolean buildIceletDetails(ActionContext context, Connection db, RowColumn rowColumn, 
-                                PortalURL portalURL, PortalEnvironment portalEnvironment,String actionWindowId) throws Exception {
+  public boolean buildIceletDetails(ActionContext context, Connection db, RowColumn rowColumn,
+                                    PortalURL portalURL, PortalEnvironment portalEnvironment, String actionWindowId) throws Exception {
     Icelet thisIcelet = rowColumn.getIcelet();
     // Get the portlet
     PortletWindowConfig windowConfig = registryService.getPortlet(rowColumn.getId() + "." + thisIcelet.getConfiguratorClass());
@@ -185,13 +190,23 @@ public class IceletManager {
       // Pass the request to the specified doAction
       if (actionWindowId.equals(portletWindow.getId().getStringId())) {
         try {
-					Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
+          ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+              "applicationPrefs");
+          context.getRequest().setAttribute("applicationPrefs", prefs);
+          ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+              "ConnectionElement");
+          context.getRequest().setAttribute("connectionElement", ce);
+          SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
+              "SystemStatus")).get(ce.getUrl());
+          context.getRequest().setAttribute("systemStatus", systemStatus);
+          context.getRequest().setAttribute("connection", db);
+
+          Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
           context.getRequest().setAttribute("scheduler", scheduler);
 
-					UserBean userBean = (UserBean)context.getRequest().getSession().getAttribute("User");
+          UserBean userBean = (UserBean) context.getRequest().getSession().getAttribute("User");
           context.getRequest().setAttribute("userBean", userBean);
-					
-          context.getRequest().setAttribute("connection", db);
+
           container.doAction(portletWindow, context.getRequest(), context.getResponse());
         } catch (PortletContainerException ex) {
           throw new ServletException(ex);
@@ -208,13 +223,23 @@ public class IceletManager {
       try {
         PortalServletRequest portalRequest = new PortalServletRequest(
             context.getRequest(), portletWindow);
-				Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
-				portalRequest.setAttribute("scheduler", scheduler);
-
-				UserBean userBean = (UserBean)context.getRequest().getSession().getAttribute("User");
-				portalRequest.setAttribute("userBean", userBean);
-
+        ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+            "ConnectionElement");
+        portalRequest.setAttribute("connectionElement", ce);
+        SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
+            "SystemStatus")).get(ce.getUrl());
+        portalRequest.setAttribute("systemStatus", systemStatus);
+        ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+            "applicationPrefs");
+        portalRequest.setAttribute("applicationPrefs", prefs);
         portalRequest.setAttribute("connection", db);
+
+        Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
+        portalRequest.setAttribute("scheduler", scheduler);
+
+        UserBean userBean = (UserBean) context.getRequest().getSession().getAttribute("User");
+        portalRequest.setAttribute("userBean", userBean);
+
         PortalServletResponse portalResponse = new PortalServletResponse(
             context.getResponse());
         container.doRender(portletWindow, portalRequest, portalResponse);
@@ -231,9 +256,9 @@ public class IceletManager {
 
 
   /**
-   *  Gets the container attribute of the IceletManager object
+   * Gets the container attribute of the IceletManager object
    *
-   * @return    The container value
+   * @return The container value
    */
   public PortletContainer getContainer() {
     return container;
@@ -241,9 +266,9 @@ public class IceletManager {
 
 
   /**
-   *  Gets the registryService attribute of the IceletManager object
+   * Gets the registryService attribute of the IceletManager object
    *
-   * @return    The registryService value
+   * @return The registryService value
    */
   public IceletRegistryService getRegistryService() {
     return registryService;

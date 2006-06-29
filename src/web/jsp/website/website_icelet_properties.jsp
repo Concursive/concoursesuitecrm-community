@@ -191,7 +191,7 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= property.getAdditionalText() != null && !"".equals(property.getAdditionalText().trim()) %>">
         <br /><%= toHtml(property.getAdditionalText()) %>
-      </dhv:evaluate>
+      </dhv:evaluate>      
     </td>
   </tr>
 <%  previousLabel = property.getLabel();

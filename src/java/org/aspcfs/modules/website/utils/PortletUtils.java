@@ -17,8 +17,8 @@ package org.aspcfs.modules.website.utils;
 
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.website.base.WebProductAccessLog;
-
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.SystemStatus;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +71,34 @@ public class PortletUtils {
       System.out.println("PortletUtils-> Scheduler failed: " + e.getMessage());
     }
     return true;
+  }
+
+
+  /**
+   * Gets the systemStatus attribute of the PortletUtils class
+   *
+   * @param request Description of the Parameter
+   * @return The systemStatus value
+   */
+  public static SystemStatus getSystemStatus(PortletRequest request) {
+    return (SystemStatus) request.getAttribute("systemStatus");
+  }
+
+
+  /**
+   * Gets the application prefs for the specified string
+   *
+   * @param request Description of the Parameter
+   * @param param Description of the Parameter
+   * @return The string value
+   */
+  public static String getApplicationPrefs(PortletRequest request, String param) {
+    ApplicationPrefs prefs = (ApplicationPrefs) request.getAttribute("applicationPrefs");
+    if (prefs != null) {
+      return prefs.get(param);
+    } else {
+      return null;
+    }
   }
 
 

@@ -66,6 +66,7 @@
   String origYear = request.getParameter("origYear");
   String origMonth = request.getParameter("origMonth");
   String dateString = request.getParameter("date");
+  String timeZone = request.getParameter("timeZone");
 
   //If the user clicks the next/previous arrow, increment/decrement the month
   //Range checking is not necessary on the month.  The calendar object automatically
@@ -84,7 +85,9 @@
   // Create the calendar with the selected locale
   Locale locale = new Locale(language, country);
   CalendarView calendarView = new CalendarView(locale);
-  calendarView.setSystemStatus(User.getSystemStatus(getServletConfig()));
+  if (User.getUserId() != -1 && User != null) {
+ 		calendarView.setSystemStatus(User.getSystemStatus(getServletConfig()));
+	}
 
   //Check to see if this should be a popup window
   String action = request.getParameter("action");
@@ -118,8 +121,10 @@
 
   //set the timezone if the user is logged in
   org.aspcfs.modules.login.beans.UserBean thisUser = (org.aspcfs.modules.login.beans.UserBean) request.getSession().getAttribute("User");
-  if (thisUser != null) {
+  if (thisUser.getUserId() != -1 && thisUser != null) {
     calendarView.setTimeZone(TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone()));
+  }else {
+    calendarView.setTimeZone(TimeZone.getTimeZone(timeZone));
   }
   
   //Configure the month to highlight a date that was passed in
@@ -148,6 +153,7 @@
 <input type="hidden" name="element" value="<%= element %>">
 <input type="hidden" name="language" value="<%= language %>">
 <input type="hidden" name="country" value="<%= country %>">
+<input type="hidden" name="timeZone" value="<%=timeZone%>">
 <%= calendarView.getHtml() %>
 </form>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

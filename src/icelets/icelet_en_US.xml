@@ -90,5 +90,17 @@
               type="text"
               defaultValue="Instant Savings:"
               additionalText=""/>
+    <property constant="6060610"
+              label="Include Search"
+              description="Allows search feature to be included"
+              type="checkbox"
+              defaultValue="false"
+              additionalText=""/>
+    <property constant="6060611"
+              label="Include Search as default page"
+              description="The search page appears as the default page"
+              type="checkbox"
+              defaultValue="false"
+              additionalText=""/>
   </icelet>
 </icelets>

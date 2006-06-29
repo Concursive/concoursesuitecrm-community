@@ -15,24 +15,18 @@
  */
 package org.aspcfs.modules.products.base;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.utils.DatabaseUtils;
 
-import com.darkhorseventures.framework.beans.GenericBean;
-import com.zeroio.iteam.base.FileItem;
-import com.zeroio.iteam.base.FileItemList;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This is a generic Product Category that contains Product Catalogs.
@@ -76,83 +70,85 @@ public class ProductCategory extends GenericBean {
   private boolean buildActivePrice = false;
   private int statusId = -1;
   private int importId = -1;
-  private ProductCategoryList fullPath=null;
-  private int childCount=-1;
-  
+  private ProductCategoryList fullPath = null;
+  private int childCount = -1;
+
   // hierarchy builder helper
   private int level = -1;
 
   /**
- * Gets the buildChildCount attribute of the ProductCategory object
- *
- * @return buildChildCount The buildChildCount value
- */
-public boolean getBuildChildCount() {
-	return this.buildChildCount;
-}
+   * Gets the buildChildCount attribute of the ProductCategory object
+   *
+   * @return buildChildCount The buildChildCount value
+   */
+  public boolean getBuildChildCount() {
+    return this.buildChildCount;
+  }
 
-/**
- * Sets the buildChildCount attribute of the ProductCategory object
- *
- * @param buildChildCount The new buildChildCount value
- */
-public void setBuildChildCount(boolean buildChildCount) {
-	this.buildChildCount = buildChildCount;
-}
-/**
- * Sets the buildChildCount attribute of the ProductCategory object
- *
- * @param buildChildCount The new buildChildCount value
- */
-public void setBuildChildCount(String buildChildCount) {
-	this.buildChildCount = Boolean.parseBoolean(buildChildCount);
-}
+  /**
+   * Sets the buildChildCount attribute of the ProductCategory object
+   *
+   * @param buildChildCount The new buildChildCount value
+   */
+  public void setBuildChildCount(boolean buildChildCount) {
+    this.buildChildCount = buildChildCount;
+  }
 
-/**
- * Gets the childCount attribute of the ProductCategory object
- *
- * @return childCount The childCount value
- */
-public int getChildCount() {
-	return this.childCount;
-}
+  /**
+   * Sets the buildChildCount attribute of the ProductCategory object
+   *
+   * @param buildChildCount The new buildChildCount value
+   */
+  public void setBuildChildCount(String buildChildCount) {
+    this.buildChildCount = Boolean.parseBoolean(buildChildCount);
+  }
 
-/**
- * Sets the childCount attribute of the ProductCategory object
- *
- * @param childCount The new childCount value
- */
-public void setChildCount(int childCount) {
-	this.childCount = childCount;
-}
+  /**
+   * Gets the childCount attribute of the ProductCategory object
+   *
+   * @return childCount The childCount value
+   */
+  public int getChildCount() {
+    return this.childCount;
+  }
 
-/**
- * Sets the childCount attribute of the ProductCategory object
- *
- * @param childCount The new childCount value
- */
-public void setChildCount(String childCount) {
-	this.childCount = Integer.parseInt(childCount);
-}
-/**
- * Gets the fullPath attribute of the ProductCategory object
- *
- * @return fullPath The fullPath value
- */
-public ProductCategoryList getFullPath() {
-	return fullPath;
-}
+  /**
+   * Sets the childCount attribute of the ProductCategory object
+   *
+   * @param childCount The new childCount value
+   */
+  public void setChildCount(int childCount) {
+    this.childCount = childCount;
+  }
 
-/**
- * Sets the fullPath attribute of the ProductCategory object
- *
- * @param fullPath The new fullPath value
- */
-public void setFullPath(ProductCategoryList fullPath) {
-	this.fullPath = fullPath;
-}
+  /**
+   * Sets the childCount attribute of the ProductCategory object
+   *
+   * @param childCount The new childCount value
+   */
+  public void setChildCount(String childCount) {
+    this.childCount = Integer.parseInt(childCount);
+  }
 
-/**
+  /**
+   * Gets the fullPath attribute of the ProductCategory object
+   *
+   * @return fullPath The fullPath value
+   */
+  public ProductCategoryList getFullPath() {
+    return fullPath;
+  }
+
+  /**
+   * Sets the fullPath attribute of the ProductCategory object
+   *
+   * @param fullPath The new fullPath value
+   */
+  public void setFullPath(ProductCategoryList fullPath) {
+    this.fullPath = fullPath;
+  }
+
+  /**
    * Gets the importId attribute of the ProductCategory object
    *
    * @return importId The importId value
@@ -1001,11 +997,11 @@ public void setFullPath(ProductCategoryList fullPath) {
       throw new SQLException("Product Category not found");
     }
     if (buildChildList) {
-        this.buildChildList(db);
-      }
-    if (buildChildCount ) {
-        this.buildChildCount(db);
-      }
+      this.buildChildList(db);
+    }
+    if (buildChildCount) {
+      this.buildChildCount(db);
+    }
     if (buildProductList) {
       this.buildProductList(db);
     }
@@ -1028,7 +1024,7 @@ public void setFullPath(ProductCategoryList fullPath) {
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      this.childCount=DatabaseUtils.getInt(rs, "child_count");
+      this.childCount = DatabaseUtils.getInt(rs, "child_count");
     }
     rs.close();
     pst.close();
@@ -1904,34 +1900,34 @@ public void setFullPath(ProductCategoryList fullPath) {
     }
     return count;
   }
-  public static ProductCategoryList buildFullName(Connection db, ProductCategoryList fullName, int currentId, boolean includeCurrent)
-			throws SQLException {
 
-		PreparedStatement pst = db
-				.prepareStatement(
-            "SELECT parent_id, category_name, category_id " +
-						"FROM product_category " +
-            "WHERE category_id = ? ");
-		pst.setInt(1, currentId);
-		ResultSet rs = pst.executeQuery();
-		int parentId = 0;
-		String name = null;
-		if (rs.next()) {
-			parentId = DatabaseUtils.getInt(rs, "parent_id");
-			name = rs.getString("category_name");
-		}
-		rs.close();
-		pst.close();
-		ProductCategory pc = new ProductCategory();
-		pc.setId(currentId);
-		pc.setName(name);
-	
-		if (parentId > -1) {
-			 fullName=ProductCategory.buildFullName(db, fullName, parentId, true);
-		}
-		if(includeCurrent)
-		{fullName.add(pc);}
-		return fullName;
-	}
+  public static ProductCategoryList buildFullName(Connection db, ProductCategoryList fullName, int currentId, boolean includeCurrent)
+      throws SQLException {
+
+    PreparedStatement pst = db
+        .prepareStatement("SELECT parent_id, category_name, category_id "
+            + "FROM product_category " + "WHERE category_id = ? ");
+    pst.setInt(1, currentId);
+    ResultSet rs = pst.executeQuery();
+    int parentId = 0;
+    String name = null;
+    if (rs.next()) {
+      parentId = DatabaseUtils.getInt(rs, "parent_id");
+      name = rs.getString("category_name");
+    }
+    rs.close();
+    pst.close();
+    ProductCategory pc = new ProductCategory();
+    pc.setId(currentId);
+    pc.setName(name);
+
+    if (parentId > -1) {
+      fullName = ProductCategory.buildFullName(db, fullName, parentId, true);
+    }
+    if (includeCurrent) {
+      fullName.add(pc);
+    }
+    return fullName;
+  }
 }
 

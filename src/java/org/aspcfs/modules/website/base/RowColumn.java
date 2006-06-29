@@ -1020,7 +1020,7 @@ public class RowColumn extends GenericBean {
     pst = db.prepareStatement(
         " select count(*) AS numberOfRecords" +
         " from web_site s, web_tab t, web_page_group pg, web_page p, " +
-        " page_version pv, page_row pr, row_column rc " +
+        " web_page_version pv, web_page_row pr, web_row_column rc " +
         " where rc.row_column_id = ? " +
         " and rc.enabled = ? " +
         " and pr.page_row_id = rc.page_row_id " +

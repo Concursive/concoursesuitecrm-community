@@ -71,13 +71,19 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private int importId = -1;
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
+  // search options 
+  private double priceRangeMin = -1;
+  private double priceRangeMax = -1;
+  private ProductCategoryList productCategoryList = new ProductCategoryList();
+  private Timestamp startDate = null;
+  private Timestamp endDate = null;
 
   private boolean excludeUnapprovedProducts = true;
-  
+
   //resources
   private boolean buildResources = false;
   private boolean buildActivePrice = false;
-  
+
   private String optionText = null;
   // this will have a valid value if all the products have the same option
   private String optionPrice = null;
@@ -96,36 +102,94 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   protected int buildActiveProductsOnly = Constants.UNDEFINED;
 
   /**
- * Gets the excludeUnapprovedProducts attribute of the ProductCatalogList object
- *
- * @return excludeUnapprovedProducts The excludeUnapprovedProducts value
- */
-public boolean isExcludeUnapprovedProducts() {
-	return excludeUnapprovedProducts;
-}
+   * Gets the excludeUnapprovedProducts attribute of the ProductCatalogList object
+   *
+   * @return excludeUnapprovedProducts The excludeUnapprovedProducts value
+   */
+  public boolean isExcludeUnapprovedProducts() {
+    return excludeUnapprovedProducts;
+  }
 
 
-/**
- * Sets the excludeUnapprovedProducts attribute of the ProductCatalogList object
- *
- * @param excludeUnapprovedProducts The new excludeUnapprovedProducts value
- */
-public void setExcludeUnapprovedProducts(boolean excludeUnapprovedProducts) {
-	this.excludeUnapprovedProducts = excludeUnapprovedProducts;
-}
+  /**
+   * Sets the excludeUnapprovedProducts attribute of the ProductCatalogList object
+   *
+   * @param excludeUnapprovedProducts The new excludeUnapprovedProducts value
+   */
+  public void setExcludeUnapprovedProducts(boolean excludeUnapprovedProducts) {
+    this.excludeUnapprovedProducts = excludeUnapprovedProducts;
+  }
 
 
-/**
- * Sets the excludeUnapprovedProducts attribute of the ProductCatalogList object
- *
- * @param excludeUnapprovedProducts The new excludeUnapprovedProducts value
- */
-public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
-	this.excludeUnapprovedProducts = DatabaseUtils.parseBoolean(excludeUnapprovedProducts);
-}
+  /**
+   * Sets the excludeUnapprovedProducts attribute of the ProductCatalogList object
+   *
+   * @param excludeUnapprovedProducts The new excludeUnapprovedProducts value
+   */
+  public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
+    this.excludeUnapprovedProducts = DatabaseUtils.parseBoolean(excludeUnapprovedProducts);
+  }
 
 
-/**
+  /**
+   * Gets the priceRangeMax attribute of the ProductCatalogList object
+   *
+   * @return The priceRangeMax value
+   */
+  public double getPriceRangeMax() {
+    return priceRangeMax;
+  }
+
+
+  /**
+   * Sets the priceRangeMax attribute of the ProductCatalogList object
+   *
+   * @param priceRangeMax The new priceRangeMax value
+   */
+  public void setPriceRangeMax(double priceRangeMax) {
+    this.priceRangeMax = priceRangeMax;
+  }
+
+  /**
+   * Sets the priceRangeMax attribute of the ProductCatalogList object
+   *
+   * @param priceRangeMax The new priceRangeMax value
+   */
+  public void setPriceRangeMax(String priceRangeMax) {
+    this.priceRangeMax = Double.parseDouble(priceRangeMax);
+  }
+
+
+  /**
+   * Gets the priceRangeMin attribute of the ProductCatalogList object
+   *
+   * @return The priceRangeMin value
+   */
+  public double getPriceRangeMin() {
+    return priceRangeMin;
+  }
+
+
+  /**
+   * Sets the priceRangeMin attribute of the ProductCatalogList object
+   *
+   * @param priceRangeMin The new priceRangeMin value
+   */
+  public void setPriceRangeMin(double priceRangeMin) {
+    this.priceRangeMin = priceRangeMin;
+  }
+
+  /**
+   * Sets the priceRangeMin attribute of the ProductCatalogList object
+   *
+   * @param priceRangeMin The new priceRangeMin value
+   */
+  public void setPriceRangeMin(String priceRangeMin) {
+    this.priceRangeMin = Double.parseDouble(priceRangeMin);
+  }
+
+
+  /**
    * Gets the importId attribute of the ProductCatalogList object
    *
    * @return importId The importId value
@@ -1083,13 +1147,13 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_catalog pctlg " +
-        "LEFT JOIN product_catalog pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        "LEFT JOIN lookup_product_type pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
-        "LEFT JOIN lookup_product_format pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
-        "LEFT JOIN lookup_product_shipping pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
-        "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
-        "WHERE pctlg.product_id > 0 ");
+            "FROM product_catalog pctlg " +
+            "LEFT JOIN product_catalog pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+            "LEFT JOIN lookup_product_type pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+            "LEFT JOIN lookup_product_format pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+            "LEFT JOIN lookup_product_shipping pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+            "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+            "WHERE pctlg.product_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -1109,8 +1173,8 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -1136,18 +1200,18 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
     }
     sqlSelect.append(
         "pctlg.*, " +
-        "pctlg2.product_name AS parent_name, " +
-        "pctlgtype.description AS type_name, " +
-        "pctlgformat.description AS format_name, " +
-        "pctlgshipping.description AS shipping_name, " +
-        "pctlgshiptime.description AS shiptime_name " +
-        "FROM product_catalog pctlg " +
-        "LEFT JOIN product_catalog pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        "LEFT JOIN lookup_product_type pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
-        "LEFT JOIN lookup_product_format pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
-        "LEFT JOIN lookup_product_shipping pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
-        "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
-        "WHERE pctlg.product_id > 0 ");
+            "pctlg2.product_name AS parent_name, " +
+            "pctlgtype.description AS type_name, " +
+            "pctlgformat.description AS format_name, " +
+            "pctlgshipping.description AS shipping_name, " +
+            "pctlgshiptime.description AS shiptime_name " +
+            "FROM product_catalog pctlg " +
+            "LEFT JOIN product_catalog pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+            "LEFT JOIN lookup_product_type pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+            "LEFT JOIN lookup_product_format pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+            "LEFT JOIN lookup_product_shipping pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+            "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+            "WHERE pctlg.product_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -1301,12 +1365,12 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
       sqlFilter.append(" AND pctlg.type_id = ? ");
     }
     if (importId > -1) {
-        sqlFilter.append(" AND pctlg.import_id = ? ");
-      }
+      sqlFilter.append(" AND pctlg.import_id = ? ");
+    }
 
     if (excludeUnapprovedProducts) {
-    	sqlFilter.append("AND (pctlg.status_id IS NULL OR pctlg.status_id = ?) ");
-      }
+      sqlFilter.append("AND (pctlg.status_id IS NULL OR pctlg.status_id = ?) ");
+    }
 
     if (name != null) {
       if (name.indexOf("%") >= 0) {
@@ -1347,25 +1411,40 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
     if (categoryId > -1) {
       sqlFilter.append(
           "AND pctlg.product_id IN ( " +
-          "  SELECT product_id FROM product_catalog_category_map " +
-          "  WHERE category_id = ? )");
+              "  SELECT product_id FROM product_catalog_category_map " +
+              "  WHERE category_id = ? )");
     }
 
     if (serviceContractId > -1) {
       sqlFilter.append(
           "AND pctlg.product_id IN ( " +
-          "SELECT link_product_id FROM service_contract_products " +
-          "WHERE link_contract_id = ? )");
+              "SELECT link_product_id FROM service_contract_products " +
+              "WHERE link_contract_id = ? )");
+    }
+
+    if (!productCategoryList.isEmpty()) {
+      Iterator i = productCategoryList.iterator();
+      sqlFilter.append(
+          " AND pctlg.product_id IN ( " +
+              " SELECT product_id FROM product_catalog_category_map WHERE category_id in (");
+      String categoryIds = "";
+      while (i.hasNext()) {
+        ProductCategory productCategory = (ProductCategory) i.next();
+        categoryIds = categoryIds + (productCategory.getId() + ",");
+      }
+      categoryIds = categoryIds.substring(0, categoryIds.length() - 1);
+      sqlFilter.append(categoryIds +
+          " )) ");
     }
 
     if (hasCategories == Constants.TRUE) {
       sqlFilter.append(
           " AND pctlg.product_id IN ( " +
-          " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 ) ");
+              " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 ) ");
     } else if (hasCategories == Constants.FALSE) {
       sqlFilter.append(
           " AND pctlg.product_id NOT IN ( " +
-          " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 )");
+              " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 )");
     }
 
     if (buildTopLevelOnly == Constants.TRUE) {
@@ -1374,29 +1453,52 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
       sqlFilter.append("AND pctlg.parent_id IS NOT NULL ");
     }
 
+    //  Search options
+    if (priceRangeMin > -1 || priceRangeMax > -1) {
+      sqlFilter.append(" AND pctlg.product_id IN ( SELECT product_id FROM product_catalog_pricing WHERE ");
+
+      if (priceRangeMin > -1) {
+        sqlFilter.append(" price_amount >= ?");
+      }
+      if (priceRangeMax > -1) {
+        sqlFilter.append(((priceRangeMin > -1) ? " AND " : "") + " price_amount <= ?");
+      }
+      //TODO: determine if the enabled flag needs to be set
+      //sqlFilter.append(" AND price.enabled = ? ");
+      sqlFilter.append(") ");
+    }
+
+    if (startDate != null) {
+      sqlFilter.append(" AND pctlg.start_date >= ? ");
+    }
+
+    if (endDate != null) {
+      sqlFilter.append(" AND pctlg.start_date <= ? ");
+    }
+
     if (buildActiveProductsOnly != Constants.UNDEFINED) {
       sqlFilter.append(
           "AND pctlg.product_id IN ( SELECT p.product_id " +
-          " FROM product_catalog p LEFT JOIN product_catalog_pricing price ON " +
-          " ( p.product_id = price.product_id ) " +
-          " WHERE p.product_id > 0 ");
+              " FROM product_catalog p LEFT JOIN product_catalog_pricing price ON " +
+              " ( p.product_id = price.product_id ) " +
+              " WHERE p.product_id > 0 ");
       if (buildActiveProductsOnly == Constants.TRUE) {
         sqlFilter.append(
             " AND p.\"active\" = ? " +
-            " AND price.enabled = ? " +
-            " AND (p.start_date < ? OR p.start_date IS NULL) " +
-            " AND (p.expiration_date IS NULL OR p.expiration_date > ?) " +
-            " AND (price.start_date < ? OR price.start_date IS NULL) " +
-            " AND (price.expiration_date IS NULL OR price.expiration_date > ?) " +
-            " ) ");
+                " AND price.enabled = ? " +
+                " AND (p.start_date < ? OR p.start_date IS NULL) " +
+                " AND (p.expiration_date IS NULL OR p.expiration_date > ?) " +
+                " AND (price.start_date < ? OR price.start_date IS NULL) " +
+                " AND (price.expiration_date IS NULL OR price.expiration_date > ?) " +
+                " ) ");
       } else if (buildActiveProductsOnly == Constants.FALSE) {
         sqlFilter.append(
             " AND (p.\"active\" = ? " +
-            " OR price.enabled = ? " +
-            " OR p.start_date > ? OR p.expiration_date < ? " +
-            " OR price.start_date > ? OR price.expiration_date < ?) " +
-            " ) OR pctlg.product_id NOT IN (SELECT pp.product_id " +
-            " FROM product_catalog_pricing pp WHERE pp.product_id > 0 ))");
+                " OR price.enabled = ? " +
+                " OR p.start_date > ? OR p.expiration_date < ? " +
+                " OR price.start_date > ? OR price.expiration_date < ?) " +
+                " ) OR pctlg.product_id NOT IN (SELECT pp.product_id " +
+                " FROM product_catalog_pricing pp WHERE pp.product_id > 0 ))");
       }
     }
     //Sync API
@@ -1469,13 +1571,13 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
     if (typeId > -1) {
       pst.setInt(++i, typeId);
     }
-    
+
     if (importId > -1) {
-			pst.setInt(++i, importId);
-		}
+      pst.setInt(++i, importId);
+    }
     if (excludeUnapprovedProducts) {
-        pst.setInt(++i, Import.PROCESSED_APPROVED);
-      }
+      pst.setInt(++i, Import.PROCESSED_APPROVED);
+    }
     if (name != null) {
       pst.setString(++i, name.toLowerCase());
     }
@@ -1502,6 +1604,26 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
 
     if (serviceContractId > -1) {
       pst.setInt(++i, serviceContractId);
+    }
+
+    //Search Parameters
+    if (priceRangeMin > -1 || priceRangeMax > -1) {
+      if (priceRangeMin > -1) {
+        pst.setDouble(++i, priceRangeMin);
+      }
+      if (priceRangeMax > -1) {
+        pst.setDouble(++i, priceRangeMax);
+      }
+      //TODO: determine if the enabled flag needs to be set
+      //pst.setBoolean(++i,true);
+    }
+
+    if (startDate != null) {
+      pst.setTimestamp(++i, startDate);
+    }
+
+    if (endDate != null) {
+      pst.setTimestamp(++i, endDate);
     }
 
     if (buildActiveProductsOnly == Constants.TRUE) {
@@ -1695,6 +1817,84 @@ public void setExcludeUnapprovedProducts(String excludeUnapprovedProducts) {
       db.setAutoCommit(true);
     }
   }
+
+
+  /**
+   * Gets the productCategoryList attribute of the ProductCatalogList object
+   *
+   * @return The productCategoryList value
+   */
+  public ProductCategoryList getProductCategoryList() {
+    return productCategoryList;
+  }
+
+
+  /**
+   * Sets the productCategoryList attribute of the ProductCatalogList object
+   *
+   * @param productCategoryList The new productCategoryList value
+   */
+  public void setProductCategoryList(ProductCategoryList productCategoryList) {
+    this.productCategoryList = productCategoryList;
+  }
+
+
+  /**
+   * Gets the endDate attribute of the ProductCatalogList object
+   *
+   * @return The endDate value
+   */
+  public Timestamp getEndDate() {
+    return endDate;
+  }
+
+
+  /**
+   * Sets the endDate attribute of the ProductCatalogList object
+   *
+   * @param endDate The new endDate value
+   */
+  public void setEndDate(Timestamp endDate) {
+    this.endDate = endDate;
+  }
+
+  /**
+   * Sets the endDate attribute of the ProductCategory object
+   *
+   * @param tmp The new startDate value
+   */
+  public void setEndDate(String tmp) {
+    this.endDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the startDate attribute of the ProductCatalogList object
+   *
+   * @return The startDate value
+   */
+  public Timestamp getStartDate() {
+    return startDate;
+  }
+
+
+  /**
+   * Sets the startDate attribute of the ProductCatalogList object
+   *
+   * @param startDate The new startDate value
+   */
+  public void setStartDate(Timestamp startDate) {
+    this.startDate = startDate;
+  }
+
+
+  /**
+   * Sets the startDate attribute of the ProductCategory object
+   *
+   * @param tmp The new startDate value
+   */
+  public void setStartDate(String tmp) {
+    this.startDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
 }
-
-

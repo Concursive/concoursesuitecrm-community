@@ -201,9 +201,8 @@ public class CalendarHandler extends TagSupport {
     try {
       Locale locale = null;
       // Retrieve the user's timezone from their session
-      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
-          "User");
-      if (thisUser != null) {
+      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+      if (thisUser.getUserId() != -1 && thisUser != null) {
         if (timeZone == null) {
           timeZone = thisUser.getUserRecord().getTimeZone();
         }
@@ -229,6 +228,7 @@ public class CalendarHandler extends TagSupport {
         dateString = formatter.format(timestamp);
       }
     } catch (Exception e) {
+      System.out.println(e);
     }
     // Output the result based on the retrieved info (if any)
     try {
@@ -242,7 +242,7 @@ public class CalendarHandler extends TagSupport {
         // TODO: Add onChange="checkDate(this.value)"
         String toWriteOut = "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
             (required?" <font color='red'>*</font>":"") +
-            "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
+            "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "','"+timeZone+"');\">" +
             "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>";
         if (showTimeZone) {
           toWriteOut = toWriteOut + "&nbsp;" + HtmlSelectTimeZone.getSelect(

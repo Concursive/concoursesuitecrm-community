@@ -3979,6 +3979,12 @@
     <param name="product.Categories">
       <value><![CDATA[Categories]]></value>
     </param>
+    <param name="product.priceRange">
+      <value><![CDATA[Price Range]]></value>
+    </param>
+    <param name="product.searchStartDate">
+      <value><![CDATA[Product Start Date]]></value>
+    </param>
     <param name="categories.categoriesForSite">
       <value><![CDATA[Categories for Site]]></value>
     </param>

@@ -31,6 +31,8 @@
 <jsp:useBean id="SHOW_PRICE_SAVINGS" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ORIGINAL_PRICE_TEXT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PRICE_SAVINGS_TEXT" class="java.lang.String" scope="request"/>
+<jsp:useBean id="PRODUCT_SEARCH" class="java.lang.String" scope="request"/>
+<jsp:useBean id="previousPage" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPopupMenu.jsp" %>
 <portlet:defineObjects/>
@@ -54,11 +56,20 @@
   <tr>
     <td colspan="2" style="text-align:left;" nowrap>
 			<portlet:renderURL portletMode="view" var="url">
-				<portlet:param name="viewType" value="summary"/>
+				<portlet:param name="viewType" value="<%=previousPage%>"/>
 				<portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
 				<portlet:param name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>"/>
 			</portlet:renderURL>
 		&nbsp;[<a href="<%= pageContext.getAttribute("url") %>">Back to Items</a>]
+		</td>
+		<td colspan="2" style="text-align:right;" nowrap>
+			&nbsp;
+			<dhv:evaluate if="<%= "true".equals(PRODUCT_SEARCH)%>">
+			<portlet:renderURL portletMode="view" var="searchUrl">
+				<portlet:param name="viewType" value="search"/>
+			</portlet:renderURL>
+			[<a href="<%= pageContext.getAttribute("searchUrl") %>">Search Product</a>]
+			</dhv:evaluate>
 		</td>
 	</tr>
   <%-- Product Details --%>

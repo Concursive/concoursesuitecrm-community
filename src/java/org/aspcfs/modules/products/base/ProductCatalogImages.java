@@ -41,7 +41,6 @@ import com.zeroio.iteam.base.Thumbnail;
  *          Exp $
  * @created May 29, 2006
  */
-@SuppressWarnings("serial")
 public class ProductCatalogImages extends HashMap {
 
   public ProductCatalogImages() {
@@ -55,7 +54,6 @@ public class ProductCatalogImages extends HashMap {
    * @param zipFilePath
    * @throws IOException
    */
-  @SuppressWarnings("unchecked")
   public ProductCatalogImages(FileItem fileItem, String zipFilePath)
       throws IOException {
     File zipFile = new File(zipFilePath + fileItem.getFilename());
@@ -79,7 +77,6 @@ public class ProductCatalogImages extends HashMap {
    * @return
    * @throws IOException
    */
-  @SuppressWarnings("unchecked")
   public static ProductCatalogImages processZipFile(FileItem fileItem,
       String zipFilePath) throws IOException {
     String imagesPath = zipFilePath;

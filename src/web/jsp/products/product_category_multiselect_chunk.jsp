@@ -12,7 +12,7 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
  --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv"%>
 <jsp:useBean id="permissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request" />
@@ -27,7 +27,7 @@
 <script language='javascript' type='text/javascript'>
     if (window.parent.loadNode != null && window.parent != self)
     {
-        elem = document.getElementById('ul_<%=parentId%>'); 
+        elem = document.getElementById('ul_<%=parentId%>');
         if (elem && elem.innerHTML)
         {
             window.parent.loadNode('<%=parentId%>', elem);
