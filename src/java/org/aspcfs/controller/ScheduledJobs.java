@@ -19,6 +19,7 @@ import com.zeroio.iteam.scheduler.IndexerJob;
 import org.aspcfs.modules.admin.jobs.DeleteTrashJob;
 import org.aspcfs.modules.admin.jobs.NotifierJob;
 import org.aspcfs.modules.admin.jobs.UserCleanupJob;
+import org.aspcfs.modules.admin.jobs.LoggerJob;
 import org.aspcfs.modules.pipeline.jobs.ResetGraphDataJob;
 import org.aspcfs.modules.reports.jobs.ReportCleanupJob;
 import org.aspcfs.modules.reports.jobs.ReportRunnerJob;
@@ -135,6 +136,7 @@ public class ScheduledJobs {
           IndexerJob.class);
       //scheduler.addJob(job, true);
       // Update every 24 hours, starting in 5 minutes
+      // This job is triggered in code, on demand
       long startTime = System.currentTimeMillis() + (5L * 60L * 1000L);
       SimpleTrigger trigger = new SimpleTrigger(
           "indexer",
@@ -145,5 +147,24 @@ public class ScheduledJobs {
           24L * 60L * 60L * 1000L);
       scheduler.scheduleJob(job, trigger);
     }
+
+    // Website access logging
+    if (1 == 1) {
+      JobDetail job = new JobDetail(
+          "logger",
+          Scheduler.DEFAULT_GROUP,
+          LoggerJob.class);
+      // Update every 30 secs, starting in 30 sec
+      long startTime = System.currentTimeMillis() + (1L * 30L * 1000L);
+      SimpleTrigger trigger = new SimpleTrigger(
+          "logger",
+          Scheduler.DEFAULT_GROUP,
+          new Date(startTime),
+          null,
+          SimpleTrigger.REPEAT_INDEFINITELY,
+          1L * 30L * 1000L);
+      scheduler.scheduleJob(job, trigger);
+    }
+		
   }
 }

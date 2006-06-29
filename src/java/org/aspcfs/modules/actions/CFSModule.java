@@ -1789,6 +1789,30 @@ public class CFSModule {
 
 
   /**
+   *  Adds an item to the log.
+   *
+   * @param  context       Description of the Parameter
+   * @param  type          Description of the Parameter
+   * @param  item          Description of the Parameter
+   * @return               Description of the Return Value
+   * @throws  IOException  Description of the Exception
+   */
+  protected synchronized boolean addLogItem(ActionContext context, String type, Object item) throws IOException {
+    if (item == null) {
+      return false;
+    }
+    Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
+    try {
+			//e.g., type=webPageAccessLog
+			((Vector) scheduler.getContext().get(type)).add(item);
+      scheduler.triggerJob("logger", Scheduler.DEFAULT_GROUP);
+    } catch (Exception e) {
+      System.out.println("CFSModule-> Scheduler failed: " + e.getMessage());
+    }
+    return true;
+  }
+
+  /**
    *  Adds an item to the index. Code licensed from teamelements.com
    *
    * @param  context       Description of the Parameter

@@ -171,6 +171,52 @@ public class WebProductAccessLog extends GenericBean {
 	/**
 	 *  Description of the Method
 	 *
+	 *@param  db                Description of the Parameter
+	 *@return                   Description of the Return Value
+	 *@exception  SQLException  Description of the Exception
+	 */
+	public static PreparedStatement prepareInsert(Connection db) throws SQLException {
+		PreparedStatement pst = db.prepareStatement(
+				"INSERT INTO web_product_access_log " +
+				"(product_id , " +
+				"site_log_id ) " +
+				"VALUES (?,?)");
+		return pst;
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  pst               Description of the Parameter
+	 *@return                   Description of the Return Value
+	 *@exception  SQLException  Description of the Exception
+	 */
+	public boolean insertData(PreparedStatement pst) throws SQLException {
+		int i = 0;
+		DatabaseUtils.setInt(pst, ++i, productId);
+		DatabaseUtils.setInt(pst, ++i, siteLogId);
+		pst.execute();
+		return true;
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  pst               Description of the Parameter
+	 *@return                   Description of the Return Value
+	 *@exception  SQLException  Description of the Exception
+	 */
+	public static boolean closeInsert(PreparedStatement pst) throws SQLException {
+		pst.close();
+		return true;
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
 	 *@param  rs             Description of the Parameter
 	 *@throws  SQLException  Description of the Exception
 	 */

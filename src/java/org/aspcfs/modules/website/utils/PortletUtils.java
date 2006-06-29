@@ -15,12 +15,20 @@
  */
 package org.aspcfs.modules.website.utils;
 
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.website.base.WebProductAccessLog;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import org.quartz.Scheduler;
 
 /**
  * Description of the Class
@@ -46,6 +54,23 @@ public class PortletUtils {
    */
   public static Connection getConnection(PortletRequest request) {
     return (Connection) request.getAttribute("connection");
+  }
+
+
+  public static synchronized boolean addLogItem(PortletRequest request, String type, Object item) throws IOException {
+    if (item == null) {
+      return false;
+    }
+    Scheduler scheduler = (Scheduler) request.getAttribute("scheduler");
+    try {
+			((Vector) scheduler.getContext().get(type)).add(item);
+      // Force the job right now, otherwise wait for timer
+      //scheduler.triggerJob("logger", Scheduler.DEFAULT_GROUP);
+    } catch (Exception e) {
+			e.printStackTrace();
+      System.out.println("PortletUtils-> Scheduler failed: " + e.getMessage());
+    }
+    return true;
   }
 
 
@@ -83,5 +108,9 @@ public class PortletUtils {
     return tmpInfo;
   }
 
+
+  public static UserBean getUser(PortletRequest request) {
+    return (UserBean)request.getAttribute("userBean");
+  }
 }
 

@@ -1,6 +1,7 @@
 package org.aspcfs.modules.website.framework;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
 import org.apache.pluto.driver.core.PortalEnvironment;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import java.sql.Connection;
 import java.util.Iterator;
 import java.util.HashMap;
+import org.quartz.Scheduler;
 
 /**
  *  Server side preparation for portlets
@@ -183,6 +185,12 @@ public class IceletManager {
       // Pass the request to the specified doAction
       if (actionWindowId.equals(portletWindow.getId().getStringId())) {
         try {
+					Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
+          context.getRequest().setAttribute("scheduler", scheduler);
+
+					UserBean userBean = (UserBean)context.getRequest().getSession().getAttribute("User");
+          context.getRequest().setAttribute("userBean", userBean);
+					
           context.getRequest().setAttribute("connection", db);
           container.doAction(portletWindow, context.getRequest(), context.getResponse());
         } catch (PortletContainerException ex) {
@@ -200,6 +208,12 @@ public class IceletManager {
       try {
         PortalServletRequest portalRequest = new PortalServletRequest(
             context.getRequest(), portletWindow);
+				Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
+				portalRequest.setAttribute("scheduler", scheduler);
+
+				UserBean userBean = (UserBean)context.getRequest().getSession().getAttribute("User");
+				portalRequest.setAttribute("userBean", userBean);
+
         portalRequest.setAttribute("connection", db);
         PortalServletResponse portalResponse = new PortalServletResponse(
             context.getResponse());

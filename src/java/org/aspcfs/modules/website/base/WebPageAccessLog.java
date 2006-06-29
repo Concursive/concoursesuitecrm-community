@@ -74,8 +74,24 @@ public class WebPageAccessLog extends GenericBean {
 	}
 
 
-public void setSiteLogId(int tmp) { this.siteLogId = tmp; }
-public void setSiteLogId(String tmp) { this.siteLogId = Integer.parseInt(tmp); }
+	/**
+	 *  Sets the siteLogId attribute of the WebPageAccessLog object
+	 *
+	 *@param  tmp  The new siteLogId value
+	 */
+	public void setSiteLogId(int tmp) {
+		this.siteLogId = tmp;
+	}
+
+
+	/**
+	 *  Sets the siteLogId attribute of the WebPageAccessLog object
+	 *
+	 *@param  tmp  The new siteLogId value
+	 */
+	public void setSiteLogId(String tmp) {
+		this.siteLogId = Integer.parseInt(tmp);
+	}
 
 
 	/**
@@ -108,7 +124,14 @@ public void setSiteLogId(String tmp) { this.siteLogId = Integer.parseInt(tmp); }
 	}
 
 
-public int getSiteLogId() { return siteLogId; }
+	/**
+	 *  Gets the siteLogId attribute of the WebPageAccessLog object
+	 *
+	 *@return    The siteLogId value
+	 */
+	public int getSiteLogId() {
+		return siteLogId;
+	}
 
 
 	/**
@@ -141,6 +164,52 @@ public int getSiteLogId() { return siteLogId; }
 		pst.execute();
 		pst.close();
 
+		return true;
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  db                Description of the Parameter
+	 *@return                   Description of the Return Value
+	 *@exception  SQLException  Description of the Exception
+	 */
+	public static PreparedStatement prepareInsert(Connection db) throws SQLException {
+		PreparedStatement pst = db.prepareStatement(
+				"INSERT INTO web_page_access_log " +
+				"(page_id , " +
+				"site_log_id ) " +
+				"VALUES (?,?)");
+		return pst;
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  pst               Description of the Parameter
+	 *@return                   Description of the Return Value
+	 *@exception  SQLException  Description of the Exception
+	 */
+	public boolean insertData(PreparedStatement pst) throws SQLException {
+		int i = 0;
+		DatabaseUtils.setInt(pst, ++i, pageId);
+		DatabaseUtils.setInt(pst, ++i, siteLogId);
+		pst.execute();
+		return true;
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  pst               Description of the Parameter
+	 *@return                   Description of the Return Value
+	 *@exception  SQLException  Description of the Exception
+	 */
+	public static boolean closeInsert(PreparedStatement pst) throws SQLException {
+		pst.close();
 		return true;
 	}
 

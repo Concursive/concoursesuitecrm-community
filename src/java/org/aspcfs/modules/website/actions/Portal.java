@@ -19,6 +19,7 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.website.base.*;
 import org.aspcfs.modules.website.base.Site;
 import org.aspcfs.modules.website.base.SiteList;
@@ -111,6 +112,17 @@ public final class Portal extends CFSModule {
       }
       context.getRequest().setAttribute("tabId", String.valueOf(tabId));
       context.getRequest().setAttribute("pageId", String.valueOf(pageId));
+			
+			//Add to website access log
+			UserBean userBean = (UserBean)context.getRequest().getSession().getAttribute("User");
+			if (userBean != null && userBean.getUserId() == -2){
+				WebPageAccessLog webPageAccessLog = new WebPageAccessLog();
+				webPageAccessLog.setSiteLogId(Integer.parseInt(userBean.getSessionId()));
+				webPageAccessLog.setPageId(pageId);
+				addLogItem(context,"webPageAccessLog",webPageAccessLog);
+			}
+			
+			//Building site for display
       site.buildResources(db, tabId, pageId, Site.PORTAL_MODE);
       rowColumnList = new ArrayList();
       site.buildRowsColumns(rowColumnList);

@@ -236,6 +236,33 @@ public class WebProductEmailLog extends GenericBean {
 		return true;
 	}
 
+	public static PreparedStatement prepareInsert(Connection db) throws SQLException {
+		PreparedStatement pst = db.prepareStatement(
+				"INSERT INTO web_product_email_log " +
+				"(product_id , " +
+				"emails_to , " +
+				"from_name , " +
+				"comments , " +
+				"site_log_id ) " +
+				"VALUES (?,?,?,?,?)");
+		return pst;
+	}
+
+	public boolean insertData(PreparedStatement pst) throws SQLException {
+		int i = 0;
+		DatabaseUtils.setInt(pst, ++i, productId);
+		pst.setString(++i, emailsTo);
+		pst.setString(++i, fromName);
+		pst.setString(++i, comments);
+		DatabaseUtils.setInt(pst, ++i, siteLogId);
+		pst.execute();
+		return true;
+	}
+
+	public static void closeInsert(PreparedStatement pst) throws SQLException {
+		pst.close();
+	}
+
 
 	/**
 	 *  Description of the Method

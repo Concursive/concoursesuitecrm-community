@@ -12,11 +12,12 @@ The following is a running list until release...
 New features:
 - Web Content Management module and Portal using Apache Pluto JSR-168 Embedded
   Portlet Container
-- Added the following portlets:
-  - HTML Content portlet
-  - Contact Us Form portlet
-  - Image Gallery portlet
-  - Product Catalog portlet
+  - Added the following portlets:
+    - HTML Content portlet
+    - Contact Us Form portlet
+    - Image Gallery portlet
+    - Product Catalog portlet
+  - Added a "hit" tracker for web pages, products, and emails
 - Product Importer
 - IBM DB2 Database support
 - IBM WAS-CE Websphere Application Server Community Edition support

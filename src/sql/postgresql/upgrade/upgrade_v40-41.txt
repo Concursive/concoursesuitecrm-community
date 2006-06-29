@@ -17,6 +17,6 @@
 
 # 4.1b3 Portal Improvements
 
-# 4.1b4 Web access log (still in development, do not run)
-# 2006-06-09-script01-kailash.sql
+# 4.1b4 Web access log
+2006-06-09-script01-kailash.sql
 

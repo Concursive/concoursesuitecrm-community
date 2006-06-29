@@ -93,18 +93,20 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
         if (thisUser != null) {
           // Internal SessionManager
           int userId = thisUser.getActualUserId();
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println(
-                "ContextSessionListener-> Session for user " + userId + " ended ");
-          }
-          SessionManager thisManager = ((SystemStatus) ((Hashtable) context.getAttribute(
-              "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getSessionManager();
-          UserSession thisSession = thisManager.getUserSession(userId);
-          if (thisSession.getId().equals(thisUser.getSessionId())) {
-            thisManager.removeUser(userId);
+          if (userId > -2) {
             if (System.getProperty("DEBUG") != null) {
               System.out.println(
-                  "ContextSessionListener-> User removed from valid user list");
+                  "ContextSessionListener-> Session for user " + userId + " ended ");
+            }
+            SessionManager thisManager = ((SystemStatus) ((Hashtable) context.getAttribute(
+                "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getSessionManager();
+            UserSession thisSession = thisManager.getUserSession(userId);
+            if (thisSession.getId().equals(thisUser.getSessionId())) {
+              thisManager.removeUser(userId);
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println(
+                    "ContextSessionListener-> User removed from valid user list");
+              }
             }
           }
           // Website Tracker
@@ -114,6 +116,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
         }
       }
     } catch (Exception e) {
+      e.printStackTrace(System.out);
       System.out.println("ContextSessionListener-> attributeRemoved Error: " + e.toString());
     }
   }

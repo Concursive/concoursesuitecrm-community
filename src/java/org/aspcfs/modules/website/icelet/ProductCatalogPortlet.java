@@ -16,8 +16,10 @@
 package org.aspcfs.modules.website.icelet;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.products.base.*;
 import org.aspcfs.modules.website.utils.PortletUtils;
+import org.aspcfs.modules.website.base.WebProductAccessLog;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -146,7 +148,6 @@ public class ProductCatalogPortlet extends GenericPortlet {
 		renderParams.put("offset", new String[]{request.getParameter("offset")});
 		renderParams.put("page", new String[]{request.getParameter("page")});
     request.setAttribute("page", (String) request.getParameter("page"));
-System.out.println("ProductCatalogPortlet::buildProduct the offset is "+ request.getParameter("offset"));
 		productCatalogListInfo.setRenderParameters(renderParams);
 
 		//building a single item as a list
@@ -155,8 +156,10 @@ System.out.println("ProductCatalogPortlet::buildProduct the offset is "+ request
 		productCatalogList.setCategoryId(request.getParameter("categoryId"));
 		productCatalogList.buildList(db);
 		request.setAttribute("productCatalogList", productCatalogList);
+		ProductCatalog productCatalog = null; 
 		if (productCatalogList.size() > 0){
-			request.setAttribute("productCatalog",(ProductCatalog) productCatalogList.get(0));
+			productCatalog = (ProductCatalog) productCatalogList.get(0);
+			request.setAttribute("productCatalog",productCatalog);
 		}
 
 		//fetching parent category for the specified product/category
@@ -176,6 +179,16 @@ System.out.println("ProductCatalogPortlet::buildProduct the offset is "+ request
     request.setAttribute("SHOW_PRICE_SAVINGS", (String) request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "true"));
     request.setAttribute("ORIGINAL_PRICE_TEXT", (String) request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
     request.setAttribute("PRICE_SAVINGS_TEXT", (String) request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Instant Savings:"));
+		
+		//Add Product Access log
+		UserBean userBean = PortletUtils.getUser(request);
+		if (userBean.getUserId() == -2){
+			WebProductAccessLog webProductAccessLog = new WebProductAccessLog();
+			webProductAccessLog.setSiteLogId(Integer.parseInt(userBean.getSessionId()));
+			webProductAccessLog.setProductId(productCatalog.getId());
+			PortletUtils.addLogItem(request,"webProductAccessLog",webProductAccessLog);
+		}
+		
   }
 
 
@@ -220,7 +233,6 @@ System.out.println("ProductCatalogPortlet::buildProduct the offset is "+ request
 		//Get Paged List handler for product catalog list
 		PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
 		productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
-System.out.println("ProductCatalogPortlet::buildProductCategoryList the offset is "+ productCatalogListInfo.getCurrentOffset());
 		//Setting URL
     HashMap renderParams = new HashMap();
 		renderParams.put("viewType", new String[]{"list"});

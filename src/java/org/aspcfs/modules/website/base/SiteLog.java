@@ -24,11 +24,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kailash
- *@created    February 10, 2006 $Id: Exp $
- *@version    $Id: Exp $
+ * @author kailash
+ * @version $Id: Exp $
+ * @created February 10, 2006 $Id: Exp $
  */
 
 public class SiteLog extends GenericBean {
@@ -38,22 +38,24 @@ public class SiteLog extends GenericBean {
   private int userId = -1;
   private String ip = "";
   private java.sql.Timestamp entered = null;
-  private String browser = "";
+  private String browser = null;
+  private String referrer = null;
 
 
   /**
-   *  Constructor for the SiteLog object
+   * Constructor for the SiteLog object
    */
-  public SiteLog() { }
+  public SiteLog() {
+  }
 
 
   /**
-   *  Constructor for the SiteLog object
+   * Constructor for the SiteLog object
    *
-   *@param  db                Description of the Parameter
-   *@param  tmpSiteLogId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of the Exception
+   * @param db           Description of the Parameter
+   * @param tmpSiteLogId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public SiteLog(Connection db, int tmpSiteLogId) throws SQLException {
     queryRecord(db, tmpSiteLogId);
@@ -61,11 +63,11 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Constructor for the Site object
+   * Constructor for the Site object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public SiteLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -73,9 +75,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the SiteLog object
+   * Sets the id attribute of the SiteLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -83,9 +85,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the SiteLog object
+   * Sets the id attribute of the SiteLog object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -93,9 +95,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the site_id attribute of the SiteLog object
+   * Sets the site_id attribute of the SiteLog object
    *
-   *@param  tmp  The new site_id value
+   * @param tmp The new site_id value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -103,9 +105,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the site_id attribute of the SiteLog object
+   * Sets the site_id attribute of the SiteLog object
    *
-   *@param  tmp  The new site_id value
+   * @param tmp The new site_id value
    */
   public void setSite_id(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -113,9 +115,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the SiteLog object
+   * Sets the userId attribute of the SiteLog object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -123,9 +125,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the SiteLog object
+   * Sets the userId attribute of the SiteLog object
    *
-   *@param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -133,9 +135,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the ip attribute of the SiteLog object
+   * Sets the ip attribute of the SiteLog object
    *
-   *@param  tmp  The new ip value
+   * @param tmp The new ip value
    */
   public void setIp(String tmp) {
     this.ip = tmp;
@@ -143,9 +145,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the SiteLog object
+   * Sets the entered attribute of the SiteLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -153,9 +155,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the SiteLog object
+   * Sets the entered attribute of the SiteLog object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -163,9 +165,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Sets the browser attribute of the SiteLog object
+   * Sets the browser attribute of the SiteLog object
    *
-   *@param  tmp  The new browser value
+   * @param tmp The new browser value
    */
   public void setBrowser(String tmp) {
     this.browser = tmp;
@@ -173,9 +175,19 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the SiteLog object
+   * Sets the referrer attribute of the SiteLog object
    *
-   *@return    The id value
+   * @param tmp The new referrer value
+   */
+  public void setReferrer(String tmp) {
+    this.referrer = tmp;
+  }
+
+
+  /**
+   * Gets the id attribute of the SiteLog object
+   *
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -183,9 +195,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Gets the site_id attribute of the SiteLog object
+   * Gets the site_id attribute of the SiteLog object
    *
-   *@return    The site_id value
+   * @return The site_id value
    */
   public int getSiteId() {
     return siteId;
@@ -193,9 +205,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Gets the userId attribute of the SiteLog object
+   * Gets the userId attribute of the SiteLog object
    *
-   *@return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -203,9 +215,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Gets the ip attribute of the SiteLog object
+   * Gets the ip attribute of the SiteLog object
    *
-   *@return    The ip value
+   * @return The ip value
    */
   public String getIp() {
     return ip;
@@ -213,9 +225,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the SiteLog object
+   * Gets the entered attribute of the SiteLog object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -223,9 +235,9 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Gets the browser attribute of the SiteLog object
+   * Gets the browser attribute of the SiteLog object
    *
-   *@return    The browser value
+   * @return The browser value
    */
   public String getBrowser() {
     return browser;
@@ -233,12 +245,22 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Gets the referrer attribute of the SiteLog object
    *
-   *@param  db             Description of the Parameter
-   *@param  tmpSiteLogId   Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @return The referrer value
+   */
+  public String getReferrer() {
+    return referrer;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db           Description of the Parameter
+   * @param tmpSiteLogId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean queryRecord(Connection db, int tmpSiteLogId) throws SQLException {
 
@@ -246,8 +268,8 @@ public class SiteLog extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         "SELECT wsal.* " +
-        "FROM web_site_access_log wsal " +
-        "WHERE site_log_id = ? ");
+            "FROM web_site_access_log wsal " +
+            "WHERE site_log_id = ? ");
     pst.setInt(1, tmpSiteLogId);
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -261,23 +283,24 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
 
     id = DatabaseUtils.getNextSeq(db, "web_site_access_log_site_log_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO web_site_access_log " +
-        "(" + (id > -1 ? "site_log_id, " : "") +
-        "site_id , " +
-        "user_id , " +
-        "ip , " +
-        "browser ) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?)");
+            "(" + (id > -1 ? "site_log_id, " : "") +
+            "site_id , " +
+            "user_id , " +
+            "ip , " +
+            "browser , " +
+            "referrer ) " +
+            "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -286,6 +309,7 @@ public class SiteLog extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, userId);
     pst.setString(++i, ip);
     pst.setString(++i, browser);
+    pst.setString(++i, referrer);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "web_site_access_log_site_log_id_seq", id);
     pst.close();
@@ -295,11 +319,11 @@ public class SiteLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
 
@@ -311,7 +335,7 @@ public class SiteLog extends GenericBean {
 
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM web_site_access_log " +
-          "WHERE site_log_id = ? ");
+              "WHERE site_log_id = ? ");
 
       pst.setInt(1, this.getId());
       pst.execute();
@@ -338,15 +362,17 @@ public class SiteLog extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  rs  Description of the Parameter
+   *@param  rs                Description of the Parameter
+   *@exception SQLException  Description of the Exception
    */
-  public void buildRecord(ResultSet rs) throws SQLException{
+  public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("site_log_id");
     siteId = rs.getInt("site_id");
     userId = rs.getInt("user_id");
     ip = rs.getString("ip");
     entered = rs.getTimestamp("entered");
     browser = rs.getString("browser");
-  }
+    referrer = rs.getString("referrer");
+	}
 }
 

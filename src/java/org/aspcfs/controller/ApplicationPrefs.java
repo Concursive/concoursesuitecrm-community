@@ -485,6 +485,9 @@ public class ApplicationPrefs {
             scheduler.getContext().put("ConnectionPool", context.getAttribute("ConnectionPool"));
             scheduler.getContext().put("ApplicationPrefs", this);
             scheduler.getContext().put("IndexArray", new Vector());
+            scheduler.getContext().put("webPageAccessLog", new Vector());
+            scheduler.getContext().put("webProductAccessLog", new Vector());
+            scheduler.getContext().put("webProductEmailLog", new Vector());
             scheduler.getContext().put("SystemStatus", context.getAttribute("SystemStatus"));
             scheduler.getContext().put("ApplicationPath", context.getRealPath("/"));
             scheduler.start();

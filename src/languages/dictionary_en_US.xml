@@ -176,7 +176,10 @@
     <param name="tickets.enteredDateBetween">
       <value><![CDATA[Entered Date between]]></value>
     </param>
-    <param name="tickets.ticketState">
+		<param name="tickets.resolvable">
+			<value><![CDATA[Resolvable]]></value>
+		</param>
+		<param name="tickets.ticketState">
       <value><![CDATA[Ticket State]]></value>
     </param>
     <param name="tickets.ticketCategoryMappedActionPlans.colon">
