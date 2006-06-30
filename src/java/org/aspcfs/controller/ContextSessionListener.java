@@ -73,7 +73,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
       thisUser.setSessionId(event.getSession().getId());
       // Track website users
       Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
-              "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
+          "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
       tracker.add(thisUser.getSessionId(), thisUser);
     }
   }
@@ -94,25 +94,34 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
           // Internal SessionManager
           int userId = thisUser.getActualUserId();
           if (userId > -2) {
-            if (System.getProperty("DEBUG") != null) {
-              System.out.println(
-                  "ContextSessionListener-> Session for user " + userId + " ended ");
-            }
-            SessionManager thisManager = ((SystemStatus) ((Hashtable) context.getAttribute(
-                "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getSessionManager();
-            UserSession thisSession = thisManager.getUserSession(userId);
-            if (thisSession.getId().equals(thisUser.getSessionId())) {
-              thisManager.removeUser(userId);
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println(
-                    "ContextSessionListener-> User removed from valid user list");
+            // If context reloaded, then SystemStatus is null, but user is valid
+            Hashtable systems = (Hashtable) context.getAttribute("SystemStatus");
+            if (systems != null) {
+              SystemStatus systemStatus = (SystemStatus) systems.get(thisUser.getConnectionElement().getUrl());
+              if (systemStatus != null) {
+                // Remove the user from the session if it already is there
+                SessionManager thisManager = systemStatus.getSessionManager();
+                if (thisManager != null) {
+                  UserSession thisSession = thisManager.getUserSession(userId);
+                  if (thisSession != null && thisSession.getId().equals(thisUser.getSessionId()))
+                  {
+                    if (System.getProperty("DEBUG") != null) {
+                      System.out.println(
+                          "ContextSessionListener-> Session for user " + userId + " ended");
+                    }
+                    thisManager.removeUser(userId);
+                    if (System.getProperty("DEBUG") != null) {
+                      System.out.println(
+                          "ContextSessionListener-> User removed from valid user list");
+                    }
+                  }
+                }
+                // Website Tracker
+                Tracker tracker = systemStatus.getTracker();
+                tracker.remove(thisUser.getSessionId());
               }
             }
           }
-          // Website Tracker
-          Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
-              "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
-          tracker.remove(thisUser.getSessionId());
         }
       }
     } catch (Exception e) {
@@ -136,7 +145,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
       UserBean thisUser = (UserBean) event.getValue();
       thisUser.setSessionId(event.getSession().getId());
       Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
-              "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
+          "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
       tracker.remove(event.getSession().getId());
       tracker.add(thisUser.getSessionId(), thisUser);
     }
