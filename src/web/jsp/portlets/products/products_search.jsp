@@ -68,36 +68,36 @@
     document.forms['searchCondition'].searchCategoryListIds.value = categoryListIds;    
    	changeDivContent('changecategory', searchCategoryNames);
    }
-  
 </script>
 <!--  <body onLoad="javascript:document.searchCondition.searchName.focus();"> -->
+<%--
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <td colspan="1" style="text-align:left;" nowrap>
-    
 			<portlet:renderURL portletMode="view" var="url">
 				<portlet:param name="viewType" value="summary"/>
 				<portlet:param name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>"/>
 			</portlet:renderURL>
-		&nbsp;[<a href="<%= pageContext.getAttribute("url") %>">Back to Products Summary</a>]
+		  <a href="<%= pageContext.getAttribute("url") %>">Back to Products Summary</a>
 		</td>
-</tabel>	
+</table>
+--%>
 <form name="searchCondition" action="<portlet:actionURL />" method="post">
-	<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 		<tr>
 			<th colspan="2">
-				<strong><dhv:label name="product.searchCondition">Search Product</dhv:label></strong>
+				<dhv:label name="product.searchCondition">Search</dhv:label>
 			</th>
 		</tr>
 		<tr>
-			<td class="formLabel" width="20%">
+			<td class="formLabel" nowrap>
 				<dhv:label name="products.productName">Product Name</dhv:label>
 			</td>
-			<td width="20%">
+			<td width="100%">
 				<input type="text" size="35" name="searchName" value="<%= searchName %>">
 			</td>
 		</tr>
 		<tr>
-			<td class="formLabel">
+			<td class="formLabel" nowrap>
 				<dhv:label name="literal.abbreviation.name">Abbreviation</dhv:label>
 			</td>
 			<td>
@@ -105,38 +105,35 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="formLabel">
+			<td class="formLabel" nowrap>
 				<dhv:label name="quotes.sku">SKU</dhv:label>
 			</td>
 			<td>
 				<input type="text" size="15" name="searchSku" value="<%= searchSku %>">
 			</td>
 		</tr>
-
 		<tr>
-			<td class="formLabel">
+			<td class="formLabel" nowrap>
 				<dhv:label name="product.priceRange">Price Range</dhv:label>
 			</td>
 			<td>
 				<input type="text" size="10" name="searchcodePriceRangeMin" value="<%= searchcodePriceRangeMin %>">
-				&nbsp;
+				to
 				<input type="text" size="10" name="searchcodePriceRangeMax" value="<%= searchcodePriceRangeMax %>">
 			</td>
 		</tr>
-
 		<tr>
 			<td class="formLabel">
 				<dhv:label name="product.startDate">Product Start Date </dhv:label>
 			</td>
 			<td>
-       <zeroio:dateSelect form="searchCondition" field="searchtimestampStartDate" timestamp="<%= searchtimestampStartDate %>"  timeZone="<%= timeZone %>" showTimeZone="false" />
-            <%= showError(request, "startDateError") %>			
-            &nbsp;to&nbsp;
-       <zeroio:dateSelect form="searchCondition" field="searchtimestampEndDate" timestamp="<%= searchtimestampEndDate %>"  timeZone="<%= timeZone %>" showTimeZone="false" />
-            <%= showError(request, "startDateError") %>			
-       </td>
-		</tr> 
-		
+        <zeroio:dateSelect form="searchCondition" field="searchtimestampStartDate" timestamp="<%= searchtimestampStartDate %>"  timeZone="<%= timeZone %>" showTimeZone="false" />
+        <%= showError(request, "startDateError") %>
+        to
+        <zeroio:dateSelect form="searchCondition" field="searchtimestampEndDate" timestamp="<%= searchtimestampEndDate %>"  timeZone="<%= timeZone %>" showTimeZone="false" />
+        <%= showError(request, "startDateError") %>
+      </td>
+		</tr>
 		<tr>
 			<td class="formLabel" nowrap>
 				<dhv:label name="products.productCategory">Product Category</dhv:label>
@@ -160,14 +157,17 @@
 					</tr>
 				</table>
 			</td>
-		</tr> 
-
-	</table>
-	&nbsp;
-	<br>
-	<input type="hidden" name="viewType" value="searchResult" />
+		</tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+	      <input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
+      </td>
+    </tr>
+  </table>
+  <input type="hidden" name="actionType" value="search" />
+  <input type="hidden" name="viewType" value="searchResult" />
 	<input type="hidden" name="searchCategoryNames" id="searchCategoryNames" value="<%=toHtmlValue(searchCategoryNames)%>">
-	<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
-	<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 </form>
 

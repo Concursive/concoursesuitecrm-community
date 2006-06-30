@@ -91,16 +91,40 @@
               defaultValue="Instant Savings:"
               additionalText=""/>
     <property constant="6060610"
-              label="Include Search"
-              description="Allows search feature to be included"
+              label="Search"
+              description="Display search link on details page"
               type="checkbox"
-              defaultValue="false"
+              defaultValue="true"
               additionalText=""/>
     <property constant="6060611"
-              label="Include Search as default page"
-              description="The search page appears as the default page"
+              label="Search"
+              description="Default the page to a search form"
               type="checkbox"
               defaultValue="false"
               additionalText=""/>
-  </icelet>
+    <property constant="6060717"
+              label="Email Options"
+              description="Include a send email option"
+              type="checkbox"
+              defaultValue="false"
+              additionalText=""/>
+    <property constant="6060718"
+              label="Email Options"
+              description="Web address of the site"
+              type="text"
+              defaultValue=""
+              additionalText=""/>
+    <property constant="6060719"
+              label="Email Options"
+              description="Subject"
+              type="text"
+              defaultValue="A product from our catalog"
+              additionalText=""/>
+    <property constant="6060720"
+              label="Email Options"
+              description="Introductory message"
+              type="textarea"
+              defaultValue="We have an exciting range of products."
+              additionalText=""/>
+	</icelet>
 </icelets>

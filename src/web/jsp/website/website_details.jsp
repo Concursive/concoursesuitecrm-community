@@ -54,6 +54,7 @@
 <%@ include file="website_column_menu.jsp" %>
 </dhv:evaluate>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/div.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript">
 <%-- Preload image rollovers for drop-down menu --%>

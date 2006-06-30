@@ -15,20 +15,19 @@
  */
 package org.aspcfs.modules.website.utils;
 
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.utils.web.PagedListInfo;
+import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.quartz.Scheduler;
+
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.Vector;
-
-import org.quartz.Scheduler;
 
 /**
  * Description of the Class
@@ -38,6 +37,8 @@ import org.quartz.Scheduler;
  * @created May 11, 2006 $Id: Exp $
  */
 public class PortletUtils {
+
+  public final static String fs = System.getProperty("file.separator");
 
   /**
    * Constructor for the PortletUtils object
@@ -63,11 +64,11 @@ public class PortletUtils {
     }
     Scheduler scheduler = (Scheduler) request.getAttribute("scheduler");
     try {
-			((Vector) scheduler.getContext().get(type)).add(item);
+      ((Vector) scheduler.getContext().get(type)).add(item);
       // Force the job right now, otherwise wait for timer
       //scheduler.triggerJob("logger", Scheduler.DEFAULT_GROUP);
     } catch (Exception e) {
-			e.printStackTrace();
+      e.printStackTrace();
       System.out.println("PortletUtils-> Scheduler failed: " + e.getMessage());
     }
     return true;
@@ -85,17 +86,58 @@ public class PortletUtils {
   }
 
 
+  public static ApplicationPrefs getApplicationPrefs(PortletRequest request) {
+    ApplicationPrefs prefs = (ApplicationPrefs) request.getAttribute("applicationPrefs");
+    if (prefs != null) {
+      return prefs;
+    } else {
+      return null;
+    }
+  }
+
   /**
    * Gets the application prefs for the specified string
    *
    * @param request Description of the Parameter
-   * @param param Description of the Parameter
+   * @param param   Description of the Parameter
    * @return The string value
    */
   public static String getApplicationPrefs(PortletRequest request, String param) {
-    ApplicationPrefs prefs = (ApplicationPrefs) request.getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = PortletUtils.getApplicationPrefs(request);
     if (prefs != null) {
       return prefs.get(param);
+    } else {
+      return null;
+    }
+  }
+
+
+  /**
+   * Gets the file path with the database name for the specified string
+   *
+   * @param request Description of the Parameter
+   * @return The string value
+   */
+  public static String getDbNamePath(PortletRequest request) {
+    String fileLibraryPath = PortletUtils.getApplicationPrefs(request, "FILELIBRARY");
+    if (fileLibraryPath != null) {
+      return (fileLibraryPath + getDbName(request) + fs);
+    } else {
+      return null;
+    }
+  }
+
+
+  /**
+   * Gets the database name for the specified string
+   *
+   * @param request Description of the Parameter
+   * @return The string value
+   */
+  public static String getDbName(PortletRequest request) {
+    ConnectionElement ce = (ConnectionElement) request.getAttribute("connectionElement");
+    if (ce != null) {
+      return ce.getDbName();
     } else {
       return null;
     }
@@ -138,7 +180,7 @@ public class PortletUtils {
 
 
   public static UserBean getUser(PortletRequest request) {
-    return (UserBean)request.getAttribute("userBean");
+    return (UserBean) request.getAttribute("userBean");
   }
 }
 

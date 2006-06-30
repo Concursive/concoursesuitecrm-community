@@ -33,53 +33,70 @@
 <jsp:useBean id="PRICE_SAVINGS_TEXT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PRODUCT_SEARCH" class="java.lang.String" scope="request"/>
 <jsp:useBean id="previousPage" class="java.lang.String" scope="request"/>
+<jsp:useBean id="INCLUDE_EMAIL" class="java.lang.String" scope="request"/>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
+<script language="JavaScript">
+  function showEmailSpan(columnId) {
+		<%-- TODO: use portlet instance name for uniqueness --%>
+    showSpan('emailSpan');
+		hideSpan('emailSpanLink');
+	}
+</script>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPopupMenu.jsp" %>
 <portlet:defineObjects/>
-<dhv:evaluate if="<%= StringUtils.hasText(introduction) %>">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td>
-        <%= StringUtils.toHtml(introduction) %>
-      </td>
-    </tr>
-  </table>
-  <br />
-</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <TR>
+    <td colspan="2">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="productCatalogListCategory">
+        <TR>
+          <td nowrap>
+            <dhv:evaluate if="<%= "searchResult".equals(previousPage) %>">
+              Search Results
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= !"searchResult".equals(previousPage) %>">
+              <dhv:evaluate if="<%= hasText(parentCategory.getName()) %>">
+                <%= StringUtils.toHtml(parentCategory.getName()) %><br />
+              </dhv:evaluate>
+            </dhv:evaluate>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
   <%-- Product Header --%>
   <tr>
 		<th colspan="2">
-			<dhv:pagedListStatus title="<%= StringUtils.toHtml(productCatalog.getName()) %>" object="productCatalogListInfo"/>
-		</th>
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <TR>
+          <td nowrap>
+            <portlet:renderURL portletMode="view" var="url">
+              <portlet:param name="viewType" value="<%=previousPage%>"/>
+              <portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
+              <portlet:param name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>"/>
+            </portlet:renderURL>
+            <dhv:evaluate if="<%= "searchResult".equals(previousPage) %>">
+              <a href="<%= pageContext.getAttribute("url") %>">Back to Search Results</a>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= !"searchResult".equals(previousPage) %>">
+              <a href="<%= pageContext.getAttribute("url") %>">Back to Category</a>
+            </dhv:evaluate>
+          </td>
+          <td nowrap align="right">
+            <dhv:pagedListStatus object="productCatalogListInfo"/>
+          </td>
+        </tr>
+      </table>
+    </th>
   </tr>
-  <tr>
-    <td colspan="2" style="text-align:left;" nowrap>
-			<portlet:renderURL portletMode="view" var="url">
-				<portlet:param name="viewType" value="<%=previousPage%>"/>
-				<portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
-				<portlet:param name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>"/>
-			</portlet:renderURL>
-		&nbsp;[<a href="<%= pageContext.getAttribute("url") %>">Back to Items</a>]
-		</td>
-		<td colspan="2" style="text-align:right;" nowrap>
-			&nbsp;
-			<dhv:evaluate if="<%= "true".equals(PRODUCT_SEARCH)%>">
-			<portlet:renderURL portletMode="view" var="searchUrl">
-				<portlet:param name="viewType" value="search"/>
-			</portlet:renderURL>
-			[<a href="<%= pageContext.getAttribute("searchUrl") %>">Search Product</a>]
-			</dhv:evaluate>
-		</td>
-	</tr>
   <%-- Product Details --%>
   <tr>
-		<td valign="top" nowrap>
-      <dhv:evaluate if="<%= productCatalog.getLargestImageId() > -1 %>">
+    <dhv:evaluate if="<%= productCatalog.getLargestImageId() > -1 %>">
+      <td valign="top" nowrap>
         <dhv:fileItemImage id="<%= productCatalog.getLargestImageId() %>" path="products" thumbnail="false" name="<%=  productCatalog.getName() %>" />
-      </dhv:evaluate>
-		</td>
-    <td valign="top" width="100%">
+		  </td>
+    </dhv:evaluate>
+    <td valign="top" nowrap width="100%" <dhv:evaluate if="<%= productCatalog.getLargestImageId() == -1 %>">colspan="2"</dhv:evaluate>>
       <dhv:evaluate if="<%= "true".equals(SHOW_SKU) %>">
         <dhv:evaluate if="<%= StringUtils.hasText(productCatalog.getSku()) %>">
           <strong><%= toHtml(SKU_TEXT) %><%= StringUtils.toHtml(productCatalog.getSku()) %></strong><br />
@@ -88,8 +105,10 @@
       </dhv:evaluate>
       <strong><%= StringUtils.toHtml(productCatalog.getName()) %></strong><br />
       <br />
-      <%= StringUtils.toHtml(productCatalog.getLongDescription()) %><br />
-      <br />
+      <dhv:evaluate if="<%= hasText(productCatalog.getLongDescription()) %>">
+        <%= StringUtils.toHtml(productCatalog.getLongDescription()) %><br />
+        <br />
+      </dhv:evaluate>
       <%-- show price: must be greater than 0 --%>
       <dhv:evaluate if="<%= productCatalog.getActivePrice() != null && productCatalog.getActivePrice().getPriceAmount() > 0 %>">
         <dhv:evaluate if="<%= "true".equals(SHOW_PRICE_SAVINGS) %>">
@@ -103,7 +122,68 @@
         </dhv:evaluate>
       </dhv:evaluate>
       <%-- show options --%>
-
     </td>
   </tr>
 </table>
+<%-- show email option --%>
+<dhv:evaluate if="<%= "true".equals(INCLUDE_EMAIL) %>">
+  <span name="emailSpanLink" id="emailSpanLink">
+    <br />
+    [<a href="javascript:showEmailSpan();">Send to a friend</a>]
+  </span>
+  <span name="emailSpan" id="emailSpan" style="display:none">
+	<form name="emailForm" action="<portlet:actionURL />" method="post" >
+    <table cellpadding="4" cellspacing="0" width="100%" class="details">
+			<tr>
+				<th colspan="2">
+					Complete the following form to email this item to a friend...
+				</th>
+			</tr>
+			<tr class="containerBody">
+				<td nowrap class="formLabel">
+					Your Name
+				</td>
+				<td width="100%">
+					<input type="text" size="35" maxlength="80" name="yourName" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="formLabel">
+					Your email address
+				</td>
+				<td>
+					<input type="text" size="35" maxlength="80" name="yourEmailAddress" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="formLabel">
+					Your friend's address
+				</td>
+				<td>
+					<input type="text" size="35" maxlength="80" name="yourFriendsAddress" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="formLabel">
+					Comments
+				</td>
+				<td>
+					 <textarea name="comments" cols="55" rows="8"></textarea>
+				</td>
+			</tr>
+      <TR>
+        <td>&nbsp;</td>
+        <td><input type="submit" name="Submit" value="Submit" /></td>
+      </tr>
+      <input type="hidden" name="actionType" value="sendEmail" />
+      <input type="hidden" name="productURL" value="<%=  request.getAttribute("productURL") %>" />
+			<input type="hidden" name="productId" value="<%=  productCatalog.getId() %>" />
+			<input type="hidden" name="categoryId" value="<%=  parentCategory.getId() %>" />
+			<input type="hidden" name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>" />
+			<input type="hidden" name="offset" value="<%= String.valueOf((String) request.getAttribute("offset")) %>" />
+			<input type="hidden" name="viewType" value="details" />
+		</table>
+	</form>
+  </span>
+</dhv:evaluate>
+

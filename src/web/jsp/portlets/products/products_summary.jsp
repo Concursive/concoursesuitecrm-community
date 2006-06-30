@@ -21,6 +21,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/portlet.tld" prefix="portlet" %>
 <%@ page import="java.io.*, java.util.*, org.aspcfs.modules.products.base.*" %>
+<%@ page import="org.aspcfs.utils.web.PagedListInfo"%>
 <jsp:useBean id="introduction" class="java.lang.String" scope="request"/>
 <jsp:useBean id="parentCategory" class="org.aspcfs.modules.products.base.ProductCategory" scope="request"/>
 <jsp:useBean id="productCategoryList" class="org.aspcfs.modules.products.base.ProductCategoryList" scope="request"/>
@@ -41,96 +42,73 @@
   <br />
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
-	<TR><td>
-	  &nbsp;<dhv:evaluate if="<%= "true".equals(PRODUCT_SEARCH)%>">
-		<portlet:renderURL portletMode="view" var="searchUrl">
-			<portlet:param name="viewType" value="search"/>
-		</portlet:renderURL>
-			[<a href="<%= pageContext.getAttribute("searchUrl") %>">Search Product</a>]		
-		</dhv:evaluate>	
- </td></tr>	
-<dhv:evaluate if="<%= !"true".equals(searchResults) %>">
-<dhv:evaluate if="<%= productCategoryList.size() > 0 %>">
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-	<tr>
-		<th style="text-align:left;">
-      <table align="center" width="100%" cellpadding="4" cellspacing="0" border="0"><tr><td nowrap valign="bottom" align="left">
-			Categories
-      </td></tr></table>
-		</th>
-	</tr>
-	<tr>
-		<td>
+  <TR>
+    <td>
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="productCatalogListCategory">
+        <TR>
+          <td nowrap>
+            <dhv:evaluate if="<%= "true".equals(searchResults) %>">
+              Search Results
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= !"true".equals(searchResults) %>">
+              <dhv:evaluate if="<%= hasText(parentCategory.getName()) %>">
+                <%= StringUtils.toHtml(parentCategory.getName()) %>
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= parentCategory.getId() != Integer.parseInt((String)request.getAttribute("preferredCategoryId")) %>">
+                <portlet:renderURL var="parentUrl">
+                  <portlet:param name="viewType" value="summary"/>
+                  <portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getParentId()) %>"/>
+                </portlet:renderURL>
+                <a href="<%= pageContext.getAttribute("parentUrl") %>">Back to Previous Category</a><br />
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= productCategoryList.size() > 0 %>">
 <%
-	Iterator categoryIterator = productCategoryList.iterator();		
-	if (categoryIterator.hasNext()) {
-		while (categoryIterator.hasNext()) {
-			ProductCategory productCategory = (ProductCategory)categoryIterator.next();
-	%>
-			<portlet:renderURL var="categoryUrl">
-				<portlet:param name="viewType" value="summary"/>
-				<portlet:param name="categoryId" value="<%= String.valueOf(productCategory.getId())%>"/>
-			</portlet:renderURL>
-			<a href="<%= pageContext.getAttribute("categoryUrl") %>"><%=  productCategory.getName() %></a>&nbsp;&nbsp;&nbsp;
-	<%	
-		 }
-		} else {
-	%>
-		No categories are available for the chosen category.
-	<%	
-		 }
-	%>                                     
-	</td>
-</tr>
-</table>
-  <dhv:evaluate if="<%= productCatalogList.size() > 0 %>">
-	  <br />
-  </dhv:evaluate>
-</dhv:evaluate>
-</dhv:evaluate>
-<dhv:evaluate if="<%= !"true".equals(searchResults) %>">
-	<dhv:evaluate if="<%= productCatalogList.size() > 0 || parentCategory.getId() != Integer.parseInt((String)request.getAttribute("preferredCategoryId")) %>">
-	<table cellpadding="4" cellspacing="0" border="0" width="100%">
-		<tr>
-			<th>
-				<dhv:pagedListStatus title="<%= StringUtils.toHtml(parentCategory.getName()) %>" object="productCatalogListInfo"/>
-			</th>
-		</tr>
-		<tr>
-			<td style="text-align:left;">
-				<dhv:evaluate if="<%=!(parentCategory.getId() == Integer.parseInt((String)request.getAttribute("preferredCategoryId")))%>">
-					<portlet:renderURL var="parentUrl">
-						<portlet:param name="viewType" value="summary"/>
-						<portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getParentId()) %>"/>
-					</portlet:renderURL>
-					&nbsp;[<a href="<%= pageContext.getAttribute("parentUrl") %>">Back to Parent Category</a>]
-				</dhv:evaluate>
-			</td>
-		</tr>
-		<dhv:evaluate if="<%= productCatalogList.size() == 0 %>">
-			</table>
-		</dhv:evaluate>
-  </dhv:evaluate>
-</dhv:evaluate>
-<dhv:evaluate if="<%= "true".equals(searchResults) %>">
-	<dhv:evaluate if="<%= productCatalogList.size() > 0 %>">
-	<table cellpadding="4" cellspacing="0" border="0" width="100%">
-		<tr>
-			<th>
-				<dhv:pagedListStatus title="" object="productCatalogListInfo"/>
-			</th>
-		</tr>
- </dhv:evaluate>
-</dhv:evaluate>
+  Iterator categoryIterator = productCategoryList.iterator();
+  while (categoryIterator.hasNext()) {
+    ProductCategory productCategory = (ProductCategory)categoryIterator.next();
+%>
+                <portlet:renderURL var="categoryUrl">
+                  <portlet:param name="viewType" value="summary"/>
+                  <portlet:param name="categoryId" value="<%= String.valueOf(productCategory.getId())%>"/>
+                </portlet:renderURL>
+                <a href="<%= pageContext.getAttribute("categoryUrl") %>"><%=  toHtml(productCategory.getName()) %></a>
+<%
+    if (categoryIterator.hasNext()) {
+%>
+                ::
+<%
+    }
+  }
+%>
+              </dhv:evaluate>
+            </dhv:evaluate>
+          </td>
+          <dhv:evaluate if="<%= "true".equals(PRODUCT_SEARCH)%>">
+            <td align="right" nowrap>
+              <portlet:renderURL portletMode="view" var="searchUrl">
+                <portlet:param name="viewType" value="search"/>
+              </portlet:renderURL>
+              <a href="<%= pageContext.getAttribute("searchUrl") %>">Search</a>
+            </td>
+          </dhv:evaluate>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      <dhv:pagedListStatus label="Items" title="<%= ((PagedListInfo)renderRequest.getPortletSession().getAttribute("productCatalogListInfo")).getMaxRecords() + " item" + (((PagedListInfo)renderRequest.getPortletSession().getAttribute("productCatalogListInfo")).getMaxRecords() == 1 ? "" : "s") + " found" %>" object="productCatalogListInfo" tableClass="productCatalogListStatus" />
+    </th>
+  </tr>
 <dhv:evaluate if="<%= productCatalogList.size() > 0 %>">
-	<tr>
-		<td>
+  <%-- Display the products --%>
+  <tr>
+    <td>
 <%
 	Iterator productIterator = productCatalogList.iterator();
-	if (productIterator.hasNext()){
-		int offset = productCatalogList.getPagedListInfo().getCurrentOffset();
-		while (productIterator.hasNext()) {
-			ProductCatalog productCatalog = (ProductCatalog)productIterator.next();
+  int offset = productCatalogList.getPagedListInfo().getCurrentOffset();
+  while (productIterator.hasNext()) {
+    ProductCatalog productCatalog = (ProductCatalog)productIterator.next();
 	%>
 			<portlet:renderURL var="url">
 				<portlet:param name="page" value="<%= String.valueOf(offset%10) %>"/>
@@ -141,7 +119,7 @@
 				<portlet:param name="searchResults" value="<%= searchResults %>"/>
 			</portlet:renderURL>
 				<div style="float: left;width: 140px;height: 160px;padding-right: 3px;">
-          <table border="0" width="140" height="160" cellpadding="0" cellspacing="0">
+          <table border="0" width="140" height="160" cellpadding="0" cellspacing="0" class="productCatalogThumbnail">
             <tr>
 							<td width="140" height="160" valign="top">
 								<a href="<%= pageContext.getAttribute("url") %>">
@@ -153,15 +131,10 @@
           </table>
 				</div>
 	<%
-			offset++;
-		}
-	} else {
-%>
-			No products are available for the chosen category.
-	<%
-		}
+    offset++;
+  }
  %>
 		</td>
 	</tr>
+  </dhv:evaluate>
 </table>
-</dhv:evaluate>

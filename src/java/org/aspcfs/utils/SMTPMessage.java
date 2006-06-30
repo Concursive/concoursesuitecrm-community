@@ -452,7 +452,8 @@ public class SMTPMessage {
             BodyPart embeddedBodyPart = new MimeBodyPart();
             DataSource fds = new URLDataSource(new URL(urlImageLocation));
             embeddedBodyPart.setDataHandler(new DataHandler(fds));
-            embeddedBodyPart.setHeader("Content-ID", "<" + contentId + ">");
+						//embeddedBodyPart.setHeader("Content-Type", "image/gif");
+						embeddedBodyPart.setHeader("Content-ID", "<" + contentId + ">");
             multipart.addBodyPart(embeddedBodyPart);
           }
         }

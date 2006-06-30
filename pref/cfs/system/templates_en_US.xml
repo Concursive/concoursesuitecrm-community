@@ -306,5 +306,30 @@ Centric CRM<br />
 </body>
 ]]>
 </map>
+<map id="productInformation.details" displayName="Product Information"><![CDATA[<body>
+Hello,<br />
+<br />
+${email.fromName} wanted to share the following product with you:
+<table>
+<tr>
+<td>
+${product.name}<br />
+${product.imageSource}<br />
+${product.allowedInformation}<br />
+</td>
+</tr>
+<tr>
+<td>
+The following comment was made:<br />
+${email.comments} <br /><br />
+You may view this product online by clicking <a href="${product.link}">here</a>.<br />
+If this does not automatically open your browser and take you to that page, cut and paste the following url into your browser's address bar and hit enter: <br /><br />
+${product.link} <br />
+<br />
+You can visit the site anytime at <a href="${site.link}">${site.link}</a> for more information. <br />
+</td>
+</tr>
+</table><br />
+</body>]]></map>
 </mappings>
 </templates>
