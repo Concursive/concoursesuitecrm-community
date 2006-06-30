@@ -164,3 +164,30 @@ OPTGROUP {
   background-color: #CCCCCC !important;
   border: 1px solid #000000 !important;
 }
+
+/* Table surrounding the catalog list header */
+.productCatalogListCategory {
+  border-bottom: 1px solid #CCCCCC;
+}
+.productCatalogListCategory td {
+  font-weight: bold;
+
+}
+.productCatalogListStatus {
+
+}
+.productCatalogThumbnail td {
+  text-align: center;
+}
+.productCatalogThumbnail img {
+  border: 1px solid #CCCCCC;
+}
+
+/* Form customization */
+.details th {
+  text-align: left;
+}
+.formLabel {
+  text-align: right;
+  font-weight: normal;
+}
