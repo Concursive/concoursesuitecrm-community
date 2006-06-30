@@ -1945,6 +1945,27 @@ public class ProductCatalog extends GenericBean {
 			pst.execute();
 			pst.close();
 
+      //Reset references in access logs
+      pst = db.prepareStatement(
+        "UPDATE web_product_access_log " +
+          " SET product_id = ? " +
+					" WHERE product_id = ? ");
+			i = 0;
+			DatabaseUtils.setInt(pst, ++i, -1);
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(
+        "UPDATE web_product_email_log " +
+          " SET product_id = ? " +
+					" WHERE product_id = ? ");
+			i = 0;
+			DatabaseUtils.setInt(pst, ++i, -1);
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+
 			// delete the product from the catalog
 			i = 0;
 			pst = db.prepareStatement("DELETE FROM product_catalog "

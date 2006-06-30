@@ -107,11 +107,11 @@ public class ProductCatalogPortlet extends GenericPortlet {
 
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProductCatalogPortlet-> PortletMode: " + request.getPortletMode());
-      }
-      String viewType = (String) request.getParameter("viewType");
-      Boolean isSearchAsDefault = DatabaseUtils.parseBoolean(request.getPreferences().getValue(PRODUCT_SEARCH_AS_DEFAULT, "false"));
-      if ("details".equals(viewType)) {
+				System.out.println("ProductCatalogPortlet-> PortletMode: " + request.getPortletMode());
+			}
+			String viewType = (String) request.getParameter("viewType");
+      boolean isSearchAsDefault = DatabaseUtils.parseBoolean(request.getPreferences().getValue(PRODUCT_SEARCH_AS_DEFAULT,"false"));
+			if ("details".equals(viewType)) {
         boolean productExists = buildProduct(request, response);
         if (productExists) {
           PortletRequestDispatcher requestDispatcher =
@@ -285,13 +285,11 @@ public class ProductCatalogPortlet extends GenericPortlet {
       productCatalogList.setProductCategoryList(productCategoryList);
     }
     productCatalogList.setPagedListInfo(productCatalogListInfo);
-    if (productCatalogList.getCategoryId() == -1) {
-      // TODO: RESOLVE THIS CONFLICT
-      // NOTE: This line was in EMAIL
-      //productCatalogList.setHasCategories(Constants.FALSE);
-      // NOTE: This line was in SEARCH
+    if (productCatalogList.getCategoryId() == -1 && productCatalogListInfo.getSavedCriteria().size() == 0) {
+      productCatalogList.setHasCategories(Constants.FALSE);
+    } else if (productCatalogList.getCategoryId() == -1 && productCatalogListInfo.getSavedCriteria().size() > 0){
       productCatalogList.setHasCategories(Constants.UNDEFINED);
-    }
+		}
     productCatalogList.buildList(db);
     request.setAttribute("productCatalogList", productCatalogList);
     ProductCatalog productCatalog = null;

@@ -392,7 +392,7 @@ public final class RowColumns extends CFSModule {
         rowColumn.setWidth(width);
       }
       context.getRequest().setAttribute("rowColumn", rowColumn);
-      if (rowColumn.getIceletId() > -1) {
+      if (rowColumn.getIceletId() > -1) { 
         Icelet icelet = new Icelet(db, Integer.parseInt(iceletId));
         propertyMap = (HashMap) this.getIcletPrefs(context, icelet.getConfiguratorClass());
         context.getRequest().setAttribute("icelet", icelet);

@@ -36,7 +36,7 @@
 <%
   Iterator iter = productCatalog.getCategoryList().iterator();
   while (iter.hasNext()) {
-    ProductCategory category = iter.next();
+    ProductCategory category = (ProductCategory)iter.next();
 %>
       categories = categories+'<%= category.getId()%>|';
       currentCategoriesIds = currentCategoriesIds + '<%= category.getId() %>|';

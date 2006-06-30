@@ -230,9 +230,9 @@ public final class Portal extends CFSModule {
       db = this.getConnection(context);
       String ids = "";
       if (category != null) {
-        for (String s : category) {
-          ids += s + "|";
-        }
+				for (int i = 0; i < category.length ; i++){
+					ids += category[i] + "|";
+				}
       }
       ProductCategoryList newList = new ProductCategoryList();
       newList = newList.buildListFromIds(db, ids);

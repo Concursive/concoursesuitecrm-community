@@ -100,7 +100,7 @@ public class ProductCategory extends GenericBean {
    * @param buildChildCount The new buildChildCount value
    */
   public void setBuildChildCount(String buildChildCount) {
-    this.buildChildCount = Boolean.parseBoolean(buildChildCount);
+    this.buildChildCount = DatabaseUtils.parseBoolean(buildChildCount);
   }
 
   /**

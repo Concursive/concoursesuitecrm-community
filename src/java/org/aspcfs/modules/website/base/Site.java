@@ -798,25 +798,28 @@ public class Site extends GenericBean {
         db.setAutoCommit(false);
       }
 
-      //TODO: enable once access log is finished
-      /*
-      SiteLogList tmpSiteLogList = new SiteLogList();
-      tmpSiteLogList.setSiteId(this.getId());
-      tmpSiteLogList.buildList(db);
-      tmpSiteLogList.delete(db);
-      tmpSiteLogList = null;
-      */
+      //Reset references in access log
+      PreparedStatement pst = db.prepareStatement(
+        "UPDATE web_site_access_log " +
+          " SET site_id = ? " +
+					" WHERE site_id = ? ");
+			int i = 0;
+			DatabaseUtils.setInt(pst, ++i, -1);
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+
       TabList tmpTabList = new TabList();
       tmpTabList.setSiteId(this.getId());
       tmpTabList.buildList(db);
       tmpTabList.delete(db);
       tmpTabList = null;
 
-      PreparedStatement pst = db.prepareStatement(
+      pst = db.prepareStatement(
         "DELETE FROM web_site " +
           "WHERE site_id = ? ");
-
-      pst.setInt(1, this.getId());
+			i = 0;
+      pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
 

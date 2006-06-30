@@ -933,6 +933,17 @@ public class Page extends GenericBean {
 
       updateRelatedPages(db, false);
 
+			//Reset logs
+      pst = db.prepareStatement(
+        "UPDATE web_page_access_log " +
+          " SET page_id = ? " +
+					" WHERE page_id = ? ");
+			int i = 0;
+			DatabaseUtils.setInt(pst, ++i, -1);
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+
       pst = db.prepareStatement(
           "DELETE FROM web_page " +
           "WHERE page_id =  ? ");
