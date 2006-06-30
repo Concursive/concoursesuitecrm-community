@@ -363,12 +363,12 @@ public class ProductEmailFormatter {
 			if (productCatalog.getActivePrice() != null) {
 				additionalInformation.append("<br />");
 				additionalInformation.append(originalPriceText);
-				additionalInformation.append(CurrencyFormat.getCurrencyString(productCatalog.getActivePrice().getPriceAmount(), locale));
+				additionalInformation.append(CurrencyFormat.getCurrencyString(Double.valueOf(productCatalog.getActivePrice().getPriceAmount()), locale));
 				if (productCatalog.getActivePrice().getMsrpAmount() > productCatalog.getActivePrice().getPriceAmount()) {
 					additionalInformation.append("<br />");
 					additionalInformation.append(priceSavingsText);
 					double savings = productCatalog.getActivePrice().getMsrpAmount() - productCatalog.getActivePrice().getPriceAmount();
-					additionalInformation.append(CurrencyFormat.getCurrencyString(savings, locale));
+					additionalInformation.append(CurrencyFormat.getCurrencyString(Double.valueOf(savings), locale));
 				}
 			} else {
 				if (System.getProperty("DEBUG") != null) {
@@ -380,7 +380,7 @@ public class ProductEmailFormatter {
 			if (productCatalog.getActivePrice() != null) {
 				additionalInformation.append("<br />");
 				additionalInformation.append(priceText);
-				additionalInformation.append(CurrencyFormat.getCurrencyString(productCatalog.getActivePrice().getPriceAmount(), locale));
+				additionalInformation.append(CurrencyFormat.getCurrencyString(Double.valueOf(productCatalog.getActivePrice().getPriceAmount()), locale));
 			} else {
 				if (System.getProperty("DEBUG") != null) {
 					System.out.println("ProductEmailFormatter.getProductInformation() 'showPriceSavings && !showPriceSavings' ==> active price is NULL");
