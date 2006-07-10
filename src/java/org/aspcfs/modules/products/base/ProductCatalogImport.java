@@ -47,7 +47,7 @@ import java.util.StringTokenizer;
 
 /**
  * Represents importer for ProductCatalog
- * 
+ *
  * @author Olga.Kaptyug
  * @created May 25, 2006
  */
@@ -97,7 +97,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the imageList attribute of the ProductCatalogImport object
-   * 
+   *
    * @return imageList The imageList value
    */
   public ProductCatalogImages getImageList() {
@@ -106,7 +106,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the imageList attribute of the ProductCatalogImport object
-   * 
+   *
    * @param imageList The new imageList value
    */
   public void setImageList(ProductCatalogImages imageList) {
@@ -115,7 +115,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the imageId attribute of the ProductCatalogImport object
-   * 
+   *
    * @return The imageId value
    */
   public int getImageId() {
@@ -124,7 +124,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the id attribute of the Import object
-   * 
+   *
    * @param tmp The new id value
    */
   public void setId(String tmp) {
@@ -133,7 +133,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the imageId attribute of the ProductCatalogImport object
-   * 
+   *
    * @param imageId The new imageId value
    */
   public void setImageId(int imageId) {
@@ -148,7 +148,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Constructor for the ContactImport object
-   * 
+   *
    * @param db       Description of the Parameter
    * @param importId Description of the Parameter
    * @throws SQLException Description of the Exception
@@ -159,7 +159,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the properties attribute of the ContactImport object
-   * 
+   *
    * @param request The new properties value
    */
   public void setProperties(HttpServletRequest request) {
@@ -173,7 +173,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the owner attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
@@ -182,7 +182,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the owner attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
@@ -191,7 +191,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the accessTypeId attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new accessTypeId value
    */
   public void setAccessTypeId(int tmp) {
@@ -200,7 +200,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the accessTypeId attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new accessTypeId value
    */
   public void setAccessTypeId(String tmp) {
@@ -209,7 +209,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the userId attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
@@ -218,7 +218,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the userId attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
@@ -227,7 +227,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the lookupAccount attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new lookupAccount value
    */
   public void setLookupAccount(boolean tmp) {
@@ -236,7 +236,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the lookupAccount attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new lookupAccount value
    */
   public void setLookupAccount(String tmp) {
@@ -245,7 +245,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the propertyMap attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new propertyMap value
    */
   public void setPropertyMap(PropertyMap tmp) {
@@ -254,7 +254,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the filePath attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new filePath value
    */
   public void setFilePath(String tmp) {
@@ -263,7 +263,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the db attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new db value
    */
   public void setDb(Connection tmp) {
@@ -272,7 +272,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the manager attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new manager value
    */
   public void setManager(ImportManager tmp) {
@@ -281,7 +281,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the errorFile attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new errorFile value
    */
   public void setErrorFile(File tmp) {
@@ -290,7 +290,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the fileItem attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new fileItem value
    */
   public void setFileItem(FileItem tmp) {
@@ -299,7 +299,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the importThread attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new importThread value
    */
   public void setImportThread(Thread tmp) {
@@ -308,7 +308,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the importThread attribute of the ContactImport object
-   * 
+   *
    * @return The importThread value
    */
   public Thread getImportThread() {
@@ -317,7 +317,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the fileItem attribute of the ContactImport object
-   * 
+   *
    * @return The fileItem value
    */
   public FileItem getFileItem() {
@@ -326,7 +326,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the errorFile attribute of the ContactImport object
-   * 
+   *
    * @return The errorFile value
    */
   public File getErrorFile() {
@@ -335,7 +335,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the manager attribute of the ContactImport object
-   * 
+   *
    * @return The manager value
    */
   public ImportManager getManager() {
@@ -344,7 +344,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the db attribute of the ContactImport object
-   * 
+   *
    * @return The db value
    */
   public Connection getDb() {
@@ -353,7 +353,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the filePath attribute of the ContactImport object
-   * 
+   *
    * @return The filePath value
    */
   public String getFilePath() {
@@ -362,7 +362,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the propertyMap attribute of the ContactImport object
-   * 
+   *
    * @return The propertyMap value
    */
   public PropertyMap getPropertyMap() {
@@ -371,7 +371,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the lookupAccount attribute of the ContactImport object
-   * 
+   *
    * @return The lookupAccount value
    */
   public boolean getLookupAccount() {
@@ -380,7 +380,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the userId attribute of the ContactImport object
-   * 
+   *
    * @return The userId value
    */
   public int getUserId() {
@@ -389,7 +389,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the owner attribute of the ContactImport object
-   * 
+   *
    * @return The owner value
    */
   public int getOwner() {
@@ -398,7 +398,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the accessTypeId attribute of the ContactImport object
-   * 
+   *
    * @return The accessTypeId value
    */
   public int getAccessTypeId() {
@@ -407,7 +407,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the connectionElement attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new connectionElement value
    */
   public void setConnectionElement(ConnectionElement tmp) {
@@ -416,7 +416,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the connectionElement attribute of the ContactImport object
-   * 
+   *
    * @return The connectionElement value
    */
   public ConnectionElement getConnectionElement() {
@@ -425,7 +425,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the lead attribute of the ContactImport object
-   * 
+   *
    * @return The lead value
    */
   public boolean getLead() {
@@ -434,7 +434,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the lead attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new lead value
    */
   public void setLead(boolean tmp) {
@@ -443,7 +443,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the lead attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new lead value
    */
   public void setLead(String tmp) {
@@ -452,7 +452,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the leadStatus attribute of the ContactImport object
-   * 
+   *
    * @return The leadStatus value
    */
   public int getLeadStatus() {
@@ -461,7 +461,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the leadStatus attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new leadStatus value
    */
   public void setLeadStatus(int tmp) {
@@ -470,7 +470,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the leadStatus attribute of the ContactImport object
-   * 
+   *
    * @param tmp The new leadStatus value
    */
   public void setLeadStatus(String tmp) {
@@ -560,8 +560,8 @@ public class ProductCatalogImport extends Import implements Runnable {
               thisProductCatalog.setStatusId(Import.PROCESSED_UNAPPROVED);
               thisProductCatalog.setComments(this.getComments());
               // set product properties
-              
-            
+
+
               String productName = this.getValue(thisRecord, propertyMap
                   .getProperty("productName"));
               if (!"".equals(StringUtils.toString(productName))) {
@@ -591,7 +591,7 @@ public class ProductCatalogImport extends Import implements Runnable {
                   thisProductCatalogPricing.setPriceAmount(price);
                   thisProductCatalog.getPriceList().add(
                       thisProductCatalogPricing);
-                } 
+                }
               }
               ArrayList categoryInstances = propertyMap
                   .getDependencyMapList("productCategory");
@@ -616,66 +616,58 @@ public class ProductCatalogImport extends Import implements Runnable {
                     thisProductCatalog.getCategoryList()
                         .add(tmpProductCategory);
                   }
-                } 
+                }
               }
               String smallImageName = this.getValue(thisRecord, propertyMap
-                      .getProperty("smallImageName"));
-                  if (!"".equals(StringUtils.toString(smallImageName))) {
-                    if (!images.isEmpty()) {
-                      if (images.containsKey(smallImageName)) {
-                        error.append("; Small Image Name is a duplicated");
-                      } else {
-                        if (imageList.containsKey(smallImageName)) {
-                          images.put(smallImageName, null);
-                          thisProductCatalog.setSmallImageName(smallImageName);
-                        } else {
-                          error.append("; Small Image Name is absent in archive");
-                        }
-                      }
-                    } else {
-                      if (imageList.containsKey(smallImageName)) {
-                        images.put(smallImageName, null);
-                        thisProductCatalog.setSmallImageName(smallImageName);
-                      } else {
-                        error.append("; Small Image Name is absent in archive");
-                      }
-                    }
-                  } 
+                  .getProperty("smallImageName"));
+              if (!"".equals(StringUtils.toString(smallImageName))) {
+                if (!images.isEmpty()) {
+                  if (imageList.containsKey(smallImageName)) {
+                    images.put(smallImageName, null);
+                    thisProductCatalog.setSmallImageName(smallImageName);
+                  } else {
+                    error.append("; Small Image Name is absent in archive");
+                  }
+                } else {
+                  if (imageList.containsKey(smallImageName)) {
+                    images.put(smallImageName, null);
+                    thisProductCatalog.setSmallImageName(smallImageName);
+                  } else {
+                    error.append("; Small Image Name is absent in archive");
+                  }
+                }
+              }
 
-                  String largeImageName = this.getValue(thisRecord, propertyMap
-                      .getProperty("largeImageName"));
-                  if (!"".equals(StringUtils.toString(largeImageName))) {
-                    if (!images.isEmpty()) {
-                      if (images.containsKey(largeImageName)) {
-                        error.append("; Large Image Name is a duplicated");
-                      } else {
-                        if (imageList.containsKey(largeImageName)) {
-                          images.put(largeImageName, null);
-                          thisProductCatalog.setLargeImageName(largeImageName);
-                        } else {
-                          error.append("; Large Image Name is absent in archive");
-                        }
-                      }
-                    } else {
-                      if (imageList.containsKey(largeImageName)) {
-                        images.put(largeImageName, null);
-                        thisProductCatalog.setLargeImageName(largeImageName);
-                      } else {
-                        error.append("; Large Image Name is absent in archive");
-                      }
-                    }
-                  } 
+              String largeImageName = this.getValue(thisRecord, propertyMap
+                  .getProperty("largeImageName"));
+              if (!"".equals(StringUtils.toString(largeImageName))) {
+                if (!images.isEmpty()) {
+                  if (imageList.containsKey(largeImageName)) {
+                    images.put(largeImageName, null);
+                    thisProductCatalog.setLargeImageName(largeImageName);
+                  } else {
+                    error.append("; Large Image Name is absent in archive");
+                  }
+                } else {
+                  if (imageList.containsKey(largeImageName)) {
+                    images.put(largeImageName, null);
+                    thisProductCatalog.setLargeImageName(largeImageName);
+                  } else {
+                    error.append("; Large Image Name is absent in archive");
+                  }
+                }
+              }
               String shortDescription = this.getValue(thisRecord, propertyMap
-                      .getProperty("shortDescription"));
-                  if (!"".equals(StringUtils.toString(shortDescription))) {
-                    thisProductCatalog.setShortDescription(shortDescription);
-                  } 
+                  .getProperty("shortDescription"));
+              if (!"".equals(StringUtils.toString(shortDescription))) {
+                thisProductCatalog.setShortDescription(shortDescription);
+              }
 
-                  String longDescription = this.getValue(thisRecord, propertyMap
-                      .getProperty("longDescription"));
-                  if (!"".equals(StringUtils.toString(longDescription))) {
-                    thisProductCatalog.setLongDescription(longDescription);
-                  } 
+              String longDescription = this.getValue(thisRecord, propertyMap
+                  .getProperty("longDescription"));
+              if (!"".equals(StringUtils.toString(longDescription))) {
+                thisProductCatalog.setLongDescription(longDescription);
+              }
               thisProductCatalog.setAbbreviation(this.getValue(thisRecord,
                   propertyMap.getProperty("abbreviation")));
               if (this.getValue(thisRecord, propertyMap
@@ -689,10 +681,10 @@ public class ProductCatalogImport extends Import implements Runnable {
                     propertyMap.getProperty("listOrder")));
               }
               String productCode = this.getValue(thisRecord, propertyMap
-                      .getProperty("sku"));
-                  if (!"".equals(StringUtils.toString(productCode))) {
-                    thisProductCatalog.setSku(productCode);
-                  }
+                  .getProperty("sku"));
+              if (!"".equals(StringUtils.toString(productCode))) {
+                thisProductCatalog.setSku(productCode);
+              }
               thisProductCatalog.setSpecialNotes(this.getValue(thisRecord,
                   propertyMap.getProperty("specialNotes")));
               thisProductCatalog.setInStock(this.getValue(thisRecord,
@@ -752,34 +744,35 @@ public class ProductCatalogImport extends Import implements Runnable {
 
               if (error.length() == 0) {
                 // insert the record
-                boolean isValid = ObjectValidator.validate(null, db,thisProductCatalog);
+                boolean isValid = ObjectValidator.validate(null, db, thisProductCatalog);
                 if (isValid) {
-                  
+
                   recordInserted = thisProductCatalog.insert(db);
-                  if(recordInserted){
+                  if (recordInserted) {
                     // saving smallImage
-                if(!imageList.isEmpty()){
-                  FileItem smallImage = null;
-                  FileItem largeImage = null;
-                  if(!"".equals(StringUtils.toString(thisProductCatalog.getSmallImageName()))){
-                    smallImage = imageList.saveImage(db,thisProductCatalog.getSmallImageName(),thisProductCatalog.getId(),userId);
-                  }
-                    // saving LargeImage
-                  if(!"".equals(StringUtils.toString(thisProductCatalog.getLargeImageName()))){
-                    largeImage = imageList.saveImage(db,thisProductCatalog.getLargeImageName(),thisProductCatalog.getId(),userId);
-                    }
-                  
-                  if (smallImage != null && largeImage != null)
-                  {
-                    thisProductCatalog.setSmallImageId(smallImage.getId());
-                    thisProductCatalog.setLargeImageId(largeImage.getId());
-                    int count = thisProductCatalog.updateImages(db);
+                    if (!imageList.isEmpty()) {
+                      FileItem smallImage = null;
+                      FileItem largeImage = null;
+                      if (!"".equals(StringUtils.toString(thisProductCatalog.getSmallImageName())))
+                      {
+                        smallImage = imageList.saveImage(db, thisProductCatalog.getSmallImageName(), thisProductCatalog.getId(), userId);
+                      }
+                      // saving LargeImage
+                      if (!"".equals(StringUtils.toString(thisProductCatalog.getLargeImageName())))
+                      {
+                        largeImage = imageList.saveImage(db, thisProductCatalog.getLargeImageName(), thisProductCatalog.getId(), userId);
+                      }
+
+                      if (smallImage != null && largeImage != null) {
+                        thisProductCatalog.setSmallImageId(smallImage.getId());
+                        thisProductCatalog.setLargeImageId(largeImage.getId());
+                        int count = thisProductCatalog.updateImages(db);
                         if (count <= 0) {
                           recordInserted = false;
+                        }
+                      }
+                    }
                   }
-                }
-                  }
-                }
                 }
                 if (recordInserted) {
                   incrementTotalImportedRecords();
@@ -898,7 +891,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Logs an error when a record fails
-   * 
+   *
    * @param error      Description of the Parameter
    * @param line       Description of the Parameter
    * @param lineNumber Description of the Parameter
@@ -932,7 +925,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the value attribute of the ProductCatalogImport object
-   * 
+   *
    * @param thisRecord Description of the Parameter
    * @param type       Description of the Parameter
    * @return The value value
@@ -950,7 +943,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Description of the Method
-   * 
+   *
    * @param db Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
@@ -979,7 +972,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Deletes the import
-   * 
+   *
    * @param db Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
@@ -1012,7 +1005,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Deletes all imported records
-   * 
+   *
    * @param db           Description of the Parameter
    * @param thisImportId Description of the Parameter
    * @return Description of the Return Value
@@ -1050,7 +1043,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Description of the Method
-   * 
+   *
    * @param db Description of the Parameter
    * @throws SQLException Description of the Exception
    */
@@ -1061,7 +1054,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Description of the Method
-   * 
+   *
    * @param db Description of the Parameter
    * @throws SQLException Description of the Exception
    */
@@ -1072,7 +1065,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Gets the zipFileItem attribute of the ProductCatalogImport object
-   * 
+   *
    * @return The zipFileItem value
    */
   public FileItem getZipFileItem() {
@@ -1081,7 +1074,7 @@ public class ProductCatalogImport extends Import implements Runnable {
 
   /**
    * Sets the zipFileItem attribute of the ProductCatalogImport object
-   * 
+   *
    * @param zipFileItem The new zipFileItem value
    */
   public void setZipFileItem(FileItem zipFileItem) {
