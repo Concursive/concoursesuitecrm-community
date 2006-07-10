@@ -152,7 +152,15 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
+<servlet>
+    <servlet-name>CartPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>CartPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
   <!-- Portlet Mappings -->
   <servlet-mapping>
     <servlet-name>AboutPortlet</servlet-name>
@@ -174,6 +182,11 @@
     <servlet-name>ProductCatalogPortlet</servlet-name>
     <url-pattern>/PlutoInvoker/ProductCatalogPortlet</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CartPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/CartPortlet</url-pattern>
+  </servlet-mapping>
+
   <!-- Servlet mappings -->
   <servlet-mapping>
         <servlet-name>Controller</servlet-name>

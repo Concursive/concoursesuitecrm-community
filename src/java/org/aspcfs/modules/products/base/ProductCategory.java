@@ -1011,7 +1011,6 @@ public class ProductCategory extends GenericBean {
    * Description of the Method
    *
    * @param db Description of the Parameter
-   * @param id Description of the Parameter
    * @throws SQLException Description of the Exception
    */
   public void buildChildCount(Connection db) throws SQLException {

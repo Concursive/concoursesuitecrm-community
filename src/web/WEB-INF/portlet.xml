@@ -66,6 +66,18 @@
       <title>Product Catalog</title>
     </portlet-info>
   </portlet>
+  <portlet>
+    <portlet-name>CartPortlet</portlet-name>
+    <portlet-class>org.aspcfs.modules.website.icelet.CartPortlet</portlet-class>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>config</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Cart</title>
+    </portlet-info>
+  </portlet>
   <custom-portlet-mode>
       <description>Provides administration functions</description>
       <name>config</name>

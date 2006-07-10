@@ -11698,6 +11698,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="netapp.NetAppImport">
       <value><![CDATA[Network Application Import]]></value>
     </param>
+    <param name="quote.ProductQuoted">
+      <value>This item has been added to your cart.  You can add more items or submit the selected items to a sales representative from the cart page.</value>
+    </param>
   </config>
 
 

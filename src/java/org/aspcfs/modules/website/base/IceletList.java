@@ -17,14 +17,10 @@ package org.aspcfs.modules.website.base;
 
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.XMLUtils;
-
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
 import java.io.File;
 import java.sql.Connection;
@@ -36,11 +32,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     kailash
- *@created    February 10, 2006 $Id: Exp $
- *@version    $Id: Exp $
+ * @author kailash
+ * @version $Id: Exp $
+ * @created February 10, 2006 $Id: Exp $
  */
 public class IceletList extends ArrayList {
 
@@ -51,21 +47,22 @@ public class IceletList extends ArrayList {
   private String configuratorClass = null;
   private int enabled = Constants.UNDEFINED;
 
-  //Html drop-down helper properties
+  // Html drop-down helper properties
   private String emptyHtmlSelectRecord = null;
   private String jsEvent = null;
 
 
   /**
-   *  Constructor for the IceletList object
+   * Constructor for the IceletList object
    */
-  public IceletList() { }
+  public IceletList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the IceletList object
+   * Sets the pagedListInfo attribute of the IceletList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -73,9 +70,9 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the IceletList object
+   * Sets the id attribute of the IceletList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -83,9 +80,9 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the IceletList object
+   * Sets the id attribute of the IceletList object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -93,9 +90,9 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Sets the iceletName attribute of the IceletList object
+   * Sets the iceletName attribute of the IceletList object
    *
-   *@param  tmp  The new iceletName value
+   * @param tmp The new iceletName value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -103,9 +100,9 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Sets the iceletConfiguratorClass attribute of the IceletList object
+   * Sets the iceletConfiguratorClass attribute of the IceletList object
    *
-   *@param  tmp  The new iceletConfiguratorClass value
+   * @param tmp The new iceletConfiguratorClass value
    */
   public void setConfiguratorClass(String tmp) {
     this.configuratorClass = tmp;
@@ -113,9 +110,9 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the IceletList object
+   * Sets the enabled attribute of the IceletList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -123,9 +120,9 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the IceletList object
+   * Sets the enabled attribute of the IceletList object
    *
-   *@param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -133,100 +130,91 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the IceletList object
+   * Sets the emptyHtmlSelectRecord attribute of the IceletList object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
   }
 
-
   /**
-   *  Sets the jsEvent attribute of the IceletList object
+   * Sets the jsEvent attribute of the IceletList object
    *
-   *@param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
   }
 
-
   /**
-   *  Gets the pagedListInfo attribute of the IceletList object
+   * Gets the pagedListInfo attribute of the IceletList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
 
-
   /**
-   *  Gets the id attribute of the IceletList object
+   * Gets the id attribute of the IceletList object
    *
-   *@return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
   }
 
-
   /**
-   *  Gets the iceletName attribute of the IceletList object
+   * Gets the iceletName attribute of the IceletList object
    *
-   *@return    The iceletName value
+   * @return The iceletName value
    */
   public String getName() {
     return name;
   }
 
-
   /**
-   *  Gets the iceletConfiguratorClass attribute of the IceletList object
+   * Gets the iceletConfiguratorClass attribute of the IceletList object
    *
-   *@return    The iceletConfiguratorClass value
+   * @return The iceletConfiguratorClass value
    */
   public String getConfiguratorClass() {
     return configuratorClass;
   }
 
-
   /**
-   *  Gets the enabled attribute of the IceletList object
+   * Gets the enabled attribute of the IceletList object
    *
-   *@return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
   }
 
-
   /**
-   *  Gets the emptyHtmlSelectRecord attribute of the IceletList object
+   * Gets the emptyHtmlSelectRecord attribute of the IceletList object
    *
-   *@return    The emptyHtmlSelectRecord value
+   * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
   }
 
-
   /**
-   *  Gets the jsEvent attribute of the IceletList object
+   * Gets the jsEvent attribute of the IceletList object
    *
-   *@return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -236,11 +224,12 @@ public class IceletList extends ArrayList {
       this.add(thisIcelet);
     }
     rs.close();
+    // TODO: pst is always null here
     if (pst != null) {
       pst.close();
     }
   }
-  
+
   public void buildList(HashMap map) {
     Iterator iter = (Iterator) map.keySet().iterator();
     while (iter.hasNext()) {
@@ -249,16 +238,16 @@ public class IceletList extends ArrayList {
     }
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@param  pst            Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public ResultSet queryList(Connection db, PreparedStatement pst)
+      throws SQLException {
 
     ResultSet rs = null;
     int items = -1;
@@ -268,17 +257,16 @@ public class IceletList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    //Need to build a base SQL statement for counting records
-    sqlCount.append(
-        "SELECT COUNT(*) AS recordcount " +
-        "FROM web_icelet " +
-        "WHERE icelet_id > -1 ");
+    // Need to build a base SQL statement for counting records
+    sqlCount.append("SELECT COUNT(*) AS recordcount " + "FROM web_icelet "
+        + "WHERE icelet_id > -1 ");
 
     createFilter(sqlFilter, db);
 
     if (pagedListInfo != null) {
-      //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      // Get the total number of records matching filter
+      pst = db.prepareStatement(sqlCount.toString()
+          + sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -288,25 +276,23 @@ public class IceletList extends ArrayList {
       rs.close();
       pst.close();
 
-      //Determine column to sort by
+      // Determine column to sort by
       pagedListInfo.setDefaultSort("icelet_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY icelet_id ");
     }
 
-    //Need to build a base SQL statement for returning records
+    // Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append(
-        "wi.* " +
-        "FROM web_icelet wi " +
-        "WHERE icelet_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    sqlSelect.append("wi.* " + "FROM web_icelet wi "
+        + "WHERE icelet_id > -1 ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
+        + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -316,15 +302,15 @@ public class IceletList extends ArrayList {
     return rs;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter      Description of the Parameter
-   *@param  db             Description of the Parameter
-   *@throws  SQLException  Description of the Exception
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
-  private void createFilter(StringBuffer sqlFilter, Connection db) throws SQLException {
+  private void createFilter(StringBuffer sqlFilter, Connection db)
+      throws SQLException {
     if (id != -1) {
       sqlFilter.append("AND icelet_id = ? ");
     }
@@ -341,11 +327,11 @@ public class IceletList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst            Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -364,40 +350,37 @@ public class IceletList extends ArrayList {
     return i;
   }
 
-
   /**
-   *  Gets the htmlSelect attribute of the IceletList object
+   * Gets the htmlSelect attribute of the IceletList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
   }
 
-
   /**
-   *  Gets the emptyHtmlSelect attribute of the IceletList object
+   * Gets the emptyHtmlSelect attribute of the IceletList object
    *
-   *@param  thisSystem  Description of the Parameter
-   *@param  selectName  Description of the Parameter
-   *@return             The emptyHtmlSelect value
+   * @param thisSystem Description of the Parameter
+   * @param selectName Description of the Parameter
+   * @return The emptyHtmlSelect value
    */
   public String getEmptyHtmlSelect(SystemStatus thisSystem, String selectName) {
     HtmlSelect iceletListSelect = new HtmlSelect();
-    iceletListSelect.addItem(
-        -1, thisSystem.getLabel("calendar.none.4dashes"));
+    iceletListSelect.addItem(-1, thisSystem
+        .getLabel("calendar.none.4dashes"));
 
     return iceletListSelect.getHtml(selectName);
   }
 
-
   /**
-   *  Gets the htmlSelect attribute of the IceletList object
+   * Gets the htmlSelect attribute of the IceletList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect iceletListSelect = new HtmlSelect();
@@ -410,24 +393,21 @@ public class IceletList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Icelet thisIcelet = (Icelet) i.next();
-      if (thisIcelet.getEnabled() == false) {
+      if (!thisIcelet.getEnabled()) {
         if (thisIcelet.getId() != defaultKey) {
           continue;
         }
       }
-      iceletListSelect.addItem(
-          thisIcelet.getId(),
-          thisIcelet.getName());
+      iceletListSelect.addItem(thisIcelet.getId(), thisIcelet.getName());
     }
 
     return iceletListSelect.getHtml(selectName, defaultKey);
   }
 
-
   /**
-   *  Gets the htmlSelectObj attribute of the IceletList object
+   * Gets the htmlSelectObj attribute of the IceletList object
    *
-   *@return    The htmlSelectObj value
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj() {
     HtmlSelect iceletListSelect = new HtmlSelect();
@@ -440,54 +420,49 @@ public class IceletList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Icelet thisIcelet = (Icelet) i.next();
-      if (thisIcelet.getEnabled() == false) {
+      if (!thisIcelet.getEnabled()) {
         continue;
       }
-      iceletListSelect.addItem(
-          thisIcelet.getId(),
-          thisIcelet.getName());
+      iceletListSelect.addItem(thisIcelet.getId(), thisIcelet.getName());
     }
 
     return iceletListSelect;
   }
 
-
   /**
-   *  Gets the idFromConfiguratorClass attribute of the IceletList object
+   * Gets the idFromConfiguratorClass attribute of the IceletList object
    *
-   *@param  tmpConfiguratorClass  Description of the Parameter
-   *@return                       The idFromConfiguratorClass value
+   * @param tmpConfiguratorClass Description of the Parameter
+   * @return The idFromConfiguratorClass value
    */
   public int getIdFromConfiguratorClass(String tmpConfiguratorClass) {
     Iterator iterator = this.iterator();
-    while (iterator.hasNext()){
-      Icelet icelet = (Icelet)iterator.next();
-      if (tmpConfiguratorClass.equals(icelet.getConfiguratorClass())){
+    while (iterator.hasNext()) {
+      Icelet icelet = (Icelet) iterator.next();
+      if (tmpConfiguratorClass.equals(icelet.getConfiguratorClass())) {
         return icelet.getId();
       }
     }
     return -1;
   }
 
-
   /**
-   *  Gets the object attribute of the IceletList object
+   * Gets the object attribute of the IceletList object
    *
-   *@param  rs             Description of the Parameter
-   *@return                The object value
-   *@throws  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public Icelet getObject(ResultSet rs) throws SQLException {
     Icelet thisIcelet = new Icelet(rs);
     return thisIcelet;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator iceletIterator = this.iterator();
@@ -497,15 +472,14 @@ public class IceletList extends ArrayList {
     }
   }
 
-  
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  filePath       Description of the Parameter
-   *@exception  Exception  Description of the Exception
+   * @param filePath Description of the Parameter
+   * @throws Exception Description of the Exception
    */
   public static HashMap load(String filePath) throws Exception {
-    if (System.getProperty("DEBUG") != null){
+    if (System.getProperty("DEBUG") != null) {
       System.out.println("Reading from file:" + filePath);
     }
     File configFile = new File(filePath);
@@ -513,15 +487,17 @@ public class IceletList extends ArrayList {
     HashMap iceletMap = new HashMap();
     ArrayList iceletElements = new ArrayList();
 
-    //fetching data by table name
-    XMLUtils.getAllChildren(xml.getDocumentElement(), "icelet", iceletElements);
+    // fetching data by table name
+    XMLUtils.getAllChildren(xml.getDocumentElement(), "icelet",
+        iceletElements);
 
     Iterator iceletIterator = iceletElements.iterator();
     System.out.println("Reading values for icelets");
     while (iceletIterator.hasNext()) {
 
       Element iceletElement = (Element) iceletIterator.next();
-      Element descriptionElement = XMLUtils.getFirstChild(iceletElement, "description");
+      Element descriptionElement = XMLUtils.getFirstChild(iceletElement,
+          "description");
       Icelet icelet = new Icelet();
       String value = "";
 
@@ -529,7 +505,9 @@ public class IceletList extends ArrayList {
         icelet.setName(iceletElement.getAttribute("name"));
       }
       if (iceletElement.hasAttribute("class")) {
-        icelet.setConfiguratorClass(iceletElement.getAttribute("class"));
+        icelet
+            .setConfiguratorClass(iceletElement
+                .getAttribute("class"));
       }
       if (iceletElement.hasAttribute("version")) {
         icelet.setVersion(iceletElement.getAttribute("version"));
@@ -539,43 +517,50 @@ public class IceletList extends ArrayList {
 
       IceletPropertyMap iceletPropertyMap = new IceletPropertyMap();
       ArrayList propertyElementList = new ArrayList();
-      XMLUtils.getAllChildren(iceletElement, "property", propertyElementList);
+      XMLUtils.getAllChildren(iceletElement, "property",
+          propertyElementList);
       Iterator propertyElementIterator = propertyElementList.iterator();
       while (propertyElementIterator.hasNext()) {
         IceletProperty iceletProperty = new IceletProperty();
-        Element propertyElement = (Element) propertyElementIterator.next();
-        iceletProperty.setTypeConstant(propertyElement.getAttribute("constant"));
-        iceletProperty.setDescription(propertyElement.getAttribute("description"));
+        Element propertyElement = (Element) propertyElementIterator
+            .next();
+        iceletProperty.setTypeConstant(propertyElement
+            .getAttribute("constant"));
+        iceletProperty.setDescription(propertyElement
+            .getAttribute("description"));
         iceletProperty.setLabel(propertyElement.getAttribute("label"));
         iceletProperty.setType(propertyElement.getAttribute("type"));
-        iceletProperty.setDefaultValue(propertyElement.getAttribute("defaultValue"));
+        Element defaultValue = XMLUtils.getFirstChild(propertyElement, "defaultValue");
+        if (defaultValue != null) {
+          iceletProperty.setDefaultValue(XMLUtils.getNodeText(defaultValue));
+        } else {
+          iceletProperty.setDefaultValue(propertyElement.getAttribute("defaultValue"));
+        }
         iceletProperty.setAdditionalText(propertyElement.getAttribute("additionalText"));
         iceletProperty.setAutoAdd(propertyElement.getAttribute("autoAdd"));
         iceletPropertyMap.put(new Integer(iceletProperty.getTypeConstant()), iceletProperty);
       }
-
       icelet.setIceletPropertyMap(iceletPropertyMap);
-
-      iceletMap.put(icelet.getConfiguratorClass(),icelet);
+      iceletMap.put(icelet.getConfiguratorClass(), icelet);
     }
-    
     return iceletMap;
   }
-  
-  
+
   public Icelet getIceletById(int id) {
     Icelet result = null;
     Iterator iterator = this.iterator();
     while (iterator.hasNext()) {
-      Icelet icelet = (Icelet)iterator.next();
-//System.out.println("IceletList::getIceletById the checkIceletId is "+ icelet.getId()+" ?= "+ id);
-      if (icelet.getId() == id){
+      Icelet icelet = (Icelet) iterator.next();
+      // System.out.println("IceletList::getIceletById the checkIceletId
+      // is "+ icelet.getId()+" ?= "+ id);
+      if (icelet.getId() == id) {
         result = icelet;
-//System.out.println("IceletList::getIceletById the id match found is "+ icelet.getId());
+        // System.out.println("IceletList::getIceletById the id match
+        // found is "+ icelet.getId());
       }
     }
-//System.out.println("IceletList::getIceletById the icelet name is "+ (result != null?result.getConfiguratorClass():" icelet is null") );
+    // System.out.println("IceletList::getIceletById the icelet name is "+
+    // (result != null?result.getConfiguratorClass():" icelet is null") );
     return result;
   }
 }
-

@@ -1468,19 +1468,18 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     StringBuffer sqlSelect = new StringBuffer();
     if (ids != null && !"".equals(ids)) {
       sqlSelect
-          .append("select category_id, category_name from product_category");
+          .append("select category_id, category_name from product_category ");
 
       StringTokenizer st = new StringTokenizer(ids, "|");
 
       if (st.hasMoreTokens()) {
-        sqlSelect.append(" where category_id in (").append(
+        sqlSelect.append("where category_id in (").append(
             st.nextToken());
         while (st.hasMoreTokens()) {
           sqlSelect.append(",").append(st.nextToken());
         }
         sqlSelect.append(")");
       }
-
       pst = db.prepareStatement(sqlSelect.toString());
       rs = pst.executeQuery();
       while (rs.next()) {

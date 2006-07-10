@@ -1051,6 +1051,7 @@ public class QuoteProductBean extends GenericBean {
    * @return The product value
    */
   public ProductCatalog getProduct() {
+   if(this.product == null){  
     product = new ProductCatalog();
     product.setSku(this.getSku());
     product.setName(this.getName());
@@ -1063,6 +1064,7 @@ public class QuoteProductBean extends GenericBean {
     product.setActive(true);
     product.setInStock(true);
     product.setOnlyWarnings(this.getOnlyWarnings());
+   }
     return product;
   }
 

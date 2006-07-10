@@ -5,8 +5,9 @@
     <property constant="6022301"
               label="Content"
               description=""
-              type="htmleditor"
-              defaultValue="Enter and format your content here." />
+              type="htmleditor">
+              <defaultValue><![CDATA[Enter and format your content here.]]></defaultValue>
+    </property>
   </icelet>
   <icelet name="Contact Us Form" class="ContactFormPortlet" version="1">
     <description>Include a contact form in your web page.
@@ -17,19 +18,22 @@
               label="Introduction message"
               description="A brief message which explains that providing contact information can help the user:"
               type="textarea"
-              defaultValue="Please enter your name and contact information. This will help us to serve you better."
-              additionalText="This introduction will appear at the top of the form." />
+              additionalText="This introduction will appear at the top of the form.">
+              <defaultValue><![CDATA[Please enter your name and contact information. This will help us to serve you better.]]></defaultValue>
+    </property>
     <property constant="6022303"
               label="Thank you message"
               description="Thank the user for providing you with their contact information:"
               type="textarea"
-              defaultValue="Thank you for contact us. We will review your message and respond accordingly."
-              additionalText="This message will appear after the contact form is submitted by the user."/>
+              additionalText="This message will appear after the contact form is submitted by the user.">
+              <defaultValue><![CDATA[Thank you for contact us. We will review your message and respond accordingly.]]></defaultValue>
+    </property>
     <property constant="2006051911"
               label="Source"
               type="leadsource"
-              defaultValue="-1"
-              additionalText=""/>
+              additionalText="">
+              <defaultValue><![CDATA[-1]]></defaultValue>
+    </property>
   </icelet>
   <icelet name="Portfolio" class="PortfolioPortlet" version="1">
     <description>Displays the selected portfolio</description>
@@ -37,91 +41,117 @@
               label="Category"
               description="Select the category to display in your portal"
               type="portfolioCategory"
-              defaultValue="-1"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[-1]]></defaultValue>
+    </property>
   </icelet>
+  <icelet name="Cart" class="CartPortlet" version="1">
+    <description>Displays the products added to a quote</description>
+    <property constant="6062311"
+              label="Email To"
+              description="Email address of the quote reviewer"
+              type="text"
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue>
+    </property>
+    <property constant="6062312"
+              label="Email subject"
+              description="Email subject"
+              type="text"
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue>
+    </property>
+    <property constant="6062313"
+              label="Email message to the quote reviewer"
+              description="Email message to the quote reviewer"
+              type="htmleditor"
+              additionalText=""><defaultValue><![CDATA[${quoteRequester.name} has requested a quote for the following products.]]></defaultValue>
+    </property>
+    <property constant="6062314"
+              label="Email message to the quote requester"
+              description="Email message to the quote requester"
+              type="htmleditor"
+              additionalText=""><defaultValue><![CDATA[You have requested a quote for the items listed below. <br /> 
+							Your quote has been sent to ${quoteReviewer.email}. Your request will be reviewed, and you will receive an email soon.]]></defaultValue>
+     </property>
+   </icelet>
   <icelet name="Product Catalog" class="ProductCatalogPortlet" version="1">
     <description>Displays the products for the selected category</description>
     <property constant="6050816"
               label="Category"
               description="Select the category to display in your portal"
               type="productCategory"
-              defaultValue="-1"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[-1]]></defaultValue></property>
     <property constant="6051001"
               label="Product"
               description="Show product SKU"
               type="checkbox"
-              defaultValue="true"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[true]]></defaultValue></property>
     <property constant="6051002"
               label="Product"
               description="Text to display next to SKU"
               type="text"
-              defaultValue="Item #"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[Item #]]></defaultValue></property>
     <property constant="6051003"
               label="Product"
               description="Show product price"
               type="checkbox"
-              defaultValue="true"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[true]]></defaultValue></property>
     <property constant="6051004"
               label="Product"
               description="Text to display next to price"
               type="text"
-              defaultValue=""
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
     <property constant="6051005"
               label="Product"
               description="Show price savings between MSRP and price"
               type="checkbox"
-              defaultValue="true"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[true]]></defaultValue></property>
     <property constant="6051007"
               label="Product"
               description="Text to display next to original price"
               type="text"
-              defaultValue="Original Price:"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[Original Price:]]></defaultValue>
+    </property>
     <property constant="6051006"
               label="Product"
               description="Text to display next to savings"
               type="text"
-              defaultValue="Instant Savings:"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[Instant Savings:]]></defaultValue>
+    </property>
     <property constant="6060610"
               label="Search"
               description="Display search link on details page"
               type="checkbox"
-              defaultValue="true"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
     <property constant="6060611"
               label="Search"
               description="Default the page to a search form"
               type="checkbox"
-              defaultValue="false"
-              additionalText=""/>
+              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+     <property constant="6062310"
+              label="Cart"
+              description="Allow products to be added to cart for quoting and follow-up"
+              type="checkbox"
+              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
     <property constant="6060717"
-              label="Email Options"
-              description="Include a send email option"
+              label="Email"
+              description="Allow products to be emailed to a friend"
               type="checkbox"
               defaultValue="false"
               additionalText=""/>
+    <!-- TODO: remove the web address of site and read it from SystemStatus -->
     <property constant="6060718"
-              label="Email Options"
+              label="Email"
               description="Web address of the site"
               type="text"
               defaultValue=""
               additionalText=""/>
     <property constant="6060719"
-              label="Email Options"
+              label="Email"
               description="Subject"
               type="text"
               defaultValue="A product from our catalog"
               additionalText=""/>
     <property constant="6060720"
-              label="Email Options"
+              label="Email"
               description="Introductory message"
               type="textarea"
               defaultValue="We have an exciting range of products."

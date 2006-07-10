@@ -99,7 +99,7 @@ public class PortletUtils {
    * Gets the application prefs for the specified string
    *
    * @param request Description of the Parameter
-   * @param param   Description of the Parameter
+   * @param param Description of the Parameter
    * @return The string value
    */
   public static String getApplicationPrefs(PortletRequest request, String param) {
@@ -119,12 +119,12 @@ public class PortletUtils {
    * @return The string value
    */
   public static String getDbNamePath(PortletRequest request) {
-    String fileLibraryPath = PortletUtils.getApplicationPrefs(request, "FILELIBRARY");
+    String fileLibraryPath = PortletUtils.getApplicationPrefs(request,"FILELIBRARY");
     if (fileLibraryPath != null) {
-      return (fileLibraryPath + getDbName(request) + fs);
-    } else {
-      return null;
-    }
+			return (fileLibraryPath + getDbName(request) + fs);
+		} else {
+			return null;
+		}
   }
 
 

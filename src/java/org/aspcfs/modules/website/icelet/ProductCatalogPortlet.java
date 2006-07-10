@@ -19,6 +19,7 @@ import com.zeroio.iteam.base.FileItem;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.quotes.base.QuoteProductBean;
 import org.aspcfs.modules.website.base.WebProductAccessLog;
 import org.aspcfs.modules.website.utils.PortletUtils;
 import org.aspcfs.utils.DatabaseUtils;
@@ -31,7 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 
 /**
@@ -43,7 +46,7 @@ import java.util.Locale;
  */
 public class ProductCatalogPortlet extends GenericPortlet {
 
-  //values are of the form ([y]ymmddhh)
+  // values are of the form ([y]ymmddhh)
   private final static String VIEW_PAGE1 = "/portlets/products/products_summary.jsp";
   private final static String VIEW_PAGE2 = "/portlets/products/product.jsp";
   private final static String VIEW_PAGE3 = "/portlets/products/products_search.jsp";
@@ -56,6 +59,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
    */
   public final static String CATEGORY = "6050816";
   public final static String SHOW_SKU = "6051001";
+  public final static String ADD_QUOTE = "6062310";
   public final static String SKU_TEXT = "6051002";
   public final static String SHOW_PRICE = "6051003";
   public final static String PRICE_TEXT = "6051004";
@@ -107,11 +111,11 @@ public class ProductCatalogPortlet extends GenericPortlet {
 
     try {
       if (System.getProperty("DEBUG") != null) {
-				System.out.println("ProductCatalogPortlet-> PortletMode: " + request.getPortletMode());
-			}
-			String viewType = (String) request.getParameter("viewType");
-      boolean isSearchAsDefault = DatabaseUtils.parseBoolean(request.getPreferences().getValue(PRODUCT_SEARCH_AS_DEFAULT,"false"));
-			if ("details".equals(viewType)) {
+        System.out.println("ProductCatalogPortlet-> PortletMode: " + request.getPortletMode());
+      }
+      String viewType = request.getParameter("viewType");
+      boolean isSearchAsDefault = DatabaseUtils.parseBoolean(request.getPreferences().getValue(PRODUCT_SEARCH_AS_DEFAULT, "false"));
+      if ("details".equals(viewType)) {
         boolean productExists = buildProduct(request, response);
         if (productExists) {
           PortletRequestDispatcher requestDispatcher =
@@ -131,9 +135,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
         buildSearchResult(request, response);
         PortletRequestDispatcher requestDispatcher = getPortletContext().getRequestDispatcher(VIEW_PAGE4);
         requestDispatcher.include(request, response);
-      } else
-      if (("search".equals(viewType)) || (isSearchAsDefault && viewType == null))
-      {
+      } else if (("search".equals(viewType)) || (isSearchAsDefault && viewType == null)) {
         buildSearch(request, response);
         PortletRequestDispatcher requestDispatcher = getPortletContext().getRequestDispatcher(VIEW_PAGE3);
         requestDispatcher.include(request, response);
@@ -189,7 +191,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
    */
   public void processAction(ActionRequest request, ActionResponse response)
       throws PortletException, IOException {
-    if ("search".equals(request.getParameter("actionType"))) {
+    // Handle different portlet posts
+    String action = request.getParameter("actionType");
+    if ("search".equals(action)) {
       try {
         prepareSearchResult(request, response);
       } catch (Exception e) {
@@ -198,7 +202,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
       response.setRenderParameter("viewType", "searchResult");
     }
 
-    if ("sendEmail".equals(request.getParameter("actionType"))) {
+    if ("sendEmail".equals(action)) {
       try {
         sendEmail(request, response);
       } catch (Exception e) {
@@ -210,8 +214,53 @@ public class ProductCatalogPortlet extends GenericPortlet {
       response.setRenderParameter("page", request.getParameter("page"));
       response.setRenderParameter("offset", request.getParameter("offset"));
     }
+
+    if ("quote".equals(action)) {
+      try {
+        addQuote(request, response);
+        response.setRenderParameter("viewType", "details");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
+  /**
+   * @param request
+   * @param response
+   * @throws java.sql.SQLException
+   * @throws NumberFormatException
+   */
+  private void addQuote(ActionRequest request, ActionResponse response)
+      throws NumberFormatException, SQLException {
+    Connection db = PortletUtils.getConnection(request);
+    String productId = request.getParameter("forwardproductId");
+    HashMap quotes = new HashMap();
+    QuoteProductBean quote = new QuoteProductBean();
+    if (((HttpServletRequest) request).getSession().getAttribute("CartBean") != null) {
+      quotes = (HashMap) ((HttpServletRequest) request).getSession().getAttribute("CartBean");
+    }
+    if (productId != null) {
+      ProductCatalog productCatalog = new ProductCatalog(db, Integer.parseInt(productId));
+      quote.setProduct(productCatalog);
+      quote.setQuantity(1);
+      quotes.put(productId, quote);
+    }
+    ((HttpServletRequest) request).getSession().setAttribute("CartBean", quotes);
+    forwardParameters(request, response);
+  }
+
+  private void forwardParameters(ActionRequest request, ActionResponse response) {
+    // TODO Auto-generated method stub
+    HashMap parameters = (HashMap) request.getParameterMap();
+    Iterator iter = parameters.keySet().iterator();
+    while (iter.hasNext()) {
+      String tempKey = (String) iter.next();
+      if (tempKey.startsWith("forward")) {
+        response.setRenderParameter(tempKey.substring(7), request.getParameter(tempKey));
+      }
+    }
+  }
 
   /**
    * Description of the Method
@@ -220,17 +269,21 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @param response Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  private boolean buildProduct(RenderRequest request, RenderResponse response) throws Exception {
+  private boolean buildProduct(RenderRequest request, RenderResponse response)
+      throws Exception {
+
     // Retrieve the product preferences
-    request.setAttribute("SHOW_SKU", (String) request.getPreferences().getValue(SHOW_SKU, "true"));
-    request.setAttribute("SKU_TEXT", (String) request.getPreferences().getValue(SKU_TEXT, "Item #"));
-    request.setAttribute("SHOW_PRICE", (String) request.getPreferences().getValue(SHOW_PRICE, "true"));
-    request.setAttribute("PRICE_TEXT", (String) request.getPreferences().getValue(PRICE_TEXT, ""));
-    request.setAttribute("SHOW_PRICE_SAVINGS", (String) request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "true"));
-    request.setAttribute("ORIGINAL_PRICE_TEXT", (String) request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
-    request.setAttribute("PRICE_SAVINGS_TEXT", (String) request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Instant Savings:"));
-    request.setAttribute("PRODUCT_SEARCH", (String) request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
-    request.setAttribute("INCLUDE_EMAIL", (String) request.getPreferences().getValue(INCLUDE_EMAIL, "false"));
+    request.setAttribute("SHOW_SKU", request.getPreferences().getValue(SHOW_SKU, "true"));
+    request.setAttribute("SKU_TEXT", request.getPreferences().getValue(SKU_TEXT, "Item #"));
+    request.setAttribute("SHOW_PRICE", request.getPreferences().getValue(SHOW_PRICE, "true"));
+    request.setAttribute("PRICE_TEXT", request.getPreferences().getValue(PRICE_TEXT, ""));
+    request.setAttribute("SHOW_PRICE_SAVINGS", request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "true"));
+    request.setAttribute("ORIGINAL_PRICE_TEXT", request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
+    request.setAttribute("PRICE_SAVINGS_TEXT", request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Instant Savings:"));
+    request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
+    request.setAttribute("INCLUDE_EMAIL", request.getPreferences().getValue(INCLUDE_EMAIL, "false"));
+    request.setAttribute("ADD_QUOTE", request.getPreferences().getValue(ADD_QUOTE, "true"));
+
     // Compose a url for emailing
     StringBuffer completeProductURL = new StringBuffer();
     completeProductURL.append(((HttpServletRequest) request).getRequestURL());
@@ -248,11 +301,11 @@ public class ProductCatalogPortlet extends GenericPortlet {
     if (tmpInfo == null || tmpInfo.getId() == null) {
       checkProductId = true;
     }
-    //Get Paged List handler for product catalog list
+    // Get Paged List handler for product catalog list
     PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo", false);
     productCatalogListInfo.setMode(PagedListInfo.DETAILS_VIEW);
     productCatalogListInfo.setCurrentOffset(request.getParameter("offset"));
-    //setting the URL
+    // setting the URL
     HashMap renderParams = new HashMap();
     renderParams.put("viewType", new String[]{"details"});
     renderParams.put("productId", new String[]{request.getParameter("productId")});
@@ -260,20 +313,21 @@ public class ProductCatalogPortlet extends GenericPortlet {
     renderParams.put("offset", new String[]{request.getParameter("offset")});
     renderParams.put("page", new String[]{request.getParameter("page")});
     renderParams.put("searchResults", new String[]{request.getParameter("searchResults")});
-    request.setAttribute("page", (String) request.getParameter("page"));
-    request.setAttribute("offset", (String) request.getParameter("offset"));
+    request.setAttribute("page", request.getParameter("page"));
+    request.setAttribute("offset", request.getParameter("offset"));
     productCatalogListInfo.setRenderParameters(renderParams);
 
     String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
     request.setAttribute("preferredCategoryId", preferredCategoryId);
 
-    //building a single item as a list
+    // building a single item as a list
     ProductCatalogList productCatalogList = new ProductCatalogList();
     if (!"true".equals(request.getParameter("searchResults"))) {
       productCatalogList.setCategoryId(request.getParameter("categoryId"));
     } else {
       ProductCategoryList productCategoryList = new ProductCategoryList();
       String searchCategoryListIds = productCatalogListInfo.getSearchOptionValue("searchCategoryListIds");
+      // TODO: searchCategoryListIds = -1
       if (searchCategoryListIds.equals("") || searchCategoryListIds == null) {
         productCategoryList = productCategoryList.buildListFromIds(db, preferredCategoryId);
       } else {
@@ -285,11 +339,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
       productCatalogList.setProductCategoryList(productCategoryList);
     }
     productCatalogList.setPagedListInfo(productCatalogListInfo);
-    if (productCatalogList.getCategoryId() == -1 && productCatalogListInfo.getSavedCriteria().size() == 0) {
-      productCatalogList.setHasCategories(Constants.FALSE);
-    } else if (productCatalogList.getCategoryId() == -1 && productCatalogListInfo.getSavedCriteria().size() > 0){
+    if (productCatalogList.getCategoryId() == -1) {
       productCatalogList.setHasCategories(Constants.UNDEFINED);
-		}
+    }
     productCatalogList.buildList(db);
     request.setAttribute("productCatalogList", productCatalogList);
     ProductCatalog productCatalog = null;
@@ -302,7 +354,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
       request.setAttribute("productCatalog", productCatalog);
     }
 
-    //fetching parent category for the specified product/category
+    // fetching parent category for the specified product/category
     ProductCategory parentCategory = null;
     if (Integer.parseInt(request.getParameter("categoryId")) != -1) {
       parentCategory = new ProductCategory(db, Integer.parseInt(request.getParameter("categoryId")));
@@ -339,7 +391,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
     request.setAttribute("preferredCategoryId", preferredCategoryId);
 
-    //fetching sub categories for the specified category
+    // fetching sub categories for the specified category
     ProductCategoryList productCategoryList = new ProductCategoryList();
     productCategoryList.setParentId(preferredCategoryId);
     if (StringUtils.hasText(request.getParameter("categoryId"))) {
@@ -354,7 +406,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
     request.setAttribute("productCategoryList", productCategoryList);
 
-    //fetching parent category for the specified category
+    // fetching parent category for the specified category
     ProductCategory parentCategory = null;
     if (productCategoryList.getParentId() != -1) {
       parentCategory = new ProductCategory(db, productCategoryList.getParentId());
@@ -363,16 +415,16 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
     request.setAttribute("parentCategory", parentCategory);
 
-    //Get Paged List handler for product catalog list
+    // Get Paged List handler for product catalog list
     PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
     productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
-    //Setting URL
+    // Setting URL
     HashMap renderParams = new HashMap();
     renderParams.put("viewType", new String[]{"list"});
     renderParams.put("categoryId", new String[]{String.valueOf(productCategoryList.getParentId())});
     productCatalogListInfo.setRenderParameters(renderParams);
 
-    //fetching products for the specified category
+    // fetching products for the specified category
     ProductCatalogList productCatalogList = new ProductCatalogList();
     productCatalogList.setPagedListInfo(productCatalogListInfo);
     productCatalogList.setCategoryId(preferredCategoryId);
@@ -390,7 +442,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     // Set previous page
     request.getPortletSession().setAttribute("previousPage", "summary");
     request.setAttribute("productCatalogList", productCatalogList);
-    request.setAttribute("PRODUCT_SEARCH", (String) request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
+    request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
   }
 
 
@@ -401,15 +453,16 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @param response Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  private void buildSearchResult(RenderRequest request, RenderResponse response) throws Exception {
+  private void buildSearchResult(RenderRequest request,
+                                 RenderResponse response) throws Exception {
     Connection db = PortletUtils.getConnection(request);
 
-    //fetching products for the specified category
+    // fetching products for the specified category
     String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
-    //Get Paged List handler for product catalog list
+    // Get Paged List handler for product catalog list
     PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
     productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
-    //Setting URL
+    // Setting URL
     HashMap renderParams = new HashMap();
     renderParams.put("viewType", new String[]{"searchResult"});
     productCatalogListInfo.setRenderParameters(renderParams);
@@ -441,7 +494,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     request.getPortletSession().setAttribute("previousPage", "searchResult");
     request.setAttribute("productCatalogList", productCatalogList);
     request.setAttribute("searchResults", "true");
-    request.setAttribute("PRODUCT_SEARCH", (String) request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
+    request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
   }
 
   /**
@@ -451,14 +504,19 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @param response Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  private void prepareSearchResult(ActionRequest request, ActionResponse response) throws Exception {
-
+  private void prepareSearchResult(ActionRequest request,
+                                   ActionResponse response) throws Exception {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("1.viewtype ==> " + request.getParameter("viewType"));
-      System.out.println("1.searchName ==>" + request.getParameter("searchName"));
-      System.out.println("1.searchSku ==>" + request.getParameter("searchSku"));
-      System.out.println("1.searchcodePriceRangeMin ==>" + request.getParameter("searchcodePriceRangeMin"));
-      System.out.println("1.searchcodePriceRangeMax ==>" + request.getParameter("searchcodePriceRangeMax"));
+      System.out.println("1.viewtype ==> "
+          + request.getParameter("viewType"));
+      System.out.println("1.searchName ==>"
+          + request.getParameter("searchName"));
+      System.out.println("1.searchSku ==>"
+          + request.getParameter("searchSku"));
+      System.out.println("1.searchcodePriceRangeMin ==>"
+          + request.getParameter("searchcodePriceRangeMin"));
+      System.out.println("1.searchcodePriceRangeMax ==>"
+          + request.getParameter("searchcodePriceRangeMax"));
     }
     response.setRenderParameter("searchName", request.getParameter("searchName"));
     response.setRenderParameter("searchSku", request.getParameter("searchAbbreviation"));

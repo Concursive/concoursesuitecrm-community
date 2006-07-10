@@ -12,9 +12,9 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id: product_catalogs_search.jsp 11310 2005-04-13 20:05:00Z mrajkowski $
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv"%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -44,28 +44,28 @@
     document.forms['searchCondition'].searchAbbreviation.value="";
     document.forms['searchCondition'].searchSku.value="";
     document.forms['searchCondition'].searchcodePriceRangeMin.value="";
-    document.forms['searchCondition'].searchcodePriceRangeMax.value="";    
+    document.forms['searchCondition'].searchcodePriceRangeMax.value="";
     document.forms['searchCondition'].searchtimestampStartDate.value="";
-    document.forms['searchCondition'].searchtimestampEndDate.value="";        
+    document.forms['searchCondition'].searchtimestampEndDate.value="";
     document.forms['searchCondition'].searchCategoryListIds.value = "";
     document.forms['searchCondition'].searchCategoryNames.value = "";
     changeDivContent('changecategory', 'All');
-    
+
     document.forms['searchCondition'].searchName.focus();
     //changeDivContent('changecategory', label('label.all','All'));
   }
-  
+
   function clearProductCategory() {
-    document.forms['searchCondition'].searchCategoryListIds.value = "";    
+    document.forms['searchCondition'].searchCategoryListIds.value = "";
     //changeDivContent('changecategory', label('label.all','All'));
      document.forms['searchCondition'].searchCategoryNames.value = "";
      changeDivContent('changecategory', 'All');
   }
-  
+
   function setProductCategory(searchCategoryNames,categoryListIds) {
     //changeDivContent('changecategory', label('label.all','All'));
     document.forms['searchCondition'].searchCategoryNames.value = searchCategoryNames;
-    document.forms['searchCondition'].searchCategoryListIds.value = categoryListIds;    
+    document.forms['searchCondition'].searchCategoryListIds.value = categoryListIds;
    	changeDivContent('changecategory', searchCategoryNames);
    }
 </script>
@@ -143,7 +143,7 @@
 					<tr>
 						<td valign="top" nowrap>
 							<div id="changecategory">
-							<%if ("".equals(searchCategoryNames) || searchCategoryNames == null ) 
+							<%if ("".equals(searchCategoryNames) || searchCategoryNames == null )
 									{%><dhv:label name="quotes.all">All</dhv:label>
 							<%} else {%>
 								<%=toHtmlValue(searchCategoryNames)%><%}%>

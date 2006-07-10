@@ -20,11 +20,13 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/portlet.tld" prefix="portlet" %>
 <%@ page import="org.aspcfs.utils.StringUtils"%>
+<%@ page import="java.util.HashMap" %>
 <jsp:useBean id="introduction" class="java.lang.String" scope="request"/>
 <jsp:useBean id="productCatalog" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
 <jsp:useBean id="parentCategory" class="org.aspcfs.modules.products.base.ProductCategory" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="SHOW_SKU" class="java.lang.String" scope="request"/>
+<jsp:useBean id="ADD_QUOTE" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SKU_TEXT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SHOW_PRICE" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PRICE_TEXT" class="java.lang.String" scope="request"/>
@@ -32,8 +34,12 @@
 <jsp:useBean id="ORIGINAL_PRICE_TEXT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PRICE_SAVINGS_TEXT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PRODUCT_SEARCH" class="java.lang.String" scope="request"/>
-<jsp:useBean id="previousPage" class="java.lang.String" scope="request"/>
 <jsp:useBean id="INCLUDE_EMAIL" class="java.lang.String" scope="request"/>
+<jsp:useBean id="previousPage" class="java.lang.String" scope="request"/>
+<jsp:useBean id="offset" class="java.lang.String" scope="request"/>
+<jsp:useBean id="searchResult" class="java.lang.String" scope="request"/>
+<%@ include file="../../initPage.jsp" %>
+<%@ include file="../../initPopupMenu.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function showEmailSpan(columnId) {
@@ -42,9 +48,8 @@
 		hideSpan('emailSpanLink');
 	}
 </script>
-<%@ include file="../../initPage.jsp" %>
-<%@ include file="../../initPopupMenu.jsp" %>
 <portlet:defineObjects/>
+<% HashMap quotes = (HashMap)request.getSession().getAttribute("CartBean"); %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <TR>
     <td colspan="2">
@@ -89,12 +94,22 @@
       </table>
     </th>
   </tr>
+  <%-- Optional cart information --%>
+  <dhv:evaluate if="<%= "true".equals(ADD_QUOTE) %>">
+    <dhv:evaluate if="<%= quotes != null && quotes.containsKey(String.valueOf(productCatalog.getId())) %>">
+      <tr>
+        <td colspan="2">
+          <dhv:label name="quote.ProductQuoted">This item has been added to your cart.  You can add more items or submit the selected items to a sales representative from the cart page.</dhv:label>
+        </td>
+      </tr>
+    </dhv:evaluate>
+  </dhv:evaluate>
   <%-- Product Details --%>
   <tr>
     <dhv:evaluate if="<%= productCatalog.getLargestImageId() > -1 %>">
       <td valign="top" nowrap>
         <dhv:fileItemImage id="<%= productCatalog.getLargestImageId() %>" path="products" thumbnail="false" name="<%=  productCatalog.getName() %>" />
-		  </td>
+		</td>
     </dhv:evaluate>
     <td valign="top" nowrap width="100%" <dhv:evaluate if="<%= productCatalog.getLargestImageId() == -1 %>">colspan="2"</dhv:evaluate>>
       <dhv:evaluate if="<%= "true".equals(SHOW_SKU) %>">
@@ -126,10 +141,24 @@
   </tr>
 </table>
 <%-- show email option --%>
+<dhv:evaluate if="<%= "true".equals(ADD_QUOTE) %>">
+  <dhv:evaluate if="<%= quotes == null || !quotes.containsKey(String.valueOf(productCatalog.getId())) %>">
+  <form name="addQuote" action="<portlet:actionURL/>" method="POST">
+    <input type="hidden" name="actionType" value="quote"/>
+    <input type="hidden" name="forwardpage" value="<%= String.valueOf((String) request.getAttribute("page"))%>"/>
+    <input type="hidden" name="forwardviewType" value="details"/>
+    <input type="hidden" name="forwardproductId" value="<%= String.valueOf(productCatalog.getId()) %>"/>
+    <input type="hidden" name="forwardcategoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
+    <input type="hidden" name="forwardoffset" value="<%=offset%>"/>
+    <input type="hidden" name="forwardsearchResult" value="<%= searchResult %>"/>
+    <input type="submit" name="Add Quote" value="Receive a quote for this item"/>
+   </form>
+  </dhv:evaluate>
+</dhv:evaluate>
 <dhv:evaluate if="<%= "true".equals(INCLUDE_EMAIL) %>">
   <span name="emailSpanLink" id="emailSpanLink">
     <br />
-    [<a href="javascript:showEmailSpan();">Send to a friend</a>]
+    <input type="button" name="Send Email" value="Email this item to a friend" onclick="javascript:showEmailSpan();" />
   </span>
   <span name="emailSpan" id="emailSpan" style="display:none">
 	<form name="emailForm" action="<portlet:actionURL />" method="post" >
@@ -180,7 +209,7 @@
 			<input type="hidden" name="productId" value="<%=  productCatalog.getId() %>" />
 			<input type="hidden" name="categoryId" value="<%=  parentCategory.getId() %>" />
 			<input type="hidden" name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>" />
-			<input type="hidden" name="offset" value="<%= String.valueOf((String) request.getAttribute("offset")) %>" />
+			<input type="hidden" name="offset" value="<%= offset %>" />
 			<input type="hidden" name="viewType" value="details" />
 		</table>
 	</form>

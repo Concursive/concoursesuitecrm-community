@@ -1440,11 +1440,11 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (hasCategories == Constants.TRUE) {
       sqlFilter.append(
           " AND pctlg.product_id IN ( " +
-              " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 ) ");
+              " SELECT product_id FROM product_catalog_category_map ) ");
     } else if (hasCategories == Constants.FALSE) {
       sqlFilter.append(
           " AND pctlg.product_id NOT IN ( " +
-              " SELECT pcmap1.product_id FROM product_catalog_category_map pcmap1 )");
+              " SELECT product_id FROM product_catalog_category_map )");
     }
 
     if (buildTopLevelOnly == Constants.TRUE) {
