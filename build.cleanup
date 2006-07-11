@@ -177,3 +177,6 @@ website/website_row_add.jsp
 website/website_template_blank.jsp
 website/website_template_blank_1.jsp
 
+## 2006-07-11 updated to JavaMail 1.4
+WEB-INF/lib/mail.jar
+WEB-INF/lib/activation.jar

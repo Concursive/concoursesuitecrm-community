@@ -145,7 +145,7 @@
         <available file="${build.config.filename}" type="file"/>
       </and>
     </condition>
-    <available file="${base.dir}/lib/mail.jar" property="build.lib.present"/>
+    <available file="${base.dir}/lib/activation-1.1.jar" property="build.lib.present"/>
   </target>
 
   <target name="init.buildfile.type" depends="init.buildfile.exists" unless="build.config.present">
