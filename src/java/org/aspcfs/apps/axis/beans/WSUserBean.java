@@ -11,7 +11,7 @@ import com.darkhorseventures.framework.beans.GenericBean;
  */
 public class WSUserBean extends GenericBean {
   private int id = -1;
-  private String userName = null;
+  private String username = null;
   private String nameFirst = null;
   private String nameLast = null;
 
@@ -47,22 +47,22 @@ public class WSUserBean extends GenericBean {
 
 
   /**
-   *  Gets the userName attribute of the UserBean object
+   *  Gets the username attribute of the UserBean object
    *
-   * @return    The userName value
+   * @return    The username value
    */
-  public String getUserName() {
-    return userName;
+  public String getUsername() {
+    return username;
   }
 
 
   /**
-   *  Sets the userName attribute of the UserBean object
+   *  Sets the username attribute of the UserBean object
    *
-   * @param  tmp  The new userName value
+   * @param  tmp  The new username value
    */
-  public void setUserName(String tmp) {
-    this.userName = tmp;
+  public void setUsername(String tmp) {
+    this.username = tmp;
   }
 
 

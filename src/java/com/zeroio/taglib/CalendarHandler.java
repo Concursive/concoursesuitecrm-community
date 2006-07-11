@@ -202,11 +202,11 @@ public class CalendarHandler extends TagSupport {
       Locale locale = null;
       // Retrieve the user's timezone from their session
       UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
-      if (thisUser.getUserId() != -1 && thisUser != null) {
-        if (timeZone == null) {
-          timeZone = thisUser.getUserRecord().getTimeZone();
-        }
-        locale = thisUser.getUserRecord().getLocale();
+      if (thisUser != null && thisUser.getUserId() != -1 && thisUser.getUserRecord() != null){
+				if (timeZone == null) {
+					timeZone = thisUser.getUserRecord().getTimeZone();
+				}
+				locale = thisUser.getUserRecord().getLocale();
       }
       if (locale == null) {
         locale = Locale.getDefault();
@@ -228,7 +228,7 @@ public class CalendarHandler extends TagSupport {
         dateString = formatter.format(timestamp);
       }
     } catch (Exception e) {
-      System.out.println(e);
+			e.printStackTrace();
     }
     // Output the result based on the retrieved info (if any)
     try {
@@ -254,6 +254,7 @@ public class CalendarHandler extends TagSupport {
             "<input type=\"hidden\" name=\"" + field + "\" value=\"" + dateString + "\" />");
       }
     } catch (Exception e) {
+			e.printStackTrace();
     }
     return SKIP_BODY;
   }

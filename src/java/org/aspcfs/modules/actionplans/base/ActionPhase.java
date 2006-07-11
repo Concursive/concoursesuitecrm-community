@@ -331,8 +331,6 @@ public class ActionPhase extends GenericBean {
   public void buildSteps(Connection db) throws SQLException {
     //This needs to be uncommented on creating the ActionPhaseList class
     steps = new ActionStepList();
-//    steps.setBuildCompleteStepList(true);
-    steps.setParentId(0);
     steps.setPhaseId(this.getId());
     steps.buildList(db);
     steps = steps.reorder();

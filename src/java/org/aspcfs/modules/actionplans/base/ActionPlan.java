@@ -444,8 +444,6 @@ public class ActionPlan extends GenericBean {
     //This needs to be uncommented on creating the ActionPhaseList class
     phases = new ActionPhaseList();
     phases.setPlanId(this.getId());
-//    phases.setBuildCompletePhaseList(true);
-    phases.setParentId(0);
     phases.setBuildSteps(this.getBuildSteps());
     phases.buildList(db);
     phases = phases.reorder();

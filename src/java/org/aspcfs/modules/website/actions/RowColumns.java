@@ -382,8 +382,9 @@ public final class RowColumns extends CFSModule {
       db = this.getConnection(context);
       if (rowColumnId != null && !"".equals(rowColumnId.trim()) && !"-1".equals(rowColumnId.trim()) && rowColumn.getId() == -1) {
         rowColumn.setBuildIcelet(true);
-        rowColumn.setBuildIceletPropertyMap(true);
         rowColumn.queryRecord(db, Integer.parseInt(rowColumnId.trim()));
+        rowColumn.setDefaultPropertyMap(this.getIcletPrefs(context, rowColumn.getIcelet().getConfiguratorClass()));
+        rowColumn.buildIceletPropertyMap(db);
       }
       if (iceletId != null && !"".equals(iceletId.trim())) {
         rowColumn.setIceletId(iceletId);

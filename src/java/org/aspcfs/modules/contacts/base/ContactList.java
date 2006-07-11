@@ -235,6 +235,14 @@ public class ContactList extends Vector implements UserCentric {
     this.includeUsersOnly = includeUsersOnly;
   }
 
+  /**
+   *  Sets the includeUsersOnly attribute of the ContactList object
+   *
+   * @param  includeUsersOnly  The new includeUsersOnly value
+   */
+  public void setIncludeUsersOnly(String includeUsersOnly) {
+    this.includeUsersOnly = DatabaseUtils.parseBoolean(includeUsersOnly);
+  }
 
   /**
    *  Gets the userRoleType attribute of the ContactList object

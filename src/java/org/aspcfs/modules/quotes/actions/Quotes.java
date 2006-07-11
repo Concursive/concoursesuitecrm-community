@@ -1137,6 +1137,8 @@ public final class Quotes extends CFSModule {
       quote.setClosed(quoteBean.getClosed());
       quote.setSubmitAction(quoteBean.getSubmitAction());
       quote.setLogoFileId(quoteBean.getLogoFileId());
+      quote.setShowTotal(quoteBean.getShowTotal());
+      quote.setShowSubtotal(quoteBean.getShowSubtotal());
       quote.setModifiedBy(user.getId());
       isValid = this.validateObject(context, db, quote);
       if (isValid){
@@ -1956,6 +1958,10 @@ public final class Quotes extends CFSModule {
           "CENTRIC_DICTIONARY", this.getSystemStatus(context).getLocalizationPrefs());
       String filename = "quote.xml";
       
+      //provide a seperate database connection for the subreports
+      Connection scriptdb = this.getConnection(context);
+      map.put("SCRIPT_DB_CONNECTION", scriptdb);
+      
       //Replace the font based on the system language to support i18n chars
       String fontPath = getWebInfPath(context, "fonts");
       String reportDir = getWebInfPath(context, "reports");
@@ -2009,6 +2015,8 @@ public final class Quotes extends CFSModule {
     HashMap sentEmailAddresses = new HashMap();
     String displayGrandTotal = (String) context.getRequest().getParameter(
         "displayGrandTotal");
+    String displaySubTotal = (String) context.getRequest().getParameter(
+        "displaySubTotal");
     String quoteId = (String) context.getRequest().getParameter("quoteId");
     Quote quote = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -2081,6 +2089,12 @@ public final class Quotes extends CFSModule {
       } else {
         map.put("displaytotal", new Boolean("false"));
       }
+      if (displaySubTotal != null && !"".equals(displaySubTotal)) {
+        map.put("displaysubtotal", new Boolean(displaySubTotal));
+      } else {
+        map.put("displaysubtotal", new Boolean("false"));
+      }
+      
       if (quote.getLogoFileId() > 0) {
         FileItem thisItem = new FileItem(
             db, quote.getLogoFileId(), Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
@@ -2088,9 +2102,33 @@ public final class Quotes extends CFSModule {
             thisItem.getModified()) + thisItem.getFilename();
         map.put("logopath", logoFilePath);
       }
+      //provide the language, currency and country information
+      map.put(
+          "language", this.getSystemStatus(context).getLanguage());
+      map.put(
+          "currency", this.getSystemStatus(context).getApplicationPrefs().get(
+              "SYSTEM.CURRENCY"));
+      map.put(
+          "country", this.getSystemStatus(context).getApplicationPrefs().get(
+              "SYSTEM.COUNTRY"));
+      //provide the dictionary as a parameter to the quote report
+      map.put(
+          "CENTRIC_DICTIONARY", this.getSystemStatus(context).getLocalizationPrefs());
+      //provide a seperate database connection for the subreports
+      Connection scriptdb = this.getConnection(context);
+      map.put("SCRIPT_DB_CONNECTION", scriptdb);
+      
       String filename = "quote.xml";
-      byte[] attachment = JasperReportUtils.getReportAsBytes(
-          reportPath + filename, map, db);
+      
+      //Replace the font based on the system language to support i18n chars
+      String fontPath = getWebInfPath(context, "fonts");
+      JasperReport jasperReport = JasperReportUtils.getReport(reportPath + filename); 
+      String language = getPref(context, "SYSTEM.LANGUAGE");
+      
+      JasperReportUtils.modifyFontProperties(jasperReport, reportPath, fontPath, language);
+          
+      byte[] attachment = JasperRunManager.runReportToPdf(jasperReport, map, db);
+        
       //Send the email
       if (errors.size() == 0) {
         SMTPMessage mail = new SMTPMessage();

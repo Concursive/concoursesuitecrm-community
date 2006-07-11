@@ -74,7 +74,7 @@
     <dhv:label name="products.images">Images</dhv:label>
   </td>
   <td>
-    <%= ImportDetails.getZipFileItem().getClientFilename() %>&nbsp;&nbsp;[ <a href="javascript:window.location.href='ProductCatalogImports.do?command=Download&importId=<%= ImportDetails.getZipFileItem() %>&fid=<%= ImportDetails.getZipFileItem().getId() %>'"><dhv:label name="products.downloadFile">Download Images</dhv:label></a> ]
+    <%= ImportDetails.getZipFileItem().getClientFilename() %>&nbsp;&nbsp;[ <a href="javascript:window.location.href='ProductCatalogImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getZipFileItem().getId() %>'"><dhv:label name="products.downloadFile">Download Images</dhv:label></a> ]
   </td>
   </tr>
   <tr class="containerBody">

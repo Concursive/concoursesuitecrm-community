@@ -22,11 +22,11 @@ import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Writes data using an HTTP connection and passing objects as XML to a
@@ -46,11 +46,33 @@ public class CFSHttpXMLWriter implements DataWriter {
   private String username = null;
 
   private ArrayList transaction = new ArrayList();
+  private ArrayList transactionMeta = new ArrayList();
+
   private boolean autoCommit = true;
   private int transactionCount = 0;
   private String lastResponse = null;
 
   private boolean ignoreClientId = false;
+
+
+  /**
+   *  Gets the transactionMeta attribute of the CFSHttpXMLWriter object
+   *
+   * @return    The transactionMeta value
+   */
+  public ArrayList getTransactionMeta() {
+    return transactionMeta;
+  }
+
+
+  /**
+   *  Sets the transactionMeta attribute of the CFSHttpXMLWriter object
+   *
+   * @param  tmp  The new transactionMeta value
+   */
+  public void setTransactionMeta(ArrayList tmp) {
+    this.transactionMeta = tmp;
+  }
 
 
   /**
@@ -357,6 +379,16 @@ public class CFSHttpXMLWriter implements DataWriter {
    *
    * @return Description of the Return Value
    */
+  public boolean hasMetaInfo() {
+    return (transactionMeta != null && transactionMeta.size() > 0);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
   public boolean commit() {
     try {
       //Construct XML insert
@@ -401,6 +433,20 @@ public class CFSHttpXMLWriter implements DataWriter {
       trans.setAttribute("id", String.valueOf(++transactionCount));
       app.appendChild(trans);
 
+      //Process explicit meta information if specified
+      if (hasMetaInfo()) {
+        //Add the meta node: fields that will be returned
+        Element meta = document.createElement("meta");
+        trans.appendChild(meta);
+        Iterator properties = transactionMeta.iterator();
+        while (properties.hasNext()) {
+          String prop = (String) properties.next();
+          Element property = document.createElement("property");
+          property.appendChild(document.createTextNode(prop));
+          meta.appendChild(property);
+        }
+      }
+
       //Process the records to be submitted
       Iterator dataRecordItems = transaction.iterator();
       int recordCount = 0;
@@ -408,9 +454,9 @@ public class CFSHttpXMLWriter implements DataWriter {
         ++recordCount;
         DataRecord record = (DataRecord) dataRecordItems.next();
 
-        //Add the meta node: fields that will be returned
+        //If meta info not specified then add the meta node: fields that will be returned
         Element meta = document.createElement("meta");
-        if (recordCount == 1) {
+        if (recordCount == 1 && !hasMetaInfo()) {
           trans.appendChild(meta);
         }
 
@@ -427,7 +473,7 @@ public class CFSHttpXMLWriter implements DataWriter {
           DataField thisField = (DataField) fieldItems.next();
 
           //Add the property to the meta node
-          if (recordCount == 1) {
+          if (recordCount == 1 && !hasMetaInfo()) {
             Element property = document.createElement("property");
             property.appendChild(document.createTextNode(thisField.getName()));
             meta.appendChild(property);

@@ -130,7 +130,7 @@
             <td>
 <input type="hidden" name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" id="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="<%= (iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString())?iceletProperty.getValue():"-1") %>"/> &nbsp;
 [<a href="javascript:popProductCategoriesListSingle('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>','<%= "changeproduct_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', 'setParentList=true&listType=single');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>] &nbsp;
-[<a href="javascript:document.elements('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>').value='-1';javascript:changeDivContent('<%= "changeproduct_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', label('none.selected','None Selected'));"><dhv:label name="button.clear">Clear</dhv:label></a>]
+[<a href="javascript:document.getElementById('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>').value='-1';javascript:changeDivContent('<%= "changeproduct_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', label('none.selected','None Selected'));"><dhv:label name="button.clear">Clear</dhv:label></a>]
             <%} %>
               &nbsp;
             </td>
@@ -156,7 +156,7 @@
             <td>
 <input type="hidden" name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" id="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="<%= (iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString())?iceletProperty.getValue():"-1") %>"/> &nbsp;
 [<a href="javascript:popPortfolioCategoryListSingle('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>','<%= "changeportfolio_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', '');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>] &nbsp;
-[<a href="javascript:document.elements('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>').value='-1';javascript:changeDivContent('<%= "changeportfolio_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', label('none.selected','None Selected'));"><dhv:label name="button.clear">Clear</dhv:label></a>]
+[<a href="javascript:document.getElementById('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>').value='-1';javascript:changeDivContent('<%= "changeportfolio_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', label('none.selected','None Selected'));"><dhv:label name="button.clear">Clear</dhv:label></a>]
             <%}%>
               &nbsp;
             </td>

@@ -765,10 +765,6 @@ public final class ActionPlanEditor extends CFSModule {
     SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
-      if (phase.isGlobal()) {
-        //reset the parent
-        phase.setParentId(-1);
-      }
       //update or save the current phase
       if (phase.getPlanId() == -1) {
         phase.setPlanId(planId);
@@ -788,22 +784,17 @@ public final class ActionPlanEditor extends CFSModule {
         if (nextPhaseId != null && !"".equals(nextPhaseId.trim())) {
           context.getRequest().setAttribute("nextPhaseId", nextPhaseId);
         }
-        if (previousPhaseId != null && !"".equals(previousPhaseId.trim())) {
-          context.getRequest().setAttribute("previousPhaseId", previousPhaseId);
-        }
         if (phase.getId() > -1) {
           return executeCommandModifyPhase(context);
         } else {
           return executeCommandAddPhase(context);
         }
       } else {
-        if (!phase.isGlobal()) {
           if (previousPhaseId != null && !"".equals(previousPhaseId)) {
             phase.setAfterPhaseId(db, previousPhaseId, true);
           } else if (nextPhaseId != null && !"".equals(nextPhaseId)) {
             phase.setBeforePhaseId(db, nextPhaseId, true);
           }
-        }
       }
       context.getRequest().setAttribute("planId", String.valueOf(phase.getPlanId()));
     } catch (Exception e) {

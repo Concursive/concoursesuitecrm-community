@@ -50,7 +50,7 @@ function populateEmailAddress(address, type, field) {
 }
 </script>
 <body onLoad="javascript:showSpan('send');hideSpan('sendingEmail');document.forms['emailQuote'].emailToAddress.focus();">
-<form name="emailQuote" action="Quotes.do?command=SendEmail&quoteId=<%= quote.getId() %>&displayGrandTotal=<%= quote.getShowTotal() %>&displaySubtotal=<%= quote.getShowSubtotal() %>'" method="post" onSubmit="return checkForm(this);">
+<form name="emailQuote" action="Quotes.do?command=SendEmail&quoteId=<%= quote.getId() %>&displayGrandTotal=<%= quote.getShowTotal() %>&displaySubTotal=<%= quote.getShowSubtotal() %>'" method="post" onSubmit="return checkForm(this);">
 <%= showError(request, "actionError") %>
 <br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

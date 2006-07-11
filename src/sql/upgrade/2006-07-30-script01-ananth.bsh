@@ -1,0 +1,78 @@
+// Script (C) 2006 Dark Horse Ventures LLC, all rights reserved
+
+import org.aspcfs.utils.DatabaseUtils;
+import java.sql.*;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.modules.actionplans.base.*;
+
+//Script fixes the phase parent chain by determining the global phase id
+//Assumes only one global phase in the plan
+//Assumes only one regular phase with no parent phase in the plan
+
+pst = db.prepareStatement(
+  "UPDATE action_phase " +
+  "SET parent_id = ? " +
+  "WHERE phase_id = ? ");
+      
+//Determine the phase that is not a parent nor has a parent
+ActionPlanList planList = new ActionPlanList();
+planList.buildList(db);
+
+Iterator plans = planList.iterator();
+while (plans.hasNext()) {
+  ActionPlan thisPlan = (ActionPlan) plans.next();
+  
+  int freePhase = -1;
+  int makeParent = -1;
+  
+  print("Plan: " + thisPlan.getId() + "\n");
+  
+  ActionPhaseList phaseList = new ActionPhaseList();
+  phaseList.setPlanId(thisPlan.getId());
+  phaseList.buildList(db);
+  
+  Iterator p1 = phaseList.iterator();
+  while (p1.hasNext()) {
+    ActionPhase thisPhase = (ActionPhase) p1.next();
+    
+    if (thisPhase.getParentId() == 0) {
+      //Phase has no parent. check to see if it is not a parent to any node
+      boolean isParent = false;
+      Iterator p2 = phaseList.iterator();
+      while (p2.hasNext()) {
+        ActionPhase phase = (ActionPhase) p2.next();
+        if (phase.getParentId() == thisPhase.getId()) {
+          isParent = true;
+        }
+      }
+      if (!isParent) {
+        print("Phase HAS NO parent and is not a parent to any node: " + thisPhase.getId() + "\n");
+        freePhase = thisPhase.getId();
+      }
+    } else {
+      //phase has a parent. check to see if it is not a parent to any node
+      boolean isParent = false;
+      Iterator p3 = phaseList.iterator();
+      while (p3.hasNext()) {
+        ActionPhase phase = (ActionPhase) p3.next();
+        if (phase.getParentId() == thisPhase.getId()) {
+          isParent = true;
+        }
+      }
+      if (!isParent) {
+        print("Phase HAS A parent, and is not a parent to any node: " + thisPhase.getId() + "\n");
+        makeParent = thisPhase.getId();
+      }
+    }
+  }
+  
+  if (freePhase != -1 && makeParent != -1) {
+    //Attach the loose node to the end of the chain
+    print("Updating the loose end...." + "\n");
+    pst.setInt(1, makeParent);
+    pst.setInt(2, freePhase);
+    pst.executeUpdate();
+  }
+}
+
+pst.close();

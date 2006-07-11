@@ -66,8 +66,16 @@
        <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%" valign="top" nowrap>
-      <%= toHtml(cat.getFullPath()) %>
-    </td>
+			<%if(cat.getFullPath()!=null){
+			ProductCategoryList fullPath = cat.getFullPath();
+			Iterator fullPathIter = fullPath.iterator();
+			while (fullPathIter.hasNext()) {
+			 ProductCategory pc = (ProductCategory)fullPathIter.next();
+			%>
+			<%=pc.getName()%><%if(fullPathIter.hasNext()){%> > <%}%>
+		<%}
+		}%>
+		</td>
   </tr>
 <%} } else {%>
   <tr>

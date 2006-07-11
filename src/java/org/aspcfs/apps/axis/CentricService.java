@@ -43,11 +43,11 @@ public class CentricService {
     //crm.setCode(code);
 
     //TODO: Remove these. To test the following values need to be provided
-    crm.setUrl("http://127.0.0.1:8080/centric40/ProcessPacket.do");
-    crm.setId("127.0.0.1:8080");
+    crm.setUrl("http://127.0.0.1:8080/branch-40/ProcessPacket.do");
+    crm.setId("127.0.0.1");
     crm.setSystemId(4);
-    //crm.setClientId(4);
-    crm.setUsername("ananth");
+    crm.setClientId(1); 
+    //crm.setUsername("ananth");
     crm.setCode("792fef441691aa41135a15c1478a5ee4");
   }
 
@@ -57,16 +57,20 @@ public class CentricService {
    * @param  password  Description of the Parameter
    * @return           Description of the Return Value
    */
-  public int validateUser(String username, String password) {
+  public int validateUser(String in0, String in1) {
     try {
       initialize();
+      
+      String username = in0;
+      String password = in1;
+      
       // Start a new transaction
       crm.setAutoCommit(false);
-
+      
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("id", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("id");
+      crm.setTransactionMeta(meta);
 
       DataRecord login = new DataRecord();
       login.setName("userList");
@@ -100,10 +104,10 @@ public class CentricService {
       crm.setAutoCommit(false);
 
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("id", "");
-      meta.addField("username", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("id");
+      meta.add("username");
+      crm.setTransactionMeta(meta);
 
       DataRecord login = new DataRecord();
       login.setName("userList");
@@ -148,10 +152,10 @@ public class CentricService {
       crm.setAutoCommit(false);
 
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("nameFirst", "");
-      meta.addField("nameLast", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("nameFirst");
+      meta.add("nameLast");
+      crm.setTransactionMeta(meta);
 
       DataRecord contact = new DataRecord();
       contact.setName("contactList");
@@ -162,7 +166,7 @@ public class CentricService {
       boolean result = crm.commit();
       System.out.println("RESPONSE: " + crm.getLastResponse());
 
-      ArrayList contacts = crm.getRecords("org.aspcfs.modules.contact.base.Contact");
+      ArrayList contacts = crm.getRecords("org.aspcfs.modules.contacts.base.Contact");
       if (contacts.size() == 1) {
         return (Contact) contacts.get(0);
       }
@@ -192,28 +196,33 @@ public class CentricService {
    * @param  filter  Description of the Parameter
    * @return         Description of the Return Value
    */
-  public Organization[] retrieveAccounts(int userId, String filter) {
+  public Organization[] retrieveAccounts(int in0, String in1) {
     try {
       initialize();
+      
+      int userId = in0;
+      String filter = in1;
+      
       // Start a new transaction
       crm.setAutoCommit(false);
 
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("name", "");
-      meta.addField("url", "");
-      meta.addField("notes", "");
-      meta.addField("industryName", "");
-      meta.addField("alertDate", "");
-      meta.addField("alertText", "");
-      meta.addField("revenue", "");
-      meta.addField("ticker", "");
-      meta.addField("accountNumber", "");
-      meta.addField("potential", "");
-      meta.addField("nameFirst", "");
-      meta.addField("nameMiddle", "");
-      meta.addField("nameLast", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("orgId");
+      meta.add("name");
+      meta.add("url");
+      meta.add("notes");
+      meta.add("industryName");
+      meta.add("alertDate");
+      meta.add("alertText");
+      meta.add("revenue");
+      meta.add("ticker");
+      meta.add("accountNumber");
+      meta.add("potential");
+      meta.add("nameFirst");
+      meta.add("nameMiddle");
+      meta.add("nameLast");
+      crm.setTransactionMeta(meta);
 
       DataRecord account = new DataRecord();
       account.setName("accountList");
@@ -255,18 +264,18 @@ public class CentricService {
       crm.setAutoCommit(false);
 
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("streetAddressLine1", "");
-      meta.addField("streetAddressLine2", "");
-      meta.addField("streetAddressLine3", "");
-      meta.addField("streetAddressLine4", "");
-      meta.addField("city", "");
-      meta.addField("state", "");
-      meta.addField("zip", "");
-      meta.addField("country", "");
-      meta.addField("typeName", "");
-      meta.addField("primaryAddress", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("streetAddressLine1");
+      meta.add("streetAddressLine2");
+      meta.add("streetAddressLine3");
+      meta.add("streetAddressLine4");
+      meta.add("city");
+      meta.add("state");
+      meta.add("zip");
+      meta.add("country");
+      meta.add("typeName");
+      meta.add("primaryAddress");
+      crm.setTransactionMeta(meta);
 
       DataRecord account = new DataRecord();
       account.setName("organizationAddressList");
@@ -305,12 +314,13 @@ public class CentricService {
       crm.setAutoCommit(false);
 
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("number", "");
-      meta.addField("extension", "");
-      meta.addField("typeName", "");
-      meta.addField("primaryNumber", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("orgId");
+      meta.add("number");
+      meta.add("extension");
+      meta.add("typeName");
+      meta.add("primaryNumber");
+      crm.setTransactionMeta(meta);
 
       DataRecord account = new DataRecord();
       account.setName("organizationPhoneNumberList");
@@ -349,12 +359,12 @@ public class CentricService {
       crm.setAutoCommit(false);
 
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("id", "");
-      meta.addField("linkItemId", "");
-      meta.addField("name", "");
-      meta.addField("description", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("id");
+      meta.add("linkItemId");
+      meta.add("name");
+      meta.add("description");
+      crm.setTransactionMeta(meta);
 
       DataRecord category = new DataRecord();
       category.setName("customFieldCategoryList");
@@ -395,10 +405,10 @@ public class CentricService {
       crm.setAutoCommit(false);
 
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("id", "");
-      meta.addField("name", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("id");
+      meta.add("name");
+      crm.setTransactionMeta(meta);
 
       DataRecord category = new DataRecord();
       category.setName("customFieldList");
@@ -431,16 +441,20 @@ public class CentricService {
    * @param  folderId   Description of the Parameter
    * @return            Description of the Return Value
    */
-  public CustomFieldData[] retrieveCustomData(int accountId, int folderId, int fieldId) {
+  public CustomFieldData[] retrieveCustomData(int in0, int in1, int in2) {
     try {
       initialize();
       // Start a new transaction
       crm.setAutoCommit(false);
 
+      int accountId = in0;
+      int folderId = in1;
+      int fieldId = in2;
+      
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("enteredValue", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("enteredValue");
+      crm.setTransactionMeta(meta);
 
       DataRecord category = new DataRecord();
       category.setName("customFieldDataList");
@@ -479,7 +493,7 @@ public class CentricService {
    * @param  userId     The feature to be added to the CustomRecord attribute
    * @return            Description of the Return Value
    */
-  public boolean addCustomRecord(int userId, int folderId, int fieldId, int accountId, int input) {
+  public boolean addCustomRecord(int in0, int in1, int in2, int in3, int in4) {
     //insert a new record
     //insert custom field data
     try {
@@ -487,10 +501,16 @@ public class CentricService {
       // Start a new transaction
       crm.setAutoCommit(false);
 
+      int userId = in0;
+      int folderId = in1;
+      int fieldId = in2;
+      int accountId = in3;
+      int input = in4;
+      
       //Add Meta Info
-      DataRecord meta = new DataRecord();
-      meta.addField("id", "");
-      crm.save(meta);
+      ArrayList meta = new ArrayList();
+      meta.add("id");
+      crm.setTransactionMeta(meta);
 
       DataRecord customRecord = new DataRecord();
       customRecord.setName("customFieldRecord");

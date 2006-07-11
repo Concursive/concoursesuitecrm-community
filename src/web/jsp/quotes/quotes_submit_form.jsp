@@ -138,6 +138,7 @@
 <input type="hidden" name="address" value="<%= quote.getAddress() %>"/>
 <input type="hidden" name="closeIt" value="<%= quote.getCloseIt() %>"/>
 <input type="hidden" name="showTotal" value="<%= quote.getShowTotal() %>"/>
+<input type="hidden" name="showSubtotal" value="<%= quote.getShowSubtotal() %>"/>
 <input type="hidden" name="logoFileId" value="<%= quote.getLogoFileId() %>"/>
 <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" />
 <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />

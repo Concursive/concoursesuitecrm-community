@@ -121,8 +121,8 @@
 
   //set the timezone if the user is logged in
   org.aspcfs.modules.login.beans.UserBean thisUser = (org.aspcfs.modules.login.beans.UserBean) request.getSession().getAttribute("User");
-  if (thisUser.getUserId() != -1 && thisUser != null) {
-    calendarView.setTimeZone(TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone()));
+  if (thisUser.getUserId() != -1 && thisUser != null && thisUser.getUserRecord() != null) {
+    	calendarView.setTimeZone(TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone()));
   }else {
     calendarView.setTimeZone(TimeZone.getTimeZone(timeZone));
   }
