@@ -157,7 +157,6 @@
 </dhv:evaluate>
 <dhv:evaluate if="<%= "true".equals(INCLUDE_EMAIL) %>">
   <span name="emailSpanLink" id="emailSpanLink">
-    <br />
     <input type="button" name="Send Email" value="Email this item to a friend" onclick="javascript:showEmailSpan();" />
   </span>
   <span name="emailSpan" id="emailSpan" style="display:none">
