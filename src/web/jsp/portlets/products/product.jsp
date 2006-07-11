@@ -111,7 +111,7 @@
         <dhv:fileItemImage id="<%= productCatalog.getLargestImageId() %>" path="products" thumbnail="false" name="<%=  productCatalog.getName() %>" />
 		</td>
     </dhv:evaluate>
-    <td valign="top" nowrap width="100%" <dhv:evaluate if="<%= productCatalog.getLargestImageId() == -1 %>">colspan="2"</dhv:evaluate>>
+    <td valign="top" width="100%" <dhv:evaluate if="<%= productCatalog.getLargestImageId() == -1 %>">colspan="2"</dhv:evaluate>>
       <dhv:evaluate if="<%= "true".equals(SHOW_SKU) %>">
         <dhv:evaluate if="<%= StringUtils.hasText(productCatalog.getSku()) %>">
           <strong><%= toHtml(SKU_TEXT) %><%= StringUtils.toHtml(productCatalog.getSku()) %></strong><br />
