@@ -67,12 +67,12 @@
               
               <%-- Update Rating --%>
               <dhv:evaluate if="<%= (thisItemWork.getActionId() == ActionStep.UPDATE_RATING) %>">
-                <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                   <%-- The user logged-in is the steps owner --%>
                   <%= ratingLookup.getHtmlSelect("rating", actionPlanWork.getOrganization().getRating()) %>
                   <input type="hidden" name="ratingItemId" value=<%= thisItemWork.getId() %>/>
                 </dhv:evaluate>
-                <dhv:evaluate if="<%= !thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                <dhv:evaluate if="<%= !thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                   <%-- The user logged-in is NOT the steps owner, so disable the lookup --%>
                   <%= ratingLookup.getHtmlSelect("rating", actionPlanWork.getOrganization().getRating(), true) %>
                 </dhv:evaluate>

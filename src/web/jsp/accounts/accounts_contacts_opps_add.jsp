@@ -24,6 +24,7 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="addQuote" class="java.lang.String" scope="request"/>
 <%
   OpportunityHeader opportunityHeader = OppDetails.getHeader();
 	OpportunityComponent ComponentDetails = OppDetails.getComponent();
@@ -147,7 +148,7 @@ function checkForm(form) {
               <strong><dhv:label name="pipeline.addAQuoteQuestion">Add a quote?</dhv:label></strong>
             </td>
             <td>
-              <input type="checkbox" name="addQuote" value="true" />
+              <input type="checkbox" name="addQuote" value="true" <%= request.getAttribute("addQuote") != null && "true".equals((String) request.getAttribute("addQuote"))? "CHECKED":"" %>/>
             </td>
           </tr>
         </table>

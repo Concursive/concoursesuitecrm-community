@@ -3889,9 +3889,9 @@ public class ContactList extends Vector implements UserCentric {
     if (ownerOrReader) {
       sqlFilter.append(
           "AND c.contact_id NOT IN ( " +
-          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
-          "AND (c.owner = ? OR c.contact_id IN (SELECT cr.contact_id AS contact_id " +
-          "FROM contact_lead_read_map cr WHERE cr.user_id = ?)) ");
+          "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
+          "AND (c.owner = ? OR c.contact_id IN (SELECT contact_id " +
+          "FROM contact_lead_read_map WHERE user_id = ?)) ");
     }
 
     if (this.getHierarchialUsers() != -1) {

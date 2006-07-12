@@ -484,7 +484,7 @@ public final class Leads extends CFSModule {
       componentList.setPagedListInfo(componentListInfo);
       componentList.setAccessType(thisHeader.getAccessType());
       String accessType = searchOppListInfo.getSearchOptionValue("searchcodeAccessType");
-      if (viewSource != null && !"dashboard".equals(viewSource)) {
+      if (viewSource == null || !"dashboard".equals(viewSource)) {
         if (accessType != null && !"".equals(accessType.trim()) && AccessType.CONTROLLED_HIERARCHY == accessTypeList.getRuleId(Integer.parseInt(accessType))) {
           if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
             componentList.setControlledHierarchy(Constants.TRUE, this.getUserRange(context, searchOppListInfo.getFilterKey("listFilter2")));

@@ -87,11 +87,14 @@ public class FieldHandler extends TagSupport {
     int checks = 0;
     ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
         "ConnectionElement");
+		SystemStatus systemStatus = null;
     if (ce == null) {
       System.out.println("FieldHandler-> ConnectionElement is null");
-    }
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-        "SystemStatus")).get(ce.getUrl());
+			systemStatus = (SystemStatus)pageContext.getRequest().getAttribute("systemStatus");
+    } else {
+			systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+					"SystemStatus")).get(ce.getUrl());
+		}
     if (systemStatus == null) {
       System.out.println("FieldHandler-> SystemStatus is null");
     }

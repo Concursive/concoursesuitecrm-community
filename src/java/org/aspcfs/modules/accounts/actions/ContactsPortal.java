@@ -513,6 +513,7 @@ public final class ContactsPortal extends CFSModule {
     newUser.setModifiedBy(getUserId(context));
     newUser.setTimeZone(getPref(context, "SYSTEM.TIMEZONE"));
     newUser.setCurrency(getPref(context, "SYSTEM.CURRENCY"));
+    newUser.setSiteId(thisContact.getSiteId());
     newUser.setLanguage(getPref(context, systemStatus.getLanguage()));
     recordInserted = newUser.insert(db, context);
 

@@ -161,7 +161,7 @@ public final class Quotes extends CFSModule {
       siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
       context.getRequest().setAttribute("SiteList", siteList);
 
-      
+
       //reset the offset and current letter of the paged list in order to make sure we search ALL quotes
       PagedListInfo quoteListInfo = this.getPagedListInfo(
           context, "quoteListInfo");
@@ -1957,23 +1957,23 @@ public final class Quotes extends CFSModule {
       map.put(
           "CENTRIC_DICTIONARY", this.getSystemStatus(context).getLocalizationPrefs());
       String filename = "quote.xml";
-      
+
       //provide a seperate database connection for the subreports
       Connection scriptdb = this.getConnection(context);
       map.put("SCRIPT_DB_CONNECTION", scriptdb);
-      
+
       //Replace the font based on the system language to support i18n chars
       String fontPath = getWebInfPath(context, "fonts");
       String reportDir = getWebInfPath(context, "reports");
-      JasperReport jasperReport = JasperReportUtils.getReport(reportDir + filename); 
+      JasperReport jasperReport = JasperReportUtils.getReport(reportDir + filename);
       String language = getPref(context, "SYSTEM.LANGUAGE");
-      
+
       JasperReportUtils.modifyFontProperties(
           jasperReport, reportDir, fontPath, language);
-      
+
       byte[] bytes = JasperRunManager.runReportToPdf(
         jasperReport, map, db);
-        
+
       if (bytes != null) {
         FileDownload fileDownload = new FileDownload();
         fileDownload.setDisplayName(
@@ -2094,7 +2094,7 @@ public final class Quotes extends CFSModule {
       } else {
         map.put("displaysubtotal", new Boolean("false"));
       }
-      
+
       if (quote.getLogoFileId() > 0) {
         FileItem thisItem = new FileItem(
             db, quote.getLogoFileId(), Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
@@ -2117,18 +2117,18 @@ public final class Quotes extends CFSModule {
       //provide a seperate database connection for the subreports
       Connection scriptdb = this.getConnection(context);
       map.put("SCRIPT_DB_CONNECTION", scriptdb);
-      
+
       String filename = "quote.xml";
-      
+
       //Replace the font based on the system language to support i18n chars
       String fontPath = getWebInfPath(context, "fonts");
-      JasperReport jasperReport = JasperReportUtils.getReport(reportPath + filename); 
+      JasperReport jasperReport = JasperReportUtils.getReport(reportPath + filename);
       String language = getPref(context, "SYSTEM.LANGUAGE");
-      
+
       JasperReportUtils.modifyFontProperties(jasperReport, reportPath, fontPath, language);
-          
+
       byte[] attachment = JasperRunManager.runReportToPdf(jasperReport, map, db);
-        
+
       //Send the email
       if (errors.size() == 0) {
         SMTPMessage mail = new SMTPMessage();

@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
-<%@ page import="org.aspcfs.utils.CurrencyFormat" %>
+<%@ page import="org.aspcfs.utils.CurrencyFormat,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="oppList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="opportunityListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -61,7 +61,7 @@
         <a href="javascript:submitActionPlan('<%= oppHeader.getId() %>', '', '<%= request.getAttribute("hiddenFieldId") %>','<%= request.getAttribute("displayFieldId") %>','<%= request.getParameter("actionStepWork") %>');">
         <%= toHtml(oppHeader.getDescription()) %></a>
       <% } else { %>
-        <a href="javascript:submitPage('<%= oppHeader.getId() %>', '<%= toHtml(oppHeader.getDescription()) %>', '<%= request.getAttribute("hiddenFieldId") %>','<%= request.getAttribute("displayFieldId") %>');">
+        <a href="javascript:submitPage('<%= oppHeader.getId() %>', '<%= toHtml(StringUtils.jsStringEscape(oppHeader.getDescription())) %>', '<%= request.getAttribute("hiddenFieldId") %>','<%= request.getAttribute("displayFieldId") %>');">
         <%= toHtml(oppHeader.getDescription()) %></a>
       <% } %>
       (<%= oppHeader.getComponentCount() %>)

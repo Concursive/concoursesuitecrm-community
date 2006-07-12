@@ -169,7 +169,7 @@ public class UserGroupList extends ArrayList {
         sqlFilter.append("AND ug.group_id IN (SELECT group_id FROM user_group_map WHERE user_id = ? ) ");
       }
       if (campaignId > -1) {
-        sqlFilter.append("AND ug.group_id IN (SELECT cgm.user_group_id AS group_id FROM campaign_group_map cgm WHERE cgm.campaign_id = ? ) ");
+        sqlFilter.append("AND ug.group_id IN (SELECT user_group_id FROM campaign_group_map WHERE campaign_id = ?) ");
       }
       if (enabled != Constants.UNDEFINED) {
         sqlFilter.append("AND ug.enabled = ? ");
@@ -177,12 +177,12 @@ public class UserGroupList extends ArrayList {
     } else if (getEnabledForUser) {
       sqlFilter.append("AND (ug.group_id IN (SELECT group_id FROM user_group_map WHERE user_id = ? ) " + (enabled != Constants.UNDEFINED ? " OR ug.enabled = ?" : "") + ") ");
       if (campaignId > -1) {
-        sqlFilter.append("AND ug.group_id IN (SELECT cgm.user_group_id AS group_id FROM campaign_group_map cgm WHERE cgm.campaign_id = ? ) ");
+        sqlFilter.append("AND ug.group_id IN (SELECT user_group_id FROM campaign_group_map WHERE campaign_id = ?) ");
       }
     } else if (getEnabledForCampaign) {
-      sqlFilter.append("AND (ug.group_id IN (SELECT cgm.user_group_id AS group_id FROM campaign_group_map cgm WHERE cgm.campaign_id = ? ) " + (enabled != Constants.UNDEFINED ? " OR ug.enabled = ?" : "") + ") ");
+      sqlFilter.append("AND (ug.group_id IN (SELECT user_group_id FROM campaign_group_map WHERE campaign_id = ?) " + (enabled != Constants.UNDEFINED ? " OR ug.enabled = ?" : "") + ") ");
       if (userId > -1) {
-        sqlFilter.append("AND ug.group_id IN (SELECT group_id FROM user_group_map WHERE user_id = ? ) ");
+        sqlFilter.append("AND ug.group_id IN (SELECT group_id FROM user_group_map WHERE user_id = ?) ");
       }
     }
     if (!includeAllSites) {

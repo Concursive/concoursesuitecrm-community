@@ -157,3 +157,6 @@
 2006-05-08-script02-mr.bsh
 2005-09-25-script02-partha.bsh
 2006-02-13-script01-ananth.bsh
+## 4.0.2
+## Removes 2 undeveloped action step types if they exist
+2006-06-14-script01-mr.sql

@@ -156,9 +156,9 @@ public final class ExternalContactsImports extends CFSModule {
     Connection db = null;
     boolean contactRecordInserted = false;
     boolean fileRecordInserted = false;
-    SystemStatus systemStatus = this.getSystemStatus(context);
-    ContactImport thisImport = (ContactImport) context.getFormBean();
     try {
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      ContactImport thisImport = (ContactImport) context.getFormBean();
       db = getConnection(context);
 
       String filePath = this.getPath(context, "contacts");
@@ -237,6 +237,7 @@ public final class ExternalContactsImports extends CFSModule {
 
       context.getRequest().setAttribute("ImportDetails", thisImport);
     } catch (Exception e) {
+      e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {

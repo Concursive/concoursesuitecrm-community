@@ -539,9 +539,11 @@ public class RecipientList extends Vector {
     int count = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT COUNT(*) as itemcount " +
+        "SELECT COUNT("+(moduleId == Constants.CONTACTS?"DISTINCT c.campaign_id":"*")+") as itemcount " +
         "FROM scheduled_recipient s " +
-        "WHERE id > 0 ");
+        (moduleId == Constants.CONTACTS?"LEFT JOIN campaign c ON (s.campaign_id = c.campaign_id) ":" ") +
+        "WHERE id > 0 " +
+        (moduleId == Constants.CONTACTS?"AND c.trashed_date IS NULL ":""));
     if (moduleId == Constants.CONTACTS) {
       sql.append("AND s.contact_id = ? ");
     }

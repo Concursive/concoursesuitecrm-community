@@ -4765,6 +4765,7 @@ public class Contact extends GenericBean {
         dependencyList.add(thisDependency);
       }
     } catch (SQLException e) {
+      e.printStackTrace();
       throw new SQLException(e.getMessage());
     }
     return dependencyList;

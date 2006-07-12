@@ -233,7 +233,7 @@
                     <%--This step allows user to update --%>
                     <dhv:evaluate if="<%= thisPhaseWork.getPhase().getRandom() %>">
                       <%-- Random Steps --%>
-                      <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                      <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                         <%-- User has permission to complete this step --%>
                         <dhv:evaluate if="<%= thisPhaseWork.isCurrent() %>">
                           <dhv:evaluate if="<%= !thisItemWork.hasStatus() %>">
@@ -258,7 +258,7 @@
                           </dhv:evaluate>
                         </dhv:evaluate>
                       </dhv:evaluate>
-                      <dhv:evaluate if="<%= !thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                      <dhv:evaluate if="<%= !thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                         <%-- User does not have permission to compete this step --%>
                         <dhv:evaluate if="<%= thisItemWork.hasStatus() %>">
                           <%-- The step has a valid status --%>
@@ -274,18 +274,18 @@
                     </dhv:evaluate>
                     <dhv:evaluate if="<%= !thisPhaseWork.getPhase().getRandom() %>">
                       <%-- Sequential Steps --%>
-                      <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                      <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                         <%-- The user logged-in is the steps owner --%>
                         <dhv:evaluate if="<%= thisItemWork.isCurrent() %>">
                           <%-- This is the current step in the Action Plan --%>
                           <dhv:evaluate if="<%= thisItemWork.getHasNext() %>">
                             <%-- There exists a next step --%>
-                            <dhv:evaluate if="<%= thisItemWork.getNextStep().userHasPermission(User.getUserRecord().getId()) %>">
+                            <dhv:evaluate if="<%= thisItemWork.getNextStep().userHasPermission(User.getUserRecord().getId(), request) %>">
                               <%-- The Next step's owner is the current step's owner  --%>
                               <a class="rollover" href="javascript:markComplete('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '<%= thisItemWork.getNextStep().getId() %>');"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a>
                               <a class="phaseCurrentLink" href="javascript:markComplete('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '<%= thisItemWork.getNextStep().getId() %>');"><%= toHtml(thisItemWork.getStepDescription()) %></a>
                             </dhv:evaluate>
-                            <dhv:evaluate if="<%= !thisItemWork.getNextStep().userHasPermission(User.getUserRecord().getId()) %>">
+                            <dhv:evaluate if="<%= !thisItemWork.getNextStep().userHasPermission(User.getUserRecord().getId(), request) %>">
                               <%-- The Next step's owner is NOT the current step's owner  --%>
                               <a class="rollover" href="javascript:checkPopURLReturn('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>','<%= thisItemWork.getId() %>');"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a>
                               <a class="phaseCurrentLink" href="javascript:checkPopURLReturn('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>','<%= thisItemWork.getId() %>');"><%= toHtml(thisItemWork.getStepDescription()) %></a>
@@ -324,12 +324,12 @@
                           </dhv:evaluate>
                           <dhv:evaluate if="<%= thisItemWork.isPrevious() %>">
                             <%-- This is the previous step in the Action Plan (could be the last step too!) --%>
-                              <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                              <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                                 <%-- The Previous step's owner is the current step's owner  --%>
                                 <a class="rollover" href="javascript:revertStatus('<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '<%= thisItemWork.getHasNext() ? thisItemWork.getNextStep().getId() : -1 %>');"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a>
                                 <a class="rollover" href="javascript:revertStatus('<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '<%= thisItemWork.getHasNext() ? thisItemWork.getNextStep().getId() : -1 %>');"><%= toHtml(thisItemWork.getStepDescription()) %></a>
                               </dhv:evaluate>
-                              <dhv:evaluate if="<%= ! thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                              <dhv:evaluate if="<%= ! thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                                 <%-- The Previous step's owner is NOT the current step's owner  --%>
                                 <a class="rollover" href="javascript:displayMsg();"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a>
                                 <a class="rollover" href="javascript:displayMsg();"><%= toHtml(thisItemWork.getStepDescription()) %></a>
@@ -338,7 +338,7 @@
                         </dhv:evaluate>
                       </dhv:evaluate>
                       <%-- The user logged-in is NOT the steps owner --%>
-                      <dhv:evaluate if="<%= ! thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+                      <dhv:evaluate if="<%= ! thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
                         <dhv:evaluate if="<%= thisItemWork.hasStatus() %>">
                           <%-- The step has a valid status --%>
                           <%= thisItemWork.getStatusGraphicTag(systemStatus) %>

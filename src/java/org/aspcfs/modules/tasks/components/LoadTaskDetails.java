@@ -76,12 +76,15 @@ public class LoadTaskDetails extends ObjectHookComponent implements ComponentInt
         Contact contact = new Contact(db, user.getContactId());
         context.setAttribute(ENTERED_BY_CONTACT, contact);
       }
-      Contact contact = new Contact(db, thisTask.getContactId());
-      if (contact.getEmployee()) {
-        return false;
+      if (thisTask.getContactId() > -1) {
+        Contact contact = new Contact(db, thisTask.getContactId());
+        if (contact.getEmployee()) {
+          return false;
+        }
       }
       result = true;
     } catch (Exception e) {
+      e.printStackTrace();
     } finally {
       freeConnection(context, db);
     }

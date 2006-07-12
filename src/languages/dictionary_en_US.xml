@@ -3892,6 +3892,12 @@
     <param name="actionPlan.assignedUserHierarchy.text">
       <value><![CDATA[Within the hierarchy of the assigned user]]></value>
     </param>
+    <param name="actionPlan.assignedUserHierarchy.withName">
+      <value><![CDATA[Within the hierarchy of ${username}]]></value>
+    </param>
+    <param name="actionPlan.upTheUserHierarchy.withName">
+      <value><![CDATA[Up the hierarchy of ${username}]]></value>
+    </param>
     <param name="admin.actionPlan.attachAccountContact.text">
       <value><![CDATA[Require user to attach or create an account contact]]></value>
     </param>

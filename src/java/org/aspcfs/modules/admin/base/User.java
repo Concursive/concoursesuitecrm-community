@@ -3263,6 +3263,6 @@ public class User extends GenericBean {
    * @return Description of the Return Value
    */
   public String toString() {
-    return this.getUsername();
+    return this.getUsername()+"("+ this.getId() +")";
   }
 }

@@ -3304,6 +3304,9 @@ public class Campaign extends GenericBean {
     stepList.setCampaignId(this.getId());
     stepList.buildList(db);
     stepList.resetCampaignInformation(db);
+    
+    // remove link to instant action campaigns
+    ActionItemLog.deleteLink(db, this.getId(), Constants.CAMPAIGN_OBJECT);
 
     ContactHistory.deleteObject(db, OrganizationHistory.CAMPAIGN, this.getId());
 

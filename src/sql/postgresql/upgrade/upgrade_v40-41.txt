@@ -12,10 +12,13 @@
 2006-05-25-script01-aliaksei.bsh
 2006-05-25-script02-aliaksei.bsh
 
-# 4.1b4 Web access log
+# Web access log
 2006-06-09-script01-kailash.sql
 
-
+# TODO: verify and add to next 4.1 .war
+# 4.0 fixes
+2006-06-14-script01-mr.sql
+2006-06-28-script01-partha.sql
 
 
 # Run each time after upgrading a system

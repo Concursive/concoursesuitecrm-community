@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Calendar;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *  Description of the Class
@@ -1312,16 +1313,16 @@ public class ActionPhaseWork extends GenericBean {
    * @param  userId  Description of the Parameter
    * @return         Description of the Return Value
    */
-  public boolean requiresUserAttention(int userId) {
+  public boolean requiresUserAttention(int userId, HttpServletRequest request) {
     boolean result = false;
     if (!this.getPhase().getRandom()) {
-      return (this.getCurrentStep().userHasPermission(userId));
+      return (this.getCurrentStep().userHasPermission(userId, request));
     } else {
       if (itemWorkList != null && itemWorkList.size() > 0) {
         Iterator iter = (Iterator) itemWorkList.iterator();
         while (iter.hasNext()) {
           ActionItemWork item = (ActionItemWork) iter.next();
-          if (!item.hasStatus() && item.userHasPermission(userId)) {
+          if (!item.hasStatus() && item.userHasPermission(userId, request)) {
             result = true;
             break;
           }

@@ -240,10 +240,10 @@
       ActionPlanWork thisWork = (ActionPlanWork) j.next();
 %>
   <tr
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null && thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId()) %>">
+      <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null && thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
         class="highlightRed"
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() == null || !thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId()) %>">
+      <dhv:evaluate if="<%= thisWork.getCurrentPhase() == null || !thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
         class="row<%= rowid %>"
       </dhv:evaluate>
       >
@@ -260,10 +260,10 @@
     <td width="100%"><%= toHtml(thisWork.getPlanName()) %></td>
     <td align="center" nowrap>
       <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null %>">
-        <dhv:evaluate if="<%= thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId()) %>">
+        <dhv:evaluate if="<%= thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
           <dhv:label name="account.yes">Yes</dhv:label>
         </dhv:evaluate>
-        <dhv:evaluate if="<%= !thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId()) %>">
+        <dhv:evaluate if="<%= !thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
           <dhv:label name="account.no">No</dhv:label>
         </dhv:evaluate>
       </dhv:evaluate>

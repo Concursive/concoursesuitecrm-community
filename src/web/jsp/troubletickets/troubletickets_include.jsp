@@ -371,7 +371,7 @@
           </td>
           <td>
             <input type="hidden" name="orgId" id="orgId" value="<%=  TicketDetails.getOrgId() %>" />
-            <input type="hidden" name="orgSiteId" id="orgSiteId" value="<%=  TicketDetails.getId() > 0 ? TicketDetails.getOrgSiteId() : User.getSiteId()%>" />
+            <input type="hidden" name="orgSiteId" id="orgSiteId" value="<%=  TicketDetails.getId() > 0 || TicketDetails.getOrgId() > -1 ? TicketDetails.getOrgSiteId() : User.getSiteId()%>" />
             &nbsp;<font color="red">*</font>
             <%= showAttribute(request, "orgIdError") %>
             [<a href="javascript:popAccountsListSingle('orgId','changeaccount', 'showMyCompany=true&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
@@ -487,6 +487,7 @@
   </tr>
   </dhv:include>
   <% }else{ %>
+    <input type="hidden" name="orgSiteId" id="orgSiteId" value="<%=  TicketDetails.getId() > 0 ? TicketDetails.getOrgSiteId() : User.getSiteId()%>" />
     <input type="hidden" name="orgId" value="<%= toHtmlValue(request.getParameter("orgId")) %>">
     <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
   <% } %>

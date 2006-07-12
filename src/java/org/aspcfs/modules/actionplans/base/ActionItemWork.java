@@ -31,10 +31,12 @@ import org.aspcfs.modules.relationships.base.RelationshipList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.SMTPMessage;
 import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.UserUtils;
 import org.aspcfs.utils.web.LookupList;
 
 import java.sql.*;
 import java.util.Iterator;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *  Description of the Class
@@ -1303,6 +1305,16 @@ public class ActionItemWork extends GenericBean {
           this.setUserGroupName(step.getUserGroupName());
         }
         break;
+      case ActionStep.WITHIN_USER_HIERARCHY:
+        departmentUsers = new UserList();
+        departmentUsers.setManagerId(this.getOwnerId());
+        departmentUsers.setEnabled(Constants.TRUE);
+        departmentUsers.buildList(db);
+        this.setDepartmentName("");
+        break;
+      case ActionStep.UP_USER_HIERARCHY:
+        this.setDepartmentName("");
+        break;
       default:
         break;
     }
@@ -1315,7 +1327,7 @@ public class ActionItemWork extends GenericBean {
    * @param  userId  Description of the Parameter
    * @return         Description of the Return Value
    */
-  public boolean userHasPermission(int userId) {
+  public boolean userHasPermission(int userId, HttpServletRequest request) {
     boolean result = false;
     switch (step.getPermissionType()) {
       case ActionStep.ROLE:
@@ -1329,6 +1341,21 @@ public class ActionItemWork extends GenericBean {
         break;
       case ActionStep.SPECIFIC_USER_GROUP:
         result = (groupUsers != null && groupUsers.getUser(userId) != null);
+        break;
+      case ActionStep.MANAGER:
+        result = (userId == planWork.getManagerId());
+        break;
+      case ActionStep.UP_USER_HIERARCHY:
+        result = this.getOwnerId() == userId || (UserUtils.getUserIdRange(request).indexOf(String.valueOf(this.getOwnerId())) != -1);
+        break;
+      case ActionStep.WITHIN_USER_HIERARCHY:
+        result = (departmentUsers != null && departmentUsers.getUser(userId) != null) || this.getOwnerId() == userId;
+        break;
+      case ActionStep.ASSIGNED_USER_AND_MANAGER:
+        result = (userId == this.getOwnerId() || userId == planWork.getManagerId());
+        break;
+      case ActionStep.USER_DELEGATED:
+        result = (this.getOwnerId() == userId);
         break;
       default:
         result = (this.getOwnerId() == userId);

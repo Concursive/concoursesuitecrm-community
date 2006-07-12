@@ -236,6 +236,9 @@ public final class AccountContactsOpps extends CFSModule {
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute(
             "TypeList", newOpp.getComponent().getTypeList());
+        if (context.getRequest().getParameter("addQuote") != null && "true".equals(context.getRequest().getParameter("addQuote"))) {
+          context.getRequest().setAttribute("addQuote", "true");
+        }
       }
       context.getRequest().setAttribute("ComponentDetails", newOpp.getComponent());
 

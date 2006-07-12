@@ -178,12 +178,12 @@
         <tr class="containerBody">
           <%-- Global Step --%>
           <td nowrap valign="top" class="row1" style="border-right:0px">
-            <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+            <dhv:evaluate if="<%= thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
               <%-- The user logged-in is the steps owner --%>
               <a class="rollover" href="javascript:updateGlobalStatus('<%= !thisItemWork.isComplete() ? thisItemWork.getActionRequired() : false %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getActionId() %>', '<%= thisItemWork.getId() %>');"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a>
               <a class="rollover" href="javascript:updateGlobalStatus('<%= !thisItemWork.isComplete() ? thisItemWork.getActionRequired() : false %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getActionId() %>', '<%= thisItemWork.getId() %>');"><%= toHtml(thisItemWork.getStepDescription()) %></a>
             </dhv:evaluate>
-            <dhv:evaluate if="<%= ! thisItemWork.userHasPermission(User.getUserRecord().getId()) %>">
+            <dhv:evaluate if="<%= ! thisItemWork.userHasPermission(User.getUserRecord().getId(), request) %>">
               <%-- The user logged-in is NOT the steps owner --%>
               <%= thisItemWork.getStatusGraphicTag(systemStatus) %>
               <%= toHtml(thisItemWork.getStepDescription()) %>

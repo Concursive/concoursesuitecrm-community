@@ -2,7 +2,7 @@
 Centric CRM 4.1 beta
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-July 11, 2006
+July 12, 2006
 ----------------------------------------------------------------------------
 
 ** UNDER DEVELOPMENT **

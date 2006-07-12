@@ -73,8 +73,12 @@ public class AutoPopulate {
     if (timeParams != null) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("AutoPopulate-> Found timeParams");
-        System.out.println(
-            "AutoPopulate-> User has timezone: " + user.getTimeZone());
+				if (user == null){
+					System.out.println("user record in NULL");
+				} else {
+					System.out.println(
+							"AutoPopulate-> User has timezone: " + user.getTimeZone());
+				}
       }
       cal = Calendar.getInstance();
     }

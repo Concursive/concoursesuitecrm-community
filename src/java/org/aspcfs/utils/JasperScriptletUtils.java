@@ -645,10 +645,9 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
       }
       if (email != null && !"".equals(email.trim())) {
         if (sb.length() > 0) {
-          sb.append("\nEmail: " + email);
-        } else {
-          sb.append("Email" + email);
+          sb.append("\n");
         }
+        sb.append("Email: " + email);
       }
     }
     rs.close();

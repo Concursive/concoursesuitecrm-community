@@ -1751,6 +1751,7 @@ public final class TroubleTickets extends CFSModule {
     if (newTic.getOrgId() > -1) {
       Organization org = new Organization(db, newTic.getOrgId());
       siteId = org.getSiteId();
+      newTic.setOrgSiteId(siteId);
     }
     LookupList resolvedByDeptList = new LookupList(db, "lookup_department");
     resolvedByDeptList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
@@ -2182,6 +2183,10 @@ public final class TroubleTickets extends CFSModule {
       map.put(
           "CENTRIC_DICTIONARY", this.getSystemStatus(context).getLocalizationPrefs());
       String filename = "ticket.xml";
+      
+      //provide a seperate database connection for the subreports
+      Connection scriptdb = this.getConnection(context);
+      map.put("SCRIPT_DB_CONNECTION", scriptdb);
       
       //Replace the font based on the system language to support i18n chars
       String fontPath = getWebInfPath(context, "fonts");

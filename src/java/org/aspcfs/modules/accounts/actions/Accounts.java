@@ -798,6 +798,7 @@ public final class Accounts extends CFSModule {
         //the organization that he access to
         //(i.e., the organization for which he is an account contact
         if (isPortalUser(context)) {
+          organizationList.setOrgSiteId(this.getUserSiteId(context));
           organizationList.setOrgId(getPortalUserPermittedOrgId(context));
         }
         organizationList.buildList(db);

@@ -100,7 +100,7 @@
       <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
     </td>
     <td>
-      <input type="text" size="10" name="serviceContractNumber" maxlength="8" value="<%= toHtmlValue(serviceContract.getServiceContractNumber()) %>"><font color="red">*</font>
+      <input type="text" size="10" name="serviceContractNumber" maxlength="30" value="<%= toHtmlValue(serviceContract.getServiceContractNumber()) %>"><font color="red">*</font>
       <%= showAttribute(request, "serviceContractNumberError") %>
     </td>
   </tr>

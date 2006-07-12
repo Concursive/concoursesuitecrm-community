@@ -3475,6 +3475,9 @@ public class Ticket extends GenericBean {
       workList.setSiteId(this.getSiteId());
       workList.buildList(db);
       workList.delete(db);
+      
+      //delete any related action list items
+      ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
     }
 
     // Enable/Disable the contact history for the ticket
