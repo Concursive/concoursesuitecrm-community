@@ -1113,6 +1113,9 @@ public class RowColumn extends GenericBean {
     subRows = new PageRowList();
     subRows.setRowColumnId(this.getId());
     subRows.setBuildColumns(true);
+    subRows.setBuildIcelet(this.getBuildIcelet());
+    subRows.setBuildIceletPropertyMap(this.getBuildIceletPropertyMap());
+    subRows.setBuildSubRows(this.getBuildSubRows());
     subRows.buildList(db);
   }
 

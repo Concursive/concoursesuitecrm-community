@@ -21,6 +21,7 @@ import org.aspcfs.apps.workFlowManager.ComponentInterface;
 import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.base.Constants;
 
 import java.sql.Connection;
 
@@ -76,7 +77,9 @@ public class LoadDocumentDetails extends ObjectHookComponent implements Componen
         Contact contact = new Contact(db, user.getContactId());
         context.setAttribute(ENTERED_BY_CONTACT, contact);
       }
-      result = true;
+      if (thisDocument.getLinkModuleId() == Constants.ACCOUNTS) {
+        result = true;
+      }
     } catch (Exception e) {
     } finally {
       freeConnection(context, db);

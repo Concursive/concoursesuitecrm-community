@@ -636,7 +636,7 @@ public class UserGroup extends GenericBean {
    * @return    Description of the Return Value
    */
   public String toString() {
-    return this.getName();
+    return (this.getName()+" ("+this.getId()+")");
   }
 
 

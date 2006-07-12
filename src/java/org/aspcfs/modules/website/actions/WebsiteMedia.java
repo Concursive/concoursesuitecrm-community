@@ -208,8 +208,6 @@ public final class WebsiteMedia extends CFSModule {
 						thumbnail.setModifiedBy(thisItem.getModifiedBy());
 						thumbnail.insert(db);
 					}
-
-          this.processInsertHook(context, thisItem);
           context.getRequest().setAttribute("fileItem", thisItem);
           context.getRequest().setAttribute("subject", "");
         }
@@ -336,9 +334,6 @@ public final class WebsiteMedia extends CFSModule {
         isValid = this.validateObject(context, db, thisItem);
         if (isValid) {
           recordInserted = thisItem.insertVersion(db);
-        }
-        if (recordInserted) {
-          this.processUpdateHook(context, previousItem, thisItem);
         }
       } else {
         recordInserted = false;
@@ -598,9 +593,6 @@ public final class WebsiteMedia extends CFSModule {
       isValid = this.validateObject(context, db, thisItem);
       if (isValid) {
         recordInserted = thisItem.update(db);
-      }
-      if (recordInserted) {
-        this.processUpdateHook(context, previousItem, thisItem);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

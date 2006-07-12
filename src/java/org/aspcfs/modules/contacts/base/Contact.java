@@ -397,10 +397,10 @@ public class Contact extends GenericBean {
     StringBuffer sql = new StringBuffer();
     //NOTE: Update the UserList query if any changes are made to the contact query
     sql.append(
-        "SELECT c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate," + 
+        "SELECT c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate," +
         " d.description as departmentname, " +
         " ca.city AS city, " +
-        " ca.postalcode AS postalcode, " + 
+        " ca.postalcode AS postalcode, " +
         " lsi.description AS site_id_name, " +
         " lind.description AS industry_name, " +
         " lcs.description AS source_name, " +
@@ -559,6 +559,11 @@ public class Contact extends GenericBean {
   }
 
 
+  /**
+   *  Sets the potential attribute of the Contact object
+   *
+   * @param  tmp  The new potential value
+   */
   public void setPotential(String tmp) {
     this.potential = Double.parseDouble(tmp);
   }
@@ -1757,7 +1762,7 @@ public class Contact extends GenericBean {
   /**
    *  Sets the orgTrashedDate attribute of the Contact object
    *
-   * @param  orgTrashedDate  The new orgEnabled value
+   * @param  tmp             The new orgTrashedDate value
    */
   public void setOrgTrashedDate(java.sql.Timestamp tmp) {
     this.orgTrashedDate = tmp;
@@ -1767,7 +1772,7 @@ public class Contact extends GenericBean {
   /**
    *  Sets the orgTrashedDate attribute of the Contact object
    *
-   * @param  orgTrashedDate  The new orgEnabled value
+   * @param  tmp             The new orgTrashedDate value
    */
   public void setOrgTrashedDate(String tmp) {
     this.orgTrashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -5330,6 +5335,21 @@ public class Contact extends GenericBean {
     //Move the contact
     Contact.move(db, this.getId(), newOrgId, organization.getName(), this.getModifiedBy());
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public boolean canWorkAsContact() {
+    boolean result = true;
+    if ((this.getCompany() == null || "".equals(this.getCompany().trim())) &&
+        (this.getNameLast() == null || "".equals(this.getNameLast().trim()))) {
+      result = false;
+    }
+    return result;
   }
 }
 

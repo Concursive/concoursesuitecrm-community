@@ -15,5 +15,9 @@
 # 4.1b4 Web access log
 2006-06-09-script01-kailash.sql
 
-# Update the icelets last
+
+
+
+# Run each time after upgrading a system
+2005-07-20-script01-mr.bsh
 2006-06-01-script01-mr.bsh

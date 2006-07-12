@@ -527,6 +527,9 @@ public class RowColumnList extends ArrayList {
       Iterator rowColumnIterator = this.iterator();
       while (rowColumnIterator.hasNext()) {
         RowColumn thisRowColumn = (RowColumn) rowColumnIterator.next();
+        thisRowColumn.setBuildIceletPropertyMap(buildIceletPropertyMap);
+        thisRowColumn.setBuildIcelet(buildIcelet);
+        thisRowColumn.setBuildSubRows(buildSubRows);
         if (buildIceletPropertyMap) {
           thisRowColumn.buildIceletPropertyMap(db);
         }

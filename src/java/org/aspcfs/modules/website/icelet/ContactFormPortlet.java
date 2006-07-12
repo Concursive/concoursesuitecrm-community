@@ -105,7 +105,6 @@ public class ContactFormPortlet extends GenericPortlet {
     }
     // Process the submitted form, validate and determine if a success
     response.setRenderParameter("verified", "true");
-    System.out.println("ContactFormPortlet::processAction printing name "+ request.getParameter("nameFirst"));
     request.getPortletSession().setAttribute("nameFirst", request.getParameter("nameFirst"));
   }
 
@@ -119,7 +118,6 @@ public class ContactFormPortlet extends GenericPortlet {
    */
   private void insertLead(ActionRequest request, ActionResponse response) throws Exception {
     Connection db = PortletUtils.getConnection(request);
-    System.out.println("\n\n\nInserting the ContactFormPortlet::processAction");
     //Insert the lead
     AccessTypeList accessTypeList = new AccessTypeList(db, AccessType.GENERAL_CONTACTS);
     Contact lead = new Contact();

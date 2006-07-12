@@ -1117,7 +1117,7 @@ public class CFSModule {
    *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @param  campaign          Description of the Parameter
+   * @param  campaignId          Description of the Parameter
    * @param  userId            Description of the Parameter
    * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
@@ -1130,7 +1130,8 @@ public class CFSModule {
     mapList.setCampaignId(campaignId);
     mapList.buildList(db);
     if (mapList.size() > 0) {
-      return mapList.checkUserAccess(db, userId);
+      User user = new User(db, userId);
+      return mapList.checkUserAccess(db, userId, user.getSiteId());
     }
     return false;
   }
@@ -1147,7 +1148,8 @@ public class CFSModule {
    */
   protected boolean hasCampaignUserGroupAccess(ActionContext context, Connection db, Campaign campaign) throws SQLException {
     int userId = this.getUserId(context);
-    return campaign.getUserGroupMaps().checkUserAccess(db, userId);
+    int siteId = this.getUserSiteId(context);
+    return campaign.getUserGroupMaps().checkUserAccess(db, userId, siteId);
   }
 
 

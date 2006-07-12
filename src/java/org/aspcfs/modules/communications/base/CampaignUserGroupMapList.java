@@ -271,10 +271,12 @@ public class CampaignUserGroupMapList extends ArrayList {
    * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
    */
-  public boolean checkUserAccess(Connection db, int userId) throws SQLException {
+  public boolean checkUserAccess(Connection db, int userId, int siteId) throws SQLException {
     UserGroupList userGroups = new UserGroupList();
     userGroups.setGetEnabledForUser(Constants.TRUE, userId);
     userGroups.setCampaignId(this.getCampaignId());
+    userGroups.setExclusiveToSite(true);
+    userGroups.setSiteId(siteId);
     userGroups.buildList(db);
     return (userGroups.size() > 0);
   }

@@ -92,7 +92,7 @@ var menu_init = false;
         PortfolioItem item = (PortfolioItem) itemList.get(i);
     %>
       var itemPosition = document.getElementById('item<%= item.getId() %>').value;
-      if (!checkPositionValue(categoryPosition)) {
+      if (!checkPositionValue(itemPosition)) {
         formTest == false;
         message = label("","- Please make sure to leave the example position entries blank or enter a whole number\r\n");
       }

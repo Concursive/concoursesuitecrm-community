@@ -515,6 +515,17 @@ public class PagedListInfo implements Serializable {
 
 
   /**
+   * When initializing a pagedList, a default view can be set if it is not already set
+   * @param tmp
+   */
+  public void setDefaultListView(String tmp) {
+    if (listView == null) {
+      this.listView = tmp;
+    }
+  }
+
+
+  /**
    * Sets the Parameters attribute of the PagedListInfo object
    *
    * @param context The new Parameters value

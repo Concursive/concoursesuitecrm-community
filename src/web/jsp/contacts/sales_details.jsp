@@ -638,19 +638,21 @@
 <br />
 
 <span name="worklead" id="worklead" style="">
-<dhv:include name="sales.details.workContact" none="true">
-<dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.workAsContact">Work as Contact</dhv:label>" onClick="javascript:workLead();" /></dhv:permission>
-</dhv:include>
-<dhv:include name="sales.details.workAccount" none="true">
-<dhv:evaluate if="<%= ContactDetails.getCompany() != null && !"".equals(ContactDetails.getCompany()) %>">
-  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.workAsAccount">Work as Account</dhv:label>" onClick="javascript:workAccount();" /></dhv:permission>
+<dhv:evaluate if="<%= ContactDetails.canWorkAsContact() %>">
+  <dhv:include name="sales.details.workContact" none="true">
+  <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.workAsContact">Work as Contact</dhv:label>" onClick="javascript:workLead();" /></dhv:permission>
+  </dhv:include>
+  <dhv:include name="sales.details.workAccount" none="true">
+  <dhv:evaluate if="<%= ContactDetails.getCompany() != null && !"".equals(ContactDetails.getCompany()) %>">
+    <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.workAsAccount">Work as Account</dhv:label>" onClick="javascript:workAccount();" /></dhv:permission>
+  </dhv:evaluate>
+  </dhv:include>
+  <dhv:include name="sales.details.assignLead" none="true">
+  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:assignLead();" /></dhv:permission>
+  </dhv:include>
+  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignAccountR">Assign Account ></dhv:label>" onClick="javascript:assignAccount();" /></dhv:permission>
+  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.trashLeadR">Trash Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
 </dhv:evaluate>
-</dhv:include>
-<dhv:include name="sales.details.assignLead" none="true">
-<dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:assignLead();" /></dhv:permission>
-</dhv:include>
-<dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignAccountR">Assign Account ></dhv:label>" onClick="javascript:assignAccount();" /></dhv:permission>
-<dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.trashLeadR">Trash Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
 <dhv:include name="sales.details.skipThisLeadR" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.skipThisLeadR">Skip this Lead ></dhv:label>" onClick="javascript:skipLead();" /></dhv:permission></dhv:include>
 <dhv:include name="sales.details.modifyLead" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:modifyLead();" /></dhv:permission></dhv:include>
 <dhv:permission name="sales-leads-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:deleteLead();" /></dhv:permission><br />

@@ -116,23 +116,8 @@ public class ActionPhaseList extends ArrayList {
     }
     rs.close();
     pst.close();
-    if (buildSteps && !buildCompletePhaseList) {
+    if (buildSteps) {
       buildSteps(db);
-    }
-    if (this.getBuildCompletePhaseList()) {
-      int size = this.size();
-      for (int i = 0; i < size; i++) {
-        ActionPhase phase = (ActionPhase) this.get(i);
-        phase.setBuildCompletePhaseList(true);
-        if (buildSteps) {
-          phase.setBuildSteps(true);
-          phase.buildSteps(db);
-        }
-        phase.buildPhaseList(db);
-        if (phase.getPhaseList().size() > 0) {
-          this.addAll(this.size(), phase.getPhaseList());
-        }
-      }
     }
   }
 

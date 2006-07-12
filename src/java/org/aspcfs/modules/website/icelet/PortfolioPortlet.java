@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.website.icelet;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.website.base.PortfolioCategory;
 import org.aspcfs.modules.website.base.PortfolioCategoryList;
 import org.aspcfs.modules.website.base.PortfolioItem;
@@ -144,6 +145,7 @@ public class PortfolioPortlet extends GenericPortlet {
     PortfolioItemList portfolioItemList = new PortfolioItemList();
     portfolioItemList.setPagedListInfo(portfolioItemListInfo);
     portfolioItemList.setCategoryId(request.getParameter("categoryId"));
+    portfolioItemList.setEnabledOnly(Constants.TRUE);
     portfolioItemList.buildList(db);
     if (portfolioItemList.size() > 0) {
       request.setAttribute("portfolioItem", (PortfolioItem) portfolioItemList.get(0));
@@ -170,6 +172,7 @@ public class PortfolioPortlet extends GenericPortlet {
     if (StringUtils.hasText(request.getParameter("categoryId"))) {
       portfolioCategoryList.setParentId(request.getParameter("categoryId"));
     }
+    portfolioCategoryList.setEnabledOnly(Constants.TRUE);
     portfolioCategoryList.buildList(db);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("PortfolioPortlet.doView() + portfolioCategoryList.size()  ==> " + portfolioCategoryList.size());

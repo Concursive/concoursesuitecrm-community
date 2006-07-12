@@ -129,17 +129,6 @@ public class ActionStepList extends ArrayList {
     }
     rs.close();
     pst.close();
-    if (this.getBuildCompleteStepList()) {
-      int size = this.size();
-      for (int i = 0; i < size; i++) {
-        ActionStep step = (ActionStep) this.get(i);
-        step.setBuildCompleteStepList(true);
-        step.buildStepList(db);
-        if (step.getStepList().size() > 0) {
-          this.addAll(this.size(), step.getStepList());
-        }
-      }
-    }
   }
 
 

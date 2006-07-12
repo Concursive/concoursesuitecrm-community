@@ -1,4 +1,4 @@
-<site name="Custom" enabled="true">
+<site name="Custom">
   <internalDescription />
   <tab displayText="Home" enabled="true">
     <internalDescription />
@@ -72,7 +72,7 @@
         <pageVersion versionNumber="1" type="construction">
           <internalDescription />
           <notes></notes>
-          <row>
+          <row enabled="true">
             <column iceletClass="ContactFormPortlet" width="50" enabled="true">
               <property constant="6022302">Please enter your name and contact information. This would help us serve you better.</property>
               <property constant="6022303">Thank you for contact us. We will review your message and respond accordingly.</property>

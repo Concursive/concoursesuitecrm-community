@@ -91,7 +91,10 @@ public class SecurityHook implements ControllerHook {
       try {
 				Site thisSite = SecurityHook.retrieveSite(servlet.getServletConfig().getServletContext(), request);
 				if (userSession == null || ceSession == null) {
-					// Give them a connection element to snoop around the portal
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("SecurityHook-> Creating a web site user session");
+          }
+          // Give them a connection element to snoop around the portal
 					ceSession = thisSite.getConnectionElement();
 					request.getSession().setAttribute("ConnectionElement", ceSession);
 					// Allow portal mode to create a default session with guest capabilities
@@ -317,6 +320,10 @@ public class SecurityHook implements ControllerHook {
     SiteList sites = SiteUtils.getSiteList(prefs, sqlDriver, serverName);
     if (sites.size() == 1) {
       return (Site) sites.get(0);
+    } else {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("SecurityHook-> retrieveSite size: " + sites.size());
+      }
     }
     return null;
   }

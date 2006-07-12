@@ -565,6 +565,7 @@ public class ObjectValidator {
         addError(systemStatus, object, "action", "object.validation.noId");
       }
       checkError(systemStatus, object, "subject", REQUIRED_FIELD);
+      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "subject", 255);
     }
 
     //  ServiceContract
@@ -1931,13 +1932,25 @@ public class ObjectValidator {
     if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Site"))
     {
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
+      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "name", 300);
     }
 
     if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Tab"))
     {
       checkError(systemStatus, object, "displayText", REQUIRED_FIELD);
+      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "displayText", 300);
     }
-
+    
+    if (object.getClass().getName().equals("org.aspcfs.modules.website.base.PageGroup")) {
+      checkError(systemStatus, object, "name", REQUIRED_FIELD);
+      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "name", 300);
+    }
+    
+    if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Page")) {
+      checkError(systemStatus, object, "name", REQUIRED_FIELD);
+      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "name", 300);
+    }
+    
     // Invoke custom validators
     try {
       Map customValidators = systemStatus.getCustomValidators();

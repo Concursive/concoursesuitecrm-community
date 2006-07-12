@@ -81,6 +81,7 @@ public final class AccountContactsImports extends CFSModule {
     PagedListInfo pagedListInfo = this.getPagedListInfo(
         context, "AccountContactsImportListInfo");
     pagedListInfo.setLink("AccountContactsImports.do?command=View");
+    pagedListInfo.setDefaultListView("my");
     try {
       db = this.getConnection(context);
 
@@ -93,9 +94,9 @@ public final class AccountContactsImports extends CFSModule {
       thisList.setType(Constants.IMPORT_ACCOUNT_CONTACTS);
       thisList.setPagedListInfo(pagedListInfo);
       if ("my".equals(pagedListInfo.getListView())) {
-        thisList.setEnteredIdRange(this.getUserRange(context));
-      } else {
         thisList.setEnteredBy(this.getUserId(context));
+      } else {
+        thisList.setEnteredIdRange(this.getUserRange(context));
       }
       thisList.setManager(manager);
       thisList.setSystemStatus(systemStatus);

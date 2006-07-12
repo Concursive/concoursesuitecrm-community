@@ -34,17 +34,16 @@ import java.sql.SQLException;
 /**
  *  Actions for the Pages module
  *
- *@author kailash
- *@created February 10, 2006
- *$Id: Exp $
+ * @author     kailash
+ * @created    February 10, 2006 $Id: Exp $
  */
 public final class Pages extends CFSModule {
 
   /**
    *  Default: not used
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
 
@@ -52,6 +51,12 @@ public final class Pages extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
@@ -99,6 +104,12 @@ public final class Pages extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
@@ -115,7 +126,7 @@ public final class Pages extends CFSModule {
     PageGroup pageGroup = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
-    try{
+    try {
       db = this.getConnection(context);
       pageGroup = new PageGroup();
       pageGroup.queryRecord(db, Integer.parseInt(pageGroupId));
@@ -137,6 +148,12 @@ public final class Pages extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
@@ -154,7 +171,7 @@ public final class Pages extends CFSModule {
     PageGroup pageGroup = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
-    try{
+    try {
       db = this.getConnection(context);
       if (page.getPageGroupId() == -1) {
         page.setPageGroupId(pageGroupId);
@@ -193,9 +210,16 @@ public final class Pages extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context,"Save");
+    return this.getReturn(context, "Save");
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandMove(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
@@ -218,10 +242,16 @@ public final class Pages extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context,"Move");
+    return this.getReturn(context, "Move");
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "site-editor-delete"))) {
       return ("PermissionError");
@@ -252,7 +282,7 @@ public final class Pages extends CFSModule {
       if (dependencies.canDelete()) {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("actionphase.dependencies"));
-        htmlDialog.addButton(systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='Pages.do?command=Delete&pageGroupId=" + pageGroupId + "&pageId=" + page.getId() +"&siteId=" + siteId + "&popup=true'");
+        htmlDialog.addButton(systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='Pages.do?command=Delete&pageGroupId=" + pageGroupId + "&pageId=" + page.getId() + "&siteId=" + siteId + "&popup=true'");
         htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close();");
       } else {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
@@ -267,10 +297,16 @@ public final class Pages extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context,"ConfirmDelete");
+    return this.getReturn(context, "ConfirmDelete");
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "site-editor-delete"))) {
       return ("PermissionError");
@@ -292,7 +328,7 @@ public final class Pages extends CFSModule {
       page.queryRecord(db, Integer.parseInt(pageId));
       page.buildPageVersionToView(db);
       tabId = page.getPageVersionToView().getTabIdByPageVersionId(db);
-       //delete the page
+      //delete the page
       page.delete(db);
     } catch (Exception e) {
       e.printStackTrace();
@@ -302,10 +338,18 @@ public final class Pages extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=-1&popup=true");
-    return this.getReturn(context,"Delete");
+    return this.getReturn(context, "Delete");
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  context           Description of the Parameter
+   * @param  db                Description of the Parameter
+   * @param  page              Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public void insertDefaultData(ActionContext context, Connection db, Page page) throws SQLException {
     SystemStatus systemStatus = this.getSystemStatus(context);
     int userId = this.getUserId(context);

@@ -54,6 +54,11 @@ public class PageRow extends GenericBean {
   private int nextPageRowId = -1;
   private int totalColumnWidth = 0;
   private int level = -1;
+
+  private boolean buildIcelet = true;
+  private boolean buildIceletPropertyMap = true;
+  private boolean buildSubRows = true;
+
   /*
    *  This is used to avoid switching single column row's column with the parent column
    */
@@ -593,6 +598,96 @@ public class PageRow extends GenericBean {
 
 
   /**
+   *  Gets the buildIcelet attribute of the PageRow object
+   *
+   * @return    The buildIcelet value
+   */
+  public boolean getBuildIcelet() {
+    return buildIcelet;
+  }
+
+
+  /**
+   *  Sets the buildIcelet attribute of the PageRow object
+   *
+   * @param  tmp  The new buildIcelet value
+   */
+  public void setBuildIcelet(boolean tmp) {
+    this.buildIcelet = tmp;
+  }
+
+
+  /**
+   *  Sets the buildIcelet attribute of the PageRow object
+   *
+   * @param  tmp  The new buildIcelet value
+   */
+  public void setBuildIcelet(String tmp) {
+    this.buildIcelet = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildIceletPropertyMap attribute of the PageRow object
+   *
+   * @return    The buildIceletPropertyMap value
+   */
+  public boolean getBuildIceletPropertyMap() {
+    return buildIceletPropertyMap;
+  }
+
+
+  /**
+   *  Sets the buildIceletPropertyMap attribute of the PageRow object
+   *
+   * @param  tmp  The new buildIceletPropertyMap value
+   */
+  public void setBuildIceletPropertyMap(boolean tmp) {
+    this.buildIceletPropertyMap = tmp;
+  }
+
+
+  /**
+   *  Sets the buildIceletPropertyMap attribute of the PageRow object
+   *
+   * @param  tmp  The new buildIceletPropertyMap value
+   */
+  public void setBuildIceletPropertyMap(String tmp) {
+    this.buildIceletPropertyMap = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildSubRows attribute of the PageRow object
+   *
+   * @return    The buildSubRows value
+   */
+  public boolean getBuildSubRows() {
+    return buildSubRows;
+  }
+
+
+  /**
+   *  Sets the buildSubRows attribute of the PageRow object
+   *
+   * @param  tmp  The new buildSubRows value
+   */
+  public void setBuildSubRows(boolean tmp) {
+    this.buildSubRows = tmp;
+  }
+
+
+  /**
+   *  Sets the buildSubRows attribute of the PageRow object
+   *
+   * @param  tmp  The new buildSubRows value
+   */
+  public void setBuildSubRows(String tmp) {
+    this.buildSubRows = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Description of the Method
    *
    * @param  db             Description of the Parameter
@@ -749,15 +844,6 @@ public class PageRow extends GenericBean {
       pst.execute();
       pst.close();
 
-/*
-      //If the current row is a subRow, fix the Column.
-      if (this.getRowColumnId() > -1 && !this.getDeletingFromList()) {
-        RowColumn rowColumn = new RowColumn();
-        rowColumn.setBuildSubRows(true);
-        rowColumn.queryRecord(db, this.getRowColumnId());
-        rowColumn.fixSingleCellSubRow(db);
-      }
-*/
       if (commit) {
         db.commit();
       }
@@ -805,9 +891,9 @@ public class PageRow extends GenericBean {
   public void buildRowColumnList(Connection db) throws SQLException {
     rowColumnList = new RowColumnList();
     rowColumnList.setPageRowId(this.getId());
-    rowColumnList.setBuildIcelet(true);
-    rowColumnList.setBuildIceletPropertyMap(true);
-    rowColumnList.setBuildSubRows(true);
+    rowColumnList.setBuildIcelet(this.getBuildIcelet());
+    rowColumnList.setBuildIceletPropertyMap(this.getBuildIceletPropertyMap());
+    rowColumnList.setBuildSubRows(this.getBuildSubRows());
     rowColumnList.buildList(db);
     this.setTotalColumnWidth(rowColumnList.getTotalColumnWidth());
   }

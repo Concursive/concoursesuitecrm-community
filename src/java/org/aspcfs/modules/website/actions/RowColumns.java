@@ -318,14 +318,16 @@ public final class RowColumns extends CFSModule {
       db = this.getConnection(context);
       pageRow = new PageRow();
       pageRow.setBuildRowColumnList(true);
+      pageRow.setBuildIcelet(false);
+      pageRow.setBuildIceletPropertyMap(false);
       pageRow.queryRecord(db, Integer.parseInt(pageRowId));
       context.getRequest().setAttribute("pageRow", pageRow);
       if (rowColumn.getId() == -1) {
         rowColumn.queryRecord(db, Integer.parseInt(rowColumnId));
         if (rowColumn.getIceletId() != -1) {
           rowColumn.buildIcelet(db);
-//          rowColumn.setDefaultPropertyMap(this.getIcletPrefs(context, rowColumn.getIcelet().getConfiguratorClass()));
-//          rowColumn.buildIceletPropertyMap(db);
+          rowColumn.setDefaultPropertyMap(this.getIcletPrefs(context, rowColumn.getIcelet().getConfiguratorClass()));
+          rowColumn.buildIceletPropertyMap(db);
         }
       }
       rowColumn.setModifiedBy(this.getUserId(context));
@@ -381,10 +383,15 @@ public final class RowColumns extends CFSModule {
     try {
       db = this.getConnection(context);
       if (rowColumnId != null && !"".equals(rowColumnId.trim()) && !"-1".equals(rowColumnId.trim()) && rowColumn.getId() == -1) {
-        rowColumn.setBuildIcelet(true);
+        rowColumn.setBuildIcelet(false);
+        rowColumn.setBuildIceletPropertyMap(false);
         rowColumn.queryRecord(db, Integer.parseInt(rowColumnId.trim()));
-        rowColumn.setDefaultPropertyMap(this.getIcletPrefs(context, rowColumn.getIcelet().getConfiguratorClass()));
-        rowColumn.buildIceletPropertyMap(db);
+        if (rowColumn.getIceletId() != -1) {
+          rowColumn.buildIcelet(db);
+          rowColumn.setBuildIceletPropertyMap(true);
+          rowColumn.setDefaultPropertyMap(this.getIcletPrefs(context, rowColumn.getIcelet().getConfiguratorClass()));
+          rowColumn.buildIceletPropertyMap(db);
+        }
       }
       if (iceletId != null && !"".equals(iceletId.trim())) {
         rowColumn.setIceletId(iceletId);

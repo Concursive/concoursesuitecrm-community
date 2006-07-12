@@ -81,6 +81,7 @@ public final class SalesImports extends CFSModule {
     PagedListInfo pagedListInfo = this.getPagedListInfo(
         context, "SalesImportListInfo");
     pagedListInfo.setLink("SalesImports.do?command=View");
+    pagedListInfo.setDefaultListView("my");
     try {
       db = this.getConnection(context);
       //get mananger
@@ -92,9 +93,9 @@ public final class SalesImports extends CFSModule {
       thisList.setType(Constants.IMPORT_SALES);
       thisList.setPagedListInfo(pagedListInfo);
       if ("my".equals(pagedListInfo.getListView())) {
-        thisList.setEnteredIdRange(this.getUserRange(context));
-      } else {
         thisList.setEnteredBy(this.getUserId(context));
+      } else {
+        thisList.setEnteredIdRange(this.getUserRange(context));
       }
       thisList.setManager(manager);
       thisList.setSystemStatus(systemStatus);

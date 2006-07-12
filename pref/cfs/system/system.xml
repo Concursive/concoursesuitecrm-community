@@ -18,6 +18,7 @@
     <param name="accounts-employees" obsolete="true" since="2004-01-22"/>
     <param name="accounts-revenue" obsolete="true" since="2004-01-22"/>
     <param name="organization.revenue"/>
+    <param name="pipeline-custom1Integer"/>
     <!--
     <param name="organization.employees"/>
     <param name="leads.search.country"/>

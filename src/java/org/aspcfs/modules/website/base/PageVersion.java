@@ -758,6 +758,9 @@ public class PageVersion extends GenericBean {
     pageRowList.setPageVersionId(this.getId());
     pageRowList.setMode(mode);
     pageRowList.setBuildColumns(true);
+    pageRowList.setBuildIcelet(true);
+    pageRowList.setBuildIceletPropertyMap(true);
+    pageRowList.setBuildSubRows(true);
     pageRowList.buildList(db);
   }
 

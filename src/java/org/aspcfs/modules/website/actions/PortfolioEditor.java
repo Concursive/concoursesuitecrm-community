@@ -539,6 +539,8 @@ public final class PortfolioEditor extends CFSModule {
       item.setPositionId(positionId);
       if (enabled != null && !"".equals(enabled.trim())) {
         item.setEnabled(enabled);
+      } else {
+        item.setEnabled(false);
       }
       if (categoryId != null && !"".equals(categoryId)) {
         item.setCategoryId(categoryId);

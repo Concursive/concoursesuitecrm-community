@@ -217,7 +217,14 @@ public class PortfolioItemList extends ArrayList {
     while (iter.hasNext()) {
       PortfolioItem item = (PortfolioItem) iter.next();
       String position = context.getRequest().getParameter("item" + item.getId());
-      if (position == null || "".equals(position)) {
+      if (position.indexOf(".") > -1) {
+        try {
+          position = (new Integer((int) Math.ceil(Double.parseDouble(context.getRequest().getParameter("item" + item.getId()))))).toString();
+        } catch (NumberFormatException e) {
+          position = (String) oldOrder.get(String.valueOf(item.getId()));
+        }
+      }
+      if (position == null || "".equals(position.trim())) {
         position = (String) oldOrder.get(String.valueOf(item.getId()));
       }
       //Process the new position and push either the itemId into the hash map

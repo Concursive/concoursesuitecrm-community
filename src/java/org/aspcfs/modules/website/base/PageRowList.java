@@ -52,6 +52,10 @@ public class PageRowList extends ArrayList {
   private int lastPositionPageRowId = -1;
   private boolean buildLastPosition = false;
 
+  private boolean buildIcelet = true;
+  private boolean buildIceletPropertyMap = true;
+  private boolean buildSubRows = true;
+
 
   /**
    *  Constructor for the PageRowList object
@@ -476,6 +480,96 @@ public class PageRowList extends ArrayList {
 
 
   /**
+   *  Gets the buildIcelet attribute of the PageRowList object
+   *
+   * @return    The buildIcelet value
+   */
+  public boolean getBuildIcelet() {
+    return buildIcelet;
+  }
+
+
+  /**
+   *  Sets the buildIcelet attribute of the PageRowList object
+   *
+   * @param  tmp  The new buildIcelet value
+   */
+  public void setBuildIcelet(boolean tmp) {
+    this.buildIcelet = tmp;
+  }
+
+
+  /**
+   *  Sets the buildIcelet attribute of the PageRowList object
+   *
+   * @param  tmp  The new buildIcelet value
+   */
+  public void setBuildIcelet(String tmp) {
+    this.buildIcelet = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildIceletPropertyMap attribute of the PageRowList object
+   *
+   * @return    The buildIceletPropertyMap value
+   */
+  public boolean getBuildIceletPropertyMap() {
+    return buildIceletPropertyMap;
+  }
+
+
+  /**
+   *  Sets the buildIceletPropertyMap attribute of the PageRowList object
+   *
+   * @param  tmp  The new buildIceletPropertyMap value
+   */
+  public void setBuildIceletPropertyMap(boolean tmp) {
+    this.buildIceletPropertyMap = tmp;
+  }
+
+
+  /**
+   *  Sets the buildIceletPropertyMap attribute of the PageRowList object
+   *
+   * @param  tmp  The new buildIceletPropertyMap value
+   */
+  public void setBuildIceletPropertyMap(String tmp) {
+    this.buildIceletPropertyMap = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildSubRows attribute of the PageRowList object
+   *
+   * @return    The buildSubRows value
+   */
+  public boolean getBuildSubRows() {
+    return buildSubRows;
+  }
+
+
+  /**
+   *  Sets the buildSubRows attribute of the PageRowList object
+   *
+   * @param  tmp  The new buildSubRows value
+   */
+  public void setBuildSubRows(boolean tmp) {
+    this.buildSubRows = tmp;
+  }
+
+
+  /**
+   *  Sets the buildSubRows attribute of the PageRowList object
+   *
+   * @param  tmp  The new buildSubRows value
+   */
+  public void setBuildSubRows(String tmp) {
+    this.buildSubRows = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Description of the Method
    *
    * @param  db             Description of the Parameter
@@ -500,6 +594,9 @@ public class PageRowList extends ArrayList {
       Iterator pageRowIterator = this.iterator();
       while (pageRowIterator.hasNext()) {
         PageRow thisPageRow = (PageRow) pageRowIterator.next();
+        thisPageRow.setBuildIcelet(this.getBuildIcelet());
+        thisPageRow.setBuildIceletPropertyMap(this.getBuildIceletPropertyMap());
+        thisPageRow.setBuildSubRows(this.getBuildSubRows());
         thisPageRow.buildRowColumnList(db);
         maxColumns = (thisPageRow.getRowColumnList().size() > maxColumns ? thisPageRow.getRowColumnList().size() : maxColumns);
       }
@@ -685,7 +782,7 @@ public class PageRowList extends ArrayList {
           "UPDATE web_page_row " +
           "SET row_position = row_position + 1 " +
           "WHERE page_row_id <> ? " +
-          "AND " +(pageVersionId == -1 ? " row_column_id = ? " : "page_version_id = ? ") +
+          "AND " + (pageVersionId == -1 ? " row_column_id = ? " : "page_version_id = ? ") +
           "AND " + (changeAdjacentPosition ? "row_position >= " : "row_position > ") +
           "(SELECT row_position FROM web_page_row WHERE page_row_id = ?) ");
       pst.setInt(1, currentId);
@@ -706,7 +803,14 @@ public class PageRowList extends ArrayList {
       pst.close();
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  rowsColumns  Description of the Parameter
+   * @param  level        Description of the Parameter
+   */
   public void buildRowsColumns(ArrayList rowsColumns, int level) {
     Iterator pageRowIterator = this.iterator();
     while (pageRowIterator.hasNext()) {

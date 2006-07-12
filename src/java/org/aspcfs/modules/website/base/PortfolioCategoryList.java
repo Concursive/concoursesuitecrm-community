@@ -240,9 +240,13 @@ public class PortfolioCategoryList extends ArrayList {
       PortfolioCategory category = (PortfolioCategory) iter.next();
       String position = context.getRequest().getParameter("category" + category.getId());
       if (position.indexOf(".") > -1) {
-        position = (new Integer((int) Math.ceil(Double.parseDouble(context.getRequest().getParameter("category" + category.getId()))))).toString();
+        try {
+          position = (new Integer((int) Math.ceil(Double.parseDouble(context.getRequest().getParameter("category" + category.getId()))))).toString();
+        } catch (NumberFormatException e) {
+          position = (String) oldOrder.get(String.valueOf(category.getId()));
+        }
       }
-      if (position == null || "".equals(position)) {
+      if (position == null || "".equals(position.trim())) {
         position = (String) oldOrder.get(String.valueOf(category.getId()));
       }
       //Process the new position and push either the categoryId into the hash map

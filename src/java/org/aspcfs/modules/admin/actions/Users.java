@@ -400,6 +400,10 @@ public final class Users extends CFSModule {
             errors.put("password1Error", systemStatus.getLabel("admin.generatePasswordError.text"));
             errors.putAll(thisUser.getErrors());
             processErrors(context, errors);
+            if (thisUser.getContactId() != -1) {
+              thisUser.setContact(contactForUser);
+            }
+            context.getRequest().setAttribute("UserRecord", thisUser);
             return (executeCommandInsertUserForm(context));
           } else {
             //has password been generated?
@@ -952,6 +956,7 @@ public final class Users extends CFSModule {
         //updateSystemPermissionCheck(db, context);
       }
     } catch (Exception errorMessage) {
+      errorMessage.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
@@ -1104,7 +1109,7 @@ public final class Users extends CFSModule {
    * @return                 Description of the Return Value
    * @exception  Exception   Description of the Exception
    */
-  public boolean sendEmail(ActionContext context, User thisUser, User modifiedByUser, String template, String password) throws Exception {
+  private boolean sendEmail(ActionContext context, User thisUser, User modifiedByUser, String template, String password) throws Exception {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     SystemStatus systemStatus = this.getSystemStatus(context);
     UserEmail userEmail = new UserEmail(context, thisUser, modifiedByUser.getContact().getNameLastFirst(), password, systemStatus.getUrl(), template);
