@@ -146,10 +146,6 @@ WEB-INF/lib/postgresql-8.0-310.jdbc3.jar
 WEB-INF/lib/quartz-1.4.5.jar
 WEB-INF/lib/commons-collections.jar
 
-## 2006-03-16 updated for compatibility
-WEB-INF/lib/DaffodilDB_402_Common.jar
-WEB-INF/lib/DaffodilDB_402_Embedded.jar
-
 ## 2006-03-27 relaced with newer version
 WEB-INF/lib/oracle-10.1.0.4.0-jdbc14.jar
 
@@ -184,3 +180,4 @@ WEB-INF/lib/activation.jar
 ## 2006-06-28 reverted back to 402 due to errors
 WEB-INF/lib/DaffodilDB_410_Common.jar
 WEB-INF/lib/DaffodilDB_410_Embedded.jar
+
