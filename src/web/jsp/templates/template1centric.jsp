@@ -74,7 +74,7 @@
       <br />
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="center">&#169; Copyright 2000-2006 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved</dhv:label> &#149; <dhv:label name="templates.variousTrademarksHeldByTheirRespectiveOwners">Various trademarks held by their respective owners.</dhv:label></td>
+          <td align="center">&#169; Copyright 2000-2006 Centric CRM &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved</dhv:label> &#149; <dhv:label name="templates.variousTrademarksHeldByTheirRespectiveOwners">Various trademarks held by their respective owners.</dhv:label></td>
         </tr>
       </table>
       <br />

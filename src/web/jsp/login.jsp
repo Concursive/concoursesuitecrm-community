@@ -184,7 +184,7 @@
         <tr>
           <td align="center">
             <%= toHtml(applicationPrefs.get("VERSION")) %><br />
-            &#169; Copyright 2000-2006 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
+            &#169; Copyright 2000-2006 Centric CRM &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
           </td>
         </tr>
       </table>
