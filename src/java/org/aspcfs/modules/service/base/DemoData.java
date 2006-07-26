@@ -3653,7 +3653,7 @@ public class DemoData {
       com.zeroio.iteam.base.NewsArticle newsArticle = new com.zeroio.iteam.base.NewsArticle();
       newsArticle.setProjectId(project.getId());
       newsArticle.setSubject("Welcome new team members");
-      newsArticle.setIntro("Welcome to the project new team members.Ê We look forward to providing AAA Automotive with the very best experience as they're one of our most valuable customers.Ê We'll make them happy if we all remember:<br /><br /><ul><li>Leave the weapons at home<br /></li><li>No drinking on the job</li><li>Get a good night sleep</li></ul>Thanks,<br /><br />Your team leader<br />");
+      newsArticle.setIntro("Welcome to the project new team members.  We look forward to providing AAA Automotive with the very best experience as they're one of our most valuable customers.  We'll make them happy if we all remember:<br /><br /><ul><li>Leave the weapons at home<br /></li><li>No drinking on the job</li><li>Get a good night sleep</li></ul>Thanks,<br /><br />Your team leader<br />");
       newsArticle.setEnteredBy(user1Id);
       newsArticle.setModifiedBy(user1Id);
       newsArticle.setStartDate(addCurrentTimestamp(0));
