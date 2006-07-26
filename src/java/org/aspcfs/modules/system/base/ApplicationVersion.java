@@ -27,7 +27,7 @@ import com.darkhorseventures.framework.hooks.CustomHook;
  * @created July 31, 2003
  */
 public class ApplicationVersion {
-  public final static String VERSION = "Centric CRM 4.1 Preview 1 (2006-07-25)";
+  public final static String VERSION = "Centric CRM 4.1 Beta 5 (2006-07-25)";
   public final static String APP_VERSION = "2006-07-25";
   public final static String DB_VERSION = "2006-07-25";
 
