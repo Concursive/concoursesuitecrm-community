@@ -299,9 +299,9 @@ function reopenContact(id) {
             </td>
             <td valign="top">
               <%if(ContactDetails.getOrgId() == -1){%>
-                &nbsp;[<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+                [<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
               <% }else{ %>
-                &nbsp;[<a href="javascript:popContactTypeSelectMultiple('selectedList', 'accounts', <%= ContactDetails.getId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+                [<a href="javascript:popContactTypeSelectMultiple('selectedList', 'accounts', <%= ContactDetails.getId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
              <% } %>
              <%= showAttribute(request, "personalContactError") %>
             </td>

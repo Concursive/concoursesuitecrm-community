@@ -98,7 +98,6 @@
       }
     }
   }
-
   function update(countryObj, stateObj, selectedValue) {
     var country = document.forms['addContact'].elements[countryObj].value;
     var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=addContact&stateObj=address"+stateObj+"state";
@@ -114,7 +113,6 @@
       showSpan('state1' + stateObj);
     }
   }
-
 
   function setCategoryPopContactType(selectedId, contactId){
     var category = 'general';
@@ -171,7 +169,6 @@
     </th>
   </tr>
     <tr class="containerBody">
-    <tr>
       <td nowrap class="formLabel">
         <dhv:label name="accounts.site">Site</dhv:label>
       </td>
