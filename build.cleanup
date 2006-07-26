@@ -181,3 +181,9 @@ WEB-INF/lib/activation.jar
 WEB-INF/lib/DaffodilDB_410_Common.jar
 WEB-INF/lib/DaffodilDB_410_Embedded.jar
 
+## 2006-07-14 upgrade to DB2 9
+WEB-INF/lib/db2jcc_license_cu-8.2.jar
+WEB-INF/lib/db2jcc-8.2.jar
+
+## 2006-07-25 upgrade to 2.1
+WEB-INF/lib/jaybird-full-2.0.1.jar
