@@ -1,17 +1,33 @@
 ----------------------------------------------------------------------------
-Centric CRM 4.1 beta
+Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-July 12, 2006
+July 25, 2006
 ----------------------------------------------------------------------------
 
 ** UNDER DEVELOPMENT **
 
 The following is a running list until release...
 
+Latest information can be found in the Centric CRM 4.1 Community:
+http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109
+
 New features:
+- IBM DB2 Database support
+- IBM WAS-CE Websphere Application Server Community Edition support
+
+Enhancements:
+- Usability and stability improvements as assigned (details online)
+- Upgraded TinyMCE HTML Editor to 2.0.6.1
+- Email user a password when a user is added, previously only when modified
+
+Developer changes:
+- JUnit added with tests
+
+Unreleased features, target version to be determined:
 - Web Content Management module and Portal using Apache Pluto JSR-168 Embedded
   Portlet Container
+  (must execute ant install.addicelets)
   - Added the following portlets:
     - HTML Content portlet
     - Contact Us Form portlet
@@ -23,15 +39,6 @@ New features:
     - Cart Portlet
   - Added a "hit" tracker for web pages, products, and emails
 - Product Importer (.csv w/images.zip)
-- IBM DB2 Database support
-- IBM WAS-CE Websphere Application Server Community Edition support
-
-Enhancements:
-- Upgraded TinyMCE HTML Editor to 2.0.6.1
-- Email user a password when a user is added, previously only when modified
-
-Developer changes:
-- JUnit added with tests
 
 
 ----------------------------------------------------------------------------
