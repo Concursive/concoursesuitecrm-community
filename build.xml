@@ -76,7 +76,18 @@
   </target>
 
   <!-- See if servlet API file exists -->
-  <target name="init.servlet4.exists" depends="init.environment">
+  <target name="init.servlet.type" depends="init.environment">
+    <condition property="TYPE.CATALINA">
+      <equals arg1="${WEBSERVER.TYPE}" arg2="catalina" />
+    </condition>
+    <condition property="TYPE.GERONIMO">
+      <equals arg1="${WEBSERVER.TYPE}" arg2="geronimo"/>
+    </condition>
+    <condition property="TYPE.JBOSS">
+      <equals arg1="${WEBSERVER.TYPE}" arg2="jboss"/>
+    </condition>
+  </target>
+  <target name="init.servlet4.exists" depends="init.environment" if="TYPE.CATALINA">
     <available file="${CATALINA_HOME}/common/lib/servlet.jar"
       property="build.servlet4.present"/>
   </target>
@@ -84,14 +95,35 @@
     <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"/>
     <echo message="Web Server: Tomcat 4.x"/>
   </target>
-  <target name="init.servlet5.exists" depends="init.environment">
+  <target name="init.servlet5.exists" depends="init.environment" if="TYPE.CATALINA">
     <available file="${CATALINA_HOME}/common/lib/servlet-api.jar"
       property="build.servlet5.present"/>
   </target>
   <target name="init.servlet5.set" depends="init.servlet5.exists" if="build.servlet5.present">
     <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet-api.jar"/>
+    <property name="jspJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}jsp-api.jar"/>
+    <property name="namingJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}naming-resources.jar"/>
     <echo message="Web Server: Tomcat 5.x"/>
   </target>
+  <target name="init.geronimo24.exists" depends="init.environment" if="TYPE.GERONIMO">
+    <available file="${GERONIMO_HOME}/repository/org.apache.geronimo.specs/jars/geronimo-servlet_2.4_spec-1.0.jar"
+      property="build.geronimo24.present"/>
+  </target>
+  <target name="init.geronimo24.set" depends="init.geronimo24.exists" if="build.geronimo24.present">
+    <property name="servletJar" value="${GERONIMO_HOME}/repository/org.apache.geronimo.specs/jars/geronimo-servlet_2.4_spec-1.0.jar"/>
+    <property name="jspJar" value="${GERONIMO_HOME}/repository/org.apache.geronimo.specs/jars/geronimo-jsp_2.0_spec-1.0.jar"/>
+    <property name="namingJar" value="${GERONIMO_HOME}/repository/tomcat/jars/naming-resources-5.5.9.jar"/>
+    <echo message="Web Server: Geronimo using Servlet 2.4 API"/>
+  </target>
+  <target name="init.jboss24.exists" depends="init.environment" if="TYPE.JBOSS">
+    <available file="${JBOSS_HOME}/???"
+      property="build.jboss24.present"/>
+  </target>
+  <target name="init.jboss24.set" depends="init.jboss24.exists" if="build.jboss24.present">
+    <property name="servletJar" value="${JBOSS_HOME}/???"/>
+    <echo message="Web Server: JBoss using Servlet 2.4 API"/>
+  </target>
+
 
   <!-- See where the build.properties file exists -->
   <target name="init.buildfile.exists">
@@ -191,12 +223,54 @@
   SOLUTION:
 
     Download the 3rd-party libraries and make sure they are available at ${lib.dir}${fs}, these are available as a separate download</fail>
-
+    <!-- Use the environment variable if available -->
     <condition property="CATALINA_HOME" value="${env.CATALINA_HOME}">
-      <available file="${env.CATALINA_HOME}" />
+      <and>
+        <equals arg1="${WEBSERVER.TYPE}" arg2="catalina" />
+        <available file="${env.CATALINA_HOME}" />
+      </and>
     </condition>
-    <fail unless="CATALINA_HOME">Initialization aborted
-
+    <condition property="SERVLET_CONTAINER_EXISTS">
+      <and>
+        <equals arg1="${WEBSERVER.TYPE}" arg2="catalina" />
+        <available file="${CATALINA_HOME}" />
+      </and>
+    </condition>
+    <!-- Use the environment variable if available -->
+    <condition property="GERONIMO_HOME" value="${env.GERONIMO_HOME}">
+      <and>
+        <equals arg1="${WEBSERVER.TYPE}" arg2="geronimo" />
+        <available file="${env.GERONIMO_HOME}" />
+      </and>
+    </condition>
+    <condition property="SERVLET_CONTAINER_EXISTS">
+      <and>
+        <equals arg1="${WEBSERVER.TYPE}" arg2="geronimo" />
+        <available file="${GERONIMO_HOME}" />
+      </and>
+    </condition>
+    <!-- Use the environment variable if available -->
+    <condition property="JBOSS_HOME" value="${env.JBOSS_HOME}">
+      <and>
+        <equals arg1="${WEBSERVER.TYPE}" arg2="jboss" />
+        <available file="${env.JBOSS_HOME}" />
+      </and>
+    </condition>
+    <condition property="SERVLET_CONTAINER_EXISTS">
+      <and>
+        <equals arg1="${WEBSERVER.TYPE}" arg2="jboss" />
+        <available file="${env.JBOSS_HOME}" />
+      </and>
+    </condition>
+    <fail>Initialization aborted
+      <condition>
+        <and>
+          <not>
+            <isset property="SERVLET_CONTAINER_EXISTS"/>
+          </not>
+          <equals arg1="${WEBSERVER.TYPE}" arg2="catalina" />
+        </and>
+     </condition>
   SOLUTION:
 
     Either...
@@ -211,6 +285,43 @@
 
       Ex. "export CATALINA_HOME=/path/to/apache-tomcat"
       Ex. "Using System in Control Panel set CATALINA_HOME=c:\Program Files\Apache Software Foundation\Tomcat 5.5"
+    </fail>
+    <fail>Initialization aborted
+      <condition>
+        <and>
+          <not>
+            <isset property="SERVLET_CONTAINER_EXISTS"/>
+          </not>
+          <equals arg1="${WEBSERVER.TYPE}" arg2="geronimo" />
+        </and>
+     </condition>
+  SOLUTION:
+
+    Either...
+
+    1. Create a file called "home.properties" in this directory with the GERONIMO_HOME property:
+
+      GERONIMO_HOME=/path/to/apache-geronimo or /path/to/ibm/websphere-ce
+
+    or...
+
+    2. Create an environment variable GERONIMO_HOME which points to Geronimo's directory.
+
+      Ex. "export GERONIMO_HOME=/path/to/apache-geronimo or /path/to/ibm/websphere-ce"
+      Ex. "Using System in Control Panel set GERONIMO_HOME=c:\Program Files\IBM\WebSphere"
+    </fail>
+    <fail>Initialization aborted
+      <condition>
+        <and>
+          <not>
+            <isset property="SERVLET_CONTAINER_EXISTS"/>
+          </not>
+          <equals arg1="${WEBSERVER.TYPE}" arg2="jboss" />
+        </and>
+     </condition>
+  SOLUTION:
+
+    JBoss not implemented yet.
     </fail>
     <fail unless="build.config.present">Initialization aborted
 
@@ -238,11 +349,11 @@
   </target>
 
   <!-- Configure classpath as both object and a property -->
-  <target name="init.classpath" depends="init.classpath.uptodate">
+  <target name="init.classpath" depends="init.classpath.uptodate,init.servlet.type,init.servlet4.set,init.servlet5.set,init.geronimo24.set,init.jboss24.set">
     <path id="cfs2.classpath">
-      <fileset dir="${CATALINA_HOME}/common/lib">
-        <include name="*.jar"/>
-      </fileset>
+      <pathelement location="${servletJar}"/>
+      <pathelement location="${jspJar}"/>
+      <pathelement location="${namingJar}"/>
       <fileset dir="${lib.dir}">
         <include name="*.jar"/>
       </fileset>
@@ -251,13 +362,14 @@
   </target>
 
   <!-- Prepare ant for processing -->
-  <target name="init" depends="init.loadproperties,init.classpath,init.servlet4.set,init.servlet5.set"
+  <target name="init" depends="init.loadproperties,init.classpath"
     description="Verify system environment needed by install">
     <!-- Default properties if not otherwise specified in build.properties -->
     <property name="DEBUG" value="false"/>
     <property name="DEBUGLEVEL" value="none"/>
     <property name="build.config.filename" value="${base.dir}/build.properties"/>
     <property name="build.config.present" value="ERROR: UNDEFINED"/>
+    <property name="WEBSERVER.TYPE" value="catalina"/>
     <!-- Gatekeeper database -->
     <property name="GATEKEEPER.APPCODE" value=""/>
     <property name="GATEKEEPER.DBTYPE" value=""/>
@@ -284,7 +396,7 @@
     <echo message="System: ${os.name} ${os.arch} ${os.version}"/>
     <echo message="Ant version: ${ant.version}"/>
     <echo message="Java version: ${java.version}"/>
-    <echo message=""/>
+    <echo message="Container Type: ${WEBSERVER.TYPE}"/>
     <echo message="Source path: ${base.dir}"/>
     <echo message="Destination path: ${CENTRIC_HOME}"/>
     <echo message="Properties file: ${build.config.filename}"/>
