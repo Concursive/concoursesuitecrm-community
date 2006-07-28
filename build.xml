@@ -142,16 +142,25 @@
 
     Either...
 
-    1. Create a file called "home.properties" in this directory with the CENTRIC_HOME property:
+    A. Use the home.properties file for this instance...
 
-      CENTRIC_HOME=/path/to/apache-tomcat/webapps/centric
+      1. Create a file called "home.properties" in this directory with the CENTRIC_HOME property:
+
+          CENTRIC_HOME=/path/to/apache-tomcat/webapps/centric
+
+      2. Create the directory and make sure file permissions are correct.
 
     or...
 
-    2. Create an environment variable CENTRIC_HOME which points to Tomcat's Centric CRM webapp directory.
+    B. Use environment variables
 
-      Ex. "export CENTRIC_HOME=/path/to/apache-tomcat/webapps/centric"
-      Ex. "Using System in Control Panel set CENTRIC_HOME=c:\Program Files\Apache Software Foundation\Tomcat 5.5\webapps"
+      1. Create an environment variable CENTRIC_HOME which points to Tomcat's Centric CRM webapp directory.
+
+         Ex. "export CENTRIC_HOME=/path/to/apache-tomcat/webapps/centric"
+         Ex. "Using System in Control Panel set CENTRIC_HOME=c:\Program Files\Apache Software Foundation\Tomcat 5.5\webapps"
+
+      2. Create the directory and make sure file permissions are correct.
+
     </fail>
     <fail unless="CENTRIC_FILELIBRARY">Initialization aborted
 
@@ -159,18 +168,27 @@
 
     Either...
 
-    1. Create a file called "home.properties" in this directory with the CENTRIC_FILELIBRARY property:
+    A. Use the home.properties file for this instance...
 
-      CENTRIC_FILELIBRARY=/var/lib/centric_crm/fileLibrary
+       1. Create a file called "home.properties" in this directory with the CENTRIC_FILELIBRARY property:
+
+         CENTRIC_FILELIBRARY=/var/lib/centric_crm/fileLibrary
+
+       2. Create the directory and make sure file permissions are correct.
 
     or...
 
-    2. Create an environment variable CENTRIC_FILELIBRARY which points to Centric CRM's target fileLibrary.
-       The fileLibrary should be separate from CENTRIC_HOME because it contains custom files for Centric CRM.
+    B. Use environment variables
 
-      Ex. "export CENTRIC_FILELIBRARY=/var/lib/centric_crm/fileLibrary"
-      Ex. "export CENTRIC_FILELIBRARY=/Library/Application\ Support/CentricCRM/fileLibrary"
-      Ex. "Using System in Control Panel set CENTRIC_FILELIBRARY=c:\CentricCRM\fileLibrary"
+       1. Create an environment variable CENTRIC_FILELIBRARY which points to Centric CRM's target fileLibrary.
+          The fileLibrary should be separate from CENTRIC_HOME because it contains custom files for Centric CRM.
+
+         Ex. "export CENTRIC_FILELIBRARY=/var/lib/centric_crm/fileLibrary"
+         Ex. "export CENTRIC_FILELIBRARY=/Library/Application\ Support/CentricCRM/fileLibrary"
+         Ex. "Using System in Control Panel set CENTRIC_FILELIBRARY=c:\CentricCRM\fileLibrary"
+
+       2. Create the directory and make sure file permissions are correct.
+
     </fail>
     <property name="build.config.filename" value="${CENTRIC_FILELIBRARY}/build.properties" />
     <condition property="build.config.present">
@@ -224,7 +242,17 @@
 
   SOLUTION:
 
-    Download the 3rd-party libraries and make sure they are available at ${lib.dir}${fs}, these are available as a separate download</fail>
+    Download the 3rd-party libraries and make sure they are available at ${lib.dir}${fs}, these are available as a separate download
+    </fail>
+    <fail unless="WEBSERVER.TYPE">Initialization aborted
+
+  SOLUTION:
+
+    Uncomment and edit the WEBSERVER.TYPE property in the build.properties file:
+
+      ${build.config.filename}
+
+    </fail>
     <!-- Use the environment variable if available -->
     <condition property="CATALINA_HOME" value="${env.CATALINA_HOME}">
       <and>
@@ -382,7 +410,6 @@
     <property name="DEBUGLEVEL" value="none"/>
     <property name="build.config.filename" value="${base.dir}/build.properties"/>
     <property name="build.config.present" value="ERROR: UNDEFINED"/>
-    <property name="WEBSERVER.TYPE" value="catalina"/>
     <!-- Gatekeeper database -->
     <property name="GATEKEEPER.APPCODE" value=""/>
     <property name="GATEKEEPER.DBTYPE" value=""/>
