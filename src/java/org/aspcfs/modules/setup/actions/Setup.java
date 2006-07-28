@@ -452,9 +452,8 @@ public class Setup extends CFSModule {
       db = getDbConnection(context);
       if (!isDatabaseInstalled(db)) {
         try {
-          //Create the database and initial data, combine the following files
-          //pg_dump -xOdR  cfs2gk > gatekeeper.sql
-          //pg_dump -xOdR  cdb_cfs > postgresql.sql
+          // The database must already be created, this creates the schema and
+          // inserts the default data
           switch (DatabaseUtils.getType(db)) {
             case DatabaseUtils.POSTGRESQL:
               if (System.getProperty("DEBUG") != null) {
@@ -481,6 +480,14 @@ public class Setup extends CFSModule {
                 System.out.println("Setup-> Installing Oracle Schema");
               }
               DatabaseUtils.executeSQL(db, setupPath + "oracle.sql");
+              SetupUtils.insertDefaultData(
+                  db, dbFileLibraryPath, setupPath, locale);
+              break;
+            case DatabaseUtils.DB2:
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("Setup-> Installing DB2 Schema");
+              }
+              DatabaseUtils.executeSQL(db, setupPath + "db2.sql");
               SetupUtils.insertDefaultData(
                   db, dbFileLibraryPath, setupPath, locale);
               break;
