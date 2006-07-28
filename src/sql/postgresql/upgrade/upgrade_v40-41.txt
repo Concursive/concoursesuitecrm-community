@@ -19,7 +19,7 @@
 # 4.0 fixes
 2006-06-14-script01-mr.sql
 2006-06-28-script01-partha.sql
-
+2006-07-30-script01-ananth.bsh
 
 # Run each time after upgrading a system
 2005-07-20-script01-mr.bsh

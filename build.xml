@@ -116,11 +116,13 @@
     <echo message="Web Server: Geronimo using Servlet 2.4 API"/>
   </target>
   <target name="init.jboss24.exists" depends="init.environment" if="TYPE.JBOSS">
-    <available file="${JBOSS_HOME}/???"
+    <available file="${JBOSS_HOME}/server/all/lib/javax.servlet.jar"
       property="build.jboss24.present"/>
   </target>
   <target name="init.jboss24.set" depends="init.jboss24.exists" if="build.jboss24.present">
-    <property name="servletJar" value="${JBOSS_HOME}/???"/>
+    <property name="servletJar" value="${JBOSS_HOME}/server/all/lib/javax.servlet.jar"/>
+    <property name="jspJar" value="${JBOSS_HOME}/server/all/lib/javax.servlet.jsp.jar"/>
+    <property name="namingJar" value="${JBOSS_HOME}/server/all/deploy/jbossweb-tomcat55.sar/naming-resources.jar"/>
     <echo message="Web Server: JBoss using Servlet 2.4 API"/>
   </target>
 
@@ -259,7 +261,7 @@
     <condition property="SERVLET_CONTAINER_EXISTS">
       <and>
         <equals arg1="${WEBSERVER.TYPE}" arg2="jboss" />
-        <available file="${env.JBOSS_HOME}" />
+        <available file="${JBOSS_HOME}" />
       </and>
     </condition>
     <fail>Initialization aborted
@@ -321,7 +323,18 @@
      </condition>
   SOLUTION:
 
-    JBoss not implemented yet.
+    Either...
+
+    1. Create a file called "home.properties" in this directory with the JBOSS_HOME property:
+
+      JBOSS_HOME=/path/to/jboss
+
+    or...
+
+    2. Create an environment variable JBOSS_HOME which points to JBoss's directory.
+
+      Ex. "export JBOSS_HOME=/path/to/jboss"
+      Ex. "Using System in Control Panel set JBOSS_HOME=c:\Program Files\JBoss"
     </fail>
     <fail unless="build.config.present">Initialization aborted
 

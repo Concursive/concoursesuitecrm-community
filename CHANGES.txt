@@ -23,11 +23,12 @@ Enhancements:
 
 Developer changes:
 - JUnit added with tests
+- "ant deploy" now supports WEBSERVER.TYPE geronimo and jboss
 
 Unreleased features, target version to be determined:
 - Web Content Management module and Portal using Apache Pluto JSR-168 Embedded
   Portlet Container
-  (must execute ant install.addicelets)
+  (must execute ant install.icelets before using)
   - Added the following portlets:
     - HTML Content portlet
     - Contact Us Form portlet
