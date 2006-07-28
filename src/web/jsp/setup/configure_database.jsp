@@ -69,6 +69,9 @@
       if (document.configure.type.value == "Oracle") {
         document.configure.port.value = "1521";
       }
+      if (document.configure.type.value == "DB2") {
+        document.configure.port.value = "50000";
+      }
       if (document.configure.type.value == "Firebird") {
         document.configure.port.value = "3050";
       }
@@ -110,8 +113,9 @@
               <option value="MSSQL"<%= "MSSQL".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.sqlServer">Microsoft SQL Server</dhv:label></option>
               <option value="DaffodilDB"<%= "DaffodilDB".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.DaffodilDB">DaffodilDB/One$DB (Embedded)</dhv:label></option>
             <dhv:evaluate if="<%= !hasText(APP_VERSION) %>">
-              <option value="Firebird"<%= "Firebird".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.firebird">Firebird SQL Server</dhv:label></option>
-              <option value="Oracle"<%= "Oracle".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.oracle">Oracle Server</dhv:label></option>
+              <option value="DB2"<%= "DB2".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.db2">DB2</dhv:label></option>
+              <option value="Firebird"<%= "Firebird".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.firebird">Firebird</dhv:label></option>
+              <option value="Oracle"<%= "Oracle".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.oracle">Oracle</dhv:label></option>
             </dhv:evaluate>
             </select>
             <font color="red">*</font>

@@ -159,8 +159,11 @@ public class DatabaseBean extends GenericBean {
       if ("DaffodilDB".equals(type)) {
         driver = "in.co.daffodil.db.jdbc.DaffodilDBDriver";
       }
-      if ("PostgreSQL".equals(type)) {
-        driver = "org.postgresql.Driver";
+      if ("DB2".equals(type)) {
+        driver = "com.ibm.db2.jcc.DB2Driver";
+      }
+      if ("Firebird".equals(type)) {
+        driver = "org.firebirdsql.jdbc.FBDriver";
       }
       if ("MSSQL".equals(type)) {
         driver = "net.sourceforge.jtds.jdbc.Driver";
@@ -168,8 +171,8 @@ public class DatabaseBean extends GenericBean {
       if ("Oracle".equals(type)) {
         driver = "oracle.jdbc.driver.OracleDriver";
       }
-      if ("Firebird".equals(type)) {
-        driver = "org.firebirdsql.jdbc.FBDriver";
+      if ("PostgreSQL".equals(type)) {
+        driver = "org.postgresql.Driver";
       }
     }
     return driver;
@@ -245,6 +248,10 @@ public class DatabaseBean extends GenericBean {
     if ("net.sourceforge.jtds.jdbc.Driver".equals(this.getDriver())) {
       return "jdbc:jtds:sqlserver://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
+    if ("com.ibm.db2.jcc.DB2Driver".equals(this.getDriver())) {
+      // jdbc:db2://127.0.0.1:50000/centric
+      return "jdbc:db2://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
+    }
     if ("com.microsoft.jdbc.sqlserver.SQLServerDriver".equals(this.getDriver())) {
       return "jdbc:microsoft:sqlserver://" + this.getIp() + ":" + this.getPort() + ";SelectMethod=cursor;DatabaseName=" + this.getName();
     }
@@ -307,6 +314,9 @@ public class DatabaseBean extends GenericBean {
   public String getTypeValue() {
     if ("DaffodilDB".equals(type)) {
       return "daffodildb";
+    }
+    if ("DB2".equals(type)) {
+      return "db2";
     }
     if ("PostgreSQL".equals(type)) {
       return "postgresql";
