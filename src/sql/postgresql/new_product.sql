@@ -5,6 +5,9 @@
 -- classification and definition of products that a company can sell.
 -- REQUIRES: new_cdb.sql
 -- REQUIRES: new_project.sql
+-- Todo: index product_option on option_id
+--       index product_option_<all tables> on product_option_id
+--       index quote_product_option_<all tables> on quote_product_option_id
 
 -- Currency table, could extend to exchange rates
 -- Example: USD

@@ -827,7 +827,6 @@ public final class ProductCatalogs extends CFSModule {
     ProductCatalog updatedCatalog = null;
     ProductCatalog catalog = (ProductCatalog) context.getFormBean();
     catalog.setModifiedBy(getUserId(context));
-    //ProductCategoryList pcList = catalog.getCategoryList();
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
@@ -845,8 +844,6 @@ public final class ProductCatalogs extends CFSModule {
 
         updatedCatalog = new ProductCatalog(db, catalog.getId());
         updatedCatalog.buildCategories(db);
-        //pcList.addProductMapping(db, updatedCatalog.getCategoryList(), updatedCatalog.getId());
-        //pcList = updatedCatalog.getCategoryList();
         context.getRequest().setAttribute("productCatalog", updatedCatalog);
 
         String categoryId = context.getRequest().getParameter("categoryId");

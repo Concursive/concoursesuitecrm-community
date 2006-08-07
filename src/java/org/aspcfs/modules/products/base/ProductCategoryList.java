@@ -1468,12 +1468,12 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     StringBuffer sqlSelect = new StringBuffer();
     if (ids != null && !"".equals(ids)) {
       sqlSelect
-          .append("select category_id, category_name from product_category ");
+          .append("select category_id, category_name from product_category");
 
       StringTokenizer st = new StringTokenizer(ids, "|");
 
       if (st.hasMoreTokens()) {
-        sqlSelect.append("where category_id in (").append(
+        sqlSelect.append(" where category_id in (").append(
             st.nextToken());
         while (st.hasMoreTokens()) {
           sqlSelect.append(",").append(st.nextToken());
@@ -1495,9 +1495,9 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   }
 
   /**
-   *  Sets the elements attribute of the AssetMaterialList object
+   * Sets the elements attribute of the AssetMaterialList object
    *
-   * @param  categories  The new elements value
+   * @param categories The new elements value
    */
   public void setElements(String categories) {
     StringTokenizer str = new StringTokenizer(categories, "|");
@@ -1506,8 +1506,8 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       String temp = str.nextToken();
       if (temp != null && !"".equals(temp)) {
         category.setId(temp);
-	        this.add(category);
-	      }
-	    }
-	  }
+        this.add(category);
+      }
+    }
+  }
 }

@@ -178,7 +178,7 @@ CREATE TABLE order_address (
 );
 
 -- The method in which a payment is made
--- Example: Credit Card, EFT, Cash, Check, Money Order
+-- Example: Credit Card, EFT, Cash, Check, Money Order, Purchase Order
 CREATE TABLE lookup_payment_methods (
 	code SERIAL PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
