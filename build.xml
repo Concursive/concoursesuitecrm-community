@@ -513,6 +513,7 @@
     depends="init,compile.delete"
     unless="classes.uptodate">
     <!-- Compile the code -->
+    <echo message="Setting memory to 168m for compile"/>
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off"
       fork="true" memoryInitialSize="168m" memoryMaximumSize="168m"
     	debug="${DEBUG}" debuglevel="${DEBUGLEVEL}">
