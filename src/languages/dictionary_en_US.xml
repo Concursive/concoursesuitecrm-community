@@ -3751,6 +3751,12 @@
     <param name="products.productName">
       <value><![CDATA[Product Name]]></value>
     </param>
+    <param name="products.keywords">
+      <value><![CDATA[Keyword(s)]]></value>
+    </param>
+    <param name="products.productSKU">
+      <value><![CDATA[Product SKU]]></value>
+    </param>
     <param name="productCategory.deleteMsg">
       <value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
     </param>
@@ -4752,6 +4758,9 @@
     </param>
     <param name="product.startDate">
       <value><![CDATA[Start Date]]></value>
+    </param>
+    <param name="product.dateAfter">
+      <value><![CDATA[Date Added to Catalog]]></value>
     </param>
     <param name="product.expirationDate">
       <value><![CDATA[Expiration Date]]></value>

@@ -535,7 +535,7 @@ public class Role extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append("INSERT INTO \"role\" (\"role\", description, role_type, ");
       if (entered != null) {
-        sql.append("entered, ");
+      sql.append("entered, ");
       }
       if (id > -1) {
         sql.append("role_id, ");

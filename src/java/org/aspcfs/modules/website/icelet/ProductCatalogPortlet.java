@@ -106,8 +106,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @throws PortletException Description of the Exception
    * @throws IOException      Description of the Exception
    */
-  public void doView(RenderRequest request, RenderResponse response)
-      throws PortletException, IOException {
+  public void doView(RenderRequest request, RenderResponse response) throws PortletException, IOException {
 
     try {
       if (System.getProperty("DEBUG") != null) {
@@ -135,7 +134,8 @@ public class ProductCatalogPortlet extends GenericPortlet {
         buildSearchResult(request, response);
         PortletRequestDispatcher requestDispatcher = getPortletContext().getRequestDispatcher(VIEW_PAGE4);
         requestDispatcher.include(request, response);
-      } else if (("search".equals(viewType)) || (isSearchAsDefault && viewType == null)) {
+      } else
+      if (("search".equals(viewType)) || (isSearchAsDefault && viewType == null)) {
         buildSearch(request, response);
         PortletRequestDispatcher requestDispatcher = getPortletContext().getRequestDispatcher(VIEW_PAGE3);
         requestDispatcher.include(request, response);
@@ -161,15 +161,13 @@ public class ProductCatalogPortlet extends GenericPortlet {
     productCategory.setId(preferredCategoryId);
     request.setAttribute("productCategory", productCategory);
     request.setAttribute("searchProductCatalogListInfo", productCatalogListInfo);
-    request.setAttribute("searchName", productCatalogListInfo.getSearchOptionValue("searchName"));
-    request.setAttribute("searchAbbreviation", productCatalogListInfo.getSearchOptionValue("searchAbbreviation"));
+    request.setAttribute("searchcodeGroupKeywords", productCatalogListInfo.getSearchOptionValue("searchcodeGroupKeywords"));
     request.setAttribute("searchSku", productCatalogListInfo.getSearchOptionValue("searchSku"));
     request.setAttribute("searchcodePriceRangeMin", productCatalogListInfo.getSearchOptionValue("searchcodePriceRangeMin"));
     request.setAttribute("searchcodePriceRangeMax", productCatalogListInfo.getSearchOptionValue("searchcodePriceRangeMax"));
-    request.setAttribute("searchtimestampStartDate", productCatalogListInfo.getSearchOptionValue("searchtimestampStartDate"));
-    request.setAttribute("searchtimestampEndDate", productCatalogListInfo.getSearchOptionValue("searchtimestampEndDate"));
     request.setAttribute("searchCategoryListIds", productCatalogListInfo.getSearchOptionValue("searchCategoryListIds"));
     request.setAttribute("searchCategoryNames", productCatalogListInfo.getSearchOptionValue("searchCategoryNames"));
+    request.setAttribute("searchcodeDateAfter", productCatalogListInfo.getSearchOptionValue("searchcodeDateAfter"));
     request.setAttribute("timeZone", timeZone);
     request.getPortletSession().removeAttribute("productCatalogListInfo");
   }
@@ -189,8 +187,8 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @throws PortletException Description of the Exception
    * @throws IOException      Description of the Exception
    */
-  public void processAction(ActionRequest request, ActionResponse response)
-      throws PortletException, IOException {
+  public void processAction(ActionRequest request, ActionResponse response) throws PortletException, IOException {
+
     // Handle different portlet posts
     String action = request.getParameter("actionType");
     if ("search".equals(action)) {
@@ -231,8 +229,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @throws java.sql.SQLException
    * @throws NumberFormatException
    */
-  private void addQuote(ActionRequest request, ActionResponse response)
-      throws NumberFormatException, SQLException {
+  private void addQuote(ActionRequest request, ActionResponse response) throws NumberFormatException, SQLException {
     Connection db = PortletUtils.getConnection(request);
     String productId = request.getParameter("forwardproductId");
     HashMap quotes = new HashMap();
@@ -293,7 +290,6 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
     request.setAttribute("productURL", completeProductURL.toString());
 
-
     Connection db = PortletUtils.getConnection(request);
     boolean checkProductId = false;
     //determine if this page was reached directly (e.g., via a link in the email)
@@ -322,12 +318,15 @@ public class ProductCatalogPortlet extends GenericPortlet {
 
     // building a single item as a list
     ProductCatalogList productCatalogList = new ProductCatalogList();
+    //if (!"searchResult".equals(request.getPortletSession().getAttribute("previousPage"))) {
     if (!"true".equals(request.getParameter("searchResults"))) {
       productCatalogList.setCategoryId(request.getParameter("categoryId"));
+      if (productCatalogList.getCategoryId() == -1) {
+        productCatalogList.setHasCategories(Constants.FALSE);
+      }
     } else {
       ProductCategoryList productCategoryList = new ProductCategoryList();
       String searchCategoryListIds = productCatalogListInfo.getSearchOptionValue("searchCategoryListIds");
-      // TODO: searchCategoryListIds = -1
       if (searchCategoryListIds.equals("") || searchCategoryListIds == null) {
         productCategoryList = productCategoryList.buildListFromIds(db, preferredCategoryId);
       } else {
@@ -337,11 +336,11 @@ public class ProductCatalogPortlet extends GenericPortlet {
       productCategoryList.buildCompleteHierarchy();
       productCatalogListInfo.setSearchCriteria(productCatalogList, (HttpServletRequest) request, PortletUtils.getSystemStatus(request), null);
       productCatalogList.setProductCategoryList(productCategoryList);
+      if (productCatalogList.getCategoryId() == -1) {
+        productCatalogList.setHasCategories(Constants.UNDEFINED);
+      }
     }
     productCatalogList.setPagedListInfo(productCatalogListInfo);
-    if (productCatalogList.getCategoryId() == -1) {
-      productCatalogList.setHasCategories(Constants.UNDEFINED);
-    }
     productCatalogList.buildList(db);
     request.setAttribute("productCatalogList", productCatalogList);
     ProductCatalog productCatalog = null;
@@ -453,8 +452,8 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @param response Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  private void buildSearchResult(RenderRequest request,
-                                 RenderResponse response) throws Exception {
+  private void buildSearchResult(RenderRequest request, RenderResponse response) throws Exception {
+
     Connection db = PortletUtils.getConnection(request);
 
     // fetching products for the specified category
@@ -504,29 +503,8 @@ public class ProductCatalogPortlet extends GenericPortlet {
    * @param response Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  private void prepareSearchResult(ActionRequest request,
-                                   ActionResponse response) throws Exception {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("1.viewtype ==> "
-          + request.getParameter("viewType"));
-      System.out.println("1.searchName ==>"
-          + request.getParameter("searchName"));
-      System.out.println("1.searchSku ==>"
-          + request.getParameter("searchSku"));
-      System.out.println("1.searchcodePriceRangeMin ==>"
-          + request.getParameter("searchcodePriceRangeMin"));
-      System.out.println("1.searchcodePriceRangeMax ==>"
-          + request.getParameter("searchcodePriceRangeMax"));
-    }
-    response.setRenderParameter("searchName", request.getParameter("searchName"));
-    response.setRenderParameter("searchSku", request.getParameter("searchAbbreviation"));
-    response.setRenderParameter("searchSku", request.getParameter("searchSku"));
-    response.setRenderParameter("searchcodePriceRangeMin", request.getParameter("searchcodePriceRangeMin"));
-    response.setRenderParameter("searchcodePriceRangeMax", request.getParameter("searchcodePriceRangeMax"));
-    response.setRenderParameter("searchtimestampStartDate", request.getParameter("searchtimestampStartDate"));
-    response.setRenderParameter("searchtimestampEndDate", request.getParameter("searchtimestampEndDate"));
-    response.setRenderParameter("searchCategoryListIds", request.getParameter("searchCategoryListIds"));
-    response.setRenderParameter("searchCategoryNames", request.getParameter("searchCategoryNames"));
+  private void prepareSearchResult(ActionRequest request, ActionResponse response) throws Exception {
+    forwardParameters(request, response);
     response.setRenderParameter("viewType", "searchResult");
   }
 

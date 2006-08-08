@@ -451,7 +451,7 @@ public class PagedListInfo implements Serializable {
       }
       if (System.getProperty("DEBUG") != null) {
         System.out.println(
-          "PagedListInfo-> Offset reduced to: " + currentOffset);
+            "PagedListInfo-> Offset reduced to: " + currentOffset);
       }
       //Check to see if the page break has any records to display, otherwise
       //go back a page
@@ -516,6 +516,7 @@ public class PagedListInfo implements Serializable {
 
   /**
    * When initializing a pagedList, a default view can be set if it is not already set
+   *
    * @param tmp
    */
   public void setDefaultListView(String tmp) {
@@ -547,11 +548,11 @@ public class PagedListInfo implements Serializable {
   public boolean setParameters(HttpServletRequest request) {
     //check for multiple pagedLists on a single page
     if (request.getParameter("pagedListInfoId") != null &&
-      !(request.getParameter("pagedListInfoId").equals("")) &&
-      this.getId() != null && !"".equals(this.getId().trim()) &&
-      !(request.getParameter("pagedListInfoId").equals("null")) &&
-      !(request.getParameter("pagedListInfoId").equals(
-        this.getId()))) {
+        !(request.getParameter("pagedListInfoId").equals("")) &&
+        this.getId() != null && !"".equals(this.getId().trim()) &&
+        !(request.getParameter("pagedListInfoId").equals("null")) &&
+        !(request.getParameter("pagedListInfoId").equals(
+            this.getId()))) {
       return false;
     }
 
@@ -643,7 +644,7 @@ public class PagedListInfo implements Serializable {
     int filter = 0;
     while (request.getParameter("listFilter" + (++filter)) != null) {
       String tmpListFilter = request.getParameter(
-        "listFilter" + filter);
+          "listFilter" + filter);
       addFilter(filter, tmpListFilter);
     }
     if (request.getParameter("listFilter2") != null && filter < 2) {
@@ -654,7 +655,7 @@ public class PagedListInfo implements Serializable {
     if (request.getParameter("listFilter1") != null && resetList) {
       String thisFilter = request.getParameter("listFilter1");
       if (listFilters.get("listFilter1") != null && !thisFilter.equals(
-        listFilters.get("listFilter1"))) {
+          listFilters.get("listFilter1"))) {
         resetList();
       }
     }
@@ -667,7 +668,7 @@ public class PagedListInfo implements Serializable {
           reset = true;
         }
         this.getSavedCriteria().put(
-          param, request.getParameter(param));
+            param, request.getParameter(param));
       }
     }
     return true;
@@ -685,84 +686,92 @@ public class PagedListInfo implements Serializable {
     ConnectionElement ce = null;
     if (context != null) {
       ce = (ConnectionElement) context.getSession().getAttribute(
-        "ConnectionElement");
+          "ConnectionElement");
     }
     if (ce != null) {
-			SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
           "SystemStatus")).get(ce.getUrl());
       this.setSystemStatus(systemStatus);
     }
-		return setSearchCriteria(obj,context.getRequest(),systemStatus);
-	}
-	
-  public boolean setSearchCriteria(Object obj, HttpServletRequest request, SystemStatus systemStatus) {
-    return this.setSearchCriteria(obj,request,systemStatus, UserUtils.getUserLocale(request));
+    return setSearchCriteria(obj, context.getRequest(), systemStatus);
   }
-    
+
+  public boolean setSearchCriteria(Object obj, HttpServletRequest request, SystemStatus systemStatus) {
+    return this.setSearchCriteria(obj, request, systemStatus, UserUtils.getUserLocale(request));
+  }
+
   public boolean setSearchCriteria(Object obj, HttpServletRequest request, SystemStatus systemStatus, Locale locale) {
-		if (locale == null) {
-			locale = Locale.getDefault();
-		}
+    if (locale == null) {
+      locale = Locale.getDefault();
+    }
     if (!this.getSavedCriteria().isEmpty()) {
       Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
       while (hashIterator.hasNext()) {
         String tempKey = (String) hashIterator.next();
         if (this.getCriteriaValue(tempKey) != null && !(this.getCriteriaValue(
-          tempKey).trim().equals(""))) {
+            tempKey).trim().equals(""))) {
           //its an int
           if (System.getProperty("DEBUG") != null) {
             System.out.println(
-              "PagedListInfo-> Setting: " + tempKey + "=" + getCriteriaValue(
-                tempKey));
+                "PagedListInfo-> Setting: " + tempKey + "=" + getCriteriaValue(
+                    tempKey));
           }
           if (tempKey.startsWith("searchcode")) {
             ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
           } else if (tempKey.startsWith("searchdate")) {
-            Timestamp tmpTimestamp = 
-                DateUtils.getUserToServerDateTime(null, 
-                                                  DateFormat.SHORT, 
-                                                  DateFormat.LONG, 
-                                                  this.getCriteriaValue(tempKey), 
-                                                  locale);
+            Timestamp tmpTimestamp =
+                DateUtils.getUserToServerDateTime(null,
+                    DateFormat.SHORT,
+                    DateFormat.LONG,
+                    this.getCriteriaValue(tempKey),
+                    locale);
             if (tmpTimestamp != null) {
               boolean modified = false;
               java.sql.Date tmpDate = new java.sql.Date(
-                tmpTimestamp.getTime());
-              modified = ObjectUtils.setParam( obj, tempKey.substring(10), tmpDate);
-              if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey))) {
+                  tmpTimestamp.getTime());
+              modified = ObjectUtils.setParam(obj, tempKey.substring(10), tmpDate);
+              if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey)))
+              {
                 isValid = false;
                 addError(obj, "getErrors", tempKey, systemStatus);
               }
             }
             if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(
-              this.getCriteriaValue(tempKey))) {
+                this.getCriteriaValue(tempKey))) {
               isValid = false;
               addError(obj, "getErrors", tempKey, systemStatus);
             }
-          } else if(tempKey.startsWith("searchtimestamp")) {
-            Timestamp tmpTimestamp = 
-              DateUtils.getUserToServerDateTime(null, 
-                                                DateFormat.SHORT, 
-                                                DateFormat.LONG, 
-                                                this.getCriteriaValue(tempKey), 
-                                                locale);
-          if (tmpTimestamp != null) {
-            boolean modified = false;
-            modified = ObjectUtils.setParam( obj, tempKey.substring(15), tmpTimestamp);
-            if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey))) {
+          } else if (tempKey.startsWith("searchtimestamp")) {
+            Timestamp tmpTimestamp =
+                DateUtils.getUserToServerDateTime(null,
+                    DateFormat.SHORT,
+                    DateFormat.LONG,
+                    this.getCriteriaValue(tempKey),
+                    locale);
+            if (tmpTimestamp != null) {
+              boolean modified = false;
+              modified = ObjectUtils.setParam(obj, tempKey.substring(15), tmpTimestamp);
+              if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey)))
+              {
+                isValid = false;
+                addError(obj, "getErrors", tempKey, systemStatus);
+              }
+            }
+            if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(
+                this.getCriteriaValue(tempKey))) {
               isValid = false;
               addError(obj, "getErrors", tempKey, systemStatus);
             }
-          }
-          if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(
-            this.getCriteriaValue(tempKey))) {
-            isValid = false;
-            addError(obj, "getErrors", tempKey, systemStatus);
-          }  
+          } else if (tempKey.startsWith("searchgroup")) {
+            String[] words = this.getCriteriaValue(tempKey).split(",");
+            for (int i = 0; i < words.length; i++) {
+              words[i] = "%" + words[i] + "%";
+            }
+            ObjectUtils.setParam(obj, tempKey.substring(11), words);
           } else {
-            ObjectUtils.setParam(obj, 
-                                 tempKey.substring(6), 
-                                 "%" + this.getCriteriaValue(tempKey) + "%");
+            ObjectUtils.setParam(obj,
+                tempKey.substring(6),
+                "%" + this.getCriteriaValue(tempKey) + "%");
           }
         }
       }
@@ -774,26 +783,26 @@ public class PagedListInfo implements Serializable {
   /**
    * Adds a feature to the Error attribute of the PagedListInfo class
    *
-   * @param obj     The feature to be added to the Error attribute
-   * @param param   The feature to be added to the Error attribute
-   * @param field   The feature to be added to the Error attribute
+   * @param obj          The feature to be added to the Error attribute
+   * @param param        The feature to be added to the Error attribute
+   * @param field        The feature to be added to the Error attribute
    * @param systemStatus The feature to be added to the Error attribute
    */
   private static void addError(Object obj, String param, String field, SystemStatus systemStatus) {
     try {
       Method method = obj.getClass().getMethod(
-        param, (java.lang.Class[]) null);
+          param, (java.lang.Class[]) null);
       if (systemStatus == null) {
         ((HashMap) method.invoke(obj, (java.lang.Object[]) null)).put(
-          field.substring(0, 1).toLowerCase() + field.substring(1) + "Error", "Invalid Date");
+            field.substring(0, 1).toLowerCase() + field.substring(1) + "Error", "Invalid Date");
       } else {
         ((HashMap) method.invoke(obj, (java.lang.Object[]) null)).put(
-          field.substring(0, 1).toLowerCase() + field.substring(1) + "Error", systemStatus.getLabel(
-          "object.validation.incorrectDateFormat"));
+            field.substring(0, 1).toLowerCase() + field.substring(1) + "Error", systemStatus.getLabel(
+            "object.validation.incorrectDateFormat"));
       }
       if (System.getProperty("DEBUG") != null) {
         System.out.println(
-          "PagedListInfo-> Adding an error: " + field + "Error");
+            "PagedListInfo-> Adding an error: " + field + "Error");
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -929,7 +938,7 @@ public class PagedListInfo implements Serializable {
     int numPages = this.getNumberOfPages();
     StringBuffer links = new StringBuffer();
     links.append(
-      numPages + " page" + ((numPages == 1) ? "" : "s") + " in this view ");
+        numPages + " page" + ((numPages == 1) ? "" : "s") + " in this view ");
     if (numPages > 1) {
       links.append("[");
       for (int i = 1; i < (numPages + 1); i++) {
@@ -1060,7 +1069,7 @@ public class PagedListInfo implements Serializable {
         links.append(" <b>" + thisLetter + "</b> ");
       } else {
         links.append(
-          "<a href=\"javascript:" + javaScript + "('letter','" + thisLetter + "','" + formName + "');\"> " + thisLetter + " </a>");
+            "<a href=\"javascript:" + javaScript + "('letter','" + thisLetter + "','" + formName + "');\"> " + thisLetter + " </a>");
       }
     }
     return links.toString();
@@ -1121,25 +1130,25 @@ public class PagedListInfo implements Serializable {
         String thisLink = null;
         if (response == null) {
           thisLink = link + "&pagedListInfoId=" + this.getId() +
-            (getExpandedSelection() ? "&pagedListSectionId=" + this.getId() : "") +
-            "&offset=" + (newOffset > 0 ? newOffset : 0);
+              (getExpandedSelection() ? "&pagedListSectionId=" + this.getId() : "") +
+              "&offset=" + (newOffset > 0 ? newOffset : 0);
         } else {
           PortletURL renderURL = response.createRenderURL();
           HashMap params = (HashMap) renderParameters.clone();
           params.put("pagedListInfoId", new String[]{this.getId()});
           params.put("pagedListSectionId", new String[]{this.getId()});
           params.put("offset", new String[]{String.valueOf(newOffset > 0 ? newOffset : 0)});
-          params.put("page", new String[]{String.valueOf(newOffset > 0 ? newOffset%10 : 0)});
+          params.put("page", new String[]{String.valueOf(newOffset > 0 ? newOffset % 10 : 0)});
           renderURL.setParameters(params);
           thisLink = renderURL.toString();
         }
         result.append(
-          "<a href=\"" + scrollStart + thisLink + scrollEnd + "\">" + linkOn + "</a>");
+            "<a href=\"" + scrollStart + thisLink + scrollEnd + "\">" + linkOn + "</a>");
         return result.toString();
       } else {
         //Use javascript for constructing the link
         result.append(
-          "<a href=\"javascript:offsetsubmit('" + formName + "','" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>");
+            "<a href=\"javascript:offsetsubmit('" + formName + "','" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>");
         return result.toString();
       }
     } else {
@@ -1202,8 +1211,8 @@ public class PagedListInfo implements Serializable {
         String thisLink = null;
         if (response == null) {
           thisLink = link + "&pagedListInfoId=" + this.getId() +
-            (getExpandedSelection() ? "&pagedListSectionId=" + this.getId() : "") +
-            "&offset=" + (currentOffset + getItemsPerPage());
+              (getExpandedSelection() ? "&pagedListSectionId=" + this.getId() : "") +
+              "&offset=" + (currentOffset + getItemsPerPage());
         } else {
           PortletURL renderURL = response.createRenderURL();
           HashMap params = (HashMap) renderParameters.clone();
@@ -1214,19 +1223,18 @@ public class PagedListInfo implements Serializable {
           thisLink = renderURL.toString();
         }
         result.append(
-          "<a href=\"" + scrollStart + thisLink + scrollEnd + "\">" + linkOn + "</a>");
+            "<a href=\"" + scrollStart + thisLink + scrollEnd + "\">" + linkOn + "</a>");
         return result.toString();
       } else {
         //Use javascript for constructing the link
         result.append(
-          "<a href=\"javascript:offsetsubmit('" + formName + "','" + (currentOffset + getItemsPerPage()) + "');\">" + linkOn + "</a>");
+            "<a href=\"javascript:offsetsubmit('" + formName + "','" + (currentOffset + getItemsPerPage()) + "');\">" + linkOn + "</a>");
         return result.toString();
       }
     } else {
       return linkOff;
     }
   }
-
 
   /**
    * Gets the expandLink attribute of the PagedListInfo object
@@ -1251,14 +1259,14 @@ public class PagedListInfo implements Serializable {
   */
 
   /**
-     * Gets the expandLink attribute of the PagedListInfo object
-     *
-     * @param expandLink   Description of the Parameter
-     * @param collapseLink Description of the Parameter
-     * @return The expandLink value
-     */
+   * Gets the expandLink attribute of the PagedListInfo object
+   *
+   * @param expandLink   Description of the Parameter
+   * @param collapseLink Description of the Parameter
+   * @return The expandLink value
+   */
   // TODO: see where this method is used
-    public String getExpandLink(String expandLink, String collapseLink) {
+  public String getExpandLink(String expandLink, String collapseLink) {
     if (!expandedSelection) {
       return "<a href=\"" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + "\">" + expandLink + "</a>";
     } else {
@@ -1269,14 +1277,14 @@ public class PagedListInfo implements Serializable {
   /**
    * Gets the expandLink attribute of the PagedListInfo object
    *
-   * @param expandLink       Description of the Parameter
-   * @param collapseLink      Description of the Parameter
+   * @param expandLink   Description of the Parameter
+   * @param collapseLink Description of the Parameter
    * @param collapseLink Description of the Parameter
    * @return The expandLink value
    */
   public String getExpandLink(String expandLink, String collapseLink, String tmpParams) {
     if (!expandedSelection) {
-      return "<a href=\"" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + tmpParams +"\">" + expandLink + "</a>";
+      return "<a href=\"" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + tmpParams + "\">" + expandLink + "</a>";
     } else {
       return "<a href=\"" + link + "&resetList=true&pagedListInfoId=" + this.getId() + tmpParams + "\">" + collapseLink + "</a>";
     }
@@ -1451,7 +1459,7 @@ public class PagedListInfo implements Serializable {
    */
   public void appendSqlSelectHead(Connection db, StringBuffer sqlStatement) {
     if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-      this.getItemsPerPage() > 0) {
+        this.getItemsPerPage() > 0) {
       int x = this.getItemsPerPage() + this.getCurrentOffset();
       sqlStatement.append("SELECT TOP " + x + " ");
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE &&
@@ -1461,11 +1469,11 @@ public class PagedListInfo implements Serializable {
         this.getItemsPerPage() > 0) {
       sqlStatement.append("SELECT * FROM (SELECT ROW_NUMBER() OVER (" + orderByStatement + ") AS db_row, ");
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD &&
-      this.getItemsPerPage() > 0) {
+        this.getItemsPerPage() > 0) {
       sqlStatement.append("SELECT FIRST " + this.getItemsPerPage() + " ");
       sqlStatement.append("SKIP " + this.getCurrentOffset() + " ");
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB &&
-      this.getItemsPerPage() > 0) {
+        this.getItemsPerPage() > 0) {
       int x = this.getItemsPerPage() + this.getCurrentOffset();
       sqlStatement.append("SELECT TOP (" + x + ") ");
     } else {
@@ -1477,7 +1485,7 @@ public class PagedListInfo implements Serializable {
   /**
    * Description of the Method
    *
-   * @param db           Description of Parameter
+   * @param db                   Description of Parameter
    * @param appendedSqlStatement Description of Parameter
    */
   public void appendSqlTail(Connection db, StringBuffer appendedSqlStatement) {
@@ -1525,8 +1533,8 @@ public class PagedListInfo implements Serializable {
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.DB2) {
       if (this.getItemsPerPage() > 0) {
         sqlStatement.append(
-          "FETCH FIRST " + (this.getItemsPerPage() + this.getCurrentOffset()) + " ROWS ONLY) AS db_row_numbers " +
-          "WHERE db_row > " + this.getCurrentOffset() + " AND db_row <= " + (this.getCurrentOffset() + this.getItemsPerPage()) + " ");
+            "FETCH FIRST " + (this.getItemsPerPage() + this.getCurrentOffset()) + " ROWS ONLY) AS db_row_numbers " +
+                "WHERE db_row > " + this.getCurrentOffset() + " AND db_row <= " + (this.getCurrentOffset() + this.getItemsPerPage()) + " ");
       }
     }
     appendedSqlStatement.append(sqlStatement);
@@ -1542,9 +1550,9 @@ public class PagedListInfo implements Serializable {
    */
   public void doManualOffset(Connection db, ResultSet rs) throws SQLException {
     if (this.getItemsPerPage() > 0 &&
-      (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ||
-        DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ||
-        DatabaseUtils.getType(db) == DatabaseUtils.ORACLE)) {
+        (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ||
+            DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ||
+            DatabaseUtils.getType(db) == DatabaseUtils.ORACLE)) {
       for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++)
       {
         rs.next();

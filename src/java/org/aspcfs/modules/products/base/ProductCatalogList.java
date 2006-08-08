@@ -77,7 +77,10 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private ProductCategoryList productCategoryList = new ProductCategoryList();
   private Timestamp startDate = null;
   private Timestamp endDate = null;
-
+  private String dateAfter = null;
+  private String groupKeywords = null;
+  private String[] keywords = null;
+  
   private boolean excludeUnapprovedProducts = true;
 
   //resources
@@ -1381,6 +1384,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
             "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) = ? ");
       }
     }
+    if (keywords != null){
+      for(int i=0;i<keywords.length;i++){
+        sqlFilter.append(" AND ( " + DatabaseUtils.toLowerCase(db) +"(pctlg.product_name) like ? OR " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.convertToVarChar(db, "pctlg.short_description") + ") like ? OR " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.convertToVarChar(db, "pctlg.long_description") + ") like ?) ");
+      }
+    }
+    
     if (abbreviation != null) {
       if (abbreviation.indexOf("%") >= 0) {
         sqlFilter.append(
@@ -1581,7 +1590,14 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (name != null) {
       pst.setString(++i, name.toLowerCase());
     }
-
+    if (keywords != null){
+      for(int i1=0;i1<keywords.length;i1++){
+        pst.setString(++i, ("%"+keywords[i1].toLowerCase()+"%"));
+        pst.setString(++i, ("%"+keywords[i1].toLowerCase()+"%"));
+        pst.setString(++i, ("%"+keywords[i1].toLowerCase()+"%"));
+      }
+    }
+    
     if (abbreviation != null) {
       pst.setString(++i, abbreviation.toLowerCase());
     }
@@ -1895,6 +1911,85 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the dateAfter attribute of the ProductCatalogList object
+   *
+   * @return The dateAfter value
+   */
+  public String getDateAfter() {
+    return dateAfter;
+  }
+
+
+  /**
+   * Sets the dateAfter attribute of the ProductCatalogList object
+   * dateAfter - The Search attribute 
+   * Parse on  the mask  number_ dimensions
+   * number - int
+   * dimensions - Field name of the java.util.Calendar (HOUR|MONTH|YEAR)
+   * @param dateAfter The new dateAfter value
+   */
+  public void setDateAfter(String dateAfter) throws Exception{
+    this.dateAfter = dateAfter;
+    if(dateAfter != null && dateAfter != "" ){ 
+      String[] temp = dateAfter.split("_");
+      Calendar cal = Calendar.getInstance();
+      int calendarConst = -1;
+      java.lang.reflect.Field[] fields = cal.getClass().getFields();      
+      for(int i=0;i<fields.length;i++){
+        if(fields[i].getName().equals(temp[1])){
+          calendarConst = fields[i].getInt(cal);
+          break;
+        }
+          
+      }
+      cal.add(calendarConst,-1*Integer.parseInt(temp[0]));
+      java.util.Date date = cal.getTime();
+      this.startDate = new Timestamp(date.getTime());
+    }    
+  }
+
+
+	/**
+   * Gets the groupKeywords attribute of the ProductCatalogList object
+   *
+   */
+	 public void setGroupKeywords(String tmp) { 
+	 	this.groupKeywords = tmp;
+		keywords = groupKeywords.split(" ");
+	 }
+
+
+	 /**
+   * Gets the groupKeywords attribute of the ProductCatalogList object
+   *
+   * @return The groupKeywords value
+   */
+	 public String getGroupKeywords() { 
+	 	return groupKeywords;
+	 }
+
+
+  /**
+   * Gets the keywords attribute of the ProductCatalogList object
+   *
+   * @return The keywords value
+   */
+  public String[] getKeywords() {
+    return keywords;
+  }
+
+
+  /**
+   * Sets the keywords attribute of the ProductCatalogList object
+   *  
+   * @param keywords The new keywords value
+   */
+  public void setKeywords(String[] keywords) {
+    this.keywords = keywords;
   }
 
 }

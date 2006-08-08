@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -21,16 +21,14 @@
 <%@ taglib uri="/WEB-INF/portlet.tld" prefix="portlet" %>
 <%@ page import="java.util.*,org.aspcfs.modules.products.base.*"%>
 <jsp:useBean id="productCategory" class="org.aspcfs.modules.products.base.ProductCategory" scope="request" />
-<jsp:useBean id="searchName" class="java.lang.String" scope="request" />
-<jsp:useBean id="searchAbbreviation" class="java.lang.String" scope="request" />
+<jsp:useBean id="searchcodeGroupKeywords" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchSku" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchcodePriceRangeMin" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchcodePriceRangeMax" class="java.lang.String" scope="request" />
-<jsp:useBean id="searchtimestampStartDate" class="java.lang.String" scope="request" />
-<jsp:useBean id="searchtimestampEndDate" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchcodeCategoryId" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchCategoryNames" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchCategoryListIds" class="java.lang.String" scope="request" />
+<jsp:useBean id="searchcodeDateAfter" class="java.lang.String" scope="request" />
 <jsp:useBean id="timeZone" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPopupMenu.jsp" %>
@@ -40,99 +38,73 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="Javascript">
   function clearForm() {
-    document.forms['searchCondition'].searchName.value = "";
-    document.forms['searchCondition'].searchAbbreviation.value="";
-    document.forms['searchCondition'].searchSku.value="";
-    document.forms['searchCondition'].searchcodePriceRangeMin.value="";
-    document.forms['searchCondition'].searchcodePriceRangeMax.value="";
-    document.forms['searchCondition'].searchtimestampStartDate.value="";
-    document.forms['searchCondition'].searchtimestampEndDate.value="";
-    document.forms['searchCondition'].searchCategoryListIds.value = "";
-    document.forms['searchCondition'].searchCategoryNames.value = "";
+    document.forms['searchCondition'].forwardsearchcodeGroupKeywords.value = "";
+    document.forms['searchCondition'].forwardsearchSku.value="";
+    document.forms['searchCondition'].forwardsearchcodePriceRangeMin.value="";
+    document.forms['searchCondition'].forwardsearchcodePriceRangeMax.value="";
+		document.forms['searchCondition'].forwardsearchCategoryListIds.value = "";
+    document.forms['searchCondition'].forwardsearchCategoryNames.value = "";
     changeDivContent('changecategory', 'All');
+		setSearchcodeDateAfter("-1");
 
-    document.forms['searchCondition'].searchName.focus();
+    document.forms['searchCondition'].forwardsearchcodeGroupKeywords.focus();
     //changeDivContent('changecategory', label('label.all','All'));
   }
+	function setSearchcodeDateAfter(selected){
+		for(i=0;i<document.forms['searchCondition'].forwardsearchcodeDateAfter.length;i++){
+		 if(document.forms['searchCondition'].forwardsearchcodeDateAfter[i].value== selected){
+				document.forms['searchCondition'].forwardsearchcodeDateAfter[i].selected = true;
+				break;
+			}
+		}
+	}
 
   function clearProductCategory() {
-    document.forms['searchCondition'].searchCategoryListIds.value = "";
+    document.forms['searchCondition'].forwardsearchCategoryListIds.value = "";
     //changeDivContent('changecategory', label('label.all','All'));
-     document.forms['searchCondition'].searchCategoryNames.value = "";
+     document.forms['searchCondition'].forwardsearchCategoryNames.value = "";
      changeDivContent('changecategory', 'All');
   }
 
   function setProductCategory(searchCategoryNames,categoryListIds) {
     //changeDivContent('changecategory', label('label.all','All'));
-    document.forms['searchCondition'].searchCategoryNames.value = searchCategoryNames;
-    document.forms['searchCondition'].searchCategoryListIds.value = categoryListIds;
+    document.forms['searchCondition'].forwardsearchCategoryNames.value = searchCategoryNames;
+    document.forms['searchCondition'].forwardsearchCategoryListIds.value = categoryListIds;
    	changeDivContent('changecategory', searchCategoryNames);
    }
 </script>
-<!--  <body onLoad="javascript:document.searchCondition.searchName.focus();"> -->
-<%--
+<!--  <body onLoad="javascript:document.searchCondition.searchgroupKeywords.focus();"> -->
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <td colspan="1" style="text-align:left;" nowrap>
 			<portlet:renderURL portletMode="view" var="url">
 				<portlet:param name="viewType" value="summary"/>
 				<portlet:param name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>"/>
 			</portlet:renderURL>
-		  <a href="<%= pageContext.getAttribute("url") %>">Back to Products Summary</a>
+		  [<a href="<%= pageContext.getAttribute("url") %>">Back to Products Summary</a>]
 		</td>
 </table>
---%>
 <form name="searchCondition" action="<portlet:actionURL />" method="post">
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+	<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 		<tr>
 			<th colspan="2">
-				<dhv:label name="product.searchCondition">Search</dhv:label>
+				<strong><dhv:label name="product.searchCondition">Product Search</dhv:label></strong>
 			</th>
 		</tr>
 		<tr>
-			<td class="formLabel" nowrap>
-				<dhv:label name="products.productName">Product Name</dhv:label>
+			<td class="formLabel" width="20%">
+				<dhv:label name="products.keywords">Keyword(s)</dhv:label>
 			</td>
-			<td width="100%">
-				<input type="text" size="35" name="searchName" value="<%= searchName %>">
-			</td>
-		</tr>
-		<tr>
-			<td class="formLabel" nowrap>
-				<dhv:label name="literal.abbreviation.name">Abbreviation</dhv:label>
-			</td>
-			<td>
-				<input type="text" size="35" name="searchAbbreviation" value="<%= searchAbbreviation %>">
-			</td>
-		</tr>
-		<tr>
-			<td class="formLabel" nowrap>
-				<dhv:label name="quotes.sku">SKU</dhv:label>
-			</td>
-			<td>
-				<input type="text" size="15" name="searchSku" value="<%= searchSku %>">
-			</td>
-		</tr>
-		<tr>
-			<td class="formLabel" nowrap>
-				<dhv:label name="product.priceRange">Price Range</dhv:label>
-			</td>
-			<td>
-				<input type="text" size="10" name="searchcodePriceRangeMin" value="<%= searchcodePriceRangeMin %>">
-				to
-				<input type="text" size="10" name="searchcodePriceRangeMax" value="<%= searchcodePriceRangeMax %>">
+			<td width="20%">
+				<input type="text" size="35" name="forwardsearchcodeGroupKeywords" value="<%= searchcodeGroupKeywords %>">
 			</td>
 		</tr>
 		<tr>
 			<td class="formLabel">
-				<dhv:label name="product.startDate">Product Start Date </dhv:label>
+				<dhv:label name="products.productSKU">Product SKU</dhv:label>
 			</td>
 			<td>
-        <zeroio:dateSelect form="searchCondition" field="searchtimestampStartDate" timestamp="<%= searchtimestampStartDate %>"  timeZone="<%= timeZone %>" showTimeZone="false" />
-        <%= showError(request, "startDateError") %>
-        to
-        <zeroio:dateSelect form="searchCondition" field="searchtimestampEndDate" timestamp="<%= searchtimestampEndDate %>"  timeZone="<%= timeZone %>" showTimeZone="false" />
-        <%= showError(request, "startDateError") %>
-      </td>
+				<input type="text" size="15" name="forwardsearchSku" value="<%= searchSku %>">
+			</td>
 		</tr>
 		<tr>
 			<td class="formLabel" nowrap>
@@ -150,24 +122,47 @@
 							</div>
 						</td>
 						<td valign="top" width="100%" nowrap>
-							<input type="hidden" name="searchCategoryListIds" id="searchCategoryListIds" value="<%= searchCategoryListIds %>">
-							&nbsp;[<a href="javascript:popIceProductMultiCategoriesList('Portal.do?command=ListProductMultiCategories&parentId=<%=String.valueOf(productCategory.getId())%>&categoryId=<%=String.valueOf(productCategory.getId())%>',document.forms['searchCondition'].searchCategoryListIds.value);"><dhv:label name="accounts.accounts_add.select">Multi-Select</dhv:label></a>]
-							&nbsp;[<a href="javascript:clearProductCategory();"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
+							<input type="hidden" name="forwardsearchCategoryListIds" id="forwardsearchCategoryListIds" value="<%= searchCategoryListIds %>">
+							[<a href="javascript:popIceProductMultiCategoriesList('Portal.do?command=ListProductMultiCategories&parentId=<%=String.valueOf(productCategory.getId())%>&categoryId=<%=String.valueOf(productCategory.getId())%>',document.forms['searchCondition'].forwardsearchCategoryListIds.value);"><dhv:label name="accounts.accounts_add.select">Multi-Select</dhv:label></a>]
+							[<a href="javascript:clearProductCategory();"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
 						</td>
 					</tr>
 				</table>
 			</td>
 		</tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-        <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
-	      <input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
-      </td>
-    </tr>
-  </table>
+		<tr>
+			<td class="formLabel">
+				<dhv:label name="product.priceRange">Price Range</dhv:label>
+			</td>
+			<td>
+				<input type="text" size="10" name="forwardsearchcodePriceRangeMin" value="<%= searchcodePriceRangeMin %>">
+				&nbsp;to&nbsp;
+				<input type="text" size="10" name="forwardsearchcodePriceRangeMax" value="<%= searchcodePriceRangeMax %>">
+			</td>
+		</tr>
+		<tr>
+			<td class="formLabel">
+				<dhv:label name="product.dateAfter">Date Added to Catalog</dhv:label>
+			</td>
+			<td>
+				<select size="1" name="forwardsearchcodeDateAfter">
+						<option value="-1">&nbsp;</option>
+						<option value="168_HOUR">Last Week</option>
+						<option value="1_MONTH">Last Month</option>
+						<option value="3_MONTH">Last 3 Months</option>
+						<option value="6_MONTH">Last 6 Months</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	&nbsp;
+	<br>
   <input type="hidden" name="actionType" value="search" />
   <input type="hidden" name="viewType" value="searchResult" />
-	<input type="hidden" name="searchCategoryNames" id="searchCategoryNames" value="<%=toHtmlValue(searchCategoryNames)%>">
+	<input type="hidden" name="forwardsearchCategoryNames" id="forwardsearchCategoryNames" value="<%=toHtmlValue(searchCategoryNames)%>">
+	<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+	<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 </form>
-
+<script language="javascript">
+		setSearchcodeDateAfter('<%=searchcodeDateAfter%>');
+</script>
