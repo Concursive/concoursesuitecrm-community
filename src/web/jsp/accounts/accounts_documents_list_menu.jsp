@@ -39,37 +39,37 @@
 
   //Folder operations
   function viewFolder() {
-    window.location.href='AccountsDocuments.do?command=View&orgId=' + thisOrgId + '&folderId=' + thisFolderId;
+    window.location.href='AccountsDocuments.do?command=View&orgId=' + thisOrgId + '&folderId=' + thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function editFolder() {
-    window.location.href='AccountsDocumentsFolders.do?command=Modify&orgId=' + thisOrgId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId;
+    window.location.href='AccountsDocumentsFolders.do?command=Modify&orgId=' + thisOrgId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function moveFolder() {
     popURL('AccountsDocumentsFolders.do?command=Move&orgId=' + thisOrgId + '&id=' + thisFolderId + '&popup=true&return=AccountsDocuments&param='+ thisOrgId+'&param2='+ thisFolderId ,'Files','400','375','yes','yes');
   }
   function deleteFolder() {
-    confirmDelete('AccountsDocumentsFolders.do?command=Delete&orgId=' + thisOrgId + '&id=' + thisFolderId + '&folderId=' + thisFileId );
+    confirmDelete('AccountsDocumentsFolders.do?command=Delete&orgId=' + thisOrgId + '&id=' + thisFolderId + '&folderId=' + thisFileId+'<%= addLinkParams(request, "popup|popupType|actionId") %>' );
   }
 
   //File operations
   function viewFileHistory() {
-    document.location.href='AccountsDocuments.do?command=Details&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+thisFolderId;
+    document.location.href='AccountsDocuments.do?command=Details&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function details() {
-    window.location.href='AccountsDocuments.do?command=Details&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId;
+    window.location.href='AccountsDocuments.do?command=Details&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function modify() {
-    window.location.href='AccountsDocuments.do?command=Modify&orgId=' + thisOrgId + '&fid=' + thisFileId +'&folderId='+ thisFolderId;
+    window.location.href='AccountsDocuments.do?command=Modify&orgId=' + thisOrgId + '&fid=' + thisFileId +'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function download() {
-    window.location.href='AccountsDocuments.do?command=Download&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId;
+    window.location.href='AccountsDocuments.do?command=Download&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function view() {
     popURL('AccountsDocuments.do?command=Download&orgId='+ thisOrgId +'&fid=' + thisFileId + '&view=true', 'Content', 640,480, 1, 1);
   }
   function addVersion() {
-    document.location.href='AccountsDocuments.do?command=AddVersion&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+ thisFolderId;
+    document.location.href='AccountsDocuments.do?command=AddVersion&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function moveFile() {
     popURL('AccountsDocuments.do?command=Move&orgId='+ thisOrgId+'&fid=' + thisFileId + '&popup=true&return=AccountsDocuments&param='+thisOrgId+'&param2='+thisFolderId,'Files','400','375','yes','yes');

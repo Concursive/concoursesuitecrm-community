@@ -78,16 +78,16 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='AccountQuotes.do?command=Details&quoteId=' + thisQuoteId +'&orgId='+ thisOrgId + '&version=' + thisVersionId;
+    window.location.href='AccountQuotes.do?command=Details&quoteId=' + thisQuoteId +'&orgId='+ thisOrgId + '&version=' + thisVersionId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function showVersions() {
-    window.location.href='AccountQuotes.do?command=View&version=' + thisQuoteId +'&orgId='+ thisOrgId;
+    window.location.href='AccountQuotes.do?command=View&version=' + thisQuoteId +'&orgId='+ thisOrgId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function modify() {
     if(modifiable == 'true') {
-      window.location.href='AccountQuotes.do?command=ModifyForm&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId;
+      window.location.href='AccountQuotes.do?command=ModifyForm&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
     } else {
       alert(label("quote.notmodifiable","The Quote can not be modified.\nPlease either Clone or Create a new Version.")
 );
@@ -100,20 +100,20 @@
 
   function addVersion() {
     if (confirm(label("verify.quote.newversion","Are you sure you want to create a new Version of this Quote?"))) {
-      window.location.href='AccountQuotes.do?command=AddVersion&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId;
+      window.location.href='AccountQuotes.do?command=AddVersion&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
     }
   }
 
   function deleteQuote() {
-    popURLReturn('AccountQuotes.do?command=ConfirmDelete&quoteId=' + thisQuoteId+ '&popup=true','AccountQuotes.do?command=View', 'Delete_Quote','330','200','yes','no');
+    popURLReturn('AccountQuotes.do?command=ConfirmDelete&quoteId=' + thisQuoteId+ '&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountQuotes.do?command=View', 'Delete_Quote','330','200','yes','no');
   }
 
   function reopenId(tempId) {
-    window.location.href='AccountQuotes.do?command=Details&quoteId='+tempId;
+    window.location.href='AccountQuotes.do?command=Details&quoteId='+tempId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function reopen() {
-    window.location.href='AccountQuotes.do?command=View&orgId='+thisOrgId;
+    window.location.href='AccountQuotes.do?command=View&orgId='+thisOrgId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
 </script>

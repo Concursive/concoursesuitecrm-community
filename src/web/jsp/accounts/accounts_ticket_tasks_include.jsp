@@ -20,28 +20,48 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*, org.aspcfs.modules.base.Constants"%>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
+<jsp:useBean id="forward" class="java.lang.String" scope="request"/>
+<jsp:useBean id="addAnother" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.addTask.description.focus();">
-<form name="addTask" action="AccountTicketTasks.do?command=Save&id=<%= Task.getId() %>&auto-populate=true" method="post" onSubmit="return validateTask();">
-<dhv:formMessage showSpace="false" />
-<%@ include file="../tasks/task_include.jsp" %>
-<br />
-<% if (Task.getId() == -1) { %>
-<input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" />
-<%} else {%>
-<input type="submit" value="<dhv:label name="button.update">Update</dhv:label>"/>
-<%}%>
-<%
-  String ticketId = request.getParameter("ticketId"); 
-  if (ticketId == null || "".equals(ticketId.trim())) {
-    ticketId = (String) request.getAttribute("ticketId");
+<body onLoad="javascript:refreshOpener();document.addTask.description.focus();">
+<script type="text/javascript">
+function refreshOpener() {
+  if ('<%= addAnother != null && "true".equals(addAnother.trim()) %>' == 'true') {
+    try {
+      opener.reopen();
+    } catch (oException) {
+    }
   }
-%>
-<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-<input type="hidden" name="ticketId" value="<%= ticketId %>" />
-<input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>" />
-<input type="hidden" name="type" value="<%= Constants.TICKET_OBJECT %>" />
-<input type="hidden" name="return" value="AccountTicketTasks.do?command=List&ticketId=<%= ticketId %>" />
+}
+</script>
+<form name="addTask" action="AccountTicketTasks.do?command=Save&id=<%= Task.getId() %>&auto-populate=true" method="post" onSubmit="return validateTask();">
+  <dhv:formMessage showSpace="false" />
+  <%
+    String ticketId = request.getParameter("ticketId"); 
+    if (ticketId == null || "".equals(ticketId.trim()) || "-1".equals(ticketId.trim())) {
+      ticketId = (String) request.getAttribute("ticketId");
+    }
+    if (Task.getTicketId() == -1) {
+      Task.setTicketId(ticketId);
+    }
+  %>
+  <%@ include file="../tasks/task_include.jsp" %>
+  <br />
+  <% if (Task.getId() == -1) { %>
+    <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" />
+    <input type="submit" value="<dhv:label name="button.saveAndNew">Save and New</dhv:label>" onClick="javascript:document.getElementById('addAnother').value='true';"/> 
+  <%} else {%>
+  <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>"/>
+  <%}%>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  <input type="hidden" name="addAnother" id="addAnother" value="false"/>
+  <input type="hidden" name="forward" id="forward" value="<%= toHtmlValue((String) request.getAttribute("forward")) %>"/>
+  <input type="hidden" name="addAnother" id="addAnother" value="false"/>
+<%--  <input type="hidden" name="ticketId" value="<%= ticketId %>" /> --%>
+  <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>" />
+  <input type="hidden" name="type" value="<%= Constants.TICKET_OBJECT %>" />
+  <input type="hidden" name="return" value="AccountTicketTasks.do?command=List&ticketId=<%= ticketId %>" />
+<% System.out.println("JSP::ticketId is "+ ticketId); %>
 </form>
 </body>
 

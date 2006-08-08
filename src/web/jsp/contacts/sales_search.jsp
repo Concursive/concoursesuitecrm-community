@@ -176,17 +176,13 @@
             <%if (SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner")) && !"-1".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner"))) {%>
               <dhv:username id="<%= SalesListInfo.getSearchOptionValue("searchcodeOwner") %>" lastFirst="true" />
             <%} else {%>
-              <%if ("-1".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner"))) {%>
-                <dhv:label name="pipeline.any">Any</dhv:label>
-              <%} else {%>
-                <dhv:username id="<%= User.getUserId() %>" lastFirst="true" />
-              <%}%>
+              <dhv:label name="pipeline.any">Any</dhv:label>
             <%}%>
             </div>
           </td>
           <td>
 <%--          <zeroio:debug value="<%= "JSP:: is the owner value not null? "+(SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner")))+" the value is "+SalesListInfo.getSearchOptionValue("searchcodeOwner") %>" /> --%>
-            <input type="hidden" name="searchcodeOwner" id="ownerid" value="<%= SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner"))? SalesListInfo.getSearchOptionValue("searchcodeOwner"):String.valueOf(User.getUserId()) %>" />
+            <input type="hidden" name="searchcodeOwner" id="ownerid" value="<%= SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner"))? SalesListInfo.getSearchOptionValue("searchcodeOwner"):"-1" %>" />
             &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true<%= User.getUserRecord().getSiteId() == -1 ? "&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+ User.getUserRecord().getSiteId() %>&hierarchy=<%= User.getUserId() %>');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp; [<a href="javascript:changeDivContent('changeowner',label('label.any','Any'));javascript:resetNumericFieldValue('ownerid');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
           </td>
@@ -316,9 +312,8 @@
     <td class="formLabel" valign="top" nowrap><dhv:label name="sales.sortOrder">Sort Order</dhv:label></td>
     <td>
       <select name="searchcodeOldestFirst" size="1">
-        <option value="<%= Constants.UNDEFINED %>" <%= (SalesListInfo.getSearchOptionValue("searchcodeOldestFirst").equals(""+Constants.UNDEFINED))?"SELECTED":"" %> ><dhv:label name="calendar.none.4dashes">--None--</dhv:label></option>
+        <option value="<%= Constants.FALSE %>" <%= (SalesListInfo.getSearchOptionValue("searchcodeOldestFirst") == null || SalesListInfo.getSearchOptionValue("searchcodeOldestFirst").equals(""+Constants.UNDEFINED) || SalesListInfo.getSearchOptionValue("searchcodeOldestFirst").equals(""+Constants.FALSE))?"SELECTED":"" %> ><dhv:label name="sales.newestFirst">Newest First</dhv:label></option>
         <option value="<%= Constants.TRUE %>" <%= (SalesListInfo.getSearchOptionValue("searchcodeOldestFirst").equals(""+Constants.TRUE))?"SELECTED":"" %> ><dhv:label name="sales.oldestFirst">Oldest First</dhv:label></option>
-        <option value="<%= Constants.FALSE %>" <%= (SalesListInfo.getSearchOptionValue("searchcodeOldestFirst").equals(""+Constants.FALSE))?"SELECTED":"" %> ><dhv:label name="sales.newestFirst">Newest First</dhv:label></option>
       </select>
     </td>
   </tr>

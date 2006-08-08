@@ -38,6 +38,7 @@
 <script language="JavaScript" type="text/javascript">
   loadImages('select');
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -50,8 +51,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <% int i = 0; %>
-<dhv:container name="accounts" selected="activities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="activities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
   <%-- Pending list --%>
   <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" object="AccountContactCallsListInfo"/>

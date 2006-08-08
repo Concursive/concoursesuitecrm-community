@@ -81,7 +81,7 @@ public final class ContactsPortal extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    return ("ViewContactPortalOK");
+    return getReturn(context, "ViewContactPortal");
   }
 
 
@@ -134,8 +134,7 @@ public final class ContactsPortal extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    return ("AddContactPortalOK");
+    return getReturn(context, "AddContactPortal");
   }
 
 
@@ -232,8 +231,7 @@ public final class ContactsPortal extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    return ("ModifyContactPortalOK");
+    return getReturn(context, "ModifyContactPortal");
   }
 
 
@@ -299,8 +297,7 @@ public final class ContactsPortal extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    return ("DeleteContactPortalOK");
+    return getReturn(context, "DeleteContactPortal");
   }
 
 

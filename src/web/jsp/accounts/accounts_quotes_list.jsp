@@ -34,6 +34,9 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/executeFunction.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/moveContact.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<dhv:evaluate if="<%= isPopup(request) %>">
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+</dhv:evaluate>
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript">
 <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
@@ -42,6 +45,7 @@
   boolean allowMultipleQuote = allowMultipleQuote(pageContext);
   boolean allowMultipleVersion = allowMultipleVersion(pageContext);
 %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -59,9 +63,10 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
-  <dhv:permission name="accounts-quotes-add"><a href="AccountQuotes.do?command=AddQuoteForm&orgId=<%= OrgDetails.getOrgId() %>"/><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
+  <dhv:permission name="accounts-quotes-add"><a href="AccountQuotes.do?command=AddQuoteForm&orgId=<%= OrgDetails.getOrgId() %><%= isPopup(request)?"&popup=true&popupType=true":"" %>"/><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
 </dhv:evaluate>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountQuoteListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -71,7 +76,7 @@
   </th>
   <th nowrap>
     <% if (version == null || "".equals(version)) { %> 
-      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.group_id&version=<%= version %>">
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.group_id&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%}%>
     <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
     <% if (version == null || "".equals(version)) { %> 
@@ -81,7 +86,7 @@
   </th>
   <th nowrap>
     <% if (version == null || "".equals(version)) { %> 
-      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.version&version=<%= version %>">
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.version&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%}%>
     <strong><dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label></strong>
     <% if (version == null || "".equals(version)) { %> 
@@ -91,7 +96,7 @@
   </th>
   <th nowrap>
     <% if (version == null || "".equals(version)) { %> 
-      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.short_description&version=<%= version %>">
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.short_description&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%}%>
     <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
     <% if (version == null || "".equals(version)) { %> 
@@ -101,7 +106,7 @@
   </th>
   <th nowrap>
     <% if (version == null || "".equals(version)) { %> 
-      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=statusName&version=<%= version %>">
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=statusName&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%}%>
     <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     <% if (version == null || "".equals(version)) { %> 
@@ -111,7 +116,7 @@
   </th>
   <th nowrap>
     <% if (version == null || "".equals(version)) { %> 
-      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.entered&version=<%= version %>">
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.entered&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%}%>
     <strong><dhv:label name="accounts.accounts_calls_list.Entered">Created</dhv:label></strong>
     <% if (version == null || "".equals(version)) { %> 
@@ -121,7 +126,7 @@
   </th>
   <th nowrap>
     <% if (version == null || "".equals(version)) { %> 
-      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.issued&version=<%= version %>">
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.issued&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%}%>
     <strong><dhv:label name="quotes.issued">Issued</dhv:label></strong>
     <% if (version == null || "".equals(version)) { %> 
@@ -131,7 +136,7 @@
   </th>
   <th nowrap>
     <% if (version == null || "".equals(version)) { %> 
-      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.closed&version=<%= version %>">
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.closed&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%}%>
     <strong><dhv:label name="quotes.closed">Closed</dhv:label></strong>
     <% if (version == null || "".equals(version)) { %> 
@@ -163,7 +168,7 @@
         <% } %>
       </td>
       <td valign="center" width="10%">
-        <a href="AccountQuotes.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %>&quoteId=<%= thisQuote.getId() %>"><%= thisQuote.getPaddedGroupId() %></a>
+        <a href="AccountQuotes.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %>&quoteId=<%= thisQuote.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= thisQuote.getPaddedGroupId() %></a>
       </td>
       <td valign="center">
         <%= toHtml(thisQuote.getVersion()) %>

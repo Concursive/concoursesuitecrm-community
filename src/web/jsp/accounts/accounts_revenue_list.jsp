@@ -46,7 +46,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>"><dhv:label name="accounts.accounts_revenue_add.AddRevenue">Add Revenue</dhv:label></a></dhv:permission>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="RevenueListInfo"/></center></dhv:include>

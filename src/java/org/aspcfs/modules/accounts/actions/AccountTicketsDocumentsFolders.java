@@ -81,7 +81,7 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      return ("AddOK");
+      return getReturn(context, "Add");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -138,9 +138,9 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     if (recordInserted) {
-      return ("InsertOK");
+      return "InsertOK";
     } else if (resultCount == 1) {
-      return ("UpdateOK");
+      return "UpdateOK";
     }
     return (executeCommandAdd(context));
   }

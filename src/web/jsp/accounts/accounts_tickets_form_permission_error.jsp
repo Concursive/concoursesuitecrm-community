@@ -40,8 +40,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="forms" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="forms" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <table cellpadding="4" cellspacing="0" border="0" width="100%">
       <tr>

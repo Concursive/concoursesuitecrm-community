@@ -38,7 +38,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='RevenueManager.do?command=View'" />

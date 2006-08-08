@@ -13,7 +13,7 @@
 function sendMessage() {
   formTest = true;
   message = "";
-  if(document.newMessageForm.listView.options[0].value == "none"){
+  if(document.newMessageForm.listView.options[0].value == "none") {
     message += label("select.onerecipient","- Select at least one recipient\r\n");
     formTest = false;
   }
@@ -26,6 +26,7 @@ function sendMessage() {
     formTest = false;
   }
   if (formTest) {
+    hideSendButton();
     return true;
   } else {
     alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);

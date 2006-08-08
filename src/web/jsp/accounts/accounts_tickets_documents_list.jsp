@@ -27,6 +27,7 @@
 <%@ include file="accounts_tickets_documents_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -41,18 +42,19 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <%
       String permission_doc_folders_add = "accounts-accounts-tickets-documents-add";
       String permission_doc_files_upload = "accounts-accounts-tickets-documents-add";
       String permission_doc_folders_edit = "accounts-accounts-tickets-documents-edit";
-      String documentFolderAdd ="AccountTicketsDocumentsFolders.do?command=Add&tId="+TicketDetails.getId();
-      String documentFileAdd = "AccountTicketsDocuments.do?command=Add&tId="+TicketDetails.getId();
-      String documentFolderModify = "AccountTicketsDocumentsFolders.do?command=Modify&tId="+TicketDetails.getId();
-      String documentFolderList = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId();
-      String documentFileDetails = "AccountTicketsDocuments.do?command=Details&tId="+TicketDetails.getId();
+      String documentFolderAdd ="AccountTicketsDocumentsFolders.do?command=Add&tId="+TicketDetails.getId() + addLinkParams(request, "popup|popupType|actionId");
+      String documentFileAdd = "AccountTicketsDocuments.do?command=Add&tId="+TicketDetails.getId() + addLinkParams(request, "popup|popupType|actionId");
+      String documentFolderModify = "AccountTicketsDocumentsFolders.do?command=Modify&tId="+TicketDetails.getId() + addLinkParams(request, "popup|popupType|actionId");
+      String documentFolderList = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId() + addLinkParams(request, "popup|popupType|actionId");
+      String documentFileDetails = "AccountTicketsDocuments.do?command=Details&tId="+TicketDetails.getId() + addLinkParams(request, "popup|popupType|actionId");
       String documentModule = "AccountTickets";
       String specialID = ""+TicketDetails.getId();
       boolean hasPermission = true;

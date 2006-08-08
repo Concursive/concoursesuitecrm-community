@@ -29,17 +29,17 @@
   function getSiteId() {
     var site = document.forms['searchQuote'].searchcodeSiteId;
     var siteId = '';
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteList.size() > 2 %>" == "true") {
       siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+    } else {
       siteId = site.value;
-    </dhv:evaluate>
-     if (siteId == '<%= Constants.INVALID_SITE %>') {
+    }
+    if (siteId == '<%= Constants.INVALID_SITE %>') {
       siteId = '<%= User.getUserRecord().getSiteId() %>&includeAllSites=true';
-     } else {
+    } else {
       siteId = siteId + '&thisSiteIdOnly=true&exclusiveToSite=true';
-     }
-     return siteId;
+    }
+    return siteId;
   }
   
   function clearForm() {
@@ -50,7 +50,7 @@
     setSelectedRadio(document.forms['searchQuote'].searchcodeSubmitAction,'-1');
     document.forms['searchQuote'].searchProductName.value="";
     document.forms['searchQuote'].searchSku.value="";
-    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
+    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 && SiteList.size() > 2 %>" >
       document.forms['searchQuote'].searchcodeSiteId.options.selectedIndex = 0;
     </dhv:evaluate>
     document.forms['searchQuote'].searchcodeGroupId.focus();
@@ -137,6 +137,7 @@
       <input type="text" size="15" name="searchSku" value="<%= quoteListInfo.getSearchOptionValue("searchSku") %>"/>
     </td>
   </tr>
+  <dhv:evaluate if="<%= SiteList.size() > 2 %>">
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="accounts.site">Site</dhv:label>
@@ -151,6 +152,10 @@
       </dhv:evaluate>
     </td>
   </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteList.size() <= 2 %>">
+    <input type="hidden" name="searchcodeSiteId" id="searchcodeSiteId" value="-1" />
+  </dhv:evaluate>
 </table>
 <br />
 <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">

@@ -109,6 +109,10 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "View Documents");
     if (errorMessage == null) {
+      String accountfolders = context.getRequest().getParameter("accountfolders");
+      if (accountfolders != null && "true".equals(accountfolders)) {
+        return "ViewAccountFolderPopupOK";
+      }
       return (getReturn(context, "View"));
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -155,7 +159,7 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Upload Document");
     if (errorMessage == null) {
-      return ("AddOK");
+      return getReturn(context, "Add");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -301,7 +305,7 @@ public final class AccountsDocuments extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "Upload New Document Version");
     if (errorMessage == null) {
-      return ("AddVersionOK");
+      return getReturn(context, "AddVersion");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -451,7 +455,7 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Document Details");
     if (errorMessage == null) {
-      return ("DetailsOK");
+      return getReturn(context, "Details");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -613,7 +617,7 @@ public final class AccountsDocuments extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "Modify Document Information");
     if (errorMessage == null) {
-      return ("ModifyOK");
+      return getReturn(context, "Modify");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

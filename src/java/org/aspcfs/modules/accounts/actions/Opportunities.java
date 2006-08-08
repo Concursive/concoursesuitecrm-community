@@ -80,10 +80,10 @@ public final class Opportunities extends CFSModule {
     Exception errorMessage = null;
     String orgId = context.getRequest().getParameter("orgId");
     addModuleBean(context, "View Accounts", "View Opportunity Details");
-
+    boolean isPopup=(context.getRequest().getParameter("popup") != null && "true".equals(context.getRequest().getParameter("popup")));
     PagedListInfo oppPagedInfo = this.getPagedListInfo(
         context, "OpportunityPagedInfo");
-    oppPagedInfo.setLink("Opportunities.do?command=View&orgId=" + orgId);
+    oppPagedInfo.setLink("Opportunities.do?command=View&orgId=" + orgId+(isPopup?"&popup=true":""));
 
     Connection db = null;
     OpportunityHeaderList oppList = new OpportunityHeaderList();
@@ -134,7 +134,7 @@ public final class Opportunities extends CFSModule {
 
     if (errorMessage == null) {
       context.getRequest().setAttribute("OpportunityHeaderList", oppList);
-      return ("ListOK");
+      return getReturn(context, "List");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -270,14 +270,15 @@ public final class Opportunities extends CFSModule {
       }
     } else {
       if (resultCount == 1) {
-        if (context.getRequest().getParameter("popup") != null) {
+        boolean isAccountPopup = (context.getRequest().getParameter("popupType") != null && "inline".equals(context.getRequest().getParameter("popupType")));
+        if (context.getRequest().getParameter("popup") != null && !isAccountPopup) {
           return ("CloseAddPopup");
         }
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
             "return").equals("list")) {
           return (executeCommandDetails(context));
         } else {
-          return ("DetailsComponentOK");
+          return getReturn(context, "DetailsComponent");
         }
       } else {
         if (resultCount == -1 || !isValid) {
@@ -498,7 +499,8 @@ public final class Opportunities extends CFSModule {
     if ("insert".equals(action)) {
       if (recordInserted) {
         addRecentItem(context, newOpp.getHeader());
-        if (context.getRequest().getParameter("popup") != null) {
+        boolean isAccountPopup = (context.getRequest().getParameter("popupType") != null && "inline".equals(context.getRequest().getParameter("popupType")));
+        if (context.getRequest().getParameter("popup") != null && !isAccountPopup) {
           return ("CloseAddPopup");
         }
         context.getRequest().setAttribute(
@@ -595,7 +597,7 @@ public final class Opportunities extends CFSModule {
     }
     context.getRequest().setAttribute("OppComponentDetails", thisComponent);
     addRecentItem(context, thisComponent);
-    return ("DetailsComponentOK");
+    return getReturn(context, "DetailsComponent");
   }
 
 
@@ -625,14 +627,14 @@ public final class Opportunities extends CFSModule {
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
-
+    boolean isPopup = (context.getRequest().getParameter("popupType") != null && "inline".equals(context.getRequest().getParameter("popupType")));
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("AccountsComponentListInfo");
     }
     PagedListInfo oppPagedInfo = this.getPagedListInfo(context, "OpportunityPagedInfo", false);
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "AccountsComponentListInfo");
     componentListInfo.setLink(
-        "Opportunities.do?command=Details&headerId=" + headerId + "&orgId=" + orgId);
+        "Opportunities.do?command=Details&headerId=" + headerId + "&orgId=" + orgId+(isPopup?"&popup=true&popupType=inline":""));
     try {
       db = this.getConnection(context);
       LookupList environmentSelect = systemStatus.getLookupList(
@@ -700,7 +702,7 @@ public final class Opportunities extends CFSModule {
     if (!allowMultiple(context) && (componentList.size() > 0)) {
       return this.getReturn(context, "DetailsComponent");
     }
-    return ("DetailsOK");
+    return getReturn(context, "Details");
   }
 
 
@@ -735,8 +737,9 @@ public final class Opportunities extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getRequest().setAttribute("orgId", orgId);
+        boolean inline = (context.getRequest().getParameter("popupType") != null && "inline".equals(context.getRequest().getParameter("popupType")));
         context.getRequest().setAttribute(
-            "refreshUrl", "Opportunities.do?command=View&orgId=" + orgId);
+            "refreshUrl", "Opportunities.do?command=View&orgId=" + orgId+(inline?"&popup=true&popupType=inline":""));
         deleteRecentItem(context, newOpp);
         return ("DeleteOK");
       } else {
@@ -784,7 +787,8 @@ public final class Opportunities extends CFSModule {
           systemStatus.getLabel("confirmdelete.account.opps.delete"));
       htmlDialog.setShowAndConfirm(false);
       htmlDialog.setDeleteUrl(
-          "javascript:window.location.href='OpportunitiesComponents.do?command=DeleteComponent&orgId=" + orgId + "&id=" + id + "'");
+          "javascript:window.location.href='OpportunitiesComponents.do?command=DeleteComponent&orgId=" + orgId + "&id=" + id +
+          RequestUtils.addLinkParams(context.getRequest(),"popup|popupType|actionId") +"'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -908,7 +912,7 @@ public final class Opportunities extends CFSModule {
     }
     context.getRequest().setAttribute("opportunityHeader", thisHeader);
     addRecentItem(context, thisHeader);
-    return "PrepareModifyOppOK";
+    return getReturn(context, "PrepareModifyOpp");
   }
 
 
@@ -940,7 +944,8 @@ public final class Opportunities extends CFSModule {
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Opportunities.do?command=Delete&orgId=" + orgId + "&id=" + headerId + "'");
+          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Opportunities.do?command=Delete&orgId=" + orgId + "&id=" + headerId + 
+          RequestUtils.addLinkParams(context.getRequest(),"popup|popupType|actionId") +"'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -1138,7 +1143,7 @@ public final class Opportunities extends CFSModule {
     componentHistoryListInfo.setLink(
         "OpportunitiesComponents.do?command=ComponentHistory&orgId=" + orgId +  
           "&id="+ componentId + RequestUtils.addLinkParams(
-            context.getRequest(), "viewSource"));
+            context.getRequest(), "viewSource|popup|popupType"));
 
     try {
       db = this.getConnection(context);
@@ -1172,7 +1177,7 @@ public final class Opportunities extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("ComponentHistoryOK");
+    return getReturn(context, "ComponentHistory");
   }
   /**
    * Description of the Method
@@ -1210,7 +1215,7 @@ public final class Opportunities extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("accountsComponentDetails", thisComponentLog);
-    return ("ComponentHistoryDetailsOK");
+    return getReturn(context, "ComponentHistoryDetails");
   }
 
   

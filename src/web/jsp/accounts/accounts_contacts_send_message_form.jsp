@@ -74,7 +74,8 @@
     return true;
   }
 </script>
-<form name="sendMessage" action="AccountContactsMessages.do?command=SendMessage&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="sendMessage" action="AccountContactsMessages.do?command=SendMessage&auto-populate=true<%= addLinkParams(request,"popup|popupType") %>" method="post" onSubmit="return checkForm(this);">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -95,8 +96,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:formMessage showSpace="false"/>
 <dhv:label name="actionList.chooseCreateMessage.text">Start by choosing an existing message or create a new one:</dhv:label><br />
 <SELECT SIZE="1" name="listView" onChange="javascript:updateMessageList();">
@@ -115,7 +117,7 @@ if(!"new".equals(request.getParameter("listView"))){ %>
    messageList.addItem(0, "-- None --");
 %>
 <%= messageList.getHtmlSelect("messageId", (request.getParameter("messageId") != null ? Integer.parseInt(request.getParameter("messageId")) : -1)) %>
-<% }else{ %>
+<% } else { %>
   <select size="1" name="messageId">
     <option value="0"><dhv:label name="calendar.none.4dashes">--None--</dhv:label></option>
   </select>  
@@ -130,7 +132,7 @@ if(!"new".equals(request.getParameter("listView"))){ %>
 <table border="0" class="empty">
 <tr id="send"><td>
   <input type="submit" value="<dhv:label name="button.sendMessage">Send Message</dhv:label>" />
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='Contacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='Contacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request,"popup|popupType") %>';" />
 </td>
 </tr>
 <tr id="sendingEmail"><td><dhv:label name="quotes.sendingEmail.label">Sending the email...</dhv:label></td></tr>

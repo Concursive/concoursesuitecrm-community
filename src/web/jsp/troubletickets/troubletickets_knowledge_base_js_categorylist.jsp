@@ -23,6 +23,7 @@
 <jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="SiteIdList" class="org.aspcfs.utils.web.LookupList" scope="request"/> 
 <body onload="page_init();">
 <script language="JavaScript">
 <%
@@ -136,11 +137,11 @@ function page_init() {
   var subCat2 = subCat2Element.options[subCat2Element.options.selectedIndex].value;
   var subCat3 = subCat3Element.options[subCat3Element.options.selectedIndex].value;
   var siteId = -1;
-  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-  siteId = site.options[site.options.selectedIndex].value;
-  </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-  siteId = site.value;
-  </dhv:evaluate>
+  if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+    siteId = site.options[site.options.selectedIndex].value;
+  } else {
+    siteId = site.value;
+  }
   parent.reopen('&searchcodeSiteId='+siteId+'&searchcodeCatCode='+catCode+'&searchcodeSubCat1='+subCat1+'&searchcodeSubCat2='+subCat2+'&searchcodeSubCat3='+subCat3);
 </dhv:evaluate>
 }

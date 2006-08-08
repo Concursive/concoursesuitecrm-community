@@ -259,6 +259,10 @@ public final class ContactsList extends CFSModule {
     if (leads != null && !"".equals(leads.trim())) {
       context.getRequest().setAttribute("leads", leads);
     }
+    String tasks = context.getRequest().getParameter("tasks");
+    if (tasks != null && !"".equals(tasks.trim())) {
+      context.getRequest().setAttribute("tasks", tasks);
+    }
     String recipient = context.getRequest().getParameter("recipient");
     if (recipient != null && !"".equals(recipient)) {
       context.getRequest().setAttribute("recipient", recipient);

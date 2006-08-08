@@ -38,11 +38,11 @@
   function getSiteId() {
     var site = document.getElementById('siteId');
     var siteId = '<%= User.getUserRecord().getSiteId() %>';
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>">
       siteId = site.options[site.options.selectedIndex].value;
     </dhv:evaluate>
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() != -1 %>">
-      siteId = site.options[site.options.selectedIndex].value;
+    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() != -1 || SiteIdList.size() <= 1%>">
+      siteId = site.value;
     </dhv:evaluate>
     return siteId;
   }
@@ -128,7 +128,7 @@
   
 </script>
 <dhv:evaluate if="<%= User.getSiteId() == -1 %>" > 
-  <body onLoad="javascript:document.addLead.siteId.focus();">
+  <body onLoad="javascript:try{document.addLead.siteId.focus();}catch(oException){}">
 </dhv:evaluate>
 <dhv:evaluate if="<%= User.getSiteId() != -1 %>" > 
   <body onLoad="javascript:document.addLead.listSalutation.focus();">
@@ -146,7 +146,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.saveAndReturnDashboard">Save and Return to Dashboard</dhv:label>" onClick="this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndAddAnotherLead">Save and Add another Lead</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndViewDetails">Save and View Details</dhv:label>" onClick="this.form.saveAndClone.value='true';this.form.dosubmit.value='true';">
 <br />
@@ -156,22 +156,27 @@
     <th colspan="2">
       <strong><dhv:label name="sales.addLead">Add Lead</dhv:label></strong>    </th>
   </tr>
-    <tr>
-      <td nowrap class="formLabel">
-        <dhv:label name="accounts.site">Site</dhv:label>
-      </td>
-      <td>
-        <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
-          <% SiteIdList.setJsEvent("id=\"siteId\" onChange=\"javascript:changeDivContent('changeowner',label('none.selected','None Selected'));javascript:resetFieldValue('ownerid');\"");%>
-          <%= SiteIdList.getHtmlSelect("siteId",ContactDetails.getSiteId()) %>
-          <font color="red">*</font> <%= showAttribute(request, "siteIdError") %>
-        </dhv:evaluate>
-        <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
-           <%= SiteIdList.getSelectedValue(User.getSiteId()) %>
-          <input type="hidden" name="siteId" value="<%=User.getSiteId()%>" >
-        </dhv:evaluate>
-      </td>
-    </tr>
+  <dhv:evaluate if="<%= SiteIdList.size() > 1 %>">
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </td>
+    <td>
+      <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+        <% SiteIdList.setJsEvent("id=\"siteId\" onChange=\"javascript:changeDivContent('changeowner',label('none.selected','None Selected'));javascript:resetFieldValue('ownerid');\"");%>
+        <%= SiteIdList.getHtmlSelect("siteId",ContactDetails.getSiteId()) %>
+        <font color="red">*</font> <%= showAttribute(request, "siteIdError") %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+         <%= SiteIdList.getSelectedValue(User.getSiteId()) %>
+        <input type="hidden" name="siteId" value="<%=User.getSiteId()%>" >
+      </dhv:evaluate>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= SiteIdList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
       <dhv:label name="actionList.assignTo">Assign To</dhv:label>
@@ -287,7 +292,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="campaign.comments">Comments</dhv:label>
+      <dhv:label name="campaign.comments">Assignment Comments</dhv:label>
     </td>
     <td>
       <textarea name="comments" rows="3" cols="50"><%= toString(ContactDetails.getComments()) %></textarea>

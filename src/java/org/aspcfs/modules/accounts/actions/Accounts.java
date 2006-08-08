@@ -912,13 +912,13 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("TicList", ticList);
       context.getRequest().setAttribute("OrgDetails", newOrg);
       addModuleBean(context, "View Accounts", "Accounts View");
-      return ("ViewTicketsOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "ViewTickets");
   }
 
 
@@ -2011,6 +2011,9 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCount == 1 && isValid) {
+      if (context.getRequest().getParameter("source") != null && "attachplan".equals(context.getRequest().getParameter("source"))) {
+        return "UpdateFieldsAttachPlanOK";
+      }
       return getReturn(context, "UpdateFields");
     } else {
       context.getRequest().setAttribute(
@@ -2125,7 +2128,10 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
     if (popup) {
-      return getReturn(context, "InsertFields");
+      if (context.getRequest().getParameter("source") != null && "attachplan".equals(context.getRequest().getParameter("source"))) {
+        return "InsertFieldsAttachPlanOK";
+      }
+//      return getReturn(context, "InsertFields");
     }
     return (this.executeCommandFields(context));
   }

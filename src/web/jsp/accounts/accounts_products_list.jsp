@@ -26,7 +26,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="products" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="products" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <a href="AccountsProducts.do?command=Add&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="product.addProduct">Add Product</dhv:label></a><br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchCustomerProductListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

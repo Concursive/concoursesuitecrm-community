@@ -126,19 +126,19 @@
       }
     }
     var statusId = '<%= ActionPlanWork.COMPLETED %>';
-    window.location.href = "AccountTicketActionPlans.do?command=UpdateStatus&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=" + statusId;
+    window.location.href = "AccountTicketActionPlans.do?command=UpdateStatus&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=" + statusId+'<%= addLinkParams(request, "popup|actionId") %><%= isPopup(request)?"&popupType=inline":"" %>';
   }
   
   function revertStatus(actionPlanId, itemId, nextStepId) {
-    window.location.href = "AccountTicketActionPlans.do?command=RevertStatus&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=-1";
+    window.location.href = "AccountTicketActionPlans.do?command=RevertStatus&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=-1<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
   
   function continueReassignPlan(userId, actionPlanWork) {
-    window.location.href = "AccountTicketActionPlans.do?command=Reassign&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=details";
+    window.location.href = "AccountTicketActionPlans.do?command=Reassign&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=details<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
 
   function reopen(attachment) {
-    window.location.href='AccountTicketActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>&ticketId=<%= ticket.getId() %>'+attachment;
+    window.location.href='AccountTicketActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>&ticketId=<%= ticket.getId() %>'+attachment+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function updateGlobalStatus(required, actionPlanId, actionId, itemId) {
@@ -147,10 +147,11 @@
         return;
       }
     }
-    window.location.href = "AccountTicketActionPlans.do?command=UpdateGlobalStatus&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&statusId=-1";
+    window.location.href = "AccountTicketActionPlans.do?command=UpdateGlobalStatus&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&statusId=-1<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
 </script>
 <%@ include file="../initPage.jsp" %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -168,10 +169,11 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <dhv:formMessage />
 <% String param1 = "id=" + ticket.getId(); %>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param="<%= "id=" + ticket.getId() %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param="<%= "id=" + ticket.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <%@ include file="accounts_ticket_header_include.jsp" %>
   <dhv:evaluate if="<%= ticket.getClosed() != null %>">
     <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>

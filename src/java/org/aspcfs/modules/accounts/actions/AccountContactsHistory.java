@@ -62,10 +62,12 @@ public final class AccountContactsHistory extends CFSModule {
     if (contactId == null) {
       contactId = (String) context.getRequest().getAttribute("contactId");
     }
+    String isPopup = context.getRequest().getParameter("popup");
     PagedListInfo accountContactHistoryListInfo = this.getPagedListInfo(
         context, "accountContactHistoryListInfo");
     accountContactHistoryListInfo.setLink(
-        "AccountContactsHistory.do?command=View&contactId=" + contactId);
+        "AccountContactsHistory.do?command=View&contactId=" + contactId+
+      (isPopup != null && "true".equals(isPopup) ? "&popup=true":""));
 
     ContactHistoryList historyList = new ContactHistoryList();
     historyList.setPagedListInfo(accountContactHistoryListInfo);
@@ -99,7 +101,7 @@ public final class AccountContactsHistory extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "ListOK";
+    return getReturn(context, "List");
   }
 
 

@@ -32,7 +32,7 @@
   var thisCanDelete = false;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, historyId, orgId, contactId, objectId, itemId, canView, canModify, canDelete ) {
+  function displayMenu(loc, id, historyId, orgId, contactId, objectId, itemId, canView, canModify, canDelete) {
     thisHistoryId = historyId;
     thisOrgId = orgId;
     thisContactId = contactId;
@@ -63,9 +63,9 @@
         urlModify = 'ExternalContactsHistory.do?command=ModifyNote&id='+ thisHistoryId +'&contactId='+ thisContactId +'&popup=true';
       }
       if (thisOrgId != -1) {
-        urlDelete = 'AccountsHistory.do?command=DeleteNote&id='+ thisHistoryId +'&orgId='+ thisOrgId;
+        urlDelete = 'AccountsHistory.do?command=DeleteNote&id='+ thisHistoryId +'<%= isPopup(request)?"&popup=true":"" %>&orgId='+ thisOrgId;
       } else {
-        urlDelete = 'AccountContactsHistory.do?command=DeleteNote&id='+ thisHistoryId +'&contactId='+ thisContactId;
+        urlDelete = 'AccountContactsHistory.do?command=DeleteNote&id='+ thisHistoryId +'<%= isPopup(request)?"&popup=true":"" %>&contactId='+ thisContactId;
       }
       isPopup = true;
       } else if(thisObjectId == '<%= OrganizationHistory.COMPLETE_ACTIVITY %>') {
@@ -266,15 +266,15 @@
     if (isPopup) {
       popURL(urlDetails, 'ContactHistory', 600, 300, true, true);
     } else {
-      window.location.href = urlDetails;
+      window.location.href = urlDetails+'<%= isPopup(request)?"&popup=true":"" %>';
     }
   }
-  
+
   function modify() {
     if (isPopup) {
       popURL(urlModify, 'ContactHistory', 600, 300, true, true);
     } else {
-      window.location.href = urlModify;
+      window.location.href = urlModify+'<%= isPopup(request)?"&popup=true":"" %>';
     }
   }
 

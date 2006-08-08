@@ -266,7 +266,7 @@ public final class AccountRelationships extends CFSModule {
       this.freeConnection(context, db);
     }
     if (isValid && (recordInserted || resultCount == 1)) {
-      return getReturn(context, "Save");
+      return "SaveOK";
     }
     if (thisRelationship.getId() > 0) {
       return getReturn(context, "Modify");
@@ -313,7 +313,7 @@ public final class AccountRelationships extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return getReturn(context, "Delete");
+    return "DeleteOK";
   }
 
 

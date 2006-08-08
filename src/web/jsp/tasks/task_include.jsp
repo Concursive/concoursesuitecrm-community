@@ -27,6 +27,7 @@
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script type="text/javascript">
 function selectLinkContact() {
   var selectedAssignedTo = document.getElementById('ownerid').value;
@@ -45,6 +46,7 @@ function selectAssignedTo() {
     popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true<%= User.getUserRecord().getSiteId() == -1? "&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&reset=true');
   }
 }
+
 </script>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -61,8 +63,8 @@ function selectAssignedTo() {
       <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
-  <dhv:evaluate if="<%= ticketTaskCategoryList != null && ticketTaskCategoryList.size() > 0 %>">
-  <tr class="containerBody">
+<dhv:evaluate if="<%= ticketTaskCategoryList != null && ticketTaskCategoryList.size() > 0 %>">
+  <tr id="tickettaskcategoryfield" class="containerBody">
     <td class="formLabel">
       <dhv:label name="reports.helpdesk.category">Category</dhv:label>
     </td>
@@ -72,7 +74,7 @@ function selectAssignedTo() {
   <dhv:evaluate if="<%= ticketTaskCategoryList == null || ticketTaskCategoryList.size() == 0 %>">
     <input type="hidden" name="ticketTaskCategoryId" value="<%= Task.getTicketTaskCategoryId() %>"/>
   </dhv:evaluate>
-  <tr>
+  <tr id="duedatefield">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label>
     </td>
@@ -81,13 +83,13 @@ function selectAssignedTo() {
       <%= showAttribute(request, "dueDateError") %><%= showWarningAttribute(request, "dueDateWarning") %>
     </td>
   </tr>
-  <tr class="containerBody">
+  <tr id="priorityfield" class="containerBody">
     <td class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></td>
     <td>
       <%= PriorityList.getHtmlSelect("priority",Task.getPriority()) %>
     </td>
   </tr>
-  <tr class="containerBody"> 
+  <tr id="statusfield" class="containerBody"> 
     <td class="formLabel"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
     <td>
       <table cellpadding="3" cellspacing="0" class="empty">
@@ -102,7 +104,7 @@ function selectAssignedTo() {
       </table>
     </td>
   </tr>
-  <tr class="containerBody"> 
+  <tr id="sharingfield" class="containerBody"> 
     <td class="formLabel"><dhv:label name="tasks.sharing">Sharing</dhv:label></td>
     <td>
       <table cellpadding="3" cellspacing="0" class="empty">
@@ -119,7 +121,7 @@ function selectAssignedTo() {
       </table>
     </td>
   </tr>
-  <tr class="containerBody">
+  <tr id="assigntofield" class="containerBody">
     <td nowrap class="formLabel" valign="top">
       <dhv:label name="actionList.assignTo">Assign To</dhv:label>
     </td>
@@ -147,7 +149,7 @@ function selectAssignedTo() {
       </table>
     </td>
   </tr>
-  <tr class="containerBody">
+  <tr id="estimatedloefield" class="containerBody">
     <td nowrap class="formLabel" valign="top">
       <dhv:label name="tasks.estimatedLOE">Estimated LOE</dhv:label>
     </td>
@@ -157,13 +159,13 @@ function selectAssignedTo() {
       &nbsp;<%= showAttribute(request, "estimatedLOEError") %>
     </td>
   </tr>
-  <tr class="containerBody">
+  <tr id="notesfield" class="containerBody">
     <td valign="top" nowrap class="formLabel"><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
     <td>
       <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(Task.getNotes()) %></TEXTAREA>
     </td>
   </tr>
-  <tr class="containerBody">
+  <tr id="linkcontactfield" class="containerBody">
     <td nowrap class="formLabel" valign="top">
       <dhv:label name="tasks.linkContact">Link Contact</dhv:label>
     </td>
@@ -199,3 +201,4 @@ function selectAssignedTo() {
 <input type="hidden" name="ticketId" value="<%= Task.getTicketId() %>"/>
 <%= addHiddenParams(request, "popup|popupType|actionId") %> 
 <input type="hidden" name="onlyWarnings" value="<%=(Task.getOnlyWarnings()?"on":"off")%>" />
+

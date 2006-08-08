@@ -22,9 +22,10 @@
   var thisNoteId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, typeId, noteId) {
+  function displayMenu(loc, id, typeId, noteId, statusId) {
     thisTypeId = typeId;
     thisNoteId = noteId;
+    updateMenu(statusId);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuNote", "down", 0, 0, 170, getHeight("menuNoteTable"));
@@ -32,9 +33,27 @@
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
+  function updateMenu(statusId) {
+    if (statusId == 2) {
+      hideSpan("archive");
+      showSpan("sendToInbox");
+    } else {
+      showSpan("archive");
+      hideSpan("sendToInbox");
+    }
+  }
+  
   //Menu link functions
   function details() {
     window.location.href='MyCFSInbox.do?command=CFSNoteDetails&id=' + thisNoteId;
+  }
+  
+  function sendToInbox() {
+    window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id='+ thisNoteId +'&type='+ thisTypeId +'&return=list';
+  }
+  
+  function archive() {
+    window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id='+ thisNoteId +'&type='+ thisTypeId+'&return=list';
   }
   
   function forward() {
@@ -70,6 +89,26 @@
         </th>
         <td width="100%">
           <dhv:label name="project.reply">Reply</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="myhomepage-inbox-view">
+      <tr id="archive" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="archive()">
+        <th>
+          <img src="images/icons/stock_reply_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="accounts.accounts_list_menu.Archive">Archive</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="myhomepage-inbox-view">
+      <tr id="sendToInbox" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="sendToInbox()">
+        <th>
+          <img src="images/icons/stock_reply_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="">Send to Inbox</dhv:label>
         </td>
       </tr>
       </dhv:permission>

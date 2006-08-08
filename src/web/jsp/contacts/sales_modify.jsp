@@ -176,6 +176,7 @@
         <strong><dhv:label name="sales.modifyLead">Modify Lead</dhv:label></strong>
       </th>
     </tr>
+  <dhv:evaluate if="<%= SiteIdList.size() > 1 %>">
     <tr>
       <td nowrap class="formLabel">
         <dhv:label name="accounts.site">Site</dhv:label>
@@ -192,6 +193,10 @@
         </dhv:evaluate>
       </td>
     </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteIdList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
       <dhv:label name="actionList.assignTo">Assign To</dhv:label>

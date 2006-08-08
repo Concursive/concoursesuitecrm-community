@@ -37,6 +37,7 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -55,7 +56,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="sidetabs">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="sidetabs"  appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <%
   if (parent != null && parent.getId() != -1 && parent.getParentList() != null && parent.getParentList().size() > 0) {
     Iterator iter = (Iterator) parent.getParentList().iterator();
@@ -63,11 +65,11 @@
       Asset parentAsset = (Asset) iter.next(); 
       String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
 %>
-    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" />
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>"  appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>"/>
 <% }} %>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
     <dhv:permission name="accounts-assets-add">
-      <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null?parent.getId():-1) %>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
+      <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null?parent.getId():-1) %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
     </dhv:permission>
   </dhv:evaluate>
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo"/>

@@ -165,6 +165,7 @@
       <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></strong>
     </th>
   </tr>
+  <dhv:evaluate if="<%= SiteIdList.size() > 1 %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.site">Site</dhv:label>
@@ -180,6 +181,10 @@
     </dhv:evaluate>
     </td>
   </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteIdList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="pipeline.opportunityDescription">Opportunity Description</dhv:label>

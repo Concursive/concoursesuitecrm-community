@@ -116,7 +116,7 @@
       if (test != null) {
         selectAllOptions(document.addAccount.selectedList);
       }
-      if(alertMessage != ""){
+      if(alertMessage != "") {
         confirmAction(alertMessage);
       }
       return true;
@@ -384,6 +384,7 @@
     </th>
   </tr>
   <dhv:include name="accounts-sites" none="true">
+  <dhv:evaluate if="<%= SiteList.size() > 1 %>">
     <tr>
       <td nowrap class="formLabel">
         <dhv:label name="accounts.site">Site</dhv:label>
@@ -398,6 +399,10 @@
         </dhv:evaluate>
       </td>
     </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
   </dhv:include>
   <dhv:include name="organization.types,accounts-types" none="true">
     <tr>

@@ -45,7 +45,17 @@
 </dhv:evaluate>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <script language="JavaScript">
+  function hideSendButton() {
+    try {
+      var send1 = document.getElementById('send1');
+      send1.value = label('label.sending','Sending...');
+      send1.disabled=true;
+    } catch (oException) {}
+  }
+
   function updateMessageList() {
     document.forms['sendMessage'].elements['messageId'].selectedIndex = 0;
     messageType = "<%=request.getAttribute("messageType")%>";
@@ -76,6 +86,7 @@
       alert(label("check.send.email", "The message could not be sent, please check the following:\r\n\r\n") + messageText);
       return false;
     }
+    hideSendButton();
     return true;
   }
 </script>
@@ -114,7 +125,7 @@ boolean showCc = true;
   <dhv:label name="action.contacts.Note.text">Note: The recipient's contact information will be attached with the chosen message.</dhv:label>
 <%}%>
 <br />
-<input type="submit" value="<dhv:label name="button.sendMessage">Send Message</dhv:label>" />
+</span><input type="submit" id="send1" value="<dhv:label name="button.sendMessage">Send Message</dhv:label>" />
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
 <br />
 <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>" />

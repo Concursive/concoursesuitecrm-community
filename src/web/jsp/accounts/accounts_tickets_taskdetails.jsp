@@ -19,9 +19,22 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*, org.aspcfs.modules.base.Constants"%>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
+<jsp:useBean id="forward" class="java.lang.String" scope="request" />
 <%@ include file="../initPage.jsp" %>
 <dhv:formMessage showSpace="false" />
 <%@ include file="../tasks/task_details_include.jsp" %>
 <br>
+<% if (hasAuthority(pageContext, String.valueOf(Task.getOwner()))) { %>
+ <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountTicketTasks.do?command=Modify&id=<%= Task.getId() %>&forward=details<%= isPopup(request)?"&popup=true":"" %>';"> 
+ <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountTicketTasks.do?command=ConfirmDelete&id=<%= Task.getId() %>&popup=true&sourcePopup=true','MyTasks.do?command=ListTasks', 'Delete_task','320','200','yes','no');"> 
+<% } %>
 <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close();">
+<script type="text/javascript">
+if ('<%= forward != null && "true".equals(forward.trim()) %>' == 'true') {
+  try {
+    opener.reopen();
+  } catch (oException) {
+  }
+}
+</script>
 

@@ -44,16 +44,16 @@
   }
   //Menu link functions
   function details() {
-    window.location.href = 'AccountTicketMaintenanceNotes.do?command=View&id=' + thisTicketId + '&formId=' + thisFromId;
+    window.location.href = 'AccountTicketMaintenanceNotes.do?command=View&id=' + thisTicketId + '&formId=' + thisFromId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
 
   function modify() {
-    window.location.href = 'AccountTicketMaintenanceNotes.do?command=Modify&id=' + thisTicketId + '&formId=' + thisFromId + '&return=list';
+    window.location.href = 'AccountTicketMaintenanceNotes.do?command=Modify&id=' + thisTicketId + '&formId=' + thisFromId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function deleteNote() {
-    popURLReturn('AccountTicketMaintenanceNotes.do?command=ConfirmDelete&id=' + thisTicketId + '&formId=' + thisFromId + '&popup=true','AccountTicketMaintenanceNotes.do?command=List&id=' + thisTicketId,'Delete_maintenancenote','330','200','yes','no');
+    popURLReturn('AccountTicketMaintenanceNotes.do?command=ConfirmDelete&id=' + thisTicketId + '&formId=' + thisFromId + '&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountTicketMaintenanceNotes.do?command=List&id=' + thisTicketId,'Delete_maintenancenote','330','200','yes','no');
   }
 
 </script>

@@ -46,6 +46,7 @@
     return true;
   }
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -59,10 +60,11 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="actionplans" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
-<form name="addActionPlan" method="post" action="AccountActionPlans.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="actionplans" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<form name="addActionPlan" method="post" action="AccountActionPlans.do?command=Insert&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return checkForm(this);">
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="return checkForm(this.form)">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %>'"/>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"/>
   &nbsp;<br /><br />
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
@@ -133,7 +135,7 @@
   </table>
   &nbsp;<br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="return checkForm(this.form)">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %>'"/>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"/>
   <input type="hidden" name="orgId" value="<%= orgDetails.getOrgId() %>"/>
 </form>
 </dhv:container>

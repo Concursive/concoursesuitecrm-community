@@ -38,7 +38,7 @@
 
   function reopenOpportunity(id) {
     if (id == '<%= opportunityHeader.getId() %>') {
-      scrollReload('Opportunities.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= isPopup(request)?"&popup=true":"" %>');
+      scrollReload('Opportunities.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       return id;
     } else {
       return '<%= opportunityHeader.getId() %>';
@@ -49,6 +49,7 @@
 <%
   boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
 %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <table class="trails" cellspacing="0">
 <tr>
 <td>
@@ -62,8 +63,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <dhv:formMessage showSpace="false" />
-<dhv:container name="accounts" selected="opportunities" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="opportunities" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
@@ -83,32 +85,32 @@
       </th>
       <dhv:include name="opportunity.openOrClosed" none="true">
         <th nowrap>
-          <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.description<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a></strong>
+          <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.description<%= addLinkParams(request, "viewSource|popup|popupType") %>"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a></strong>
           <%= componentHistoryListInfo.getSortIcon("ocl.description") %>
         </th>
       </dhv:include>
       <dhv:include name="opportunity.singleComponent" none="true">
         <th align="center" nowrap>
-          <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.owner<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
+          <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.owner<%= addLinkParams(request, "viewSource|popup|popupType") %>"><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
           <%= componentHistoryListInfo.getSortIcon("ocl.owner") %>
         </th>
       </dhv:include>
       <th align="center" nowrap>
-        <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.closeprob<%= addLinkParams(request, "viewSource") %>"><dhv:label name="reports.pipeline.probability">Probability</dhv:label></a></strong>
+        <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.closeprob<%= addLinkParams(request, "viewSource|popup|popupType") %>"><dhv:label name="reports.pipeline.probability">Probability</dhv:label></a></strong>
         <%= componentHistoryListInfo.getSortIcon("ocl.closeprob") %>
       </th>
       <th nowrap>
-        <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.closedate<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a></strong>
+        <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=ocl.closedate<%= addLinkParams(request, "viewSource|popup|popupType") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a></strong>
         <%= componentHistoryListInfo.getSortIcon("ocl.closedate") %>
       </th>
       <dhv:include name="opportunity.currentStage" none="true">
         <th nowrap>
-          <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=enteredby<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_fields_list.ModifiedBy">Modified By</dhv:label></a></strong>
+          <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=enteredby<%= addLinkParams(request, "viewSource|popup|popupType") %>"><dhv:label name="accounts.accounts_fields_list.ModifiedBy">Modified By</dhv:label></a></strong>
           <%= componentHistoryListInfo.getSortIcon("enteredby") %>
         </th>
       </dhv:include>
       <th nowrap>
-        <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=entered<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
+        <strong><a href="OpportunitiesComponents.do?command=ComponentHistory&orgId=<%= orgDetails.getOrgId() %>&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>&column=entered<%= addLinkParams(request, "viewSource|popup|popupType") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
         <%= componentHistoryListInfo.getSortIcon("entered") %>
       </th>
     </tr>
@@ -133,7 +135,7 @@
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td width="100%" valign="top">
-        <a href="OpportunitiesComponents.do?command=ComponentHistoryDetails&headerId=<%= opportunityHeader.getId() %>&orgId=<%= orgDetails.getOrgId() %>&id=<%= thisComponentLog.getId() %>&return=details<%= addLinkParams(request, "viewSource") %>">
+        <a href="OpportunitiesComponents.do?command=ComponentHistoryDetails&headerId=<%= opportunityHeader.getId() %>&orgId=<%= orgDetails.getOrgId() %>&id=<%= thisComponentLog.getId() %>&return=details<%= addLinkParams(request, "viewSource|popup|popupType") %>">
           <%= toHtml(thisComponentLog.getDescription()) %></a>
       </td>
       <td valign="top" align="center" nowrap>

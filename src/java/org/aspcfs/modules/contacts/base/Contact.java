@@ -3025,7 +3025,7 @@ public class Contact extends GenericBean {
     if (leadStatus == LEAD_ASSIGNED) {
       return "Assigned";
     } else if (leadStatus == LEAD_TRASHED) {
-      return "Trashed";
+      return "Archived";
     } else if (leadStatus == LEAD_UNPROCESSED) {
       return "Unprocessed";
     }

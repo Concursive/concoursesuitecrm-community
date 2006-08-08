@@ -115,7 +115,7 @@ public final class AccountTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "View Accounts", "View Documents");
-    return ("ViewOK");
+    return getReturn(context, "View");
   }
 
 
@@ -148,7 +148,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
       //Build array of folder trails
       ProjectManagementFileFolders.buildHierarchy(db, context);
-      return ("AddOK");
+      return getReturn(context, "Add");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -239,7 +239,7 @@ public final class AccountTicketsDocuments extends CFSModule {
       freeConnection(context, db);
     }
     if (recordInserted) {
-      return ("UploadOK");
+      return "UploadOK";
     }
     return (executeCommandAdd(context));
   }
@@ -292,7 +292,7 @@ public final class AccountTicketsDocuments extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "Upload New Document Version");
     if (errorMessage == null) {
-      return ("AddVersionOK");
+      return getReturn(context, "AddVersion");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -383,7 +383,7 @@ public final class AccountTicketsDocuments extends CFSModule {
       freeConnection(context, db);
     }
     if (recordInserted) {
-      return ("UploadOK");
+      return getReturn(context, "Upload");
     }
     return (executeCommandAddVersion(context));
   }
@@ -438,7 +438,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Document Details");
     if (errorMessage == null) {
-      return ("DetailsOK");
+      return getReturn(context, "Details");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -607,7 +607,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Modify Document Information");
     if (errorMessage == null) {
-      return ("ModifyOK");
+      return getReturn(context, "Modify");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -662,7 +662,7 @@ public final class AccountTicketsDocuments extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "");
     if (recordInserted && isValid) {
-      return ("UpdateOK");
+      return getReturn(context, "Update");
     } else {
       context.getRequest().setAttribute("fid", itemId);
       return (executeCommandModify(context));

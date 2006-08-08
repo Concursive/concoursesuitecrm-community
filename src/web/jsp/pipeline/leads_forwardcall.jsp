@@ -22,6 +22,8 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <script type="text/javascript">
 function reopenOpportunity(id) {
   if (id == '<%= opportunityHeader.getId() %>') {
@@ -34,6 +36,18 @@ function reopenOpportunity(id) {
   } else {
     return '<%= opportunityHeader.getId() %>';
   }
+}
+function hideSendButton() {
+    try {
+      var send1 = document.getElementById('send1');
+      send1.value = label('label.sending','Sending...');
+      send1.disabled=true;
+    } catch (oException) {}
+    try {
+      var send2 = document.getElementById('send2');
+      send2.value = label('label.sending','Sending...');
+      send2.disabled=true;
+    } catch (oException) {}
 }
 </script>
 <form name="newMessageForm" action="LeadsCallsForward.do?command=SendCall&headerId=<%= request.getParameter("headerId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
@@ -65,7 +79,7 @@ function reopenOpportunity(id) {
    String param2 = addLinkParams(request, "viewSource");
 %>
 <dhv:container name="opportunities" selected="calls" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
-  <input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+  <input type="submit" id="send1" value="<dhv:label name="global.button.send">Send</dhv:label>" />
   <% if("list".equals(request.getParameter("return"))){ %>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=View&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource|view") %>'">
   <% }else{ %>
@@ -74,7 +88,7 @@ function reopenOpportunity(id) {
   <br><br>
   <%@ include file="../newmessage_include.jsp" %>
   <br>
-  <input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+  <input type="submit" id="send2" value="<dhv:label name="global.button.send">Send</dhv:label>" />
   <% if("list".equals(request.getParameter("return"))){ %>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=View&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource|view") %>'">
   <% }else{ %>
@@ -84,3 +98,4 @@ function reopenOpportunity(id) {
   <%= addHiddenParams(request, "viewSource") %>
 </dhv:container>
 </form>
+

@@ -1112,7 +1112,8 @@ public final class Users extends CFSModule {
   private boolean sendEmail(ActionContext context, User thisUser, User modifiedByUser, String template, String password) throws Exception {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    UserEmail userEmail = new UserEmail(context, thisUser, modifiedByUser.getContact().getNameLastFirst(), password, systemStatus.getUrl(), template);
+    String modifiedByUserName = (modifiedByUser.getContact() != null && modifiedByUser.getContact().getNameFull() != null? modifiedByUser.getContact().getNameFull():systemStatus.getLabel("campaign.superUser","Super User"));
+    UserEmail userEmail = new UserEmail(context, thisUser, modifiedByUserName, password, systemStatus.getUrl(), template);
     // Prepare the email
     SMTPMessage mail = new SMTPMessage();
     mail.setHost(prefs.get("MAILSERVER"));

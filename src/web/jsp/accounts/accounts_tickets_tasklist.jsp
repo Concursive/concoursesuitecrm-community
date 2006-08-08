@@ -26,6 +26,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -47,7 +48,11 @@
     }
   }
 
+  function reopen() {
+    window.location.href='AccountTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';
+  }
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -62,8 +67,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="tasks" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="tasks" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
       <%@ include file="accounts_ticket_header_include.jsp" %>
       <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>">
         <dhv:permission name="accounts-accounts-tickets-tasks-add">
@@ -109,7 +115,7 @@
         <td align="center" valign="top">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
           <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-          <a href="javascript:displayMenu('select<%= count %>','menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,'<%= thisTask.getId() %>','<%= TicketDetails.isTrashed() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,<%= thisTask.getId() %>,<%= thisTask.getContactId() %>,<%= thisTask.getOwner() %>,'<%= TicketDetails.isTrashed() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td nowrap align="center" valign="top">
           <% if(thisTask.getPriority() != -1) {%>
@@ -155,7 +161,7 @@
           </td>
           <td valign="top">
             <a href="javascript:popURL('AccountTicketTasks.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&id=<%= thisTask.getId() %>&popup=true','CRM_Task','600','425','yes','yes');"><%= toHtml(thisTask.getDescription()) %></a>&nbsp;
-            <% if(thisTask.getContactId()!=-1) {%>
+            <% if(thisTask.getContactId()!=-1 && !isPopup(request)) {%>
               <% if(!thisTask.getContact().getEmployee()) {%>
                 [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%= thisTask.getContact().getNameLastFirst() %>"><font color="green"><dhv:label name="admin.contact.abbreviation">C</dhv:label></font></a>]
               <%} else {%>
@@ -248,5 +254,6 @@
     </table>
   </dhv:container>
 </dhv:container>
+<input type="hidden" name="ownerid" id="ownerid" value="-1"/>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 

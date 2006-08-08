@@ -30,6 +30,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
@@ -43,6 +44,17 @@
       img.id = "1";
       window.frames['server_commands'].location.href = two+'&imageId='+id;
     }
+  }
+  
+  function reopen() {
+    window.location.href = 'MyTasks.do';
+  }
+  
+  function getSharing(chk2) {
+    if (chk2 == true) {
+      return '1';
+    }
+    return '0';
   }
 
 </script>
@@ -72,15 +84,17 @@
       <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>&nbsp;
       <input type="text" name="description" value="" size="30">
       <font color="red">*</font>
-      <input type="hidden" name="owner" value="<%= User.getUserRecord().getId() %>">
+      <input type="hidden" id="owner" name="owner" value="<%= User.getUserRecord().getId() %>">
       <input type="hidden" name="priority" value="1">
       <input type="checkbox" name="chk2" value="true" onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');">
       <dhv:label name="tasks.personal">Personal</dhv:label>
       <input type="hidden" name="sharing" value="">
+      <input type="button" value="<dhv:label name="button.moreFields">More Fields...</dhv:label>"
+        onClick="javascript:window.location.href='MyTasks.do?command=New&auto-populate=true&description='+ document.addTask.description.value+'&sharing='+getSharing(document.addTask.chk2.checked);"/>
       <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>">
     </td>
-  </tr>
   </form>
+  </tr>
 </table>
 <br />
 <a href="javascript:window.location.href='MyTasks.do?command=New'"><dhv:label name="tasks.addAdvancedTask">Add an Advanced Task</dhv:label></a><br>
@@ -153,7 +167,7 @@
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= Constants.TASKS %>', '<%=  thisTask.getId() %>');"
+      <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= Constants.TASKS %>', '<%=  thisTask.getId() %>', '<%= thisTask.getTicketId() %>','<%= thisTask.getContactId() %>', '<%= thisTask.getOwner() %>');"
        onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td nowrap align="center" valign="top">
@@ -312,5 +326,6 @@
 <dhv:permission name="myhomepage-tasks-add">
   </body>
 </dhv:permission>
+<input type="hidden" name="ownerid" id="ownerid" value="-1"/>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 

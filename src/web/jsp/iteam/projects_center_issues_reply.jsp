@@ -24,9 +24,24 @@
 <jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
 <jsp:useBean id="Issue" class="com.zeroio.iteam.base.Issue" scope="request"/>
 <jsp:useBean id="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request"/>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.body.focus();">
 <script language="JavaScript">
+  function hideSendButton() {
+    try {
+      var send1 = document.getElementById('send1');
+      send1.value = label('label.sending','Sending...');
+      send1.disabled=true;
+    } catch (oException) {}
+    try {
+      var send2 = document.getElementById('send2');
+      send2.value = label('label.sending','Sending...');
+      send2.disabled=true;
+    } catch (oException) {}
+  }
+
   function checkForm(form) {
     if (form.dosubmit.value == "false") {
       return true;
@@ -48,6 +63,7 @@
       form.dosubmit.value = "true";
       return false;
     } else {
+      hideSendButton();
       return true;
     }
   }
@@ -67,7 +83,7 @@
   </tr>
 </table>
 <br>
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" id="send1" value="<dhv:label name="global.button.save">Save</dhv:label>" />
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagementIssues.do?command=Details&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
   <input type="hidden" name="projectId" value="<%= Project.getId() %>">
   <input type="hidden" name="issueId" value="<%= Issue.getId() %>">
@@ -115,7 +131,8 @@
     </dhv:evaluate>
   </table>
   <br />
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" id="send2" value="<dhv:label name="button.send">Send</dhv:label>" />
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagementIssues.do?command=Details&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>';">
 </form>
 </body>
+

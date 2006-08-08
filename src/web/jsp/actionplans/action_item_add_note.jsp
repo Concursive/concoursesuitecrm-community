@@ -45,7 +45,7 @@
 <dhv:evaluate if="<%= status != null && !"true".equals(status) %>">
   <body onLoad="document.actionStep.description.focus();">
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documents" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" hideContainer="true">
+<dhv:container name="accounts" selected="documents" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" hideContainer="true" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <dhv:evaluate if="<%= actionItemWork.getActionId() == ActionStep.ATTACH_NOTE_SINGLE %>">
   <%-- Single Note Allowed --%>
   <table class="note" cellspacing="0">

@@ -37,6 +37,7 @@
 <jsp:useBean id="fileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/scrollReload.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -55,30 +56,30 @@
   
   function checkType(value) {
     if (value == "Save") {
-      document.forms['addProduct'].action = 'AccountContactsOppQuotes.do?command=Save&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&version=<%= version %>&auto-populate=true';
+      document.forms['addProduct'].action = 'AccountContactsOppQuotes.do?command=Save&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&version=<%= version %>&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>';
       document.forms['addProduct'].submit();
     } else if (value == "Create Order") {
-      document.forms['addProduct'].action = 'Orders.do?command="CreateOrder&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %>';
+      document.forms['addProduct'].action = 'Orders.do?command="CreateOrder&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>';
       document.forms['addProduct'].submit();
     }
   }
 
   function generateVersion() {
     if (confirm(label("verify.quote.newversion","Are you sure you want to create a new Version of this Quote?"))) {
-      window.location.href='AccountContactsOppQuotes.do?command=AddVersion&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&quoteId=<%= quote.getId() %>&version=<%= version %>';
+      window.location.href='AccountContactsOppQuotes.do?command=AddVersion&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&quoteId=<%= quote.getId() %>&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>';
     }
   }
   
-  function reopen(){
-    scrollReload('AccountContactsOppQuotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>');
+  function reopen() {
+    scrollReload('AccountContactsOppQuotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
 
-  function reopenId(id){
-    window.location.href= 'AccountContactsOppQuotes.do?command=Details&quoteId='+id;
+  function reopenId(id) {
+    window.location.href= 'AccountContactsOppQuotes.do?command=Details&quoteId='+id+'&version=<%= version %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
-  function reopenAndPrint(canPrint){
-    scrollReload('AccountContactsOppQuotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&canPrint='+canPrint);
+  function reopenAndPrint(canPrint) {
+    scrollReload('AccountContactsOppQuotes.do?command=Details&quoteId=<%= quote.getId() %>&version=<%= version %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&canPrint='+canPrint+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
 
 </script>
@@ -86,8 +87,9 @@
   boolean allowMultipleQuote = allowMultipleQuote(pageContext);
   boolean allowMultipleVersion = allowMultipleVersion(pageContext);
 %>
-<form method="post" name="addProduct" action="AccountContactsOppQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&version=<%= version %>">
+<form method="post" name="addProduct" action="AccountContactsOppQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&version=<%= version %><%= addLinkParams(request, "popup|popupType|actionId") %>">
 <%   int showAction = quote.getClosed() == null?1:0; %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -108,16 +110,17 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
-    <dhv:container name="accountcontactopportunities" selected="quotes" object="opportunity" param="<%= "headerId=" + quote.getHeaderId() + "|" + "orgId=" + OrgDetails.getOrgId() + "|" + "contactId=" + ContactDetails.getId()%>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+    <dhv:container name="accountcontactopportunities" selected="quotes" object="opportunity" param="<%= "headerId=" + quote.getHeaderId() + "|" + "orgId=" + OrgDetails.getOrgId() + "|" + "contactId=" + ContactDetails.getId()%>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <dhv:label name="accounts.accountasset_include.DescriptionColon">Description:</dhv:label>&nbsp;<%= toHtml(quote.getShortDescription()) %><br />
     <%String status = quoteStatusList.getValueFromId(quote.getStatusId());%>
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <% if(quote.getClosed() == null){ %>
         <dhv:permission name="accounts-accounts-contacts-opportunities-quotes-edit"><input type="button" value="<dhv:label name="button.submit">Submit</dhv:label>" onClick="javascript:popURL('AccountContactsOppQuotes.do?command=Submit&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
         <dhv:evaluate if="<%=(!quote.getLock())%>" >
-          <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountContactsOppQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= quote.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>';"/></dhv:permission>
+          <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountContactsOppQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= quote.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"/></dhv:permission>
         </dhv:evaluate>
     <%}%>
     <dhv:evaluate if="<%=(!quote.getLock())%>" >
@@ -147,11 +150,11 @@ String opportunityPermission = "accounts-accounts-opportunities-view";
 String contactPermission = "accounts-accounts-contacts-view";
 String quoteEditPermission = "accounts-accounts-contacts-opportunities-quotes-edit";
 // set the Links
-String ticketLink = "AccountTickets.do?command=TicketDetails&id="+ quote.getTicketId();
-String quoteNextVersionLink = "AccountContactsOppQuotes.do?command=Details&quoteId="+ quote.getParentId() +"&orgId="+OrgDetails.getOrgId()+"&version="+(version!=null?version:"");
-String orderLink = "AccountOrders.do?command=Details&id="+ order.getId();
-String opportunityLink = "AccountContactsOppComponents.do?command=DetailsOpp&headerId="+ quote.getHeaderId() + "&contactId=" + ContactDetails.getId() +"&orgId="+ OrgDetails.getOrgId() +"&reset=true";
-String contactLink = "Contacts.do?command=Details&id="+ quote.getContactId();
+String ticketLink = "AccountTickets.do?command=TicketDetails&id="+ quote.getTicketId()+ addLinkParams(request, "popup|popupType|actionId");
+String quoteNextVersionLink = "AccountContactsOppQuotes.do?command=Details&quoteId="+ quote.getParentId() +"&orgId="+OrgDetails.getOrgId()+"&version="+(version!=null?version:"")+ addLinkParams(request, "popup|popupType|actionId");
+String orderLink = "AccountOrders.do?command=Details&id="+ order.getId()+ addLinkParams(request, "popup|popupType|actionId");
+String opportunityLink = "AccountContactsOppComponents.do?command=DetailsOpp&headerId="+ quote.getHeaderId() + "&contactId=" + ContactDetails.getId() +"&orgId="+ OrgDetails.getOrgId() +"&reset=true"+ addLinkParams(request, "popup|popupType|actionId");
+String contactLink = "Contacts.do?command=Details&id="+ quote.getContactId()+ addLinkParams(request, "popup|popupType|actionId");
 // set the other items
 String orgId = ""+OrgDetails.getOrgId();
 String contactId = ""+quote.getContactId();
@@ -162,7 +165,7 @@ String location = "accountsContactsOppsQuotes";
     <% if(quote.getClosed() == null){ %>
       <dhv:permission name="accounts-accounts-contacts-opportunities-quotes-edit"><input type="button" value="<dhv:label name="button.submit">Submit</dhv:label>" onClick="javascript:popURL('AccountContactsOppQuotes.do?command=Submit&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
       <dhv:evaluate if="<%=(!quote.getLock())%>" >
-        <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountContactsOppQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= quote.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>';"/></dhv:permission>
+        <dhv:permission name="accounts-quotes-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='AccountContactsOppQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= quote.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"/></dhv:permission>
       </dhv:evaluate>
     <%}%>
     <dhv:evaluate if="<%=(!quote.getLock())%>" >
@@ -179,7 +182,7 @@ String location = "accountsContactsOppsQuotes";
     </dhv:evaluate>
     <input type="button" value="<dhv:label name="global.button.Print">Print</dhv:label>" onClick="javascript:printQuote('<%= quote.getId() %>');"/>
     <dhv:evaluate if="<%=(!quote.getLock())%>" >
-      <dhv:permission name="accounts-accounts-contacts-opportunities-quotes-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountContactsOppQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&popup=true','AccountContactsOppQuotes.do?command=View', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-opportunities-quotes-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountContactsOppQuotes.do?command=ConfirmDelete&version=<%= version %>&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quote.getHeaderId() %>&popup=true<%= isPopup(request) ? "&popupType=inline":"" %>','AccountContactsOppQuotes.do?command=View', 'Delete_Quote','330','200','yes','no');"/></dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-opportunities-quotes-edit"><input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:closeQuote();"/></dhv:permission>
     </dhv:evaluate>
     </dhv:container>

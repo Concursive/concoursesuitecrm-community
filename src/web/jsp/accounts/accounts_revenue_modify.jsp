@@ -42,7 +42,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
       <input type="hidden" name="id" value="<%= Revenue.getId() %>">
       <input type="hidden" name="modified" value="<%= Revenue.getModified() %>">
 <% if (request.getParameter("return") != null) {%>

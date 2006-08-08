@@ -31,6 +31,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
@@ -45,6 +46,10 @@
       img.id = "1";
       window.frames['server_commands'].location.href = two+'&imageId='+id;
     }
+  }
+  
+  function reopen() {
+    window.location.href='TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>';
   }
 
 </script>
@@ -117,7 +122,7 @@
       <td align="center" valign="top">
         <%-- <a href="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%=thisTask.getId()%>&return=' + escape('MyTasks.do?command=ListTasks') + '&sendUrl='+ escape('MyTasksForward.do?command=SendMessage');">Fwd</a>|--%>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= TicketDetails.getId() %>', '<%= thisTask.getId() %>','<%= TicketDetails.isTrashed() %>');"
+       <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= TicketDetails.getId() %>', '<%= thisTask.getId() %>',<%= thisTask.getContactId() %>,<%= thisTask.getOwner() %>,'<%= TicketDetails.isTrashed() %>', '<%= hasAuthority(pageContext, String.valueOf(thisTask.getOwner())) %>');"
        onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
       <td nowrap align="center" valign="top">
@@ -270,5 +275,6 @@
         </tr>
     <%}%>
   </table>
+  <input type="hidden" name="ownerid" id="ownerid" value="-1"/>
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </dhv:container>

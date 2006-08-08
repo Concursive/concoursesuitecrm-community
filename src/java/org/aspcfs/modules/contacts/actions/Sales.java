@@ -945,6 +945,7 @@ public final class Sales extends CFSModule {
     SystemStatus systemStatus = this.getSystemStatus(context);
     String from = (String) context.getRequest().getParameter("from");
     context.getRequest().setAttribute("from", from);
+    String type = context.getRequest().getParameter("type");
     String nextValue = (String) context.getRequest().getAttribute("nextValue");
     if (nextValue == null || "".equals(nextValue)) {
       nextValue = (String) context.getRequest().getParameter("nextValue");
@@ -972,6 +973,11 @@ public final class Sales extends CFSModule {
 
       LookupList ratings = new LookupList(db, "lookup_contact_rating");
       context.getRequest().setAttribute("ratingList", ratings);
+      LookupList sources = new LookupList(db, "lookup_contact_rating");
+      context.getRequest().setAttribute("SourceList", sources);
+      LookupList sites = new LookupList(db, "lookup_site_id");
+      sites.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", sites);
 
       if (readStatusString == null || "".equals(readStatusString.trim())) {
         if (hasPermission(context, "sales-leads-edit")) {
@@ -1010,6 +1016,9 @@ public final class Sales extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Leads", "Leads");
+    if (type != null && "assignLead".equals(type)) {
+      return "ReassignLeadOK";
+    }
     return "AssignLeadOK";
   }
 
@@ -1093,9 +1102,9 @@ public final class Sales extends CFSModule {
     }
     Connection db = null;
     addModuleBean(context, "Add Contact", "Add Contact to Account");
-    String contactId = (String) context.getRequest().getParameter("id");
-    String rating = (String) context.getRequest().getParameter("rating");
-    String comments = (String) context.getRequest().getParameter("comments");
+    String contactId =  context.getRequest().getParameter("id");
+    String rating = context.getRequest().getParameter("rating");
+    String comments = context.getRequest().getParameter("comments");
 
     try {
       db = getConnection(context);
@@ -1114,7 +1123,9 @@ public final class Sales extends CFSModule {
       if (rating != null && !"".equals(rating)) {
         contact.setRating(Integer.parseInt(rating));
       }
-      contact.setComments(comments);
+      if (comments != null && !"".equals(comments.trim())) {
+        contact.setComments(comments);
+      }
       contact.update(db, context);
       processUpdateHook(context, oldContact, contact);
       int size = LeadUtils.cleanUpContact(
@@ -1473,21 +1484,6 @@ public final class Sales extends CFSModule {
         context.getRequest().setAttribute("ContactDetails", thisContact);
         context.getRequest().setAttribute("contactId", "" + thisContact.getId());
 
-        String next = (String) context.getRequest().getParameter("next");
-        if ("assignaccount".equals(next)) {
-          // TODO: The following should not be executed in this Action because now
-          // this request is using an additional database connection without closing the first!
-          // it could be moved down below to fix this
-          String retVal = executeCommandWorkAccount(context);
-          if (from != null && !"list".equals(from)) {
-            context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
-          } else {
-            context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
-          }
-          if ("CloseAndReloadOK".equals(retVal)) {
-            return "CloseAndReloadOK";
-          }
-        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -1495,6 +1491,30 @@ public final class Sales extends CFSModule {
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if (isValid && resultCount == 1) {
+      String next = context.getRequest().getParameter("next");
+      String leadAssignment = context.getRequest().getParameter("leadAssignment");
+      if (next != null && "assignaccount".equals(next)) {
+        // TODO: The following should not be executed in this Action because now
+        // this request is using an additional database connection without closing the first!
+        // it could be moved down below to fix this
+        String retVal = null;
+        if (leadAssignment == null || !"true".equals(leadAssignment)) {
+          retVal = executeCommandWorkAccount(context);
+        } else {
+          context.getRequest().setAttribute("id", contactId);
+          return "CloseOK";
+        }
+        if (from != null && !"list".equals(from)) {
+          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
+        } else {
+          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
+        }
+        if (retVal != null && "CloseAndReloadOK".equals(retVal)) {
+          return "CloseAndReloadOK";
+        }
+      }
     }
     addModuleBean(context, "Leads", "Update Lead");
     // decide what happend with the processing

@@ -8,6 +8,7 @@ import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -43,7 +44,8 @@ public class AccountsProjects extends CFSModule {
       PagedListInfo projectListInfo = this.getPagedListInfo(
           context, "AccountProjectInfo");
       projectListInfo.setLink(
-          "AccountsProjects.do?command=List&orgId=" + thisOrganization.getId());
+          "AccountsProjects.do?command=List&orgId=" + thisOrganization.getId()
+          +RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
       projectListInfo.setItemsPerPage(0);
       projects.setPagedListInfo(projectListInfo);
       //Project Info
@@ -68,7 +70,7 @@ public class AccountsProjects extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("AccountsProjectsListOK");
+    return getReturn(context, "AccountsProjectsList");
   }
 
   private static Organization setOrganization(ActionContext context, Connection db) throws SQLException {

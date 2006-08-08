@@ -27,6 +27,7 @@ import org.aspcfs.modules.servicecontracts.base.*;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -71,7 +72,8 @@ public class AccountsServiceContracts extends CFSModule {
     PagedListInfo serviceContractListInfo = this.getPagedListInfo(
         context, "ServiceContractListInfo");
     serviceContractListInfo.setLink(
-        "AccountsServiceContracts.do?command=List&orgId=" + orgId);
+        "AccountsServiceContracts.do?command=List&orgId=" + orgId
+        + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -98,7 +100,7 @@ public class AccountsServiceContracts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("AccountsServiceContractsListOK");
+    return getReturn(context, "AccountsServiceContractsList");
   }
 
 
@@ -167,7 +169,7 @@ public class AccountsServiceContracts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("AccountsServiceContractsAddOK");
+    return getReturn(context, "AccountsServiceContractsAdd");
   }
 
 
@@ -356,7 +358,8 @@ public class AccountsServiceContracts extends CFSModule {
           systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsServiceContracts.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id + "'");
+          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsServiceContracts.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id 
+          + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -420,21 +423,13 @@ public class AccountsServiceContracts extends CFSModule {
               "orgId"));
       return getReturn(context, "Delete");
     }
-
+    boolean inline = (context.getRequest().getParameter("popupType") != null 
+                      && "inline".equals(context.getRequest().getParameter("popupType")));
     processErrors(context, thisContract.getErrors());
     context.getRequest().setAttribute(
         "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
-            "orgId") + "&id=" + context.getRequest().getParameter("id"));
-    return getReturn(context, "Delete");
-/*
-    context.getRequest().setAttribute(
-        "actionError", systemStatus.getLabel(
-            "object.validation.actionError.contractDeletion"));
-    context.getRequest().setAttribute(
-        "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
-            "orgId"));
-    return ("DeleteError");
-*/
+        "orgId") + "&id=" + context.getRequest().getParameter("id")+(inline?"&popup=true":""));
+    return "DeleteOK";
   }
 
 
@@ -592,7 +587,7 @@ public class AccountsServiceContracts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("AccountsServiceContractsModifyOK");
+    return getReturn(context, "AccountsServiceContractsModify");
   }
 
 
@@ -656,7 +651,7 @@ public class AccountsServiceContracts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("AccountsServiceContractsViewOK");
+    return getReturn(context, "AccountsServiceContractsView");
   }
 
 

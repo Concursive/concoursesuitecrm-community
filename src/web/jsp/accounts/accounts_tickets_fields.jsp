@@ -28,7 +28,8 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
-<form name="details" action="AccountTicketFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>" method="post">
+<form name="details" action="AccountTicketFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -53,8 +54,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="folders" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="folders" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
     &nbsp;<br />
     <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -78,8 +80,8 @@
   </table>
 &nbsp;<br />
 <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
-  <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=ModifyFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-  <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=DeleteFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+  <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=ModifyFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"></dhv:permission>
+  <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=DeleteFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';confirmSubmit(this.form);"></dhv:permission>
   <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
   <br />
   <br /><dhv:formMessage showSpace="false" />
@@ -151,8 +153,8 @@
 </table>
 <br>
 <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
-  <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=ModifyFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-  <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=DeleteFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+  <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=ModifyFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"></dhv:permission>
+  <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='AccountTicketFolders.do?command=DeleteFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';confirmSubmit(this.form);"></dhv:permission>
 </dhv:evaluate>
 </dhv:container>
 </dhv:container>

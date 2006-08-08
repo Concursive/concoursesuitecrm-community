@@ -20,11 +20,18 @@
 <script language="javascript">
   var thisTaskId = -1;
   var thisTypeId = -1;
+  var thisTicketId = -1;
+  var thisContactId = -1;
+  var thisOwnerId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, typeId, taskId) {
+  function displayMenu(loc, id, typeId, taskId, ticketId, contactId, ownerId) {
     thisTaskId = taskId;
     thisTypeId = typeId;
+    thisTicketId = ticketId;
+    thisContactId = contactId;
+    thisOwnerId = ownerId;
+    document.getElementById('ownerid').value = thisOwnerId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
@@ -39,6 +46,21 @@
   
   function modify() {
     window.location.href='MyTasks.do?command=Modify&id=' + thisTaskId;
+  }
+  
+  function assignTask(ownerId) {
+    var url = 'MyTasks.do?command=ReassignTask&id='+ thisTaskId + '&ownerId=' + ownerId + '&return=myhomepage';
+    window.frames['server_commands'].location.href = url;
+  }
+
+  function reassign() {
+    if (thisTicketId != '-1') {
+      popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true&ticketId='+ thisTicketId +'&reset=true');
+    } else if (thisContactId != '-1') {
+        popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true&mySiteOnly=true&siteIdContact='+thisContactId+'&reset=true');
+    } else {
+      popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true<%= User.getUserRecord().getSiteId() == -1? "&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&reset=true');
+    }
   }
 
   function forward() {
@@ -73,6 +95,16 @@
         </th>
         <td width="100%">
           <dhv:label name="global.button.modify">Modify</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="myhomepage-tasks-edit">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reassign()">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="actionPlan.reassign">Reassign</dhv:label>
         </td>
       </tr>
       </dhv:permission>

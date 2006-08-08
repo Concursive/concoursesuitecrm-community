@@ -55,7 +55,7 @@
   
   //Menu link functions
   function details() {
-    window.location.href = 'AccountActionPlans.do?command=Details&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId;
+    window.location.href = 'AccountActionPlans.do?command=Details&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function reassign() {
@@ -64,7 +64,7 @@
   }
   
   function continueReassignPlan(userId, actionPlanWork) {
-    window.location.href = "AccountActionPlans.do?command=Reassign&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list";
+    window.location.href = "AccountActionPlans.do?command=Reassign&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
 
   function reviewNotes() {
@@ -73,11 +73,11 @@
   }
   
   function enable() {
-    window.location.href = 'AccountActionPlans.do?command=Enable&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId + '&enabled=true';
+    window.location.href = 'AccountActionPlans.do?command=Enable&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId + '&enabled=true<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function archive() {
-    window.location.href = 'AccountActionPlans.do?command=Enable&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId + '&enabled=false';
+    window.location.href = 'AccountActionPlans.do?command=Enable&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId + '&enabled=false<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function revertBackToLead() {
@@ -85,7 +85,7 @@
   }
 
   function deletePlan() {
-    confirmDelete('AccountActionPlans.do?command=Delete&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId);
+    confirmDelete('AccountActionPlans.do?command=Delete&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + thisWorkId+'<%= addLinkParams(request, "popupType|actionId") %>');
   }
 </script>
 <div id="menuActionPlanContainer" class="menu">

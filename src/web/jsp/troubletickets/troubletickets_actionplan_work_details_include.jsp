@@ -43,7 +43,7 @@
           popURLReturn('AccountActionPlans.do?command=ModifyStatus&orgId=<%= orgDetails.getOrgId() %>&planId=' + planId + '&itemId=' + itemId,'AccountActionPlans.do?command=Details&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
         </dhv:evaluate>
       }
-    } else { 
+    } else {
       <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
         <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
           popURLReturn('AccountTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
@@ -85,34 +85,34 @@
   function restartPlan() {
     <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
       <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
-        confirmForward('AccountTicketActionPlans.do?command=Restart&ticketId=<%= ticket.getId() %>&actionPlanId=<%= actionPlanWork.getId() %>');
+        confirmForward('AccountTicketActionPlans.do?command=Restart&ticketId=<%= ticket.getId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
       <dhv:evaluate if="<%= moduleName == null || "".equals(moduleName) %>">
-        confirmForward('TroubleTicketActionPlans.do?command=Restart&ticketId=<%= ticket.getId() %>&actionPlanId=<%= actionPlanWork.getId() %>');
+        confirmForward('TroubleTicketActionPlans.do?command=Restart&ticketId=<%= ticket.getId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
     </dhv:evaluate>
     <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.MYHOMEPAGE)))) %>">
-      confirmForward('MyActionPlans.do?command=Restart&orgId=<%= actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1 %>&actionPlanId=<%= actionPlanWork.getId() %>');
+      confirmForward('MyActionPlans.do?command=Restart&orgId=<%= actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1 %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
     </dhv:evaluate>
     <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
-      confirmForward('AccountActionPlans.do?command=Restart&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=<%= actionPlanWork.getId() %>');
+      confirmForward('AccountActionPlans.do?command=Restart&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
     </dhv:evaluate>
   }
   
   function deletePlan() {
     <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
       <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
-        confirmDelete('AccountTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=<%= actionPlanWork.getId() %>');
+        confirmDelete('AccountTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
       <dhv:evaluate if="<%= moduleName == null || "".equals(moduleName) %>">
-        confirmDelete('TroubleTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=<%= actionPlanWork.getId() %>');
+        confirmDelete('TroubleTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
     </dhv:evaluate>
     <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.MYHOMEPAGE)))) %>">
-      confirmForward('MyActionPlans.do?command=Delete&orgId=<%= actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1 %>&actionPlanId=<%= actionPlanWork.getId() %>');
+      confirmForward('MyActionPlans.do?command=Delete&orgId=<%= actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1 %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
     </dhv:evaluate>
     <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
-      confirmDelete('AccountActionPlans.do?command=Delete&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=<%= actionPlanWork.getId() %>');
+      confirmDelete('AccountActionPlans.do?command=Delete&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
     </dhv:evaluate>
   }
   

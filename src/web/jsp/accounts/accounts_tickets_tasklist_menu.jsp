@@ -21,12 +21,17 @@
   var thisTicId = -1;
   var thisOrgId = -1;
   var thisTaskId = -1;
+  var thisContactId = -1;
+  var thisOwnerId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, ticId, taskId, trashed) {
+  function displayMenu(loc, id, orgId, ticId, taskId, contactId, ownerId, trashed) {
     thisOrgId = orgId;
     thisTicId = ticId;
     thisTaskId = taskId;
+    thisContactId = contactId;
+    thisOwnerId = ownerId;
+    document.getElementById('ownerid').value = thisOwnerId;
     updateMenu(trashed);
     if (!menu_init) {
       menu_init = true;
@@ -36,10 +41,12 @@
   }
 
   function updateMenu(trashed){
-    if (trashed == 'true'){
+    if (trashed == 'true') {
+      hideSpan('menuAssign');
       hideSpan('menuModify');
       hideSpan('menuDelete');
     } else {
+      showSpan('menuAssign');
       showSpan('menuModify');
       showSpan('menuDelete');
     }
@@ -49,12 +56,27 @@
     popURL('AccountTicketTasks.do?command=Details&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
   }
 
+  function assignTask(ownerId) {
+    var url = 'MyTasks.do?command=ReassignTask&id='+ thisTaskId + '&ownerId=' + ownerId + '&return=myhomepage';
+    window.frames['server_commands'].location.href = url;
+  }
+
+  function reassign() {
+    if (thisTicId != '-1') {
+      popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true&ticketId='+ thisTicId +'&reset=true');
+    } else if (thisContactId != '-1') {
+        popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true&mySiteOnly=true&siteIdContact='+thisContactId+'&reset=true');
+    } else {
+      popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true<%= User.getUserRecord().getSiteId() == -1? "&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&reset=true');
+    }
+  }
+
   function modify() {
     popURL('AccountTicketTasks.do?command=Modify&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
   }
 
   function deleteTask() {
-    popURL('AccountTicketTasks.do?command=ConfirmDelete&id=' + thisTaskId + '&popup=true', 'Delete_task','320','200','yes','no');
+    popURL('AccountTicketTasks.do?command=ConfirmDelete&id=' + thisTaskId + '&popup=true<%= isPopup(request)?"&popupType=inline":"" %>', 'Delete_task','320','200','yes','no');
   }
 </script>
 <div id="menuTaskContainer" class="menu">
@@ -77,6 +99,16 @@
         </th>
         <td width="100%">
           <dhv:label name="global.button.modify">Modify</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-tasks-edit">
+      <tr id="menuAssign" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reassign();">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="actionPlan.reassign">Reassign</dhv:label>
         </td>
       </tr>
       </dhv:permission>

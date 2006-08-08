@@ -35,7 +35,8 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<form name="viewServiceContract" action="AccountsServiceContracts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>&id=<%=serviceContract.getId()%>&return=single" method="post">
+<form name="viewServiceContract" action="AccountsServiceContracts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>&id=<%=serviceContract.getId()%>&return=single<%= addLinkParams(request, "popup|popupType|actionId") %>" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -49,13 +50,14 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() || !serviceContract.isTrashed() %>">
     <dhv:permission name="accounts-service-contracts-edit">
      <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
     </dhv:permission>
     <dhv:permission name="accounts-service-contracts-delete">
-      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
+      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true<%= isPopup(request)?"&popupType=true":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
     </dhv:permission>
   </dhv:evaluate>
   <input type="hidden" name="orgId" value = <%= OrgDetails.getOrgId() %> />
@@ -266,7 +268,7 @@
       <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
     </dhv:permission>
     <dhv:permission name="accounts-service-contracts-delete">
-      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
+      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true<%= isPopup(request)?"&popupType=true":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
     </dhv:permission>
   </dhv:evaluate>
 </dhv:container>

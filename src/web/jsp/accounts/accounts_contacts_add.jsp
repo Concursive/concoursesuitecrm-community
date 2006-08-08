@@ -109,12 +109,16 @@
 </script>
 <body onLoad="javascript:document.addContact.listSalutation.focus();">
 <%
+  boolean hiddensource = false;
+  if (request.getParameter("hiddensource") != null && !"".equals(request.getParameter("hiddensource"))) {
+    hiddensource = true;
+  }
   boolean popUp = false;
-  if(request.getParameter("popup")!=null){
+  if(request.getParameter("popup")!=null) {
     popUp = true;
   }
 %> 
-  <form name="addContact" action="Contacts.do?command=Save&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">
+  <form name="addContact" action="Contacts.do?command=Save&auto-populate=true<%= (isPopup(request) ?"&popup=true":"") %>" method="post">
 <%-- Trails --%>
 <dhv:evaluate if="<%= !popUp %>">
 <table class="trails" cellspacing="0">
@@ -130,13 +134,13 @@
 </table>
 </dhv:evaluate>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="return checkForm(this.form)">
-  <dhv:evaluate if="<%= !popUp %>">
+  <dhv:evaluate if="<%= !popUp || !hiddensource %>">
     <input type="submit" value="<dhv:label name="accounts.accounts_contacts_add.SaveClone">Save & Clone</dhv:label>" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
   </dhv:evaluate>
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:<%= popUp ? "window.close();" : "window.location.href='Contacts.do?command=View&orgId=" + OrgDetails.getOrgId() + "'" %>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:<%= popUp && hiddensource ? "window.close();" : "window.location.href='Contacts.do?command=View&orgId=" + OrgDetails.getOrgId() + (popUp?"&popup=true":"") + "'" %>">
   <br />
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -284,10 +288,10 @@
   </dhv:permission>
   <br>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="return checkForm(this.form)">
-  <dhv:evaluate if="<%= !popUp %>">
+  <dhv:evaluate if="<%= !popUp || !hiddensource %>">
     <input type="submit" value="<dhv:label name="accounts.accounts_contacts_add.SaveClone">Save & Clone</dhv:label>" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
   </dhv:evaluate>
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:<%= popUp ? "window.close();" : "window.location.href='Contacts.do?command=View&orgId=" + OrgDetails.getOrgId() + "'" %>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:<%= popUp && hiddensource ? "window.close();" : "window.location.href='Contacts.do?command=View&orgId=" + OrgDetails.getOrgId() + (popUp?"&popup=true":"") + "'" %>">
   <input type="hidden" name="siteId" value="<%= OrgDetails.getSiteId() %>">
   <input type="hidden" name="orgName" value="<%= OrgDetails.getName() %>">
   <input type="hidden" name="hiddensource" value="<%= toHtmlValue(request.getParameter("hiddensource")) %>">

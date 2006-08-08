@@ -26,7 +26,8 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
-<form name="viewContactPortal" action="ContactsPortal.do?command=Modify&contactId=<%= ContactDetails.getId() %>" method="post">
+<form name="viewContactPortal" action="ContactsPortal.do?command=Modify&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType") %>" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -40,8 +41,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="portal" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountscontacts" selected="portal" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <input type="hidden" name="id" value="<%=ContactDetails.getId()%>" />
     <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>" />
     <input type="hidden" name="userId" value="<%=portalUserDetails.getId()%>">
@@ -54,7 +56,7 @@
       <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
         <dhv:permission name="portal-user-add">
           <tr>
-            <td><a href="ContactsPortal.do?command=Add&contactId=<%=ContactDetails.getId()%>"><dhv:label name="account.contact.grantPortalAccess">Grant Portal Access</dhv:label></td>
+            <td><a href="ContactsPortal.do?command=Add&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="account.contact.grantPortalAccess">Grant Portal Access</dhv:label></td>
           </tr>
         </dhv:permission>
       </dhv:evaluate>
@@ -76,14 +78,14 @@
       <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
         <dhv:permission name="portal-user-edit">
           <%if (portalUserDetails.getEnabled()){%>
-            <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%>'" />
+            <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
           <%}else{%>
-            <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+            <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
           <%}%>
         </dhv:permission>
         <dhv:permission name="portal-user-delete">
           <dhv:evaluate if="<%= (portalUserDetails.getEnabled()) %>" >
-            <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+            <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
           </dhv:evaluate>
         </dhv:permission>
       </dhv:evaluate>
@@ -127,14 +129,14 @@
       <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
         <dhv:permission name="portal-user-edit">
           <%if (portalUserDetails.getEnabled()){%>
-            <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%>'" />
+            <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Modify&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
           <%}else{%>
-            <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+            <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Enable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
           <%}%>
         </dhv:permission>
         <dhv:permission name="portal-user-delete">
           <dhv:evaluate if="<%= (portalUserDetails.getEnabled()) %>" >
-            <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'" />
+            <input type="button" value="<dhv:label name="global.button.Disable">Disable</dhv:label>" onClick="javascript:window.location.href='ContactsPortal.do?command=Disable&userId=<%=portalUserDetails.getId()%>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
            </dhv:evaluate>
         </dhv:permission>
       </dhv:evaluate>

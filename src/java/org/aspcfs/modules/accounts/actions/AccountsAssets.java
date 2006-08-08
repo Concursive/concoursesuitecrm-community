@@ -31,6 +31,7 @@ import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -110,7 +111,7 @@ public class AccountsAssets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("AccountsAssetsListOK");
+    return getReturn(context, "AccountsAssetsList");
   }
 
 
@@ -160,7 +161,6 @@ public class AccountsAssets extends CFSModule {
       String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
       context.getRequest().setAttribute("asset", thisAsset);
-      return ("AccountsAssetsAddOK");
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", errorMessage);
@@ -169,6 +169,7 @@ public class AccountsAssets extends CFSModule {
       //Always free the database connection
       this.freeConnection(context, db);
     }
+    return getReturn(context, "AccountsAssetsAdd");
   }
 
 
@@ -282,7 +283,7 @@ public class AccountsAssets extends CFSModule {
       //Always free the database connection
       this.freeConnection(context, db);
     }
-    return ("AccountsAssetsModifyOK");
+    return getReturn(context, "AccountsAssetsModify");
   }
 
 
@@ -384,14 +385,16 @@ public class AccountsAssets extends CFSModule {
       if (dependencies.canDelete()) {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
         htmlDialog.addButton(
-            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsAssets.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id + "'");
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsAssets.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id 
+            + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType") + "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
         htmlDialog.setHeader(
             systemStatus.getLabel("confirmdelete.unableHeader"));
         htmlDialog.addButton(
-            systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountsAssets.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id + "&forceDelete=true" + "'");
+            systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountsAssets.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id + "&forceDelete=true" 
+            + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType") + "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
@@ -448,7 +451,7 @@ public class AccountsAssets extends CFSModule {
         "refreshUrl", "AccountsAssets.do?command=View&orgId=" + context.getRequest().getParameter(
             "orgId"));
     //return executeCommandView(context);
-    return getReturn(context, "Delete");
+    return "DeleteOK";
   }
 
 
@@ -492,7 +495,8 @@ public class AccountsAssets extends CFSModule {
       //return (executeCommandList(context));
       return getReturn(context, "Delete");
     }
-
+    boolean inline = (context.getRequest().getParameter("popupType") != null 
+                      && "inline".equals(context.getRequest().getParameter("popupType")));
     processErrors(context, thisAsset.getErrors());
     context.getRequest().setAttribute(
         "actionError", systemStatus.getLabel(
@@ -555,7 +559,7 @@ public class AccountsAssets extends CFSModule {
       context.getRequest().setAttribute("asset", thisAsset);
       context.getRequest().setAttribute("serviceContract", thisContract);
 
-      return ("AccountsAssetsViewOK");
+      return getReturn(context, "AccountsAssetsView");
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", errorMessage);
@@ -594,12 +598,12 @@ public class AccountsAssets extends CFSModule {
       Organization thisOrganization = new Organization(
           db, thisAsset.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-
       //Prepare pagedListInfo
       PagedListInfo assetHistoryInfo = this.getPagedListInfo(
           context, "AssetHistoryInfo");
       assetHistoryInfo.setLink(
-          "AccountsAssets.do?command=History&id=" + thisAsset.getId());
+          "AccountsAssets.do?command=History&id=" + thisAsset.getId() + 
+          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
       TicketList ticketList = new TicketList();
       ticketList.setPagedListInfo(assetHistoryInfo);
       ticketList.setAssetId(thisAsset.getId());
@@ -607,7 +611,6 @@ public class AccountsAssets extends CFSModule {
       context.getRequest().setAttribute("ticketList", ticketList);
       thisAsset.buildCompleteParentList(db);
       context.getRequest().setAttribute("asset", thisAsset);
-      return ("AccountsAssetsHistoryOK");
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", errorMessage);
@@ -616,6 +619,7 @@ public class AccountsAssets extends CFSModule {
       //Always free the database connection
       this.freeConnection(context, db);
     }
+    return getReturn(context, "AccountsAssetsHistory");
   }
 
 
@@ -804,6 +808,6 @@ public class AccountsAssets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("ViewMaterialsOK");
+    return getReturn(context, "ViewMaterials");
   }
 }

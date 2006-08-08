@@ -9,7 +9,7 @@ function quickAction(id) {
 //    popURL('OpportunityForm.do?command=Prepare&actionSource=GlobalItem','Opportunity','600','500','yes','yes');
 //  }
   if (id == 'task') {
-    popURL('MyTasks.do?command=New&actionSource=GlobalItem&popup=true','Task','600','425','yes','yes');
+    popURL('MyTasks.do?command=New&actionSource=GlobalItem&popup=true&moreFields=false','Task','600','425','yes','yes');
   }
   if (id == 'ticket') {
     popURL('TroubleTickets.do?command=Add&actionSource=GlobalItem&popup=true','Ticket','600','500','yes','yes');

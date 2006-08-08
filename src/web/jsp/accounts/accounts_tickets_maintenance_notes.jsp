@@ -40,6 +40,7 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -54,8 +55,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
       <%@ include file="accounts_ticket_header_include.jsp" %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
   <tr class="overlineSection">
@@ -107,7 +109,7 @@
     <td>
        <dhv:evaluate if="<%= !ticketDetails.isTrashed() %>" >
       <dhv:permission name="accounts-accounts-tickets-maintenance-report-add">
-            <a href="AccountTicketMaintenanceNotes.do?command=Add&id=<%=ticketDetails.getId()%>"><dhv:label name="ticket.addMaintenanceNote">Add Maintenance Note</dhv:label></a>
+            <a href="AccountTicketMaintenanceNotes.do?command=Add&id=<%=ticketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="ticket.addMaintenanceNote">Add Maintenance Note</dhv:label></a>
       </dhv:permission>
        </dhv:evaluate>
     </td>
@@ -146,7 +148,7 @@
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicketForm');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
 		<td width="15%" nowrap>
-      <a href="AccountTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%= thisSun.getId()%>">
+      <a href="AccountTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%= thisSun.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>">
       <zeroio:tz timestamp="<%= thisSun.getEntered() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></a>
 		</td>
 		<td width="15%" >

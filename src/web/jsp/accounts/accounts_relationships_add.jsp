@@ -52,7 +52,8 @@
     return true;
   }
 </script>
-<form name="addRelation" action="AccountRelationships.do?command=Save&auto-populate=true" method="post"  onSubmit="return doCheck(this);">
+<form name="addRelation" action="AccountRelationships.do?command=Save&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" method="post"  onSubmit="return doCheck(this);">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -70,7 +71,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-  <dhv:container name="accounts" selected="relationships" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+  <dhv:container name="accounts" selected="relationships" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:formMessage showSpace="false" />
     <table cellpadding="4" cellspacing="0" border="0" class="details">
       <tr>
@@ -125,7 +127,7 @@
     </table>
     <br>
     <input type="submit" value="<dhv:label name="global.button.CreateRelationship">Create Relationship</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountRelationships.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';" />
+    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountRelationships.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';" />
     <input type="hidden" name="dosubmit" value="true" />
     <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
     <input type="hidden" name="categoryIdMapsTo" value="<%= Constants.ACCOUNT_OBJECT %>" />

@@ -71,12 +71,12 @@
 <table cellpadding="3" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th nowrap>&nbsp;</th>
-    <dhv:include name="sales.list.name">
-      <th nowrap><strong><dhv:label name="contacts.name">Name</dhv:label></strong></th>
-    </dhv:include>
     <th><strong><a href="Sales.do?command=List&from=list&column=c.org_name"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></a></strong>
           <%= SalesListInfo.getSortIcon("c.org_name") %>
     </th>
+    <dhv:include name="sales.list.name" none="true">
+      <th nowrap><strong><dhv:label name="contacts.name">Name</dhv:label></strong></th>
+    </dhv:include>
     <th nowrap><strong><a href="Sales.do?command=List&from=list&column=ca.city"><dhv:label name="accounts.accounts_add.City">City</dhv:label></a></strong>
           <%= SalesListInfo.getSortIcon("ca.city") %>
     </th>
@@ -93,7 +93,7 @@
     <dhv:evaluate if="<%= contacts.getOwner() != User.getUserId() %>">
       <th nowrap><strong><dhv:label name="reports.owner">Owner</dhv:label></strong></th>
     </dhv:evaluate>
-<dhv:evaluate if="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+<dhv:evaluate if="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) || SiteIdList.size() > 2 %>">
     <th nowrap>
       <strong><a href="Sales.do?command=List&from=list&column=lsi.description"><dhv:label name="accounts.site">Site</dhv:label></a></strong>
       <%= SalesListInfo.getSortIcon("lsi.description") %>
@@ -122,9 +122,6 @@
         onmouseout="out(0, <%= menuCount %>);hideMenu('menuContact');"><img
         src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0" /></a>
       </td>
-      <dhv:include name="sales.list.name">
-        <td valign="top"><%= toHtml(thisLead.getNameLastFirst()) %></td>
-      </dhv:include>
       <td valign="top" nowrap>
         <dhv:evaluate if="<%= thisLead.getIsLead() %>">
           <a href="Sales.do?command=Details&contactId=<%= thisLead.getId() %>&from=list&listForm=true">
@@ -144,6 +141,9 @@
           </a>
         </dhv:evaluate>
       </td>
+      <dhv:include name="sales.list.name" none="true">
+        <td valign="top"><%= toHtml(thisLead.getNameLastFirst()) %></td>
+      </dhv:include>
       <td valign="top">
         <%= toHtml(thisLead.getCity()) %>
       </td>
@@ -169,7 +169,7 @@
           <dhv:username id="<%= thisLead.getOwner() %>" />
         </td>
       </dhv:evaluate>
-<dhv:evaluate if="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+<dhv:evaluate if="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) || SiteIdList.size() > 2 %>">
       <dhv:include name="sales.list.site" none="true">
         <td valign="top"><%= SiteIdList.getSelectedValue(thisLead.getSiteId()) %></td>
       </dhv:include>
@@ -185,7 +185,7 @@
 	  } else {
 %>
   <tr>
-    <td valign="center" colspan="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE))? "10":"9" %>"><dhv:label name="sales.noLeadsFound">No leads found.</dhv:label></td>
+    <td valign="center" colspan="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) || SiteIdList.size() > 2 ? "10":"9" %>"><dhv:label name="sales.noLeadsFound">No leads found.</dhv:label></td>
   </tr>
 <%}%>
 </table>

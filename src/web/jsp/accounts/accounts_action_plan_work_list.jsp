@@ -26,6 +26,8 @@
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -35,9 +37,10 @@
   loadImages('select');
   
   function reassignPlan(userId, actionPlanWork) {
-    window.location.href = "AccountActionPlans.do?command=Reassign&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list";
+    window.location.href = "AccountActionPlans.do?command=Reassign&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
 </SCRIPT>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -50,9 +53,10 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="actionplans" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
-<form name="actionPlanListView" method="post" action="AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %>">
-<dhv:permission name="accounts-action-plans-add"><a href="AccountActionPlans.do?command=Add&orgId=<%=request.getParameter("orgId")%>"><dhv:label name="actionPlan.addActionPlan">Add Action Plan</dhv:label></a></dhv:permission>
+</dhv:evaluate>
+<dhv:container name="accounts" selected="actionplans" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<form name="actionPlanListView" method="post" action="AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:permission name="accounts-action-plans-add"><a href="AccountActionPlans.do?command=Add&orgId=<%=request.getParameter("orgId")%><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="actionPlan.addActionPlan">Add Action Plan</dhv:label></a></dhv:permission>
 <center><dhv:pagedListAlphabeticalLinks object="accountActionPlanWorkListInfo"/></center>
 &nbsp;<br />
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -101,7 +105,7 @@
       <strong><dhv:label name="actionPlan.daysActive">Days Active</dhv:label></strong>
     </th>
     <th valign="middle" nowrap>
-      <strong><a href="AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %>&column=apw.modified"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
+      <strong><a href="AccountActionPlans.do?command=View&orgId=<%= orgDetails.getOrgId() %>&column=apw.modified<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
       <%= accountActionPlanWorkListInfo.getSortIcon("apw.modified") %>
     </th>
   </tr>
@@ -129,7 +133,7 @@
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td>
-      <a href="AccountActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>&orgId=<%= orgDetails.getOrgId() %>"><dhv:username id="<%= thisWork.getAssignedTo() %>"/></a>
+      <a href="AccountActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:username id="<%= thisWork.getAssignedTo() %>"/></a>
     </td>
     <td width="25%"><%= toHtml(thisWork.getPlanName()) %></td>
     <td align="center" nowrap>

@@ -39,42 +39,42 @@
 
   //Folder operations
   function viewFolder() {
-    window.location.href='AccountTicketsDocuments.do?command=View&tId=' + thisTicId + '&folderId=' + thisFolderId;
+    window.location.href='AccountTicketsDocuments.do?command=View&tId=' + thisTicId + '&folderId=' + thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function editFolder() {
-    window.location.href='AccountTicketsDocumentsFolders.do?command=Modify&tId=' + thisTicId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId;
+    window.location.href='AccountTicketsDocumentsFolders.do?command=Modify&tId=' + thisTicId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function moveFolder() {
     popURL('AccountTicketsDocumentsFolders.do?command=Move&tId=' + thisTicId + '&id=' + thisFolderId + '&popup=true&return=AccountTicketsDocuments&param='+ thisTicId +'&param2='+ thisFolderId ,'Files','400','375','yes','yes');
   }
   function deleteFolder() {
-    confirmDelete('AccountTicketsDocumentsFolders.do?command=Delete&tId=' + thisTicId + '&id=' + thisFolderId + '&folderId=' + thisFileId );
+    confirmDelete('AccountTicketsDocumentsFolders.do?command=Delete&tId=' + thisTicId + '&id=' + thisFolderId + '&folderId=' + thisFileId +'<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
 
   //File operations
   function viewFileHistory() {
-    document.location.href='AccountTicketsDocuments.do?command=Details&&tId=' + thisTicId +'&fid=' + thisFileId + '&folderId='+thisFolderId;
+    document.location.href='AccountTicketsDocuments.do?command=Details&&tId=' + thisTicId +'&fid=' + thisFileId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function details() {
-    window.location.href='AccountTicketsDocuments.do?command=Details&tId=' + thisTicId + '&fid=' + thisFileId + '&folderId='+thisFolderId;
+    window.location.href='AccountTicketsDocuments.do?command=Details&tId=' + thisTicId + '&fid=' + thisFileId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function modify() {
-    window.location.href='AccountTicketsDocuments.do?command=Modify&fid=' + thisFileId + '&tId=' + thisTicId + '&folderId='+thisFolderId;
+    window.location.href='AccountTicketsDocuments.do?command=Modify&fid=' + thisFileId + '&tId=' + thisTicId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function view() {
     popURL('AccountTicketsDocuments.do?command=Download&tId='+ thisTicId +'&fid=' + thisFileId + '&stream=true', 'Content', 640,480, 1, 1);
   }
   function download() {
-    window.location.href='AccountTicketsDocuments.do?command=Download&tId=' + thisTicId + '&fid=' + thisFileId + '&folderId='+thisFolderId;
+    window.location.href='AccountTicketsDocuments.do?command=Download&tId=' + thisTicId + '&fid=' + thisFileId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function addVersion() {
-    document.location.href='AccountTicketsDocuments.do?command=AddVersion&tId=' + thisTicId + '&fid=' + thisFileId + '&folderId='+ thisFolderId;
+    document.location.href='AccountTicketsDocuments.do?command=AddVersion&tId=' + thisTicId + '&fid=' + thisFileId + '&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   function moveFile() {
     popURL('AccountTicketsDocuments.do?command=Move&tId=' + thisTicId + '&fid=' + thisFileId + '&popup=true&return=AccountTicketsDocuments&param=' + thisTicId +'&param2='+thisFolderId,'Files','400','375','yes','yes');
   }
   function deleteFile() {
-    confirmDelete('AccountTicketsDocuments.do?command=Delete&fid='+ thisFileId + '&tId=' + thisTicId + '&folderId='+thisFolderId);
+    confirmDelete('AccountTicketsDocuments.do?command=Delete&fid='+ thisFileId + '&tId=' + thisTicId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
   
 </script>

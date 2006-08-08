@@ -524,6 +524,9 @@
     <param name="tickets.details">
       <value><![CDATA[Ticket Details]]></value>
     </param>
+    <param name="tickets.viewTicketDetails">
+      <value><![CDATA[View Ticket Details]]></value>
+    </param>
     <param name="communications.campaign.ComposeMessageToReach">
       <value><![CDATA[Compose a message to reach your audience.]]></value>
     </param>
@@ -784,6 +787,9 @@
     </param>
     <param name="global.button.save">
       <value><![CDATA[Save]]></value>
+    </param>
+    <param name="global.button.saveAndReturnDashboard">
+      <value><![CDATA[Save and return to Dashboard]]></value>
     </param>
     <param name="button.downloadVcard">
       <value><![CDATA[Download vCard]]></value>
@@ -2596,6 +2602,9 @@
     <param name="sales.Trashed">
       <value><![CDATA[Trashed]]></value>
     </param>
+    <param name="sales.Archived">
+      <value><![CDATA[Archived]]></value>
+    </param>
     <param name="sales.Assigned">
       <value><![CDATA[Assigned]]></value>
     </param>
@@ -2660,6 +2669,9 @@
     </param>
     <param name="dependency.portfolioItems">
       <value><![CDATA[Examples]]></value>
+    </param>
+    <param name="dependency.onlyPageGroup">
+      <value><![CDATA[Only page group for the tab]]></value>
     </param>
     <param name="dependency.portfolioCategories">
       <value><![CDATA[Categories]]></value>
@@ -3150,6 +3162,9 @@
     <param name="button.workAsContact">
       <value><![CDATA[Work as Contact]]></value>
     </param>
+    <param name="button.convertToContact">
+      <value><![CDATA[Convert to Contact]]></value>
+    </param>
     <param name="button.assignLead">
       <value><![CDATA[Assign Lead]]></value>
     </param>
@@ -3162,11 +3177,20 @@
     <param name="button.workAsAccount">
       <value><![CDATA[Work as Account]]></value>
     </param>
+    <param name="button.archiveLead">
+      <value><![CDATA[Archive Lead]]></value>
+    </param>
+    <param name="button.convertToAccount">
+      <value><![CDATA[Convert to Account]]></value>
+    </param>
     <param name="button.calling.dots">
       <value><![CDATA[Calling...]]></value>
     </param>
     <param name="button.assignLeadR">
       <value><![CDATA[Assign Lead >]]></value>
+    </param>
+    <param name="button.assignLeadR">
+      <value><![CDATA[Reassign Lead >]]></value>
     </param>
     <param name="button.assignAccountR">
       <value><![CDATA[Assign Account >]]></value>
@@ -3179,6 +3203,9 @@
     </param>
     <param name="button.skipThisLeadR">
       <value><![CDATA[Skip this Lead >]]></value>
+    </param>
+    <param name="sales.assignmentMessage">
+      <value><![CDATA[Assignment Message]]></value>
     </param>
     <param name="sales.createContactFromLead">
       <value><![CDATA[Create Contact from Lead]]></value>
@@ -7288,6 +7315,9 @@ reflect those changes.]]></value>
     <param name="campaign.user">
       <value><![CDATA[User]]></value>
     </param>
+    <param name="campaign.superUser">
+      <value><![CDATA[Super User]]></value>
+    </param>
     <param name="campaign.noCommentsForQuestion.text">
       <value><![CDATA[No comments found for this question.]]></value>
     </param>
@@ -10146,6 +10176,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="button.submit">
       <value><![CDATA[Submit]]></value>
     </param>
+    <param name="button.moreFields">
+      <value><![CDATA[More Fields...]]></value>
+    </param>
     <param name="button.addVersion">
       <value><![CDATA[Add Version]]></value>
     </param>
@@ -10426,7 +10459,7 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Subject:]]></value>
     </param>
     <param name="mail.label.taskDetails">
-      <value><![CDATA[------Task Details------<br /><br />]]></value>
+      <value><![CDATA[------Task Details------]]></value>
     </param>
     <param name="mail.label.task">
       <value><![CDATA[Task: ]]></value>

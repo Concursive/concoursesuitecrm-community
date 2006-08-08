@@ -38,7 +38,8 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<form name="addAccountAsset" action="AccountsAssets.do?command=Update&auto-populate=true&return<%= request.getParameter("return") %>" onSubmit="return doCheck(this);" method="post">
+<form name="addAccountAsset" action="AccountsAssets.do?command=Update&auto-populate=true&return<%= request.getParameter("return") %><%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return doCheck(this);" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -52,7 +53,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-  <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+  <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <%
   if (asset.getParentList() != null && asset.getParentList().size() > 0) {
     Iterator iter = (Iterator) asset.getParentList().iterator();
@@ -60,15 +62,15 @@
       Asset parentAsset = (Asset) iter.next();
       String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
 %>
-    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" />
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>"/>
 <% }} %>
 <% String param2 = "id=" + asset.getId() + "|parentId="+asset.getId()+"|orgId="+OrgDetails.getOrgId(); %>
-<dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>">
+<dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <input type=submit value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
     <%if ("list".equals(request.getParameter("return"))) { %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= asset.getParentId() %>';this.form.dosubmit.value='false';" />
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= asset.getParentId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />
     <%}else{ %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&parentId=<%= asset.getParentId() %>';this.form.dosubmit.value='false';" />
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&parentId=<%= asset.getParentId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />
     <%}%>
     <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
     <input type="hidden" name="id" value="<%= asset.getId() %>" />
@@ -80,9 +82,9 @@
     <br>
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
     <%if ("list".equals(request.getParameter("return"))) { %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />
     <%}else{ %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>';this.form.dosubmit.value='false';" />
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />
     <%}%>
     <input type="hidden" name="dosubmit" value="true" />
   </dhv:container>

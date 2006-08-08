@@ -28,26 +28,26 @@
   function remove() {
     if (isCondition == 'true') {
       if(thisLocation == 'quotes') {
-        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId);
+        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
       } else if (thisLocation == 'accountsQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&orgId='+thisOrgId);
+        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&orgId='+thisOrgId+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
       } else if (thisLocation == 'opportunitiesQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
+        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource|popup|popupType|actionId") %>');
       } else if (thisLocation == 'accountsContactsOppsQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&orgId='+thisOrgId+'&contactId='+thisContactId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
+        scrollReload('QuotesConditions.do?command=RemoveCondition&quoteId=' + thisQuoteId+'&conditionId='+thisConditionId+'&orgId='+thisOrgId+'&contactId='+thisContactId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource|popup|popupType|actionId") %>');
       } else {
         alert(label("program.error.conditions","Programming Error. the location/module has to be specified for conditions"));
       }
-    } else if (isCondition == 'false'){
+    } else if (isCondition == 'false') {
       if(thisLocation == 'quotes') {
-        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId);
+        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
       } else if (thisLocation == 'accountsQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&orgId='+thisOrgId);
+        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&orgId='+thisOrgId+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
       } else if (thisLocation == 'opportunitiesQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
+        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource|popup|popupType|actionId") %>');
       } else if (thisLocation == 'accountsContactsOppsQuotes') {
-        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&orgId='+thisOrgId+'&contactId='+thisContactId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource") %>');
-      }else {
+        scrollReload('QuotesConditions.do?command=RemoveRemark&quoteId='+thisQuoteId+'&remarkId='+thisConditionId+'&orgId='+thisOrgId+'&contactId='+thisContactId+'&headerId='+thisHeaderId+'<%= addLinkParams(request, "viewSource|popup|popupType|actionId") %>');
+      } else {
         alert(label("program.error.remarks","Programming Error. the location/module has to be specified for remarks"));
       }
     }

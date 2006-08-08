@@ -63,9 +63,10 @@
   }
 
   function reopen() {
-    window.location.href='AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %>';
+    window.location.href='AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>';
   }
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
  <tr><td>
@@ -78,14 +79,15 @@
  </td></tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="history" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountscontacts" selected="history" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
 <dhv:permission name="accounts-accounts-contacts-history-add">
 <a href=" javascript:popURL('AccountContactsHistory.do?command=AddNote&contactId=<%= ContactDetails.getId() %>','Note','575','200','yes','yes');" ><dhv:label name="accounts.accountHistory.addANote">Add a Note</dhv:label></a><br /><br />
 </dhv:permission></dhv:evaluate>
 <span name="filterForm" id="filterForm" style="display:none">
-<form name="history" action="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %>" method="post" onSubmit="return checkForm(this);">
+<form name="history" action="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="searchcodeContactId" value="<%= ContactDetails.getId() %>"/>
 <% boolean check = accountContactHistoryListInfo.getSavedCriteria().size() == 0; %>
 <table cellpadding="4" cellspacing="0" class="empty"><tr><td>
@@ -144,18 +146,18 @@
     <tr>
       <th width="8" nowrap>&nbsp;</th>
       <th nowrap>
-        <strong><a href="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %>&column=type"><dhv:label name="reports.accounts.type">Type</dhv:label></a></strong>
+        <strong><a href="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>&column=type"><dhv:label name="reports.accounts.type">Type</dhv:label></a></strong>
         <%= accountContactHistoryListInfo.getSortIcon("type") %>
       </th>
       <th width="100%">
         <strong><dhv:label name="reports.helpdesk.ticket.maintenance.partDescription">Description</dhv:label></strong>
       </th>
       <th nowrap>
-        <strong><a href="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %>&column=entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></a></strong>
+        <strong><a href="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>&column=entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></a></strong>
         <%= accountContactHistoryListInfo.getSortIcon("entered") %>
       </th>
       <th nowrap>
-        <strong><a href="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %>&column=modified"><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></a></strong>
+        <strong><a href="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>&column=modified"><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></a></strong>
         <%= accountContactHistoryListInfo.getSortIcon("modified") %>
       </th>
     </tr>

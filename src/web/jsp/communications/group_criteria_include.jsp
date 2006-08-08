@@ -52,7 +52,12 @@ function checkOwnerSite(item) {
 function continueSetSite(value, item) {
   if (item == 'siteId') {
     var siteElement = document.getElementById('siteId2');
-    var siteId = siteElement.options[siteElement.options.selectedIndex].value;
+    var siteId = -1;
+    if ('<%= SiteCriteriaList.size() > 1 %>' == 'true') {
+      siteId = siteElement.options[siteElement.options.selectedIndex].value;
+    } else {
+      siteId = siteElement.value;
+    }
     if (value == '-1' || value == siteId) {
       return;
     }
@@ -430,19 +435,27 @@ listOfOperators[2] = numberOperators
         <tr>
           <td style="text-align: right;" nowrap>
             <span name="searchSite2a" ID="searchSite2a">
-              <dhv:label name="campaign.at">At</dhv:label>
+              <dhv:evaluate if="<%= SiteCriteriaList.size() > 1 %>">
+                <dhv:label name="campaign.at">At</dhv:label>
+              </dhv:evaluate> 
             </span>
           </td>
           <td width="100%" valign="center">
             <span name="searchSite2b" ID="searchSite2b">
-              <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
-                <% SiteCriteriaList.setJsEvent("id=\"siteId2\" onChange=\"checkOwnerSite('siteId');\""); %>
-                <%= SiteCriteriaList.getHtmlSelect("siteId2",-1) %>
-              </dhv:evaluate>
-              <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
-                 <%= SiteCriteriaList.getSelectedValue(User.getSiteId()) %>
-                <input type="hidden" name="siteId2" value="<%=User.getSiteId()%>" >
-                <input type="hidden" name="siteName2" value="<%= SiteCriteriaList.getSelectedValue(User.getSiteId()) %>" >
+              <dhv:evaluate if="<%= SiteCriteriaList.size() > 1 %>">
+                <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+                  <% SiteCriteriaList.setJsEvent("id=\"siteId2\" onChange=\"checkOwnerSite('siteId');\""); %>
+                  <%= SiteCriteriaList.getHtmlSelect("siteId2",-1) %>
+                </dhv:evaluate>
+                <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+                   <%= SiteCriteriaList.getSelectedValue(User.getSiteId()) %>
+                  <input type="hidden" name="siteId2" value="<%=User.getSiteId()%>" >
+                  <input type="hidden" name="siteName2" value="<%= SiteCriteriaList.getSelectedValue(User.getSiteId()) %>" >
+                </dhv:evaluate>
+              </dhv:evaluate> 
+              <dhv:evaluate if="<%= SiteCriteriaList.size() <= 1 %>">
+                <input type="hidden" name="siteId2" value="-1" />
+                <input type="hidden" name="siteName2" value="<%= SiteCriteriaList.getSelectedValue(User.getSiteId()) %>" />
               </dhv:evaluate>
             </span>
           </td>

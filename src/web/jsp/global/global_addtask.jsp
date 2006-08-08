@@ -22,13 +22,13 @@
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.addTask.description.focus();">
-<form name="addTask" action="MyTasks.do?command=<%= Task.getId() != -1 ? "Update" : "Insert" %>&id=<%= Task.getId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>&actionSource=<%= request.getParameter("actionSource") %>" method="post" onSubmit="return validateTask();">
+<form name="addTask" action="MyTasks.do?command=<%= Task.getId() != -1 ? "Update" : "Insert" %>&id=<%= Task.getId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>&actionSource=<%= request.getParameter("actionSource") %>&global=true" method="post" onSubmit="return validateTask();">
 <% boolean popUp = request.getParameter("popup") != null; %>
 <dhv:formMessage showSpace="false" />
 <%@ include file="../tasks/task_include.jsp" %>
 <br>
 <% if (Task.getId() == -1) { %>
-<input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" />
+  <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" />
 <%} else {%>
 <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>"/>
 <%}%>

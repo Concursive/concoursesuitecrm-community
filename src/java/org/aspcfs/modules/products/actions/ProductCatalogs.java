@@ -375,14 +375,30 @@ public final class ProductCatalogs extends CFSModule {
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
           "permissionCategory", permissionCategory);
+      if (newCatalog.getActivePrice() != null && newCatalog.getActivePrice().getPriceAmount() > 0) {
+        newCatalog.getActivePrice().setEnabled(newCatalog.getEnabled());
+        newCatalog.getActivePrice().setEnteredBy(this.getUserId(context));
+        newCatalog.getActivePrice().setModifiedBy(this.getUserId(context));
+        newCatalog.getActivePrice().setStartDate(newCatalog.getStartDate());
+        newCatalog.getActivePrice().setExpirationDate(newCatalog.getExpirationDate());
+      }
       isValid = this.validateObject(context, db, newCatalog);
+      if (newCatalog.getActivePrice() != null && newCatalog.getActivePrice().getPriceAmount() > 0) {
+        isValid = this.validateObject(context, db, newCatalog.getActivePrice()) && isValid;
+      }
       if (isValid) {
         recordInserted = newCatalog.insert(db);
+        if (recordInserted && newCatalog.getActivePrice() != null && newCatalog.getActivePrice().getPriceAmount() > 0) {
+          insCatalog = new ProductCatalog(db, newCatalog.getId());
+          newCatalog.getActivePrice().setProductId(insCatalog.getId());
+          recordInserted = newCatalog.getActivePrice().insert(db);
+        }
       }
       if (recordInserted && isValid) {
-        insCatalog = new ProductCatalog(db, newCatalog.getId());
+        if (insCatalog == null || insCatalog.getId() == -1) {
+          insCatalog = new ProductCatalog(db, newCatalog.getId());
+        }
         context.getRequest().setAttribute("productCatalog", insCatalog);
-
         String categoryId = context.getRequest().getParameter("categoryId");
         if (categoryId != null && !"".equals(categoryId.trim()) && Integer.parseInt(
             categoryId) != -1) {
@@ -391,9 +407,6 @@ public final class ProductCatalogs extends CFSModule {
           ProductCategories.buildHierarchy(db, context);
           context.getRequest().setAttribute("productCategory", parentCategory);
         }
-      } else {
-        context.getRequest().setAttribute("productCatalog", newCatalog);
-        return (executeCommandAdd(context));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -401,6 +414,10 @@ public final class ProductCatalogs extends CFSModule {
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if (!recordInserted || !isValid) {
+      context.getRequest().setAttribute("productCatalog", newCatalog);
+      return (executeCommandAdd(context));
     }
     if (recordInserted && isValid) {
       return ("InsertOK");
@@ -509,13 +526,29 @@ public final class ProductCatalogs extends CFSModule {
       cloneSource.setBuildOptions(true);
       cloneSource.setBuildPriceList(true);
       cloneSource.queryRecord(db, Integer.parseInt(cloneSourceId));
-
+      if (newCatalog.getActivePrice() != null && newCatalog.getActivePrice().getPriceAmount() > 0) {
+        newCatalog.getActivePrice().setEnabled(newCatalog.getEnabled());
+        newCatalog.getActivePrice().setEnteredBy(this.getUserId(context));
+        newCatalog.getActivePrice().setModifiedBy(this.getUserId(context));
+        newCatalog.getActivePrice().setStartDate(newCatalog.getStartDate());
+        newCatalog.getActivePrice().setExpirationDate(newCatalog.getExpirationDate());
+      }
       isValid = this.validateObject(context, db, newCatalog);
+      if (newCatalog.getActivePrice() != null && newCatalog.getActivePrice().getPriceAmount() > 0) {
+        isValid = this.validateObject(context, db, newCatalog.getActivePrice()) && isValid;
+      }
       if (isValid) {
-        recordInserted = newCatalog.insertClone(db, cloneSource);
+        recordInserted = newCatalog.insert(db);
+        if (recordInserted && newCatalog.getActivePrice() != null && newCatalog.getActivePrice().getPriceAmount() > 0) {
+          insCatalog = new ProductCatalog(db, newCatalog.getId());
+          newCatalog.getActivePrice().setProductId(insCatalog.getId());
+          recordInserted = newCatalog.getActivePrice().insert(db);
+        }
       }
       if (recordInserted && isValid) {
-        insCatalog = new ProductCatalog(db, newCatalog.getId());
+        if (insCatalog == null || insCatalog.getId() == -1) {
+          insCatalog = new ProductCatalog(db, newCatalog.getId());
+        }
         context.getRequest().setAttribute("productCatalog", insCatalog);
 
         String categoryId = context.getRequest().getParameter("categoryId");
@@ -526,9 +559,6 @@ public final class ProductCatalogs extends CFSModule {
           ProductCategories.buildHierarchy(db, context);
           context.getRequest().setAttribute("productCategory", parentCategory);
         }
-      } else {
-        context.getRequest().setAttribute("productCatalog", newCatalog);
-        return (executeCommandClone(context));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -536,6 +566,10 @@ public final class ProductCatalogs extends CFSModule {
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if (!recordInserted || !isValid) {
+      context.getRequest().setAttribute("productCatalog", newCatalog);
+      return (executeCommandClone(context));
     }
     if (recordInserted && isValid) {
       return ("SaveCloneOK");

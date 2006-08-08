@@ -210,6 +210,7 @@ function reopenContact(id) {
         </strong>
       </th>
     </tr>
+  <dhv:evaluate if="<%= SiteList.size() > 1 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.site">Site</dhv:label>
@@ -220,6 +221,10 @@ function reopenContact(id) {
         <%= showAttribute(request, "siteIdError") %>
       </td>
     </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
         <dhv:label name="accounts.accounts_revenue_modify.ReassignTo">Reassign To</dhv:label>

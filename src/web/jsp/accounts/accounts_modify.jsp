@@ -376,7 +376,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>">
+<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
       <input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
 <% if (request.getParameter("return") != null) {%>
       <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
@@ -399,6 +399,7 @@
     </th>     
   </tr>
 <dhv:include name="accounts-sites" none="true">
+  <dhv:evaluate if="<%= SiteList.size() > 1 %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.site">Site</dhv:label>
@@ -408,6 +409,10 @@
       <input type="hidden" name="siteId" value="<%=OrgDetails.getSiteId()%>" >
     </td>
   </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
 </dhv:include>
 <dhv:evaluate if="<%= OrgDetails.getOwner() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), OrgDetails.getOwner()) %>">
   <tr class="containerBody">

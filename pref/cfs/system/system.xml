@@ -26,6 +26,7 @@
     <param name="leads.search.getNextLead"/>
     <param name="leads.list.name"/>
     <param name="leads.list.entered"/>
+    <param name="sales.list.name"/>
     <param name="sales.details.workContact"/>
     <param name="sales.details.workAccount"/>
     <param name="sales.details.assignLead"/>

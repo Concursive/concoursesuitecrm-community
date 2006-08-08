@@ -26,6 +26,7 @@ import org.aspcfs.modules.troubletickets.base.TicketReplacementPart;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -69,7 +70,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
       if (thisTicket.getAssetId() == -1) {
-        return ("FormERROR");
+        return getReturn(context, "FormERROR");
       }
 
       // Build the onsiteModelList
@@ -80,18 +81,19 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       PagedListInfo sunListInfo = this.getPagedListInfo(
           context, "SunListInfo");
       sunListInfo.setLink(
-          "AccountTicketMaintenanceNotes.do?command=List&id=" + thisTicket.getId());
+          "AccountTicketMaintenanceNotes.do?command=List&id=" + thisTicket.getId()
+          + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
       thisList.setPagedListInfo(sunListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
       context.getRequest().setAttribute("maintenanceList", thisList);
-      return ("ListOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "List");
   }
 
 
@@ -122,13 +124,13 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       loadOrganizaton(context, db, thisTicket);
       // Load the form elements
       buildFormElements(context, db);
-      return ("AddOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "Add");
   }
 
 
@@ -170,13 +172,13 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
           return ("PermissionError");
       }
       context.getRequest().setAttribute("maintenanceDetails", thisSun);
-      return ("ModifyOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "Modify");
   }
 
 
@@ -359,13 +361,13 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       } else {
           return ("PermissionError");
       }
-      return ("ViewOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "View");
   }
 
 
@@ -410,7 +412,8 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
           systemStatus.getLabel("confirmdelete.caution") + "\n");
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.formHeader"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + 
+          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -470,16 +473,19 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       this.freeConnection(context, db);
     }
     // The record was deleted
+    String inline = context.getRequest().getParameter("popupType");
     if (recordDeleted) {
       context.getRequest().setAttribute(
-          "refreshUrl", "AccountTicketMaintenanceNotes.do?command=List&id=" + ticketId);
-      return getReturn(context, "Delete");
+          "refreshUrl", "AccountTicketMaintenanceNotes.do?command=List&id=" + ticketId + 
+          (inline != null && "inline".equals(inline) ? "&popup=true":""));
+      return "DeleteOK";
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
     context.getRequest().setAttribute(
-        "refreshUrl", "AccountTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId);
-    return getReturn(context, "Delete");
+        "refreshUrl", "AccountTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId +
+        (inline != null && "inline".equals(inline) ? "&popup=true":""));
+    return "DeleteOK";
   }
 
 

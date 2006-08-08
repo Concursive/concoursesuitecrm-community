@@ -19,6 +19,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <script type="text/javascript">
 function reopenContact(id) {
   if (id == '<%= ContactDetails.getId() %>') {
@@ -27,6 +29,18 @@ function reopenContact(id) {
   } else {
     return '<%= ContactDetails.getId() %>';
   }
+}
+function hideSendButton() {
+    try {
+      var send1 = document.getElementById('send1');
+      send1.value = label('label.sending','Sending...');
+      send1.disabled=true;
+    } catch (oException) {}
+    try {
+      var send2 = document.getElementById('send2');
+      send2.value = label('label.sending','Sending...');
+      send2.disabled=true;
+    } catch (oException) {}
 }
 </script>
 <form name="newMessageForm" action="ExternalContactsCallsForward.do?command=SendCall&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
@@ -49,7 +63,7 @@ function reopenContact(id) {
 </dhv:evaluate>
 <%-- End Trails --%>
 <dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
+  <input type="submit" id="send1" value="<dhv:label name="global.button.send">Send</dhv:label>" />
   <% if("list".equals(request.getParameter("return"))){ %>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "popup|view|popupType") %>'">
   <% }else{ %>
@@ -58,7 +72,7 @@ function reopenContact(id) {
   <br><br>
   <%@ include file="../newmessage_include.jsp" %>
   <br>
-  <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
+  <input type="submit" id="send2" value="<dhv:label name="global.button.send">Send</dhv:label>" />
   <% if("list".equals(request.getParameter("return"))){ %>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "popup|view|popupType") %>'">
   <% }else{ %>

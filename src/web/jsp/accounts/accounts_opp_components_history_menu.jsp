@@ -42,7 +42,7 @@
 
   //Menu link functions
   function details() {
-    window.location.href = 'OpportunitiesComponents.do?command=ComponentHistoryDetails&orgId=' + thisOrgId + '&id=' + thisCompId + '&return=details<%= addLinkParams(request, "viewSource") %>';
+    window.location.href = 'OpportunitiesComponents.do?command=ComponentHistoryDetails&orgId=' + thisOrgId + '&id=' + thisCompId + '&return=details<%= addLinkParams(request, "viewSource|popup|popupType") %>';
   }
 
 </script>

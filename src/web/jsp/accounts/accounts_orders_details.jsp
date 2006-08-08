@@ -40,7 +40,7 @@ Order Details
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="orders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="orders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <input type="hidden" name="id" value="<%=OrderDetails.getId()%>">
   <input type="hidden" name="orgId" value="<%=OrderDetails.getOrgId()%>">
   <table cellpadding="0" cellspacing="0" border="0" width="100%">

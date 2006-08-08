@@ -32,7 +32,7 @@
 </table>
 <%-- End Trails --%>
 <%= showError(request, "actionError", false) %>
-<dhv:container name="accounts" selected="orders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="orders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
     <td width="100%"><%@ include file="accounts_details_header_include.jsp" %></td>

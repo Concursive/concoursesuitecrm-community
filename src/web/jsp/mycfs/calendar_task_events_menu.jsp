@@ -21,14 +21,16 @@
   var thisTaskId = -1;
   var thisTypeId = -1;
   var thisContactId = -1;
+  var thisTicketId = -1;
   var isEmployee = 'yes';
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayTaskMenu(loc, id, typeId, taskId, contactId, isE) {
+  function displayTaskMenu(loc, id, typeId, taskId, contactId, ticketId, isE) {
     thisTaskId = taskId;
     thisTypeId = typeId;
     isEmployee = isE;
     thisContactId = contactId;
+    thisTicketId = ticketId;
     updateTaskMenu();
     if (!menu_init) {
       menu_init = true;
@@ -43,6 +45,11 @@
       showSpan('menuContactTask');
     }else{
       hideSpan('menuContactTask');
+    }
+    if (thisTicketId > -1) {
+      showSpan('menuTicketTask');
+    }else{
+      hideSpan('menuTicketTask');
     }
   }
   //Menu link functions
@@ -63,6 +70,9 @@
    }
   }
   
+  function ticketDetailsTask() {
+    window.parent.location.href = 'TroubleTickets.do?command=Details&id=' + thisTicketId;
+  }
 </script>
 <div id="menuTaskContainer" class="menu">
   <div id="menuTaskContent">
@@ -86,6 +96,17 @@
         </th>
         <td width="100%">
           <dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="tickets-tickets-view">
+      <tr id="menuTicketTask" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="ticketDetailsTask()">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="tickets.goToTicketDetails">Go to Ticket Details</dhv:label>
         </td>
       </tr>
       </dhv:permission>

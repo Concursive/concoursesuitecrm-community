@@ -230,7 +230,7 @@
       <table width="100%" border="0" cellpadding="3">
         <tr>
           <td style="text-align: center;">
-            <dhv:pagedListStatus object="SalesDashboardListInfo" showRefresh="false" showControlOnly="true"/>
+            <dhv:pagedListControl object="SalesDashboardListInfo" tdClass="row1"/>
           </td>
         </tr>
       </table>

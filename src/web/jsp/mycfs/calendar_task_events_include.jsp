@@ -61,7 +61,7 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-        <a href="javascript:displayTaskMenu('select-arrow<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>', '<%= ((pendingTask.getContactId()!=-1) && pendingTask.getContact().getEmployee())?"yes":"no" %>');"
+        <a href="javascript:displayTaskMenu('select-arrow<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>', '<%= pendingTask.getTicketId() %>', '<%= ((pendingTask.getContactId()!=-1) && pendingTask.getContact().getEmployee())?"yes":"no" %>');"
        onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTask');"><img 
         src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
      </td>

@@ -19,7 +19,7 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='QuotesProducts.do?command=Details&itemId=' + thisItemId;
+    window.location.href='QuotesProducts.do?command=Details&itemId=' + thisItemId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function modify() {

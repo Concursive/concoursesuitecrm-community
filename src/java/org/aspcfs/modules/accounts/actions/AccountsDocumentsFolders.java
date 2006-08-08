@@ -62,7 +62,7 @@ public final class AccountsDocumentsFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      return ("AddOK");
+      return getReturn(context, "Add");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

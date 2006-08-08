@@ -222,6 +222,7 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
+    String returnPage = context.getRequest().getParameter("return");
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     Connection db = null;
     int myId = -1;
@@ -626,7 +627,7 @@ public final class MyCFS extends CFSModule {
       processErrors(context, errors);
     }
     if (isValid) {
-      return ("SendMessageOK");
+      return getReturn(context, "SendMessage");
     }
     if (noteType == Constants.CFSNOTE) {
       return executeCommandNewMessage(context);
@@ -653,6 +654,10 @@ public final class MyCFS extends CFSModule {
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
+    }
+    String forward = context.getRequest().getParameter("return");
+    if (forward != null && !"".equals(forward.trim())) {
+      context.getRequest().setAttribute("return",forward);
     }
 
     context.getSession().removeAttribute("selectedContacts");
@@ -721,7 +726,7 @@ public final class MyCFS extends CFSModule {
         dueDate = systemStatus.getLabel("mail.label.dueDate");
         relevantNotes = systemStatus.getLabel("mail.label.relevantNotes");
         newNote.setBody(
-            taskDetails +
+            taskDetails + "\n" +
             task + StringUtils.toString(thisTask.getDescription()) + "\n" +
             from + StringUtils.toString(userName) + "\n" +
             dueDate + (thisTask.getDueDate() != null ? DateUtils.getServerToUserDateString(

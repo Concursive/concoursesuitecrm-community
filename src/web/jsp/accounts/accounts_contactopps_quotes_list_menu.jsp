@@ -79,16 +79,16 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='AccountContactsOppQuotes.do?command=Details&quoteId=' + thisQuoteId +'&orgId='+ thisOrgId + '&contactId=' + thisContactId + '&headerId=' + thisHeaderId + '&version=' + thisVersionId;
+    window.location.href='AccountContactsOppQuotes.do?command=Details&quoteId=' + thisQuoteId +'&orgId='+ thisOrgId + '&contactId=' + thisContactId + '&headerId=' + thisHeaderId + '<%= addLinkParams(request, "popup|popupType|actionId") %>&version=' + thisVersionId;
   }
 
   function showVersions() {
-    window.location.href='AccountContactsOppQuotes.do?command=View&version=' + thisQuoteId +'&orgId='+ thisOrgId + '&contactId=' + thisContactId + '&headerId=' + thisHeaderId;
+    window.location.href='AccountContactsOppQuotes.do?command=View&version=' + thisQuoteId +'&orgId='+ thisOrgId + '&contactId=' + thisContactId + '<%= addLinkParams(request, "popup|popupType|actionId") %>&headerId=' + thisHeaderId;
   }
 
   function modify() {
     if(modifiable == 'true') {
-      window.location.href='AccountContactsOppQuotes.do?command=ModifyForm&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&headerId=' + thisHeaderId;
+      window.location.href='AccountContactsOppQuotes.do?command=ModifyForm&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId + '&contactId=' + thisContactId + '<%= addLinkParams(request, "popup|popupType|actionId") %>&headerId=' + thisHeaderId;
     } else {
       alert(label("quote.notmodifiable","The Quote can not be modified.\nPlease either Clone or Create a new Version."));
     }
@@ -100,20 +100,20 @@
 
   function addVersion() {
     if (confirm(label("verify.quote.newversion","Are you sure you want to create a new Version of this Quote?"))) {
-      window.location.href='AccountContactsOppQuotes.do?command=AddVersion&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&headerId=' + thisHeaderId;
+      window.location.href='AccountContactsOppQuotes.do?command=AddVersion&quoteId='+ thisQuoteId +'&orgId=' + thisOrgId + '&contactId=' + thisContactId + '<%= addLinkParams(request, "popup|popupType|actionId") %>&headerId=' + thisHeaderId;
     }
   }
 
   function deleteQuote() {
-    popURLReturn('AccountContactsOppQuotes.do?command=ConfirmDelete&quoteId=' + thisQuoteId+ '&popup=true','AccountContactsOppQuotes.do?command=View', 'Delete_Quote','330','200','yes','no');
+    popURLReturn('AccountContactsOppQuotes.do?command=ConfirmDelete&quoteId=' + thisQuoteId+ '&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountContactsOppQuotes.do?command=View<%= isPopup(request)?"&popupType=inline":"" %>', 'Delete_Quote','330','200','yes','no');
   }
 
   function reopenId(tempId) {
-    window.location.href='AccountContactsOppQuotes.do?command=Details&quoteId='+tempId;
+    window.location.href='AccountContactsOppQuotes.do?command=Details&quoteId='+tempId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function reopen() {
-    window.location.href='AccountContactsOppQuotes.do?command=View&orgId='+ thisOrgId + '&contactId=' + thisContactId + '&headerId=' + thisHeaderId;
+    window.location.href='AccountContactsOppQuotes.do?command=View&orgId='+ thisOrgId + '&contactId=' + thisContactId + '&headerId=' + thisHeaderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
 </script>

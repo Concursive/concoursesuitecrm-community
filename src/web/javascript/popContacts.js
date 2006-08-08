@@ -7,7 +7,7 @@ function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  if(params != null && params != ""){
+  if (params != null && params != "") {
     params = '&' + params;
   }
   var newwin=window.open('ContactsList.do?command=ContactList&listType=single&flushtemplist=true&selectedIds='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
@@ -187,6 +187,15 @@ function setParentListActionPlan(recipientEmails,recipientIds,listType,displayFi
     } else if (source == "reassignplan") {
       opener.continueReassignPlan(recipientIds[i],actionPlanWork);
     }
+  }
+}
+
+function setParentListTask(recipientEmails, recipientIds, listType, displayFieldId, hiddenFieldId, source) {
+  if (source == "tasks") {
+    opener.assignTask(recipientIds[0]);
+  } else if (source == "tickettasks") {
+    //To be determined
+    opener.assignTask(recipientIds[0]);
   }
 }
 

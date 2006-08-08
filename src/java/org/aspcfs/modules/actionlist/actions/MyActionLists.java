@@ -22,6 +22,8 @@ import org.aspcfs.modules.actionlist.base.ActionContactsList;
 import org.aspcfs.modules.actionlist.base.ActionList;
 import org.aspcfs.modules.actionlist.base.ActionLists;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.communications.base.SearchCriteriaList;
 import org.aspcfs.modules.contacts.base.ContactList;
@@ -269,6 +271,8 @@ public final class MyActionLists extends CFSModule {
                 thisSCL, this.getUserId(context), this.getUserRange(context));
             contacts.setBuildDetails(true);
             contacts.setBuildTypes(false);
+            AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+            contacts.setGeneralContactAccessTypes(accessTypeList);
             contacts.buildList(db);
 
             //save action contacts

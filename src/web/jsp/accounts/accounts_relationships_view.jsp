@@ -28,6 +28,7 @@
 <script language="JavaScript" type="text/javascript">
   loadImages('select');
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -44,9 +45,10 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="relationships" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="relationships" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
-    <dhv:permission name="accounts-accounts-relationships-add"><a href="AccountRelationships.do?command=Add&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_relationships_view.AddARelationship">Add a  Relationship</dhv:label></a><br><br></dhv:permission>
+    <dhv:permission name="accounts-accounts-relationships-add"><a href="AccountRelationships.do?command=Add&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_relationships_view.AddARelationship">Add a  Relationship</dhv:label></a><br><br></dhv:permission>
   </dhv:evaluate>
   <%-- list --%>
   <%
@@ -92,13 +94,13 @@
               if(thisRelationship.getCategoryIdMapsFrom() == Constants.ACCOUNT_OBJECT){
                 Organization mappedOrg = (Organization) thisRelationship.getMappedObject();
           %>
-              <a href="Accounts.do?command=Details&orgId=<%= mappedOrg.getOrgId() %>"><%= toHtml(mappedOrg.getName()) %></a>
+              <a href="Accounts.do?command=Details&orgId=<%= mappedOrg.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(mappedOrg.getName()) %></a>
           <% }
             }else{
               if(thisRelationship.getCategoryIdMapsTo() == Constants.ACCOUNT_OBJECT){
                 Organization mappedOrg = (Organization) thisRelationship.getMappedObject();
           %>
-              <a href="Accounts.do?command=Details&orgId=<%= mappedOrg.getOrgId() %>"><%= toHtml(mappedOrg.getName()) %></a>
+              <a href="Accounts.do?command=Details&orgId=<%= mappedOrg.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(mappedOrg.getName()) %></a>
           <% }
             }
           %>

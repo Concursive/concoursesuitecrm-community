@@ -65,7 +65,7 @@
 
   //Menu link functions
   function details() {
-    var url = 'AccountContactsCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId;
+    var url = 'AccountContactsCalls.do?command=Details&contactId=' + thisContactId + '<%= addLinkParams(request,"popup|popupType") %>&id=' + thisCallId;
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -73,7 +73,7 @@
   }
 
   function complete() {
-    var url = 'AccountContactsCalls.do?command=Complete&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
+    var url = 'AccountContactsCalls.do?command=Complete&contactId=' + thisContactId + '<%= addLinkParams(request,"popup|popupType") %>&id=' + thisCallId + '&return=list';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -81,7 +81,7 @@
   }
 
   function modify() {
-    var url = 'AccountContactsCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
+    var url = 'AccountContactsCalls.do?command=Modify&contactId=' + thisContactId + '<%= addLinkParams(request,"popup|popupType") %>&id=' + thisCallId + '&return=list';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -89,7 +89,7 @@
   }
 
   function forward() {
-    var url ='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list&forwardType=<%= Constants.TASKS %>';
+    var url ='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '<%= addLinkParams(request,"popup|popupType") %>&id=' + thisCallId + '&return=list&forwardType=<%= Constants.TASKS %>';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -97,7 +97,7 @@
   }
   
   function deleteCall() {
-  var url = 'AccountContactsCalls.do?command=Cancel&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list&action=cancel';
+  var url = 'AccountContactsCalls.do?command=Cancel&contactId=' + thisContactId + '<%= addLinkParams(request,"popup|popupType") %>&id=' + thisCallId + '&return=list&action=cancel';
     if(thisView == 'pending'){
       url += '&view=pending';
     }

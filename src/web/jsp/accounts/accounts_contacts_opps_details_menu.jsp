@@ -50,19 +50,19 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='AccountContactsOppComponents.do?command=DetailsComponent&id=' + thisId + '&contactId=' + thisContactId;
+    window.location.href='AccountContactsOppComponents.do?command=DetailsComponent&id=' + thisId + '&contactId=' + thisContactId+'<%= addLinkParams(request, "popup|popupType") %>';
   }
 
   function log() {
-    window.location.href='AccountContactsOppComponents.do?command=ComponentHistory&contactId=' + thisContactId + '&headerId=' + thisHeaderId + '&id=' + thisId;
+    window.location.href='AccountContactsOppComponents.do?command=ComponentHistory&contactId=' + thisContactId + '&headerId=' + thisHeaderId + '&id=' + thisId+'<%= addLinkParams(request, "popup|popupType") %>';
   }
   
   function modify() {
-    window.location.href='AccountContactsOppComponents.do?command=ModifyComponent&headerId=' + thisHeaderId + '&contactId=' + thisContactId + '&id=' + thisId + '&return=list&actionSource=AccountContactsOppComponents';
+    window.location.href='AccountContactsOppComponents.do?command=ModifyComponent&headerId=' + thisHeaderId + '&contactId=' + thisContactId + '&id=' + thisId + '&return=list&actionSource=AccountContactsOppComponents'+'<%= addLinkParams(request, "popup|popupType") %>';
   }
 
   function deleteOpp() {
-    popURLReturn('AccountContactsOppComponents.do?command=ConfirmComponentDelete&contactId=' + thisContactId + '&id=' + thisId + '&popup=true','AccountContactsOpps.do?command=ViewOpps' + '&contactId=' + thisContactId, 'Delete_contact','330','200','yes','no');
+    popURLReturn('AccountContactsOppComponents.do?command=ConfirmComponentDelete&contactId=' + thisContactId + '&id=' + thisId + '&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountContactsOpps.do?command=ViewOpps' + '&contactId=' + thisContactId, 'Delete_contact','330','200','yes','no');
   }
 </script>
 <div id="menuOppContainer" class="menu">

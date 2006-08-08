@@ -251,7 +251,7 @@
       }
     }else{
       if (acctPermission) {
-        popURL('Contacts.do?command=Prepare&container=false&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','600','550','yes','yes');
+        popURL('Contacts.do?command=Prepare&container=false&popup=true&source=troubletickets&hiddensource=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','600','550','yes','yes');
       } else {
         alert(label("no.permission.addcontacts","You do not have permission to add contacts"));
         return;

@@ -82,8 +82,8 @@
  </td></tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="history" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="history" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+<dhv:container name="accounts" selected="history" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountscontacts" selected="history" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <form name="history" action="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %>" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="searchcodeContactId" value="<%= ContactDetails.getId() %>"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="empty">

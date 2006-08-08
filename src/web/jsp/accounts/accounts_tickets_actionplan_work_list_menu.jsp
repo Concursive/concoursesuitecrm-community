@@ -57,7 +57,7 @@
   
   //Menu link functions
   function details() {
-    window.location.href = 'AccountTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + thisWorkId;
+    window.location.href = 'AccountTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + thisWorkId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function reassign() {
@@ -66,7 +66,7 @@
   }
   
   function continueReassignPlan(userId, actionPlanWork) {
-    window.location.href = "AccountTicketActionPlans.do?command=Reassign&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list";
+    window.location.href = "AccountTicketActionPlans.do?command=Reassign&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
 
   function reviewNotes() {
@@ -75,15 +75,15 @@
   }
   
   function enable() {
-    window.location.href = 'AccountTicketActionPlans.do?command=Enable&ticketId=<%= ticket.getId() %>&actionPlanId=' + thisWorkId + '&enabled=true';
+    window.location.href = 'AccountTicketActionPlans.do?command=Enable&ticketId=<%= ticket.getId() %>&actionPlanId=' + thisWorkId + '&enabled=true<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function archive() {
-    window.location.href = 'AccountTicketActionPlans.do?command=Enable&ticketId=<%= ticket.getId() %>&actionPlanId=' + thisWorkId + '&enabled=false';
+    window.location.href = 'AccountTicketActionPlans.do?command=Enable&ticketId=<%= ticket.getId() %>&actionPlanId=' + thisWorkId + '&enabled=false<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function deletePlan() {
-    confirmDelete('AccountTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=' + thisWorkId);
+    confirmDelete('AccountTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=' + thisWorkId+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
 </script>
 <div id="menuActionPlanContainer" class="menu">

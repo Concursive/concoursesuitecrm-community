@@ -19,6 +19,8 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.webutils.FileDownload;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actionlist.base.*;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
@@ -260,6 +262,8 @@ public final class MyActionContacts extends CFSModule {
         contacts.setBuildDetails(true);
         contacts.setBuildTypes(false);
         contacts.setIncludeAllSites(true);
+        AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+        contacts.setGeneralContactAccessTypes(accessTypeList);
         contacts.buildList(db);
 
         //save action contacts

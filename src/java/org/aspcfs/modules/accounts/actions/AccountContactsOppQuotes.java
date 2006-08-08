@@ -34,6 +34,7 @@ import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.util.Iterator;
@@ -66,7 +67,8 @@ public final class AccountContactsOppQuotes extends CFSModule {
     if (orgid == null) {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
-
+    boolean popup = (context.getRequest().getParameter("popup") != null 
+                      && "true".equals(context.getRequest().getParameter("popup")));
     String contactId = context.getRequest().getParameter("contactId");
     if (contactId == null) {
       contactId = (String) context.getRequest().getAttribute("contactId");
@@ -77,7 +79,9 @@ public final class AccountContactsOppQuotes extends CFSModule {
     }
 
     PagedListInfo quoteListInfo = this.getPagedListInfo(context, "accountQuoteListInfo", "qe.group_id", "desc");
-    quoteListInfo.setLink("AccountContactsOppQuotes.do?command=View&orgId=" + orgid + (headerId != null ? "&headerId=" + headerId : "") + "&version=" + (version != null ? version : ""));
+    quoteListInfo.setLink("AccountContactsOppQuotes.do?command=View&orgId=" + orgid + 
+      (headerId != null ? "&headerId=" + headerId : "") + "&version=" + (version != null ? version : "") +
+      (popup?"&popup=true":""));
     Connection db = null;
     QuoteList quoteList = new QuoteList();
     Organization thisOrganization = null;
@@ -123,7 +127,7 @@ public final class AccountContactsOppQuotes extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("quoteList", quoteList);
-    return ("ListOK");
+    return getReturn(context, "List");
   }
 
 
@@ -258,7 +262,7 @@ public final class AccountContactsOppQuotes extends CFSModule {
     context.getRequest().setAttribute("quote", quote);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
     context.getRequest().setAttribute("ContactDetails", thisContact);
-    return ("DetailsOK");
+    return getReturn(context, "Details");
   }
 
 
@@ -399,7 +403,8 @@ public final class AccountContactsOppQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "AccountContactsOppQuotes.do?command=View&orgId=" + orgId + "&contactId=" + quote.getContactId() + "&headerId=" + quote.getHeaderId());
+    boolean inline = (context.getRequest().getParameter("popupType") != null && "inline".equals(context.getRequest().getParameter("popupType")));
+    context.getRequest().setAttribute("refreshUrl", "AccountContactsOppQuotes.do?command=View&orgId=" + orgId + "&contactId=" + quote.getContactId() + "&headerId=" + quote.getHeaderId()+(inline?"&popup=true":""));
     return "DeleteOK";
   }
 
@@ -452,7 +457,9 @@ public final class AccountContactsOppQuotes extends CFSModule {
       } else {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsOppQuotes.do?command=Delete&quoteId=" + quote.getId() + "&orgId=" + quote.getOrgId() + "&contactId=" + quote.getContactId() + "&headerId=" + quote.getHeaderId() + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsOppQuotes.do?command=Delete&quoteId=" 
+          + quote.getId() + "&orgId=" + quote.getOrgId() + "&contactId=" + quote.getContactId() 
+          + "&headerId=" + quote.getHeaderId() + RequestUtils.addLinkParams(context.getRequest(),"popup|popupType|actionId") + "'");
         htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
@@ -612,7 +619,7 @@ public final class AccountContactsOppQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "ModifyFormOK";
+    return getReturn(context, "ModifyForm");
   }
 
 
@@ -731,7 +738,7 @@ public final class AccountContactsOppQuotes extends CFSModule {
     if (resultCount == -1 || !isValid) {
       return executeCommandModifyForm(context);
     }
-    return getReturn(context, "Modify");
+    return "ModifyOK";
   }
 
 
@@ -953,7 +960,7 @@ public final class AccountContactsOppQuotes extends CFSModule {
     }
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
-    return "AddQuoteFormOK";
+    return getReturn(context, "AddQuoteForm");
   }
 
 

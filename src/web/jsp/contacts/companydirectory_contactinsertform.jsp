@@ -53,7 +53,7 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    
+
     if (document.addContact.company.value != "" && checkNullString(document.addContact.company.value)) {
        message += label("check.company.blanks", "- Please enter a valid company name.\r\n");
 			 formTest = false;
@@ -67,7 +67,7 @@
 			 formTest = false;
     }
 <dhv:include name="contact.phoneNumbers" none="true">
-    if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) || (checkNullString(form.phone1number.value) && !checkNullString(form.phone1ext.value)) || (checkNullString(form.phone2number.value) && !checkNullString(form.phone2ext.value)) || (checkNullString(form.phone3number.value) && !checkNullString(form.phone3ext.value))) { 
+    if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) || (checkNullString(form.phone1number.value) && !checkNullString(form.phone1ext.value)) || (checkNullString(form.phone2number.value) && !checkNullString(form.phone2ext.value)) || (checkNullString(form.phone3number.value) && !checkNullString(form.phone3ext.value))) {
       message += label("check.phone", "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n");
       formTest = false;
     }
@@ -119,9 +119,9 @@
     if(document.addContact.contactcategory[0] && document.addContact.contactcategory[1].checked){
       category = 'accounts';
     }
-    popContactTypeSelectMultiple(selectedId, category, contactId); 
+    popContactTypeSelectMultiple(selectedId, category, contactId);
   }
-  
+
   function updateCategoryInfo(category){
     if(category == "general"){
       document.addContact.orgId.value = '-1';
@@ -136,7 +136,7 @@
       window.frames['server_commands'].location.href=url;
     }
   }
-  
+
   function selectAccount(){
    document.forms['addContact'].contactcategory[1].checked='t';
    updateCategoryInfo('account');
@@ -168,28 +168,34 @@
       <strong><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></strong>
     </th>
   </tr>
-    <tr class="containerBody">
-      <td nowrap class="formLabel">
-        <dhv:label name="accounts.site">Site</dhv:label>
-      </td>
-      <td>
-        <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
-          <%= SiteList.getHtmlSelect("siteId",ContactDetails.getSiteId()) %>
-        </dhv:evaluate>
-        <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
-           <%= SiteList.getSelectedValue(User.getSiteId()) %>
-          <input type="hidden" name="siteId" value="<%=User.getSiteId()%>" >
-        </dhv:evaluate>
-        <%= showAttribute(request, "siteIdError") %>
-      </td>
-    </tr>
+  <dhv:evaluate if="<%= SiteList.size() > 1 %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.site">Site</dhv:label>
+    </td>
+    <td>
+      <dhv:evaluate if="<%= User.getSiteId() == -1 %>" >
+        <%= SiteList.getHtmlSelect("siteId",ContactDetails.getSiteId()) %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= User.getSiteId() != -1 %>" >
+         <%= SiteList.getSelectedValue(User.getSiteId()) %>
+        <input type="hidden" name="siteId" value="<%=User.getSiteId()%>" >
+      </dhv:evaluate>
+      <%= showAttribute(request, "siteIdError") %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= SiteList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       <dhv:label name="contact.contactCategory">Contact Category</dhv:label>
     </td>
     <td>
       <% if("adduser".equals(request.getParameter("source"))){ %>
       	<input type="radio" name="contactcategory" value="3" onChange="javascript:updateCategoryInfo('employee');" <%= ContactDetails.getOrgId() == -1 ? " checked" : ""%>><dhv:label name="employees.employee">Employee</dhv:label><br>
-	<input type="hidden" name="source" value="<%= request.getParameter("source") %>">
+        <input type="hidden" name="source" value="<%= request.getParameter("source") %>">
       <% }else{ %>
         <input type="radio" name="contactcategory" value="1" onChange="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>><dhv:label name="accounts.accounts_importcontact_details_include.GeneralContact">General Contact</dhv:label><br>
       <% } %>

@@ -145,11 +145,11 @@ public final class AccountTicketFolders extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "Custom Fields Details");
     if (Integer.parseInt(selectedCatId) <= 0) {
-      return ("FieldsEmptyOK");
+      return getReturn(context, "FieldsEmpty");
     } else if (recordId == null && showRecords) {
-      return ("FieldRecordListOK");
+      return getReturn(context,"FieldRecordList");
     } else {
-      return ("FieldsOK");
+      return getReturn(context, "Fields");
     }
   }
 
@@ -198,7 +198,7 @@ public final class AccountTicketFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "View Tickets", "Custom Folder List");
-    return ("FolderListOK");
+    return getReturn(context, "FolderList");
   }
 
 
@@ -251,7 +251,7 @@ public final class AccountTicketFolders extends CFSModule {
     addModuleBean(context, "View Accounts", "Add Folder Record");
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
-    return ("AddFolderRecordOK");
+    return getReturn(context, "AddFolderRecord");
   }
 
 
@@ -308,9 +308,9 @@ public final class AccountTicketFolders extends CFSModule {
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
     if (recordId.equals("-1")) {
-      return ("AddFolderRecordOK");
+      return getReturn(context, "AddFolderRecord");
     } else {
-      return ("ModifyFieldsOK");
+      return getReturn(context, "ModifyFields");
     }
   }
 
@@ -416,7 +416,7 @@ public final class AccountTicketFolders extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCount == 1 && isValid) {
-      return ("UpdateFieldsOK");
+      return getReturn(context, "UpdateFields");
     } else {
       context.getRequest().setAttribute(
           "Error", CFSModule.NOT_UPDATED_MESSAGE);
@@ -511,7 +511,7 @@ public final class AccountTicketFolders extends CFSModule {
         }
         context.getRequest().setAttribute(
             "systemStatus", this.getSystemStatus(context));
-        return ("AddFolderRecordOK");
+        return getReturn(context, "AddFolderRecord");
       } else {
         processInsertHook(context, thisCategory);
       }

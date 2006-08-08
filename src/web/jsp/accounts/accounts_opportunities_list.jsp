@@ -43,6 +43,7 @@
 <%
   boolean allowMultiple = allowMultipleComponents(pageContext, OpportunityComponent.MULTPLE_CONFIG_NAME, "multiple");
 %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -55,17 +56,18 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>" >
     <dhv:permission name="accounts-accounts-opportunities-add">
-      <a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a>
+      <a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %><%= isPopup(request)?"&popup=true&popupType=inline":"" %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a>
     </dhv:permission>
   </dhv:evaluate>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="OpportunityPagedInfo"/></center></dhv:include>
   <table width="100%" border="0">
     <tr>
-      <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">
+      <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
       <td align="left">
         <select size="1" name="listView" onChange="javascript:document.listView.submit();">
           <option <%= OpportunityPagedInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
@@ -85,7 +87,7 @@
         &nbsp;
       </th>
       <th width="100%" nowrap>
-        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.OpportunityName">Opportunity Name</dhv:label></a></strong>
+        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.OpportunityName">Opportunity Name</dhv:label></a></strong>
         <%= OpportunityPagedInfo.getSortIcon("x.description") %>
       </th>
       <th nowrap>
@@ -109,7 +111,7 @@
         </th>
       </dhv:include>
       <th nowrap>
-        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
+        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
         <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
       </th>
     </tr>
@@ -140,7 +142,7 @@
          <% } %>
       </td>
       <td valign="center">
-          <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
+          <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true<%= addLinkParams(request, "popup|popupType|actionId") %>">
           <%= toHtml(oppHeader.getDescription()) %></a>
           (<%= oppHeader.getComponentCount() %>)
         <dhv:evaluate if="<%= oppHeader.hasFiles() %>">

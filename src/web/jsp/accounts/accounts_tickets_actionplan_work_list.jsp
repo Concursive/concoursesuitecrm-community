@@ -36,9 +36,10 @@
   loadImages('select');
   
   function reassignPlan(userId, actionPlanWork) {
-    window.location.href = "AccountTicketActionPlans.do?command=Reassign&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list";
+    window.location.href = "AccountTicketActionPlans.do?command=Reassign&ticketId=<%= ticket.getId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
 </SCRIPT>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -55,17 +56,18 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <% String param1 = "id=" + ticket.getId(); %>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param="<%= "id=" + ticket.getId() %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param="<%= "id=" + ticket.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <%@ include file="accounts_ticket_header_include.jsp" %>
   <dhv:evaluate if="<%= ticket.getClosed() != null %>">
     <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
     <zeroio:tz timestamp="<%= ticket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </font><br />
   </dhv:evaluate>
-<dhv:permission name="accounts-action-plans-add"><a href="AccountTicketActionPlans.do?command=Add&ticketId=<%= ticket.getId() %>"><dhv:label name="actionPlan.addActionPlan">Add Action Plan</dhv:label></a><br /></dhv:permission>
-<form name="actionPlanListView" method="post" action="AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %>">
+<dhv:permission name="accounts-action-plans-add"><a href="AccountTicketActionPlans.do?command=Add&ticketId=<%= ticket.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="actionPlan.addActionPlan">Add Action Plan</dhv:label></a><br /></dhv:permission>
+<form name="actionPlanListView" method="post" action="AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td>
@@ -113,7 +115,7 @@
       <strong><dhv:label name="actionPlan.daysActive">Days Active</dhv:label></strong>
     </th>
     <th valign="middle" nowrap>
-      <strong><a href="AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %>&column=apw.modified"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
+      <strong><a href="AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %>&column=apw.modified<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
       <%= accountTicketPlanWorkListInfo.getSortIcon("apw.modified") %>
     </th>
   </tr>
@@ -141,7 +143,7 @@
           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td>
-      <a href="AccountTicketActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>&ticketId=<%= ticket.getId() %>"><dhv:username id="<%= thisWork.getAssignedTo() %>"/></a>
+      <a href="AccountTicketActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>&ticketId=<%= ticket.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:username id="<%= thisWork.getAssignedTo() %>"/></a>
     </td>
     <td width="25%"><%= toHtml(thisWork.getPlanName()) %></td>
     </td>

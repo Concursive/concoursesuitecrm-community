@@ -22,6 +22,7 @@
 <jsp:useBean id="categoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -36,8 +37,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="folders" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="folders" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
     &nbsp;<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -61,7 +63,7 @@
     %>
     <tr class="containerBody">
       <td class="row<%= rowid %>">
-        <a href="AccountTicketFolders.do?command=Fields&ticketId=<%= ticketDetails.getId() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a>
+        <a href="AccountTicketFolders.do?command=Fields&ticketId=<%= ticketDetails.getId() %>&catId=<%= thisCategory.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(thisCategory.getName()) %></a>
       </td>
       <td class="row<%= rowid %>">
         <%= thisCategory.getNumberOfRecords() %>

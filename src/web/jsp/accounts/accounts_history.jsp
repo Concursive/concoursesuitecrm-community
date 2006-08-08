@@ -61,9 +61,10 @@
   }
   
   function reopen() {
-    window.location.href='AccountsHistory.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';
+    window.location.href='AccountsHistory.do?command=View&orgId=<%= OrgDetails.getOrgId() + (isPopup(request)?"&popup=true":"") %>';
   }
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -76,12 +77,13 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="history" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="history" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <dhv:evaluate if="<%= OrgDetails.getTrashedDate() == null %>"><dhv:permission name="accounts-accounts-history-add">
 <a href=" javascript:popURL('AccountsHistory.do?command=AddNote&orgId=<%= OrgDetails.getOrgId() %>','Note','575','200','yes','yes');" ><dhv:label name="accounts.accountHistory.addANote">Add a Note</dhv:label></a><br /><br />
 </dhv:permission></dhv:evaluate>
 <span name="filterForm" id="filterForm" style="display:none">
-<form name="history" action="AccountsHistory.do?command=View&orgId=<%= OrgDetails.getOrgId() %>" method="post" onSubmit="return checkForm(this);">
+<form name="history" action="AccountsHistory.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= isPopup(request)?"&popup=true":"" %>" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="searchcodeOrgId" value="<%= OrgDetails.getOrgId() %>"/>
 <% boolean check = orgHistoryListInfo.getSavedCriteria().size() == 0; %>
 <table cellpadding="4" cellspacing="0" class="empty"><tr><td>

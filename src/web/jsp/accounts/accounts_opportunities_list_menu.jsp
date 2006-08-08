@@ -49,15 +49,15 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='Opportunities.do?command=Details&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&reset=true';
+    window.location.href='Opportunities.do?command=Details&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&reset=true<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function modify() {
-    window.location.href='Opportunities.do?command=Modify&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&return=list';
+    window.location.href='Opportunities.do?command=Modify&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function deleteOpp() {
-    popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=' + thisOrgId + '&headerId=' + thisHeaderId,'Opportunities.do?command=View&orgId=' + thisOrgId + '&popup=true', 'Delete_opp','320','200','yes','no');
+    popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=' + thisOrgId + '&headerId=' + thisHeaderId+'&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','Opportunities.do?command=View&orgId=' + thisOrgId + '&popup=true', 'Delete_opp','320','200','yes','no');
   }
 </script>
 <div id="menuOppContainer" class="menu">

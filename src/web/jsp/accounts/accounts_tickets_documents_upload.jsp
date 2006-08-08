@@ -26,10 +26,11 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
-<form method="post" name="inputForm" action="AccountTicketsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<form method="post" name="inputForm" action="AccountTicketsDocuments.do?command=Upload<%= addLinkParams(request, "popup|popupType|actionId") %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
 <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -45,13 +46,14 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <table border="0" cellpadding="4" cellspacing="0" width="100%">
       <tr class="subtab">
         <td>
-          <% String documentLink = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
+          <% String documentLink = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId()+ addLinkParams(request, "popup|popupType|actionId"); %>
           <zeroio:folderHierarchy module="AccountsTickets" link="<%= documentLink %>" showLastLink="false"/>
         </td>
       </tr>
@@ -61,7 +63,7 @@
     <p align="center">
       <dhv:label name="product.largeFileUploadStatement" param="break=<br />">* Large files may take a while to upload.<br />Wait for file completion message when upload is complete.</dhv:label></p>
     <input type="submit" value=" <dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload" />
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';" />
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %><%= addLinkParams(request, "popup|popupType|actionId") %>';" />
   </dhv:container>
 </dhv:container>
 </form>

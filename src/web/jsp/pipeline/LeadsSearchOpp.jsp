@@ -75,7 +75,7 @@
   function getSiteId() {
     var site = document.forms['searchLeads'].searchcodeSiteId;
     var siteId = '';
-    if ('<%= User.getUserRecord().getSiteId() == -1 %>' == 'true') {
+    if ('<%= User.getUserRecord().getSiteId() == -1 || SiteIdList.size() > 1 %>' == 'true') {
       siteId = site.options[site.options.selectedIndex].value;
     } else {
       siteId = site.value;
@@ -270,21 +270,26 @@
     </td>
   </tr>
   <dhv:include name="pipeline.search.sites" none="true">
-  <tr>
-    <td nowrap class="formLabel">
-      <dhv:label name="accounts.site">Site</dhv:label>
-    </td>
-    <td>
-     <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
-      <%= SiteIdList.getHtmlSelect("searchcodeSiteId", ("".equals(SearchOppListInfo.getSearchOptionValue("searchcodeSiteId")) ? String.valueOf(Constants.INVALID_SITE) : SearchOppListInfo.getSearchOptionValue("searchcodeSiteId"))) %>
-     </dhv:evaluate>
-     <dhv:evaluate if="<%=User.getUserRecord().getSiteId() != -1 %>" >
-        <input type="hidden" name="searchcodeSiteId" value="<%= User.getUserRecord().getSiteId() %>">
-        <%= SiteIdList.getSelectedValue(User.getUserRecord().getSiteId()) %>
-     </dhv:evaluate>
-     <input type="hidden" name="searchcodeExclusiveToSite" value="true"/>
-    </td>
-  </tr>
+  <dhv:evaluate if="<%= SiteIdList.size() > 2 %>">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.site">Site</dhv:label>
+      </td>
+      <td>
+       <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
+        <%= SiteIdList.getHtmlSelect("searchcodeSiteId", ("".equals(SearchOppListInfo.getSearchOptionValue("searchcodeSiteId")) ? String.valueOf(Constants.INVALID_SITE) : SearchOppListInfo.getSearchOptionValue("searchcodeSiteId"))) %>
+       </dhv:evaluate>
+       <dhv:evaluate if="<%=User.getUserRecord().getSiteId() != -1 %>" >
+          <input type="hidden" name="searchcodeSiteId" value="<%= User.getUserRecord().getSiteId() %>">
+          <%= SiteIdList.getSelectedValue(User.getUserRecord().getSiteId()) %>
+       </dhv:evaluate>
+       <input type="hidden" name="searchcodeExclusiveToSite" value="true"/>
+      </td>
+    </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= SiteIdList.size() <= 2 %>">
+    <input type="hidden" name="searchcodeSiteId" id="searchcodeSiteId" value="-1" />
+  </dhv:evaluate>
   </dhv:include>
 </table>
 &nbsp;<br>

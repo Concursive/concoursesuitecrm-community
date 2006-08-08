@@ -57,11 +57,12 @@ public final class AccountActionPlans extends CFSModule {
       if (orgId == null) {
         orgId = context.getRequest().getParameter("accountId");
       }
+      boolean popup = (context.getRequest().getParameter("popup") != null && "true".equals(context.getRequest().getParameter("popup")));
       Organization orgDetails = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("orgDetails", orgDetails);
 
       PagedListInfo planWorkListInfo = this.getPagedListInfo(context, "accountActionPlanWorkListInfo");
-      planWorkListInfo.setLink("AccountActionPlans.do?command=View&orgId=" + orgId);
+      planWorkListInfo.setLink("AccountActionPlans.do?command=View&orgId=" + orgId+(popup?"&popup=true":""));
       if (!planWorkListInfo.hasListFilters()) {
         planWorkListInfo.addFilter(1, "my");
         planWorkListInfo.addFilter(2, "true");
@@ -107,7 +108,7 @@ public final class AccountActionPlans extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      return "ViewOK";
+      return getReturn(context, "View");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -182,7 +183,7 @@ public final class AccountActionPlans extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "AddOK";
+    return getReturn(context, "Add");
   }
 
 
@@ -334,7 +335,7 @@ public final class AccountActionPlans extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "DetailsOK";
+    return getReturn(context, "Details");
   }
 
 
@@ -500,7 +501,8 @@ public final class AccountActionPlans extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if ("true".equals(context.getRequest().getParameter("popup"))) {
+    boolean isAccountPopup = (context.getRequest().getParameter("popupType") != null && "inline".equals(context.getRequest().getParameter("popupType")));
+    if ("true".equals(context.getRequest().getParameter("popup")) && !isAccountPopup) {
       return "UpdateStatusOK";
     }
     return (executeCommandDetails(context));

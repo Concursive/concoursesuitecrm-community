@@ -44,7 +44,8 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContactPhoneNumberListSingle.js"></script>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.addQuote.shortDescription.focus();">
-<form method="post" name="addQuote" action="AccountQuotes.do?command=Modify&versionId=<%= version %>&quoteId=<%= quoteBean.getId() %>&auto-populate=true" onSubmit="return checkForm(this);">
+<form method="post" name="addQuote" action="AccountQuotes.do?command=Modify&versionId=<%= version %>&quoteId=<%= quoteBean.getId() %>&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return checkForm(this);">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -62,12 +63,13 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <% Quote quote = quoteBean; %>
-<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountsQuotes" selected="details" object="quoteBean" param="<%= "quoteId=" + quote.getId() + "|version=" + version %>">
+<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountsQuotes" selected="details" object="quoteBean" param="<%= "quoteId=" + quote.getId() + "|version=" + version %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>"/>
-    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&version=<%= version %>&quoteId=<%= quoteBean.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';"/>
+    <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&version=<%= version %>&quoteId=<%= quoteBean.getId() %>&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"/>
     <br />
     <dhv:formMessage />
 <%
@@ -83,7 +85,7 @@
     <%@ include file="../quotes/quotes_modify_include.jsp" %>
     <br />
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" />
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&version=<%= version %>&quoteId=<%= quoteBean.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';" />
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&version=<%= version %>&quoteId=<%= quoteBean.getId() %>&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';" />
   </dhv:container>
 </dhv:container>
 </form>

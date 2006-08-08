@@ -38,6 +38,7 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -52,15 +53,16 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" object="ticketDetails" selected="activitylog" param="<%= "id=" + ticketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" object="ticketDetails" selected="activitylog" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
 <dhv:permission name="accounts-accounts-tickets-activity-log-add,tickets-activity-log-view" all="false">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
   <tr>
     <td>
      <dhv:evaluate if="<%= !ticketDetails.isTrashed() %>" >
-        <dhv:permission name="accounts-accounts-tickets-activity-log-add"><a href="AccountTicketActivityLog.do?command=Add&id=<%=ticketDetails.getId()%>"><dhv:label name="account.addActivities">Add activities</dhv:label></a><br /></dhv:permission>
+        <dhv:permission name="accounts-accounts-tickets-activity-log-add"><a href="AccountTicketActivityLog.do?command=Add&id=<%=ticketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="account.addActivities">Add activities</dhv:label></a><br /></dhv:permission>
      </dhv:evaluate>
     </td>
   </tr>

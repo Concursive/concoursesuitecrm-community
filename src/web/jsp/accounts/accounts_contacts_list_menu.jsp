@@ -56,11 +56,11 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='Contacts.do?command=Details&id=' + thisContactId;
+    window.location.href='Contacts.do?command=Details&id=' + thisContactId+'<%= isPopup(request)?"&popup=true":"" %>';
   }
 
   function modify() {
-    window.location.href='Contacts.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisContactId + '&return=list';
+    window.location.href='Contacts.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisContactId + '&return=list<%= isPopup(request)?"&popup=true":"" %>';
   }
 
   function move() {
@@ -68,19 +68,19 @@
   }
 
   function clone() {
-    window.location.href='Contacts.do?command=Clone&orgId=' + thisOrgId + '&id=' + thisContactId + '&return=list';
+    window.location.href='Contacts.do?command=Clone&orgId=' + thisOrgId + '&id=' + thisContactId + '&return=list<%= isPopup(request)?"&popup=true":"" %>';
   }
 
   function deleteContact() {
-    popURLReturn('Contacts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContactId + '&popup=true','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');
+    popURLReturn('Contacts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContactId + '&popup=true<%= isPopup(request)?"&accountpopup=true":"" %>','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');
   }
   
   function addActivity(){
-    window.location.href='AccountContactsCalls.do?command=Add&contactId=' + thisContactId + '&return=list';
+    window.location.href='AccountContactsCalls.do?command=Add&contactId=' + thisContactId + '&return=list<%= isPopup(request)?"&popup=true":"" %>';
   }
   
   function viewActivityList(){
-    window.location.href='AccountContactsCalls.do?command=View&contactId=' + thisContactId;
+    window.location.href='AccountContactsCalls.do?command=View&contactId=' + thisContactId+'<%= isPopup(request)?"&popup=true":"" %>';
   }
 
   function moveTheContact() {

@@ -59,7 +59,7 @@
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAsset');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="15%" nowrap>
-      <a href="AccountsAssets.do?command=View&id=<%= thisAsset.getId()%>"><%= toHtml(thisAsset.getSerialNumber()) %></a>
+      <a href="AccountsAssets.do?command=View&id=<%= thisAsset.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(thisAsset.getSerialNumber()) %></a>
 		</td>
     <td width="15%" nowrap>
       <%= toHtml(thisAsset.getServiceContractNumber()) %>

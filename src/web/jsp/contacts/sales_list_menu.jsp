@@ -43,7 +43,7 @@
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
-  
+
   function updateMenu() {
     if (thisIsLead == 'true') {
       hideSpan('menuAccount');
@@ -82,7 +82,7 @@
   function details() {
     window.location.href = 'Sales.do?command=Details&contactId=' + thisContactId +'&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
-  
+
   function trash() {
     var url = 'Sales.do?command=CheckAssignStatus&contactId='+thisContactId+'&next=trash&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>';
     window.frames['server_commands'].location.href=url;
@@ -92,7 +92,7 @@
     var leadStatus = '<%= Contact.LEAD_TRASHED %>';
     window.location.href="Sales.do?command=Update&contactId="+thisContactId+"&leadStatus="+leadStatus+"&from="+thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>';
   }
-  
+
   function deleteLead() {
     var url = 'Sales.do?command=CheckAssignStatus&contactId='+thisContactId+'&next=delete&from='+ thisReturnValue;
     popURL(url+'&popup=true','DeleteLead','330','200','yes','yes');
@@ -105,11 +105,11 @@
       popURL('Sales.do?command=ConfirmDelete&contactId='+thisContactId+ '&popup=true&return='+thisReturnValue+'&listForm=<%= (listForm!=null?listForm:"") %><%= addLinkParams(request, "popupType|actionId") %>', 'Delete_Lead','330','200','yes','no');
     }
   }
-  
+
   function contactDetails() {
     popURL('ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '&popup=true&viewOnly=true','Details','650','500','yes','yes');
   }
-  
+
   function orgDetails() {
     popURL('Accounts.do?command=Details&orgId=' + thisOrgId + '&popup=true&viewOnly=true','Details','650','500','yes','yes');
   }
@@ -121,7 +121,7 @@
   function continueReassign(assignTo) {
     window.location.href = 'Sales.do?command=Update&contactId='+thisContactId+'&next=&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>&owner='+assignTo;
   }
-  
+
   function reassign() {
     var URL = 'ContactsList.do?command=ContactList&listView=employees&listType=single<%= User.getUserRecord().getSiteId() > -1?"&mySiteOnly=true":"" %>&siteId='+thisSiteId+'&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true&source=leads&flushtemplist=true&usersOnly=true&leads=true&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>';
     popURL(URL, 'Action_Plan', 700, 425, 'yes', 'yes');
@@ -176,7 +176,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="button.trashLead">Trash Lead</dhv:label>
+          <dhv:label name="button.archiveLead">Archive Lead</dhv:label>
         </td>
       </tr>
       </dhv:permission>

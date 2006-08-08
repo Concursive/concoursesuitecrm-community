@@ -57,7 +57,7 @@
   //Menu link functions
   function details() {
     var url = 'AccountContactsCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId + 
-   '&trailSource=accounts';
+   '&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -66,7 +66,7 @@
   
   function complete() {
     var url = 'AccountContactsCalls.do?command=Complete&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list' + 
-   '&trailSource=accounts';
+   '&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -75,7 +75,7 @@
   
   function modify() {
     var url = 'AccountContactsCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list' + 
-   '&trailSource=accounts';
+   '&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -84,7 +84,7 @@
   
   function forward() {
     var url ='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '&id=' + thisCallId + 
-   '&trailSource=accounts&return=list&forwardType=<%= Constants.TASKS %>';
+   '&trailSource=accounts&return=list&forwardType=<%= Constants.TASKS %><%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -92,7 +92,8 @@
   }
   
   function deleteCall() {
-  var url = 'AccountContactsCalls.do?command=Cancel&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list&action=cancel&trailSource=accounts';
+  var url = 'AccountContactsCalls.do?command=Cancel&contactId=' + thisContactId + '&id=' + thisCallId + 
+            '&return=list&action=cancel&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending';
     }

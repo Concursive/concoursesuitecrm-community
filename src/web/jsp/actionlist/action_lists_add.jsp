@@ -23,6 +23,7 @@
 <jsp:useBean id="viewUser" class="java.lang.String" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <%-- <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script> --%>

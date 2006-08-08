@@ -107,10 +107,10 @@
   <tr class="row<%= rowid %>">
     <td valign="center" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-        <a href="javascript:displayMenu('select<%= count %>','menuNote', '<%= Constants.CFSNOTE %>', '<%=  thisNote.getId() %>');"
+        <a href="javascript:displayMenu('select<%= count %>','menuNote', '<%= Constants.CFSNOTE %>', '<%=  thisNote.getId() %>', '<%= thisNote.getStatus() %>');"
          onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuNote');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
-  <% if (InboxInfo.getListView().equalsIgnoreCase("new")){ %>
+  <% if (InboxInfo.getListView().equalsIgnoreCase("new")) { %>
 		<td valign="center" nowrap>
       <%= toHtml(thisNote.getStatusText()) %>
     </td>

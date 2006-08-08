@@ -31,13 +31,14 @@
 <script type="text/javascript">
 function reopenOpportunity(id) {
   if (id == '<%= opportunityHeader.getId() %>') {
-    scrollReload('Opportunities.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= isPopup(request)?"&popup=true":"" %>');
+    scrollReload('Opportunities.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "viewSource|popup|popupType") %>');
     return id;
   } else {
     return '<%= opportunityHeader.getId() %>';
   }
 }
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -53,15 +54,16 @@ function reopenOpportunity(id) {
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <%-- Begin container --%>
 <% String param1 = "id=" + opportunityHeader.getId(); 
-   String param2 = addLinkParams(request, "viewSource");
+   String param2 = addLinkParams(request, "viewSource|popup|popupType");
 %>
-<dhv:container name="accounts" selected="opportunities" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="opportunities" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -182,5 +184,5 @@ function reopenOpportunity(id) {
       </td>
     </tr>
   </table>
-  <%= addHiddenParams(request, "viewSource") %>
+  <%= addHiddenParams(request, "viewSource|popup|popupType") %>
 </dhv:container>

@@ -54,7 +54,7 @@
   function getSiteId() {
     var site = document.forms['searchTicket'].searchcodeSiteId;
     var siteId = '';
-    if ('<%= User.getUserRecord().getSiteId() == -1 %>' == 'true') {
+    if ('<%= User.getUserRecord().getSiteId() == -1 && SiteList.size() > 2 %>' == 'true') {
       siteId = site.options[site.options.selectedIndex].value;
     } else {
       siteId = site.value;
@@ -89,7 +89,7 @@
     changeDivContent('changeowner',label('label.anyone','Anyone'));
     document.forms['searchTicket'].searchcodeUserGroupId.value="-1";
     changeDivContent('changegroup',label('label.any','Any'));
-    <dhv:evaluate if="<%=User.getSiteId() == -1 %>" >
+    <dhv:evaluate if="<%=User.getSiteId() == -1 && SiteList.size() > 2 %>" >
     document.forms['searchTicket'].searchcodeSiteId.options.selectedIndex = 0;
     </dhv:evaluate>
   }
@@ -251,6 +251,7 @@
       </table>
     </td>
 	</tr>
+  <dhv:evaluate if="<%= SiteList.size() > 2 %>">
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="accounts.site">Site</dhv:label>
@@ -266,6 +267,10 @@
      </dhv:evaluate>
     </td>
   </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteList.size() <= 2 %>">
+    <input type="hidden" name="searchcodeSiteId" id="searchcodeSiteId" value="-1" />
+  </dhv:evaluate>
   <%--
   <tr>
     <td class="formLabel">

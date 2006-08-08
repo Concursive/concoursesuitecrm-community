@@ -40,9 +40,9 @@ Record Details
 <%@ include file="accounts_details_header_include.jsp" %>
 <%-- include the accounts menu --%>
 <% if("accounts".equals(trailSource)){ %>
-<dhv:container name="accounts" selected="contactopportunities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs" appendToUrl="&trailSource=accounts"/>
+<dhv:container name="accounts" selected="contactopportunities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs" appendToUrl="<%= "&trailSource=accounts"+addLinkParams(request, "popup|popupType|actionId") %>"/>
 <% }else{ %>
-<dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
+<dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>"/>
 <% } %>
 <%-- actual opportunity add form --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">

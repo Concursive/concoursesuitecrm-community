@@ -20,12 +20,17 @@
 <script language="javascript">
   var thisTicId = -1;
   var thisTaskId = -1;
+  var thisContactId = -1;
+  var thisOwnerId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, ticId, taskId, trashed) {
+  function displayMenu(loc, id, ticId, taskId, contactId, ownerId, trashed, hasAuthority) {
     thisTicId = ticId;
     thisTaskId = taskId;
-    updateMenu(trashed);
+    thisTaskId = taskId;
+    thisContactId = contactId;
+    document.getElementById('ownerid').value = thisOwnerId;
+    updateMenu(trashed, hasAuthority);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
@@ -33,18 +38,41 @@
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
 
-  function updateMenu(trashed){
-    if (trashed == 'true'){
+  function updateMenu(trashed, hasAuthority){
+    if (hasAuthority == 'true') {
+      if (trashed == 'true') {
+        hideSpan('menuAssign');
+        hideSpan('menuDelete');
+        hideSpan('menuModify');
+      } else {
+        showSpan('menuAssign');
+        showSpan('menuDelete');
+        showSpan('menuModify');
+      }
+    } else {
+      hideSpan('menuAssign');
       hideSpan('menuDelete');
       hideSpan('menuModify');
-    } else {
-      showSpan('menuDelete');
-      showSpan('menuModify');
     }
   }
   //Menu link functions
   function details() {
    popURL('TroubleTicketTasks.do?command=Details&ticketId=' + thisTicId + '&id=' + thisTaskId +  '&popup=true','CRM_Task','600','425','yes','yes');
+  }
+
+  function assignTask(ownerId) {
+    var url = 'MyTasks.do?command=ReassignTask&id='+ thisTaskId + '&ownerId=' + ownerId + '&return=myhomepage';
+    window.frames['server_commands'].location.href = url;
+  }
+
+  function reassign() {
+    if (thisTicId != '-1') {
+      popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true&ticketId='+ thisTicId +'&reset=true');
+    } else if (thisContactId != '-1') {
+        popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true&mySiteOnly=true&siteIdContact='+thisContactId+'&reset=true');
+    } else {
+      popContactsListSingle('ownerid','changeowner', 'listView=employees&tasks=true&hiddensource=tasks&usersOnly=true<%= User.getUserRecord().getSiteId() == -1? "&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&reset=true');
+    }
   }
 
   function modify() {
@@ -75,6 +103,16 @@
         </th>
         <td width="100%">
           <dhv:label name="global.button.modify">Modify</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="tickets-tickets-tasks-edit">
+      <tr id="menuAssign" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reassign();">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="actionPlan.reassign">Reassign</dhv:label>
         </td>
       </tr>
       </dhv:permission>

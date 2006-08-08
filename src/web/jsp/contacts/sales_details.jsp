@@ -52,6 +52,9 @@
       scrollReload('Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=<%= nextValue!=null?""+("true".equals(nextValue)?"true":"false"):"" %>&listForm=<%= listForm!=null?listForm:"" %>');
     }
   }
+  function reopenId(id) {
+    scrollReload('Sales.do?command=Details&contactId='+id);
+  }
   function reopenOnDelete() {
     if ('<%= from %>' == 'dashboard') {
       scrollReload('Sales.do?command=Dashboard');
@@ -83,9 +86,17 @@
     popURL(url,'WorkLead','650','500','yes','yes');
   }
 
-  function workAccount() {
+/*  function workAccount() {
     var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=account&popup=true&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
     popURL(url,'WorkLead','650','500','yes','yes');
+  }
+*/
+  function workAsAccount() {
+    popURL('Sales.do?command=AssignLead&contactId=<%= ContactDetails.getId() %>&type=workAsAccount&from=dashboard&from=<%= from %>&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popupType|actionId") %>&popup=true','ConvertToAccount','650','200','yes','yes');
+  }
+
+  function reassignLead() {
+    popURL('Sales.do?command=AssignLead&contactId=<%= ContactDetails.getId() %>&type=assignLead&from=dashboard&from=<%= from %>&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popupType|actionId") %>&popup=true','ReassignLead','650','200','yes','yes');
   }
 
   function continueWorkLead() {
@@ -106,8 +117,8 @@
 
   function modifyLead() {
     var owner = document.forms['details'].owner.value;
-    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
-    var manager = document.forms['details'].planManager.value;
+//    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
+//    var manager = document.forms['details'].planManager.value;
 
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
@@ -119,15 +130,15 @@
       }
     } catch (oException) {
     }
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=modify&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner=' + owner + '&actionPlan=' + actionPlan + '&manager=' + manager;
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=modify&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner=' + owner;
     window.frames['server_commands'].location.href=url;
   }
 
   function continueModifyLead() {
-    var rating = document.forms['details'].rating.value;
-    var comments = document.forms['details'].comments.value;
+    var rating = '<%= ContactDetails.getRating() %>';
+    var comments = '<%= ContactDetails.getComments() %>';
     var contactId = '<%= ContactDetails.getId() %>';
-    var owner = document.forms['details'].owner.value;
+    var owner = '<%= ContactDetails.getOwner() %>';
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
@@ -141,7 +152,7 @@
     var url = "Sales.do?command=Modify&contactId="+contactId+"&nextValue=true&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
     window.location.href= url;
   }
-
+/*
   function assignLead() {
     var owner = document.forms['details'].owner.value;
     var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
@@ -221,7 +232,7 @@
     url += "&comments="+comments+"&rating="+rating+"&actionPlan=" + actionPlan + "&manager=" + manager;
     window.location.href= url;
   }
-
+*/
   function trashLead() {
     var nextTo = '<%= from %>';
     try {
@@ -235,8 +246,8 @@
   }
 
   function continueTrashLead() {
-    var rating = document.forms['details'].rating.value;
-    var comments = document.forms['details'].comments.value;
+    var rating = '<%= ContactDetails.getRating() %>';
+    var comments = '<%= ContactDetails.getComments() %>';
     var leadStatus = '<%= Contact.LEAD_TRASHED %>';
     var contactId = '<%= ContactDetails.getId() %>';
     var nextTo = '<%= from %>';
@@ -301,6 +312,50 @@
   <font color="red"><dhv:label name="sales.leadBeingReadBy" param="<%= "username="+getUsername(pageContext,Integer.parseInt(readStatus),false,false,"&nbsp;") %>">This lead is being read by <dhv:username id="<%= readStatus %>" /></dhv:label></font><br />
   <br />
 </dhv:evaluate>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+	    <strong><dhv:label name="sales.leadStatus">Lead Status</dhv:label></strong>
+	  </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
+    <td>
+      <dhv:label name="<%= "sales."+ContactDetails.getLeadStatusString() %>"><%= toHtml(ContactDetails.getLeadStatusString()) %></dhv:label>
+      <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />&nbsp;&nbsp;
+    </td>
+  </tr>
+  <dhv:evaluate if="<%= SiteIdList.size() > 2 %>">
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="admin.user.site">Site</dhv:label>
+    </td>
+    <td>
+       <%= SiteIdList.getSelectedValue(ContactDetails.getSiteId()) %>
+       <input type="hidden" name="siteId" value="<%=ContactDetails.getSiteId()%>" >
+    </td>
+  </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteIdList.size() <= 2 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getOwner() > 0 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top">
+        <dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= ContactDetails.getOwner() %>"/>
+        <dhv:evaluate if="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red"><dhv:label name="accounts.accounts_importcontact_details.NoLongerAccess">(No longer has access)</dhv:label></font></dhv:evaluate>
+        <input type="hidden" name="owner" id="owner" value="<%= ContactDetails.getOwner() %>"/>
+      </td>
+    </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getOwner() <= 0 %>">
+    <input type="hidden" name="owner" id="owner" value="<%= ContactDetails.getOwner() %>"/>
+  </dhv:evaluate>
+</table>
+&nbsp;<br />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -521,10 +576,10 @@
 </dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel">
-      <dhv:label name="campaign.comments">Comments</dhv:label>
+      <dhv:label name="sales.assignmentMessage">Assignment Message</dhv:label>
     </td>
     <td>
-      <TEXTAREA NAME="comments" ROWS="3" COLS="50"><%= toString(ContactDetails.getComments()) %></TEXTAREA>
+      <%= toHtml(ContactDetails.getComments()) %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -537,54 +592,7 @@
   </tr>
 </table>
 <br />
-<table cellpadding="4" cellspacing="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong><dhv:label name="sales.leadStatus">Lead Status</dhv:label></strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
-    <td>
-      <dhv:label name="<%= "sales."+ContactDetails.getLeadStatusString() %>"><%= toHtml(ContactDetails.getLeadStatusString()) %></dhv:label>
-      <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />&nbsp;&nbsp;
-    </td>
-  </tr>
-  <tr>
-    <td nowrap class="formLabel">
-      <dhv:label name="admin.user.site">Site</dhv:label>
-    </td>
-    <td>
-       <%= SiteIdList.getSelectedValue(ContactDetails.getSiteId()) %>
-       <input type="hidden" name="siteId" value="<%=ContactDetails.getSiteId()%>" >
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">
-      <dhv:label name="actionList.assignTo">Assign To</dhv:label>
-    </td>
-    <td>
-      <table class="empty">
-        <tr>
-          <td>
-            <div id="changeowner">
-            <%if(ContactDetails.getOwner() > 0){ %>
-              <dhv:username id="<%= ContactDetails.getOwner() %>"/>
-              <dhv:evaluate if="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red"><dhv:label name="accounts.accounts_importcontact_details.NoLongerAccess">(No longer has access)</dhv:label></font></dhv:evaluate>
-            <% }else{ %>
-               <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
-            <%}%>
-            </div>
-          </td>
-          <td>
-            <input type="hidden" name="owner" id="ownerid" value="<%= ContactDetails.getOwner() == -1 ? User.getUserRecord().getId() : ContactDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true<%= User.getUserRecord().getSiteId() > -1?"&mySiteOnly=true":"" %>&siteId=<%=ContactDetails.getSiteId()%>&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
-            &nbsp; [<a href="javascript:changeDivContent('changeowner',label('none.selected','None Selected'));javascript:resetNumericFieldValue('ownerid');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
+<%--
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="sales.actionPlan">Action Plan</dhv:label>
@@ -635,23 +643,27 @@
     </td>
   </tr>
 </table>
+--%>
 <br />
 
 <span name="worklead" id="worklead" style="">
 <dhv:evaluate if="<%= ContactDetails.canWorkAsContact() %>">
   <dhv:include name="sales.details.workContact" none="true">
-  <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.workAsContact">Work as Contact</dhv:label>" onClick="javascript:workLead();" /></dhv:permission>
+  <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.convertToContact">Convert to Contact</dhv:label>" onClick="javascript:workLead();" /></dhv:permission>
   </dhv:include>
   <dhv:include name="sales.details.workAccount" none="true">
-  <dhv:evaluate if="<%= ContactDetails.getCompany() != null && !"".equals(ContactDetails.getCompany()) %>">
-    <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.workAsAccount">Work as Account</dhv:label>" onClick="javascript:workAccount();" /></dhv:permission>
-  </dhv:evaluate>
+    <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.convertToAccount">Convert to Account</dhv:label>" onClick="javascript:workAsAccount();" /></dhv:permission>
   </dhv:include>
-  <dhv:include name="sales.details.assignLead" none="true">
-  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:assignLead();" /></dhv:permission>
-  </dhv:include>
-  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.assignAccountR">Assign Account ></dhv:label>" onClick="javascript:assignAccount();" /></dhv:permission>
-  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.trashLeadR">Trash Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
+<dhv:include name="sales.details.assignLead" none="true">
+  <dhv:permission name="sales-leads-edit">
+    <dhv:evaluate if="<%= ContactDetails.getOwner() != -1 %>">
+      <input type="button" value="<dhv:label name="button.reassignLeadR">Reassign Lead ></dhv:label>" onClick="javascript:reassignLead();" />
+    </dhv:evaluate><dhv:evaluate if="<%= ContactDetails.getOwner() == -1 %>">
+      <input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:assignLead();" />
+    </dhv:evaluate>
+  </dhv:permission>
+</dhv:include>
+  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.archiveLead">Archive Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
 </dhv:evaluate>
 <dhv:include name="sales.details.skipThisLeadR" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.skipThisLeadR">Skip this Lead ></dhv:label>" onClick="javascript:skipLead();" /></dhv:permission></dhv:include>
 <dhv:include name="sales.details.modifyLead" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:modifyLead();" /></dhv:permission></dhv:include>

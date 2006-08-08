@@ -45,15 +45,15 @@
   }
   //Menu link functions
   function details() {
-    window.location.href = 'AccountsServiceContracts.do?command=View&orgId=' + thisOrgId + '&id=' + thisContractId;
+    window.location.href = 'AccountsServiceContracts.do?command=View&orgId=' + thisOrgId + '&id=' + thisContractId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function modify() {
-    window.location.href = 'AccountsServiceContracts.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisContractId + '&return=list';
+    window.location.href = 'AccountsServiceContracts.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisContractId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function deleteContract() {
-    popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContractId + '&popup=true','AccountsServiceContracts.do?command=List&orgId=' + thisOrgId,'Delete_servicecontract','330','200','yes','no');
+    popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContractId + '&popup=true<%= isPopup(request)?"&popupType=true":"" %>','AccountsServiceContracts.do?command=List&orgId=' + thisOrgId,'Delete_servicecontract','330','200','yes','no');
   }
 
 </script>

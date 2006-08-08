@@ -113,6 +113,8 @@ public final class MyTasks extends CFSModule {
     if (!(hasPermission(context, "myhomepage-tasks-add"))) {
       return ("PermissionError");
     }
+    Task newTask = (Task) context.getFormBean();
+    context.getRequest().setAttribute("Task", newTask);
     addModuleBean(context, "My Tasks", "New Task");
     return getReturn(context, "NewTask");
   }
@@ -131,6 +133,9 @@ public final class MyTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
+    if (id == null || "".equals(id.trim())) {
+      id = (String) context.getRequest().getAttribute("id");
+    }
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, Integer.parseInt(id));
@@ -162,6 +167,10 @@ public final class MyTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     int id = -1;
+    String forward = context.getRequest().getParameter("return");
+    if (forward != null && !"".equals(forward.trim())) {
+      context.getRequest().setAttribute("return",forward);
+    }
     if (!(hasPermission(context, "myhomepage-tasks-edit"))) {
       return ("PermissionError");
     }
@@ -258,6 +267,11 @@ public final class MyTasks extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    String addAnother = (String) context.getRequest().getParameter("addAnother");
+    if (addAnother != null && "true".equals(addAnother.trim())) {
+      context.getRequest().setAttribute("Task", new Task());
+      return getReturn(context, "NewTask");
+    }
     if (inserted) {
       return getReturn(context, "InsertTask");
     } else {
@@ -279,10 +293,14 @@ public final class MyTasks extends CFSModule {
       return ("PermissionError");
     }
     int count = -1;
+    String forward = context.getRequest().getParameter("return");
+    if (forward != null && !"".equals(forward.trim())) {
+      context.getRequest().setAttribute("return",forward);
+    }
     String id = context.getRequest().getParameter("id");
+    Task thisTask = (Task) context.getFormBean();
     try {
       db = this.getConnection(context);
-      Task thisTask = (Task) context.getFormBean();
       Task previousTask = new Task(db, thisTask.getId());
       thisTask.setModifiedBy(getUserId(context));
       Task oldTask = new Task(db, Integer.parseInt(id));
@@ -304,6 +322,10 @@ public final class MyTasks extends CFSModule {
     }
     if (count == -1 || !isValid) {
       return executeCommandModify(context);
+    }
+    if (forward != null && "details".equals(forward.trim())) {
+      context.getRequest().setAttribute("id", String.valueOf(thisTask.getId()));
+      return getReturn(context, "DetailsTask");
     }
     return getReturn(context, "InsertTask");
   }
@@ -480,6 +502,44 @@ public final class MyTasks extends CFSModule {
       return "SetStatusOK";
     }
     return ("-none-");
+  }
+
+
+  public String executeCommandReassignTask(ActionContext context) {
+    Connection db = null;
+    boolean isValid = false;
+    if (!(hasPermission(context, "myhomepage-tasks-edit"))) {
+      return ("PermissionError");
+    }
+    int count = -1;
+    String forward = context.getRequest().getParameter("return");
+    if (forward != null && !"".equals(forward.trim())) {
+      context.getRequest().setAttribute("return",forward);
+    }
+    String id = context.getRequest().getParameter("id");
+    String ownerId = context.getRequest().getParameter("ownerId");
+    Task thisTask = null;
+    try {
+      db = this.getConnection(context);
+      thisTask = new Task(db, Integer.parseInt(id));
+      thisTask.setOwner(ownerId);
+      Task previousTask = new Task(db, thisTask.getId());
+      thisTask.setModifiedBy(getUserId(context));
+      Task oldTask = new Task(db, Integer.parseInt(id));
+      if (!hasAuthority(context, oldTask.getOwner())) {
+        return ("PermissionError");
+      }
+      count = thisTask.update(db);
+      if (count == 1) {
+        this.processUpdateHook(context, previousTask, thisTask);
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "AssignTaskOK";
   }
 }
 

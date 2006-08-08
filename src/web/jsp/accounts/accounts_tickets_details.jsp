@@ -31,6 +31,7 @@
 <jsp:useBean id="defect" class="org.aspcfs.modules.troubletickets.base.TicketDefect" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script type="text/javascript">
 function popKbEntries() {
   var siteId = '<%= TicketDetails.getSiteId() %>';
@@ -54,35 +55,37 @@ function popKbEntries() {
 }
 </script>
 <%@ include file="../initPage.jsp" %>
-<form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
+<form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
-<a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
-<dhv:label name="accounts.tickets.details">Ticket Details</dhv:label>
+  <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+  <a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+  <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
+  <dhv:label name="accounts.tickets.details">Ticket Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="details" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="details" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
        <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
          <dhv:evaluate if="<%= TicketDetails.isClosed() %>" >
             <dhv:permission name="accounts-accounts-tickets-edit">
-              <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();">
+              <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"/>
             </dhv:permission>
          </dhv:evaluate>
          <dhv:evaluate if="<%= !TicketDetails.isClosed() %>" >
             <dhv:permission name="accounts-accounts-tickets-edit">
-              <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();">
+              <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"/>
              </dhv:permission>
             <dhv:permission name="accounts-accounts-tickets-delete">
-              <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">
+              <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true<%= isPopup(request)?"&popupType=inline":"" %>', 'Delete_ticket','320','200','yes','no');"/>
             </dhv:permission>
          </dhv:evaluate>
        </dhv:evaluate>
@@ -536,15 +539,15 @@ function popKbEntries() {
        <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
          <dhv:evaluate if="<%= TicketDetails.isClosed() %>" >
             <dhv:permission name="accounts-accounts-tickets-edit">
-              <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();">
+              <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"/>
             </dhv:permission>
          </dhv:evaluate>
          <dhv:evaluate if="<%= !TicketDetails.isClosed() %>" >
             <dhv:permission name="accounts-accounts-tickets-edit">
-              <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();">
-            </dhv:permission>
+              <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>';submit();"/>
+             </dhv:permission>
             <dhv:permission name="accounts-accounts-tickets-delete">
-              <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%=TicketDetails.getOrgId()%>&id=<%=TicketDetails.getId()%>&popup=true', 'Delete_ticket','320','200','yes','no');">
+              <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true<%= isPopup(request)?"&popupType=inline":"" %>', 'Delete_ticket','320','200','yes','no');"/>
             </dhv:permission>
          </dhv:evaluate>
        </dhv:evaluate>

@@ -146,19 +146,19 @@
       }
     }
     var statusId = '<%= ActionPlanWork.COMPLETED %>';
-    window.location.href = "AccountActionPlans.do?command=UpdateStatus&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=" + statusId;
+    window.location.href = "AccountActionPlans.do?command=UpdateStatus&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=" + statusId+'<%= addLinkParams(request, "popup|actionId") %><%= isPopup(request)?"&popupType=inline":"" %>';
   }
   
   function revertStatus(actionPlanId, itemId, nextStepId) {
-    window.location.href = "AccountActionPlans.do?command=RevertStatus&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=-1";
+    window.location.href = "AccountActionPlans.do?command=RevertStatus&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&nextStepId=" + nextStepId + "&statusId=-1<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
   
   function continueReassignPlan(userId, actionPlanWork) {
-    window.location.href = "AccountActionPlans.do?command=Reassign&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=details";
+    window.location.href = "AccountActionPlans.do?command=Reassign&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=details<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
   
   function reopen(attachment) {
-    window.location.href='AccountActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>&orgId=<%= orgDetails.getOrgId() %>'+attachment;
+    window.location.href='AccountActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>&orgId=<%= orgDetails.getOrgId() %>'+attachment+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function updateGlobalStatus(required, actionPlanId, actionId, itemId) {
@@ -167,10 +167,11 @@
         return;
       }
     }
-    window.location.href = "AccountActionPlans.do?command=UpdateGlobalStatus&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&statusId=-1";
+    window.location.href = "AccountActionPlans.do?command=UpdateGlobalStatus&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=" + actionPlanId + "&stepId=" + itemId + "&statusId=-1<%= addLinkParams(request, "popup|popupType|actionId") %>";
   }
 </script>
 <%@ include file="../initPage.jsp" %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -184,8 +185,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <dhv:formMessage />
-<dhv:container name="accounts" selected="actionplans" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="actionplans" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <%@ include file="../troubletickets/troubletickets_actionplan_work_details_include.jsp" %>
 <%--  <%@ include file="../actionplans/action_plan_work_details_include.jsp" %> --%>
 </dhv:container>

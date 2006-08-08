@@ -121,6 +121,7 @@
       </select>
     </td>
   </tr>
+  <dhv:evaluate if="<%= SiteList.size() > 2 %>">
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="accounts.site">Site</dhv:label>
@@ -136,6 +137,11 @@
     <input type="hidden" name="searchcodeExclusiveToSite" value="true"/>
     </td>
   </tr>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteList.size() <= 2 %>">
+    <input type="hidden" name="searchcodeSiteId" value="-1" />
+    <input type="hidden" name="searchcodeExclusiveToSite" value="true"/>
+  </dhv:evaluate>
   <%--
   <tr>
     <td class="formLabel">

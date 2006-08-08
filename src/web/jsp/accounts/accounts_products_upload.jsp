@@ -62,7 +62,7 @@
 </table>
 <%-- End Trails --%>
 <%= showError(request, "actionError", false) %>
-<dhv:container name="accounts" selected="products" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="products" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <% if (orderProduct.getId() != -1 ) { %>
     <input type="hidden" name="orderItemId" value="<%= orderProduct.getId() %>"/>
 <% } %>

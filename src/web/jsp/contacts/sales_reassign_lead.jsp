@@ -52,14 +52,14 @@
       if (next == "work" || next == "account") {
         opener.hideSpan("worklead");
         opener.showSpan("nextlead");
-        var rating = opener.document.forms['details'].rating.value;
-        var comments = opener.document.forms['details'].comments.value;
-        var owner = opener.document.forms['details'].owner.value;
-        var actionPlan = opener.document.forms['details'].actionPlan.options[opener.document.forms['details'].actionPlan.selectedIndex].value;
-        var manager = opener.document.forms['details'].planManager.value;
         if (next == "work") {
-          window.location.href= 'Sales.do?command=WorkLead&id=<%= contactId %>&rating='+rating+'&comments='+comments+'&popup=true&listForm=<%= (listForm != null ? listForm : "") %>';
+          window.location.href= 'Sales.do?command=WorkLead&id=<%= contactId %>&popup=true&listForm=<%= (listForm != null ? listForm : "") %>';
         } else if (next == "account") {
+          var rating = opener.document.forms['details'].rating.value;
+          var comments = opener.document.forms['details'].comments.value;
+          var owner = opener.document.forms['details'].owner.value;
+          var actionPlan = opener.document.forms['details'].actionPlan.options[opener.document.forms['details'].actionPlan.selectedIndex].value;
+          var manager = opener.document.forms['details'].planManager.value;
           window.location.href= 'Sales.do?command=WorkAccount&id=<%= contactId %>&rating='+rating+'&comments='+comments+'&popup=true&listForm=<%= (listForm != null ? listForm : "") %>&actionPlan=' + actionPlan + '&manager=' + manager + '&owner=' + owner;
         }
       } else if (next == "assign") {

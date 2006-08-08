@@ -83,6 +83,7 @@
   &nbsp;<br>
 	<center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
   <input type="hidden" name="letter">
+  <input type="hidden" name="tasks" value="<%= toHtmlValue((String) request.getAttribute("tasks")) %>">
   <input type="hidden" name="leads" value="<%= (String) request.getAttribute("leads") %>"/>
   <input type="hidden" name="type" value="<%= (request.getAttribute("type") != null? (String) request.getAttribute("type"):"") %>"/>
   <input type="hidden" name="hiddensource" value="<%= (request.getAttribute("hiddensource") != null? (String) request.getAttribute("hiddensource"):"") %>"/>
@@ -107,12 +108,16 @@
 </body>
 <%} else {%>
 <%-- The final submit --%>
+<% System.out.println("JSP:: the value of tasks is "+ (String) request.getAttribute("tasks")); %>
   <% if ("true".equals((String) request.getParameter("campaign"))) {%>
   <body onLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%=User.getBrowserId()%>');window.close()">
   <%} else if ("true".equals((String) request.getAttribute("recipient"))) {%>
   <body onLoad="javascript:setParentListRecipients(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getAttribute("hiddensource") %>','<%= request.getParameter("allowDuplicateRecipient") %>','<%= (request.getAttribute("actionItemId") != null? (String)request.getAttribute("actionItemId"):"-1") %>');window.close()">
   <%} else if ("true".equals((String) request.getParameter("actionplan"))) {%>
   <body onLoad="javascript:setParentListActionPlan(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("hiddensource") %>','<%= request.getParameter("actionPlanWork") %>','<%= request.getParameter("actionStepWork") %>','<%=User.getBrowserId()%>');window.close()">
+  <%} else if ("true".equals((String) request.getAttribute("tasks"))) {%>
+<% System.out.println("JSP:: just before opening the setParentListTask() the value of tasks is "+ (String) request.getAttribute("tasks")); %>
+  <body onLoad="javascript:setParentListTask(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("hiddensource") %>','<%=User.getBrowserId()%>');window.close();">
   <%} else if ("true".equals((String) request.getAttribute("leads"))) {%>
   <body onLoad="javascript:setParentListLead(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("source") %>','<%= request.getParameter("from") %>','<%= request.getParameter("last") %>','<%=User.getBrowserId()%>');window.close();">
   <%} else {%>

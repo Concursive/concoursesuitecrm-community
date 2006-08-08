@@ -21,6 +21,8 @@ import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.actionplans.base.ActionStepList;
 import org.aspcfs.modules.actionplans.base.ActionStep;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
@@ -2124,6 +2126,10 @@ public class Campaign extends GenericBean {
       groupContacts.setBuildDetails(false);
       groupContacts.setBuildTypes(false);
       groupContacts.setCheckExcludedFromCampaign(this.getId());
+      AccessTypeList gcAccessTypes = new AccessTypeList();
+      gcAccessTypes.setLinkModuleId(AccessType.GENERAL_CONTACTS);
+      gcAccessTypes.buildList(db);
+      groupContacts.setGeneralContactAccessTypes(gcAccessTypes);
       groupContacts.buildList(db);
       if (System.getProperty("DEBUG") != null) {
         System.out.println(
@@ -2172,6 +2178,10 @@ public class Campaign extends GenericBean {
       groupContacts.setBuildDetails(false);
       groupContacts.setBuildTypes(false);
       groupContacts.setCheckExcludedFromCampaign(this.getId());
+      AccessTypeList gcAccessTypes = new AccessTypeList();
+      gcAccessTypes.setLinkModuleId(AccessType.GENERAL_CONTACTS);
+      gcAccessTypes.buildList(db);
+      groupContacts.setGeneralContactAccessTypes(gcAccessTypes);
       groupContacts.buildList(db);
       if (System.getProperty("DEBUG") != null) {
         System.out.println(

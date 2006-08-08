@@ -41,7 +41,8 @@
     return true;
   }
 </script>
-<form method="post" name="form_notes" action="AccountQuotes.do?command=SaveNotes&quoteId=<%= quote.getId() %>&auto-populate=true" onSubmit="return checkComplete();">
+<form method="post" name="form_notes" action="AccountQuotes.do?command=SaveNotes&quoteId=<%= quote.getId() %>&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return checkComplete();">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -59,9 +60,10 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <%= showError(request, "actionError", false) %>
-<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountsQuotes" selected="notes" object="quote" param="<%= "quoteId=" + quote.getId() + "|version="+version %>">
+<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountsQuotes" selected="notes" object="quote" param="<%= "quoteId=" + quote.getId() + "|version="+version %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <% String status = quoteStatusList.getValueFromId(quote.getStatusId()); %>
     <dhv:evaluate if="<%= !quote.isTrashed() %>" >
@@ -69,7 +71,7 @@
         <dhv:permission name="accounts-quotes-edit">
           <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>
         </dhv:permission>
-        <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %>'"/><br /><br />
+        <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId|version") %>'"/><br /><br />
       </dhv:evaluate>
     </dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -83,7 +85,7 @@
     int rowid=0;
     int i=0;
     Iterator iterator = (Iterator) quoteNoteList.iterator();
-    while(iterator.hasNext()){
+    while(iterator.hasNext()) {
       QuoteNote quoteNote = (QuoteNote) iterator.next();
       i++;
       rowid = ( rowid != 1 ? 1:2 );
@@ -131,7 +133,7 @@
       <dhv:permission name="accounts-quotes-edit">
         <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>
       </dhv:permission>
-      <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%>&version=<%= version %>'"/>
+      <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountQuotes.do?command=Details&quoteId=<%= quote.getId() %>&orgId=<%= OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId|version") %>'"/>
     </dhv:evaluate>
   </dhv:evaluate>
   </dhv:container>

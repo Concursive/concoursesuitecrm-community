@@ -44,7 +44,7 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if ((form.siteId.value) == <%=Constants.INVALID_SITE%>) { 
+    if ((form.siteId.value) == <%=Constants.INVALID_SITE%>) {
       message += label("site.required", "- Site is a required field\r\n");
       formTest = false;
     }
@@ -137,6 +137,7 @@
       <strong><dhv:label name="employees.addEmployeeRecord">Add an Employee Record</dhv:label></strong>
     </th>
   </tr>
+  <dhv:evaluate if="<%= SiteList.size() > 1 %>">
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="accounts.site">Site</dhv:label>
@@ -152,6 +153,10 @@
       </dhv:evaluate>
     </td>
   </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= SiteList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>

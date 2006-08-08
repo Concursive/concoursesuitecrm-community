@@ -60,16 +60,14 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
       <% int i = 0; %>
-      <dhv:evaluate if="<%= !isPopup(request) %>">
-        <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
-          <dhv:permission name="accounts-accounts-contacts-calls-add">
-            <a href="AccountContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a><br />
-            <br />
-          </dhv:permission>
-        </dhv:evaluate>
+      <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
+        <dhv:permission name="accounts-accounts-contacts-calls-add">
+          <a href="AccountContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list<%= addLinkParams(request,"popup|popupType") %>"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a><br />
+          <br />
+        </dhv:permission>
       </dhv:evaluate>
     <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
       <%-- Pending list --%>
@@ -153,11 +151,9 @@
       <dhv:pagedListStatus showExpandLink="true" title="<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.CompletedCanceledActivities", "Completed/Canceled Activities") %>" object="AccountContactCompletedCallsListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
-          <dhv:evaluate if="<%= !isPopup(request) %>">
           <th>
             &nbsp;
           </th>
-          </dhv:evaluate>
           <th>
             <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
           </th>
@@ -184,7 +180,6 @@
             Call thisCall = (Call) jc.next();
 %>
         <tr class="row<%= rowid %>">
-        <dhv:evaluate if="<%= !isPopup(request) %>">
           <td <%= AccountContactCompletedCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getNotes())) ? "rowspan=\"2\"" : ""%> width="8" valign="top" nowrap>
              <%-- Use the unique id for opening the menu, and toggling the graphics --%>
             <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
@@ -193,7 +188,6 @@
             </dhv:evaluate>
             <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">&nbsp;</dhv:evaluate>
           </td>
-          </dhv:evaluate>
           <td valign="top" nowrap>
             <%= thisCall.getStatusString() %>
           </td>

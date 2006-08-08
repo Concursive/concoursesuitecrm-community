@@ -27,6 +27,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript">
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -40,7 +41,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <%
   if (asset.getParentList() != null && asset.getParentList().size() > 0) {
     Iterator iter = (Iterator) asset.getParentList().iterator();
@@ -49,10 +51,10 @@
       String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
       System.out.println("JSP:: printing "+ param1);
 %>
-    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" />
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>"/>
 <% }} %>
 <% String param2 = "id=" + asset.getId() + "|parentId="+asset.getId()+"|orgId="+OrgDetails.getOrgId(); %>
-<dhv:container name="accountsassets" selected="history" object="asset" param="<%= param2 %>">
+<dhv:container name="accountsassets" selected="history" object="asset" param="<%= param2 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetHistoryInfo"/>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>
@@ -60,14 +62,14 @@
           <strong><dhv:label name="accounts.tickets.number">Ticket Number</dhv:label></strong>
         </th>
         <th width="12%">
-          <b><a href="AccountsAssets.do?command=History&id=<%=asset.getId()%>&column=t.entered"><dhv:label name="accounts.accounts_asset_history.DateEntered">Date Entered</dhv:label></a></b>
+          <b><a href="AccountsAssets.do?command=History&id=<%=asset.getId()%>&column=t.entered<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_asset_history.DateEntered">Date Entered</dhv:label></a></b>
           <%= AssetHistoryInfo.getSortIcon("t.entered") %>
         </th>
         <th width="32%">
           <strong><dhv:label name="accounts.accounts_asset_history.Issue">Issue</dhv:label></strong>
         </th>
         <th width="12%" nowrap>
-          <b><a href="AccountsAssets.do?command=History&id=<%=asset.getId()%>&column=closed"><dhv:label name="accounts.accounts_asset_history.DateClosed">Date Closed</dhv:label></a></b>
+          <b><a href="AccountsAssets.do?command=History&id=<%=asset.getId()%>&column=closed<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_asset_history.DateClosed">Date Closed</dhv:label></a></b>
           <%= AssetHistoryInfo.getSortIcon("closed") %>
         </th>
         <th width="32%" nowrap>
@@ -86,7 +88,7 @@
         %>
       <tr valign="top" class="row<%=rowid%>">
         <td width=8 valign="center"  nowrap >
-            <dhv:permission name="accounts-accounts-tickets-view"><a href="AccountTickets.do?command=TicketDetails&id=<%=thisTicket.getId()%>"></dhv:permission><%=thisTicket.getPaddedId() %><dhv:permission name="accounts-accounts-tickets-view"></a></dhv:permission>
+            <dhv:permission name="accounts-accounts-tickets-view"><a href="AccountTickets.do?command=TicketDetails&id=<%=thisTicket.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"></dhv:permission><%=thisTicket.getPaddedId() %><dhv:permission name="accounts-accounts-tickets-view"></a></dhv:permission>
         </td>
         <td width="12%" >
           <zeroio:tz timestamp="<%= thisTicket.getEntered() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>

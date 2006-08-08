@@ -44,15 +44,15 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='AccountTickets.do?command=TicketDetails&id=' + thisTicId;
+    window.location.href='AccountTickets.do?command=TicketDetails&id=' + thisTicId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function modify() {
-    window.location.href='AccountTickets.do?command=ModifyTicket&id=' + thisTicId + '&return=list';
+    window.location.href='AccountTickets.do?command=ModifyTicket&id=' + thisTicId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function deleteTic() {
-    popURL('AccountTickets.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisTicId + '&popup=true', 'Delete_ticket','320','200','yes','no');
+    popURL('AccountTickets.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisTicId + '&popup=true<%= isPopup(request) ? "&popupType=inline":"" %>', 'Delete_ticket','320','200','yes','no');
   }
 
 </script>

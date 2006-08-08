@@ -63,9 +63,11 @@ public final class AccountsHistory extends CFSModule {
     if (orgid == null) {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
+    String isPopup = context.getRequest().getParameter("popup");
     PagedListInfo historyListInfo = this.getPagedListInfo(
         context, "orgHistoryListInfo");
-    historyListInfo.setLink("AccountsHistory.do?command=View&orgId=" + orgid);
+    historyListInfo.setLink("AccountsHistory.do?command=View&orgId=" + orgid+
+      (isPopup != null && "true".equals(isPopup) ? "&popup=true":""));
 
     OrganizationHistoryList historyList = new OrganizationHistoryList();
     historyList.setPagedListInfo(historyListInfo);
@@ -104,7 +106,7 @@ public final class AccountsHistory extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("ListOK");
+    return getReturn(context, "List");
   }
 
 

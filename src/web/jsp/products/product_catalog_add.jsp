@@ -23,6 +23,7 @@
 <jsp:useBean id="productCatalog" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="parentCategory" class="org.aspcfs.modules.products.base.ProductCategory" scope="request"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.addCatalog.name.focus();"> 
 <dhv:evaluate if="<%= (request.getParameter("actionReq") == null) || (request.getParameter("actionReq") != null && "".equals(request.getParameter("actionReq"))) %>">
@@ -62,6 +63,45 @@
     &nbsp;<br>
     <dhv:formMessage />
     <%@ include file="product_catalog_include.jsp" %>
+    <br />
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="product.addPrice">Add Price</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="product.msrp">MSRP</dhv:label>
+        </td>
+        <td>
+          <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+          <input type="text" name="activePrice_msrpAmount" size="15" value="<zeroio:number value="<%= productCatalog.getActivePrice().getMsrpAmount() %>" locale="<%= User.getLocale() %>" />">
+          <%= showAttribute(request, "msrpAmountError") %>
+        </td>
+      </tr>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="quotes.Price">Price</dhv:label>
+        </td>
+        <td>
+          <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+          <input type="text" name="activePrice_priceAmount" size="15" value="<zeroio:number value="<%= productCatalog.getActivePrice().getPriceAmount() %>" locale="<%= User.getLocale() %>" />">
+          <%= showAttribute(request, "priceAmountError") %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="product.cost">Cost</dhv:label>
+        </td>
+        <td>
+          <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+          <input type="text" name="activePrice_costAmount" size="15" value="<zeroio:number value="<%= productCatalog.getActivePrice().getCostAmount() %>" locale="<%= User.getLocale() %>" />">
+          <%= showAttribute(request, "costAmountError") %>
+        </td>
+      </tr>
+    </table>
     <br />
     <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">
     <input type="submit" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='ProductCatalogEditor.do?command=List&moduleId=<%= permissionCategory.getId() %>';this.form.dosubmit.value='false';">

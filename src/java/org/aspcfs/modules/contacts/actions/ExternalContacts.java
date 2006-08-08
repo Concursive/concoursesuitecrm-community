@@ -2320,7 +2320,7 @@ public final class ExternalContacts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return getReturn(context, "PrepareMessage");
+    return "PrepareMessageOK";
   }
 
 

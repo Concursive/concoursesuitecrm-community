@@ -45,7 +45,7 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
-<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= isPopup(request) || !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
+<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
 <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 <dhv:evaluate if="<%=OrgDetails.isTrashed()%>">
     <dhv:permission name="accounts-accounts-edit">

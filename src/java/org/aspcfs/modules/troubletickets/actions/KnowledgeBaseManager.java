@@ -177,6 +177,7 @@ public final class KnowledgeBaseManager extends CFSModule {
    */
   public String executeCommandCategoryJSList(ActionContext context) {
     Connection db = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       String siteId = context.getRequest().getParameter("siteId");
       String reset = context.getRequest().getParameter("reset");
@@ -188,6 +189,12 @@ public final class KnowledgeBaseManager extends CFSModule {
       if (!isSiteAccessPermitted(context, siteId)) {
         return ("PermissionError");
       }
+
+      db = this.getConnection(context);
+      LookupList siteid = new LookupList(db, "lookup_site_id");
+      siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SiteIdList", siteid);
+
 /*      if (siteId != null && !"".equals(siteId.trim())) {
         if (user.getSiteId() != -1 && user.getSiteId() != Integer.parseInt(siteId)) {
           return ("PermissionError");
@@ -197,7 +204,6 @@ public final class KnowledgeBaseManager extends CFSModule {
       if (siteId == null || "".equals(siteId.trim())) {
         siteId = String.valueOf(user.getSiteId());
       }
-      db = this.getConnection(context);
       if (reset != null && "true".equals(reset.trim())) {
         TicketCategoryList catList = new TicketCategoryList();
         catList.setCatLevel(0);

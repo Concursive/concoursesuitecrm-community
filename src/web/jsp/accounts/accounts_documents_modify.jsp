@@ -49,7 +49,11 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
-<form method="post" name="inputForm" action="AccountsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
+<form method="post" name="inputForm" action="AccountsDocuments.do?command=Update<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return checkFileForm(this);">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
+<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -63,7 +67,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
@@ -108,10 +113,7 @@
   </table>
   <br />
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="update" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View';" />
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
-	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View<%= addLinkParams(request, "popup|popupType|actionId") %>';" />
 </dhv:container>
 </form>
 </body>

@@ -163,6 +163,7 @@
         <%}%></strong>
       </th>
     </tr>
+    <dhv:evaluate if="<%= SiteList.size() > 1 %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.site">Site</dhv:label>
@@ -172,6 +173,7 @@
           <input type="hidden" name="siteId" value="<%=ContactDetails.getSiteId()%>" >
       </td>
     </tr>
+    </dhv:evaluate>
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>

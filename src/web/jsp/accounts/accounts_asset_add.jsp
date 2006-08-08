@@ -44,7 +44,8 @@
     <%}%>
   }
 </script>
-<form name="addAccountAsset" action="AccountsAssets.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addAccountAsset" action="AccountsAssets.do?command=Save&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return doCheck(this);" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -58,7 +59,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <%
   if (parent != null && parent.getId() != -1 && parent.getParentList() != null && parent.getParentList().size() > 0) {
     Iterator iter = (Iterator) parent.getParentList().iterator();
@@ -69,7 +71,7 @@
     <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>"/>
 <% }} %>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null && parent.getId() != -1 ? String.valueOf(parent.getId()):"") %>';this.form.dosubmit.value='false';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null && parent.getId() != -1 ? String.valueOf(parent.getId()):"") %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />
   <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
   <br />
   <dhv:formMessage />
@@ -78,7 +80,7 @@
   <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
   <br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null && parent.getId() != -1 ? String.valueOf(parent.getId()):"") %>';this.form.dosubmit.value='false';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null && parent.getId() != -1 ? String.valueOf(parent.getId()):"") %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />
   <input type="hidden" name="dosubmit" value="true" />
 </dhv:container>
 </form>

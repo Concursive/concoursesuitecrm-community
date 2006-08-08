@@ -17,6 +17,7 @@ package org.aspcfs.modules.website.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 
 import java.sql.Connection;
@@ -750,32 +751,32 @@ public class PageGroup extends GenericBean {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int i = 0;
-    /*
-     *  / Check for this site's dependencies
-     *  try {
-     *  i = 0;
-     *  pst = db.prepareStatement(
-     *  "SELECT count(*) as parentcount " +
-     *  "FROM quote_entry " +
-     *  "WHERE parent_id = ? ");
-     *  pst.setInt(++i, this.getId());
-     *  rs = pst.executeQuery();
-     *  if (rs.next()) {
-     *  int parentCount = rs.getInt("parentcount");
-     *  if (parentCount != 0) {
-     *  Dependency thisDependency = new Dependency();
-     *  thisDependency.setName("numberOfParentsOfThisQuote");
-     *  thisDependency.setCount(parentCount);
-     *  thisDependency.setCanDelete(true);
-     *  dependencyList.add(thisDependency);
-     *  }
-     *  }
-     *  rs.close();
-     *  pst.close();
-     *  } catch (SQLException e) {
-     *  throw new SQLException(e.getMessage());
-     *  }
-     */
+    
+     //Check for this page group's dependencies
+     try {
+     i = 0;
+     pst = db.prepareStatement(
+       "SELECT count(*) as groupcount " +
+       "FROM page_group " +
+       "WHERE tab_id = ? ");
+     pst.setInt(++i, this.getTabId());
+     rs = pst.executeQuery();
+     if (rs.next()) {
+       int groupCount = rs.getInt("groupcount");
+       if (groupCount <= 1) {
+         Dependency thisDependency = new Dependency();
+         thisDependency.setName("onlyPageGroup");
+         thisDependency.setCount(groupCount);
+         thisDependency.setCanDelete(false);
+         dependencyList.add(thisDependency);
+       }
+     }
+     rs.close();
+     pst.close();
+     } catch (SQLException e) {
+     throw new SQLException(e.getMessage());
+     }
+    
     return dependencyList;
   }
 

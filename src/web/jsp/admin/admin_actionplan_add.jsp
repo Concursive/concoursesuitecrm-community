@@ -161,6 +161,7 @@
     </td>
 	</tr>
 </dhv:include>
+  <dhv:evaluate if="<%= SiteIdList.size() > 1 %>">
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="admin.user.site">Site</dhv:label>
@@ -177,7 +178,10 @@
       </dhv:evaluate>
     </td>
   </tr>
-</table>
+  </dhv:evaluate> 
+  <dhv:evaluate if="<%= SiteIdList.size() <= 1 %>">
+    <input type="hidden" name="siteId" id="siteId" value="-1" />
+  </dhv:evaluate></table>
 <br />
 <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>
 <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="window.location.href='ActionPlanEditor.do?command=ListPlans&moduleId=<%= permissionCategory.getId() %>&constantId=<%= constantId %>';"/>

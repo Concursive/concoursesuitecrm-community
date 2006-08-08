@@ -53,11 +53,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['searchKb'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=searchKb&catCode=" + escape(value)+'&siteId='+siteId+'&from=kblist';
     if (value == '0') {
       categoryId = -1;
@@ -76,11 +76,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['searchKb'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=searchKb&subCat1=" + escape(value)+'&siteId='+siteId+'&from=kblist';
     if (value == '0') {
       categoryId = -1;
@@ -99,11 +99,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['searchKb'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=searchKb&subCat2=" + escape(value)+'&siteId='+siteId+'&from=kblist';
     if (value == '0') {
       categoryId = -1;
@@ -122,11 +122,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['searchKb'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=searchKb&subCat3=" + escape(value)+'&siteId='+siteId+'&from=kblist';
     if (value == '0') {
       categoryId = -1;
@@ -177,7 +177,7 @@
 <table cellpadding="4" cellspacing="0" class="empty"><tr><td>
   <table cellpadding="0" cellspacing="0" class="floatWrap">
   <tr>
-  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>">
     <td valign="top">
       <strong><dhv:label name="categories.switchToSite">Switch to Site</dhv:label></strong>
     </td>
@@ -188,11 +188,14 @@
     <td valign="top"><strong><dhv:label name="account.ticket.subLevel3">Sub-level 3</dhv:label></strong></td>
   </tr>
   <tr>
-  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
+  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>">
     <td valign="top">
       <% SiteIdList.setJsEvent("id=\"searchcodeSiteId\" onChange=\"reopen('&reset=true&searchcodeSiteId='+document.getElementById('searchcodeSiteId').options[document.getElementById('searchcodeSiteId').options.selectedIndex].value+'&searchcodeExclusiveToSite=true');\""); %>
       <%= SiteIdList.getHtmlSelect("searchcodeSiteId", (siteId != null?siteId:String.valueOf(User.getUserRecord().getSiteId()))) %>
     </td>                                                                    
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 || SiteIdList.size() <= 1 %>">
+    <input type="hidden" name="searchcodeSiteId" id="searchcodeSiteId" value="<%= User.getUserRecord().getSiteId() %>"/>
   </dhv:evaluate>
     <td valign="top" align="right"><%= CategoryList.getHtmlSelect("searchcodeCatCode", kbList.getCatCode()) %></td>
     <td valign="top" align="right"><%= SubList1.getHtmlSelect("searchcodeSubCat1", kbList.getSubCat1()) %></td>

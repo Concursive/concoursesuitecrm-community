@@ -29,6 +29,7 @@
 <%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="accounts_projects_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select_<%= SKIN %>');
@@ -45,13 +46,16 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="projects" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="projects" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountProjectInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
+<dhv:evaluate if="<%= !isPopup(request) %>">
       <th width="8">&nbsp;</th>
-      <th nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=p.entered"><dhv:label name="project.startDate">Start Date</dhv:label></a><%= AccountProjectInfo.getSortIcon("p.entered") %></th>
-      <th width="100%" nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=title"><dhv:label name="project.projectTitle">Project Title</dhv:label></a><%= AccountProjectInfo.getSortIcon("title") %></th>
+</dhv:evaluate>
+      <th nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=p.entered<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="project.startDate">Start Date</dhv:label></a><%= AccountProjectInfo.getSortIcon("p.entered") %></th>
+      <th width="100%" nowrap><a href="<%= AccountProjectInfo.getLink() %>&column=title<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="project.projectTitle">Project Title</dhv:label></a><%= AccountProjectInfo.getSortIcon("title") %></th>
       <th nowrap><dhv:label name="project.overallProgress">Overall Progress</dhv:label></th>
       <%--
       <th width="118">Category</th>
@@ -61,7 +65,7 @@
     if (projectList.size() == 0) {
   %>
     <tr class="row2">
-      <td colspan="4"><dhv:label name="project.noProjectsToDisplay">No projects to display.</dhv:label></td>
+      <td colspan="<%= !isPopup(request)?"3":"4" %>"><dhv:label name="project.noProjectsToDisplay">No projects to display.</dhv:label></td>
     </tr>
   <%
     }
@@ -81,12 +85,14 @@
     </dhv:evaluate>
   </dhv:permission>
     <tr class="row<%= rowid %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
       <td valign="top" align="center" nowrap>
         <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>','menuItem','<%= thisProject.getId() %>','<%= hasAccess %>');"
            onMouseOver="over(0, <%= count %>)"
            onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img
            src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
       </td>
+</dhv:evaluate>
       <td valign="top" align="center" nowrap>
         <zeroio:tz timestamp="<%= thisProject.getRequestDate() %>" dateOnly="true" default="&nbsp;" />
       </td>

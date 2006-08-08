@@ -38,7 +38,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th>
@@ -60,7 +60,7 @@
     %>
     <tr class="containerBody">
       <td class="row<%= rowid %>">
-        <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getId() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a>
+        <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getId() %>&catId=<%= thisCategory.getId() %><%= isPopup(request)?"&popup=true":"" %>"><%= toHtml(thisCategory.getName()) %></a>
       </td>
       <td class="row<%= rowid %>">
         <%= thisCategory.getNumberOfRecords() %>

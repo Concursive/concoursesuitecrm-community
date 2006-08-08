@@ -499,11 +499,12 @@ public final class AccountContactsOpps extends CFSModule {
     Connection db = null;
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
+    boolean popup = (context.getRequest().getParameter("popup") != null && "true".equals(context.getRequest().getParameter("popup")));
     PagedListInfo oppPagedListInfo = this.getPagedListInfo(context,"AccountContactOppsPagedListInfo", false);
     PagedListInfo componentListInfo = this.getPagedListInfo(
         context, "AccountContactComponentListInfo");
     componentListInfo.setLink(
-        "AccountContactsOpps.do?command=DetailsOpp&headerId=" + headerId + "&contactId=" + contactId);
+        "AccountContactsOpps.do?command=DetailsOpp&headerId=" + headerId + "&contactId=" + contactId+(popup?"&popup=true":""));
 
     try {
       db = this.getConnection(context);
@@ -849,11 +850,12 @@ public final class AccountContactsOpps extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    boolean isPopup = (context.getRequest().getParameter("sourcepopup") != null && "true".equals(context.getRequest().getParameter("sourcepopup")));
     boolean inLinePopup = "inline".equals(
         context.getRequest().getParameter("popupType"));
     if (recordDeleted) {
       context.getRequest().setAttribute(
-          "refreshUrl", "AccountContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + RequestUtils.addLinkParams(
+          "refreshUrl", "AccountContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + (isPopup?"&popup=true":"") + RequestUtils.addLinkParams(
           context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
       deleteRecentItem(context, component);
       return ("ComponentDeleteOK");
@@ -1620,7 +1622,7 @@ public final class AccountContactsOpps extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("ComponentHistoryOK");
+    return getReturn(context, "ComponentHistory");
   }
 
 
@@ -1669,8 +1671,7 @@ public final class AccountContactsOpps extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    return ("ComponentHistoryDetailsOK");
+    return getReturn(context, "ComponentHistoryDetails");
   }
 
 

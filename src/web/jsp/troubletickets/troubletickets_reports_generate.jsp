@@ -56,11 +56,11 @@
   function updateCategoryList() {
     var site = document.forms['generate'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = 'KnowledgeBaseManager.do?command=CategoryJSList&form=generate&reset=true&siteId='+siteId;
     document.forms['generate'].searchcodeCatCode.value = 0;
     document.forms['generate'].searchcodeSubCat1.value = 0;
@@ -73,11 +73,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['generate'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=generate&catCode=" + escape(value)+'&siteId='+siteId;
     if (value == '0') {
       categoryId = -1;
@@ -96,11 +96,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['generate'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=generate&subCat1=" + escape(value)+'&siteId='+siteId;
     if (value == '0') {
       categoryId = -1;
@@ -119,11 +119,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['generate'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=generate&subCat2=" + escape(value)+'&siteId='+siteId;
     if (value == '0') {
       categoryId = -1;
@@ -142,11 +142,11 @@
     var value = sel.options[sel.selectedIndex].value;
     var site = document.forms['generate'].elements['searchcodeSiteId'];
     var siteId = -1;
-    <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
-    siteId = site.options[site.options.selectedIndex].value;
-    </dhv:evaluate><dhv:evaluate if="<%= User.getUserRecord().getSiteId() > -1 %>">
-    siteId = site.value;
-    </dhv:evaluate>
+    if ("<%= User.getUserRecord().getSiteId() == -1 && SiteIdList.size() > 1 %>" == "true") {
+      siteId = site.options[site.options.selectedIndex].value;
+    } else {
+      siteId = site.value;
+    }
     var url = "KnowledgeBaseManager.do?command=CategoryJSList&form=generate&subCat3=" + escape(value)+'&siteId='+siteId;
     if (value == '0') {
       categoryId = -1;
@@ -223,6 +223,7 @@
       </select>
     </td>
   </tr>
+  <dhv:evaluate if="<%= SiteIdList.size() > 1 %>">
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="admin.user.site">Site</dhv:label>
@@ -238,6 +239,10 @@
       </dhv:evaluate>
     </td>
   </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= SiteIdList.size() <= 1 %>">
+    <input type="hidden" name="searchcodeSiteId" id="searchcodeSiteId" value="-1" />
+  </dhv:evaluate>
   <tr>
     <td nowrap class="formLabel">
       <dhv:label name="tickets.ticketCategoryLevel1">Ticket Category Level 1</dhv:label>

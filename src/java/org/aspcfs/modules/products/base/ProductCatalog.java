@@ -92,7 +92,7 @@ public class ProductCatalog extends GenericBean {
 	private ProductOptionList optionList = null;
 	private ProductCategoryList categoryList = new ProductCategoryList();
 	private ProductCatalogPricingList priceList = new ProductCatalogPricingList();
-	private ProductCatalogPricing activePrice = null;
+	private ProductCatalogPricing activePrice = new ProductCatalogPricing();
 
 	// helper properties
 	private boolean hasCustomerProduct = false;

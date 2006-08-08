@@ -71,9 +71,9 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="contactDetails" param="<%= "id=" + contactDetails.getId() %>">
-    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param="<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + orgDetails.getOrgId() +"|" + "contactId=" + contactDetails.getId() %>">
+<dhv:container name="accounts" selected="contacts" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountscontacts" selected="opportunities" object="contactDetails" param="<%= "id=" + contactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param="<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + orgDetails.getOrgId() +"|" + "contactId=" + contactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>

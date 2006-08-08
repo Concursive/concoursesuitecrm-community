@@ -89,7 +89,7 @@ function page_init() {
       HtmlOption option = (HtmlOption) resolvedByIterator.next();
       int value = Integer.parseInt(option.getValue());
       String text = option.getText();
-      if (!"".equals(text.trim())){
+      if (!"".equals(text.trim())) {
   %>
           resolvedByWidget.options[resolvedByWidget.length] = newOpt("<%= text%>", "<%= value %>");
   <%
@@ -107,7 +107,7 @@ function page_init() {
     Iterator defectIterator = defectList.iterator();
     while (defectIterator.hasNext()) {
       TicketDefect thisDefect = (TicketDefect)defectIterator.next();
-      if (thisDefect.getSiteId() == -1){
+      if (thisDefect.getSiteId() == -1) {
    %>
       defectWidget.options[defectWidget.length] = newOpt("<%= thisDefect.getTitle() %>", "<%= thisDefect.getId() %>");
    <%

@@ -18,6 +18,8 @@ package org.aspcfs.modules.communications.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Constants;
@@ -536,6 +538,8 @@ public final class CampaignManagerGroup extends CFSModule {
         contacts.setIncludeAllSites(false);
       }
       contacts.setBuildTypes(false);
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+      contacts.setGeneralContactAccessTypes(accessTypeList);
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
     } catch (Exception e) {
@@ -614,6 +618,8 @@ public final class CampaignManagerGroup extends CFSModule {
       }
       contacts.setBuildTypes(false);
       //contacts.setOrgSiteId(UserUtils.getUserSiteId(context.getRequest()));
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+      contacts.setGeneralContactAccessTypes(accessTypeList);
       contacts.buildList(db);
       } else {
         context.getRequest().setAttribute("errorString",

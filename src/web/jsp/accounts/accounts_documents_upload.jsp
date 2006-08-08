@@ -54,10 +54,11 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
-<form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload<%= addLinkParams(request, "popup|popupType|actionId") %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <input type="hidden" name="dosubmit" value="true" />
 <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>" />
 <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>" />
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -71,11 +72,12 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
-      <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId(); %>
+      <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId()+ addLinkParams(request, "popup|popupType|actionId"); %>
       <zeroio:folderHierarchy module="Accounts" link="<%= documentLink %>" />
     </td>
   </tr>
@@ -110,7 +112,7 @@
     <dhv:label name="accounts.accounts_documents_upload.WaitForUpload">Wait for file completion message when upload is complete.</dhv:label>
   </p>
   <input type="submit" value="<dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= (String)request.getAttribute("folderId") %><%= addLinkParams(request, "popup|popupType|actionId") %>';" />
 </dhv:container>
 </form>
 </body>

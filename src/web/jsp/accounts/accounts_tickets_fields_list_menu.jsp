@@ -36,15 +36,15 @@
 
   //Menu link functions
   function folderDetails() {
-    window.location.href='AccountTicketFolders.do?command=Fields&ticketId=' + thisTicketId + '&catId=' + thisCatId + '&recId=' + thisRecId;
+    window.location.href='AccountTicketFolders.do?command=Fields&ticketId=' + thisTicketId + '&catId=' + thisCatId + '&recId=' + thisRecId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function modify() {
-    window.location.href = 'AccountTicketFolders.do?command=ModifyFields&ticketId=' + thisTicketId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list';
+    window.location.href = 'AccountTicketFolders.do?command=ModifyFields&ticketId=' + thisTicketId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function deleteFolder() {
-    confirmDelete('AccountTicketFolders.do?command=DeleteFields&ticketId='+ thisTicketId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list');
+    confirmDelete('AccountTicketFolders.do?command=DeleteFields&ticketId='+ thisTicketId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
 </script>
 <div id="menuFoldersContainer" class="menu">

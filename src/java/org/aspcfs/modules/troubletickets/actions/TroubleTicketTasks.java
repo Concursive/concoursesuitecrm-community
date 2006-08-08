@@ -96,6 +96,9 @@ public final class TroubleTicketTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
+    if (id == null || "".equals(id.trim())) {
+      id = (String) context.getRequest().getAttribute("id");
+    }
     SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
@@ -130,8 +133,17 @@ public final class TroubleTicketTasks extends CFSModule {
     int resultCount = -1;
     boolean recordInserted = false;
     boolean isValid = false;
+    String addAnother = (String) context.getRequest().getParameter("addAnother");
+    if (addAnother != null && !"".equals(addAnother.trim())) {
+      context.getRequest().setAttribute("addAnother",addAnother);
+    }
+    String forward = context.getRequest().getParameter("forward");
+    if (forward != null && !"".equals(forward.trim())) {
+      context.getRequest().setAttribute("return",forward);
+    }
     String ticketId = context.getRequest().getParameter("ticketId");
     TicketTask thisTask = (TicketTask) context.getFormBean();
+    SystemStatus systemStatus = this.getSystemStatus(context);
     String action = (thisTask.getId() > 0 ? "modify" : "insert");
     if ("insert".equals(action)) {
       permission = "tickets-tickets-tasks-add";
@@ -148,6 +160,11 @@ public final class TroubleTicketTasks extends CFSModule {
         //Check access permission to organization record
         if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
           return ("PermissionError");
+        }
+        if (forward != null || addAnother != null) {
+          LookupList list = systemStatus.getLookupList(db, "lookup_ticket_task_category");
+          list.addItem(-1,systemStatus.getLabel("calendar.none.4dashes","-- None --"));
+          context.getRequest().setAttribute("ticketTaskCategoryList", list);
         }
         thisTask.setEnteredBy(getUserId(context));
         thisTask.setTicketId(Integer.parseInt(ticketId));
@@ -186,6 +203,18 @@ public final class TroubleTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     if (recordInserted || resultCount == 1) {
+      if (resultCount == 1 && forward != null && "details".equals(forward.trim())) {
+          context.getRequest().setAttribute("id", String.valueOf(thisTask.getId()));
+          context.getRequest().setAttribute("forward", forward);
+          return executeCommandDetails(context);
+      }
+      if (recordInserted && addAnother != null && "true".equals(addAnother.trim())) {
+        Task task = new Task();
+        task.setTicketId(ticketId);
+        context.getRequest().setAttribute("Task", task);
+        return "AddTaskOK";
+      }
+      
       addModuleBean(context, "View Tickets", "Ticket Save OK");
       return ("SaveOK");
     }
@@ -254,6 +283,10 @@ public final class TroubleTicketTasks extends CFSModule {
     }
     Connection db = null;
     Task thisTask = null;
+    String forward = context.getRequest().getParameter("forward");
+    if (forward != null && !"".equals(forward.trim())) {
+      context.getRequest().setAttribute("forward",forward);
+    }
     String id = context.getRequest().getParameter("id");
     addModuleBean(context, "View Tickets", "Add Ticket");
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -298,7 +331,7 @@ public final class TroubleTicketTasks extends CFSModule {
       }
       return ("PermissionError");
     }
-    return ("AddTaskOK");
+    return "AddTaskOK";
   }
 
 
@@ -314,6 +347,7 @@ public final class TroubleTicketTasks extends CFSModule {
     }
     Connection db = null;
     Task thisTask = null;
+    String sourcePopup = context.getRequest().getParameter("sourcePopup");
     String id = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
@@ -331,6 +365,9 @@ public final class TroubleTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Task", thisTask);
+    if (sourcePopup != null && "true".equals(sourcePopup.trim())) {
+      return ("DeletePopupOK");
+    }
     context.getRequest().setAttribute(
         "refreshUrl", "TroubleTicketTasks.do?command=List&ticketId=" + thisTask.getLinkDetails().getLinkItemId());
     return ("DeleteOK");
@@ -351,6 +388,7 @@ public final class TroubleTicketTasks extends CFSModule {
     Task thisTask = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = context.getRequest().getParameter("id");
+    String sourcePopup = context.getRequest().getParameter("sourcePopup");
     try {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -368,11 +406,11 @@ public final class TroubleTicketTasks extends CFSModule {
         if (dependencies.size() == 0) {
           htmlDialog.setShowAndConfirm(false);
           htmlDialog.setDeleteUrl(
-              "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
+              "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "&sourcePopup="+sourcePopup+"'");
         } else {
           htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
           htmlDialog.addButton(
-              systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
+              systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "&sourcePopup="+sourcePopup+"'");
           htmlDialog.addButton(
               systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
         }

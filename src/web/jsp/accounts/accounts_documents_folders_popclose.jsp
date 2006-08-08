@@ -34,7 +34,7 @@
   }
   if (returnPage != null) {
     if ("AccountsDocuments".equals(returnPage)) {
-      location = "AccountsDocuments.do?command=View&orgId="+ param;
+      location = "AccountsDocuments.do?command=View&orgId="+ param+'&accountfolders=true';
     }
   }
   if (location == null) {

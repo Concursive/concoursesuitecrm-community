@@ -679,6 +679,9 @@ public class LookupElement {
     pst.execute();
     pst.close();
   }
-
+  
+  public String toString() {
+    return String.valueOf(code +"-"+description);
+  }
 }
 

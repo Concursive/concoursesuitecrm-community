@@ -235,23 +235,25 @@ function popKbEntries() {
     popURL(url, 'KnowledgeBase','600','550','yes','yes');
   }
 </script>
-<form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" method="post">
+<form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" method="post">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
-<dhv:label name="tickets.add">Add Ticket</dhv:label>
+  <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+  <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+  <a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
+  <dhv:label name="tickets.add">Add Ticket</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="return checkForm(this.form);"/>
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
   <%= showAttribute(request, "closedError") %>
   <br />
   <dhv:formMessage/>
@@ -302,7 +304,7 @@ function popKbEntries() {
   <%}%>
         <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
         <dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
-        [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>&popup=true', 'New_Contact','600','550','yes','yes');"><dhv:label name="account.createNewContact">Create New Contact</dhv:label></a>]
+        [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>&popup=true&hiddensource=addticket', 'New_Contact','600','550','yes','yes');"><dhv:label name="account.createNewContact">Create New Contact</dhv:label></a>]
         </dhv:evaluate>
        </td>
     </tr>
@@ -694,7 +696,7 @@ function popKbEntries() {
   </dhv:evaluate >
   <br />
   <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="return checkForm(this.form);"/>
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
   <input type="hidden" name="close" value="">
   <input type="hidden" name="refresh" value="-1">
   <input type="hidden" name="modified" value="<%=  TicketDetails.getModified() %>" />

@@ -35,6 +35,7 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -47,10 +48,11 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
     <dhv:permission name="accounts-service-contracts-add">
-      <a href="AccountsServiceContracts.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="account.sc.addServiceContract">Add Service Contract</dhv:label></a>
+      <a href="AccountsServiceContracts.do?command=Add&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="account.sc.addServiceContract">Add Service Contract</dhv:label></a>
     </dhv:permission>
   </dhv:evaluate>
   <dhv:permission name="accounts-service-contracts-add" none="true"></dhv:permission>
@@ -95,7 +97,7 @@
            onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuServiceContract');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0" /></a>
       </td>
       <td width="20%">
-        <a href="AccountsServiceContracts.do?command=View&orgId=<%=request.getParameter("orgId")%>&id=<%= thisContract.getId()%>"><%= toHtml(thisContract.getServiceContractNumber()) %></a>
+        <a href="AccountsServiceContracts.do?command=View&orgId=<%=request.getParameter("orgId")%>&id=<%= thisContract.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(thisContract.getServiceContractNumber()) %></a>
       </td>
       <td width="20%">
       <dhv:evaluate if="<%= thisContract.getCategory() > 0 %>">

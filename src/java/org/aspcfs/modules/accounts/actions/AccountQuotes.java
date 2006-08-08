@@ -33,6 +33,7 @@ import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
@@ -72,11 +73,11 @@ public final class AccountQuotes extends CFSModule {
     if (headerId == null) {
       headerId = (String) context.getRequest().getAttribute("headerId");
     }
-
     PagedListInfo quoteListInfo = this.getPagedListInfo(
         context, "accountQuoteListInfo", "qe.group_id", "desc");
     quoteListInfo.setLink(
-        "AccountQuotes.do?command=View&orgId=" + orgid + "&version=" + (version != null ? version : ""));
+        "AccountQuotes.do?command=View&orgId=" + orgid + 
+        RequestUtils.addLinkParams(context.getRequest(),"version|popup|popupType"));
     Connection db = null;
     QuoteList quoteList = new QuoteList();
     Organization thisOrganization = null;
@@ -124,7 +125,7 @@ public final class AccountQuotes extends CFSModule {
     }
     context.getRequest().setAttribute("quoteList", quoteList);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    return ("ListOK");
+    return getReturn(context, "List");
   }
 
 
@@ -248,7 +249,7 @@ public final class AccountQuotes extends CFSModule {
     }
     context.getRequest().setAttribute("quote", quote);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    return ("DetailsOK");
+    return getReturn(context, "Details");
   }
 
 
@@ -398,7 +399,7 @@ public final class AccountQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "SaveNotesOK";
+    return getReturn(context, "SaveNotes");
   }
 
 
@@ -485,8 +486,10 @@ public final class AccountQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    boolean inline = (context.getRequest().getParameter("popupType") != null 
+                      && "inline".equals(context.getRequest().getParameter("popupType")));
     context.getRequest().setAttribute(
-        "refreshUrl", "AccountQuotes.do?command=View&orgId=" + orgId);
+        "refreshUrl", "AccountQuotes.do?command=View&orgId=" + orgId + (inline?"&popup=true":""));
     return "DeleteOK";
   }
 
@@ -543,7 +546,8 @@ public final class AccountQuotes extends CFSModule {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies"));
         htmlDialog.addButton(
-            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountQuotes.do?command=Delete&quoteId=" + quote.getId() + "&orgId=" + quote.getOrgId() + "'");
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountQuotes.do?command=Delete&quoteId=" + quote.getId() + "&orgId=" + quote.getOrgId() 
+               + RequestUtils.addLinkParams(context.getRequest(), "version|popup|popupType")+ "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
@@ -698,7 +702,7 @@ public final class AccountQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "ModifyFormOK";
+    return getReturn(context, "ModifyForm");
   }
 
 
@@ -807,6 +811,10 @@ public final class AccountQuotes extends CFSModule {
     }
     if (recordCount == -1 || !isValid) {
       return executeCommandModifyForm(context);
+    }
+    boolean isAddVersion = (context.getRequest().getParameter("newVersion") != null && "true".equals(context.getRequest().getParameter("newVersion"))); 
+    if (isAddVersion) {
+      return "ModifyAddVersionOK";
     }
     return getReturn(context, "Modify");
   }
@@ -1017,7 +1025,7 @@ public final class AccountQuotes extends CFSModule {
     }
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
-    return "AddQuoteFormOK";
+    return getReturn(context, "AddQuoteForm");
   }
 
 
@@ -1126,7 +1134,7 @@ public final class AccountQuotes extends CFSModule {
     }
 
     addModuleBean(context, "View Quotes", "View Quote Details");
-    return ("ViewHistoryOK");
+    return getReturn(context, "ViewHistory");
   }
 }
 

@@ -23,6 +23,7 @@
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -36,11 +37,12 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
     <tr class="subtab">
       <td>
-        <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId(); %>
+        <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId()+ addLinkParams(request, "popup|popupType|actionId"); %>
         <zeroio:folderHierarchy module="Accounts" link="<%= documentLink %>" showLastLink="true"/> >
         <%= FileItem.getSubject() %>
       </td>
@@ -72,7 +74,7 @@
   %>
       <tr class="row<%= rowid %>">
         <td width="10" align="center" rowspan="2" nowrap>
-          <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a>
+          <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a>
         </td>
         <td width="100%">
           <%= FileItem.getImageTag("-23") %><%= thisVersion.getClientFilename() %>

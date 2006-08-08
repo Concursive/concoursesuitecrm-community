@@ -27,6 +27,7 @@
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="version" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -44,8 +45,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountsQuotes" selected="history" object="quote" param="<%= "quoteId=" + quote.getId() + "|version="+version %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountsQuotes" selected="history" object="quote" param="<%= "quoteId=" + quote.getId() + "|version="+version %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
       <%@ include file="../quotes/quotes_header_include.jsp" %>
       <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
         <tr>

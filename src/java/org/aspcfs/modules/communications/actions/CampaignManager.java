@@ -25,6 +25,7 @@ import com.zeroio.webutils.FileDownload;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Notification;
@@ -390,6 +391,8 @@ public final class CampaignManager extends CFSModule {
       contacts.setIncludeAllSites(true);
       contacts.setBuildDetails(true);
       contacts.setBuildTypes(false);
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+      contacts.setGeneralContactAccessTypes(accessTypeList);
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
     } catch (Exception e) {

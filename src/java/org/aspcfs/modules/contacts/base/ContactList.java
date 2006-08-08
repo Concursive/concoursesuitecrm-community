@@ -41,9 +41,9 @@ import java.util.*;
  *  database with any of the parameters to limit the results.
  *
  * @author     mrajkowski
+ * @created    August 29, 2001
  * @version    $Id: ContactList.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
  *      Exp $
- * @created    August 29, 2001
  */
 public class ContactList extends Vector implements UserCentric {
 
@@ -141,6 +141,7 @@ public class ContactList extends Vector implements UserCentric {
 
   //objects for speed up
   AccessTypeList accessTypes = null;
+  AccessTypeList generalContactAccessTypes = null;
   UserList users = new UserList();
 
   //import filters
@@ -235,6 +236,7 @@ public class ContactList extends Vector implements UserCentric {
     this.includeUsersOnly = includeUsersOnly;
   }
 
+
   /**
    *  Sets the includeUsersOnly attribute of the ContactList object
    *
@@ -243,6 +245,7 @@ public class ContactList extends Vector implements UserCentric {
   public void setIncludeUsersOnly(String includeUsersOnly) {
     this.includeUsersOnly = DatabaseUtils.parseBoolean(includeUsersOnly);
   }
+
 
   /**
    *  Gets the userRoleType attribute of the ContactList object
@@ -424,6 +427,11 @@ public class ContactList extends Vector implements UserCentric {
   }
 
 
+  /**
+   *  Sets the includeEnabledUsersOnly attribute of the ContactList object
+   *
+   * @param  tmp  The new includeEnabledUsersOnly value
+   */
   public void setIncludeEnabledUsersOnly(String tmp) {
     this.includeEnabledUsersOnly = DatabaseUtils.parseBoolean(tmp);
   }
@@ -446,6 +454,26 @@ public class ContactList extends Vector implements UserCentric {
    */
   public AccessTypeList getAccessTypes() {
     return accessTypes;
+  }
+
+
+  /**
+   *  Gets the generalContactAccessTypes attribute of the ContactList object
+   *
+   * @return    The generalContactAccessTypes value
+   */
+  public AccessTypeList getGeneralContactAccessTypes() {
+    return generalContactAccessTypes;
+  }
+
+
+  /**
+   *  Sets the generalContactAccessTypes attribute of the ContactList object
+   *
+   * @param  tmp  The new generalContactAccessTypes value
+   */
+  public void setGeneralContactAccessTypes(AccessTypeList tmp) {
+    this.generalContactAccessTypes = tmp;
   }
 
 
@@ -3275,10 +3303,10 @@ public class ContactList extends Vector implements UserCentric {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, " + 
+        "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, " +
         " d.description as departmentname, " +
         " ca.city AS city, " +
-        " ca.postalcode AS postalcode, " + 
+        " ca.postalcode AS postalcode, " +
         " lsi.description AS site_id_name, " +
         " lind.description AS industry_name, " +
         " lcs.description AS source_name, " +
@@ -3927,29 +3955,29 @@ public class ContactList extends Vector implements UserCentric {
 
     //NOTE: Only general contacts can be personal and so AccessTypeList has to be for the General Contacts
     switch (personalId) {
-      case IGNORE_PERSONAL:
-        break;
-      case EXCLUDE_PERSONAL:
-        if (accessTypes == null) {
-          sqlFilter.append(
-              "AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
-        } else {
-          sqlFilter.append(
-              "AND c.access_type NOT IN (" + accessTypes.getCode(
-              AccessType.PERSONAL) + ") ");
-        }
-        break;
-      default:
-        if (accessTypes == null) {
-          sqlFilter.append(
-              "AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
-        } else {
-          sqlFilter.append(
-              "AND (c.access_type NOT IN (" + accessTypes.getCode(
-              AccessType.PERSONAL) + ")  OR (c.access_type IN (" + accessTypes.getCode(
-              AccessType.PERSONAL) + ") AND c.owner = ?)) ");
-        }
-        break;
+        case IGNORE_PERSONAL:
+          break;
+        case EXCLUDE_PERSONAL:
+          if (accessTypes == null) {
+            sqlFilter.append(
+                "AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
+          } else {
+            sqlFilter.append(
+                "AND c.access_type NOT IN (" + accessTypes.getCode(
+                AccessType.PERSONAL) + ") ");
+          }
+          break;
+        default:
+          if (accessTypes == null) {
+            sqlFilter.append(
+                "AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
+          } else {
+            sqlFilter.append(
+                "AND (c.access_type NOT IN (" + accessTypes.getCode(
+                AccessType.PERSONAL) + ")  OR (c.access_type IN (" + accessTypes.getCode(
+                AccessType.PERSONAL) + ") AND c.owner = ?)) ");
+          }
+          break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
@@ -4239,7 +4267,7 @@ public class ContactList extends Vector implements UserCentric {
               }
 
               sqlFilter.append(
-                  " (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 AND " + DatabaseUtils.toLowerCase(db) + 
+                  " (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 AND " + DatabaseUtils.toLowerCase(db) +
                   " (postalcode) " + key1 + " '" + key2 + "' )) ");
               previousKey = key1;
               processElementType(db, sqlFilter, elementType);
@@ -4788,20 +4816,20 @@ public class ContactList extends Vector implements UserCentric {
     }
 
     switch (personalId) {
-      case IGNORE_PERSONAL:
-        break;
-      case EXCLUDE_PERSONAL:
-        if (accessTypes == null) {
-          pst.setInt(++i, AccessType.PERSONAL);
-        }
-        break;
-      default:
-        if (accessTypes == null) {
-          pst.setInt(++i, AccessType.PERSONAL);
-          pst.setInt(++i, AccessType.PERSONAL);
-        }
-        pst.setInt(++i, personalId);
-        break;
+        case IGNORE_PERSONAL:
+          break;
+        case EXCLUDE_PERSONAL:
+          if (accessTypes == null) {
+            pst.setInt(++i, AccessType.PERSONAL);
+          }
+          break;
+        default:
+          if (accessTypes == null) {
+            pst.setInt(++i, AccessType.PERSONAL);
+            pst.setInt(++i, AccessType.PERSONAL);
+          }
+          pst.setInt(++i, personalId);
+          break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
@@ -5068,23 +5096,29 @@ public class ContactList extends Vector implements UserCentric {
    */
   private void processElementType(Connection db, StringBuffer sqlFilter, int type) {
     switch (type) {
-      case SearchCriteriaList.SOURCE_MY_CONTACTS:
-        sqlFilter.append("AND c.owner = ? ");
-        sqlFilter.append("AND c.employee = ? ");
-        break;
-      case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-        sqlFilter.append("AND c.owner IN (" + sclOwnerIdRange + ") ");
-        sqlFilter.append("AND c.employee = ? ");
-        break;
-      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-        sqlFilter.append("AND c.org_id > 0 ");
-        sqlFilter.append("AND c.employee = ? ");
-        break;
-      case SearchCriteriaList.SOURCE_EMPLOYEES:
-        sqlFilter.append("AND c.employee = ? ");
-        break;
-      default:
-        break;
+        case SearchCriteriaList.SOURCE_MY_CONTACTS:
+          sqlFilter.append("AND c.owner = ? ");
+          sqlFilter.append("AND c.employee = ? ");
+          break;
+        case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+          if (this.getGeneralContactAccessTypes() != null) {
+            sqlFilter.append("AND ((c.owner IN (" + sclOwnerIdRange + ") AND c.access_type = " + 
+              this.getGeneralContactAccessTypes().getCode(AccessType.CONTROLLED_HIERARCHY) +
+              ") OR (c.access_type = "+ this.getGeneralContactAccessTypes().getCode(AccessType.PUBLIC) +"))");
+          } else {
+            sqlFilter.append("AND c.owner IN (" + sclOwnerIdRange + ") ");
+          }
+          sqlFilter.append("AND c.employee = ? ");
+          break;
+        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+          sqlFilter.append("AND c.org_id > 0 ");
+          sqlFilter.append("AND c.employee = ? ");
+          break;
+        case SearchCriteriaList.SOURCE_EMPLOYEES:
+          sqlFilter.append("AND c.employee = ? ");
+          break;
+        default:
+          break;
     }
   }
 
@@ -5100,21 +5134,21 @@ public class ContactList extends Vector implements UserCentric {
    */
   private int processElementTypeParam(PreparedStatement pst, int i, int type) throws SQLException {
     switch (type) {
-      case SearchCriteriaList.SOURCE_MY_CONTACTS:
-        pst.setInt(++i, sclOwnerId);
-        pst.setBoolean(++i, false);
-        break;
-      case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-        pst.setBoolean(++i, false);
-        break;
-      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-        pst.setBoolean(++i, false);
-        break;
-      case SearchCriteriaList.SOURCE_EMPLOYEES:
-        pst.setBoolean(++i, true);
-        break;
-      default:
-        break;
+        case SearchCriteriaList.SOURCE_MY_CONTACTS:
+          pst.setInt(++i, sclOwnerId);
+          pst.setBoolean(++i, false);
+          break;
+        case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+          pst.setBoolean(++i, false);
+          break;
+        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+          pst.setBoolean(++i, false);
+          break;
+        case SearchCriteriaList.SOURCE_EMPLOYEES:
+          pst.setBoolean(++i, true);
+          break;
+        default:
+          break;
     }
     return i;
   }

@@ -62,7 +62,7 @@ public final class AccountTickets extends CFSModule {
     String includePage = context.getRequest().getParameter("include");
     context.getRequest().setAttribute("IncludePage", includePage);
     addModuleBean(context, module, module);
-    return ("IncludeOK");
+    return getReturn(context, "Include");
   }
 
 
@@ -92,20 +92,20 @@ public final class AccountTickets extends CFSModule {
       thisTicket.setModifiedBy(getUserId(context));
       resultCount = thisTicket.reopen(db);
       thisTicket.queryRecord(db, thisTicket.getId());
-      if (resultCount == -1) {
-        return (executeCommandTicketDetails(context));
-      } else if (resultCount == 1) {
-        this.processUpdateHook(context, oldTicket, thisTicket);
-        return (executeCommandTicketDetails(context));
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if (resultCount == -1) {
+      return (executeCommandTicketDetails(context));
+    } else if (resultCount == 1) {
+      this.processUpdateHook(context, oldTicket, thisTicket);
+      return (executeCommandTicketDetails(context));
+    } else {
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -151,13 +151,13 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("currentDate", currentDate);
       context.getRequest().setAttribute(
           "systemStatus", this.getSystemStatus(context));
-      return ("AddTicketOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "AddTicket");
   }
 
 
@@ -290,14 +290,14 @@ public final class AccountTickets extends CFSModule {
         processInsertHook(context, newTic);
       }
       addModuleBean(context, "View Accounts", "Ticket Insert ok");
-      if (recordInserted) {
-        return ("InsertTicketOK");
-      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if (recordInserted) {
+      return getReturn(context, "InsertTicket");
     }
     return (executeCommandAddTicket(context));
   }
@@ -386,13 +386,13 @@ public final class AccountTickets extends CFSModule {
       ticketCategoryList.setExclusiveToSite(true);
       ticketCategoryList.buildList(db);
       context.getRequest().setAttribute("ticketCategoryList", ticketCategoryList);
-      return ("TicketDetailsOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "TicketDetails");
   }
 
 
@@ -469,18 +469,22 @@ public final class AccountTickets extends CFSModule {
       if (recordDeleted) {
         processDeleteHook(context, thisTic);
         deleteRecentItem(context, thisTic);
+        String inline = context.getRequest().getParameter("popupType");
         context.getRequest().setAttribute("OrgDetails", newOrg);
         context.getRequest().setAttribute(
-            "refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId);
-        return ("DeleteTicketOK");
-      } else {
-        return (executeCommandTicketDetails(context));
+            "refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId + 
+            (inline != null && "inline".equals(inline.trim()) ? "&popup=true":""));
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if (recordDeleted) {
+      return ("DeleteTicketOK");
+    } else {
+      return (executeCommandTicketDetails(context));
     }
   }
 
@@ -513,17 +517,21 @@ public final class AccountTickets extends CFSModule {
         processDeleteHook(context, thisTic);
         deleteRecentItem(context, thisTic);
         context.getRequest().setAttribute("OrgDetails", newOrg);
+        String inline = context.getRequest().getParameter("popupType");
         context.getRequest().setAttribute(
-            "refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId);
-        return ("DeleteTicketOK");
-      } else {
-        return (executeCommandTicketDetails(context));
+            "refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId +
+            (inline != null && "inline".equals(inline) ? "&popup=true":""));
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if (recordUpdated) {
+      return ("DeleteTicketOK");
+    } else {
+      return (executeCommandTicketDetails(context));
     }
   }
 
@@ -807,13 +815,13 @@ public final class AccountTickets extends CFSModule {
       String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
 
-      return ("ModifyTicketOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "ModifyTicket");
   }
 
 
@@ -914,7 +922,7 @@ public final class AccountTickets extends CFSModule {
     }
 
     if (resultCount == 1 && isValid) {
-      return ("UpdateTicketOK");
+      return "UpdateTicketOK";
     }
     return (executeCommandModifyTicket(context));
   }
@@ -1278,13 +1286,13 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("TicketDetails", thisTic);
       addRecentItem(context, thisTic);
       addModuleBean(context, "View Tickets", "Ticket Details");
-      return ("ViewHistoryOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "ViewHistory");
   }
 
 

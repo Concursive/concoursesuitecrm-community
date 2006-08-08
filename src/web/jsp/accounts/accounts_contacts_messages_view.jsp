@@ -25,6 +25,7 @@
 <jsp:useBean id="AccountContactMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -43,18 +44,19 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-<dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
     <dhv:permission name="accounts-accounts-contacts-messages-view">
-      <a href="AccountContactsMessages.do?command=PrepareMessage&contactId=<%= ContactDetails.getId() %>"><dhv:label name="actionList.newMessage">New Message</dhv:label></a>
+      <a href="AccountContactsMessages.do?command=PrepareMessage&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType") %>"><dhv:label name="actionList.newMessage">New Message</dhv:label></a>
     </dhv:permission>
   </dhv:evaluate>
 <br /><br />
     <table width="100%" border="0">
       <tr>
         <td align="left">
-        <form name="listView" method="post" action="Contacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
+        <form name="listView" method="post" action="Contacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType") %>">
           <select size="1" name="listView" onChange="javascript:document.listView.submit();">
             <option <%= AccountContactMessageListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_messages_view.MyMessages">My Messages</dhv:label></option>
             <option <%= AccountContactMessageListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_messages_view.AllMessages">All Messages</dhv:label></option>
@@ -70,11 +72,11 @@
       <tr>
         <th width="45%" ><strong><dhv:label name="accounts.accounts_calls_list.Subject">Subject</dhv:label></strong></th>
         <th width="20%" nowrap>
-          <a href="Contacts.do?command=ViewMessages&column=msg.name&contactId=<%= ContactDetails.getId() %>"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
+          <a href="Contacts.do?command=ViewMessages&column=msg.name&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType") %>"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
           <%= AccountContactMessageListInfo.getSortIcon("msg.name") %>
         </th>
         <th width="20%" nowrap>
-          <a href="Contacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %>"><strong><dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label></strong></a>
+          <a href="Contacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType") %>"><strong><dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label></strong></a>
           <%= AccountContactMessageListInfo.getSortIcon("active_date") %>
         </th>
         <th width="15%">
@@ -91,7 +93,7 @@
   %>
       <tr class="row<%= rowid %>">
         <td>
-          <a href="Contacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%>"><%= toHtml(campaign.getSubject()) %></a>
+          <a href="Contacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType") %>"><%= toHtml(campaign.getSubject()) %></a>
         </td>
         <td>
           <% if(campaign.getMessageName() != null && !"".equals(campaign.getMessageName())) {%>

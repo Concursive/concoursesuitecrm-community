@@ -45,7 +45,8 @@
     return true;
   }
 </script>
-<form method="POST" name="inputForm" action="AccountTicketsDocumentsFolders.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
+<form method="POST" name="inputForm" action="AccountTicketsDocumentsFolders.do?command=Save&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return checkForm(this);">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -61,14 +62,15 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
-  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
+</dhv:evaluate>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <table border="0" cellpadding="4" cellspacing="0" width="100%">
       <tr class="subtab">
         <td>
     <%
-    String documentFolderList = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId();
+    String documentFolderList = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId() + addLinkParams(request, "popup|popupType|actionId");
     String documentModule = "AccountTickets";
     %>
           <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
@@ -77,7 +79,7 @@
     </table>
     <br>
     <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="save">
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View';"><br />
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View<%= addLinkParams(request, "popup|popupType|actionId") %>';"><br />
     <dhv:formMessage />
     <br />
     <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -109,7 +111,7 @@
     <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
     <input type="hidden" name="dosubmit" value="true">
     <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="save">
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View';"><br>
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View<%= addLinkParams(request, "popup|popupType|actionId") %>';"><br>
   </dhv:container>
 </dhv:container>
 </form>

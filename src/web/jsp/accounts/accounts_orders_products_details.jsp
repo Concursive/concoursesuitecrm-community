@@ -41,7 +41,7 @@ Order Item Details
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="orders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="orders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <input type="button" value="Modify Status" onClick="javascript:popURL('OrdersProducts.do?command=Modify&productId=<%= orderProduct.getId() %>&popup=true','OrdersProducts','300','200','yes','yes');"/>&nbsp;
 <input type="button" value="Download Product" onClick="javascript:popURL('OrdersProducts.do?command=DisplayCustomerProduct&productId=<%= orderProduct.getId() %>&popup=true','CustomerProduct','600','200','yes','yes');"/>
 <br /><br />

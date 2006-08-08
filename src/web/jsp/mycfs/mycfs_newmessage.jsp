@@ -19,6 +19,8 @@
 <%-- Trails --%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
@@ -29,11 +31,26 @@
 </tr>
 </table>
 <%-- End Trails --%>
+<script type="text/javascript">
+  function hideSendButton() {
+    try {
+      var send1 = document.getElementById('send1');
+      send1.value = label('label.sending','Sending...');
+      send1.disabled=true;
+    } catch (oException) {}
+    try {
+      var send2 = document.getElementById('send2');
+      send2.value = label('label.sending','Sending...');
+      send2.disabled=true;
+    } catch (oException) {}
+  }
+</script>
 <form name="newMessageForm" action="MyCFSInbox.do?command=SendMessage" method="post" onSubmit="return sendMessage();">
-<input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
-<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'"><br><br>
+<input type="submit" id="send1" value="<dhv:label name="global.button.send">Send</dhv:label>" />
+<input type="button" id="cancel1" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'"><br><br>
 <%@ include file="../newmessage_include.jsp" %>
 <br>
-<input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
-<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'">
+<input type="submit" id="send2" value="<dhv:label name="global.button.send">Send</dhv:label>" />
+<input type="button" id="cancel2" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'">
 </form>
+

@@ -35,7 +35,7 @@
   
   //Relationship operations
   function deleteRelation() {
-    confirmDelete('AccountRelationships.do?command=Delete&orgId=' + thisOrgId + '&id='+ thisRelId);
+    confirmDelete('AccountRelationships.do?command=Delete&orgId=' + thisOrgId + '&id='+ thisRelId+'<%= addLinkParams(request, "popup|popupType|actionId") %>');
   }
 </script>
 

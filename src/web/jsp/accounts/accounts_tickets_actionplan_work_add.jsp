@@ -49,6 +49,7 @@
     return true;
   }
 </script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -66,8 +67,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
+</dhv:evaluate>
 <% String param1 = "id=" + ticket.getId(); %>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:container name="accountstickets" selected="actionplans" object="ticket" param="<%= "id=" + ticket.getId() %>">
   <%@ include file="accounts_ticket_header_include.jsp" %>
   <dhv:evaluate if="<%= ticket.getClosed() != null %>">
@@ -75,9 +77,9 @@
     <zeroio:tz timestamp="<%= ticket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </font><br />
   </dhv:evaluate>
-<form name="addActionPlan" method="post" action="AccountTicketActionPlans.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+<form name="addActionPlan" method="post" action="AccountTicketActionPlans.do?command=Insert&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return checkForm(this);">
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="return checkForm(this.form)">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %>'"/>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"/>
   &nbsp;<br /><br />
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
@@ -148,7 +150,7 @@
   </table>
   &nbsp;<br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="return checkForm(this.form)">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %>'"/>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"/>
   <input type="hidden" name="ticketId" value="<%= ticket.getId() %>"/>
 </form>
 </dhv:container>

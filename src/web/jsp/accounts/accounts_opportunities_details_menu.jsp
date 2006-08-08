@@ -49,19 +49,19 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='OpportunitiesComponents.do?command=DetailsComponent&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId;
+    window.location.href='OpportunitiesComponents.do?command=DetailsComponent&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function log() {
-    window.location.href='OpportunitiesComponents.do?command=ComponentHistory&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId;
+    window.location.href='OpportunitiesComponents.do?command=ComponentHistory&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function modify() {
-    window.location.href='OpportunitiesComponents.do?command=ModifyComponent&id=' + thisCompId  + '&orgId=' + thisOrgId  + '&headerId=' + thisHeaderId + '&return=list';
+    window.location.href='OpportunitiesComponents.do?command=ModifyComponent&id=' + thisCompId  + '&orgId=' + thisOrgId  + '&headerId=' + thisHeaderId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function deleteOpp() {
-    popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=' + thisOrgId + '&id=' + thisCompId + '&popup=true','Opportunities.do?command=ViewOpps&orgId=' + thisOrgId, 'Delete_opp','320','200','yes','no');
+    popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=' + thisOrgId + '&id=' + thisCompId + '&popup=true<%= isPopup(request)?"&popup=true&popupType=inline":"" %>','Opportunities.do?command=ViewOpps&orgId=' + thisOrgId, 'Delete_opp','320','200','yes','no');
   }
 </script>
 <div id="menuOppContainer" class="menu">

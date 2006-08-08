@@ -33,6 +33,7 @@ import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.StateSelect;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.util.Iterator;
@@ -236,23 +237,25 @@ public final class Contacts extends CFSModule {
         context.getRequest().setAttribute("ContactDetails", thisContact);
         return (executeCommandPrepare(context));
       }
-      if (context.getRequest().getParameter("popup") != null) {
+      String hiddensource = context.getParameter("hiddensource");
+      if (context.getRequest().getParameter("popup") != null && hiddensource != null && !"".equals(hiddensource.trim())) {
         return ("CloseAddPopup");
       }
       if ("true".equals(
           context.getRequest().getParameter("providePortalAccess"))) {
         return ("AddPortalOK");
       }
-      return ("DetailsOK");
+      return getReturn(context, "Details");
     } else if (resultCount == 1) {
-      if (context.getRequest().getParameter("popup") != null) {
+      String source = context.getRequest().getParameter("source");
+      if (context.getRequest().getParameter("popup") != null && source != null && "attachplan".equals(source.trim())) {
         return ("CloseAddPopup");
       }
       if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
           "return").equals("list")) {
         return (executeCommandView(context));
       } else {
-        return ("UpdateOK");
+        return "UpdateOK";
       }
     } else {
       context.getRequest().setAttribute("TypeList", thisContact.getTypeList());
@@ -304,7 +307,8 @@ public final class Contacts extends CFSModule {
       }
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.delete"), "javascript:window.location.href='Contacts.do?command=Trash&orgId=" + orgId + "&id=" + id + "'");
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='Contacts.do?command=Trash&orgId=" + orgId + "&id=" + id + RequestUtils.addLinkParams(
+                context.getRequest(), "popup|accountpopup") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception errorMessage) {
@@ -357,7 +361,7 @@ public final class Contacts extends CFSModule {
     }
     context.getRequest().setAttribute("ContactDetails", newContact);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    return ("DetailsOK");
+    return getReturn(context, "Details");
   }
 
 
@@ -372,6 +376,10 @@ public final class Contacts extends CFSModule {
       return ("PermissionError");
     }
     boolean recordDeleted = false;
+    boolean accountpopup = false;
+    if (context.getRequest().getParameter("accountpopup") != null && "true".equals(context.getRequest().getParameter("accountpopup"))) {
+      accountpopup = true;
+    }
     Contact thisContact = null;
     Organization thisOrganization = null;
     String orgId = null;
@@ -401,7 +409,7 @@ public final class Contacts extends CFSModule {
     context.getRequest().setAttribute("orgId", orgId);
     if (recordDeleted) {
       context.getRequest().setAttribute(
-          "refreshUrl", "Contacts.do?command=View&orgId=" + orgId);
+          "refreshUrl", "Contacts.do?command=View&orgId=" + orgId+ (accountpopup?"&popup=true":""));
       deleteRecentItem(context, thisContact);
       return ("DeleteOK");
     } else {
@@ -428,6 +436,10 @@ public final class Contacts extends CFSModule {
     if (context.getRequest().getParameter("orgId") != null) {
       orgId = context.getRequest().getParameter("orgId");
     }
+    boolean accountpopup = false;
+    if (context.getRequest().getParameter("accountpopup") != null && "true".equals(context.getRequest().getParameter("accountpopup"))) {
+      accountpopup = true;
+    }
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -453,7 +465,7 @@ public final class Contacts extends CFSModule {
     context.getRequest().setAttribute("orgId", orgId);
     if (recordUpdated) {
       context.getRequest().setAttribute(
-          "refreshUrl", "Contacts.do?command=View&orgId=" + orgId);
+          "refreshUrl", "Contacts.do?command=View&orgId=" + orgId+ (accountpopup?"&popup=true":""));
       deleteRecentItem(context, thisContact);
     }
     return ("DeleteOK");
@@ -612,10 +624,10 @@ public final class Contacts extends CFSModule {
     if (orgid == null) {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
-
+    String isPopup = context.getRequest().getParameter("popup");
     PagedListInfo companyDirectoryInfo = this.getPagedListInfo(
         context, "ContactListInfo");
-    companyDirectoryInfo.setLink("Contacts.do?command=View&orgId=" + orgid);
+    companyDirectoryInfo.setLink("Contacts.do?command=View&orgId=" + orgid+(isPopup != null && "true".equals(isPopup.trim()) ? "&popup=true":""));
     Connection db = null;
     ContactList contactList = new ContactList();
     Organization thisOrganization = null;
@@ -644,7 +656,7 @@ public final class Contacts extends CFSModule {
     }
     context.getRequest().setAttribute("ContactList", contactList);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    return ("ListOK");
+    return getReturn(context, "List");
   }
 
 
@@ -710,10 +722,12 @@ public final class Contacts extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("contactId"))) {
       context.getSession().removeAttribute("AccountContactMessageListInfo");
     }
+    String popup = context.getRequest().getParameter("popup");
     PagedListInfo pagedListInfo = this.getPagedListInfo(
         context, "AccountContactMessageListInfo");
     pagedListInfo.setLink(
-        "Contacts.do?command=ViewMessages&contactId=" + contactId);
+        "Contacts.do?command=ViewMessages&contactId=" + contactId+
+        (popup != null && "true".equals(popup.trim())?"&popup=true":""));
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);

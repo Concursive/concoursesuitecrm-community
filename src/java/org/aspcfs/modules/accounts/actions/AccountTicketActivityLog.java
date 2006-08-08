@@ -27,6 +27,7 @@ import org.aspcfs.modules.troubletickets.base.TicketPerDayDescription;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -68,18 +69,19 @@ public final class AccountTicketActivityLog extends CFSModule {
       TicketActivityLogList thisList = new TicketActivityLogList();
       PagedListInfo tmListInfo = this.getPagedListInfo(context, "TMListInfo");
       tmListInfo.setLink(
-          "AccountTicketActivityLog.do?command=List&id=" + thisTicket.getId());
+          "AccountTicketActivityLog.do?command=List&id=" + thisTicket.getId()
+          +RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
       thisList.setPagedListInfo(tmListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
       context.getRequest().setAttribute("activityList", thisList);
-      return ("ListOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "List");
   }
 
 
@@ -124,13 +126,13 @@ public final class AccountTicketActivityLog extends CFSModule {
               "activityDetails", thisMaintenance);
         }
       }
-      return ("AddOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "Add");
   }
 
 
@@ -179,13 +181,13 @@ public final class AccountTicketActivityLog extends CFSModule {
         }
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
       }
-      return ("ModifyOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "Modify");
   }
 
 
@@ -427,13 +429,13 @@ public final class AccountTicketActivityLog extends CFSModule {
       } else {
           return ("PermissionError");
       }
-      return ("ViewOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return getReturn(context, "View");
   }
 
 
@@ -479,7 +481,8 @@ public final class AccountTicketActivityLog extends CFSModule {
           systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.formHeader"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + 
+          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -542,16 +545,19 @@ public final class AccountTicketActivityLog extends CFSModule {
       this.freeConnection(context, db);
     }
     // The record was deleted
+    String inline = context.getRequest().getParameter("popupType");
     if (recordDeleted) {
       context.getRequest().setAttribute(
-          "refreshUrl", "AccountTicketActivityLog.do?command=List&id=" + ticketId);
-      return getReturn(context, "Delete");
+          "refreshUrl", "AccountTicketActivityLog.do?command=List&id=" + ticketId
+          +(inline != null && "inline".equals(inline) ? "&popup=true":""));
+      return "DeleteOK";
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
     context.getRequest().setAttribute(
-        "refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId);
-    return getReturn(context, "Delete");
+        "refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId
+        +(inline != null && "inline".equals(inline) ? "&popup=true":""));
+    return "DeleteOK";
   }
 
 
