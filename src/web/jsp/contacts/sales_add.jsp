@@ -303,9 +303,9 @@
 <%--  include basic contact form --%>
 <%@ include file="contact_include.jsp" %>
 <br />
-<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="<dhv:label name="global.button.saveAndAddAnotherLead">Save and Add another Lead</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-<input type="submit" value="<dhv:label name="global.button.saveAndViewDetails">Save and View Details</dhv:label>" onClick="this.form.saveAndClone.value='true';this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.saveAndReturnDashboard">Save and Return to Dashboard</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.saveAndAddAnotherLead">Save and Add another Lead</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.saveAndViewDetails">Save and View Details</dhv:label>" onClick="this.form.saveAndClone.value='true';this.form.dosubmit.value='true';">
 <input type="hidden" name="dosubmit" value="true">
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

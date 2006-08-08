@@ -38,7 +38,7 @@ function refreshOpener() {
   <dhv:formMessage showSpace="false"/>
   <%@ include file="../tasks/task_include.jsp" %>
   <input type="hidden" name="addAnother" id="addAnother" value="false"/>
-  <input type="hidden" name="forward" id="forward" value="<%= toHtmlValue((String) request.getAttribute("forward")) %>"/>
+  <input type="hidden" name="forward" id="forward" value="<%= toHtmlValue((String) request.getParameter("forward")) %>"/>
   <br />
   <% if (Task.getId() == -1) { %>
     <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" />

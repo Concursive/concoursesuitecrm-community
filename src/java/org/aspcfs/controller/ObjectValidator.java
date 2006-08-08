@@ -1369,7 +1369,7 @@ public class ObjectValidator {
             systemStatus, object, "startDate", "object.validation.startAfterExpiration");
       }
       if (productCatalog.getActive()) {
-        if (productCatalog.getActivePrice() == null) {
+        if (productCatalog.getActivePrice() == null || productCatalog.getActivePrice().getPriceAmount() <= 0 ) {
           addWarning(
               systemStatus, object, "active", "object.validation.product.activePriceNotFound");
         }

@@ -139,7 +139,7 @@ public final class TroubleTicketTasks extends CFSModule {
     }
     String forward = context.getRequest().getParameter("forward");
     if (forward != null && !"".equals(forward.trim())) {
-      context.getRequest().setAttribute("return",forward);
+      context.getRequest().setAttribute("forward",forward);
     }
     String ticketId = context.getRequest().getParameter("ticketId");
     TicketTask thisTask = (TicketTask) context.getFormBean();
@@ -203,7 +203,7 @@ public final class TroubleTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     if (recordInserted || resultCount == 1) {
-      if (resultCount == 1 && forward != null && "details".equals(forward.trim())) {
+      if ((resultCount == 1 || recordInserted) && forward != null && "details".equals(forward.trim())) {
           context.getRequest().setAttribute("id", String.valueOf(thisTask.getId()));
           context.getRequest().setAttribute("forward", forward);
           return executeCommandDetails(context);

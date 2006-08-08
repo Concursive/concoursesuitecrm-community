@@ -3189,7 +3189,7 @@
     <param name="button.assignLeadR">
       <value><![CDATA[Assign Lead >]]></value>
     </param>
-    <param name="button.assignLeadR">
+    <param name="button.reassignLeadR">
       <value><![CDATA[Reassign Lead >]]></value>
     </param>
     <param name="button.assignAccountR">

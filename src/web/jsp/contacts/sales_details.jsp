@@ -354,6 +354,46 @@
   <dhv:evaluate if="<%= ContactDetails.getOwner() <= 0 %>">
     <input type="hidden" name="owner" id="owner" value="<%= ContactDetails.getOwner() %>"/>
   </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getComments() != null && !"".equals(ContactDetails.getComments().trim()) %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="sales.assignmentMessage">Assignment Message</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getComments()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getRating() > -1 %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="sales.rating">Rating</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(RatingList.getValueFromId(ContactDetails.getRating())) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getSource() > -1 %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="contact.source">Source</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(SourceList.getValueFromId(ContactDetails.getSource())) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getIndustryTempCode() > -1 %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="">Industry</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(IndustryList.getValueFromId(ContactDetails.getIndustryTempCode())) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
 </table>
 &nbsp;<br />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -450,6 +490,7 @@
         &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
     </td>
   </tr>
+<dhv:evaluate if="<%= ContactDetails.getPotential() > 0 %>">
   <tr class="containerBody">
     <td class="formLabel">
       Potential
@@ -458,6 +499,7 @@
       <zeroio:currency value="<%= ContactDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
+</dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
@@ -576,14 +618,6 @@
 </dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel">
-      <dhv:label name="sales.assignmentMessage">Assignment Message</dhv:label>
-    </td>
-    <td>
-      <%= toHtml(ContactDetails.getComments()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
       <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
     </td>
     <td>
@@ -656,10 +690,10 @@
   </dhv:include>
 <dhv:include name="sales.details.assignLead" none="true">
   <dhv:permission name="sales-leads-edit">
-    <dhv:evaluate if="<%= ContactDetails.getOwner() != -1 %>">
+    <dhv:evaluate if="<%= ContactDetails.getOwner() > -1 %>">
       <input type="button" value="<dhv:label name="button.reassignLeadR">Reassign Lead ></dhv:label>" onClick="javascript:reassignLead();" />
-    </dhv:evaluate><dhv:evaluate if="<%= ContactDetails.getOwner() == -1 %>">
-      <input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:assignLead();" />
+    </dhv:evaluate><dhv:evaluate if="<%= ContactDetails.getOwner() <= -1 %>">
+      <input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:reassignLead();" />
     </dhv:evaluate>
   </dhv:permission>
 </dhv:include>
@@ -671,7 +705,6 @@
 <% if ((listForm != null && !"".equals(listForm)) || (from != null && "list".equals(from) && !"dashboard".equals(from))) { %>
   <input type="checkbox" id="toNextLead" name="toNextLead" value="true" /> <dhv:label name="sales.continueToNextLead.text">Continue to next lead after assigning, trashing or skipping lead</dhv:label>
 <% } %>
-
 </span>
 <span name="nextlead" id="nextlead" style="display:none">
 <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>" onClick="javascript:contactDetails();" /></dhv:permission>
@@ -679,15 +712,3 @@
 </span>
 </form>
 <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<dhv:browser id="applewebkit" include="true">
-  <%-- Safari browser does not reload the form data when an iframe triggers a url change --%>
-  <script type="text/javascript">
-    var obj = document.forms['details'].rating;
-    for (i=0;i<obj.options.length;i++) {
-      if (obj.options[i].value == <%= ContactDetails.getRating() %>) {
-          obj.options[i].selected = true;
-      }
-    }
-    document.forms['details'].comments.value = "<%= StringUtils.jsStringEscape(toString(ContactDetails.getComments())) %>";
-  </script>
-</dhv:browser>

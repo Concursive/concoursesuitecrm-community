@@ -122,6 +122,7 @@ public final class ContactForm extends CFSModule {
       context.getRequest().setAttribute("SiteIdList", siteid);
 
     } catch (Exception errorMessage) {
+      errorMessage.printStackTrace();
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {

@@ -1900,6 +1900,7 @@
     <forward name="WorkLeadOK"
              resource="/ExternalContacts.do?command=ContactDetails"/>
     <forward name="WorkAccountOK" resource="/Accounts.do?command=Details"/>
+    <forward name="WorkAccountPopupOK" resource="/Accounts.do?command=Details&amp;popup=true"/>
     <forward name="CloseAndReloadOK" resource="/dialogcloseandreload.jsp"
              layout="style"/>
     <forward name="CloseOK" resource="/reopen_opener_id.jsp"
@@ -4411,7 +4412,7 @@
     <forward name="ListTasksOK"
              resource="/troubletickets/troubletickets_tasklist.jsp"
              layout="nav"/>
-    <forward name="SaveOK" resource="/closepopupandreload.jsp"/>
+    <forward name="SaveOK" resource="/reopen_parent_or_opener.jsp"/>
     <forward name="SendMessageOK"
              resource="/troubletickets/troubletickets_confirmsend.jsp"
              layout="nav"/>

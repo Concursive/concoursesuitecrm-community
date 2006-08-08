@@ -34,6 +34,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script type="text/javascript">
   function checkForm(form) {
     formTest = true;
@@ -84,6 +85,8 @@
   </dhv:evaluate>
     url += "&actionPlan=" + actionPlan + "&manager=" + manager + "&popup=true";
     window.location.href= url;
+    opener.hideSpan("worklead");
+    opener.showSpan("nextlead");
   }
 </script>
 <form name="assignLead">
@@ -96,7 +99,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong><dhv:label name="button.workAsAccount">Work as Account</dhv:label></strong>
+	    <strong><dhv:label name="button.convertToAccount">Convert to Account</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">

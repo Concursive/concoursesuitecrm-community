@@ -60,7 +60,7 @@
           var owner = opener.document.forms['details'].owner.value;
           var actionPlan = opener.document.forms['details'].actionPlan.options[opener.document.forms['details'].actionPlan.selectedIndex].value;
           var manager = opener.document.forms['details'].planManager.value;
-          window.location.href= 'Sales.do?command=WorkAccount&id=<%= contactId %>&rating='+rating+'&comments='+comments+'&popup=true&listForm=<%= (listForm != null ? listForm : "") %>&actionPlan=' + actionPlan + '&manager=' + manager + '&owner=' + owner;
+          parent.location.href= 'Sales.do?command=WorkAccount&id=<%= contactId %>&rating='+rating+'&comments='+comments+'&popup=true&listForm=<%= (listForm != null ? listForm : "") %>&actionPlan=' + actionPlan + '&manager=' + manager + '&owner=' + owner;
         }
       } else if (next == "assign") {
         var test = parent.continueAssignLead();

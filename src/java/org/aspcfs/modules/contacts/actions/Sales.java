@@ -972,8 +972,10 @@ public final class Sales extends CFSModule {
       }
 
       LookupList ratings = new LookupList(db, "lookup_contact_rating");
+      ratings.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ratingList", ratings);
-      LookupList sources = new LookupList(db, "lookup_contact_rating");
+      LookupList sources = new LookupList(db, "lookup_contact_source");
+      sources.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("SourceList", sources);
       LookupList sites = new LookupList(db, "lookup_site_id");
       sites.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
@@ -1405,13 +1407,7 @@ public final class Sales extends CFSModule {
       }
     }
     addModuleBean(context, "Leads", "Leads");
-    if ("true".equals(context.getRequest().getParameter("popup"))) {
-      context.getRequest().setAttribute(
-          "refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(
-          context.getRequest(), "actionId|listForm|from"));
-      return "CloseAndReloadOK";
-    }
-    return "WorkAccountOK";
+    return getReturn(context, "WorkAccount");
   }
 
 
@@ -1506,14 +1502,7 @@ public final class Sales extends CFSModule {
           context.getRequest().setAttribute("id", contactId);
           return "CloseOK";
         }
-        if (from != null && !"list".equals(from)) {
-          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
-        } else {
-          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
-        }
-        if (retVal != null && "CloseAndReloadOK".equals(retVal)) {
-          return "CloseAndReloadOK";
-        }
+        return  getReturn(context, "WorkAccount");
       }
     }
     addModuleBean(context, "Leads", "Update Lead");
