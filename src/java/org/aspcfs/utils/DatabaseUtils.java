@@ -703,7 +703,7 @@ public class DatabaseUtils {
       case DatabaseUtils.FIREBIRD:
         return field;
       case DatabaseUtils.DB2:
-        return "SUBSTR(" + field + ", 2000, 1)";
+        return "CAST(" + field + " AS VARCHAR(32000))";
       case DatabaseUtils.DAFFODILDB:
         // TODO: This doesn't work for DaffodilDB, so use a VARCHAR(4192) instead of CLOB
         return field;
