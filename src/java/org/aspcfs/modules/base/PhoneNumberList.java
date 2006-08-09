@@ -62,6 +62,15 @@ public class PhoneNumberList extends Vector {
     this.orgId = tmp;
   }
 
+  /**
+   *  Sets the OrgId attribute of the AddressList object
+   *
+   * @param  tmp  The new OrgId value
+   * @since       1.1
+   */
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
 
   /**
    * Sets the ContactId attribute of the PhoneNumberList object

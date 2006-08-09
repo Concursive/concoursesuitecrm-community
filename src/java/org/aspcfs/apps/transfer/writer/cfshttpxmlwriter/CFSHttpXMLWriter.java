@@ -18,6 +18,7 @@ package org.aspcfs.apps.transfer.writer.cfshttpxmlwriter;
 import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
@@ -380,7 +381,23 @@ public class CFSHttpXMLWriter implements DataWriter {
    * @return Description of the Return Value
    */
   public boolean hasMetaInfo() {
-    return (transactionMeta != null && transactionMeta.size() > 0);
+    return (transactionMeta != null 
+                && transactionMeta.size() > 0);
+  }
+
+
+  /**
+   *  Sets the authenticationInfo attribute of the CFSHttpXMLWriter object
+   *
+   * @param  auth  The new authenticationInfo value
+   */
+  public void setAuthenticationInfo(AuthenticationItem auth) {
+    url = auth.getUrl();
+    id = auth.getId();
+    systemId = auth.getSystemId();
+    clientId = auth.getClientId();
+    username = auth.getUsername();
+    code = auth.getCode();
   }
 
 

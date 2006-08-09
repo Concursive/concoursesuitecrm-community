@@ -3,6 +3,7 @@
 #CATALINA_HOME=/path/to/apache-tomcat
 #CENTRIC_HOME=/path/to/apache-tomcat/webapps/centric
 #CENTRIC_FILELIBRARY=/path/to/centric/fileLibrary
+#AXIS_HOME=/path/to/apache-tomcat/webapps/axis
 
 ## To skip web based GUI the fileLibrary must be in the WEB-INF folder
 #CENTRIC_FILELIBRARY=/path/to/apache-tomcat/webapps/centric/WEB-INF/fileLibrary

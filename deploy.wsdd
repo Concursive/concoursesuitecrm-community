@@ -1,19 +1,57 @@
-<deployment xmlns="http://xml.apache.org/axis/wsdd/"
-            xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
 
- <service name="CentricService" provider="java:RPC">
-  <parameter name="className" value="org.aspcfs.apps.axis.CentricService"/>
+ <service name="CentricServices" provider="java:RPC">
+  <parameter name="className" value="org.aspcfs.modules.webservices.CentricServices"/>
   <parameter name="allowedMethods" value="*"/>
-  <beanMapping qname="myNS:Timestamp" xmlns:myNS="urn:CentricService" languageSpecificType="java:java.sql.Timestamp"/>
-  <beanMapping qname="myNS:Locale" xmlns:myNS="urn:CentricService" languageSpecificType="java:java.util.Locale"/>
-  <beanMapping qname="myNS:Organization" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.modules.accounts.base.Organization"/>
-  <beanMapping qname="myNS:OrganizationAddress" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.modules.accounts.base.OrganizationAddress"/>
-  <beanMapping qname="myNS:OrganizationPhoneNumber" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.modules.accounts.base.OrganizationPhoneNumber"/>
-  <beanMapping qname="myNS:Contact" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.modules.contacts.base.Contact"/>
-  <beanMapping qname="myNS:WSUserBean" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.apps.axis.beans.WSUserBean"/>
-  <beanMapping qname="myNS:CustomFieldCategory" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.modules.base.CustomFieldCategory"/>
-  <beanMapping qname="myNS:CustomField" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.modules.base.CustomField"/>
-  <beanMapping qname="myNS:CustomFieldData" xmlns:myNS="urn:CentricService" languageSpecificType="java:org.aspcfs.modules.base.CustomFieldData"/>
-  <beanMapping qname="myNS:ActionContext" xmlns:myNS="urn:CentricService" languageSpecificType="java:com.darkhorseventures.framework.actions.ActionContext"/>
+  <beanMapping qname="myNS:Timestamp"               xmlns:myNS="urn:CentricServices" languageSpecificType="java:java.sql.Timestamp"/>
+  <beanMapping qname="myNS:Locale"                  xmlns:myNS="urn:CentricServices" languageSpecificType="java:java.util.Locale"/>
+  <beanMapping qname="myNS:AuthenticationItem"      xmlns:myNS="urn:CentricServices" languageSpecificType="java:org.aspcfs.modules.login.base.AuthenticationItem"/>
+  <beanMapping qname="myNS:ActionContext"           xmlns:myNS="urn:CentricServices" languageSpecificType="java:com.darkhorseventures.framework.actions.ActionContext"/>
+  <beanMapping qname="myNS:Contact"                 xmlns:myNS="urn:CentricServices" languageSpecificType="java:org.aspcfs.modules.contacts.base.Contact"/>
+  <beanMapping qname="myNS:WSUserBean"              xmlns:myNS="urn:CentricServices" languageSpecificType="java:org.aspcfs.modules.webservices.beans.WSUserBean"/>
+  <beanMapping qname="myNS:WSCustomFolder"          xmlns:myNS="urn:CentricServices" languageSpecificType="java:org.aspcfs.modules.webservices.beans.WSCustomFolder"/>
+  <beanMapping qname="myNS:CustomField"             xmlns:myNS="urn:CentricServices" languageSpecificType="java:org.aspcfs.modules.base.CustomField"/>
+  <beanMapping qname="myNS:CustomFieldData"         xmlns:myNS="urn:CentricServices" languageSpecificType="java:org.aspcfs.modules.base.CustomFieldData"/>
+ </service>
+ 
+ <service name="ContactServices" provider="java:RPC">
+  <parameter name="className" value="org.aspcfs.modules.contacts.webservices.ContactServices"/>
+  <parameter name="allowedMethods" value="*"/>
+  <beanMapping qname="myNS:Timestamp"               xmlns:myNS="urn:ContactServices" languageSpecificType="java:java.sql.Timestamp"/>
+  <beanMapping qname="myNS:Locale"                  xmlns:myNS="urn:ContactServices" languageSpecificType="java:java.util.Locale"/>
+  <beanMapping qname="myNS:AuthenticationItem"      xmlns:myNS="urn:ContactServices" languageSpecificType="java:org.aspcfs.modules.login.base.AuthenticationItem"/>
+  <beanMapping qname="myNS:ActionContext"           xmlns:myNS="urn:ContactServices" languageSpecificType="java:com.darkhorseventures.framework.actions.ActionContext"/>
+  <beanMapping qname="myNS:Contact"                 xmlns:myNS="urn:ContactServices" languageSpecificType="java:org.aspcfs.modules.contacts.base.Contact"/>
+  <beanMapping qname="myNS:ContactEmailAddress"     xmlns:myNS="urn:ContactServices" languageSpecificType="java:org.aspcfs.modules.contacts.base.ContactEmailAddress"/>
+  <beanMapping qname="myNS:ContactPhoneNumber"      xmlns:myNS="urn:ContactServices" languageSpecificType="java:org.aspcfs.modules.contacts.base.ContactPhoneNumber"/>
+  <beanMapping qname="myNS:ContactAddress"          xmlns:myNS="urn:ContactServices" languageSpecificType="java:org.aspcfs.modules.contacts.base.ContactAddress"/>
+ </service>
+ 
+ <service name="AccountServices" provider="java:RPC">
+  <parameter name="className" value="org.aspcfs.modules.accounts.webservices.AccountServices"/>
+  <parameter name="allowedMethods" value="*"/>
+  <beanMapping qname="myNS:Timestamp"               xmlns:myNS="urn:AccountServices" languageSpecificType="java:java.sql.Timestamp"/>
+  <beanMapping qname="myNS:Locale"                  xmlns:myNS="urn:AccountServices" languageSpecificType="java:java.util.Locale"/>
+  <beanMapping qname="myNS:AuthenticationItem"      xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.login.base.AuthenticationItem"/>
+  <beanMapping qname="myNS:ActionContext"           xmlns:myNS="urn:AccountServices" languageSpecificType="java:com.darkhorseventures.framework.actions.ActionContext"/>
+  <beanMapping qname="myNS:Contact"                 xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.contacts.base.Contact"/>
+  <beanMapping qname="myNS:Organization"            xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.accounts.base.Organization"/>
+  <beanMapping qname="myNS:OrganizationAddress"     xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.accounts.base.OrganizationAddress"/>
+  <beanMapping qname="myNS:OrganizationPhoneNumber" xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.accounts.base.OrganizationPhoneNumber"/>
+  <beanMapping qname="myNS:OrganizationHistory"     xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.accounts.base.OrganizationHistory"/>
+  <beanMapping qname="myNS:ActionPlanWorkNote"      xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.actionplans.base.ActionPlanWorkNote"/>
+  <beanMapping qname="myNS:ActionItemWorkNote"      xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.actionplans.base.ActionItemWorkNote"/>
+  <beanMapping qname="myNS:Call"                    xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.contacts.base.Call"/>
+  <beanMapping qname="myNS:WSTicketBean"            xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.troubletickets.webservices.beans.WSTicketBean"/>
+  <beanMapping qname="myNS:AccountFilters"          xmlns:myNS="urn:AccountServices" languageSpecificType="java:org.aspcfs.modules.accounts.webservices.beans.AccountFilters"/>
+ </service>
+ 
+ <service name="TroubleTicketServices" provider="java:RPC">
+  <parameter name="className" value="org.aspcfs.modules.troubletickets.webservices.TroubleTicketServices"/>
+  <parameter name="allowedMethods" value="*"/>
+  <beanMapping qname="myNS:Timestamp"               xmlns:myNS="urn:TroubleTicketServices" languageSpecificType="java:java.sql.Timestamp"/>
+  <beanMapping qname="myNS:Locale"                  xmlns:myNS="urn:TroubleTicketServices" languageSpecificType="java:java.util.Locale"/>
+  <beanMapping qname="myNS:AuthenticationItem"      xmlns:myNS="urn:TroubleTicketServices" languageSpecificType="java:org.aspcfs.modules.login.base.AuthenticationItem"/>
+  <beanMapping qname="myNS:ActionContext"           xmlns:myNS="urn:TroubleTicketServices" languageSpecificType="java:com.darkhorseventures.framework.actions.ActionContext"/>
  </service>
 </deployment>

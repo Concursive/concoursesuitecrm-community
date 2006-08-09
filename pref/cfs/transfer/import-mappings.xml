@@ -18,6 +18,7 @@
   </processes>
   <mappings>
     <map class="org.aspcfs.utils.web.LookupList" id="lookupIndustry" table="lookup_industry"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupTitle" table="lookup_title"/>
     <map class="org.aspcfs.utils.web.LookupList" id="systemModules" table="system_modules"/>
     <map class="org.aspcfs.utils.web.LookupList" id="lookupContactTypes" table="lookup_contact_types"/>
     <map class="org.aspcfs.utils.web.LookupList" id="lookupAccountTypes" table="lookup_account_types"/>
@@ -54,6 +55,7 @@
       <property type="int" lookup="lookupDepartment">department</property>
       <property type="String">orgName</property>
       <property type="String">company</property>
+      <property type="int" lookup="lookupTitle">listSalutation</property>
       <property type="String">nameSalutation</property>
       <property type="String">nameFirst</property>
       <property type="String">nameMiddle</property>
@@ -71,10 +73,12 @@
       <property type="int" lookup="user">userId</property>
       <property type="Timestamp">entered</property>
       <property type="Timestamp">modified</property>
-      <property>leadStatus</property>
-      <property>isLead</property>
+      <property type="int">leadStatus</property>
+      <property type="boolean">isLead</property>
       <property lookup="lookupContactSource">source</property>
       <property lookup="lookupContactRating">rating</property>
+      <property lookup="lookupIndustry">industryTempCode</property>
+      <property type="String">comments</property>
     </map>
     <map class="org.aspcfs.modules.accounts.base.Organization" id="account">
       <property alias="guid">id</property>
@@ -100,6 +104,41 @@
       <property>accountSize</property>
       <property>directBill</property>
     </map>
+    
+    <map class="org.aspcfs.modules.accounts.base.AccountHistory" id="accountHistory" >
+      <property alias="guid" field="history_id">id</property>
+      <property field="contact_id">contactId</property>
+      <property field="org_id">orgId</property>
+      <property field="link_object_id">linkObjectId</property>
+      <property field="link_item_id">linkItemId</property>
+      <property field="level">level</property>
+      <property field="status">status</property>
+      <property field="type">type</property>
+      <property field="description">description</property>
+      <property field="enabled">enabled</property>
+      <property field="entered">entered</property>
+      <property field="enteredby">enteredBy</property>
+      <property field="modified">modified</property>
+      <property field="modifiedby">modifiedBy</property>
+
+    </map>
+    
+    <map class="org.aspcfs.modules.actionplans.base.ActionPlanWorkNote" id="actionPlanWorkNote">
+      <property alias="guid" feild="note_id">id</property>
+      <property feild="plan_work_id">planWorkId</property>
+      <property feild="description">description</property>
+      <property feild="submitted">submitted</property>
+      <property feild="submittedby">submittedBy</property>         
+    </map>
+    
+    <map class="org.aspcfs.modules.actionplans.base.ActionItemWorkNote" id="actionItemWorkNote">
+      <property alias="guid" feild="note_id">id</property>
+      <property feild="item_work_id">itemWorkId</property>
+      <property feild="description">description</property>
+      <property feild="submitted">submitted</property>
+      <property feild="submittedby">submittedBy</property>         
+    </map>
+  
     <map class="org.aspcfs.modules.admin.base.User" id="user">
       <property alias="guid">id</property>
       <property>username</property>

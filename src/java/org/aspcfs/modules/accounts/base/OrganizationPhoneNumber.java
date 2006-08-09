@@ -19,6 +19,7 @@ import org.aspcfs.modules.base.PhoneNumber;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Represents an organization phone number, extending the base PhoneNumber
@@ -260,5 +261,16 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     pst.close();
   }
 
+  /**
+   *  Gets the userIdParams attribute of the Contact class
+   *
+   * @return    The userIdParams value
+   */
+  public static ArrayList getUserIdParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("enteredBy");
+    thisList.add("modifiedBy");
+    return thisList;
+  }
 }
 

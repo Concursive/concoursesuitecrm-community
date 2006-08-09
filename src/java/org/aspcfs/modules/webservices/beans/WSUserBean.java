@@ -1,4 +1,4 @@
-package org.aspcfs.apps.axis.beans;
+package org.aspcfs.modules.webservices.beans;
 
 import com.darkhorseventures.framework.beans.GenericBean;
 

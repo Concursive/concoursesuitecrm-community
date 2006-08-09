@@ -50,12 +50,33 @@ public class AuthenticationItem {
   private String authCode = "unset";
   private String encoding = "UTF-8";
   private String username = null;
+  private String url = null;
 
 
   /**
    * Constructor for the AuthenticationItem object
    */
   public AuthenticationItem() { }
+
+
+  /**
+   *  Gets the url attribute of the AuthenticationItem object
+   *
+   * @return    The url value
+   */
+  public String getUrl() {
+    return url;
+  }
+
+
+  /**
+   *  Sets the url attribute of the AuthenticationItem object
+   *
+   * @param  tmp  The new url value
+   */
+  public void setUrl(String tmp) {
+    this.url = tmp;
+  }
 
 
   /**

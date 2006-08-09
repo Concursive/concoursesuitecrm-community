@@ -85,6 +85,9 @@ public class OrganizationList extends Vector implements SyncableList {
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
 
+  protected java.sql.Timestamp enteredSince = null;
+  protected java.sql.Timestamp enteredTo = null;
+
   protected int typeId = 0;
   protected String types = null;
   protected String accountSegment = null;
@@ -113,6 +116,66 @@ public class OrganizationList extends Vector implements SyncableList {
    * @since    1.1
    */
   public OrganizationList() { }
+
+
+  /**
+   *  Gets the enteredSince attribute of the OrganizationList object
+   *
+   * @return    The enteredSince value
+   */
+  public java.sql.Timestamp getEnteredSince() {
+    return enteredSince;
+  }
+
+
+  /**
+   *  Sets the enteredSince attribute of the OrganizationList object
+   *
+   * @param  tmp  The new enteredSince value
+   */
+  public void setEnteredSince(java.sql.Timestamp tmp) {
+    this.enteredSince = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredSince attribute of the OrganizationList object
+   *
+   * @param  tmp  The new enteredSince value
+   */
+  public void setEnteredSince(String tmp) {
+    this.enteredSince = DateUtils.parseTimestampString(tmp);
+  }
+
+
+  /**
+   *  Gets the enteredTo attribute of the OrganizationList object
+   *
+   * @return    The enteredTo value
+   */
+  public java.sql.Timestamp getEnteredTo() {
+    return enteredTo;
+  }
+
+
+  /**
+   *  Sets the enteredTo attribute of the OrganizationList object
+   *
+   * @param  tmp  The new enteredTo value
+   */
+  public void setEnteredTo(java.sql.Timestamp tmp) {
+    this.enteredTo = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredTo attribute of the OrganizationList object
+   *
+   * @param  tmp  The new enteredTo value
+   */
+  public void setEnteredTo(String tmp) {
+    this.enteredTo = DateUtils.parseTimestampString(tmp);
+  }
 
 
   /**
@@ -1542,6 +1605,14 @@ public class OrganizationList extends Vector implements SyncableList {
       sqlFilter.append("AND o.modified < ? ");
     }
 
+    if (enteredSince != null) {
+      sqlFilter.append("AND o.entered >= ? ");
+    }
+    
+    if (enteredTo != null) {
+      sqlFilter.append("AND o.entered <= ? ");
+    }
+    
     if (revenueOwnerId > -1) {
       sqlFilter.append(
           "AND o.org_id in (SELECT org_id from revenue WHERE owner = ?) ");
@@ -1798,6 +1869,14 @@ public class OrganizationList extends Vector implements SyncableList {
       pst.setTimestamp(++i, nextAnchor);
     }
 
+    if (enteredSince != null) {
+      pst.setTimestamp(++i, enteredSince);
+    }
+    
+    if (enteredTo != null) {
+      pst.setTimestamp(++i, enteredTo);
+    }
+    
     if (revenueOwnerId > -1) {
       pst.setInt(++i, revenueOwnerId);
     }

@@ -1071,8 +1071,112 @@ if (1==1) {
 if (1==1) {
   SyncTable thisTable = new SyncTable();
   thisTable.setSystemId(systemId);
+  thisTable.setName("taskList");
+  thisTable.setMappedClassName("org.aspcfs.modules.tasks.base.TaskList");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
   thisTable.setName("contactMessage");
   thisTable.setMappedClassName("org.aspcfs.modules.communications.base.ContactMessage");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("contactMessageList");
+  thisTable.setMappedClassName("org.aspcfs.modules.communications.base.ContactMessageList");
+  thisTable.insert(db);
+}
+if (1==1) {
+  String className = "org.aspcfs.utils.web.LookupElement";
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("lookupContactSource");
+  thisTable.setMappedClassName(className);
+  thisTable.insert(db);
+}
+if (1==1) {
+  String className = "org.aspcfs.utils.web.LookupList";
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("lookupContactSourceList");
+  thisTable.setMappedClassName(className);
+  thisTable.insert(db);
+}
+if (1==1) {
+  String className = "org.aspcfs.utils.web.LookupElement";
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("lookupContactRating");
+  thisTable.setMappedClassName(className);
+  thisTable.insert(db);
+}
+if (1==1) {
+  String className = "org.aspcfs.utils.web.LookupList";
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("lookupContactRatingList");
+  thisTable.setMappedClassName(className);
+  thisTable.insert(db);
+}
+if (1==1) {
+  String className = "org.aspcfs.utils.web.LookupElement";
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("lookupTitle");
+  thisTable.setMappedClassName(className);
+  thisTable.insert(db);
+}
+if (1==1) {
+  String className = "org.aspcfs.utils.web.LookupList";
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("lookupTitleList");
+  thisTable.setMappedClassName(className);
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("accountHistory");
+  thisTable.setMappedClassName("org.aspcfs.modules.accounts.base.OrganizationHistory");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("accountHistoryList");
+  thisTable.setMappedClassName("org.aspcfs.modules.accounts.base.OrganizationHistoryList");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("actionPlanWorkNote");
+  thisTable.setMappedClassName("org.aspcfs.modules.actionplans.base.ActionPlanWorkNote");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("actionPlanWorkNoteList");
+  thisTable.setMappedClassName("org.aspcfs.modules.actionplans.base.ActionPlanWorkNoteList");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("actionItemWorkNote");
+  thisTable.setMappedClassName("org.aspcfs.modules.actionplans.base.ActionItemWorkNote");
+  thisTable.insert(db);
+}
+if (1==1) {
+  SyncTable thisTable = new SyncTable();
+  thisTable.setSystemId(systemId);
+  thisTable.setName("actionItemWorkNoteList");
+  thisTable.setMappedClassName("org.aspcfs.modules.actionplans.base.ActionItemWorkNoteList");
   thisTable.insert(db);
 }
 print("Finished sync API.");

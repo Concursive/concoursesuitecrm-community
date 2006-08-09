@@ -1042,5 +1042,16 @@ public class OrganizationHistoryList extends ArrayList implements SyncableList {
       history.update(db);
     }
   }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 

@@ -31,8 +31,39 @@ import java.util.Iterator;
 public class ActionItemWorkNoteList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int itemWorkId = -1;
+  private int orgId = -1;
+  
+  
+  /**
+   *  Gets the orgId attribute of the ActionPlanWorkNoteList object
+   *
+   * @return    The orgId value
+   */
+  public int getOrgId() {
+    return orgId;
+  }
 
 
+  /**
+   *  Sets the orgId attribute of the ActionPlanWorkNoteList object
+   *
+   * @param  tmp  The new orgId value
+   */
+  public void setOrgId(int tmp) {
+    this.orgId = tmp;
+  }
+
+
+  /**
+   *  Sets the orgId attribute of the ActionPlanWorkNoteList object
+   *
+   * @param  tmp  The new orgId value
+   */
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
+
+  
   /**
    *  Gets the pagedListInfo attribute of the ActionItemWorkNoteList object
    *
@@ -181,6 +212,16 @@ public class ActionItemWorkNoteList extends ArrayList {
     if (itemWorkId > -1) {
       sqlFilter.append("AND aiwn.item_work_id = ? ");
     }
+    
+    //filters notes for a specific account
+    if (orgId > -1) {
+      sqlFilter.append("AND aiwn.item_work_id IN " +
+                       "   (SELECT item_work_id FROM action_item_work " +
+                       "    WHERE phase_work_id IN (SELECT phase_work_id FROM action_phase_work WHERE plan_work_id IN " +
+                       "      (SELECT plan_work_id FROM action_plan_work " +
+                       "       WHERE link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+                       "       AND link_item_id = ? ))) ");
+    }
   }
 
 
@@ -196,6 +237,12 @@ public class ActionItemWorkNoteList extends ArrayList {
     if (itemWorkId != -1) {
       pst.setInt(++i, itemWorkId);
     }
+    
+    if (orgId != -1) {
+      pst.setInt(++i, ActionPlan.ACCOUNTS);
+      pst.setInt(++i, orgId);
+    }
+    
     return i;
   }
 
@@ -212,6 +259,17 @@ public class ActionItemWorkNoteList extends ArrayList {
       ActionItemWorkNote thisNote = (ActionItemWorkNote) i.next();
       thisNote.delete(db);
     }
+  }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
   }
 }
 

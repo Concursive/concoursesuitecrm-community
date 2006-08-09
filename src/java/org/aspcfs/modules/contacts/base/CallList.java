@@ -1151,6 +1151,17 @@ public class CallList extends ArrayList {
     }
     return true;
   }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 }
 
 

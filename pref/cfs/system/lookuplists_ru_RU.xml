@@ -925,7 +925,6 @@
       <record><![CDATA[Начальный уровень]]></record>
       <record><![CDATA[Первый уровень]]></record>
       <record><![CDATA[Второй уровень]]></record>
-      <record><![CDATA[Второй уровень]]></record>
       <record><![CDATA[Высший уровень]]></record>
     </lookup>
     <lookup table="ticket_priority">
