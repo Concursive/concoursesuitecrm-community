@@ -999,7 +999,7 @@ public class CalendarView {
     //Display Calendar
     html.append(
         "<center><table height=\"100%\" width='" + tableWidth + "' " + borderSize + cellSpacing + cellPadding + " class='" + pre + "calendar' id='calendarTable'>" +
-        "<tr name=\"staticrow\" height=\"4%\">");
+        "<tr height=\"4%\">");
 
     //Display Previous Month Arrow
     if (popup) {
@@ -1050,7 +1050,7 @@ public class CalendarView {
     html.append("</tr>");
 
     //Display the Days of the Week names
-    html.append("<tr name=\"staticrow\" height=\"4%\">");
+    html.append("<tr height=\"4%\">");
     if (!popup) {
       html.append(
           "<td width=\"4\" class=\"row1\"><font style=\"visibility:hidden\">n</font></td>");

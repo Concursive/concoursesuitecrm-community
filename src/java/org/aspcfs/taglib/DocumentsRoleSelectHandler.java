@@ -17,6 +17,7 @@ package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.LookupList;
 
 import javax.servlet.jsp.JspException;
@@ -35,7 +36,7 @@ public class DocumentsRoleSelectHandler extends TagSupport {
   private String name = null;
   private int value = -1;
   private String onChange = null;
-
+  private boolean isPortalUser = false;
 
   /**
    * Sets the name attribute of the DocumentsRoleSelectHandler object
@@ -76,6 +77,24 @@ public class DocumentsRoleSelectHandler extends TagSupport {
     this.onChange = tmp;
   }
 
+  /**
+   *  Sets the isPortalUser attribute of the DocumentsRoleSelectHandler object
+   *
+   * @param  tmp  The new isPortalUser value
+   */
+  public void setIsPortalUser(boolean tmp) {
+    this.isPortalUser = tmp;
+  }
+
+
+  /**
+   *  Sets the isPortalUser attribute of the DocumentsRoleSelectHandler object
+   *
+   * @param  tmp  The new isPortalUser value
+   */
+  public void setIsPortalUser(String tmp) {
+    this.isPortalUser = DatabaseUtils.parseBoolean(tmp);
+  }
 
   /**
    * Description of the Method
@@ -96,6 +115,11 @@ public class DocumentsRoleSelectHandler extends TagSupport {
       if (systemStatus != null) {
         LookupList roleList = (LookupList) systemStatus.getLookupList(
             null, "lookup_document_store_role");
+        if (roleList != null && isPortalUser) {
+        	roleList = (LookupList) roleList.clone();
+          //Remove the Manager that has a level 1.
+          roleList.removeElementByLevel(1);
+        }
         if (roleList != null) {
           if (onChange != null) {
             roleList.setJsEvent("onChange=\"" + onChange + "\"");

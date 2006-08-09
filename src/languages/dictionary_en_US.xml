@@ -131,6 +131,9 @@
     <param name="accounts.accounts_contacts_messages_details.SelectedMessage">
       <value><![CDATA[Selected message]]></value>
     </param>
+    <param name="accounts.accounts_document_portal_include.ShareWithPortalUser">
+      <value><![CDATA[Share With Portal User?]]></value>
+    </param>
     <param name="accounts.accounts_asset_details.AssetDetails">
       <value><![CDATA[Asset Details]]></value>
     </param>
@@ -401,6 +404,9 @@
     <param name="accounts.accounts_contacts_portal_include.PortalRole">
       <value><![CDATA[Portal Role]]></value>
     </param>
+    <param name="accounts.accounts_contacts_portal_include.Enabled">
+      <value><![CDATA[Enabled]]></value>
+    </param>
     <param name="accounts.accounts_reports_generate.AllR">
       <value><![CDATA[All >]]></value>
     </param>
@@ -628,6 +634,12 @@
     </param>
     <param name="admin.manageRoles">
       <value><![CDATA[Manage Roles]]></value>
+    </param>
+    <param name="admin.managePortalRoles">
+      <value><![CDATA[Manage Portal Roles]]></value>
+    </param>
+    <param name="admin.portalRoles">
+      <value><![CDATA[Portal Roles]]></value>
     </param>
     <param name="admin.Usage">
       <value><![CDATA[Usage]]></value>
@@ -2268,6 +2280,9 @@
     <param name="documents.team.accountContacts">
       <value><![CDATA[Account Contacts]]></value>
     </param>
+    <param name="documents.team.portalUsers">
+      <value><![CDATA[Portal Users]]></value>
+    </param>
     <param name="documents.team.roles">
       <value><![CDATA[Roles]]></value>
     </param>
@@ -2331,6 +2346,9 @@
     <param name="documents.team.noAccountContactsMessage">
       <value><![CDATA[Account contacts have not been added to the store]]></value>
     </param>
+    <param name="documents.team.noPortalUserMessage">
+      <value><![CDATA[Portal Users contacts have not been added to the store]]></value>
+    </param>
     <param name="documents.team.noRoleMessage">
       <value><![CDATA[User Role membership has not been defined]]></value>
     </param>
@@ -2351,6 +2369,9 @@
     </param>
     <param name="documents.team.selectAccountType">
       <value><![CDATA[Select an account type:]]></value>
+    </param>
+    <param name="documents.team.searchAccountType">
+      <value><![CDATA[Search an Account:]]></value>
     </param>
     <param name="documents.team.selectContact">
       <value><![CDATA[Select a contact:]]></value>
@@ -5254,6 +5275,9 @@ while a Guest has very limited functionality.]]></value>
     <param name="project.selectAnAccountType.colon">
       <value><![CDATA[Select an account type:]]></value>
     </param>
+    <param name="project.searchAnAccountType.colon">
+      <value><![CDATA[Search an Account:]]></value>
+    </param>
     <param name="project.selectAContact">
       <value><![CDATA[Select a contact:]]></value>
     </param>
@@ -5271,6 +5295,9 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="project.role">
       <value><![CDATA[Role]]></value>
+    </param>
+    <param name="project.portalrole">
+      <value><![CDATA[PortalRole]]></value>
     </param>
     <param name="project.department">
       <value><![CDATA[Department]]></value>
@@ -5292,6 +5319,9 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="project.acctContactTeamNotDefined">
       <value><![CDATA[Account contact team has not been defined]]></value>
+    </param>
+    <param name="project.portalUserTeamNotDefined">
+      <value><![CDATA[Portal user team has not been defined]]></value>
     </param>
     <param name="project.invitationResults">
       <value><![CDATA[Invitation results]]></value>
@@ -5423,6 +5453,10 @@ while a Guest has very limited functionality.]]></value>
     <param name="project.noProjectsToDisplay">
       <value><![CDATA[There are currently no projects to display in this view.]]></value>
     </param>
+    <param name="document.noDocumentsToDisplay">
+      <value><![CDATA[There are currently no documents to display in this view.]]></value>
+    </param>
+
     <param name="project.youHaveBeenInvited.text">
       <value><![CDATA[You have been invited to the following projects and have been requested to
     either ${boldStart}ACCEPT${boldEnd} or ${boldStart}REJECT${boldEnd} each project.${break}
@@ -5508,6 +5542,9 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="project.ticket">
       <value><![CDATA[Ticket]]></value>
+    </param>
+    <param name="document.goToThisDocumentStore">
+      <value><![CDATA[Go to this Document Store]]></value>
     </param>
     <param name="project.invalidSearch.text">
       <value><![CDATA[An invalid search request was made.${break}Please check the search criteria and try again.]]></value>
@@ -6241,8 +6278,20 @@ while a Guest has very limited functionality.]]></value>
     <param name="admin.customFolders">
       <value><![CDATA[Custom Folders]]></value>
     </param>
+    <param name="admin.active">
+      <value><![CDATA[Active]]></value>
+    </param>
     <param name="admin.activeDate">
       <value><![CDATA[Active Date]]></value>
+    </param>
+    <param name="admin.activate">
+      <value><![CDATA[Activate]]></value>
+    </param>
+    <param name="admin.activateDeactivate">
+	    <value><![CDATA[Activate/Deactivate]]></value>
+    </param>
+    <param name="admin.deactivate">
+      <value><![CDATA[Deactivate]]></value>
     </param>
     <param name="admin.noFoldersHaveBeenEntered.text">
       <value><![CDATA[No folders have been entered.]]></value>
@@ -6379,14 +6428,23 @@ while a Guest has very limited functionality.]]></value>
     <param name="accounts.industryTypes">
       <value><![CDATA[Industry Types]]></value>
     </param>
+    <param name="accounts.documentStore">
+      <value><![CDATA[Document store]]></value>
+    </param>
     <param name="admin.viewRoles">
       <value><![CDATA[View Roles]]></value>
+    </param>
+    <param name="admin.viewPortalRoles">
+      <value><![CDATA[View Portal Roles]]></value>
     </param>
     <param name="contacts.textMessagingTypes">
       <value><![CDATA[Text Messaging Types]]></value>
     </param>
     <param name="admin.addNewRole">
       <value><![CDATA[Add New Role]]></value>
+    </param>
+    <param name="admin.addNewPortalRole">
+      <value><![CDATA[Add New Portal Role]]></value>
     </param>
     <param name="admin.numberOfUsers">
       <value><![CDATA[# of users]]></value>
@@ -6598,14 +6656,26 @@ reflect those changes.]]></value>
     <param name="admin.updateRole">
       <value><![CDATA[Update Role]]></value>
     </param>
+    <param name="admin.updatePortalRole">
+      <value><![CDATA[Update Portal Role]]></value>
+    </param>
     <param name="admin.roleName">
       <value><![CDATA[Role Name]]></value>
+    </param>
+    <param name="admin.portalRoleName">
+      <value><![CDATA[Portal Role Name]]></value>
+    </param>
+    <param name="accounts.sharedDocuments">
+      <value><![CDATA[Share Accounts Documents]]></value>
     </param>
     <param name="admin.accessView">
       <value><![CDATA[Access/${break}View]]></value>
     </param>
     <param name="admin.addRole">
       <value><![CDATA[Add Role]]></value>
+    </param>
+    <param name="admin.addPortalRole">
+      <value><![CDATA[Add Portal Role]]></value>
     </param>
     <param name="admin.configurePermissions.text">
       <value><![CDATA[Configure permissions for this role]]></value>
@@ -7692,6 +7762,12 @@ reflect those changes.]]></value>
     </param>
     <param name="documents.documentStoreDetails">
       <value><![CDATA[Document Store Details]]></value>
+    </param>
+    <param name="document.startDate">
+      <value><![CDATA[Start Date]]></value>
+    </param>
+    <param name="document.documentStoreName">
+      <value><![CDATA[Document Store Name]]></value>
     </param>
     <param name="errors.requestedActionNotCompleted.text">
       <value><![CDATA[The requested action could not be completed]]></value>
@@ -10391,6 +10467,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="dependency.projects">
       <value><![CDATA[Projects]]></value>
     </param>
+    <param name="dependency.sharedDocument">
+      <value><![CDATA[SharedDocuments]]></value>
+    </param>
     <param name="dependency.preventingDeletion">
       <value><![CDATA[Indicates any dependency preventing this item from being deleted.]]></value>
     </param>
@@ -10598,6 +10677,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="pagedListInfo.pagedListStatus.AccountContacts">
       <value><![CDATA[Account Contacts]]></value>
+    </param>
+    <param name="pagedListInfo.pagedListStatus.PortalUsers">
+      <value><![CDATA[Portal Users]]></value>
     </param>
     <param name="pagedListInfo.pagedListStatus.Records">
       <value><![CDATA[Records]]></value>

@@ -15,6 +15,7 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -40,7 +41,7 @@ public class FileItemVersionList extends ArrayList {
   private String ownerIdRange = null;
   private java.sql.Timestamp enteredRangeStart = null;
   private java.sql.Timestamp enteredRangeEnd = null;
-
+  private int buildPortalRecords = Constants.UNDEFINED;
 
   /**
    * Constructor for the FileItemVersionList object
@@ -150,6 +151,22 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
+	 * @return Returns the buildPortalRecords.
+	 */
+	public int getBuildPortalRecords() {
+		return buildPortalRecords;
+	}
+
+
+	/**
+	 * @param buildPortalRecords The buildPortalRecords to set.
+	 */
+	public void setBuildPortalRecords(int buildPortalRecords) {
+		this.buildPortalRecords = buildPortalRecords;
+	}
+
+
+	/**
    * Generates a list of matching FileItems
    *
    * @param db Description of Parameter
@@ -262,6 +279,10 @@ public class FileItemVersionList extends ArrayList {
     if (enteredRangeEnd != null) {
       sqlFilter.append("AND entered <= ? ");
     }
+    if (buildPortalRecords != Constants.UNDEFINED) {
+      sqlFilter.append("AND allow_portal_access = ? ");
+    }
+    
   }
 
 
@@ -285,6 +306,9 @@ public class FileItemVersionList extends ArrayList {
     }
     if (enteredRangeEnd != null) {
       pst.setTimestamp(++i, enteredRangeEnd);
+    }
+    if (buildPortalRecords != Constants.UNDEFINED) {
+      pst.setBoolean(++i, buildPortalRecords == Constants.TRUE);
     }
     return i;
   }

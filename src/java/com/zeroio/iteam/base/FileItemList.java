@@ -57,6 +57,7 @@ public class FileItemList extends ArrayList {
   private int forProjectUser = -1;
   //html select
   private String htmlJsEvent = "";
+  private int buildPortalRecords = Constants.UNDEFINED;
 
 
   /**
@@ -401,7 +402,7 @@ public class FileItemList extends ArrayList {
   }
 
 
-  /**
+	/**
    * Gets the alertRangeStart attribute of the FileItemList object
    *
    * @return The alertRangeStart value
@@ -432,6 +433,22 @@ public class FileItemList extends ArrayList {
 
 
   /**
+	 * @return Returns the buildPortalRecords.
+	 */
+	public int getBuildPortalRecords() {
+		return buildPortalRecords;
+	}
+
+
+	/**
+	 * @param buildPortalRecords The buildPortalRecords to set.
+	 */
+	public void setBuildPortalRecords(int buildPortalRecords) {
+		this.buildPortalRecords = buildPortalRecords;
+	}
+
+
+	/**
    * Generates a list of matching FileItems
    *
    * @param db Description of Parameter
@@ -555,6 +572,9 @@ public class FileItemList extends ArrayList {
     if (topLevelOnly) {
       sqlFilter.append("AND f.folder_id IS NULL ");
     }
+    if (buildPortalRecords != Constants.UNDEFINED) {
+      sqlFilter.append("AND f.allow_portal_access = ? ");
+    }
     if (webImageFormatOnly) {
       sqlFilter.append(
           "AND (" + DatabaseUtils.toLowerCase(db) + "(f.client_filename) LIKE '%.gif' OR " + DatabaseUtils.toLowerCase(
@@ -611,6 +631,9 @@ public class FileItemList extends ArrayList {
     if (forProjectUser > -1) {
       pst.setInt(++i, forProjectUser);
       pst.setBoolean(++i, true);
+    }
+    if (buildPortalRecords != Constants.UNDEFINED) {
+      pst.setBoolean(++i, buildPortalRecords == Constants.TRUE);
     }
     if (defaultFile != Constants.UNDEFINED) {
       pst.setBoolean(++i, defaultFile == Constants.TRUE);

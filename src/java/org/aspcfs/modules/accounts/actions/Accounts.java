@@ -757,6 +757,7 @@ public final class Accounts extends CFSModule {
       //the search form is bypassed.
       //temporary solution for page redirection for portal user.
       if (isPortalUser(context)) {
+        organizationList.setOrgSiteId(this.getUserSiteId(context));
         source = "searchForm";
       }
       //return if no criteria is selected
@@ -799,6 +800,7 @@ public final class Accounts extends CFSModule {
         //(i.e., the organization for which he is an account contact
         if (isPortalUser(context)) {
           organizationList.setOrgSiteId(this.getUserSiteId(context));
+          organizationList.setIncludeOrganizationWithoutSite(false);
           organizationList.setOrgId(getPortalUserPermittedOrgId(context));
         }
         organizationList.buildList(db);
@@ -832,9 +834,9 @@ public final class Accounts extends CFSModule {
         if ("my".equals(searchListInfo.getListView())) {
           contactList.setAccountOwnerId(this.getUserId(context));
         }
-        //fetching criterea for account type 
+        //fetching criterea for account type
         contactList.setAccountTypeId(searchListInfo.getFilterKey("listFilter1"));
-        
+
         //fetching criterea for account status (active, disabled or any)
         int enabled = searchListInfo.getFilterKey("listFilter2");
         contactList.setIncludeEnabledAccount(enabled);
@@ -1096,16 +1098,19 @@ public final class Accounts extends CFSModule {
       } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
           "return").equals("dashboard")) {
         return (executeCommandDashboard(context));
-      } else {
+      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
+          "return").equals("Calendar")) {
         if (context.getRequest().getParameter("popup") != null) {
           return ("PopupCloseOK");
         }
+      } else {
         return ("UpdateOK");
       }
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
+    return ("UpdateOK");
   }
 
 
@@ -2131,7 +2136,6 @@ public final class Accounts extends CFSModule {
       if (context.getRequest().getParameter("source") != null && "attachplan".equals(context.getRequest().getParameter("source"))) {
         return "InsertFieldsAttachPlanOK";
       }
-//      return getReturn(context, "InsertFields");
     }
     return (this.executeCommandFields(context));
   }

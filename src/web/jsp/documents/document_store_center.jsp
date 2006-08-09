@@ -69,6 +69,9 @@
     <dhv:documentPermission name="documentcenter-documents-view">
         <zeroio:tabbedMenu text="<%= "Documents" %>" display="Documents" type="project.documents" key="file" value="<%= section %>" url="<%= "DocumentManagement.do?command=DocumentStoreCenter&section=File_Library&documentStoreId=" + documentStore.getId() + "&folderId=-1" %>"/>
     </dhv:documentPermission>
+    <dhv:documentPermission name="documentcenter-accounts-view">
+        <zeroio:tabbedMenu text="<%= "Accounts" %>" display="Accounts" type="project.accounts" key="accounts" value="<%= section %>" url="<%= "DocumentStoreManagementAccounts.do?command=View&section=Accounts&documentStoreId=" + documentStore.getId() %>"/>
+    </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-team-view">
         <zeroio:tabbedMenu text="<%= "Team" %>" display="Team" type="project.team" key="team,user_membership_modify,group_membership_modify" value="<%= section %>" url="<%= "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + documentStore.getId() %>"/>
     </dhv:documentPermission>

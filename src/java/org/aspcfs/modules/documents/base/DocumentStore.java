@@ -59,6 +59,7 @@ public class DocumentStore extends GenericBean {
   private DocumentStoreTeamMemberList departmentTeam = new DocumentStoreTeamMemberList();
   private DocumentStoreTeamMemberList employeeTeam = new DocumentStoreTeamMemberList();
   private DocumentStoreTeamMemberList accountContactTeam = new DocumentStoreTeamMemberList();
+  private DocumentStoreTeamMemberList portalUserTeam = new DocumentStoreTeamMemberList();
   private FileItemList files = new FileItemList();
 
   private DocumentStorePermissionList permissions = new DocumentStorePermissionList();
@@ -457,6 +458,14 @@ public class DocumentStore extends GenericBean {
     this.accountContactTeam = tmp;
   }
 
+  /**
+   * Sets the portalUserTeam attribute of the DocumentStore object
+   *
+   * @param tmp The new portalUserTeam value
+   */
+  public void setPortalUserTeam(DocumentStoreTeamMemberList tmp) {
+    this.portalUserTeam = tmp;
+  }
 
   /**
    * Sets the files attribute of the DocumentStore object
@@ -699,6 +708,16 @@ public class DocumentStore extends GenericBean {
 
 
   /**
+   * Gets the portalUserTeam attribute of the DocumentStore object
+   *
+   * @return The portalUserTeam value
+   */
+  public DocumentStoreTeamMemberList getPortalUserTeam() {
+    return portalUserTeam;
+  }
+
+
+  /**
    * Gets the files attribute of the DocumentStore object
    *
    * @return The files value
@@ -741,6 +760,12 @@ public class DocumentStore extends GenericBean {
     departmentTeam.setDocumentStoreId(this.getId());
     departmentTeam.setMemberType(DocumentStoreTeamMemberList.DEPARTMENT);
     departmentTeam.buildList(db);
+
+    portalUserTeam.setDocumentStore(this);
+    portalUserTeam.setDocumentStoreId(this.getId());
+    portalUserTeam.setMemberType(DocumentStoreTeamMemberList.USER);
+    portalUserTeam.setPortalUsersOnly(true);
+    portalUserTeam.buildList(db);
   }
 
 

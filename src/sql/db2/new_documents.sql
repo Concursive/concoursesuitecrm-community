@@ -84,7 +84,8 @@ CREATE TABLE document_store_user_member(
     enteredby INTEGER NOT NULL  REFERENCES "access"(user_id),
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
-    site_id INTEGER REFERENCES lookup_site_id(code)
+    site_id INTEGER REFERENCES lookup_site_id(code),
+    role_type int
 );
 
 
@@ -99,7 +100,8 @@ CREATE TABLE document_store_role_member(
     enteredby INTEGER NOT NULL  REFERENCES "access"(user_id),
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
-    site_id INTEGER REFERENCES lookup_site_id(code)
+    site_id INTEGER REFERENCES lookup_site_id(code),
+    role_type int
 );
 
 
@@ -113,6 +115,14 @@ CREATE TABLE doc_store_depart_member(
     enteredby INTEGER NOT NULL  REFERENCES "access"(user_id),
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
-    site_id INTEGER REFERENCES lookup_site_id(code)
+    site_id INTEGER REFERENCES lookup_site_id(code),
+    role_type int
 );
 
+CREATE SEQUENCE document_accounts_id_seq AS DECIMAL(27,0);
+CREATE TABLE document_accounts (
+  id INTEGER NOT NULL PRIMARY KEY,
+  document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
+  org_id INTEGER NOT NULL REFERENCES organization(org_id),
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

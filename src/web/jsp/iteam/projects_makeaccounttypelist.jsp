@@ -19,23 +19,23 @@
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.utils.web.*,org.aspcfs.utils.StringUtils, com.zeroio.iteam.base.* " %>
-<jsp:useBean id="accountTypes" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.utils.web.*,org.aspcfs.utils.StringUtils, org.aspcfs.modules.accounts.base.* " %>
+<jsp:useBean id="orgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <html>
 <head>
 </head>
 <body onload='page_init();'>
 <script language='Javascript'>
 function page_init() {
-  var list = parent.document.forms['projectMemberForm'].elements['selDepartment'];
+  var list = parent.document.forms['projectMemberForm'].elements['selAccountList'];
   list.options.length = 0;
 <%
-  Iterator i = accountTypes.iterator();
+  Iterator i = orgList.iterator();
   while (i.hasNext()) {
-    LookupElement element = (LookupElement) i.next();
+    Organization element = (Organization) i.next();
 %>
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text="<%= StringUtils.jsStringEscape(element.getDescription()) %>";
+    newOpt.text="<%= StringUtils.jsStringEscape(element.getName()) %>";
     newOpt.value='<%= element.getId() %>';
     list.options[list.length] = newOpt;
 <%

@@ -52,6 +52,7 @@ public class FileItemVersion extends GenericBean {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private String modifiedByString = "";
+  private boolean allowPortalAccess = false;
 
 
   /**
@@ -671,6 +672,22 @@ public class FileItemVersion extends GenericBean {
 
 
   /**
+	 * @return Returns the allowPortalAccess.
+	 */
+	public boolean getAllowPortalAccess() {
+		return allowPortalAccess;
+	}
+
+
+	/**
+	 * @param allowPortalAccess The allowPortalAccess to set.
+	 */
+	public void setAllowPortalAccess(boolean allowPortalAccess) {
+		this.allowPortalAccess = allowPortalAccess;
+	}
+
+
+	/**
    * Description of the Method
    *
    * @param db Description of Parameter
@@ -689,7 +706,7 @@ public class FileItemVersion extends GenericBean {
     if (modified != null) {
       sql.append("modified, ");
     }
-    sql.append("enteredBy, modifiedBy ) ");
+    sql.append("enteredBy, modifiedBy, allow_portal_access ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -697,7 +714,7 @@ public class FileItemVersion extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("?, ?) ");
+    sql.append("?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, id);
@@ -716,6 +733,7 @@ public class FileItemVersion extends GenericBean {
     }
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
+    pst.setBoolean(++i, allowPortalAccess);
     pst.execute();
     pst.close();
     return true;
@@ -732,7 +750,7 @@ public class FileItemVersion extends GenericBean {
   public boolean update(Connection db) throws SQLException {
     String sql =
         "UPDATE project_files_version " +
-        "SET subject = ?, client_filename = ?, \"size\" = ? " +
+        "SET subject = ?, client_filename = ?, \"size\" = ?, allow_portal_access = ?  " +
         "WHERE item_id = ? " +
         "AND \"version\" = ? ";
     int i = 0;
@@ -740,6 +758,7 @@ public class FileItemVersion extends GenericBean {
     pst.setString(++i, subject);
     pst.setString(++i, clientFilename);
     pst.setInt(++i, size);
+    pst.setBoolean(++i, allowPortalAccess);
     pst.setInt(++i, this.getId());
     pst.setDouble(++i, this.getVersion());
     pst.execute();
@@ -828,6 +847,7 @@ public class FileItemVersion extends GenericBean {
     enteredBy = rs.getInt("enteredBy");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
+    allowPortalAccess = rs.getBoolean("allow_portal_access");
   }
 }
 

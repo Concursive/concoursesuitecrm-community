@@ -81,7 +81,7 @@
               <dhv:label name="documents.team.selectDepartment">Select a department:</dhv:label>
               </span>
               <span id="select1SpanAccountType" name="select1SpanAccountType" style="display:none">
-              <dhv:label name="documents.team.selectAccountType">Select an account type:</dhv:label>
+              <dhv:label name="documents.team.searchAccountType">Search an Account:</dhv:label>
               </span>
             </td>
             <td align="center">
@@ -102,6 +102,13 @@
               </select>
             </td>
             <td align="center" valign="top">
+              <span id="searchSpan" name="searchSpan" style="display:none">
+                <input type="text" name="accountSearch" maxlength="255" value="" style="width: 160px" />
+                <br/><input type="button" name="search" value="<dhv:label name="global.button.search">Search</dhv:label>" onclick="searchAccounts(this.form);">
+                <br/>
+                <select size='7' name='selAccountList' style='width: 160px' onChange="updateContactList();">
+                </select>
+              </span>
               <span id="listSpan" name="listSpan">
                 <select size='10' name='selDepartment' style='width: 160px' onChange="updateItemList();">
                 </select>
@@ -138,6 +145,7 @@
             <td colspan="4" align="center" height='30'>
               <input type="hidden" name="insertMembers">
               <input type="hidden" name="deleteMembers">
+              <input type="hidden" name="documentStoreId" id="documentStoreId" value="<%= documentStore.getId() %>">
               <input type="submit" value="<dhv:label name="documents.team.user.updateTeam">Update Team</dhv:label>" /> &nbsp;
               <input type="button" value="<dhv:label name="documents.team.user.cancelTeam">Cancel Changes</dhv:label>" onClick="javascript:window.location.href='DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=<%= documentStore.getId() %>'" />
             </td>

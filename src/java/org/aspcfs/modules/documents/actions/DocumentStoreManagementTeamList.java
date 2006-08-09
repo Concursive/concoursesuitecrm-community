@@ -17,21 +17,19 @@ package org.aspcfs.modules.documents.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.RoleList;
-import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.documents.base.AccountDocumentList;
 import org.aspcfs.modules.documents.base.DocumentStore;
 import org.aspcfs.modules.documents.base.DocumentStoreList;
 import org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList;
-import org.aspcfs.utils.UserUtils;
-import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 
 import java.sql.Connection;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 //import com.zeroio.controller.*;
@@ -54,6 +52,7 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
   public String executeCommandDocumentStore(ActionContext context) {
     //Parameters
     String value = context.getRequest().getParameter("source");
+    String search = context.getRequest().getParameter("search");
     StringTokenizer st = new StringTokenizer(value, "|");
     String source = st.nextToken();
     String status = st.nextToken();
@@ -98,13 +97,11 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
         context.getRequest().setAttribute("roles", roleList);
         return "MakeRoleListOK";
       } else if ("acct".equals(source) && "all".equals(status)) {
-        LookupList accountTypeList = new LookupList(
-            db, "lookup_account_types");
-        if (DocumentStoreTeamMemberList.USER.equals(memberType)) {
-          accountTypeList.addItem(0, "Without a type");
-        }
-        context.getRequest().setAttribute("accountTypes", accountTypeList);
-        return "MakeAccountTypeListOK";
+        OrganizationList organizationList = new OrganizationList();
+        organizationList.setName('%' + search + '%');
+        organizationList.buildShortList(db);
+        context.getRequest().setAttribute("orgList", organizationList);
+        return "MakeOrgListOK";
       }
     } catch (Exception e) {
 
@@ -129,8 +126,10 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
     String status = st.nextToken();
     String siteId = String.valueOf(this.getUserSiteId(context));
     String id = st.nextToken();
+    String orgId = null;
     if (st.hasMoreTokens()) {
       siteId = st.nextToken();
+      orgId = siteId;
       context.getRequest().setAttribute("siteId", siteId);
     }
     Connection db = null;
@@ -164,58 +163,22 @@ public final class DocumentStoreManagementTeamList extends CFSModule {
         return ("MakeUserListOK");
       }
       if ("acct".equals(source) && "all".equals(status)) {
-        //Load departments and get the contacts
-        UserList allAccountUsers = new UserList();
-        allAccountUsers.setBuildAccountUsersOnly(true);
-        allAccountUsers.setRoleType(Constants.ROLETYPE_REGULAR);
-        allAccountUsers.setBuildContactDetails(true);
-        allAccountUsers.buildList(db);
-        Iterator itr = allAccountUsers.iterator();
-        UserList users = new UserList();
-
-        while (itr.hasNext()) {
-          User thisUser = (User) itr.next();
-          Organization organization = new Organization(
-              db, thisUser.getContact().getOrgId());
-          
-          //remove account contacts whose siteId is different from the
-          //the siteId of the user.
-          if (UserUtils.getUserSiteId(context.getRequest()) != -1){
-            if (organization.getSiteId() != UserUtils.getUserSiteId(context.getRequest())){
-              itr.remove();
-              continue;
-            }
-          }
-          //Append organization name if this user is not a primary contact of this organization
-          if (organization.getPrimaryContact() != null) {
-            if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()) {
-              thisUser.getContact().setNameLast(
-                  thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
-            }
-          } else {
-            thisUser.getContact().setNameLast(
-                thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
-          }
-          
-          //Filter the fetched user list based on the account type of the
-          //account to which the user belongs to
-          Iterator typesIterator = organization.getTypes().iterator();
-          if ((organization.getTypes().size() == 0) &&
-              (Integer.parseInt(id) == 0)) {
-            //include if the account does not have a type and "without type" is chosen
-            users.add(thisUser);
-          } else {
-            while (typesIterator.hasNext()) {
-              LookupElement lookupElement = (LookupElement) typesIterator.next();
-              //include if the account type is one of the chosen types
-              if (lookupElement.getCode() == Integer.parseInt(id)) {
-                users.add(thisUser);
-              }
-            }
-          }
+        boolean nonPortalUsersOnly = false;
+        AccountDocumentList accountDocumentList = new AccountDocumentList();
+        accountDocumentList.setDocumentStoreId(id);
+        accountDocumentList.setOrgId(orgId);
+        accountDocumentList.buildList(db);
+        if (accountDocumentList.isEmpty()) {
+          nonPortalUsersOnly = true;
         }
-        context.getRequest().setAttribute("UserList", users);
-        return ("MakeUserListOK");
+        ContactList contactList = new ContactList();
+        contactList.setOrgId(orgId);
+        contactList.setWithAccountsOnly(true);
+        contactList.setPortalUsersOnly(
+            nonPortalUsersOnly ? Constants.FALSE : Constants.UNDEFINED);
+        contactList.buildList(db);
+        context.getRequest().setAttribute("contactList", contactList);
+        return ("MakeContactListOK");
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);

@@ -356,6 +356,7 @@
       <record LUID="2251510"><![CDATA[Team Members]]></record>
       <record LUID="2251511"><![CDATA[Document Library]]></record>
       <record LUID="2251512"><![CDATA[Setup]]></record>
+      <record LUID="2251513"><![CDATA[Accounts]]></record>
     </lookup>
     <lookup table="lookup_document_store_role">
       <attribute name="group_id" type="integer" />
@@ -385,6 +386,10 @@
       <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-files-rename"><![CDATA[Rename files]]></record>
       <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-files-delete"><![CDATA[View document store details]]></record>
       <record group_id="1" category_id="lookup_document_store_permission_category.2251512" default_role="lookup_document_store_role.2251509" permission="documentcenter-setup-permissions"><![CDATA[Configure document store permissions]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251513" permission="documentcenter-accounts-view"><![CDATA[View document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251512" permission="documentcenter-accounts-edit"><![CDATA[Modify document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251511" permission="documentcenter-accounts-add"><![CDATA[Add document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251510" permission="documentcenter-accounts-delete"><![CDATA[Delete document store accounts]]></record>
     </lookup>
     <lookup table="lookup_email_model">
       <record><![CDATA[No email support]]></record>

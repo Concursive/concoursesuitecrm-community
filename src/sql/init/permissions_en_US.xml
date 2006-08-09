@@ -144,6 +144,8 @@
       <permission name="accounts-directbill" attributes="vaed" description="Direct Bill" enabled="false"/>
       <permission name="accounts-accounts-contacts-folders" attributes="vaed" description="Contact Folders"/>
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" description="Contact Opportunity Folders"/>
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" description="Share Accounts Documents"/>
+      <permission name="accounts-accounts-documentstore" attributes="vaed" description="Account Document Store"/>      
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -290,6 +292,7 @@
       <permission name="admin" attributes="v---" description="Access to Admin module"/>
       <permission name="admin-users" attributes="vaed" description="Users"/>
       <permission name="admin-roles" attributes="vaed" description="Roles"/>
+      <permission name="admin-portalroleeditor" attributes="vaed" description="Portal Roles"/>
       <permission name="admin-usage" attributes="v---" description="System Usage"/>
       <permission name="admin-sysconfig" attributes="v-e-" description="System Configuration"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configure Lookup Lists"/>
@@ -381,6 +384,8 @@
       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" />
       <permission name="accounts-accounts-contacts-folders" attributes="vaed" />
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" />
+      <permission name="accounts-accounts-documentstore" attributes="vaed" />
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" />
       <permission name="portal-user" attributes="vaed" />
       <permission name="quotes" attributes="v---" />
       <permission name="quotes-quotes" attributes="vaed" />
@@ -409,6 +414,7 @@
       <permission name="admin" attributes="v---"/>
       <permission name="admin-users" attributes="vaed"/>
       <permission name="admin-roles" attributes="vaed"/>
+      <permission name="admin-portalroleeditor" attributes="vaed"/>
       <permission name="admin-sysconfig" attributes="v-e-"/>
       <permission name="admin-usage" attributes="v---"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-"/>

@@ -91,6 +91,30 @@ public class Permission extends GenericBean {
     }
   }
 
+  /**
+   * Constructor for the Permission object
+   *
+   * @param db           Description of the Parameter
+   * @param permissionName Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public Permission(Connection db, String permissionName) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT p.*, c.category " +
+        "FROM permission p, permission_category c " +
+        "WHERE p.category_id = c.category_id " +
+        "AND p.permission = ? ");
+    pst.setString(1, permissionName);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+    if (id == -1) {
+      throw new SQLException("Permission record not found.");
+    }
+  }
 
   /**
    * Sets the id attribute of the Permission object

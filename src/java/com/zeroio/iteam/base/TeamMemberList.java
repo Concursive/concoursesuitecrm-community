@@ -16,6 +16,7 @@
 package com.zeroio.iteam.base;
 
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -51,7 +52,7 @@ public class TeamMemberList extends ArrayList {
   private int userId = -1;
   private boolean employeesOnly = false;
   private boolean accountContactsOnly = false;
-
+  private boolean portalUsersOnly = false;
 
   /**
    * Constructor for the TeamMemberList object
@@ -219,7 +220,6 @@ public class TeamMemberList extends ArrayList {
     this.accountContactsOnly = DatabaseUtils.parseBoolean(tmp);
   }
 
-
   /**
    * Gets the project attribute of the TeamMemberList object
    *
@@ -256,6 +256,22 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
+	 * @return Returns the portalUsersOnly.
+	 */
+	public boolean getPortalUsersOnly() {
+		return portalUsersOnly;
+	}
+
+
+	/**
+	 * @param portalUsersOnly The portalUsersOnly to set.
+	 */
+	public void setPortalUsersOnly(boolean portalUsersOnly) {
+		this.portalUsersOnly = portalUsersOnly;
+	}
+
+
+	/**
    * Description of the Method
    *
    * @param db Description of the Parameter
@@ -364,6 +380,11 @@ public class TeamMemberList extends ArrayList {
     }
     if (accountContactsOnly) {
       sqlFilter.append("AND u.org_id > 0 ");
+      sqlFilter.append("AND t.role_type != ").append(Constants.ROLETYPE_CUSTOMER).append(" ");
+    }
+    if (portalUsersOnly) {
+      sqlFilter.append("AND u.org_id > 0 ");
+      sqlFilter.append("AND t.role_type = ").append(Constants.ROLETYPE_CUSTOMER).append(" ");
     }
   }
 
@@ -432,13 +453,14 @@ public class TeamMemberList extends ArrayList {
             //member.setUser(user);
             //this.add(member);
           } else {
+          	User user = new User(db, itemId);
             // See if ID is already on the team
             if (!isOnTeam(db, projectId, itemId)) {
               // Insert the member
               PreparedStatement pst = db.prepareStatement(
                   "INSERT INTO project_team " +
-                  "(project_id, user_id, userlevel, enteredby, modifiedby, status) " +
-                  "VALUES (?, ?, ?, ?, ?, ?) ");
+                  "(project_id, user_id, userlevel, enteredby, modifiedby, status, role_type) " +
+                  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
               int i = 0;
               pst.setInt(++i, projectId);
               pst.setInt(++i, itemId);
@@ -446,10 +468,10 @@ public class TeamMemberList extends ArrayList {
               pst.setInt(++i, enteredBy);
               pst.setInt(++i, modifiedBy);
               pst.setInt(++i, TeamMember.STATUS_PENDING);
+              DatabaseUtils.setInt(pst, ++i, user.getRoleType());              
               pst.execute();
               pst.close();
               // Existing user will be sent an email
-              User user = new User(db, itemId);
               addedUsers.add(user);
             }
           }

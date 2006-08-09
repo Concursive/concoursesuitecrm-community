@@ -389,6 +389,7 @@ CREATE TABLE project_files(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modifiedBy INTEGER NOT NULL  REFERENCES "access"(user_id),
     default_file CHAR(1) DEFAULT '0',
+    allow_portal_access CHAR(1) DEFAULT '0',
     PRIMARY KEY(item_id)
 );
 
@@ -409,7 +410,8 @@ CREATE TABLE project_files_version(
     entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     enteredBy INTEGER NOT NULL  REFERENCES "access"(user_id),
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modifiedBy INTEGER NOT NULL  REFERENCES "access"(user_id)
+    modifiedBy INTEGER NOT NULL  REFERENCES "access"(user_id),
+    allow_portal_access CHAR(1) DEFAULT '0'
 );
 
 
@@ -445,7 +447,8 @@ CREATE TABLE project_team(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     status INTEGER,
-    last_accessed TIMESTAMP
+    last_accessed TIMESTAMP,
+    role_type int
 );
 
 

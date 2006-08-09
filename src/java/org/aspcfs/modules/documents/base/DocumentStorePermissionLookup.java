@@ -19,6 +19,10 @@ import com.darkhorseventures.framework.beans.GenericBean;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  * Description of the Class
@@ -34,6 +38,7 @@ public class DocumentStorePermissionLookup extends GenericBean {
   private String permission = null;
   private String description = null;
   private int defaultRole = -1;
+  private int level = -1;
 
 
   /**
@@ -183,6 +188,17 @@ public class DocumentStorePermissionLookup extends GenericBean {
     return defaultRole;
   }
 
+  public int getLevel() {
+    return level;
+  }
+
+  public void setLevel(int level) {
+    this.level = level;
+  }
+
+  public void setLevel(String level) {
+    this.level = Integer.parseInt(level);
+  }
 
   /**
    * Description of the Method
@@ -196,6 +212,28 @@ public class DocumentStorePermissionLookup extends GenericBean {
     permission = rs.getString("permission");
     description = rs.getString("description");
     defaultRole = rs.getInt("default_role");
+  }
+
+  public void insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "lookup_document_store_permission_code_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO " + DatabaseUtils.getTableName(db, "lookup_document_store_permission") + " " +
+        "(" + (id > -1 ? "code, " : "") + "category_id, permission, description, \"level\", default_role, group_id) VALUES " +
+        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?)"
+    );
+    int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setInt(++i, categoryId);
+    pst.setString(++i, permission);
+    pst.setString(++i, description);
+    pst.setInt(++i, level);
+    pst.setInt(++i, defaultRole);
+    pst.setInt(++i, 1);
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "lookup_document_store_permission_code_seq", id);
   }
 }
 

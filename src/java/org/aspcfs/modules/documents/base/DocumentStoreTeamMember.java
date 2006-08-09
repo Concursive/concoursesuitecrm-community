@@ -53,6 +53,7 @@ public class DocumentStoreTeamMember {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private int roleId = -1;
+  private int roleType = -1;
   private int status = STATUS_ADDED;
   private java.sql.Timestamp lastAccessed = null;
   private int siteId = -1;
@@ -595,6 +596,7 @@ public class DocumentStoreTeamMember {
     this.modified = rs.getTimestamp("modified");
     this.modifiedBy = rs.getInt("modifiedby");
     this.siteId = DatabaseUtils.getInt(rs, "site_id");
+    this.roleType = DatabaseUtils.getInt(rs, "role_type");
 
     //lookup_document_store_role
     roleId = rs.getInt("level");
@@ -627,7 +629,7 @@ public class DocumentStoreTeamMember {
     StringBuffer sql = new StringBuffer();
     String tableName = DocumentStoreTeamMember.getTableName(tmpMemberType, db);
     sql.append("INSERT INTO " + tableName);
-    sql.append(" (document_store_id, item_id, userlevel, ");
+    sql.append(" (document_store_id, item_id, userlevel, role_type, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -638,7 +640,7 @@ public class DocumentStoreTeamMember {
       sql.append("last_accessed, ");
     }
     sql.append("enteredby, modifiedby, status, site_id) ");
-    sql.append("VALUES (?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
     }
@@ -654,6 +656,7 @@ public class DocumentStoreTeamMember {
     pst.setInt(++i, documentStoreId);
     pst.setInt(++i, itemId);
     pst.setInt(++i, userLevel);
+    DatabaseUtils.setInt(pst, ++i, roleType);
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }

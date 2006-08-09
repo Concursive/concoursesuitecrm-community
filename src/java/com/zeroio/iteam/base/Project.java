@@ -85,6 +85,7 @@ public class Project extends GenericBean {
   private TeamMemberList team = new TeamMemberList();
   private TeamMemberList employeeTeam = new TeamMemberList();
   private TeamMemberList accountContactTeam = new TeamMemberList();
+  private TeamMemberList portalUserTeam = new TeamMemberList();
   private AssignmentList assignments = new AssignmentList();
   private IssueCategoryList issueCategories = new IssueCategoryList();
   private IssueList issues = new IssueList();
@@ -651,6 +652,16 @@ public class Project extends GenericBean {
    */
   public void setAccountContactTeam(TeamMemberList tmp) {
     this.accountContactTeam = tmp;
+  }
+
+
+  /**
+   * Sets the portalUserTeam attribute of the Project object
+   *
+   * @param tmp The new portalUserTeam value
+   */
+  public void setPortalUserTeam(TeamMemberList tmp) {
+    this.portalUserTeam = tmp;
   }
 
 
@@ -1709,6 +1720,16 @@ public class Project extends GenericBean {
 
 
   /**
+   * Gets the portalUserTeam attribute of the Project object
+   *
+   * @return The portalUserTeam value
+   */
+  public TeamMemberList getPortalUserTeam() {
+    return portalUserTeam;
+  }
+
+
+  /**
    * Gets the Assignments attribute of the Project object
    *
    * @return The Assignments value
@@ -2160,6 +2181,11 @@ public class Project extends GenericBean {
     accountContactTeam.setProjectId(this.getId());
     accountContactTeam.setAccountContactsOnly(true);
     accountContactTeam.buildList(db);
+    
+    portalUserTeam.setProject(this);
+    portalUserTeam.setProjectId(this.getId());
+    portalUserTeam.setPortalUsersOnly(true);
+    portalUserTeam.buildList(db);
   }
 
 

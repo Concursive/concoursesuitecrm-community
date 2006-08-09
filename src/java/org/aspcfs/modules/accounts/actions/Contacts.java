@@ -691,6 +691,9 @@ public final class Contacts extends CFSModule {
         return ("PermissionError");
       }
       thisOrganization = new Organization(db, thisContact.getOrgId());
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -761,6 +764,9 @@ public final class Contacts extends CFSModule {
        *  context.getRequest().setAttribute("typeSelect", list);
        */
       thisOrganization = new Organization(db, thisContact.getOrgId());
+      if (!isRecordAccessPermitted(context, db, thisContact.getOrgId())) {
+        return ("PermissionError");
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

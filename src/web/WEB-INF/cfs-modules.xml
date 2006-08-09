@@ -294,6 +294,7 @@
     <action name="AccountContactsHistory"/>
     <action name="AccountContactsMessages"/>
     <action name="AccountActionPlans"/>
+    <action name="AccountsSharedDocuments"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>

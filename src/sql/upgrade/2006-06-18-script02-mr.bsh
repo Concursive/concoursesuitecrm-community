@@ -1,0 +1,68 @@
+import java.sql.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.modules.documents.base.*;
+
+// Load the dictionary for localization
+String fs = System.getProperty("file.separator") ;
+Dictionary dictionary = new Dictionary(languagePath, "en_US");
+if (systemLanguage != null) {
+  if (!"en_US".equals(locale)) {
+    //Override the text with a selected language
+    dictionary.load(languagePath, locale);
+  }
+}
+
+int currentLevel = DocumentStorePermissionCategoryLookupList.retrieveMaxLevel(db);
+
+DocumentStorePermissionCategoryLookup cat = new DocumentStorePermissionCategoryLookup();
+cat.setDescription(dictionary.getTerm("system.fields.label", "documents.team.accounts", "value"));
+cat.setLevel(currentLevel += 10);
+cat.setEnabled(true);
+cat.insert(db);
+print("DocumentStorePermissionCategoryLookup inserted.");
+
+if (1 == 1) {
+  DocumentStorePermissionLookup lookup = new DocumentStorePermissionLookup();
+  lookup.setCategoryId(cat.getId());
+  lookup.setPermission("documentcenter-accounts-view");
+  lookup.setDescription("View document store accounts");
+  lookup.setLevel(10);
+  lookup.setDefaultRole(5);
+  lookup.insert(db);
+  print("DocumentStorePermissionLookup inserted.");
+}
+
+if (1 == 1) {
+  DocumentStorePermissionLookup lookup = new DocumentStorePermissionLookup();
+  lookup.setCategoryId(cat.getId());
+  lookup.setPermission("documentcenter-accounts-edit");
+  lookup.setDescription("Modify document store accounts");
+  lookup.setLevel(20);
+  lookup.setDefaultRole(4);
+  lookup.insert(db);
+  print("DocumentStorePermissionLookup inserted.");
+}
+
+if (1 == 1) {
+  DocumentStorePermissionLookup lookup = new DocumentStorePermissionLookup();
+  lookup.setCategoryId(cat.getId());
+  lookup.setPermission("documentcenter-accounts-add");
+  lookup.setDescription("Add document store accounts");
+  lookup.setLevel(30);
+  lookup.setDefaultRole(3);
+  lookup.insert(db);
+  print("DocumentStorePermissionLookup inserted.");
+}
+
+if (1 == 1) {
+  DocumentStorePermissionLookup lookup = new DocumentStorePermissionLookup();
+  lookup.setCategoryId(cat.getId());
+  lookup.setPermission("documentcenter-accounts-delete");
+  lookup.setDescription("Delete document store accounts");
+  lookup.setLevel(40);
+  lookup.setDefaultRole(2);
+  lookup.insert(db);
+  print("DocumentStorePermissionLookup inserted.");
+}
+

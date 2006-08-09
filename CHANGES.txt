@@ -2,7 +2,7 @@
 Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-July 25, 2006
+August 9, 2006
 ----------------------------------------------------------------------------
 
 ** UNDER DEVELOPMENT **
@@ -20,6 +20,11 @@ Enhancements:
 - Usability and stability improvements as assigned (details online)
 - Upgraded TinyMCE HTML Editor to 2.0.6.1
 - Email user a password when a user is added, previously only when modified
+- Portal Role editor allows for admins to define roles and permissions for
+  portal users
+  - Added Projects to portal role
+  - Added Document Stores to portal role
+  - Added Account Documents to portal role
 
 Developer changes:
 - JUnit added with tests

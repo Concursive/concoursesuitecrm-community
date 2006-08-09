@@ -72,7 +72,7 @@
             <td align="center">
               <span id="select1SpanProject" name="select1SpanProject" style="display:none"><dhv:label name="project.selectAProject.colon">Select a project:</dhv:label></span>
               <span id="select1SpanDepartment" name="select1SpanDepartment" style="display:none"><dhv:label name="project.selectADepartment.colon">Select a department:</dhv:label></span>
-              <span id="select1SpanAccountType" name="select1SpanAccountType" style="display:none"><dhv:label name="project.selectAnAccountType.colon">Select an account type:</dhv:label></span>
+              <span id="select1SpanAccountType" name="select1SpanAccountType" style="display:none"><dhv:label name="project.searchAnAccountType.colon">Search an Account:</dhv:label></span>
             </td>
             <td align="center"><span id="select2Span" name="select2Span" style="display:none"><dhv:label name="project.selectAContact">Select a contact:</dhv:label></span></td>
             <td align="center" class="shade2" valign="top"><dhv:label name="documents.team.teamMembers">Team Members</dhv:label></td>
@@ -97,6 +97,13 @@
                 <br />
                 <br />
                 <dhv:label name="project.emailAddressNotFound.text" param="break=<br />">If the email address is not found in<br />the system when the team is updated,<br />an additional screen will appear<br />with the option to invite the person<br />to the project.</dhv:label>
+              </span>
+              <span id="searchSpan" name="searchSpan" style="display:none">
+                <input type="text" name="accountSearch" maxlength="255" value="" style="width: 160px" />
+                <br/><input type="button" name="search" value="<dhv:label name="global.button.search">Search</dhv:label>" onclick="searchAccounts(this.form);">
+                <br/>
+                <select size='7' name='selAccountList' style='width: 160px' onChange="updateContactList();">
+                </select>
               </span>
               <span id="listSpan" name="listSpan">
                 <select size='10' name='selDepartment' style='width: 160px' onChange="updateItemList();">
@@ -137,6 +144,7 @@
             <td colspan="4" align="center" height='30'>
               <input type="hidden" name="insertMembers">
               <input type="hidden" name="deleteMembers">
+              <input type="hidden" name="projId" value="<%= Project.getId() %>">
               <input type="submit" value="<dhv:label name="documents.team.user.updateTeam">Update Team</dhv:label>"> &nbsp;
               <input type="button" value="<dhv:label name="documents.team.user.cancelChanges">Cancel Changes</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
             </td>

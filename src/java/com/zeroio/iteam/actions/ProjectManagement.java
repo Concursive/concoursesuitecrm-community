@@ -863,6 +863,7 @@ public final class ProjectManagement extends CFSModule {
       deletePagedListInfo(context, "projectTeamInfo");
       deletePagedListInfo(context, "projectEmployeeTeamInfo");
       deletePagedListInfo(context, "projectAccountContactTeamInfo");
+      deletePagedListInfo(context, "projectPortalUserTeamInfo");
       deletePagedListInfo(context, "projectDocumentsGalleryInfo");
       deletePagedListInfo(context, "projectAccountsInfo");
     }
@@ -966,12 +967,20 @@ public final class ProjectManagement extends CFSModule {
             "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
         projectAccountContactTeamInfo.setItemsPerPage(0);
 
+        PagedListInfo projectPortalUserTeamInfo = this.getPagedListInfo(
+            context, "projectPortalUserTeamInfo");
+        projectPortalUserTeamInfo.setLink(
+            "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
+        projectPortalUserTeamInfo.setItemsPerPage(0);
+
         //Generate the list
         thisProject.getTeam().setPagedListInfo(projectTeamInfo);
         thisProject.getEmployeeTeam().setPagedListInfo(
             projectEmployeeTeamInfo);
         thisProject.getAccountContactTeam().setPagedListInfo(
             projectAccountContactTeamInfo);
+        thisProject.getPortalUserTeam().setPagedListInfo(
+        		projectPortalUserTeamInfo);
 
         thisProject.buildTeamMemberList(db);
         Iterator i = thisProject.getTeam().iterator();
@@ -993,6 +1002,15 @@ public final class ProjectManagement extends CFSModule {
           thisMember.setUser(thisUser);
         }
         i = thisProject.getAccountContactTeam().iterator();
+        while (i.hasNext()) {
+          TeamMember thisMember = (TeamMember) i.next();
+          User thisUser = new User();
+          thisUser.setBuildContact(true);
+          thisUser.setBuildContactDetails(true);
+          thisUser.buildRecord(db, thisMember.getUserId());
+          thisMember.setUser(thisUser);
+        }
+        i = thisProject.getPortalUserTeam().iterator();
         while (i.hasNext()) {
           TeamMember thisMember = (TeamMember) i.next();
           User thisUser = new User();

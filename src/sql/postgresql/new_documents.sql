@@ -79,7 +79,8 @@ CREATE TABLE document_store_user_member (
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  role_type INTEGER
 );
 
 --
@@ -95,7 +96,8 @@ CREATE TABLE document_store_role_member (
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  role_type INTEGER
 );
 
 -- Stores the scope of usage of the document stores for a department(i.e., members of a department)
@@ -109,5 +111,13 @@ CREATE TABLE document_store_department_member (
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  role_type INTEGER;
+);
+
+CREATE TABLE document_accounts (
+  id SERIAL PRIMARY KEY,
+  document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
+  org_id INTEGER NOT NULL REFERENCES organization(org_id),
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );

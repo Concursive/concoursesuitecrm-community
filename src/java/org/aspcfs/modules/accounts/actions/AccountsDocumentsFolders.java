@@ -50,6 +50,9 @@ public final class AccountsDocumentsFolders extends CFSModule {
       FileFolder thisFolder = (FileFolder) context.getFormBean();
       thisFolder.setParentId(context.getRequest().getParameter("parentId"));
       db = getConnection(context);
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       //Load the project
       Organization orgDetails = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", orgDetails);
@@ -85,6 +88,9 @@ public final class AccountsDocumentsFolders extends CFSModule {
     Organization orgDetails = null;
     try {
       db = this.getConnection(context);
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       orgDetails = new Organization(db, Integer.parseInt(orgId));
       //Insert or update the folder
       FileFolder thisFolder = (FileFolder) context.getFormBean();
@@ -139,6 +145,9 @@ public final class AccountsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       //Load the project
       orgDetails = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", orgDetails);
@@ -182,6 +191,9 @@ public final class AccountsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       //Load the file folder to be modified
       FileFolder thisFolder = (FileFolder) context.getFormBean();
       thisFolder.setId(Integer.parseInt(itemId));
@@ -214,6 +226,9 @@ public final class AccountsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       //Load the Organization
       orgDetails = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", orgDetails);
@@ -252,6 +267,9 @@ public final class AccountsDocumentsFolders extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
+      if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
+        return ("PermissionError");
+      }
       //Load the Organization
       orgDetails = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", orgDetails);

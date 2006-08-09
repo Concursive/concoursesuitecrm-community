@@ -20,6 +20,9 @@ import com.darkhorseventures.framework.beans.GenericBean;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
+
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  * Description of the Class
@@ -32,6 +35,9 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
 
   private int id = -1;
   private String description = null;
+  private boolean defaultItem = false;
+  private int level = -1;
+  private boolean enabled = false;
   private DocumentStorePermissionLookupList permissions = null;
 
 
@@ -102,6 +108,41 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
     return description;
   }
 
+  public boolean getDefaultItem() {
+    return defaultItem;
+  }
+
+  public void setDefaultItem(boolean defaultItem) {
+    this.defaultItem = defaultItem;
+  }
+
+  public void setDefaultItem(String defaultItem) {
+    this.defaultItem = DatabaseUtils.parseBoolean(defaultItem);
+  }
+
+  public int getLevel() {
+    return level;
+  }
+
+  public void setLevel(int level) {
+    this.level = level;
+  }
+
+  public void setLevel(String level) {
+    this.level = Integer.parseInt(level);
+  }
+
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  public void setEnabled(String enabled) {
+    this.enabled = DatabaseUtils.parseBoolean(enabled);
+  }
 
   /**
    * Gets the permissions attribute of the DocumentStorePermissionCategoryLookup object
@@ -135,6 +176,26 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
   public void buildResources(Connection db, int includeEnabled) throws SQLException {
     permissions = new DocumentStorePermissionLookupList(
         db, id, includeEnabled);
+  }
+
+  public boolean insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "lookup_document_store_permission_category_code_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO " + DatabaseUtils.getTableName(db, "lookup_document_store_permission_category") + " " +
+            "(" + (id > -1 ? "code, " : "") + "description, default_item, \"level\", enabled) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?)"
+    );
+    int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setString(++i, description);
+    pst.setBoolean(++i, defaultItem);
+    pst.setInt(++i, level);
+    pst.setBoolean(++i, enabled);
+    pst.execute();
+    id = DatabaseUtils.getCurrVal(db, "lookup_document_store_permission_category_code_seq", id);
+    return true;
   }
 }
 

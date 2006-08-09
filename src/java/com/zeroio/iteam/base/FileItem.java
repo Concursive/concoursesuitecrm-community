@@ -70,7 +70,7 @@ public class FileItem extends GenericBean {
 
   private String thumbnailFilename = null;
 
-
+  private boolean allowPortalAccess = false;
   /**
    * Constructor for the FileItem object
    */
@@ -1120,8 +1120,32 @@ public class FileItem extends GenericBean {
     return thumbnailFilename;
   }
 
+  
+	/**
+	 * @return Returns the allowPortalAccess.
+	 */
+	public boolean getAllowPortalAccess() {
+		return allowPortalAccess;
+	}
+
+
+	/**
+	 * @param allowPortalAccess The allowPortalAccess to set.
+	 */
+	public void setAllowPortalAccess(boolean allowPortalAccess) {
+		this.allowPortalAccess = allowPortalAccess;
+	}
 
   /**
+   * Sets the allowPortalAccess attribute of the FileItem object
+   *
+   * @param tmp The new allowPortalAccess value
+   */
+  public void setAllowPortalAccess(String tmp) {
+  	allowPortalAccess = DatabaseUtils.parseBoolean(tmp);
+  }
+
+	/**
    * Description of the Method
    *
    * @param db Description of Parameter
@@ -1152,7 +1176,7 @@ public class FileItem extends GenericBean {
       }
       sql.append(
           " link_module_id, link_item_id, " +
-          " enteredBy, modifiedBy, default_file) " +
+          " enteredBy, modifiedBy, default_file, allow_portal_access) " +
           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
         sql.append("?,");
@@ -1163,7 +1187,7 @@ public class FileItem extends GenericBean {
       if (modified != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?) ");
+      sql.append("?, ?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1193,6 +1217,7 @@ public class FileItem extends GenericBean {
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
       pst.setBoolean(++i, defaultFile);
+      pst.setBoolean(++i, allowPortalAccess);
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "project_files_item_id_seq", id);
@@ -1209,6 +1234,7 @@ public class FileItem extends GenericBean {
         thisVersion.setFilename(filename);
         thisVersion.setVersion(version);
         thisVersion.setSize(size);
+        thisVersion.setAllowPortalAccess(allowPortalAccess);
         thisVersion.setEnteredBy(enteredBy);
         thisVersion.setModifiedBy(modifiedBy);
         thisVersion.insert(db);
@@ -1256,13 +1282,14 @@ public class FileItem extends GenericBean {
       thisVersion.setSize(size);
       thisVersion.setEnteredBy(enteredBy);
       thisVersion.setModifiedBy(modifiedBy);
+      thisVersion.setAllowPortalAccess(allowPortalAccess);
       thisVersion.insert(db);
       //Update the master record
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_files " +
           "SET subject = ?, client_filename = ?, filename = ?, \"version\" = ?, " +
-          "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+          "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP, allow_portal_access = ? " +
           "WHERE item_id = ? ");
       pst.setString(++i, subject);
       pst.setString(++i, clientFilename);
@@ -1270,6 +1297,7 @@ public class FileItem extends GenericBean {
       pst.setDouble(++i, version);
       pst.setInt(++i, size);
       pst.setInt(++i, modifiedBy);
+      pst.setBoolean(++i, allowPortalAccess);
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
@@ -1306,7 +1334,7 @@ public class FileItem extends GenericBean {
     }
     String sql =
         "UPDATE project_files " +
-        "SET subject = ?, client_filename = ?, default_file = ?, \"size\" = ? " +
+        "SET subject = ?, client_filename = ?, default_file = ?, \"size\" = ?, allow_portal_access = ? " +
         "WHERE item_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1314,6 +1342,7 @@ public class FileItem extends GenericBean {
     pst.setString(++i, clientFilename);
     pst.setBoolean(++i, defaultFile);
     pst.setInt(++i, this.getSize());
+    pst.setBoolean(++i, allowPortalAccess);    
     pst.setInt(++i, this.getId());
     pst.execute();
     pst.close();
@@ -1331,6 +1360,7 @@ public class FileItem extends GenericBean {
         latestVersion.setClientFilename(this.getClientFilename());
         latestVersion.setSubject(this.getSubject());
         latestVersion.setSize(this.getSize());
+        latestVersion.setAllowPortalAccess(this.getAllowPortalAccess());
         latestVersion.update(db);
         break;
       }
@@ -1356,11 +1386,12 @@ public class FileItem extends GenericBean {
     size = thisVersion.getSize();
     enteredBy = thisVersion.getEnteredBy();
     modifiedBy = thisVersion.getModifiedBy();
+    allowPortalAccess = thisVersion.getAllowPortalAccess();
     // Update the master record
     String sql =
         "UPDATE project_files " +
         "SET subject = ?, client_filename = ?, filename = ?, \"version\" = ?, " +
-        "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP, allow_portal_access = ? " +
         "WHERE item_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1370,6 +1401,7 @@ public class FileItem extends GenericBean {
     pst.setDouble(++i, version);
     pst.setInt(++i, size);
     pst.setInt(++i, modifiedBy);
+    pst.setBoolean(++i, allowPortalAccess);
     pst.setInt(++i, this.getId());
     pst.execute();
     pst.close();
@@ -1402,15 +1434,31 @@ public class FileItem extends GenericBean {
    * @throws SQLException Description of Exception
    */
   public boolean buildVersionList(Connection db) throws SQLException {
+    return buildVersionList(db, false);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of Parameter
+   * @param isPortalUser Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   */
+  public boolean buildVersionList(Connection db, boolean isPortalUser) throws SQLException {
     if (versionList == null) {
       versionList = new FileItemVersionList();
     } else {
       versionList.clear();
     }
+    if (isPortalUser) {
+    	versionList.setBuildPortalRecords(Constants.TRUE);
+    }
     versionList.setItemId(this.getId());
     versionList.buildList(db);
     return true;
   }
+
 
 
   /**
@@ -1546,6 +1594,7 @@ public class FileItem extends GenericBean {
     enteredBy = rs.getInt("enteredBy");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
+    allowPortalAccess = rs.getBoolean("allow_portal_access");
     if (!isVersion) {
       thumbnailFilename = rs.getString("thumbnail");
     }

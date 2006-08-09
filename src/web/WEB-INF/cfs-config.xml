@@ -2790,6 +2790,11 @@
     <forward name="AccountsProjectsListPopupOK"
              resource="/accounts/accounts_projects_list.jsp" layout="style"/>
   </action>
+  <action name="AccountsSharedDocuments"
+          class="org.aspcfs.modules.accounts.actions.AccountsSharedDocuments">
+    <forward name="ListOK"
+             resource="/accounts/accounts_shared_document_list.jsp" layout="nav"/>
+  </action>
 
   <action name="AccountsServiceContracts"
           class="org.aspcfs.modules.accounts.actions.AccountsServiceContracts">
@@ -3910,8 +3915,9 @@
              resource="/iteam/projects_maketeamlist.jsp"/>
     <forward name="MakeDepartmentListOK"
              resource="/iteam/projects_makedepartmentlist.jsp"/>
-    <forward name="MakeAccountTypeListOK"
+    <forward name="MakeOrgListOK"
              resource="/iteam/projects_makeaccounttypelist.jsp"/>
+    <forward name="MakeContactListOK" resource="/iteam/projects_makecontactlist.jsp"/>
   </action>
   <action name="ProjectManagementAssignments"
           class="com.zeroio.iteam.actions.ProjectManagementAssignments">
@@ -4579,6 +4585,23 @@
     <forward name="DeleteDocumentStoreOK"
              resource="/documents/DocumentManagement.do?"/>
   </action>
+  <action name="DocumentStoreManagementAccounts"
+          class="org.aspcfs.modules.documents.actions.DocumentStoreManagementAccounts">
+    <bean name="DocumentStore"
+          class="org.aspcfs.modules.documents.base.DocumentStore"
+          scope="request"/>
+    <forward name="DocumentStorePopupOK"
+             resource="/documents/document_store_center.jsp"
+             layout="nav"/>
+    <forward name="DocumentStoreOK"
+	    resource="/documents/document_store_center.jsp" layout="nav"/>
+    <forward name="DocumentStoreAddOK"
+             resource="/documents/document_refresh_account.jsp" layout="style"/>
+    <forward name="DocumentStoreRemoveOK"
+	    resource="/DocumentStoreManagementAccounts.do?command=View"/>
+             
+  </action>
+  
   <action name="DocumentStoreManagementTeam"
           class="org.aspcfs.modules.documents.actions.DocumentStoreManagementTeam">
     <bean name="DocumentStoreTeamMemberList"
@@ -4608,9 +4631,13 @@
     <forward name="MakeRoleListOK"
              resource="/documents/document_store_makerolelist.jsp"
              layout="style"/>
-    <forward name="MakeAccountTypeListOK"
+    <forward name="MakeOrgListOK"
              resource="/documents/document_store_makeaccounttypelist.jsp"
+	     layout="style"/>
+    <forward name="MakeContactListOK"
+             resource="/documents/document_store_makecontactlist.jsp"
              layout="style"/>
+
   </action>
   <action name="DocumentStoreManagementFileFolders"
           class="org.aspcfs.modules.documents.actions.DocumentStoreManagementFileFolders">
@@ -5069,6 +5096,20 @@
              layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
+  
+  <action name="PortalRoleEditor" class="org.aspcfs.modules.admin.actions.PortalRoleEditor">
+    <bean name="Role" class="org.aspcfs.modules.admin.base.Role" scope="request"/>
+    <forward name="ListOK" resource="/admin/admin_portalroles_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/admin/admin_portalrole_insertform.jsp" layout="nav"/>
+    <forward name="SaveOK" resource="/PortalRoleEditor.do?command=List"/>
+    <forward name="ModifyOK" resource="/admin/admin_portalrole_modifyform.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/PortalRoleEditor.do?command=List"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="ActivateOK" resource="/PortalRoleEditor.do?command=List"/>
+    <forward name="DeactivateOK" resource="/PortalRoleEditor.do?command=List"/>
+   </action>
+  
   <action name="Viewpoints" class="org.aspcfs.modules.admin.actions.Viewpoints">
     <bean name="viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint"
           scope="request"/>

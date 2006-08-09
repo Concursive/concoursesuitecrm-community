@@ -675,6 +675,11 @@
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+    <attribute>
+      <name>isPortalUser</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
   <tag>
     <name>productCategoryHierarchy</name> 

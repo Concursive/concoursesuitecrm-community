@@ -187,6 +187,7 @@ public class ContactList extends Vector implements UserCentric {
   private int siteId = -1;
   private boolean exclusiveToSite = false;
   private boolean includeAllSites = false;
+  private int portalUsersOnly = Constants.UNDEFINED;
 
 
   /**
@@ -2926,6 +2927,26 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
+   *  Gets the portalUsersOnly attribute of the ContactList object
+   *
+   * @return    The portalUsersOnly value
+   */
+  public int getPortalUsersOnly() {
+    return portalUsersOnly;
+  }
+
+
+  /**
+   *  Sets the portalUsersOnly attribute of the ContactList object
+   *
+   * @param  tmp  The new portalUsersOnly value
+   */
+  public void setPortalUsersOnly(int tmp) {
+    this.portalUsersOnly = tmp;
+  }
+
+
+  /**
    *  Gets the state attribute of the ContactList object
    *
    * @return    The state value
@@ -3731,6 +3752,18 @@ public class ContactList extends Vector implements UserCentric {
       }
     }
 
+    if (portalUsersOnly == Constants.TRUE) {
+      sqlFilter.append(
+          "AND EXISTS (SELECT user_id FROM \"access\" a " +
+          "WHERE c.user_id = a.user_id AND a.enabled = ? " +
+          "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type = ?)) ");
+    } else if (portalUsersOnly == Constants.FALSE) {
+      sqlFilter.append(
+          "AND EXISTS (SELECT user_id FROM \"access\" a " +
+          "WHERE c.user_id = a.user_id " +
+          "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type != ?)) ");
+    }
+    
     if (includeNonUsersOnly) {
       sqlFilter.append(
           "AND c.contact_id NOT IN (SELECT contact_id FROM \"access\") ");
@@ -4693,6 +4726,10 @@ public class ContactList extends Vector implements UserCentric {
       }
     }
 
+    if (portalUsersOnly != Constants.UNDEFINED) {
+    	pst.setInt(++i, Constants.ROLETYPE_CUSTOMER);
+    } 
+    
     if ((includeEnabledUsersOnly || includeUsersOnly) && permission != null && !"".equals(
         permission)) {
       String[] temp = permission.split(",");

@@ -21,6 +21,8 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.IndexEvent;
 import com.zeroio.iteam.base.Project;
 import com.zeroio.iteam.base.TeamMember;
+import com.zeroio.iteam.utils.ProjectUtils;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
@@ -1615,6 +1617,10 @@ public class CFSModule {
         thisMember = new TeamMember(
             db, thisProject.getId(), this.getUserId(context));
       } catch (Exception notValid) {
+        // portal user cannot access project unless user is part of project team.
+        if (isPortalUser(context)) {
+        		return false;
+        }
         // Create a guest
         thisMember = new TeamMember();
         thisMember.setProjectId(thisProject.getId());
@@ -1648,7 +1654,7 @@ public class CFSModule {
    * @throws  SQLException      Description of the Exception
    */
   protected boolean hasDocumentStoreAccess(ActionContext context, Connection db, DocumentStore thisDocumentStore, String permission) throws SQLException {
-    // See if the team member has access to perform a document store action
+		// See if the team member has access to perform a document store action
     DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) context.getRequest().getAttribute(
         "currentMember");
     if (thisMember == null) {
@@ -1662,6 +1668,10 @@ public class CFSModule {
         thisMember = new DocumentStoreTeamMember(
             db, thisDocumentStore.getId(), tmpUserId, tmpUserRoleId, tmpDepartmentId, tmpUser.getSiteId());
       } catch (Exception notValid) {
+        // portal user cannot access document store unless user is part of document store team.
+        if (isPortalUser(context)) {
+        		return false;
+        }
         // Create a guest
         thisMember = new DocumentStoreTeamMember();
         thisMember.setDocumentStoreId(thisDocumentStore.getId());

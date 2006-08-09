@@ -856,7 +856,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() == null || "".equals(pagedListInfo.getColumnToSortBy())){
+      if (pagedListInfo.getColumnToSortBy() == null || "".equals(pagedListInfo.getColumnToSortBy())) {
         pagedListInfo.setDefaultSort(
             "enabled DESC,\"level\",description", null);
       }
@@ -1192,6 +1192,26 @@ public class LookupList extends HtmlSelect implements SyncableList {
         return thisElement.getCode();
       } else if (result == -1) {
         result = thisElement.getCode();
+      }
+    }
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  level  Description of the Parameter
+   * @return        Description of the Return Value
+   */
+  public int removeElementByLevel(int level) {
+    int result = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getLevel() == level) {
+        i.remove();
+        result++;
       }
     }
     return result;

@@ -21,6 +21,19 @@
 2006-06-28-script01-partha.sql
 2006-07-30-script01-ananth.bsh
 
+# Portal Role Editor
+2006-06-16-script01-achyutha.bsh
+2006-06-18-script01-achyutha.sql
+2006-06-18-script02-mr.bsh
+2006-06-18-script01-achyutha.bsh
+2006-06-18-script02-achyutha.bsh
+2006-06-21-script01-achyutha.sql
+2006-06-26-script01-achyutha.sql
+2006-06-29-script01-achyutha.sql
+
+
+
+
 # Run each time after upgrading a system
 2005-07-20-script01-mr.bsh
 2006-06-01-script01-mr.bsh

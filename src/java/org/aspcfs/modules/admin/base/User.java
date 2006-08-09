@@ -1917,7 +1917,15 @@ public class User extends GenericBean {
     return (this.getChild(userId) != null);
   }
 
-
+  /**
+   * Returns true if the current user is a portal user
+   *
+   * @return true if portal user.
+   */
+  public boolean isPortalUser() {
+  	return (this.roleType > 0);
+  }
+  
   /**
    * Sets the opportunityLock to true, causing any other requests to this
    * method to block until released.

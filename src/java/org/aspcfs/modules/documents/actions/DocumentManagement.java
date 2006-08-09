@@ -469,6 +469,12 @@ public final class DocumentManagement extends CFSModule {
             "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
         documentStoreDepartmentTeamInfo.setItemsPerPage(0);
 
+        PagedListInfo documentStorePortalUserTeamInfo = this.getPagedListInfo(
+            context, "documentStorePortalUserTeamInfo");
+        documentStorePortalUserTeamInfo.setLink(
+            "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + thisDocumentStore.getId());
+        documentStorePortalUserTeamInfo.setItemsPerPage(0);
+        
         //Generate the list
         thisDocumentStore.getUserTeam().setPagedListInfo(
             documentStoreUserTeamInfo);
@@ -480,6 +486,8 @@ public final class DocumentManagement extends CFSModule {
             documentStoreRoleTeamInfo);
         thisDocumentStore.getDepartmentTeam().setPagedListInfo(
             documentStoreDepartmentTeamInfo);
+        thisDocumentStore.getPortalUserTeam().setPagedListInfo(
+            documentStorePortalUserTeamInfo);
         thisDocumentStore.buildTeamMemberList(db);
 
         Iterator i = thisDocumentStore.getUserTeam().iterator();
@@ -522,7 +530,16 @@ public final class DocumentManagement extends CFSModule {
           thisMember.setUser(
               departmentList.getValueFromId(thisMember.getItemId()));
         }
-
+        i = thisDocumentStore.getPortalUserTeam().iterator();
+        while (i.hasNext()) {
+          DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) i.next();
+          User thisUser = new User();
+          thisUser.setBuildContact(true);
+          thisUser.setBuildContactDetails(true);
+          thisUser.buildRecord(db, thisMember.getItemId());
+          thisMember.setUser(thisUser);
+        }
+  
       } else if ("Details".equals(section)) {
         //Just looking at the details
         if (!hasDocumentStoreAccess(

@@ -19,6 +19,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -58,7 +59,7 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
   private boolean employeesOnly = false;
   private boolean accountContactsOnly = false;
-
+  private boolean portalUsersOnly = false;
 
   /**
    * Constructor for the DocumentStoreTeamMemberList object
@@ -429,6 +430,22 @@ public class DocumentStoreTeamMemberList extends ArrayList {
 
 
   /**
+	 * @return Returns the portalUsersOnly.
+	 */
+	public boolean getPortalUsersOnly() {
+		return portalUsersOnly;
+	}
+
+
+	/**
+	 * @param portalUsersOnly The portalUsersOnly to set.
+	 */
+	public void setPortalUsersOnly(boolean portalUsersOnly) {
+		this.portalUsersOnly = portalUsersOnly;
+	}
+
+
+	/**
    * Description of the Method
    *
    * @param thisId Description of the Parameter
@@ -599,6 +616,12 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     if ((memberType.equals(DocumentStoreTeamMemberList.USER)) &&
         (accountContactsOnly)) {
       sqlFilter.append(" AND u.org_id > 0 ");
+      sqlFilter.append(" AND um.role_type != ").append(Constants.ROLETYPE_CUSTOMER).append(" ");
+    }
+    if ((memberType.equals(DocumentStoreTeamMemberList.USER)) &&
+        (portalUsersOnly)) {
+      sqlFilter.append(" AND u.org_id > 0 ");
+      sqlFilter.append(" AND um.role_type = ").append(Constants.ROLETYPE_CUSTOMER).append(" ");
     }
   }
 
@@ -661,13 +684,14 @@ public class DocumentStoreTeamMemberList extends ArrayList {
             //member.setUser(user);
             //this.add(member);
           } else {
+          	User user = new User(db, itemId);
             // See if ID is already on the team
             if (!isUserOnTeam(db, documentStoreId, itemId)) {
               // Insert the member
               PreparedStatement pst = db.prepareStatement(
                   "INSERT INTO document_store_user_member " +
-                  "(document_store_id, item_id, userlevel, enteredby, modifiedby, status) " +
-                  "VALUES (?, ?, ?, ?, ?, ?) ");
+                  "(document_store_id, item_id, userlevel, enteredby, modifiedby, status, role_type) " +
+                  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
               int i = 0;
               pst.setInt(++i, documentStoreId);
               pst.setInt(++i, itemId);
@@ -675,6 +699,7 @@ public class DocumentStoreTeamMemberList extends ArrayList {
               pst.setInt(++i, enteredBy);
               pst.setInt(++i, modifiedBy);
               pst.setInt(++i, DocumentStoreTeamMember.STATUS_ADDED);
+              DatabaseUtils.setInt(pst, ++i, user.getRoleType());
               pst.execute();
               pst.close();
             }

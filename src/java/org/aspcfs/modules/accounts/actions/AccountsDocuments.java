@@ -15,20 +15,25 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import com.darkhorseventures.framework.actions.ActionContext;
-import com.isavvix.tools.FileInfo;
-import com.isavvix.tools.HttpMultiPartParser;
-import com.zeroio.iteam.actions.ProjectManagementFileFolders;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.FileDownload;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashMap;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import com.zeroio.iteam.actions.ProjectManagementFileFolders;
+import com.zeroio.iteam.base.FileFolderHierarchy;
+import com.zeroio.iteam.base.FileFolderList;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItemVersion;
+import com.zeroio.webutils.FileDownload;
 
 /**
  * Description of the Class
@@ -58,6 +63,7 @@ public final class AccountsDocuments extends CFSModule {
     if (folderId == null) {
       folderId = (String) context.getRequest().getAttribute("folderId");
     }
+
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrg = null;
@@ -94,6 +100,9 @@ public final class AccountsDocuments extends CFSModule {
       } else {
         files.setFolderId(Integer.parseInt(folderId));
       }
+      
+      files.setBuildPortalRecords(
+      		isPortalUser(context) ? Constants.TRUE : Constants.UNDEFINED);
       files.setLinkModuleId(Constants.ACCOUNTS);
       files.setLinkItemId(thisOrg.getOrgId());
       files.buildList(db);
@@ -194,6 +203,7 @@ public final class AccountsDocuments extends CFSModule {
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
       String actionStepWork = (String) parts.get("actionStepWork");
+      String allowPortalAccess = (String) parts.get("allowPortalAccess");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
       }
@@ -224,6 +234,7 @@ public final class AccountsDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(1.0);
         thisItem.setSize(newFileInfo.getSize());
+        thisItem.setAllowPortalAccess(allowPortalAccess);
         isValid = this.validateObject(context, db, thisItem);
         if (isValid) {
           recordInserted = thisItem.insert(db);
@@ -341,6 +352,7 @@ public final class AccountsDocuments extends CFSModule {
       String subject = (String) parts.get("subject");
       String versionId = (String) parts.get("versionId");
       String folderId = (String) parts.get("folderId");
+      String allowPortalAccess = (String) parts.get("allowPortalAccess");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
       }
@@ -371,6 +383,7 @@ public final class AccountsDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(Double.parseDouble(versionId));
         thisItem.setSize(newFileInfo.getSize());
+        thisItem.setAllowPortalAccess(allowPortalAccess);
         isValid = this.validateObject(context, db, thisItem);
         if (isValid) {
           recordInserted = thisItem.insertVersion(db);
@@ -433,7 +446,7 @@ public final class AccountsDocuments extends CFSModule {
 
       FileItem thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
-      thisItem.buildVersionList(db);
+      thisItem.buildVersionList(db, isPortalUser(context));
       if (folderId == null) {
         folderId = "" + thisItem.getFolderId();
       }
@@ -641,6 +654,8 @@ public final class AccountsDocuments extends CFSModule {
     String subject = (String) context.getRequest().getParameter("subject");
     String filename = (String) context.getRequest().getParameter(
         "clientFilename");
+    String allowPortalAccess = (String) context.getRequest().getParameter(
+    		"allowPortalAccess");
     Connection db = null;
     Organization thisOrg = null;
     try {
@@ -656,6 +671,7 @@ public final class AccountsDocuments extends CFSModule {
           db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
+      thisItem.setAllowPortalAccess(allowPortalAccess);
       isValid = this.validateObject(context, db, thisItem);
       if (isValid) {
         recordInserted = thisItem.update(db);

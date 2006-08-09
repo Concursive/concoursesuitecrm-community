@@ -126,5 +126,17 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
       category.buildResources(db, includeEnabled);
     }
   }
+
+  public static int retrieveMaxLevel(Connection db) throws SQLException {
+    int maxLevel = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT MAX(\"level\") AS max_level " +
+        "FROM " + DatabaseUtils.getTableName(db, "lookup_document_store_permission_category") + " ");
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      maxLevel = rs.getInt("max_level");
+    }
+    return maxLevel;
+  }
 }
 

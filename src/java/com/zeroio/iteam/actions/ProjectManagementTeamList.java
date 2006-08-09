@@ -15,21 +15,20 @@
  */
 package com.zeroio.iteam.actions;
 
+import java.sql.Connection;
+import java.util.StringTokenizer;
+
+import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.utils.web.LookupList;
+
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.Project;
 import com.zeroio.iteam.base.ProjectList;
 import com.zeroio.iteam.base.TeamMemberList;
-import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.admin.base.UserList;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.web.LookupElement;
-import org.aspcfs.utils.web.LookupList;
-
-import java.sql.Connection;
-import java.util.Iterator;
-import java.util.StringTokenizer;
 
 //import com.zeroio.controller.*;
 
@@ -52,6 +51,7 @@ public final class ProjectManagementTeamList extends CFSModule {
   public String executeCommandProjects(ActionContext context) {
     //Parameters
     String value = context.getRequest().getParameter("source");
+    String search = context.getRequest().getParameter("search");
     StringTokenizer st = new StringTokenizer(value, "|");
     String source = st.nextToken();
     String status = st.nextToken();
@@ -78,11 +78,11 @@ public final class ProjectManagementTeamList extends CFSModule {
         context.getRequest().setAttribute("departments", departmentList);
         return "MakeDepartmentListOK";
       } else if ("acct".equals(source) && "all".equals(status)) {
-        LookupList accountTypeList = new LookupList(
-            db, "lookup_account_types");
-        accountTypeList.addItem(0, "Without a type");
-        context.getRequest().setAttribute("accountTypes", accountTypeList);
-        return "MakeAccountTypeListOK";
+        OrganizationList organizationList = new OrganizationList();
+      	organizationList.setName('%' + search + '%');
+      	organizationList.buildShortList(db);
+      	context.getRequest().setAttribute("orgList", organizationList);
+        return "MakeOrgListOK";
       }
     } catch (Exception e) {
 
@@ -106,6 +106,10 @@ public final class ProjectManagementTeamList extends CFSModule {
     String source = st.nextToken();
     String status = st.nextToken();
     String id = st.nextToken();
+    String orgId = null;
+    if (st.hasMoreTokens()) {
+    	orgId = st.nextToken();
+    }
     Connection db = null;
     try {
       db = getConnection(context);
@@ -136,58 +140,24 @@ public final class ProjectManagementTeamList extends CFSModule {
         return ("MakeUserListOK");
       }
       if ("acct".equals(source) && "all".equals(status)) {
-        //Load departments and get the contacts
-        UserList allAccountUsers = new UserList();
-        allAccountUsers.setBuildAccountUsersOnly(true);
-        allAccountUsers.setRoleType(Constants.ROLETYPE_REGULAR);
-        allAccountUsers.setBuildContactDetails(true);
-        allAccountUsers.buildList(db);
-        Iterator itr = allAccountUsers.iterator();
-        UserList users = new UserList();
-
-        while (itr.hasNext()) {
-          User thisUser = (User) itr.next();
-          Organization organization = new Organization(
-              db, thisUser.getContact().getOrgId());
-          
-          //remove account contacts whose siteId is different from the
-          //the siteId of the user.
-          if (this.getUserSiteId(context) != -1){
-            if (organization.getSiteId() != this.getUserSiteId(context)){
-              itr.remove();
-              continue;
-            }
-          }
-          //Append organization name if this user is not a primary contact of this organization
-          if (organization.getPrimaryContact() != null) {
-            if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()) {
-              thisUser.getContact().setNameLast(
-                  thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
-            }
-          } else {
-            thisUser.getContact().setNameLast(
-                thisUser.getContact().getNameLast() + " (" + organization.getName() + ")");
-          }
-          
-          //Filter the fetched user list based on the account type of the
-          //account to which the user belongs to
-          Iterator typesIterator = organization.getTypes().iterator();
-          if ((organization.getTypes().size() == 0) &&
-              (Integer.parseInt(id) == 0)) {
-            //include if the account does not have a type and "without type" is chosen
-            users.add(thisUser);
-          } else {
-            while (typesIterator.hasNext()) {
-              LookupElement lookupElement = (LookupElement) typesIterator.next();
-              //include if the account type is one of the chosen types
-              if (lookupElement.getCode() == Integer.parseInt(id)) {
-                users.add(thisUser);
-              }
-            }
-          }
-        }
-        context.getRequest().setAttribute("UserList", users);
-        return ("MakeUserListOK");
+        // if account is associated with the project build reguluar and portal users,
+      	// otherwise build only regular users.
+      	boolean nonPortalUsersOnly = false;
+      	OrganizationList organizationList = new OrganizationList();
+      	organizationList.setProjectId(id);
+      	organizationList.setOrgId(orgId);
+      	organizationList.buildList(db);
+      	if (organizationList.isEmpty()) {
+      		nonPortalUsersOnly = true;
+      	}
+      	ContactList contactList = new ContactList();
+      	contactList.setOrgId(orgId);
+      	contactList.setWithAccountsOnly(true);
+      	contactList.setPortalUsersOnly(
+      			nonPortalUsersOnly ? Constants.FALSE : Constants.UNDEFINED);
+      	contactList.buildList(db);
+        context.getRequest().setAttribute("contactList", contactList);
+        return ("MakeContactListOK");
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);

@@ -337,3 +337,92 @@
   }
 %>
 </table>
+&nbsp;<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="false" title="Portal Users" type="documents.team.portalUsers" object="documentStorePortalUserTeamInfo"/>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
+      <strong>
+        <dhv:label name="documents.team.accessLevel">Access level</dhv:label>
+      </strong>
+    </th>
+    <th width="50%">
+      <strong>
+        <dhv:label name="documents.team.name">Name</dhv:label>
+      </strong>
+    </th>
+    <th width="50%">
+      <strong>
+        <dhv:label name="documents.team.organization">Organization</dhv:label>
+       </strong>
+     </th>
+    <dhv:documentPermission name="documentcenter-team-view-email">
+      <th nowrap>
+        <strong>
+          <dhv:label name="documents.team.emailAddress">Email Address</dhv:label>
+        </strong>
+     </th>
+    </dhv:documentPermission>
+    <th nowrap>
+      <strong>
+        <dhv:label name="documents.team.lastAccessed">Last Accessed</dhv:label>
+      </strong>
+    </th>
+  </tr>
+<%
+  DocumentStoreTeamMemberList portalUserTeam = documentStore.getPortalUserTeam();
+  if (portalUserTeam.size() == 0) {
+%>
+  <tr class="row2">
+    <td colspan="6">
+      <dhv:label name="documents.team.noPortalUserMessage">Portal Users contacts have not been added to the store</dhv:label>
+    </td>
+  </tr>
+<%
+  }
+  rowId = 0;
+  i = portalUserTeam.iterator();
+  while (i.hasNext()) {
+    rowId = (rowId != 1?1:2);
+    DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) i.next();
+    User thisContact = (User) thisMember.getUser();
+    if (thisContact == null) thisContact = new User();
+%>    
+  <tr class="row<%= rowId %>">
+    <td valign="top" nowrap>
+      <dhv:documentPermission name="documentcenter-team-edit-role" if="none">
+        <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
+      </dhv:documentPermission>
+      <dhv:documentPermission name="documentcenter-team-edit-role">
+        <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
+          <dhv:documentRoleSelect
+            name="<%= "role" + thisMember.getItemId() %>"
+            value="<%= thisMember.getUserLevel() %>"
+            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user',"+thisMember.getSiteId()+");" %>"
+            isPortalUser="true"/>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
+          <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
+        </dhv:evaluate>
+      </dhv:documentPermission>
+    </td>
+    <td valign="top">
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"><font color="red"></dhv:evaluate>
+      <%= toHtml(thisContact.getContact().getNameFirstLast()) %>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"> (X)</dhv:evaluate>
+      <dhv:evaluate if="<%= !thisContact.getEnabled() || !thisContact.getContact().getEnabled() || thisContact.getContact().isTrashed() %>"></font></dhv:evaluate>
+    </td>
+    <td valign="top"><%= toHtml(thisContact.getContact().getCompany()) %></td>
+    <dhv:documentPermission name="documentcenter-team-view-email">
+       <td valign="top" nowrap>
+        <dhv:evaluate if="<%= thisContact.getContact().getEmailAddress(1) != null %>"><a href="mailto:<%= thisContact.getContact().getEmailAddress(1) %>"><%= thisContact.getContact().getEmailAddress(1) %></a></dhv:evaluate>&nbsp;
+      </td>
+    </dhv:documentPermission>
+    <td nowrap valign="top">
+      <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+    </td>
+  </tr>
+<%    
+    }
+%>
+</table>

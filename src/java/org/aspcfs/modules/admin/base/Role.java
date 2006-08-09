@@ -460,7 +460,7 @@ public class Role extends GenericBean {
       sql.append(
           "UPDATE \"role\" " +
           "SET \"role\" = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
-          "modifiedby = ? " +
+          "modifiedby = ?, enabled = ? " +
           "WHERE modified = ? AND role_id = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
@@ -468,6 +468,7 @@ public class Role extends GenericBean {
       pst.setString(++i, this.getDescription());
       DatabaseUtils.setInt(pst, ++i, getRoleType());
       pst.setInt(++i, this.getModifiedBy());
+      pst.setBoolean(++i, this.getEnabled());
       pst.setTimestamp(++i, this.getModified());
       pst.setInt(++i, id);
       resultCount = pst.executeUpdate();

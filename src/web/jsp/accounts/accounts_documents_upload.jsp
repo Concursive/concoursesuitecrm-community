@@ -18,11 +18,12 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*,org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="folderId" class="java.lang.String"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/tasks.js"></script>
 <script language="JavaScript">
   function checkFileForm(form) {
     if (form.dosubmit.value == "false") {
@@ -98,6 +99,19 @@
         <%= showAttribute(request, "subjectError") %>
       </td>
     </tr>
+    <% if (User.getRoleType() == Constants.ROLETYPE_CUSTOMER){ %>
+    <input type="hidden" name="allowPortalAccess" value="1"></input>
+    <%} else { %>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_document_portal_include.ShareWithPortalUser">Share With Portal User?</dhv:label>
+      </td>
+      <td>
+        <input type="checkbox" name="chk1" value="on" onclick="javascript:setField('allowPortalAccess', document.inputForm.chk1.checked, 'inputForm');"/>
+        <input type="hidden" name="allowPortalAccess" value="0"></input>
+      </td>
+    </tr>
+ 		<%}%>
     <tr class="containerBody">
       <td class="formLabel">
         <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>

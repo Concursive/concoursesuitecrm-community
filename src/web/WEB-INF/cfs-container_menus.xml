@@ -85,15 +85,20 @@
       <permission value="accounts-accounts-tickets-view"/>
       <link value="Accounts.do?command=ViewTickets&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="relationships">
+      <long_html value="Relationships"/>
+      <permission value="accounts-accounts-relationships-view"/>
+      <link value="AccountRelationships.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
       <permission value="accounts-accounts-documents-view"/>
       <link value="AccountsDocuments.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
-    <submenu name="relationships">
-      <long_html value="Relationships"/>
-      <permission value="accounts-accounts-relationships-view"/>
-      <link value="AccountRelationships.do?command=View&amp;orgId=${orgId}"/>
+    <submenu name="documentStore">
+      <long_html value="Document Stores"/>
+      <permission value="accounts-accounts-shareddocuments-view"/>
+      <link value="AccountsSharedDocuments.do?command=List&amp;orgId=${orgId}"/>
     </submenu>
   </container>
   

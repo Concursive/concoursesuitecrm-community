@@ -57,6 +57,7 @@ public class TeamMember {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private int roleId = -1;
+  private int roleType = -1;
   private int status = STATUS_ADDED;
   private java.sql.Timestamp lastAccessed = null;
   //Other factors
@@ -129,6 +130,7 @@ public class TeamMember {
     lastAccessed = rs.getTimestamp("last_accessed");
     //lookup_project_role
     roleId = rs.getInt("level");
+    roleType = DatabaseUtils.getInt(rs, "role_type");
   }
 
 
@@ -532,6 +534,22 @@ public class TeamMember {
   }
 
   /**
+	 * @return Returns the roleType.
+	 */
+	public int getRoleType() {
+		return roleType;
+	}
+
+
+	/**
+	 * @param roleType The roleType to set.
+	 */
+	public void setRoleType(int roleType) {
+		this.roleType = roleType;
+	}
+
+
+	/**
    * Description of the Method
    *
    * @param db Description of the Parameter
@@ -541,7 +559,7 @@ public class TeamMember {
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO project_team ");
-    sql.append("(project_id, user_id, userlevel, ");
+    sql.append("(project_id, user_id, userlevel, role_type, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -552,7 +570,7 @@ public class TeamMember {
       sql.append("last_accessed, ");
     }
     sql.append("enteredby, modifiedby, status) ");
-    sql.append("VALUES (?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
     }
@@ -568,6 +586,7 @@ public class TeamMember {
     pst.setInt(++i, projectId);
     pst.setInt(++i, userId);
     DatabaseUtils.setInt(pst, ++i, userLevel);
+    DatabaseUtils.setInt(pst, ++i, roleType);
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
