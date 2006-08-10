@@ -112,7 +112,7 @@ CREATE TABLE document_store_department_member (
   modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
   site_id INTEGER REFERENCES lookup_site_id(code),
-  role_type INTEGER;
+  role_type INTEGER
 );
 
 CREATE TABLE document_accounts (
