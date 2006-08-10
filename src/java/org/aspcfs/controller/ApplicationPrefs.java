@@ -76,19 +76,47 @@ public class ApplicationPrefs {
       // Check "dir" prefs first, based on the installed directory of this webapp
       String fileLibrary = prefs.get(dir, null);
       if (fileLibrary == null) {
-        // Check in the current dir of the webapp
-        fileLibrary = context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs;
-        File propertyFile = new File(fileLibrary + "build.properties");
-        if (propertyFile.exists()) {
-          Prefs.savePref(dir, fileLibrary);
+        // Check for a hard-coded location
+        String os = System.getProperty("os.name");
+        File systemOverrideFile = null;
+        if (os.startsWith("Windows")) {
+          //Windows
+          systemOverrideFile = new File("c:\\CentricCRM\\fileLibrary\\path.txt");
+        } else if (os.startsWith("Mac")) {
+          //Mac OSX
+          systemOverrideFile = new File("/Library/Application Support/CentricCRM/fileLibrary/path.txt");
         } else {
-          // check in "root", for backwards compatibility
-          fileLibrary = prefs.get("cfs.fileLibrary", null);
-          if (fileLibrary != null) {
-            // Save these prefs under the "dir" prefs for next time
+          //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
+          systemOverrideFile = new File("/var/lib/centric_crm/fileLibrary/path.txt");
+        }
+        if (systemOverrideFile.exists()) {
+          // Load the fileLibrary path as specified...
+          try {
+            BufferedReader in = new BufferedReader(new FileReader(systemOverrideFile));
+            String line = in.readLine();
+            if (line != null && line.startsWith("#")) {
+              line = in.readLine();
+            }
+            fileLibrary = line;
+            in.close();
+          } catch (Exception e) {
+            System.out.println("ApplicationPrefs-> Using systemOverrideFile EXCEPTION: " + e.getMessage());
+          }
+        } else {
+          // Check in the current dir of the webapp
+          fileLibrary = context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs;
+          File propertyFile = new File(fileLibrary + "build.properties");
+          if (propertyFile.exists()) {
             Prefs.savePref(dir, fileLibrary);
-            // erase "root" since a "dir" pref has been configured and saved
-            Prefs.savePref("cfs.fileLibrary", null);
+          } else {
+            // check in "root", for backwards compatibility
+            fileLibrary = prefs.get("cfs.fileLibrary", null);
+            if (fileLibrary != null) {
+              // Save these prefs under the "dir" prefs for next time
+              Prefs.savePref(dir, fileLibrary);
+              // erase "root" since a "dir" pref has been configured and saved
+              Prefs.savePref("cfs.fileLibrary", null);
+            }
           }
         }
       }
