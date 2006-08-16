@@ -174,6 +174,9 @@ public class DatabaseBean extends GenericBean {
       if ("PostgreSQL".equals(type)) {
         driver = "org.postgresql.Driver";
       }
+      if ("MySQL".equals(type)) {
+        driver = "com.mysql.jdbc.Driver";
+      }
     }
     return driver;
   }
@@ -262,6 +265,10 @@ public class DatabaseBean extends GenericBean {
       // jdbc:oracle:thin:@//127.0.0.1:1521/XE
       return "jdbc:oracle:thin:@//" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
+    if ("com.mysql.jdbc.Driver".equals(this.getDriver())) {
+      // jdbc:mysql://127.0.0.1:3306/centric_crm
+      return "jdbc:mysql://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
+    }
     return "";
   }
 
@@ -329,6 +336,9 @@ public class DatabaseBean extends GenericBean {
     }
     if ("Firebird".equals(type)) {
       return "firebird";
+    }
+    if ("MySQL".equals(type)) {
+      return "mysql";
     }
     return null;
   }

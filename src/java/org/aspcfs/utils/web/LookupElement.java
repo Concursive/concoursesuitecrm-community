@@ -68,7 +68,7 @@ public class LookupElement {
           "LookupElement-> Retrieving ID: " + code + " from table: " + tableName);
     }
     String sql =
-        "SELECT code, description, default_item, \"level\", enabled " +
+        "SELECT code, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled " +
         "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
         "WHERE code = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
@@ -149,7 +149,7 @@ public class LookupElement {
 
     sql.append(
         "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
-        "SET \"level\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE code = ? ");
 
     int i = 0;
@@ -619,7 +619,7 @@ public class LookupElement {
     int id = DatabaseUtils.getNextSeq(db, seqName + "_code_seq");
     sql.append(
         "INSERT INTO " + DatabaseUtils.getTableName(db, tableName) + " " +
-        "(" + (id > -1 ? "code, " : "") + "description, \"level\", enabled" +
+        "(" + (id > -1 ? "code, " : "") + "description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled" +
         (fieldId > -1 ? ", field_id" : "") + ") " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?" + (fieldId > -1 ? ", ?" : "") + ") ");
     int i = 0;
@@ -651,7 +651,7 @@ public class LookupElement {
   public static int retrieveMaxLevel(Connection db, String tableName) throws SQLException {
     int maxLevel = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT MAX(\"level\") AS max_level " +
+        "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") AS max_level " +
         "FROM " + DatabaseUtils.getTableName(db, tableName) + " ");
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

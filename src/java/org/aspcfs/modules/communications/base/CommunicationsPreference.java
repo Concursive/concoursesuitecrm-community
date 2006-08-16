@@ -828,7 +828,7 @@ public class CommunicationsPreference extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO communication_preference " +
-        "(" + (id > -1 ? "preference_id, " : "") + "contact_id, type_id, \"level\", time_zone ");
+        "(" + (id > -1 ? "preference_id, " : "") + "contact_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ", time_zone ");
     if (startDay != -1) {
       sql.append(", start_day ");
     }

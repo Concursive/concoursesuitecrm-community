@@ -856,7 +856,7 @@ public class IssueReply extends GenericBean {
         "SET subject = ?, \"message\" = ?, importance = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE reply_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, subject);
@@ -864,7 +864,9 @@ public class IssueReply extends GenericBean {
     pst.setInt(++i, importance);
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

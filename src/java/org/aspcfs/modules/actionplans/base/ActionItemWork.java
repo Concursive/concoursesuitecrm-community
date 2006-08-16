@@ -2223,7 +2223,7 @@ public class ActionItemWork extends GenericBean {
     if (endDate != null) {
       sql.append("end_date, ");
     }
-    sql.append("\"level\", link_module_id, link_item_id, ");
+    sql.append("" + DatabaseUtils.addQuotes(db, "level") + ", link_module_id, link_item_id, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -2577,7 +2577,7 @@ public class ActionItemWork extends GenericBean {
   private int retrieveNextLevel(Connection db) throws SQLException {
     int returnLevel = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT MAX(\"level\") AS levelcount " +
+        "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") AS levelcount " +
         "FROM action_item_work " +
         "WHERE phase_work_id = ? ");
     pst.setInt(1, phaseWorkId);

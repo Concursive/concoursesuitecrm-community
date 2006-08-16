@@ -150,10 +150,10 @@ public class CallResultList extends ArrayList {
       rs.close();
       pst.close();
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("r.\"level\", r.description", null);
+      pagedListInfo.setDefaultSort("r." + DatabaseUtils.addQuotes(db, "level") + ", r.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY r.\"level\", r.description ");
+      sqlOrder.append("ORDER BY r." + DatabaseUtils.addQuotes(db, "level") + ", r.description ");
     }
 
     //Need to build a base SQL statement for returning records

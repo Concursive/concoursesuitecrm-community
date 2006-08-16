@@ -81,7 +81,8 @@ public class ModuleFieldCategoryLink extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "module_field_categorylin_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO module_field_categorylink " +
-        "(" + (id > -1 ? "id, " : "") + "module_id, category_id, \"level\", description) " +
+        "(" + (id > -1 ? "id, " : "") + "module_id, category_id, " + DatabaseUtils.addQuotes(db, "level") +
+        ", description) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

@@ -15,8 +15,10 @@
  */
 package org.aspcfs.modules.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -184,7 +186,7 @@ public class PhoneNumberList extends Vector {
    * @param sqlFilter Description of Parameter
    * @since 1.1
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -204,7 +206,7 @@ public class PhoneNumberList extends Vector {
       sqlFilter.append("AND extension = ? ");
     }
     if (usersOnly) {
-      sqlFilter.append("AND contact_id IN (SELECT contact_id FROM \"access\" WHERE enabled = ? AND (expires IS NULL OR expires < CURRENT_TIMESTAMP)) ");
+      sqlFilter.append("AND contact_id IN (SELECT contact_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE enabled = ? AND (expires IS NULL OR expires < CURRENT_TIMESTAMP)) ");
     }
   }
 

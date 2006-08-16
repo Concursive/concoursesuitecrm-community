@@ -547,7 +547,8 @@ public class Report extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "report_report_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO report " +
-        "(" + (id > -1 ? "report_id, " : "") + "category_id, permission_id, filename, \"type\", title, description, enteredby, modifiedby) " +
+        "(" + (id > -1 ? "report_id, " : "") + "category_id, permission_id, filename, " + DatabaseUtils.addQuotes(db, "type") +
+        ", title, description, enteredby, modifiedby) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

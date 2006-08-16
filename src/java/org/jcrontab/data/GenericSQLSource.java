@@ -14,6 +14,7 @@
 
 package org.jcrontab.data;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.jcrontab.Crontab;
 import org.jcrontab.log.Log;
 
@@ -383,7 +384,7 @@ public class GenericSQLSource implements DataSource {
         return ((javax.sql.DataSource) dbDriver).getConnection();
       }
     } else {
-      return DriverManager.getConnection(dbUrl, dbUser, dbPwd);
+      return DatabaseUtils.getConnection(dbUrl, dbUser, dbPwd);
     }
   }
 

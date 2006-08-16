@@ -2045,9 +2045,7 @@ public class ProductCatalog extends GenericBean {
 				sql.append(" entered, ");
 			}
 			sql.append(" modifiedBy, ");
-			if (modified != null) {
-				sql.append(" modified, ");
-			}
+			sql.append(" modified, ");
 			sql.append("start_date, expiration_date, enabled, \"active\")");
 			sql
 					.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
@@ -2069,7 +2067,9 @@ public class ProductCatalog extends GenericBean {
 			sql.append("?, ");
 			if (modified != null) {
 				sql.append(" ?, ");
-			}
+			}else{
+        sql.append(" " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
 			sql.append("?, ?, ?, ? )");
 			int i = 0;
 			PreparedStatement pst = db.prepareStatement(sql.toString());

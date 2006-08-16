@@ -364,7 +364,9 @@ public class ActionItemWorkList extends ArrayList {
       pagedListInfo.setDefaultSort("acs.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY apw.\"level\", aiw.\"level\", acs.description ");
+      sqlOrder.append("ORDER BY apw." + DatabaseUtils.addQuotes(db, "level") +
+          ", aiw." + DatabaseUtils.addQuotes(db, "level") +
+          ", acs.description ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {

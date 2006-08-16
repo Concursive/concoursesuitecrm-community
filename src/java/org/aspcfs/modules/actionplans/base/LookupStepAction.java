@@ -93,7 +93,7 @@ public class LookupStepAction extends GenericBean {
       code = DatabaseUtils.getNextSeq(db, "lookup_step_actions_code_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO lookup_step_actions " +
-              "(" + (code > -1 ? "code, " : "") + "description, default_item, \"level\", enabled, constant_id) VALUES " +
+              "(" + (code > -1 ? "code, " : "") + "description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, constant_id) VALUES " +
               "(" + (code > -1 ? "?, " : "") + "?, ?, ?, ?, ?) "
       );
       int i = 0;

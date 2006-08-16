@@ -410,14 +410,16 @@ public class Model {
         "SET make_id = ?, model_name = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE model_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, makeId);
     pst.setString(++i, name);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

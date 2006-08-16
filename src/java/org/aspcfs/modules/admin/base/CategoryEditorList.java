@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 /**
  * Provides a list of items that have editable categories for the specified
  * module
@@ -83,7 +85,7 @@ public class CategoryEditorList extends ArrayList {
         "SELECT * " +
         "FROM category_editor_lookup " +
         "WHERE module_id = ? " +
-        "ORDER BY \"level\" ");
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + " ");
     pst.setInt(1, moduleId);
     rs = pst.executeQuery();
     while (rs.next()) {

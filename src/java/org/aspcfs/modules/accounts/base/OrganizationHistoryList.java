@@ -742,7 +742,7 @@ public class OrganizationHistoryList extends ArrayList implements SyncableList {
         "LEFT JOIN organization o ON (history.org_id = o.org_id) " +
         "WHERE history_id > 0 ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -763,7 +763,7 @@ public class OrganizationHistoryList extends ArrayList implements SyncableList {
         pst = db.prepareStatement(
             sqlCount.toString() +
             sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(\"type\") < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.addQuotes(db, "type") + ") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -817,7 +817,7 @@ public class OrganizationHistoryList extends ArrayList implements SyncableList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -834,7 +834,7 @@ public class OrganizationHistoryList extends ArrayList implements SyncableList {
           "AND history.contact_id = ? AND history.org_id IS NULL ");
     }
     if (level != -1) {
-      sqlFilter.append("AND history.\"level\" > ? ");
+      sqlFilter.append("AND history." + DatabaseUtils.addQuotes(db, "level") + " > ? ");
     }
     if (startDateRange != null) {
       sqlFilter.append("AND history.event_date > ? ");

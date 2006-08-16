@@ -16,6 +16,7 @@
 package com.zeroio.iteam.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -92,7 +93,7 @@ public class PermissionLookupList extends ArrayList {
         "FROM lookup_project_permission " +
         "WHERE code > 0 ");
     createFilter(sql);
-    sql.append("ORDER BY category_id, \"level\", description ");
+    sql.append("ORDER BY category_id, " + DatabaseUtils.addQuotes(db, "level") + ", description ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();

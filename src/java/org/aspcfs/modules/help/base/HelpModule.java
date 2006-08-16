@@ -98,7 +98,7 @@ public class HelpModule extends GenericBean {
         "WHERE hm.module_id in " +
         "(SELECT link_module_id " +
         "from help_contents hc " +
-        "WHERE hc.\"module\" = ?) " +
+        "WHERE hc." + DatabaseUtils.addQuotes(db, "module") + " = ?) " +
         "AND hm.category_id = pc.category_id ");
     int i = 0;
     pst.setString(++i, action);

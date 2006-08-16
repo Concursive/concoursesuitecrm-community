@@ -700,7 +700,7 @@ public class CustomerProductHistory extends GenericBean {
         "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "     modifiedby = ? ");
     sql.append("WHERE history_id = ? ");
-    sql.append("AND modified = ? ");
+    sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -710,7 +710,9 @@ public class CustomerProductHistory extends GenericBean {
     pst.setTimestamp(++i, this.getProductEndDate());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

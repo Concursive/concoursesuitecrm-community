@@ -164,7 +164,7 @@ public class CustomFieldCategory extends ArrayList {
   public CustomFieldCategory(Connection db, int categoryId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         " SELECT " +
-        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc.\"level\" AS \"level\",  " +
+        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc." + DatabaseUtils.addQuotes(db, "level") + " AS " + DatabaseUtils.addQuotes(db, "level") + ",  " +
         " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
         " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
         " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
@@ -957,7 +957,7 @@ public class CustomFieldCategory extends ArrayList {
         "WHERE cfg.category_id = " + id + " ");
 
     createFilter(sqlFilter);
-    sqlOrder.append("ORDER BY \"level\", group_id, group_name ");
+    sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", group_id, group_name ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

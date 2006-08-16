@@ -969,6 +969,13 @@
         <include name="daffodildb_*.sql"/>
       </fileset>
     </copy>
+    <!-- Copy the database files (MySQL) -->
+    <copy file="${src.sql.dir}/mysql/distribution/mysql.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/mysql/distribution">
+        <include name="mysql_*.sql"/>
+      </fileset>
+    </copy>
     <!-- Copy the database upgrade files -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup">
       <fileset dir="${src.sql.dir}/upgrade">
@@ -1155,6 +1162,14 @@
         dir="src/sql/daffodildb/upgrade"
         includes="*.sql,*.txt"
         prefix="${zip.dir}/src/sql/daffodildb/upgrade"/>
+      <zipfileset
+        dir="src/sql/mysql"
+        includes="new_*.sql"
+        prefix="${zip.dir}/src/sql/mysql"/>
+      <zipfileset
+        dir="src/sql/mysql/upgrade"
+        includes="*.sql,*.txt"
+        prefix="${zip.dir}/src/sql/mysql/upgrade"/>
       <zipfileset
         dir="src/sql/init"
         includes="*.sql, *.xml, *.bsh"

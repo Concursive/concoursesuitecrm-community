@@ -42,7 +42,6 @@ import org.aspcfs.utils.*;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -158,7 +157,7 @@ public class Notifier extends ReportBuilder {
         while (i.hasNext()) {
           Site thisSite = (Site) i.next();
           Class.forName(thisSite.getDatabaseDriver());
-          db = DriverManager.getConnection(
+          db = DatabaseUtils.getConnection(
               thisSite.getDatabaseUrl(),
               thisSite.getDatabaseUsername(),
               thisSite.getDatabasePassword());

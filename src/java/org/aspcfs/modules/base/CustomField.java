@@ -1690,7 +1690,7 @@ public class CustomField extends GenericBean implements Cloneable {
     int result = 1;
     String sql =
         "UPDATE custom_field_info " +
-        "SET \"level\" = ?, group_id = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, group_id = ? " +
         "WHERE field_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);

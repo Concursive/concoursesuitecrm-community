@@ -376,7 +376,7 @@ public class Setup extends CFSModule {
         bean.setPath(dbPath);
         CustomHook.populateDatabase(bean, setupPath, dbPath);
       }
-      Connection db = DriverManager.getConnection(
+      Connection db = DatabaseUtils.getConnection(
           bean.getUrl(), bean.getUser(), bean.getPassword());
       //Save the conn info as encrypted text so it can be reloaded later
       String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
@@ -492,6 +492,14 @@ public class Setup extends CFSModule {
                   db, dbFileLibraryPath, setupPath, locale);
               break;
             case DatabaseUtils.DAFFODILDB:
+              SetupUtils.insertDefaultData(
+                  db, dbFileLibraryPath, setupPath, locale);
+              break;
+            case DatabaseUtils.MYSQL:
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("Setup-> Installing MySQL Schema");
+              }
+              DatabaseUtils.executeSQL(db, setupPath + "mysql.sql");
               SetupUtils.insertDefaultData(
                   db, dbFileLibraryPath, setupPath, locale);
               break;
@@ -902,7 +910,7 @@ public class Setup extends CFSModule {
     try {
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) AS record_count " +
-              "FROM \"access\" " +
+              "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
               "WHERE user_id > 0 ");
       ResultSet rs = pst.executeQuery();
       rs.next();
@@ -954,7 +962,7 @@ public class Setup extends CFSModule {
     }
     //Create a connection
     Class.forName(dbBean.getDriver());
-    return DriverManager.getConnection(
+    return DatabaseUtils.getConnection(
         dbBean.getUrl(), dbBean.getUser(), dbBean.getPassword());
   }
 

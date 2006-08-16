@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.help.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -167,7 +168,7 @@ public class HelpContents extends ArrayList {
         "SELECT COUNT(*) AS recordcount " +
         "FROM help_contents hc " +
         "WHERE hc.help_id > -1 ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
       pagedListInfo.setItemsPerPage(0);
@@ -202,7 +203,7 @@ public class HelpContents extends ArrayList {
     }
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("hc.\"module\"", "");
+    pagedListInfo.setDefaultSort("hc." + DatabaseUtils.addQuotes(db, "module") + "", "");
     pagedListInfo.appendSqlTail(db, sqlOrder);
 
     //Need to build a base SQL statement for returning records
@@ -242,17 +243,17 @@ public class HelpContents extends ArrayList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
 
     if (module != null) {
-      sqlFilter.append("AND hc.\"module\" = ? ");
+      sqlFilter.append("AND hc." + DatabaseUtils.addQuotes(db, "module") + " = ? ");
     }
 
     if (section != null) {
-      sqlFilter.append("AND hc.\"section\" = ? ");
+      sqlFilter.append("AND hc." + DatabaseUtils.addQuotes(db, "section") + " = ? ");
     }
 
     if (subSection != null) {

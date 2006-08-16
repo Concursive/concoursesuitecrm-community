@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.accounts.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.LookupList;
 
 import java.sql.Connection;
@@ -224,7 +225,7 @@ public class RevenueTypeList extends Vector {
   public void buildList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT * FROM lookup_revenue_types WHERE code > -1 ");
-    sql.append("ORDER BY \"level\", description ");
+    sql.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery(sql.toString());
     while (rs.next()) {

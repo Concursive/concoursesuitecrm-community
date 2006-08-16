@@ -613,7 +613,7 @@ public class Campaign extends GenericBean {
     String sql =
         "SELECT c.*, msg.name AS messageName, msg.subject AS messageSubject, dt.code AS deliveryType, dt.description AS deliveryTypeName " +
         "FROM campaign c " +
-        "LEFT JOIN \"message\" msg ON (c.message_id = msg.id) " +
+        "LEFT JOIN " + DatabaseUtils.addQuotes(db, "message") + " msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.campaign_id = ? ";
     pst = db.prepareStatement(sql);
@@ -1901,7 +1901,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.\"type\" = ? ");
+        "AND sa." + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_REGULAR);
     ResultSet rs = pst.executeQuery();
@@ -1926,7 +1926,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.\"type\" = ? ");
+        "AND sa." + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_ADDRESS_REQUEST);
     ResultSet rs = pst.executeQuery();
@@ -1950,7 +1950,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.\"type\" = ? ");
+        "AND sa." + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_REGULAR);
     ResultSet rs = pst.executeQuery();
@@ -1975,7 +1975,7 @@ public class Campaign extends GenericBean {
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? " +
         "AND (sr.active_survey_id = sa.active_survey_id) " +
-        "AND sa.\"type\" = ? ");
+        "AND sa." + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     pst.setInt(1, id);
     pst.setInt(2, Constants.SURVEY_ADDRESS_REQUEST);
     ResultSet rs = pst.executeQuery();
@@ -2218,8 +2218,8 @@ public class Campaign extends GenericBean {
       sql.append(
           "INSERT INTO campaign " +
           "(enteredby, modifiedby, name, message_id, " +
-          "reply_addr, subject, \"message\", send_method_id, " +
-          "inactive_date, approval_date, \"type\", ");
+          "reply_addr, subject, " + DatabaseUtils.addQuotes(db, "message") + ", send_method_id, " +
+          "inactive_date, approval_date, " + DatabaseUtils.addQuotes(db, "type") + ", ");
       if (id > -1) {
         sql.append("campaign_id, ");
       }
@@ -2691,7 +2691,7 @@ public class Campaign extends GenericBean {
             "UPDATE campaign " +
             "SET status_id = ?, " +
             "status = ?, " +
-            "\"active\" = ?, " +
+            "" + DatabaseUtils.addQuotes(db, "active") + " = ?, " +
             "modifiedby = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE campaign_id = ? " +
@@ -2795,8 +2795,8 @@ public class Campaign extends GenericBean {
           "modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = ? " +
       //"WHERE id = ? " +
-          "AND modified = ? " +
-          "AND \"active\" = ? ");
+          "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ") +
+          "AND " + DatabaseUtils.addQuotes(db, "active") + " = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setInt(++i, QUEUE);
@@ -2811,7 +2811,9 @@ public class Campaign extends GenericBean {
       }
       pst.setInt(++i, modifiedBy);
       pst.setInt(++i, id);
-      pst.setTimestamp(++i, modified);
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, modified);
+      }
       pst.setBoolean(++i, false);
       resultCount = pst.executeUpdate();
       pst.close();
@@ -2884,10 +2886,10 @@ public class Campaign extends GenericBean {
         //Finalize the campaign activation
         pst = db.prepareStatement(
             "UPDATE campaign " +
-            "SET \"active\" = ?, " +
+            "SET " + DatabaseUtils.addQuotes(db, "active") + " = ?, " +
             "reply_addr = ?, " +
             "subject = ?, " +
-            "\"message\" = ?, " +
+            "" + DatabaseUtils.addQuotes(db, "message") + " = ?, " +
             "modifiedby = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE campaign_id = ? ");
@@ -3034,7 +3036,7 @@ public class Campaign extends GenericBean {
         "SET message_id = ?, " +
         "reply_addr = null, " +
         "subject = null, " +
-        "\"message\" = null, " +
+        "" + DatabaseUtils.addQuotes(db, "message") + " = null, " +
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE campaign_id = ? ");
@@ -3239,7 +3241,7 @@ public class Campaign extends GenericBean {
     }
     sql.append(
         "modifiedby = ?, " +
-        "\"active\" = ?, status_id = ?, status = ?, message_id = ? " +
+        "" + DatabaseUtils.addQuotes(db, "active") + " = ?, status_id = ?, status = ?, message_id = ? " +
         "WHERE campaign_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -3461,7 +3463,7 @@ public class Campaign extends GenericBean {
     String encryptedPassword = PasswordHash.encrypt(password);
     PreparedStatement pst = db.prepareStatement(
         "SELECT a.password " +
-        "FROM \"access\" a " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
         "WHERE user_id = ? " +
         "AND a.enabled = ? ");
     pst.setInt(1, tmpUserId);

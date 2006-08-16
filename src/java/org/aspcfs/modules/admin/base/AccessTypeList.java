@@ -150,7 +150,7 @@ public class AccessTypeList extends LookupList {
       pagedListInfo.setDefaultSort("description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY \"level\",description ");
+      sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ",description ");
     }
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);

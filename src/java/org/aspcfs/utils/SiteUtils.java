@@ -23,7 +23,6 @@ import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Map;
 
 /**
@@ -82,7 +81,7 @@ public class SiteUtils {
         } else {
           //Build list of sites to process
           Class.forName(driver);
-          dbSites = DriverManager.getConnection(baseName, dbUser, dbPass);
+          dbSites = DatabaseUtils.getConnection(baseName, dbUser, dbPass);
         }
         siteList.setSiteCode(appCode);
         siteList.setEnabled(Constants.TRUE);
@@ -139,7 +138,7 @@ public class SiteUtils {
         } else {
           //Build list of sites to process
           Class.forName(driver);
-          dbSites = DriverManager.getConnection(baseName, dbUser, dbPass);
+          dbSites = DatabaseUtils.getConnection(baseName, dbUser, dbPass);
         }
         siteList.setSiteCode(appCode);
         siteList.setDbHost(ceToCompare.getUrl());

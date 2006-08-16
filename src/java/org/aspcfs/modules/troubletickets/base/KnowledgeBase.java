@@ -275,7 +275,7 @@ public class KnowledgeBase extends GenericBean {
         " modifiedby = ? " +
         " WHERE kb_id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -287,7 +287,7 @@ public class KnowledgeBase extends GenericBean {
     }
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();

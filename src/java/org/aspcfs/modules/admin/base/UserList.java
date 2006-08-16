@@ -1442,7 +1442,7 @@ public class UserList extends Vector implements SyncableList {
     StringBuffer sqlOrder = new StringBuffer();
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM \"access\" a " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
         "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
@@ -1450,11 +1450,11 @@ public class UserList extends Vector implements SyncableList {
         "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN \"access\" m_usr ON (a.manager_id = m_usr.user_id) " +
-        "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
+        "LEFT JOIN " + DatabaseUtils.addQuotes(db, "access") + " m_usr ON (a.manager_id = m_usr.user_id) " +
+        "LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (a.role_id = r.role_id) " +
         "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
         "WHERE a.user_id > -1 ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
@@ -1497,7 +1497,7 @@ public class UserList extends Vector implements SyncableList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "a.username, a.\"password\", a.role_id, a.last_login, a.manager_id, " +
+        "a.username, a." + DatabaseUtils.addQuotes(db, "password") + ", a.role_id, a.last_login, a.manager_id, " +
         "a.site_id AS siteid, " +
         "a.last_ip, a.timezone, a.startofday AS access_startofday, " +
         "a.endofday AS access_endofday, a.expires, a.alias, " +
@@ -1505,8 +1505,8 @@ public class UserList extends Vector implements SyncableList {
         "a.enabled AS access_enabled, a.assistant, " +
         "a.entered AS access_entered, a.enteredby AS access_enteredby, " +
         "a.modified AS access_modified, a.modifiedby AS access_modifiedby, " +
-        "a.currency, a.\"language\", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
-        "r.\"role\" AS systemrole, r.role_type, " +
+        "a.currency, a." + DatabaseUtils.addQuotes(db, "language") + ", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
+        "r." + DatabaseUtils.addQuotes(db, "role") + " AS systemrole, r.role_type, " +
         "m_usr.enabled AS mgr_enabled, " +
         "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
         "b.description AS site_id_name, " +
@@ -1514,7 +1514,7 @@ public class UserList extends Vector implements SyncableList {
         "lcs.description AS source_name, " + 
         "lcr.description AS rating_name, " +
         "o.name AS org_name, o.enabled AS orgenabled " +
-        "FROM \"access\" a " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
         "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
@@ -1522,8 +1522,8 @@ public class UserList extends Vector implements SyncableList {
         "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN \"access\" m_usr ON (a.manager_id = m_usr.user_id) " +
-        "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
+        "LEFT JOIN " + DatabaseUtils.addQuotes(db, "access") + " m_usr ON (a.manager_id = m_usr.user_id) " +
+        "LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (a.role_id = r.role_id) " +
         "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
         "WHERE a.user_id > -1 ");
     pst = db.prepareStatement(
@@ -1571,7 +1571,7 @@ public class UserList extends Vector implements SyncableList {
    * @param  sqlFilter  Description of Parameter
    * @since             1.4
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -1622,7 +1622,7 @@ public class UserList extends Vector implements SyncableList {
       sqlFilter.append("AND a.username = ? ");
     }
     if (password != null) {
-      sqlFilter.append("AND a.\"password\" = ? ");
+      sqlFilter.append("AND a." + DatabaseUtils.addQuotes(db, "password") + " = ? ");
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -1773,12 +1773,12 @@ public class UserList extends Vector implements SyncableList {
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
         "SELECT COUNT(*) AS recordcount " +
-        "FROM \"access\" a " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id), " +
-        "\"role\" r " +
+        "" + DatabaseUtils.addQuotes(db, "role") + " r " +
         "WHERE a.role_id = r.role_id ";
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);

@@ -1176,7 +1176,7 @@ public class FileItem extends GenericBean {
       }
       sql.append(
           " link_module_id, link_item_id, " +
-          " enteredBy, modifiedBy, default_file, allow_portal_access) " +
+          " enteredBy, modifiedBy, default_file, allow_portal_access, modified) " +
           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
         sql.append("?,");
@@ -1187,7 +1187,7 @@ public class FileItem extends GenericBean {
       if (modified != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?, ?) ");
+      sql.append("?, ?, ?, ?, ?, ?, " + ((this.getModified()!=null)?"?":DatabaseUtils.getCurrentTimestamp(db)) + ") ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1218,6 +1218,9 @@ public class FileItem extends GenericBean {
       pst.setInt(++i, modifiedBy);
       pst.setBoolean(++i, defaultFile);
       pst.setBoolean(++i, allowPortalAccess);
+      if(this.getModified()!=null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "project_files_item_id_seq", id);
@@ -1704,10 +1707,12 @@ public class FileItem extends GenericBean {
         "UPDATE project_files " +
         "SET enabled = ? " +
         "WHERE item_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     pst.setBoolean(++i, true);
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     int resultCount = pst.executeUpdate();
     pst.close();
     if (resultCount == 1) {
@@ -1735,10 +1740,12 @@ public class FileItem extends GenericBean {
         "UPDATE project_files SET " +
         "enabled = ? " +
         "WHERE item_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     pst.setBoolean(++i, false);
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     int resultCount = pst.executeUpdate();
     pst.close();
     if (resultCount == 1) {

@@ -16,6 +16,7 @@
 package org.aspcfs.apps.workFlowManager;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
 
@@ -237,8 +238,10 @@ public class ScheduledEventList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     sqlSelect.append(
-        "SELECT event_id, \"second\", \"minute\", \"hour\", " +
-        "dayofmonth, \"month\", \"dayofweek\", \"year\", task, extrainfo, " +
+        "SELECT event_id, " + DatabaseUtils.addQuotes(db, "second") +
+        ", " + DatabaseUtils.addQuotes(db, "minute") +
+        ", " + DatabaseUtils.addQuotes(db, "hour") +
+        ", " + "dayofmonth, \"month\", \"dayofweek\", \"year\", task, extrainfo, " +
         "enabled, entered, process_id " +
         "FROM business_process_events " +
         "WHERE event_id > 0 ");

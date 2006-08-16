@@ -589,12 +589,14 @@ public class CustomFieldRecord {
         "  FROM custom_field_group " +
         "  WHERE category_id = ? " +
         "  AND enabled = ? " +
-        "  ORDER BY \"level\", group_id, group_name " +
+        "  ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", group_id, group_name " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL ? "LIMIT 1 " : "") +
         " ) " +
         "AND enabled = ? " +
-        "ORDER BY \"level\", field_id, field_name " +
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", field_id, field_name " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL ? "LIMIT 1 " : "") +
         (DatabaseUtils.getType(db) == DatabaseUtils.DB2 ? "FETCH FIRST 1 ROWS ONLY " : "") +
         (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? ") WHERE ROWNUM <= 1 " : "");
     PreparedStatement pst = db.prepareStatement(sql);

@@ -341,6 +341,9 @@ public class DateUtils {
    * @return The DatePath value
    */
   public static String getDatePath(java.sql.Timestamp fileDate) {
+    if(fileDate == null){
+      return "0000" + System.getProperty("file.separator") + "0000" + System.getProperty("file.separator");
+    }
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
     String datePathToUse1 = formatter1.format(fileDate);
     SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");

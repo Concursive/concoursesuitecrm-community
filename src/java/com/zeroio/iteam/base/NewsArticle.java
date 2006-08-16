@@ -1109,7 +1109,7 @@ public class NewsArticle extends GenericBean {
         "priority_id = ?, enabled = ?, status = ?, category_id = ?, " +
         "classification_id = ?, template_id = ? " +
         "WHERE news_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     pst.setString(++i, subject);
     pst.setString(++i, intro);
     pst.setInt(++i, this.getModifiedBy());
@@ -1126,7 +1126,9 @@ public class NewsArticle extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, classificationId);
     DatabaseUtils.setInt(pst, ++i, templateId);
     pst.setInt(++i, id);
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     if (resultCount == 1) {

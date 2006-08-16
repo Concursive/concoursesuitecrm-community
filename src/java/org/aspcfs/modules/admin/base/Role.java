@@ -83,7 +83,7 @@ public class Role extends GenericBean {
   public Role(Connection db, int roleId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM \"role\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
         "WHERE role_id = ? ");
     pst.setInt(1, roleId);
     ResultSet rs = pst.executeQuery();
@@ -458,10 +458,11 @@ public class Role extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
-          "UPDATE \"role\" " +
-          "SET \"role\" = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
+          "UPDATE " + DatabaseUtils.addQuotes(db, "role") + " " +
+          "SET " + DatabaseUtils.addQuotes(db, "role") + " = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
           "modifiedby = ?, enabled = ? " +
-          "WHERE modified = ? AND role_id = ? ");
+          "WHERE modified " + ((this.getModified() == null)?"IS NULL ":"= ? ") +
+          "AND role_id = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setString(++i, this.getRole());
@@ -469,7 +470,9 @@ public class Role extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, getRoleType());
       pst.setInt(++i, this.getModifiedBy());
       pst.setBoolean(++i, this.getEnabled());
-      pst.setTimestamp(++i, this.getModified());
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       pst.setInt(++i, id);
       resultCount = pst.executeUpdate();
       pst.close();
@@ -499,7 +502,7 @@ public class Role extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS user_count " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE role_id = ? " +
         "AND user_id <> 0 " +
         "AND enabled = ? ");
@@ -534,7 +537,7 @@ public class Role extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "role_role_id_seq");
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
-      sql.append("INSERT INTO \"role\" (\"role\", description, role_type, ");
+      sql.append("INSERT INTO " + DatabaseUtils.addQuotes(db, "role") + " (" + DatabaseUtils.addQuotes(db, "role") + ", description, role_type, ");
       if (entered != null) {
       sql.append("entered, ");
       }
@@ -609,7 +612,7 @@ public class Role extends GenericBean {
       db.setAutoCommit(false);
       if (buildUserCount(db, false)) {
         pst = db.prepareStatement(
-            "UPDATE \"role\" " +
+            "UPDATE " + DatabaseUtils.addQuotes(db, "role") + " " +
             "SET enabled = ? " +
             "WHERE role_id = ? ");
         pst.setBoolean(1, false);
@@ -618,7 +621,7 @@ public class Role extends GenericBean {
       } else {
         deletePermissions(db);
         pst = db.prepareStatement(
-            "DELETE FROM \"role\" " +
+            "DELETE FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
             "WHERE role_id = ? ");
         pst.setInt(1, id);
         recordCount = pst.executeUpdate();
@@ -736,8 +739,8 @@ public class Role extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM \"role\" " +
-        "WHERE " + DatabaseUtils.toLowerCase(db) + "(\"role\") = ? " +
+        "FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
+        "WHERE " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.addQuotes(db, "role") + ") = ? " +
         "AND enabled = ? ");
     if (id > -1) {
       sql.append("AND role_id <> ? ");
@@ -776,7 +779,7 @@ public class Role extends GenericBean {
     int resultCount = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS thecount " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE role_id = ? " +
         "AND contact_id > 0 " +
         "AND (alias = -1 OR alias IS NULL) " +

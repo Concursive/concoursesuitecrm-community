@@ -91,7 +91,7 @@ public class TeamMember {
    */
   public TeamMember(Connection db, int projectId, int teamId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT t.*, r.\"level\" " +
+        "SELECT t.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
         "FROM project_team t, lookup_project_role r " +
         "WHERE t.project_id = ? " +
         "AND t.user_id = ? " +
@@ -636,7 +636,7 @@ public class TeamMember {
   public static boolean changeRole(Connection db, int projectId, int userId, int userLevel) throws SQLException {
     //Check current level, if user is not a leader than it doesn't matter what the change is
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"level\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "level") + " " +
         "FROM lookup_project_role " +
         "WHERE code IN (SELECT userlevel FROM project_team WHERE project_id = ? AND user_id = ?) ");
     pst.setInt(1, projectId);
@@ -657,7 +657,7 @@ public class TeamMember {
           "SELECT count(user_id) AS other " +
           "FROM project_team " +
           "WHERE project_id = ? " +
-          "AND userlevel IN (SELECT code FROM lookup_project_role WHERE \"level\" <= ?) " +
+          "AND userlevel IN (SELECT code FROM lookup_project_role WHERE " + DatabaseUtils.addQuotes(db, "level") + " <= ?) " +
           "AND user_id <> ? ");
       pst.setInt(1, projectId);
       pst.setInt(2, TeamMember.PROJECT_LEAD);

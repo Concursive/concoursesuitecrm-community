@@ -662,14 +662,16 @@ public class FileFolder extends GenericBean {
         "SET subject = ?, description = ?, \"display\" = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE folder_id = ? " +
-        "AND modified = ?";
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, subject);
     pst.setString(++i, description);
     DatabaseUtils.setInt(pst, ++i, display);
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

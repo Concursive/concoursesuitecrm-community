@@ -1684,7 +1684,7 @@ public class Call extends GenericBean {
         "followup_date = ?, alertdate_timezone = ?, trashed_date = ?, opp_id = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE call_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     if (updateOrganization) {
@@ -1718,7 +1718,9 @@ public class Call extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, trashedDate);
     DatabaseUtils.setInt(pst, ++i, this.getOppHeaderId());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

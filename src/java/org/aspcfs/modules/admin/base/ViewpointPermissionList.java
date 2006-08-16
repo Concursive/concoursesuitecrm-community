@@ -16,6 +16,7 @@
 package org.aspcfs.modules.admin.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -114,7 +115,7 @@ public class ViewpointPermissionList extends HashMap {
         "FROM permission p, permission_category c, viewpoint_permission v " +
         "WHERE p.category_id = c.category_id " +
         "AND p.permission_id = v.permission_id ");
-    sqlOrder.append("ORDER BY v.viewpoint_id, c.\"level\", p.\"level\" ");
+    sqlOrder.append("ORDER BY v.viewpoint_id, c." + DatabaseUtils.addQuotes(db, "level") + ", p." + DatabaseUtils.addQuotes(db, "level") + " ");
     createFilter(sqlFilter);
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

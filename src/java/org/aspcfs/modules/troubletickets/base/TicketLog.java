@@ -986,13 +986,13 @@ public class TicketLog extends GenericBean {
     }
     sql.append("WHERE id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, ++i, this.getAssignedTo());
     pst.setInt(++i, id);
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();

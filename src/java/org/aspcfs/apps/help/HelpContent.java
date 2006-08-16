@@ -439,7 +439,9 @@ public class HelpContent {
     id = DatabaseUtils.getNextSeq(db, "help_contents_help_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_contents " +
-        "(" + (id > -1 ? "help_id, " : "") + "link_module_id, category_id, \"module\", \"section\", subsection, title, description, enteredby, modifiedby) " +
+        "(" + (id > -1 ? "help_id, " : "") + "link_module_id, category_id, " + DatabaseUtils.addQuotes(db, "module") +
+        ", " + DatabaseUtils.addQuotes(db, "section") +
+        ", subsection, title, description, enteredby, modifiedby) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
@@ -481,7 +483,8 @@ public class HelpContent {
       int fid = DatabaseUtils.getNextSeq(db, "help_features_feature_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO help_features " +
-          "(" + (fid > -1 ? "feature_id, " : "") + "link_help_id, description, \"level\", enteredby, modifiedby, enabled) " +
+          "(" + (fid > -1 ? "feature_id, " : "") + "link_help_id, description, " + DatabaseUtils.addQuotes(db, "level") +
+          ", enteredby, modifiedby, enabled) " +
           "VALUES (" + (fid > -1 ? "?, " : "") + "?, ?,?, ?, ?, ?) ");
       int i = 0;
       if (fid > -1) {
@@ -611,7 +614,7 @@ public class HelpContent {
         "SELECT description " +
         "FROM help_features " +
         "WHERE link_help_id = ? " +
-        "ORDER BY \"level\"");
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + "");
 
     pst.setInt(1, getId());
     ResultSet rs = pst.executeQuery();

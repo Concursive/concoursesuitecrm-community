@@ -1049,7 +1049,7 @@ public class CustomerProduct extends GenericBean {
         "     modifiedby = ?, " +
         "     enabled = ? ");
     sql.append("WHERE order_id = ? ");
-    sql.append("AND modified = ? ");
+    sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -1058,7 +1058,9 @@ public class CustomerProduct extends GenericBean {
     pst.setTimestamp(++i, this.getStatusDate());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     pst.setBoolean(++i, this.getEnabled());
     resultCount = pst.executeUpdate();
     pst.close();

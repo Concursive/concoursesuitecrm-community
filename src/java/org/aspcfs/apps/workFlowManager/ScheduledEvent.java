@@ -541,25 +541,25 @@ public class ScheduledEvent implements Serializable {
       sql.append("event_id, ");
     }
     if (this.getSecond() != null && !"".equals(this.getSecond())) {
-      sql.append("\"second\", ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "second") + ", ");
     }
     if (this.getMinute() != null && !"".equals(this.getMinute())) {
-      sql.append("\"minute\", ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "minute") + ", ");
     }
     if (this.getHour() != null && !"".equals(this.getHour())) {
-      sql.append("\"hour\", ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "hour") + ", ");
     }
     if (this.getDayOfMonth() != null && !"".equals(getDayOfMonth())) {
       sql.append("dayofmonth, ");
     }
     if (this.getMonth() != null && !"".equals(this.getMonth())) {
-      sql.append("\"month\", ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "month") + ", ");
     }
     if (this.getDayOfWeek() != null && !"".equals(this.getDayOfWeek())) {
-      sql.append("\"dayofweek\", ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "dayofweek") + ", ");
     }
     if (this.getYear() != null && !"".equals(this.getYear())) {
-      sql.append("\"year\", ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "year") + ", ");
     }
     if (this.getTask() != null && !"".equals(this.getTask())) {
       sql.append("task, ");
@@ -671,25 +671,25 @@ public class ScheduledEvent implements Serializable {
     }
     StringBuffer sql = new StringBuffer("UPDATE business_process_events SET ");
     if (this.getSecond() != null && !"".equals(this.getSecond())) {
-      sql.append("\"second\" = ?, ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "second") + " = ?, ");
     }
     if (this.getMinute() != null && !"".equals(this.getMinute())) {
-      sql.append("\"minute\" = ?, ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "minute") + " = ?, ");
     }
     if (this.getHour() != null && !"".equals(this.getHour())) {
-      sql.append("\"hour\" = ?, ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "hour") + " = ?, ");
     }
     if (this.getDayOfMonth() != null && !"".equals(getDayOfMonth())) {
       sql.append("dayofmonth = ?, ");
     }
     if (this.getMonth() != null && !"".equals(this.getMonth())) {
-      sql.append("\"month\" = ?, ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "month") + " = ?, ");
     }
     if (this.getDayOfWeek() != null && !"".equals(this.getDayOfWeek())) {
-      sql.append("\"dayofweek\" = ?, ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "dayofweek") + " = ?, ");
     }
     if (this.getYear() != null && !"".equals(this.getYear())) {
-      sql.append("\"year\" = ?, ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "year") + " = ?, ");
     }
     if (this.getTask() != null && !"".equals(this.getTask())) {
       sql.append("task = ?, ");

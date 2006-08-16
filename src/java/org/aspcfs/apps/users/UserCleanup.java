@@ -18,11 +18,11 @@ package org.aspcfs.apps.users;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
 import org.aspcfs.utils.AppUtils;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.SiteUtils;
 
 import java.lang.reflect.Constructor;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,7 +104,7 @@ public class UserCleanup {
         while (i.hasNext()) {
           Site thisSite = (Site) i.next();
           Class.forName(thisSite.getDatabaseDriver());
-          db = DriverManager.getConnection(
+          db = DatabaseUtils.getConnection(
               thisSite.getDatabaseUrl(),
               thisSite.getDatabaseUsername(),
               thisSite.getDatabasePassword());

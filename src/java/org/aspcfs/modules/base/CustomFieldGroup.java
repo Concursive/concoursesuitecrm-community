@@ -570,7 +570,7 @@ public class CustomFieldGroup extends ArrayList {
         "WHERE cfi.group_id = " + id + " ");
 
     createFilter(sqlFilter);
-    sqlOrder.append("ORDER BY \"level\", field_id, field_name ");
+    sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", field_id, field_name ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -637,7 +637,7 @@ public class CustomFieldGroup extends ArrayList {
     if (entered != null) {
       sql.append("entered, ");
     }
-    sql.append("description, \"level\" ) ");
+    sql.append("description, " + DatabaseUtils.addQuotes(db, "level") + " ) ");
     sql.append("VALUES (?, ?, ");
     if (id > -1) {
       sql.append("?, ");
@@ -707,7 +707,7 @@ public class CustomFieldGroup extends ArrayList {
     int result = 1;
     String sql =
         "UPDATE custom_field_group " +
-        "SET \"level\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE group_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -896,7 +896,7 @@ public class CustomFieldGroup extends ArrayList {
   private int retrieveNextLevel(Connection db) throws SQLException {
     int returnLevel = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT MAX(\"level\") as \"level\" " +
+        "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") as " + DatabaseUtils.addQuotes(db, "level") + " " +
         "FROM custom_field_group " +
         "WHERE category_id = ? ");
     pst.setInt(1, categoryId);

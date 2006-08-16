@@ -480,7 +480,7 @@ public class HelpFeature extends GenericBean {
    */
   private int getMaxLevel(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT max(\"level\") AS maxrecord " +
+        "SELECT max(" + DatabaseUtils.addQuotes(db, "level") + ") AS maxrecord " +
         "FROM help_features " +
         "WHERE link_help_id = ? ");
     int i = 0;
@@ -514,7 +514,7 @@ public class HelpFeature extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "help_features_feature_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO help_features " +
-          "(" + (id > -1 ? "feature_id, " : "") + "link_help_id, description, \"level\", enteredby, modifiedby, enabled, " +
+          "(" + (id > -1 ? "feature_id, " : "") + "link_help_id, description, " + DatabaseUtils.addQuotes(db, "level") + ", enteredby, modifiedby, enabled, " +
           (linkFeatureId > 0 ? " link_feature_id, " : "") +
           "completedate, completedby) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, " +
@@ -579,10 +579,10 @@ public class HelpFeature extends GenericBean {
       int i = 0;
       pst = db.prepareStatement(
           "UPDATE help_features " +
-          "SET modifiedby = ?, description = ?, \"level\" = ?, enabled = ?, " +
+          "SET modifiedby = ?, description = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, " +
           (linkFeatureId > 0 ? " link_feature_id = ?, " : "") +
           "completedate = ?, completedby = ? " +
-          "WHERE feature_id = ? AND modified = ? ");
+          "WHERE feature_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getLevel());
@@ -601,7 +601,9 @@ public class HelpFeature extends GenericBean {
         pst.setNull(++i, java.sql.Types.SMALLINT);
       }
       pst.setInt(++i, id);
-      pst.setTimestamp(++i, this.getModified());
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       count = pst.executeUpdate();
       pst.close();
       db.commit();

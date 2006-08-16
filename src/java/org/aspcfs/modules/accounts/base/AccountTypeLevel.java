@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.accounts.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
 import java.sql.Connection;
@@ -266,7 +267,7 @@ public class AccountTypeLevel {
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("\"level\") ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "level") + ") ");
       sql.append("VALUES (?, ?, ");
       if (entered != null) {
         sql.append("?, ");

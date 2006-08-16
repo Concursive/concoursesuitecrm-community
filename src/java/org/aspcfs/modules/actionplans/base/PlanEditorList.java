@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 /**
  *  Description of the Class
  *
@@ -52,7 +54,7 @@ public class PlanEditorList extends ArrayList {
         "FROM action_plan_editor_lookup apel " +
         "LEFT JOIN action_plan_constants apc ON (apel.constant_id = apc.map_id) " +
         "WHERE module_id = ? " +
-        "ORDER BY \"level\" ");
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + " ");
     pst.setInt(1, moduleId);
     rs = pst.executeQuery();
     while (rs.next()) {

@@ -380,13 +380,15 @@ public class Make {
         "SET make_name = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE make_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, name);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

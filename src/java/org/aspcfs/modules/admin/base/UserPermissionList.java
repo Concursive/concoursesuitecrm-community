@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 /**
  * Description of the Class
  *
@@ -74,7 +76,7 @@ public class UserPermissionList extends Vector {
         "FROM permission p, permission_category c, role_permission r " +
         "WHERE p.category_id = c.category_id " +
         "AND p.permission_id = r.permission_id ");
-    sqlOrder.append("ORDER BY role_id, c.\"level\", p.\"level\" ");
+    sqlOrder.append("ORDER BY role_id, c." + DatabaseUtils.addQuotes(db, "level") + ", p." + DatabaseUtils.addQuotes(db, "level") + " ");
     createFilter(sqlFilter);
     sqlFilter.append("AND p.enabled = ? ");
     sqlFilter.append("AND c.enabled = ? ");

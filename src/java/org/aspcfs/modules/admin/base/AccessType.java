@@ -71,7 +71,7 @@ public class AccessType extends LookupElement {
     }
     this.setCode(code);
     PreparedStatement pst = db.prepareStatement(
-        "SELECT code, link_module_id, description, default_item, \"level\", enabled, rule_id " +
+        "SELECT code, link_module_id, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, rule_id " +
         "FROM lookup_access_types " +
         "WHERE code = ? ");
     pst.setInt(1, code);
@@ -213,7 +213,7 @@ public class AccessType extends LookupElement {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO lookup_access_types " +
-        "(" + (id > -1 ? "code, " : "") + "link_module_id, description, default_item, \"level\", enabled, rule_id) " +
+        "(" + (id > -1 ? "code, " : "") + "link_module_id, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, rule_id) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) "
     );
     if (id > -1) {

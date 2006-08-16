@@ -581,7 +581,7 @@ public class ActionList extends GenericBean {
           "UPDATE action_list " +
           "SET modifiedby = ?, description = ?, " +
           "modified = CURRENT_TIMESTAMP, completedate = ?, owner = ? " +
-          "WHERE action_id = ? AND modified = ? ");
+          "WHERE action_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       if (previousList.getCompleteDate() != null && this.getComplete()) {
@@ -593,7 +593,9 @@ public class ActionList extends GenericBean {
       }
       pst.setInt(++i, this.getOwner());
       pst.setInt(++i, id);
-      pst.setTimestamp(++i, this.getModified());
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       count = pst.executeUpdate();
       pst.close();
       db.commit();

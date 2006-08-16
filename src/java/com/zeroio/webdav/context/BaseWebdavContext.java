@@ -711,7 +711,7 @@ public class BaseWebdavContext implements ModuleContext {
   public int getUserSiteId(Connection db, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
       "SELECT site_id " +
-      "FROM \"access\" " +
+      "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
       "WHERE user_id = ? ");
     pst.setInt(1, userId);
     ResultSet rs = pst.executeQuery();

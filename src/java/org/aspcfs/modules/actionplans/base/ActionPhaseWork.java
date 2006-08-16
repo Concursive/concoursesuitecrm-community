@@ -780,7 +780,7 @@ public class ActionPhaseWork extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT apw.*, " +
-        "ap.phase_name, ap.description, ap.parent_id, ap.\"global\" " +
+        "ap.phase_name, ap.description, ap.parent_id, ap." + DatabaseUtils.addQuotes(db, "global") + " " +
         "FROM action_phase_work apw " +
         "LEFT JOIN action_phase ap ON (apw.action_phase_id = ap.phase_id) " +
         "WHERE apw.phase_work_id = ? ");
@@ -907,7 +907,7 @@ public class ActionPhaseWork extends GenericBean {
     if (endDate != null) {
       sql.append("end_date, ");
     }
-    sql.append("\"level\", ");
+    sql.append("" + DatabaseUtils.addQuotes(db, "level") + ", ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1269,7 +1269,7 @@ public class ActionPhaseWork extends GenericBean {
   private int retrieveNextLevel(Connection db) throws SQLException {
     int returnLevel = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT MAX(\"level\") as levelcount " +
+        "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") as levelcount " +
         "FROM action_phase_work " +
         "WHERE plan_work_id = ? ");
     pst.setInt(1, planWorkId);

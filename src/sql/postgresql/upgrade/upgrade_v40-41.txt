@@ -31,7 +31,10 @@
 2006-06-26-script01-achyutha.sql
 2006-06-29-script01-achyutha.sql
 
-
+# Upgrade scripts
+2006-07-21-script01-ananth.bsh
+### needs BSH
+2006-07-25-script01-ananth.sql
 
 
 # Run each time after upgrading a system

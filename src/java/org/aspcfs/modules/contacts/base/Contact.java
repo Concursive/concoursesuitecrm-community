@@ -1275,7 +1275,7 @@ public class Contact extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
@@ -3270,7 +3270,7 @@ public class Contact extends GenericBean {
         sql.append("contact_id, ");
       }
       sql.append(
-          "additional_names, nickname, birthdate, \"role\", site_id, " +
+          "additional_names, nickname, birthdate, " + DatabaseUtils.addQuotes(db, "role") + ", site_id, " +
           "revenue, industry_temp_code, potential, ");
 
       if (this.getIsLead()) {
@@ -3922,7 +3922,7 @@ public class Contact extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO contact_type_levels " +
-        "(contact_id, type_id, \"level\") " +
+        "(contact_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ") " +
         "VALUES (?, ?, ?) ");
     pst.setInt(++i, this.getId());
     pst.setInt(++i, type_id);
@@ -3946,7 +3946,7 @@ public class Contact extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT user_id " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
@@ -3977,7 +3977,7 @@ public class Contact extends GenericBean {
         "LEFT JOIN lookup_contact_types lct " +
         "ON ctl.type_id = lct.code " +
         "WHERE ctl.contact_id = ? " +
-        "ORDER BY ctl.\"level\" ");
+        "ORDER BY ctl." + DatabaseUtils.addQuotes(db, "level") + " ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, id);
@@ -4011,7 +4011,7 @@ public class Contact extends GenericBean {
     checkUserAccount(db);
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE contact_id = ? " +
         "AND enabled = ? ");
     pst.setInt(1, this.getId());
@@ -4092,7 +4092,7 @@ public class Contact extends GenericBean {
         );
     sql.append(
         "trashed_date = ?, additional_names = ?, nickname = ?, birthdate = ?, " +
-        "\"role\" = ?, employee_id = ?, site_id = ?, ");
+        "" + DatabaseUtils.addQuotes(db, "role") + " = ?, employee_id = ?, site_id = ?, ");
     if (locale > -1) {
       sql.append("locale = ?, ");
     }
@@ -4109,7 +4109,7 @@ public class Contact extends GenericBean {
     }
     sql.append("modifiedby = ? WHERE contact_id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -4180,7 +4180,7 @@ public class Contact extends GenericBean {
     pst.setString(++i, this.getEndOfDay());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();
@@ -4221,7 +4221,7 @@ public class Contact extends GenericBean {
         "nickname = ?, " +
         "birthdate = ?, " +
         "title = ?, " +
-        "\"role\" = ?, " +
+        "" + DatabaseUtils.addQuotes(db, "role") + " = ?, " +
         "information_update_date = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE contact_id = ? ");
     int i = 0;

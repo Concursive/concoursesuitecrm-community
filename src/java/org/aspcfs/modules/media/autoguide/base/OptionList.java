@@ -17,6 +17,7 @@ package org.aspcfs.modules.media.autoguide.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -293,7 +294,7 @@ public class OptionList extends ArrayList implements SyncableList {
     }
     sql.append("WHERE o.option_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY \"level\", o.option_name ");
+    sql.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", o.option_name ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();

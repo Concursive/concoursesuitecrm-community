@@ -2623,7 +2623,7 @@ public class Project extends GenericBean {
         "budget_currency = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE project_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, departmentId);
     DatabaseUtils.setInt(pst, ++i, categoryId);
@@ -2660,7 +2660,9 @@ public class Project extends GenericBean {
     pst.setString(++i, budgetCurrency);
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
@@ -2690,7 +2692,7 @@ public class Project extends GenericBean {
           "discussion_label = ?, tickets_label = ?, documents_label = ?, " +
           "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
           "WHERE project_id = ? " +
-          "AND modified = ? ");
+          "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       int i = 0;
       if (updateAllowGuests) {
         pst.setBoolean(++i, allowGuests);
@@ -2717,7 +2719,9 @@ public class Project extends GenericBean {
       pst.setString(++i, labelDocuments);
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
-      pst.setTimestamp(++i, modified);
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, modified);
+      }
       resultCount = pst.executeUpdate();
       pst.close();
       if (portal) {

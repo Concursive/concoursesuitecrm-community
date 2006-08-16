@@ -773,7 +773,7 @@ public class Tab extends GenericBean {
     }
     sql.append("WHERE tab_id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
 
     int i = 0;
@@ -787,7 +787,7 @@ public class Tab extends GenericBean {
       pst.setInt(++i, modifiedBy);
     }
     pst.setInt(++i, id);
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, modified);
     }
     resultCount = pst.executeUpdate();

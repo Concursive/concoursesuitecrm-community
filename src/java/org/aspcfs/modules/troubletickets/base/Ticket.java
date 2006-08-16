@@ -2538,7 +2538,7 @@ public class Ticket extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getAssignedTo());
     pst.setBoolean(2, true);
@@ -3262,7 +3262,7 @@ public class Ticket extends GenericBean {
         "escalation_level = ?, resolvable = ?, resolvedby = ?, resolvedby_department_code = ? " +
         "WHERE ticketid = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -3357,7 +3357,7 @@ public class Ticket extends GenericBean {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
     pst.setInt(++i, id);
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();

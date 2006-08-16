@@ -213,7 +213,7 @@ public class RoleList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-            "FROM \"role\" r " +
+            "FROM " + DatabaseUtils.addQuotes(db, "role") + " r " +
             "WHERE r.role_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -234,7 +234,7 @@ public class RoleList extends ArrayList {
         pst = db.prepareStatement(
             sqlCount.toString() +
                 sqlFilter.toString() +
-                "AND " + DatabaseUtils.toLowerCase(db) + "(\"role\") < ? ");
+                "AND " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.addQuotes(db, "role") + ") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -249,7 +249,7 @@ public class RoleList extends ArrayList {
       pagedListInfo.setDefaultSort("role", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY \"role\" ");
+      sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "role") + " ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -259,7 +259,7 @@ public class RoleList extends ArrayList {
     }
     sqlSelect.append(
         "r.* " +
-            "FROM \"role\" r " +
+            "FROM " + DatabaseUtils.addQuotes(db, "role") + " r " +
             "WHERE r.role_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

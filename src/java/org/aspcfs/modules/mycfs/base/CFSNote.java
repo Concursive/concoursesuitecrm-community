@@ -1058,7 +1058,7 @@ public class CFSNote extends GenericBean {
         "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
         "WHERE id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
 
     int i = 0;
@@ -1069,7 +1069,7 @@ public class CFSNote extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
 
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, modified);
     }
 

@@ -164,8 +164,8 @@ public class HelpItem extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM help_contents h " +
-        "WHERE \"module\" = ? " +
-        (section != null ? "AND \"section\" = ? " : "AND \"section\" IS NULL ") +
+        "WHERE " + DatabaseUtils.addQuotes(db, "module") + " = ? " +
+        (section != null ? "AND " + DatabaseUtils.addQuotes(db, "section") + " = ? " : "AND " + DatabaseUtils.addQuotes(db, "section") + " IS NULL ") +
         (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL "));
     if (System.getProperty("DEBUG") != null) {
       System.out.println("HelpItem-> Prepared");
@@ -225,8 +225,8 @@ public class HelpItem extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM help_contents h " +
-        "WHERE \"module\" = ? " +
-        (section != null ? "AND \"section\" = ? " : "AND \"section\" IS NULL ") +
+        "WHERE " + DatabaseUtils.addQuotes(db, "module") + " = ? " +
+        (section != null ? "AND " + DatabaseUtils.addQuotes(db, "section") + " = ? " : "AND " + DatabaseUtils.addQuotes(db, "section") + " IS NULL ") +
         (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL "));
     int i = 0;
     pst.setString(++i, module);
@@ -731,7 +731,9 @@ public class HelpItem extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "help_contents_help_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_contents " +
-        "(" + (id > -1 ? "help_id, " : "") + "\"module\", \"section\", subsection, title, description, enteredby, modifiedby) " +
+        "(" + (id > -1 ? "help_id, " : "") + "" + DatabaseUtils.addQuotes(db, "module") +
+        ", " + DatabaseUtils.addQuotes(db, "section") +
+        ", subsection, title, description, enteredby, modifiedby) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

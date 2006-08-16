@@ -8,6 +8,7 @@ package com.zeroio.iteam.base;
 
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 
 import java.sql.Connection;
@@ -142,7 +143,7 @@ public class NewsArticleCategoryList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     //Set the order
-    sqlOrder.append("ORDER BY c.project_id, c.\"level\", c.category_name ");
+    sqlOrder.append("ORDER BY c.project_id, c." + DatabaseUtils.addQuotes(db, "level") + ", c.category_name ");
     createFilter(sqlFilter);
     //Need to build a base SQL statement for returning records
     sqlSelect.append("SELECT ");
@@ -337,7 +338,7 @@ public class NewsArticleCategoryList extends ArrayList {
   public void updateLevel(Connection db, int id, int level) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news_category " +
-        "SET \"level\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE category_id = ? ");
     int i = 0;
     pst.setInt(++i, level);

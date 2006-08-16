@@ -667,7 +667,7 @@ public class CampaignList extends Vector {
         "SELECT COUNT(*) AS recordcount " +
         "FROM campaign c " +
         "WHERE c.campaign_id > -1 ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
@@ -719,7 +719,7 @@ public class CampaignList extends Vector {
     sqlSelect.append(
         "c.*, msg.name AS messageName, msg.subject AS messageSubject, dt.code AS deliveryType, dt.description AS deliveryTypeName " +
         "FROM campaign c " +
-        "LEFT JOIN \"message\" msg ON (c.message_id = msg.id) " +
+        "LEFT JOIN " + DatabaseUtils.addQuotes(db, "message") + " msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.campaign_id > -1 ");
 
@@ -747,7 +747,7 @@ public class CampaignList extends Vector {
    * @param  sqlFilter  Description of Parameter
    * @since             1.1
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -758,30 +758,30 @@ public class CampaignList extends Vector {
       sqlFilter.append("AND c.enabled = ? ");
     }
     if (active == FALSE || active == TRUE) {
-      sqlFilter.append("AND c.\"active\" = ? ");
+      sqlFilter.append("AND c." + DatabaseUtils.addQuotes(db, "active") + " = ? ");
     }
     if (incompleteOnly) {
-      sqlFilter.append("AND (active_date IS NULL OR \"active\" = ?) ");
+      sqlFilter.append("AND (active_date IS NULL OR " + DatabaseUtils.addQuotes(db, "active") + " = ?) ");
     }
     if (completeOnly) {
-      sqlFilter.append("AND active_date IS NOT NULL AND \"active\" = ? ");
+      sqlFilter.append("AND active_date IS NOT NULL AND " + DatabaseUtils.addQuotes(db, "active") + " = ? ");
     }
     if (owner > -1) {
       sqlFilter.append("AND c.enteredby = ? ");
     }
     if (!includeAllSites) {
       if (siteId > -1) {
-        sqlFilter.append("AND (c.enteredby IN (SELECT user_id FROM \"access\" WHERE site_id = ?) ");
+        sqlFilter.append("AND (c.enteredby IN (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE site_id = ?) ");
         if (!exclusiveToSite) {
-          sqlFilter.append("OR c.enteredby IN (SELECT user_id FROM \"access\" WHERE site_id IS NULL) ");
+          sqlFilter.append("OR c.enteredby IN (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE site_id IS NULL) ");
         }
         sqlFilter.append(") ");
       } else {
-        sqlFilter.append("AND c.enteredby IN (SELECT user_id FROM \"access\" WHERE site_id IS NULL) ");
+        sqlFilter.append("AND c.enteredby IN (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE site_id IS NULL) ");
       }
     }
     if (type > -1) {
-      sqlFilter.append("AND c.\"type\" = ? ");
+      sqlFilter.append("AND c." + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     }
     if (userGroupUserId > -1) {
       sqlFilter.append("AND (c.campaign_id IN ( " +
@@ -929,7 +929,7 @@ public class CampaignList extends Vector {
         "SELECT COUNT(*) AS recordcount " +
         "FROM campaign c " +
         "WHERE c.campaign_id > -1 ";
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);

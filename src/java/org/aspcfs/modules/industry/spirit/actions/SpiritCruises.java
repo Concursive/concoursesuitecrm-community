@@ -25,6 +25,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactAddress;
 import org.aspcfs.modules.contacts.base.ContactAddressList;
 import org.aspcfs.modules.industry.spirit.base.Maresa;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -99,7 +100,7 @@ public final class SpiritCruises extends CFSModule {
 
       DriverManager.setLoginTimeout(1);
       DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-      conn = DriverManager.getConnection(s1, maresaLogin, maresaLogin);
+      conn = DatabaseUtils.getConnection(s1, maresaLogin, maresaLogin);
 
       int maresaClient = getMaresaClient(conn);
       Maresa insertMaresa = null;

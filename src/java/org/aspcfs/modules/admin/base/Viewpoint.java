@@ -504,13 +504,15 @@ public class Viewpoint extends GenericBean {
         "SET vp_user_id = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP, enabled = ? " +
         "WHERE viewpoint_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst.setInt(++i, vpUserId);
     pst.setInt(++i, this.getModifiedBy());
     pst.setBoolean(++i, this.getEnabled());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     deletePermissions(db);

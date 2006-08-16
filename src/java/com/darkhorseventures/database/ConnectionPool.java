@@ -851,7 +851,7 @@ public class ConnectionPool implements Runnable {
       Class.forName(thisElement.getDriver());
       // Establish network connection to database
       Connection connection =
-          DriverManager.getConnection(
+          DatabaseUtils.getConnection(
               thisElement.getUrl(), thisElement.getUsername(), thisElement.getPassword());
       return (connection);
     } catch (Exception cnfe) {

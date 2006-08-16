@@ -1035,8 +1035,10 @@ public class Import extends GenericBean {
       }
       id = DatabaseUtils.getNextSeq(db, "import_import_id_seq");
       sql = "INSERT INTO import " +
-          "(" + (id > -1 ? "import_id, " : "") + "\"type\", name, description, file_type, source_type, rating, comments, record_delimiter, column_delimiter, status_id, enteredby, modifiedby, site_id) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+          "(" + (id > -1 ? "import_id, " : "") + "\"type\", name, description, file_type, source_type, rating, comments, record_delimiter, column_delimiter, status_id, enteredby, modifiedby, site_id, modified) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+          ((this.getModified()!=null)?"?":DatabaseUtils.getCurrentTimestamp(db)) +
+          ") ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       if (id > -1) {
@@ -1055,6 +1057,9 @@ public class Import extends GenericBean {
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       DatabaseUtils.setInt(pst, ++i, this.getSiteId());
+      if(this.getModified()!=null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       pst.execute();
       id = DatabaseUtils.getCurrVal(db, "import_import_id_seq", id);
       pst.close();

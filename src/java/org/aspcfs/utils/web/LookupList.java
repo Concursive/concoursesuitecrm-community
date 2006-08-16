@@ -219,7 +219,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
         "WHERE field_id = " + fieldId + " " +
         "AND CURRENT_TIMESTAMP > start_date " +
         "AND (CURRENT_TIMESTAMP < end_date OR end_date IS NULL) " +
-        "ORDER BY \"level\", description ");
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
 
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
@@ -858,11 +858,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
       //Determine column to sort by
       if (pagedListInfo.getColumnToSortBy() == null || "".equals(pagedListInfo.getColumnToSortBy())) {
         pagedListInfo.setDefaultSort(
-            "enabled DESC,\"level\",description", null);
+            "enabled DESC," + DatabaseUtils.addQuotes(db, "level") + ",description", null);
       }
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY enabled DESC,\"level\",description ");
+      sqlOrder.append("ORDER BY enabled DESC," + DatabaseUtils.addQuotes(db, "level") + ",description ");
     }
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);

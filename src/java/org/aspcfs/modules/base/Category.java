@@ -362,7 +362,7 @@ public class Category extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO " + tableName + " " +
-          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, \"level\", enabled, site_id) " +
+          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, site_id) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -413,7 +413,7 @@ public class Category extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE " + tableName + " " +
-          "SET description = ?, cat_level = ?, parent_cat_code = ?, \"level\" = ?, enabled = ? " +
+          "SET description = ?, cat_level = ?, parent_cat_code = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ? " +
           "WHERE id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());

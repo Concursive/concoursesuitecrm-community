@@ -737,7 +737,7 @@ public class Package extends GenericBean {
         "     expiration_date = ?, " +
         "     enabled = ? ");
     sql.append("WHERE package_id = ? ");
-    sql.append("AND modified = ? ");
+    sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -754,7 +754,9 @@ public class Package extends GenericBean {
     pst.setTimestamp(++i, this.getExpirationDate());
     pst.setBoolean(++i, this.getEnabled());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

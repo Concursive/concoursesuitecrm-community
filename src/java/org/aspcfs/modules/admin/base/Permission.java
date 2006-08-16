@@ -569,7 +569,9 @@ public class Permission extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission (" + (id > -1 ? "permission_id, " : "") + "category_id, permission, permission_view, " +
         "permission_add, permission_edit, permission_delete, " +
-        "description, \"level\", enabled, \"active\", viewpoints) " +
+        "description, " + DatabaseUtils.addQuotes(db, "level") +
+        ", enabled, " + DatabaseUtils.addQuotes(db, "active") +
+        ", viewpoints) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

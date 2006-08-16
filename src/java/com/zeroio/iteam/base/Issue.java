@@ -916,13 +916,15 @@ public class Issue extends GenericBean {
         "SET subject = ?, \"message\" = ?, importance = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE issue_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     pst.setString(++i, subject);
     pst.setString(++i, body);
     DatabaseUtils.setInt(pst, ++i, importance);
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

@@ -16,6 +16,7 @@
 package org.aspcfs.utils.web;
 
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -109,7 +110,7 @@ public class LookupListList extends HtmlSelect {
         "SELECT * " +
         "FROM lookup_lists_lookup " +
         "WHERE module_id = ? " +
-        "ORDER BY \"level\" ");
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + " ");
     pst.setInt(1, moduleId);
     rs = pst.executeQuery();
     while (rs.next()) {

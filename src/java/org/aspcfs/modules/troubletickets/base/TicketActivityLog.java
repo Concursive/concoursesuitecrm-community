@@ -904,7 +904,7 @@ public class TicketActivityLog extends GenericBean {
       }
       sql.append("WHERE form_id = ? ");
       if (!override) {
-        sql.append("AND modified = ? ");
+        sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       }
 
       pst = db.prepareStatement(sql.toString());
@@ -921,7 +921,7 @@ public class TicketActivityLog extends GenericBean {
         pst.setInt(++i, modifiedBy);
       }
       pst.setInt(++i, id);
-      if (!override) {
+      if (!override && this.getModified() != null) {
         pst.setTimestamp(++i, modified);
       }
       resultCount = pst.executeUpdate();

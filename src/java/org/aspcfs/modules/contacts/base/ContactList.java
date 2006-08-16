@@ -3672,7 +3672,7 @@ public class ContactList extends Vector implements UserCentric {
     }
 
     if (userSiteId != -1) {
-      sqlFilter.append("AND EXISTS (SELECT c.contact_id FROM \"access\" a WHERE  a.contact_id = c.contact_id AND ( a.site_id = ? ");
+      sqlFilter.append("AND EXISTS (SELECT c.contact_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a WHERE  a.contact_id = c.contact_id AND ( a.site_id = ? ");
       if (includeUsersWithAccessToAllSites) {
         sqlFilter.append(" OR a.site_id IS NULL ");
       }
@@ -3681,7 +3681,7 @@ public class ContactList extends Vector implements UserCentric {
 
     if (userSiteId == -1) {
       if (includeUsersWithAccessToAllSites) {
-        sqlFilter.append("AND EXISTS (SELECT c.contact_id FROM \"access\" a WHERE  a.contact_id = c.contact_id AND a.site_id IS NULL )");
+        sqlFilter.append("AND EXISTS (SELECT c.contact_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a WHERE  a.contact_id = c.contact_id AND a.site_id IS NULL )");
       }
     }
 
@@ -3725,7 +3725,7 @@ public class ContactList extends Vector implements UserCentric {
 
     if (withProjectsOnly) {
       sqlFilter.append(
-          "AND c.user_id in (Select distinct pt.user_id from project_team pt LEFT JOIN \"access\" a ON (pt.user_id = a.user_id) ");
+          "AND c.user_id in (Select distinct pt.user_id from project_team pt LEFT JOIN " + DatabaseUtils.addQuotes(db, "access") + " a ON (pt.user_id = a.user_id) ");
       if (!includeAllSites && orgId == -1) {
         if (siteId != -1) {
           sqlFilter.append("WHERE (a.site_id = ? ");
@@ -3743,12 +3743,12 @@ public class ContactList extends Vector implements UserCentric {
     if (includeEnabledUsersOnly) {
       if (userRoleType > -1) {
         sqlFilter.append(
-            "AND EXISTS (SELECT user_id FROM \"access\" a " +
+            "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
             "WHERE c.user_id = a.user_id AND a.enabled = ? " +
-            "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type = ?)) ");
+            "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role") + " r WHERE r.role_type = ?)) ");
       } else {
         sqlFilter.append(
-            "AND c.user_id IN (SELECT user_id FROM \"access\" WHERE enabled = ?) ");
+            "AND c.user_id IN (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE enabled = ?) ");
       }
     }
 
@@ -3766,17 +3766,17 @@ public class ContactList extends Vector implements UserCentric {
     
     if (includeNonUsersOnly) {
       sqlFilter.append(
-          "AND c.contact_id NOT IN (SELECT contact_id FROM \"access\") ");
+          "AND c.contact_id NOT IN (SELECT contact_id FROM " + DatabaseUtils.addQuotes(db, "access") + ") ");
     }
 
     if (includeUsersOnly) {
-      sqlFilter.append("AND c.user_id IN (SELECT user_id FROM \"access\") ");
+      sqlFilter.append("AND c.user_id IN (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + ") ");
     }
 
     if ((includeEnabledUsersOnly || includeUsersOnly) && permission != null && !"".equals(
         permission)) {
       sqlFilter.append(
-          "AND EXISTS (SELECT user_id FROM \"access\" a " +
+          "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
           "WHERE c.user_id = a.user_id AND a.role_id IN " +
           "(SELECT rp.role_id FROM role_permission rp " +
           "LEFT JOIN permission p ON (rp.permission_id = p.permission_id) " +
@@ -4454,9 +4454,12 @@ public class ContactList extends Vector implements UserCentric {
               }
 
               if (Integer.parseInt(key2) != -1) {
+                System.out.println("key1: " + key1);
+                System.out.println("key2: " + key2);
                 sqlFilter.append(
                     " EXISTS (SELECT c.contact_id WHERE c.site_id " + key1 + " " + key2 + " ) ");
               } else {
+                System.out.println("none");
                 sqlFilter.append(
                     " EXISTS (SELECT c.contact_id WHERE (c.site_id IS NULL OR c.site_id IS NOT NULL) ) ");
               }
@@ -4511,7 +4514,7 @@ public class ContactList extends Vector implements UserCentric {
 
               sqlFilter.append(
                   " (c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and " + DatabaseUtils.getSubString(
-                  db, "\"number\"", 2, 3) + " " + key1 + " '" + key2 + "' )) ");
+                  db, "" + DatabaseUtils.addQuotes(db, "number") + "", 2, 3) + " " + key1 + " '" + key2 + "' )) ");
               previousKey = key1;
               processElementType(db, sqlFilter, elementType);
               processSite(sqlFilter, elementType, site);

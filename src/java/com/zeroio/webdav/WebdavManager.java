@@ -183,8 +183,8 @@ public class WebdavManager {
   public boolean allowUser(Connection db, String username, String password) throws SQLException {
     boolean status = false;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.\"role\" " +
-        "FROM \"access\" a, \"role\" r " +
+        "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r." + DatabaseUtils.addQuotes(db, "role") + " " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " a, " + DatabaseUtils.addQuotes(db, "role") + " r " +
         "WHERE a.role_id = r.role_id " +
         "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
         "AND a.enabled = ? ");
@@ -222,8 +222,8 @@ public class WebdavManager {
   public boolean addUser(Connection db, String username, String nonce) throws SQLException {
     boolean status = false;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT a.expires, a.alias, a.user_id, a.role_id, a.webdav_password, r.\"role\" " +
-        "FROM \"access\" a, \"role\" r " +
+        "SELECT a.expires, a.alias, a.user_id, a.role_id, a.webdav_password, r." + DatabaseUtils.addQuotes(db, "role") + " " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " a, " + DatabaseUtils.addQuotes(db, "role") + " r " +
         "WHERE a.role_id = r.role_id " +
         "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
         "AND a.enabled = ? ");
@@ -261,7 +261,7 @@ public class WebdavManager {
     String password = "";
     PreparedStatement pst = db.prepareStatement(
         "SELECT webdav_password " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = ? " +
         "AND enabled = ? ");
     pst.setString(1, username.toLowerCase());

@@ -399,7 +399,7 @@ public class HelpTableOfContentItemLink extends GenericBean {
    */
   public void fetchLinkDetails(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT link_module_id, \"module\" " +
+        "SELECT link_module_id, " + DatabaseUtils.addQuotes(db, "module") + " " +
         "FROM help_contents h " +
         "WHERE help_id = ? ");
 

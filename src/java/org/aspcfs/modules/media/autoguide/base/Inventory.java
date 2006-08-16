@@ -1021,7 +1021,7 @@ public class Inventory {
           "sold = ?, style = ?, status = ?, " +
           "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
           "WHERE inventory_id = ? " +
-          "AND modified = ? ";
+          "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
       int i = 0;
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getVehicleId());
@@ -1041,7 +1041,9 @@ public class Inventory {
       pst.setString(++i, this.getStatus());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
-      pst.setTimestamp(++i, this.getModified());
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       resultCount = pst.executeUpdate();
       pst.close();
 

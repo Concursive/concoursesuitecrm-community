@@ -859,14 +859,16 @@ public class AssignmentFolder extends GenericBean {
         "SET name = ?, description = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP, parent_id = ? " +
         "WHERE folder_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst.setString(++i, name);
     pst.setString(++i, description);
     pst.setInt(++i, this.getModifiedBy());
     DatabaseUtils.setInt(pst, ++i, parentId);
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

@@ -377,7 +377,9 @@ public class HelpModule {
     System.out.println("Building Help Contents for:" + category);
 
     PreparedStatement pst = db.prepareStatement(
-        "SELECT help_id, \"module\", \"section\", subsection, title, description, content_id, parent, contentlevel, contentorder " +
+        "SELECT help_id, " + DatabaseUtils.addQuotes(db, "module") +
+        ", " + DatabaseUtils.addQuotes(db, "section") +
+        ", subsection, title, description, content_id, parent, contentlevel, contentorder " +
         "FROM help_contents hc, help_tableof_contents htc, help_tableofcontentitem_links hi " +
         "WHERE hc.category_id= ? " +
         "AND htc.content_id = hi.global_link_id " +
@@ -444,7 +446,9 @@ public class HelpModule {
    */
   private ArrayList buildNonTocHelpContents(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT help_id, \"module\", \"section\", subsection, title, description " +
+        "SELECT help_id, " + DatabaseUtils.addQuotes(db, "module") +
+        ", " + DatabaseUtils.addQuotes(db, "section") +
+        ", subsection, title, description " +
         "FROM help_contents hc " +
         "WHERE hc.category_id=? ");
 

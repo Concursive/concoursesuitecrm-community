@@ -1632,7 +1632,7 @@ public class OpportunityComponent extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
@@ -1756,13 +1756,15 @@ public class OpportunityComponent extends GenericBean {
     sql.append(
         "UPDATE opportunity_component SET enabled = ? " +
         "WHERE id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, false);
     pst.setInt(++i, id);
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     int resultCount = pst.executeUpdate();
     pst.close();
     if (resultCount == 1) {
@@ -1932,7 +1934,7 @@ public class OpportunityComponent extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT otl.type_id " +
         "FROM opportunity_component_levels otl " +
-        "WHERE otl.opp_id = ? ORDER BY otl.\"level\" ");
+        "WHERE otl.opp_id = ? ORDER BY otl." + DatabaseUtils.addQuotes(db, "level") + " ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -1986,7 +1988,7 @@ public class OpportunityComponent extends GenericBean {
     }
     String sql =
         "INSERT INTO opportunity_component_levels " +
-        "(opp_id, type_id, \"level\") " +
+        "(opp_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ") " +
         "VALUES (?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -2281,7 +2283,7 @@ public class OpportunityComponent extends GenericBean {
           "stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append(
-        "\"type\" = ?, stage = ?, description = ?, " +
+        "" + DatabaseUtils.addQuotes(db, "type") + " = ?, stage = ?, description = ?, " +
         "closedate = ?, closedate_timezone = ?, alertdate = ?, alert = ?, alertdate_timezone = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
     sql.append(
         "environment = ?, competitors = ?, compelling_event = ?, budget = ?, ");
@@ -2296,7 +2298,7 @@ public class OpportunityComponent extends GenericBean {
     }
     sql.append("WHERE id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -2326,7 +2328,7 @@ public class OpportunityComponent extends GenericBean {
       pst.setNull(++i, java.sql.Types.DATE);
     }
     pst.setInt(++i, this.getId());
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();

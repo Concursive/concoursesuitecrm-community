@@ -514,7 +514,7 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     if (memberType.equals(DocumentStoreTeamMemberList.ROLE)) {
       sqlCount.append(
           "SELECT COUNT(*) AS recordcount " +
-          "FROM " + tableName + " um, \"role\" rl, lookup_document_store_role r " +
+          "FROM " + tableName + " um, " + DatabaseUtils.addQuotes(db, "role") + " rl, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = rl.role_id " +
           "AND um.userlevel = r.code ");
@@ -544,14 +544,14 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     pst.close();
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("r.\"level\"", null);
+    pagedListInfo.setDefaultSort("r." + DatabaseUtils.addQuotes(db, "level") + "", null);
     pagedListInfo.appendSqlTail(db, sqlOrder);
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
 
     if (memberType.equals(DocumentStoreTeamMemberList.USER)) {
       sqlSelect.append(
-          "um.*, r.\"level\" " +
+          "um.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
           "FROM " + tableName + " um, contact u, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = u.user_id " +
@@ -559,15 +559,15 @@ public class DocumentStoreTeamMemberList extends ArrayList {
     }
     if (memberType.equals(DocumentStoreTeamMemberList.ROLE)) {
       sqlSelect.append(
-          "um.*, r.\"level\" " +
-          "FROM " + tableName + " um, \"role\" rl, lookup_document_store_role r " +
+          "um.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
+          "FROM " + tableName + " um, " + DatabaseUtils.addQuotes(db, "role") + " rl, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = rl.role_id " +
           "AND um.userlevel = r.code ");
     }
     if (memberType.equals(DocumentStoreTeamMemberList.DEPARTMENT)) {
       sqlSelect.append(
-          "um.*, r.\"level\" " +
+          "um.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
           "FROM " + tableName + " um, lookup_department d, lookup_document_store_role r " +
           "WHERE um.document_store_id > -1 " +
           "AND um.item_id = d.code " +

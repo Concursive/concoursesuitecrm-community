@@ -217,7 +217,7 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
         "FROM organization_phone p, lookup_orgphone_types l " +
         "WHERE p.phone_type = l.code ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter

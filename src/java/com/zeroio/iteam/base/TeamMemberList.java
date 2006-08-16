@@ -292,7 +292,7 @@ public class TeamMemberList extends ArrayList {
         "WHERE t.project_id > -1 " +
         "AND t.user_id = u.user_id " +
         "AND t.userlevel = r.code ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
       pagedListInfo.setItemsPerPage(-1);
@@ -324,12 +324,12 @@ public class TeamMemberList extends ArrayList {
       pst.close();
     }
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("r.\"level\", namelast", null);
+    pagedListInfo.setDefaultSort("r." + DatabaseUtils.addQuotes(db, "level") + ", namelast", null);
     pagedListInfo.appendSqlTail(db, sqlOrder);
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "t.*, r.\"level\" " +
+        "t.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
         "FROM project_team t, contact u, lookup_project_role r " +
         "WHERE t.project_id > -1 " +
         "AND t.user_id = u.user_id " +
@@ -356,7 +356,7 @@ public class TeamMemberList extends ArrayList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -370,7 +370,7 @@ public class TeamMemberList extends ArrayList {
     }
     if (roleLevel > -1) {
       sqlFilter.append(
-          "AND t.userlevel IN (SELECT code FROM lookup_project_role WHERE \"level\" = ?) ");
+          "AND t.userlevel IN (SELECT code FROM lookup_project_role WHERE " + DatabaseUtils.addQuotes(db, "level") + " = ?) ");
     }
     if (userId > -1) {
       sqlFilter.append("AND t.user_id = ? ");

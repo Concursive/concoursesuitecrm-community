@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.help.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -174,7 +175,7 @@ public class HelpFeatureList extends ArrayList {
     }
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("hf.\"level\"", "ASC");
+    pagedListInfo.setDefaultSort("hf." + DatabaseUtils.addQuotes(db, "level") + "", "ASC");
     pagedListInfo.appendSqlTail(db, sqlOrder);
 
     //Need to build a base SQL statement for returning records

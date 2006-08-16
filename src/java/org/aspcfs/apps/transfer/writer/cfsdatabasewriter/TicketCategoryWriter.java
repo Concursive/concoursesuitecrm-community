@@ -215,7 +215,7 @@ public class TicketCategoryWriter implements DataWriter {
       parentId = DatabaseUtils.getNextSeq(db, "ticket_category_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO ticket_category " +
-          "(" + (parentId > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, \"level\", enabled) " +
+          "(" + (parentId > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled) " +
           "VALUES " +
           "(" + (parentId > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       int i = 0;

@@ -69,7 +69,7 @@ public class PermissionCategoryLookupList extends ArrayList {
         "FROM " + DatabaseUtils.getTableName(db, "lookup_project_permission_category") +" " +
         "WHERE code > 0 ");
     createFilter(sql);
-    sql.append("ORDER BY \"level\", description ");
+    sql.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();

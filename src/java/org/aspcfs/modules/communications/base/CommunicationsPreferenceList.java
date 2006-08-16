@@ -582,7 +582,7 @@ public class CommunicationsPreferenceList extends ArrayList {
         " LEFT JOIN contact ct ON (cp.contact_id = ct.contact_id) " +
         " WHERE cp.preference_id > -1 ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -608,10 +608,10 @@ public class CommunicationsPreferenceList extends ArrayList {
         pst.close();
       }
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("cp.\"level\"", null);
+      pagedListInfo.setDefaultSort("cp." + DatabaseUtils.addQuotes(db, "level") + "", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY cp.\"level\"");
+      sqlOrder.append("ORDER BY cp." + DatabaseUtils.addQuotes(db, "level") + "");
     }
     //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -647,7 +647,7 @@ public class CommunicationsPreferenceList extends ArrayList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -691,7 +691,7 @@ public class CommunicationsPreferenceList extends ArrayList {
       sqlFilter.append("AND cp.enabled = ? ");
     }
     if (level != -1) {
-      sqlFilter.append("AND cp.\"level\" = ? ");
+      sqlFilter.append("AND cp." + DatabaseUtils.addQuotes(db, "level") + " = ? ");
     }
     if (timeZone != null) {
       sqlFilter.append("AND cp.time_zone = ? ");

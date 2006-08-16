@@ -409,11 +409,11 @@ public class CustomFieldCategoryList extends ArrayList {
 
       //Determine column to sort by
       pagedListInfo.setDefaultSort(
-          "cfc.\"level\", cfc.category_name, cfc.category_id", null);
+          "cfc." + DatabaseUtils.addQuotes(db, "level") + ", cfc.category_name, cfc.category_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append(
-          "ORDER BY cfc.\"level\", cfc.category_name, cfc.category_id ");
+          "ORDER BY cfc." + DatabaseUtils.addQuotes(db, "level") + ", cfc.category_name, cfc.category_id ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -423,7 +423,7 @@ public class CustomFieldCategoryList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc.\"level\" as \"level\",  " +
+        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc." + DatabaseUtils.addQuotes(db, "level") + " as " + DatabaseUtils.addQuotes(db, "level") + ",  " +
         " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
         " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
         " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +

@@ -22,6 +22,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 /**
  *  Description of the Class
  *
@@ -86,7 +88,7 @@ public class ActionStepLookupList extends ArrayList {
 
     createFilter(sqlFilter, db);
 
-    sqlOrder.append("ORDER BY \"level\", asl.description ");
+    sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", asl.description ");
     //Need to build a base SQL statement for returning records
     sqlSelect.append(" SELECT ");
     sqlSelect.append(

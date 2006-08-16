@@ -183,7 +183,7 @@ public class OrganizationEmailAddressList extends EmailAddressList {
         "FROM organization_emailaddress e, lookup_orgemail_types l " +
         "WHERE e.emailaddress_type = l.code ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter

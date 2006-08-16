@@ -898,7 +898,9 @@ public class PermissionCategory extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "permission_cate_category_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (" + (id > -1 ? "category_id, " : "") + "category, description, " +
-        "\"level\", enabled, \"active\", lookups, folders, viewpoints, categories, scheduled_events, " +
+        DatabaseUtils.addQuotes(db, "level") +
+        ", enabled, " + DatabaseUtils.addQuotes(db, "active") + 
+        ", lookups, folders, viewpoints, categories, scheduled_events, " +
         "object_events, reports, products, webdav, logos, constant, action_plans, custom_list_views, importer) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;

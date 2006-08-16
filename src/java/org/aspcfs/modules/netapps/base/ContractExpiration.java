@@ -1325,7 +1325,7 @@ public class ContractExpiration extends GenericBean {
     }
     sql.append("WHERE expiration_id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
 
     pst = db.prepareStatement(sql.toString());
@@ -1339,7 +1339,7 @@ public class ContractExpiration extends GenericBean {
       pst.setInt(++i, modifiedBy);
     }
     DatabaseUtils.setInt(pst, ++i, this.id);
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, modified);
     }
     resultCount = pst.executeUpdate();

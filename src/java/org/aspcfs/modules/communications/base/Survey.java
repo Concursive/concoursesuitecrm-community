@@ -674,7 +674,7 @@ public class Survey extends SurveyBase {
           "\"type\" = ?, " +
           "enabled = ?, " +
           "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-          "WHERE survey_id = ? AND modified = ? ";
+          "WHERE survey_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, this.getName());
@@ -686,7 +686,9 @@ public class Survey extends SurveyBase {
       pst.setBoolean(++i, this.getEnabled());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
-      pst.setTimestamp(++i, modified);
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, modified);
+      }
       resultCount = pst.executeUpdate();
       pst.close();
       if (doCommit) {

@@ -1931,7 +1931,7 @@ public class Assignment extends GenericBean {
             "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
             "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
             "WHERE assignment_id = ? " +
-            "AND modified = ? ");
+            "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, requirementId);
     if (userAssignedId > -1) {
@@ -2031,7 +2031,9 @@ public class Assignment extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     DatabaseUtils.setInt(pst, ++i, folderId);
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     // Insert any notes as well

@@ -109,7 +109,7 @@ public class Task extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
             "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
-            "t.estimatedloetype, t.\"type\", t.owner, t.completedate, t.modified, " +
+            "t.estimatedloetype, t." + DatabaseUtils.addQuotes(db, "type") + ", t.owner, t.completedate, t.modified, " +
             "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date, t.ticket_task_category_id " +
             "FROM task t " +
             "WHERE task_id = ? ");
@@ -873,7 +873,7 @@ public class Task extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-            "FROM \"access\" " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
             "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
@@ -901,7 +901,7 @@ public class Task extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-            "FROM \"access\" " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
             "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getContactId());
     pst.setBoolean(2, true);
@@ -1136,7 +1136,7 @@ public class Task extends GenericBean {
           "INSERT INTO task " +
               "(" + (id > -1 ? "task_id, " : "") + "enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, duedate_timezone, estimatedloe, " +
               (estimatedLOEType == -1 ? "" : "estimatedLOEType, ") +
-              (type == -1 ? "" : "\"type\", ") +
+              (type == -1 ? "" : "" + DatabaseUtils.addQuotes(db, "type") + ", ") +
               "complete, completedate, category_id, trashed_date, ticket_task_category_id) " +
               "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
               (estimatedLOEType == -1 ? "" : "?, ") +
@@ -1256,7 +1256,7 @@ public class Task extends GenericBean {
           (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, " +
           "category_id = ?, trashed_date = ?, ticket_task_category_id = ? " +
-          "WHERE task_id = ? AND modified = ? ";
+          "WHERE task_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
       int i = 0;
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getModifiedBy());
@@ -1283,7 +1283,9 @@ public class Task extends GenericBean {
       DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
       DatabaseUtils.setInt(pst, ++i, this.getTicketTaskCategoryId());
       pst.setInt(++i, id);
-      pst.setTimestamp(++i, this.getModified());
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       count = pst.executeUpdate();
       pst.close();
       if (contactId == -1) {

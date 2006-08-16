@@ -409,7 +409,7 @@ public class TaskCategory extends GenericBean {
       db.setAutoCommit(false);
       this.id = DatabaseUtils.getNextSeq(db, "lookup_task_category_code_seq");
       sql = "INSERT INTO lookup_task_category (" + (id > -1 ? "code, " : "") +
-          "description, default_item, \"level\", enabled) " +
+          "description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -463,7 +463,7 @@ public class TaskCategory extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE lookup_task_category " +
-        "SET description = ?, default_item = ?, \"level\" = ?, enabled = ? " +
+        "SET description = ?, default_item = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ? " +
         "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

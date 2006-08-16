@@ -87,7 +87,7 @@ public class CustomListViewEditorList extends ArrayList {
         "SELECT * " +
         "FROM custom_list_view_editor " +
         "WHERE module_id = ? " +
-        "ORDER BY \"level\" ");
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + " ");
     pst.setInt(1, moduleId);
     rs = pst.executeQuery();
     while (rs.next()) {

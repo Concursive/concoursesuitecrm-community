@@ -21,6 +21,7 @@ import com.darkhorseventures.framework.servlets.ControllerGlobalItemsHook;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.actionplans.base.ActionStep;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
@@ -275,7 +276,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
               "AND aiw.end_date IS NULL " +
               "AND (aiw.owner = ? " +
               "OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-              "WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM \"access\" WHERE user_id = ? ))) " +
+              "WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE user_id = ? ))) " +
               "OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
               "WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
               "OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +

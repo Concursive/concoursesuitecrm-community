@@ -337,7 +337,8 @@ public class LookupListElement {
     id = DatabaseUtils.getNextSeq(db, "lookup_lists_lookup_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO lookup_lists_lookup " +
-        "(" + (id > -1 ? "id, " : "") + "module_id, lookup_id, class_name, table_name, \"level\", description, category_id) " +
+        "(" + (id > -1 ? "id, " : "") + "module_id, lookup_id, class_name, table_name, " + DatabaseUtils.addQuotes(db, "level") +
+        ", description, category_id) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

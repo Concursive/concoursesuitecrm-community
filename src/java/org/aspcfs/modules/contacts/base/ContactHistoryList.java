@@ -656,7 +656,7 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
         "WHERE history_id > 0 " +
         "AND org_id IS NULL ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -728,7 +728,7 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -739,7 +739,7 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
       sqlFilter.append("AND contact_id = ? ");
     }
     if (level != -1) {
-      sqlFilter.append("AND \"level\" > ? ");
+      sqlFilter.append("AND " + DatabaseUtils.addQuotes(db, "level") + " > ? ");
     }
     if (startDateRange != null) {
       sqlFilter.append("AND modified > ? ");

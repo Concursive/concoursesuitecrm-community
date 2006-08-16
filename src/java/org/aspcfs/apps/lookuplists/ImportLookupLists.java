@@ -177,7 +177,7 @@ public class ImportLookupLists {
       } else if ("level".equals(columnName)) {
         //nothing
       } else {
-        sqlColumnNames.append(((!firstColumn) ? ", " : "") + (columnName.equals("type") ? "\"type\"" : columnName));
+        sqlColumnNames.append(((!firstColumn) ? ", " : "") + (columnName.equals("type") ? DatabaseUtils.addQuotes(db, "type") : columnName));
         sqlColumnValues.append(((!firstColumn) ? ", " : "") + "?");
         firstColumn = false;
       }
@@ -197,7 +197,7 @@ public class ImportLookupLists {
       }
       sqlColumnNames.append(
           (enabledFound ? ", enabled" : "") + (defaultItemFound ? ", default_item" : "") + (hasLevelColumn(
-              tableName) ? ", \"level\" " : ""));
+              tableName) ? ", " + DatabaseUtils.addQuotes(db, "level") + " " : ""));
 
       StringBuffer sqlColumnNamesString = new StringBuffer();
       sqlColumnNamesString.append(" ( " + sqlColumnNames.toString() + " ) ");
@@ -222,17 +222,17 @@ public class ImportLookupLists {
         String columnType = "";
         if (("enabled".equals(columnName)) ||
             ("default_item".equals(columnName)) ||
-            ("level".equals(columnName) || "\"level\"".equals(columnName))) {
-          if ("level".equals(columnName) || "\"level\"".equals(columnName) && (useLevelAsIs.booleanValue() == true)) {
+            ("level".equals(columnName) ||  DatabaseUtils.addQuotes(db, "level").equals(columnName))) {
+          if ("level".equals(columnName) || DatabaseUtils.addQuotes(db, "level").equals(columnName) && (useLevelAsIs.booleanValue() == true)) {
             if ((String) row.get("level") != null) {
               level = Integer.parseInt((String) row.get("level"));
             } else {
-              level = Integer.parseInt((String) row.get("\"level\""));
+              level = Integer.parseInt((String) row.get(DatabaseUtils.addQuotes(db, "level")));
             }
           }
           continue;
         } else {
-          if ("\"type\"".equals(columnName)) {
+          if (DatabaseUtils.addQuotes(db, "type").equals(columnName)) {
             columnName = "type";
           }
           columnType = (String) columnTypes.get(columnName);

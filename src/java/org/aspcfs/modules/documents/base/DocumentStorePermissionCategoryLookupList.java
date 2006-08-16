@@ -68,7 +68,7 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
         "FROM " + DatabaseUtils.getTableName(db, "lookup_document_store_permission_category") + " " +
         "WHERE code > 0 ");
     createFilter(sql);
-    sql.append("ORDER BY \"level\", description ");
+    sql.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
     ResultSet rs = pst.executeQuery();

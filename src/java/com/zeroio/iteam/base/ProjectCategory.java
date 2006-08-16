@@ -98,7 +98,7 @@ public class ProjectCategory extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "lookup_project_cat_code_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO lookup_project_category " +
-        "(" + (id > -1 ? "code, " : "") + "description, enabled, \"level\") VALUES " +
+        "(" + (id > -1 ? "code, " : "") + "description, enabled, " + DatabaseUtils.addQuotes(db, "level") + ") VALUES " +
         "(" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
     int i = 0;
     pst.setString(++i, description);
@@ -113,7 +113,7 @@ public class ProjectCategory extends GenericBean {
   public void update(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE lookup_project_category " +
-        "SET description = ?, enabled = ?, \"level\" = ? " +
+        "SET description = ?, enabled = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE code = ? ");
     int i = 0;
     pst.setString(++i, description);

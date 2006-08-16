@@ -217,7 +217,7 @@ public class ContactPhoneNumberList extends PhoneNumberList {
         "FROM contact_phone p, lookup_contactphone_types l " +
         "WHERE p.phone_type = l.code ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter

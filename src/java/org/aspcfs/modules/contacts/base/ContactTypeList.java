@@ -506,11 +506,11 @@ public class ContactTypeList extends ArrayList {
 
       //Determine column to sort by
       pagedListInfo.setDefaultSort(
-          "lct.category, lct.user_id, lct.\"level\", lct.description ", null);
+          "lct.category, lct.user_id, lct." + DatabaseUtils.addQuotes(db, "level") + ", lct.description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append(
-          "ORDER BY lct.category, lct.user_id, lct.\"level\", lct.description ");
+          "ORDER BY lct.category, lct.user_id, lct." + DatabaseUtils.addQuotes(db, "level") + ", lct.description ");
     }
 
     //Need to build a base SQL statement for returning records

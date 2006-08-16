@@ -1997,8 +1997,8 @@ public class User extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
-          "UPDATE \"access\" " +
-              "SET \"password\" = ?, webdav_password = ?, hidden = ? " +
+          "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
+              "SET " + DatabaseUtils.addQuotes(db, "password") + " = ?, webdav_password = ?, hidden = ? " +
               "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
@@ -2036,7 +2036,7 @@ public class User extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
-          "UPDATE \"access\" " +
+          "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
               "SET webdav_password = ?, hidden = ? " +
               "WHERE user_id = ? ");
       int i = 0;
@@ -2111,8 +2111,8 @@ public class User extends GenericBean {
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "access_user_id_seq");
       sql.append(
-          "INSERT INTO \"access\" " +
-              "(username, \"password\", contact_id, alias, " +
+          "INSERT INTO " + DatabaseUtils.addQuotes(db, "access") + " " +
+              "(username, " + DatabaseUtils.addQuotes(db, "password") + ", contact_id, alias, " +
               "manager_id, role_id, expires, ");
       if (id > -1) {
         sql.append("user_id, ");
@@ -2134,7 +2134,7 @@ public class User extends GenericBean {
         sql.append("currency, ");
       }
       if (language != null) {
-        sql.append("\"language\", ");
+        sql.append("" + DatabaseUtils.addQuotes(db, "language") + ", ");
       }
       sql.append("enteredBy, modifiedBy, webdav_password, hidden, allow_webdav_access, allow_httpapi_access ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
@@ -2264,11 +2264,11 @@ public class User extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE \"access\" " +
+        "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
             "SET expires = ?, ");
 
     if (password1 != null) {
-      sql.append("\"password\" = ?,");
+      sql.append("" + DatabaseUtils.addQuotes(db, "password") + " = ?,");
     }
 
     sql.append(
@@ -2276,7 +2276,7 @@ public class User extends GenericBean {
             "modifiedBy = ?, " +
             "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE username = ? " +
-            "AND modified = ? ");
+            "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
 
     pst = db.prepareStatement(sql.toString());
 
@@ -2289,7 +2289,9 @@ public class User extends GenericBean {
     pst.setBoolean(++i, this.getHidden());
     pst.setInt(++i, modifiedBy);
     pst.setString(++i, this.username);
-    pst.setTimestamp(++i, this.modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.modified);
+    }
 
     //Update the user
     updated = pst.executeUpdate();
@@ -2331,7 +2333,7 @@ public class User extends GenericBean {
     checkHidden(false);
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
-        "UPDATE \"access\" " +
+        "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
             "SET enabled = ?, hidden = ? " +
             "WHERE user_id = ? ");
     pst.setBoolean(1, false);
@@ -2363,7 +2365,7 @@ public class User extends GenericBean {
     checkHidden(true);
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
-        "UPDATE \"access\" " +
+        "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
             "SET enabled = ? , hidden = ? " +
             "WHERE user_id = ? ");
     pst.setBoolean(1, true);
@@ -2414,7 +2416,7 @@ public class User extends GenericBean {
     if (this.id > -1) {
       checkHidden();
       String sql =
-          "UPDATE \"access\" " +
+          "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
               "SET last_login = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
               "last_ip = ?, hidden = ? " +
               "WHERE user_id = ? ";
@@ -2440,7 +2442,7 @@ public class User extends GenericBean {
     if (this.id > -1) {
       checkHidden();
       String sql =
-          "UPDATE \"access\" " +
+          "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
               "SET allow_httpapi_access = ?, " +
               "hidden = ? " +
               "WHERE user_id = ? ";
@@ -2465,7 +2467,7 @@ public class User extends GenericBean {
     if (this.id > -1) {
       checkHidden();
       String sql =
-          "UPDATE \"access\" " +
+          "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
               "SET allow_webdav_access = ?, " +
               "hidden = ? " +
               "WHERE user_id = ? ";
@@ -2504,8 +2506,8 @@ public class User extends GenericBean {
     if (this.id > -1) {
       checkHidden();
       String sql =
-          "UPDATE \"access\" " +
-              "SET timezone = ?, currency = ?, \"language\" = ?, hidden = ? " +
+          "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
+              "SET timezone = ?, currency = ?, " + DatabaseUtils.addQuotes(db, "language") + " = ?, hidden = ? " +
               "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.timeZone);
@@ -2533,7 +2535,7 @@ public class User extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT a.username, a.\"password\", a.role_id, a.last_login, a.manager_id, " +
+        "SELECT a.username, a." + DatabaseUtils.addQuotes(db, "password") + ", a.role_id, a.last_login, a.manager_id, " +
             "a.site_id AS siteid, " +
             "a.last_ip, a.timezone, a.startofday AS access_startofday, " +
             "a.endofday AS access_endofday, a.expires, a.alias, " +
@@ -2541,19 +2543,19 @@ public class User extends GenericBean {
             "a.enabled AS access_enabled, a.assistant, " +
             "a.entered AS access_entered, a.enteredby AS access_enteredby, " +
             "a.modified AS access_modified, a.modifiedby AS access_modifiedby, " +
-            "a.currency, a.\"language\", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
-            "r.\"role\" AS systemrole, r.role_type, " +
+            "a.currency, a." + DatabaseUtils.addQuotes(db, "language") + ", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
+            "r." + DatabaseUtils.addQuotes(db, "role") + " AS systemrole, r.role_type, " +
             "m_usr.enabled AS mgr_enabled, " +
             "c.*, d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
             "b.description AS site_id_name, " +
             "o.name AS org_name, o.enabled AS orgenabled " +
-            "FROM \"access\" a " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
             "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
             "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
             "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
             "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-            "LEFT JOIN \"access\" m_usr ON (a.manager_id = m_usr.user_id) " +
-            "LEFT JOIN \"role\" r ON (a.role_id = r.role_id) " +
+            "LEFT JOIN " + DatabaseUtils.addQuotes(db, "access") + " m_usr ON (a.manager_id = m_usr.user_id) " +
+            "LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (a.role_id = r.role_id) " +
             "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
             "WHERE a.user_id > -1 " +
             "AND (ca.address_id IS NULL OR ca.address_id IN ( " +
@@ -2565,7 +2567,7 @@ public class User extends GenericBean {
     } else {
       sql.append(
           "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
-              "AND a.\"password\" = ? " +
+              "AND a." + DatabaseUtils.addQuotes(db, "password") + " = ? " +
               "AND a.enabled = ? ");
     }
     pst = db.prepareStatement(sql.toString());
@@ -2679,8 +2681,8 @@ public class User extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE \"access\" " +
-            "SET \"password\" = ?, hidden = ? ");
+        "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "SET " + DatabaseUtils.addQuotes(db, "password") + " = ?, hidden = ? ");
     if (modifiedBy > -1) {
       sql.append(
           ", modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(
@@ -2914,7 +2916,7 @@ public class User extends GenericBean {
     //finding if an enabled user exists
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-            "FROM \"access\" " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
             "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = ? " +
             "AND enabled = ? ");
     pst.setString(1, getUsername().toLowerCase());
@@ -2930,10 +2932,10 @@ public class User extends GenericBean {
     //  return true if exists as such a user can be enabled
     pst = db.prepareStatement(
         "SELECT * " +
-            "FROM \"access\", contact " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + ", contact " +
             "WHERE " + DatabaseUtils.toLowerCase(db) + "(username) = ? " +
-            "AND \"access\".enabled = ? " +
-            "AND contact.user_id = \"access\".user_id " +
+            "AND " + DatabaseUtils.addQuotes(db, "access") + ".enabled = ? " +
+            "AND contact.user_id = " + DatabaseUtils.addQuotes(db, "access") + ".user_id " +
             "AND contact.enabled = ? ");
     int i = 0;
     pst.setString(++i, getUsername().toLowerCase());
@@ -2966,7 +2968,7 @@ public class User extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT contact_id " +
-            "FROM \"access\" " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
             "WHERE user_id = ? ");
     pst.setInt(1, userId);
     ResultSet rs = pst.executeQuery();
@@ -3048,10 +3050,10 @@ public class User extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE \"access\" " +
+        "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
             "SET username = ?, manager_id = ?, role_id = ?, expires = ?, site_id = ?, ");
     if (password1 != null) {
-      sql.append("\"password\" = ?, ");
+      sql.append("" + DatabaseUtils.addQuotes(db, "password") + " = ?, ");
       sql.append("webdav_password = ?, ");
     }
     if (enteredBy > -1) {
@@ -3178,7 +3180,7 @@ public class User extends GenericBean {
     ResultSet rs = null;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) as recordcount " +
-            "FROM \"access\" " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
             "WHERE username LIKE (?)");
     int i = 0;
     pst.setString(++i, tmpUsername + "%");

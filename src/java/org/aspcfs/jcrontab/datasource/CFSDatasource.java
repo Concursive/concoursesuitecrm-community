@@ -20,6 +20,7 @@ import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.jcrontab.Crontab;
 import org.jcrontab.data.*;
 import org.jcrontab.log.Log;
@@ -462,7 +463,7 @@ public class CFSDatasource implements DataSource {
         return ((javax.sql.DataSource) dbDriver).getConnection();
       }
     } else {
-      return DriverManager.getConnection(dbUrl, dbUser, dbPwd);
+      return DatabaseUtils.getConnection(dbUrl, dbUser, dbPwd);
     }
   }
 

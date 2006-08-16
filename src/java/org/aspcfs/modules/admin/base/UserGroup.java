@@ -476,7 +476,7 @@ public class UserGroup extends GenericBean {
     int mapId = DatabaseUtils.getNextSeq(db, "user_group_map_group_map_id_seq");
     sql.append(
         "INSERT INTO user_group_map " +
-        "(" + (mapId > -1 ? "group_map_id," : "") + " user_id, group_id, \"level\", ");
+        "(" + (mapId > -1 ? "group_map_id," : "") + " user_id, group_id, " + DatabaseUtils.addQuotes(db, "level") + ", ");
     if (entered != null) {
       sql.append("entered, ");
     }

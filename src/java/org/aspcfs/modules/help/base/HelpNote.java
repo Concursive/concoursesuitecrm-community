@@ -478,7 +478,7 @@ public class HelpNote extends GenericBean {
       pst = db.prepareStatement(
           "UPDATE help_notes " +
           "SET modifiedby = ?, description = ?, enabled = ?, completedate = ?, completedby = ? " +
-          "WHERE note_id = ? AND modified = ? ");
+          "WHERE note_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       pst.setBoolean(++i, this.getEnabled());
@@ -493,7 +493,9 @@ public class HelpNote extends GenericBean {
         pst.setNull(++i, java.sql.Types.SMALLINT);
       }
       pst.setInt(++i, id);
-      pst.setTimestamp(++i, this.getModified());
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       count = pst.executeUpdate();
       pst.close();
       db.commit();

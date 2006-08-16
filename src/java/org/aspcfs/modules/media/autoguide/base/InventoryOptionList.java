@@ -16,6 +16,9 @@
 package org.aspcfs.modules.media.autoguide.base;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -240,7 +243,7 @@ public class InventoryOptionList extends ArrayList {
         " LEFT JOIN autoguide_options o ON (io.option_id = o.option_id) " +
         "WHERE io.option_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY o.\"level\", o.option_name ");
+    sql.append("ORDER BY o." + DatabaseUtils.addQuotes(db, "level") + ", o.option_name ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();

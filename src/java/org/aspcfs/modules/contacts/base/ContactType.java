@@ -270,7 +270,7 @@ public class ContactType {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO lookup_contact_types " +
             "(" + (id > -1 ? "code, " : "") +
-            "description, \"level\", enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
+            "description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
             "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?" + (userId > -1 ? ", ?" : "") + ") ");
     if (id > -1) {
       pst.setInt(++i, id);
@@ -305,7 +305,7 @@ public class ContactType {
     int i = 0;
     pst = db.prepareStatement(
         "UPDATE lookup_contact_types " +
-            "SET \"level\" = ? " +
+            "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
             "WHERE code = ? ");
     pst.setInt(++i, this.getLevel());
     pst.setInt(++i, this.getId());

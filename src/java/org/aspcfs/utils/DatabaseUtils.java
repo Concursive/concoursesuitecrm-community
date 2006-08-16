@@ -36,6 +36,11 @@ import java.util.Locale;
 public class DatabaseUtils {
 
   public final static String CRLF = System.getProperty("line.separator");
+  
+  // Quote symbols
+  public final static String qsDefault = "\"";
+  public final static String qsMySQL = "`";
+  
   // Database types
   public final static int POSTGRESQL = 1;
   public final static int MSSQL = 2;
@@ -43,6 +48,7 @@ public class DatabaseUtils {
   public final static int FIREBIRD = 4;
   public final static int DAFFODILDB = 5;
   public final static int DB2 = 6;
+  public final static int MYSQL = 7;
   public final static String sqlReservedWords = ",language,password,level,type,position,second," +
       "minute,hour,month,dayofweek,year,length,message," +
       "active,role,number,module,section,value,size," +
@@ -74,6 +80,8 @@ public class DatabaseUtils {
         return "'1'";
       case DatabaseUtils.FIREBIRD:
         return "'Y'";
+      case DatabaseUtils.MYSQL:
+        return "1";
       default:
         return "true";
     }
@@ -100,6 +108,8 @@ public class DatabaseUtils {
         return "'0'";
       case DatabaseUtils.FIREBIRD:
         return "'N'";
+      case DatabaseUtils.MYSQL:
+        return "0";
       default:
         return "false";
     }
@@ -125,6 +135,8 @@ public class DatabaseUtils {
       case DatabaseUtils.DB2:
         return "CURRENT_TIMESTAMP";
       case DatabaseUtils.FIREBIRD:
+        return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.MYSQL:
         return "CURRENT_TIMESTAMP";
       default:
         return "CURRENT_TIMESTAMP";
@@ -163,6 +175,8 @@ public class DatabaseUtils {
       return DAFFODILDB;
     } else if (databaseName.indexOf("db2") > -1) {
       return DB2;
+    } else if (databaseName.indexOf("mysql") > -1) {
+      return MYSQL;
     } else {
       System.out.println("DatabaseUtils-> Unkown Connection Class: " + databaseName);
       return -1;
@@ -190,6 +204,8 @@ public class DatabaseUtils {
         return "daffodildb";
       case DB2:
         return "db2";
+      case MYSQL:
+        return "mysql";
       default:
         return "unknown";
     }
@@ -221,6 +237,8 @@ public class DatabaseUtils {
         return ("CAST(" + date + " AS DATE)");
         //case DatabaseUtils.ORACLE:
         //  return ("CAST(" + date + " AS DATE)");
+      case DatabaseUtils.MYSQL:
+        return ("DATE(" + date + ")");
       default:
         return "";
     }
@@ -306,6 +324,16 @@ public class DatabaseUtils {
         break;
       case DatabaseUtils.ORACLE:
         break;
+      case DatabaseUtils.MYSQL:
+        if (units == DAY) {
+        } else if (units == WEEK) {
+          customUnits = "WEEK";
+        } else if (units == MONTH) {
+          customUnits = "MONTH";
+        } else if (units == YEAR) {
+          customUnits = "YEAR";
+        }
+        addTimestampIntervalString = " ADDDATE(" + timestampColumnName + ", INTERVAL " + termsColumnName + "+1 " + customUnits + ")";
     }
     return addTimestampIntervalString;
   }
@@ -361,6 +389,11 @@ public class DatabaseUtils {
         break;
       case DatabaseUtils.ORACLE:
         break;
+      case DatabaseUtils.MYSQL:
+        if (units == WEEK) {
+          customUnits = "WEEK";
+        }
+        addTimestampIntervalString = " ADDDATE(" + timestampColumnName + ", INTERVAL (" + termsColumnName + " + " + (defaultTerms + 1) + ") " + customUnits + ")";
     }
     return addTimestampIntervalString;
   }
@@ -377,7 +410,7 @@ public class DatabaseUtils {
    */
   public static int getNextSeq(Connection db, String sequenceName) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
-    if (typeId == POSTGRESQL || typeId == MSSQL) {
+    if (typeId == POSTGRESQL || typeId == MSSQL || typeId == MYSQL) {
       return -1;
     }
     int id = -1;
@@ -436,7 +469,7 @@ public class DatabaseUtils {
    */
   public static int getCurrVal(Connection db, String sequenceName, int defaultValue) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
-    if (typeId != POSTGRESQL && typeId != MSSQL) {
+    if (typeId != POSTGRESQL && typeId != MSSQL && typeId != MYSQL) {
       return defaultValue;
     }
     int id = -1;
@@ -448,6 +481,9 @@ public class DatabaseUtils {
         break;
       case DatabaseUtils.MSSQL:
         rs = st.executeQuery("SELECT @@IDENTITY");
+        break;
+      case DatabaseUtils.MYSQL:
+        rs = st.executeQuery("SELECT LAST_INSERT_ID()");
         break;
       default:
         break;
@@ -483,6 +519,8 @@ public class DatabaseUtils {
         return "EXTRACT(YEAR FROM " + fieldname + ")";
       case DatabaseUtils.DB2:
         return "YEAR(" + fieldname + ")";
+      case DatabaseUtils.MYSQL:
+        return "YEAR(" + fieldname + ")";
       default:
         return "";
     }
@@ -511,6 +549,8 @@ public class DatabaseUtils {
         return "EXTRACT(MONTH FROM " + fieldname + ")";
       case DatabaseUtils.DB2:
         return "MONTH(" + fieldname + ")";
+      case DatabaseUtils.MYSQL:
+        return "MONTH(" + fieldname + ")";
       default:
         return "";
     }
@@ -538,6 +578,8 @@ public class DatabaseUtils {
       case DatabaseUtils.ORACLE:
         return "EXTRACT(DAY FROM " + fieldname + ")";
       case DatabaseUtils.DB2:
+        return "DAY(" + fieldname + ")";
+      case DatabaseUtils.MYSQL:
         return "DAY(" + fieldname + ")";
       default:
         return "";
@@ -568,6 +610,8 @@ public class DatabaseUtils {
         return "EXTRACT(HOUR FROM " + fieldname + ")";
       case DatabaseUtils.DB2:
         return "HOUR(" + fieldname + ")";
+      case DatabaseUtils.MYSQL:
+        return "HOUR(" + fieldname + ")";
       default:
         return "";
     }
@@ -597,6 +641,8 @@ public class DatabaseUtils {
         return "EXTRACT(MINUTE FROM " + fieldname + ")";
       case DatabaseUtils.DB2:
         return "MINUTE(" + fieldname + ")";
+      case DatabaseUtils.MYSQL:
+        return "MINUTE(" + fieldname + ")";
       default:
         return "";
     }
@@ -622,6 +668,8 @@ public class DatabaseUtils {
       case DatabaseUtils.DAFFODILDB:
         return "lcase";
       case DatabaseUtils.DB2:
+        return "lower";
+      case DatabaseUtils.MYSQL:
         return "lower";
       default:
         return "lower";
@@ -649,6 +697,8 @@ public class DatabaseUtils {
       case DatabaseUtils.DAFFODILDB:
         return "lcase(" + field + ")";
       case DatabaseUtils.DB2:
+        return "lower(" + field + ")";
+      case DatabaseUtils.MYSQL:
         return "lower(" + field + ")";
       default:
         return "lower(" + field + ")";
@@ -679,6 +729,8 @@ public class DatabaseUtils {
         return "substring(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
       case DatabaseUtils.DB2:
         return "substr(" + field + "," + (first + 1) + (size < 0 ? "" : "," + size) + ") ";
+      case DatabaseUtils.MYSQL:
+        return "substr(" + field + "," + (first) + (size < 0 ? "" : "," + size) + ") ";
       default:
         return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
     }
@@ -706,6 +758,10 @@ public class DatabaseUtils {
         return "CAST(" + field + " AS VARCHAR(32000))";
       case DatabaseUtils.DAFFODILDB:
         // TODO: This doesn't work for DaffodilDB, so use a VARCHAR(4192) instead of CLOB
+        return field;
+      case DatabaseUtils.MYSQL:
+        // NOTE: If MYSQL has a problem then get a substring
+        //return "SUBSTR(" + field + ", 2000, 1)";
         return field;
       default:
         return field;
@@ -1219,7 +1275,8 @@ public class DatabaseUtils {
   public static String parseReservedWord(Connection db, String reservedWord) {
     if (DatabaseUtils.getType(db) == FIREBIRD ||
         DatabaseUtils.getType(db) == ORACLE ||
-        DatabaseUtils.getType(db) == DB2) {
+        DatabaseUtils.getType(db) == DB2 || 
+        DatabaseUtils.getType(db) == MYSQL) {
       if (reservedWord.indexOf(".") > -1) {
         // Table is being specified with field
         String part1 = reservedWord.substring(0, reservedWord.indexOf("."));
@@ -1227,9 +1284,47 @@ public class DatabaseUtils {
         return (part1 + "." + parseReservedWord(db, part2));
       }
       if (sqlReservedWords.indexOf("," + reservedWord + ",") != -1) {
-        return "\"" + reservedWord + "\"";
+        return DatabaseUtils.getQuote(db) + reservedWord + DatabaseUtils.getQuote(db);
       }
     }
     return reservedWord;
+  }
+  
+  public static String getQuote(Connection db){
+    String quoteSymbol = "";
+    switch(DatabaseUtils.getType(db)){
+      case MYSQL:
+        quoteSymbol = qsMySQL;
+        break;
+      default:
+        quoteSymbol = qsDefault;
+    }
+    
+    return quoteSymbol;
+  }
+  
+  public static String addQuotes(Connection db, String stringToQuote){
+    String quoteSymbol = DatabaseUtils.getQuote(db); 
+    return quoteSymbol + stringToQuote + quoteSymbol;
+  }
+  
+  public static Connection getConnection(String dbUrl, String dbUser, String dbPwd) throws SQLException{
+    Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
+    if (DatabaseUtils.getType(connection) == DatabaseUtils.MYSQL) {
+      PreparedStatement pst = connection.prepareStatement("SELECT @@session.sql_mode;");
+      String currentMode = "";
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        currentMode = rs.getString(1);
+      }
+      rs.close();
+      pst.close();
+
+      pst = connection.prepareStatement(
+            "SET sql_mode = '" + currentMode + ((currentMode.length()>0)?",":"") + "ANSI_QUOTES,NO_AUTO_VALUE_ON_ZERO';");
+      pst.execute();
+      pst.close();
+    }
+    return connection;
   }
 }

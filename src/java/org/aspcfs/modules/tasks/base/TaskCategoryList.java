@@ -16,6 +16,7 @@
 package org.aspcfs.modules.tasks.base;
 
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -122,10 +123,10 @@ public class TaskCategoryList extends ArrayList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("c.\"level\", c.description", null);
+      pagedListInfo.setDefaultSort("c." + DatabaseUtils.addQuotes(db, "level") + ", c.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY c.\"level\", c.description ");
+      sqlOrder.append("ORDER BY c." + DatabaseUtils.addQuotes(db, "level") + ", c.description ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -135,7 +136,7 @@ public class TaskCategoryList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.code, c.description, c.default_item, c.\"level\", c.enabled " +
+        "c.code, c.description, c.default_item, c." + DatabaseUtils.addQuotes(db, "level") + ", c.enabled " +
         "FROM lookup_task_category c " +
         "WHERE c.code > -1 ");
     pst = db.prepareStatement(

@@ -115,7 +115,8 @@ public class PlanEditor extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "action_plan_editor_loo_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO action_plan_editor_lookup " +
-        "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, \"level\", description, category_id) " +
+        "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, " + DatabaseUtils.addQuotes(db, "level") +
+        ", description, category_id) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

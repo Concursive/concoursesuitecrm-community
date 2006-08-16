@@ -391,7 +391,7 @@ public class TicketCategoryDraft extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, baseTableName + "_draft_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO " + DatabaseUtils.getTableName(db, baseTableName + "_draft") + " " +
-              "(" + (id > -1 ? "id, " : "") + "cat_level, link_id, parent_cat_code, description, \"level\", enabled, site_id) " +
+              "(" + (id > -1 ? "id, " : "") + "cat_level, link_id, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, site_id) " +
               "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
       if (id > -1) {
         pst.setInt(++i, id);
@@ -439,7 +439,7 @@ public class TicketCategoryDraft extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE " + tableName + "_draft " +
-              "SET description = ?, cat_level = ?, \"level\" = ?, " + (actualCatId != -1 ? "link_id = ?," : "") + " enabled = ? " +
+              "SET description = ?, cat_level = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, " + (actualCatId != -1 ? "link_id = ?," : "") + " enabled = ? " +
               "WHERE  id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());

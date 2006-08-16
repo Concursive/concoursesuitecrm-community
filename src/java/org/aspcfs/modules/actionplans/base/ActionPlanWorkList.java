@@ -839,7 +839,7 @@ public class ActionPlanWorkList extends ArrayList {
         }
         sqlFilter.append(
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM \"access\" WHERE user_id = ? ))) " +
+            " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE user_id = ? ))) " +
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
             " WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
@@ -873,7 +873,7 @@ public class ActionPlanWorkList extends ArrayList {
         }
         sqlFilter.append(
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM \"access\" WHERE user_id = ? ))) " +
+            " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE user_id = ? ))) " +
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
             " WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +

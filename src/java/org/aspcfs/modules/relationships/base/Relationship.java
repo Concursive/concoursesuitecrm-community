@@ -620,7 +620,7 @@ public class Relationship extends GenericBean {
           "SET modifiedby = ?, object_id_maps_from = ?, category_id_maps_from = ?, " +
           "object_id_maps_to = ?, category_id_maps_to = ?, trashed_date = ?, " +
           "modified = CURRENT_TIMESTAMP " +
-          "WHERE relationship_id = ? AND modified = ? ";
+          "WHERE relationship_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
       int i = 0;
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getModifiedBy());
@@ -630,7 +630,9 @@ public class Relationship extends GenericBean {
       pst.setInt(++i, this.getCategoryIdMapsTo());
       DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
       pst.setInt(++i, id);
-      pst.setTimestamp(++i, this.getModified());
+      if(this.getModified() != null){
+        pst.setTimestamp(++i, this.getModified());
+      }
       count = pst.executeUpdate();
       pst.close();
       db.commit();

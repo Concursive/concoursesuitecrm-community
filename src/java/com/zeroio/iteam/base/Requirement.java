@@ -1580,7 +1580,7 @@ public class Requirement extends GenericBean {
         " approvalDate = ?, closedBy = ?, closeDate = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE requirement_id = ? " +
         "AND project_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst.setString(++i, submittedBy);
     pst.setString(++i, departmentBy);
@@ -1632,7 +1632,9 @@ public class Requirement extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
     pst.setInt(++i, projectId);
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

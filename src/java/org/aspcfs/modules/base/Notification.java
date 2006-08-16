@@ -521,7 +521,7 @@ public class Notification extends Thread {
           "SELECT * " +
           "FROM notification " +
           "WHERE notify_user = " + ((userToNotify > -1) ? userToNotify : contactToNotify) + " " +
-          "AND \"module\" = ? " +
+          "AND " + DatabaseUtils.addQuotes(db, "module") + " = ? " +
           "AND item_id = " + itemId + " " +
           "AND item_modified = ? ";
 
@@ -572,7 +572,9 @@ public class Notification extends Thread {
       id = DatabaseUtils.getNextSeq(db, "notification_notification_i_seq");
       String sql =
           "INSERT INTO notification " +
-          "(" + (id > -1 ? "notification_id, " : "") + "notify_user, \"module\", item_id, item_modified, notify_type, subject, \"message\", result, errorMessage) " +
+          "(" + (id > -1 ? "notification_id, " : "") + "notify_user, " + DatabaseUtils.addQuotes(db, "module") +
+          ", item_id, item_modified, notify_type, subject, " + DatabaseUtils.addQuotes(db, "message") +
+          ", result, errorMessage) " +
           "VALUES " +
           "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;

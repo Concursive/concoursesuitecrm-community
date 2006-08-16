@@ -500,7 +500,7 @@ public class DocumentStoreTeamMember {
     int tmpDocumentStoreRoleId = -1;
     int tmpDocumentStoreUserLevel = -1;
     pst = db.prepareStatement(
-        "SELECT m.*, r.\"level\" " +
+        "SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
         "FROM document_store_user_member m, lookup_document_store_role r " +
         "WHERE m.document_store_id = ? " +
         "AND m.item_id = ? " +
@@ -523,7 +523,7 @@ public class DocumentStoreTeamMember {
       //get  User Role - Document store role mapping if user is not explicitly assigned
       //to the document store
       pst = db.prepareStatement(
-          "SELECT m.*, r.\"level\" " +
+          "SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
           "FROM document_store_role_member m, lookup_document_store_role r " +
           "WHERE m.document_store_id = ? " +
           "AND m.item_id = ? " +
@@ -547,7 +547,7 @@ public class DocumentStoreTeamMember {
       //to the document store
       if (tmpDepartmentId != -1) {
         pst = db.prepareStatement(
-            "SELECT m.*, r.\"level\" " +
+            "SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
             "FROM " + DatabaseUtils.getTableName(db, "document_store_department_member") + " m, lookup_document_store_role r " +
             "WHERE m.document_store_id = ? " +
             "AND m.item_id = ? " +
@@ -721,7 +721,7 @@ public class DocumentStoreTeamMember {
     String tableName = DocumentStoreTeamMember.getTableName(tmpMemberType, db);
     //Check current level, if user is not a leader than it doesn't matter what the change is
     PreparedStatement pst = db.prepareStatement(
-        " SELECT \"level\" " +
+        " SELECT " + DatabaseUtils.addQuotes(db, "level") + " " +
         " FROM lookup_document_store_role " +
         " WHERE code IN (SELECT userlevel FROM " + tableName + " WHERE document_store_id = ? AND item_id = ? AND site_id "+(siteId == -1?" IS NULL) ":"= ?) "));
     pst.setInt(1, tmpDocumentStoreId);
@@ -745,7 +745,7 @@ public class DocumentStoreTeamMember {
           " SELECT count(item_id) AS other " +
           " FROM " + tableName +
           " WHERE document_store_id = ? " +
-          " AND userlevel IN (SELECT code FROM lookup_document_store_role WHERE \"level\" <= ?) " +
+          " AND userlevel IN (SELECT code FROM lookup_document_store_role WHERE " + DatabaseUtils.addQuotes(db, "level") + " <= ?) " +
           " AND (item_id <> ? OR site_id "+(siteId == -1?" IS NOT NULL) ":" <> ?) "));
       pst.setInt(1, tmpDocumentStoreId);
       pst.setInt(2, DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);

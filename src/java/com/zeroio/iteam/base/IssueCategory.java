@@ -642,13 +642,15 @@ public class IssueCategory extends GenericBean {
         "modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "allow_files = ? " +
         "WHERE category_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     pst.setString(++i, subject);
     pst.setString(++i, description);
     pst.setInt(++i, modifiedBy);
     pst.setBoolean(++i, allowFileAttachments);
     pst.setInt(++i, id);
-    pst.setTimestamp(++i, modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, modified);
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;

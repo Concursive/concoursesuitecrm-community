@@ -75,6 +75,9 @@
       if (document.configure.type.value == "Firebird") {
         document.configure.port.value = "3050";
       }
+      if (document.configure.type.value == "MySQL") {
+        document.configure.port.value = "3306";
+      }
     }
   }
 </script>
@@ -115,6 +118,7 @@
             <dhv:evaluate if="<%= !hasText(APP_VERSION) %>">
               <option value="DB2"<%= "DB2".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.db2">DB2</dhv:label></option>
               <option value="Firebird"<%= "Firebird".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.firebird">Firebird</dhv:label></option>
+              <option value="MySQL"<%= "MySQL".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.mysql">MySQL</dhv:label></option>
               <option value="Oracle"<%= "Oracle".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.oracle">Oracle</dhv:label></option>
             </dhv:evaluate>
             </select>

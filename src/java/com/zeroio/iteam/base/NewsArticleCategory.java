@@ -207,7 +207,7 @@ public class NewsArticleCategory extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "project_news_category_category_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO project_news_category " +
-        "(" + (id > -1 ? "category_id, " : "") + "project_id, category_name, enabled, \"level\") VALUES " +
+        "(" + (id > -1 ? "category_id, " : "") + "project_id, category_name, enabled, " + DatabaseUtils.addQuotes(db, "level") + ") VALUES " +
         "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
@@ -233,7 +233,7 @@ public class NewsArticleCategory extends GenericBean {
   public void update(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news_category " +
-        "SET project_id = ?, category_name = ?, enabled = ?, \"level\" = ? " +
+        "SET project_id = ?, category_name = ?, enabled = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE category_id = ? ");
     int i = 0;
     pst.setInt(++i, projectId);

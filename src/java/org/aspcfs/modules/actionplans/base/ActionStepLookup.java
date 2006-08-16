@@ -293,7 +293,7 @@ public class ActionStepLookup extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "action_step_lookup_code_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO action_step_lookup " +
-            "(" + (id > -1 ? "code, " : "") + "step_id, description, default_item, \"level\", enabled) " +
+            "(" + (id > -1 ? "code, " : "") + "step_id, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled) " +
             "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

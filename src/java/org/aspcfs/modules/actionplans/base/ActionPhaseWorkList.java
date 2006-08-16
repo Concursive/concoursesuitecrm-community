@@ -395,7 +395,7 @@ public class ActionPhaseWorkList extends ArrayList {
       pagedListInfo.setDefaultSort("ap.phase_name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY \"level\", ap.phase_name ");
+      sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", ap.phase_name ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -405,7 +405,7 @@ public class ActionPhaseWorkList extends ArrayList {
     }
     sqlSelect.append(
         "apw.*, " +
-        "ap.phase_name, ap.description, ap.parent_id, ap.\"global\" " +
+        "ap.phase_name, ap.description, ap.parent_id, ap." + DatabaseUtils.addQuotes(db, "global") + " " +
         "FROM action_phase_work apw " +
         "LEFT JOIN action_phase ap ON (apw.action_phase_id = ap.phase_id) " +
         "WHERE apw.phase_work_id > 0 ");
@@ -465,7 +465,7 @@ public class ActionPhaseWorkList extends ArrayList {
       sqlFilter.append("AND apw.start_date IS NOT NULL ");
     }
     if (global != Constants.UNDEFINED) {
-      sqlFilter.append("AND ap.\"global\" = ? ");
+      sqlFilter.append("AND ap." + DatabaseUtils.addQuotes(db, "global") + " = ? ");
     }
     if (isCurrent) {
       sqlFilter.append("AND apw.start_date IS NOT NULL AND apw.end_date IS NULL AND apw.status_id IS NULL ");

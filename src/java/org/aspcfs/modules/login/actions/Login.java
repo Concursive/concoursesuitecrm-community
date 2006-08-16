@@ -185,8 +185,8 @@ public final class Login extends CFSModule {
         // modified with new fields because .war users need to
         // be able to login first, before the upgrade has happened
         PreparedStatement pst = db.prepareStatement(
-            "SELECT a.\"password\", a.role_id, r.\"role\", a.expires, a.alias, a.user_id, r.role_type " +
-                "FROM \"access\" a, \"role\" r " +
+            "SELECT a." + DatabaseUtils.addQuotes(db, "password") + ", a.role_id, r." + DatabaseUtils.addQuotes(db, "role") + ", a.expires, a.alias, a.user_id, r.role_type " +
+                "FROM " + DatabaseUtils.addQuotes(db, "access") + " a, " + DatabaseUtils.addQuotes(db, "role") + " r " +
                 "WHERE a.role_id = r.role_id " +
                 "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
                 "AND a.enabled = ? ");

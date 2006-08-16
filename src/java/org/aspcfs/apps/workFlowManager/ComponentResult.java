@@ -272,7 +272,7 @@ public class ComponentResult {
       id = DatabaseUtils.getNextSeq(db, "business_process_comp_re_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO " + DatabaseUtils.getTableName(db, "business_process_component_result_lookup") + " " +
-          "(" + (id > -1 ? "result_id, " : "") + "component_id, return_id, description, \"level\", enabled) " +
+          "(" + (id > -1 ? "result_id, " : "") + "component_id, return_id, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled) " +
           "VALUES " +
           "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?)");
       int i = 0;

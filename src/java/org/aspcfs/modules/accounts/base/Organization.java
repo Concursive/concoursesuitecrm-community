@@ -538,7 +538,7 @@ public class Organization extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM \"access\" " +
+        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
         "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
@@ -2339,7 +2339,7 @@ public class Organization extends GenericBean {
         "SELECT atl.type_id " +
         "FROM account_type_levels atl " +
         "WHERE atl.org_id = ? " +
-        "ORDER BY atl.\"level\" ");
+        "ORDER BY atl." + DatabaseUtils.addQuotes(db, "level") + " ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -2371,7 +2371,7 @@ public class Organization extends GenericBean {
     }
     String sql =
         "INSERT INTO account_type_levels " +
-        "(org_id, type_id, \"level\") " +
+        "(org_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ") " +
         "VALUES (?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -2425,14 +2425,16 @@ public class Organization extends GenericBean {
         "UPDATE organization set enabled = ? " +
         "WHERE org_id = ? ");
 
-    sql.append("AND modified = ? ");
+    sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, false);
     pst.setInt(++i, orgId);
 
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
 
     int resultCount = pst.executeUpdate();
     pst.close();
@@ -2464,12 +2466,14 @@ public class Organization extends GenericBean {
     sql.append(
         "UPDATE organization SET enabled = ? " +
         "WHERE org_id = ? ");
-    sql.append("AND modified = ? ");
+    sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, true);
     pst.setInt(++i, orgId);
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     int resultCount = pst.executeUpdate();
     pst.close();
     if (resultCount == 1) {
@@ -2989,7 +2993,7 @@ public class Organization extends GenericBean {
         "source = ?, rating = ?, potential = ? " +
         "WHERE org_id = ? ");
     if (!override) {
-      sql.append("AND modified = ? ");
+      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
 
     int i = 0;
@@ -3026,7 +3030,7 @@ public class Organization extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getRating());
     pst.setDouble(++i, this.getPotential());
     pst.setInt(++i, orgId);
-    if (!override) {
+    if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();

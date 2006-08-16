@@ -1536,6 +1536,10 @@ public class PagedListInfo implements Serializable {
             "FETCH FIRST " + (this.getItemsPerPage() + this.getCurrentOffset()) + " ROWS ONLY) AS db_row_numbers " +
                 "WHERE db_row > " + this.getCurrentOffset() + " AND db_row <= " + (this.getCurrentOffset() + this.getItemsPerPage()) + " ");
       }
+    } else if (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL) {
+      if (this.getItemsPerPage() > 0) {
+        sqlStatement.append("LIMIT " + this.getCurrentOffset() + "," + this.getItemsPerPage() + " ");
+      }
     }
     appendedSqlStatement.append(sqlStatement);
   }

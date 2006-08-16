@@ -1093,7 +1093,7 @@ public class DocumentStore extends GenericBean {
         " modifiedby = ? , " +
         " modified = CURRENT_TIMESTAMP " +
         " WHERE document_store_id = ? " +
-        " AND modified = ? ");
+        " AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
 
     pst = db.prepareStatement(sql.toString());
     int i = 0;
@@ -1128,7 +1128,9 @@ public class DocumentStore extends GenericBean {
     }
     pst.setInt(++i, this.modifiedBy);
     pst.setInt(++i, this.id);
-    pst.setTimestamp(++i, this.modified);
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.modified);
+    }
 
     resultCount = pst.executeUpdate();
 

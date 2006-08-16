@@ -1007,7 +1007,8 @@ public class CategoryEditor {
     id = DatabaseUtils.getNextSeq(db, "category_editor_lookup_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO category_editor_lookup " +
-        "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, table_name, \"level\", description, category_id, max_levels) " +
+        "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, table_name, " + DatabaseUtils.addQuotes(db, "level") +
+        ", description, category_id, max_levels) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

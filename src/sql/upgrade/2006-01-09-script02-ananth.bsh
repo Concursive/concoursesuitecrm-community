@@ -13,7 +13,8 @@ level += 10;
 int code = DatabaseUtils.getNextSeq(db, "lookup_step_actions_code_seq");
 PreparedStatement pst = db.prepareStatement(
   "INSERT INTO lookup_step_actions" +
-  "(" + (code > -1 ? "code, " : "") + "description, \"level\", constant_id) " +
+  "(" + (code > -1 ? "code, " : "") + "description, " + DatabaseUtils.addQuotes(db, "level") +
+  ", constant_id) " +
   "VALUES (" + (code > -1 ? "?, " : "") + "?, ?, ?) ");
 int i = 0;
 if (code > -1) {

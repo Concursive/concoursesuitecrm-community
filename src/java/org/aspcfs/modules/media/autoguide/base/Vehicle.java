@@ -467,7 +467,7 @@ public class Vehicle {
         "SET year = ?, make_id = ?, model_id = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE vehicle_id = ? " +
-        "AND modified = ? ");
+        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, year);
@@ -475,7 +475,9 @@ public class Vehicle {
     pst.setInt(++i, modelId);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
-    pst.setTimestamp(++i, this.getModified());
+    if(this.getModified() != null){
+      pst.setTimestamp(++i, this.getModified());
+    }
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
