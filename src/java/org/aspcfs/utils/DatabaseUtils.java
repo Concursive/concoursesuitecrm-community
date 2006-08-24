@@ -168,6 +168,8 @@ public class DatabaseUtils {
       return FIREBIRD;
     } else if ("org.firebirdsql.jdbc.FBDriver".equals(databaseName)) {
       return FIREBIRD;
+    } else if ("oracle.jdbc.driver.OracleConnection".equals(databaseName)) {
+      return ORACLE;
     } else if (databaseName.indexOf("oracle") > -1) {
       return ORACLE;
     } else if (databaseName.startsWith(
@@ -230,7 +232,7 @@ public class DatabaseUtils {
       case DatabaseUtils.DAFFODILDB:
         return ("DATE(" + date + ")");
       case DatabaseUtils.ORACLE:
-        return ("DATE(" + date + ")");
+        return ("TO_DATE(" + date + ",'dd/mm/yyyy')");
         //case DatabaseUtils.ORACLE:
         //  return ("CAST(" + date + " AS DATE)");
       case DatabaseUtils.DB2:
@@ -323,6 +325,15 @@ public class DatabaseUtils {
         }
         break;
       case DatabaseUtils.ORACLE:
+    	  if (units == DAY) {
+              addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL("+ timestampColumnName+" ,'day')) ";
+            } else if (units == WEEK) {
+              addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL("+ timestampColumnName+" * 7 ,'day'))";
+            } else if (units == MONTH) {
+              addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL("+ timestampColumnName +", 'month')) ";
+            } else if (units == YEAR) {
+              addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL("+ timestampColumnName +", 'year')) ";
+            }
         break;
       case DatabaseUtils.MYSQL:
         if (units == DAY) {
@@ -388,6 +399,7 @@ public class DatabaseUtils {
         }
         break;
       case DatabaseUtils.ORACLE:
+    	  addTimestampIntervalString = " (" + timestampColumnName + " + ((" + termsColumnName + " + " + defaultTerms + 1 + ") * 7)) ";
         break;
       case DatabaseUtils.MYSQL:
         if (units == WEEK) {
@@ -485,6 +497,9 @@ public class DatabaseUtils {
       case DatabaseUtils.MYSQL:
         rs = st.executeQuery("SELECT LAST_INSERT_ID()");
         break;
+      //case DatabaseUtils.ORACLE:
+      //    rs = st.executeQuery("SELECT "+sequenceName + ".CURRVAL FROM DUAL");
+      //    break;
       default:
         break;
     }
@@ -751,7 +766,7 @@ public class DatabaseUtils {
       case DatabaseUtils.MSSQL:
         return "CONVERT(VARCHAR(2000), " + field + ")";
       case DatabaseUtils.ORACLE:
-        return "SUBSTR(" + field + ", 2000, 1)";
+        return "TO_CHAR(" + field + ")";
       case DatabaseUtils.FIREBIRD:
         return field;
       case DatabaseUtils.DB2:
