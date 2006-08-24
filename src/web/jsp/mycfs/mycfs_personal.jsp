@@ -108,7 +108,7 @@
 <dhv:formMessage />
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
-<input type="hidden" name="modified" value="<%= EmployeeBean.getModified().toString() %>">
+<input type="hidden" name="modified" value="<%= EmployeeBean.getModified() %>">
 <input type="hidden" name="orgId" value="<%= EmployeeBean.getOrgId() %>">
 <input type="hidden" name="typeId" value="<%= EmployeeBean.getTypesNameString() %>">
 <input type="hidden" name="department" value="<%=EmployeeBean.getDepartment()%>">
