@@ -402,7 +402,7 @@
 	    <strong><dhv:label name="sales.contactInformation">Contact Information</dhv:label></strong>
 	  </th>
   </tr>
-  <dhv:evaluate if="<%= ContactDetails.getNameLast() != null && !"".equals(ContactDetails.getNameLast()) %>">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getNameLast()) %>">
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="reports.accounts.name">Name</dhv:label>
