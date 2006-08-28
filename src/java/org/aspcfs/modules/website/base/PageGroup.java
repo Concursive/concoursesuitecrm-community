@@ -757,7 +757,7 @@ public class PageGroup extends GenericBean {
      i = 0;
      pst = db.prepareStatement(
        "SELECT count(*) as groupcount " +
-       "FROM page_group " +
+       "FROM web_page_group " +
        "WHERE tab_id = ? ");
      pst.setInt(++i, this.getTabId());
      rs = pst.executeQuery();
