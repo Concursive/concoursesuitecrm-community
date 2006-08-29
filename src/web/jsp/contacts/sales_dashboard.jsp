@@ -199,7 +199,7 @@
             <dhv:evaluate if="<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) && thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>">
               <br />
             </dhv:evaluate>
-            <dhv:evaluate if="<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>">
+            <dhv:evaluate if="<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) && !thisLead.getPrimaryContact() %>">
               <%= toHtml(thisLead.getCompany()) %>
             </dhv:evaluate>
           </td>
