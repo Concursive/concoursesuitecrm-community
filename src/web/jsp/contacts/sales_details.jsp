@@ -490,6 +490,7 @@
         &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
     </td>
   </tr>
+</dhv:evaluate>
 <dhv:evaluate if="<%= ContactDetails.getPotential() > 0 %>">
   <tr class="containerBody">
     <td class="formLabel">
@@ -500,6 +501,7 @@
     </td>
   </tr>
 </dhv:evaluate>
+<dhv:evaluate if="<%= ContactDetails.getIndustryTempCode() > -1 %>">
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
