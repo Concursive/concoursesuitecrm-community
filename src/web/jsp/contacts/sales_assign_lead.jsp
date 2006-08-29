@@ -56,9 +56,13 @@
   
   function assignAccount() {
     var owner = document.forms['assignLead'].owner.value;
-    var actionPlan = document.forms['assignLead'].actionPlan.options[document.forms['assignLead'].actionPlan.selectedIndex].value;
+    <dhv:evaluate if="<%= actionPlanSelect.size() > 1 %>">
+      var actionPlan = document.forms['assignLead'].actionPlan.options[document.forms['assignLead'].actionPlan.selectedIndex].value;
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= actionPlanSelect.size() < 2 %>">
+      var actionPlan = '-1';
+    </dhv:evaluate>
     var manager = document.forms['assignLead'].planManager.value;
-    
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
@@ -68,19 +72,24 @@
   }
   
   function continueAssignAccount() {
-  <dhv:evaluate if="<%= ratingList.size() > 0 %>">
+  <dhv:evaluate if="<%= ratingList.size() > 1 %>">
     var rating = document.forms['assignLead'].rating.value;
   </dhv:evaluate>
     var contactId = '<%= contactDetails.getId() %>';
     var owner = document.forms['assignLead'].owner.value;
-    var actionPlan = document.forms['assignLead'].actionPlan.options[document.forms['assignLead'].actionPlan.selectedIndex].value;
+    <dhv:evaluate if="<%= actionPlanSelect.size() > 1 %>">
+      var actionPlan = document.forms['assignLead'].actionPlan.options[document.forms['assignLead'].actionPlan.selectedIndex].value;
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= actionPlanSelect.size() < 2 %>">
+      var actionPlan = '-1';
+    </dhv:evaluate>
     var manager = document.forms['assignLead'].planManager.value;
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
     var nextTo = '<%= from %>';
     var url = "Sales.do?command=Update&contactId="+contactId+"&id="+contactId+"&next=assignaccount&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
-  <dhv:evaluate if="<%= ratingList.size() > 0 %>">
+  <dhv:evaluate if="<%= ratingList.size() > 1 %>">
     url += "&rating="+rating;
   </dhv:evaluate>
     url += "&actionPlan=" + actionPlan + "&manager=" + manager + "&popup=true";
@@ -127,14 +136,16 @@
       </table>
     </td>
   </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      <dhv:label name="sales.actionPlan">Action Plan</dhv:label>
-    </td>
-    <td>
-      <%= actionPlanSelect.getHtml("actionPlan") %>
-    </td>
-  </tr>
+  <dhv:evaluate if="<%= actionPlanSelect.size() > 1 %>">
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="sales.actionPlan">Action Plan</dhv:label>
+      </td>
+      <td>
+        <%= actionPlanSelect.getHtml("actionPlan") %>
+      </td>
+    </tr>
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
       <dhv:label name="actionList.assignTo">Assign To</dhv:label>
@@ -160,7 +171,7 @@
       </table>
     </td>
   </tr>
-  <dhv:evaluate if="<%= ratingList.size() > 0 %>">
+  <dhv:evaluate if="<%= ratingList.size() > 1 %>">
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="sales.rating">Rating</dhv:label>
