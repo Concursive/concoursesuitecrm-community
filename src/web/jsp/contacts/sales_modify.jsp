@@ -126,7 +126,7 @@
   
   function popAssignToSingle(hiddenFieldId, displayFieldId, params) {
     var leadSiteId = <%=User.getSiteId()%>; 
-    if (<%=User.getSiteId()%> == -1) {
+    if (<%= User.getSiteId() %> == -1) {
      var siteIdWidget = document.forms['addLead'].elements['siteId'];
      leadSiteId = siteIdWidget.options[siteIdWidget.selectedIndex].value;
     }
@@ -284,14 +284,16 @@
       <%= SourceList.getHtmlSelect("source",ContactDetails.getSource()) %>
     </td>
   </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="sales.rating">Rating</dhv:label>
-    </td>
-    <td>
-      <%= RatingList.getHtmlSelect("rating", ContactDetails.getRating()) %>
-    </td>
-  </tr>
+  <dhv:evaluate if="<%= RatingList.size() > 1 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="sales.rating">Rating</dhv:label>
+      </td>
+      <td>
+        <%= RatingList.getHtmlSelect("rating", ContactDetails.getRating()) %>
+      </td>
+    </tr>
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
