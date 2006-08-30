@@ -95,7 +95,8 @@ manually:
 import org.aspcfs.utils.CRMConnection;
 import org.aspcfs.apps.transfer.DataRecord;
 
-// Client ID must already exist in target CRM system
+// Client ID must already exist in target CRM system and is created
+// under Admin -> Configure System -> HTTP-XML API Client Manager
 int clientId = 1;
 
 // Establish connectivity information
