@@ -40,3 +40,4 @@ CREATE TABLE events_log (
   status INT,
   message CLOB
 );
+

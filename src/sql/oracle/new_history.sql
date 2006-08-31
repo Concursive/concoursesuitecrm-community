@@ -19,10 +19,10 @@ CREATE TABLE history (
   description CLOB,
   "level" INTEGER DEFAULT 10,
   enabled CHAR(1) DEFAULT 1,
-  -- record status
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   PRIMARY KEY (HISTORY_ID)
 );
+

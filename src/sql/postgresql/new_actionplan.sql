@@ -36,7 +36,6 @@ CREATE TABLE action_plan_constants (
 CREATE INDEX action_plan_constant_id ON action_plan_constants(constant_id);
 
 CREATE SEQUENCE action_plan_editor_loo_id_seq;
--- Action Plan Lookup table
 CREATE TABLE action_plan_editor_lookup (
   id INTEGER DEFAULT nextval('action_plan_editor_loo_id_seq') NOT NULL PRIMARY KEY,
   module_id INTEGER NOT NULL REFERENCES permission_category(category_id),

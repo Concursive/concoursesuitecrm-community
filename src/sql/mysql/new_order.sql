@@ -1,5 +1,5 @@
 -- ----------------------------------------------------------------------------
---  PostgreSQL Table Creation
+--  MySQL Table Creation
 --
 --  @author     Andrei I. Holub
 --  @created    August 2, 2006
@@ -61,17 +61,14 @@ CREATE TABLE order_entry (
   billing_contact_id INTEGER REFERENCES contact(contact_id),
   source_id INTEGER REFERENCES lookup_order_source(code),
   grand_total FLOAT,
-  -- order status
   status_id INTEGER REFERENCES lookup_order_status(code),
   status_date TIMESTAMP NULL,
   contract_date TIMESTAMP NULL,
   expiration_date TIMESTAMP NULL,
-  -- order terms and type
   order_terms_id INTEGER REFERENCES lookup_order_terms(code),
   order_type_id INTEGER REFERENCES lookup_order_type(code),
   description VARCHAR(2048),
   notes TEXT NULL,
-  -- record status
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
@@ -84,7 +81,6 @@ CREATE TABLE order_product (
   item_id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INTEGER NOT NULL REFERENCES order_entry(order_id),
   product_id INTEGER NOT NULL REFERENCES product_catalog(product_id),
-  -- pricing and quantity of base product
   quantity INTEGER NOT NULL DEFAULT 0,
   msrp_currency INTEGER REFERENCES lookup_currency(code),
   msrp_amount FLOAT NOT NULL DEFAULT 0,
@@ -95,7 +91,6 @@ CREATE TABLE order_product (
   recurring_type INTEGER REFERENCES lookup_recurring_type(code),
   extended_price FLOAT NOT NULL DEFAULT 0,
   total_price FLOAT NOT NULL DEFAULT 0,
-  -- order item status
   status_id INTEGER REFERENCES lookup_order_status(code),
   status_date TIMESTAMP NULL
 );
@@ -107,7 +102,6 @@ CREATE TABLE order_product_status (
   order_id INTEGER NOT NULL REFERENCES order_entry(order_id),
   item_id INTEGER NOT NULL REFERENCES order_product(item_id),
   status_id INTEGER REFERENCES lookup_order_status(code),
-  -- record keeping
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
@@ -175,7 +169,6 @@ CREATE TABLE order_address (
 	state VARCHAR(300),
 	country VARCHAR(300),
 	postalcode VARCHAR(40),
-	-- record keeping
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
@@ -204,7 +197,6 @@ CREATE TABLE lookup_creditcard_types (
 
 CREATE TABLE payment_creditcard (
 	creditcard_id INT AUTO_INCREMENT PRIMARY KEY,
-	-- credit card information
 	card_type INT REFERENCES lookup_creditcard_types(code),
 	card_number VARCHAR(300),
 	card_security_code VARCHAR(300),
@@ -212,7 +204,6 @@ CREATE TABLE payment_creditcard (
 	expiration_year INT,
   name_on_card VARCHAR(300),
   company_name_on_card VARCHAR(300),
-	-- record keeping
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
@@ -222,13 +213,11 @@ CREATE TABLE payment_creditcard (
 
 CREATE TABLE payment_eft (
 	bank_id INT AUTO_INCREMENT PRIMARY KEY,
-	-- bank details
 	bank_name VARCHAR(300),
 	routing_number VARCHAR(300),
 	account_number VARCHAR(300),
 	name_on_account VARCHAR(300),
   company_name_on_account VARCHAR(300),
-	-- record keeping
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
@@ -285,7 +274,6 @@ CREATE TABLE order_payment (
   authorization_ref_number VARCHAR(30),
   authorization_code VARCHAR(30),
   authorization_date TIMESTAMP NULL,
-	-- record keeping
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
@@ -304,7 +292,6 @@ CREATE TABLE order_payment_status (
   payment_status_id INT AUTO_INCREMENT PRIMARY KEY,
   payment_id INTEGER NOT NULL REFERENCES order_payment(payment_id),
   status_id INTEGER REFERENCES lookup_payment_status(code),
-  -- record keeping
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,

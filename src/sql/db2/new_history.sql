@@ -1,9 +1,6 @@
 
 
 CREATE SEQUENCE history_history_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE history(
     history_id INTEGER NOT NULL,
     contact_id INTEGER REFERENCES contact(contact_id),
@@ -21,5 +18,4 @@ CREATE TABLE history(
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     PRIMARY KEY(history_id)
 );
-
 

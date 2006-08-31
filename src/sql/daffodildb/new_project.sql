@@ -314,7 +314,8 @@ CREATE TABLE project_files (
   enteredBy INTEGER  REFERENCES access(user_id) NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedBy INTEGER  REFERENCES access(user_id)  NOT NULL,
-  default_file boolean DEFAULT false
+  default_file boolean DEFAULT false,
+  allow_portal_access BOOLEAN DEFAULT false
 );
 
 CREATE INDEX "project_files_cidx" ON "project_files"   ("link_module_id", "link_item_id");
@@ -331,7 +332,8 @@ CREATE TABLE project_files_version (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   enteredBy INTEGER REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-  modifiedBy INTEGER REFERENCES access(user_id) NOT NULL 
+  modifiedBy INTEGER REFERENCES access(user_id) NOT NULL,
+  allow_portal_access BOOLEAN DEFAULT false
 );
 
 CREATE TABLE project_files_download (
@@ -362,7 +364,8 @@ CREATE TABLE project_team (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
   status INTEGER ,
-  last_accessed TIMESTAMP
+  last_accessed TIMESTAMP,
+  role_type INTEGER
 );
 
 CREATE INDEX project_team_uni_idx ON project_team (project_id, user_id);

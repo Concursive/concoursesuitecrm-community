@@ -41,7 +41,9 @@ CREATE TABLE product_category (
   modified TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,
   start_date TIMESTAMP ,
   expiration_date TIMESTAMP,
-  enabled boolean  DEFAULT true NOT NULL
+  enabled boolean  DEFAULT true NOT NULL,
+  import_id INTEGER REFERENCES import(import_id),
+  status_id INTEGER
 );
 
 -- Each category can be associated with multiple categories
@@ -158,7 +160,10 @@ CREATE TABLE product_catalog (
   enabled boolean DEFAULT true NOT NULL ,
   manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code),
   trashed_date TIMESTAMP,
-  active boolean DEFAULT true NOT NULL
+  active boolean DEFAULT true NOT NULL,
+  comments VARCHAR(255) DEFAULT NULL,
+  import_id INTEGER REFERENCES import(import_id),
+  status_id INTEGER
 );
 
 -- Each product can have a price, which can change over time

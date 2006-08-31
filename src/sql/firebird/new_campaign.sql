@@ -45,7 +45,6 @@ CREATE TABLE campaign (
   PRIMARY KEY (CAMPAIGN_ID)
 );
 
-
 CREATE GENERATOR campaign_run_id_seq;
 CREATE TABLE campaign_run (
   id INTEGER NOT NULL,
@@ -66,7 +65,6 @@ CREATE TABLE excluded_recipient (
   contact_id INTEGER NOT NULL REFERENCES contact(contact_id),
   PRIMARY KEY (ID)
 );
-
 
 CREATE TABLE campaign_list_groups (
   campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
@@ -326,3 +324,4 @@ CREATE TABLE campaign_group_map (
   campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
   user_group_id INTEGER NOT NULL REFERENCES user_group(group_id)
 );
+

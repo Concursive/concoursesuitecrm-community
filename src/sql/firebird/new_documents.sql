@@ -12,9 +12,7 @@ CREATE TABLE lookup_doc_store_perm_cat (
   group_id INTEGER DEFAULT 0 NOT NULL
 );
 
-
 -- Store the document store roles (e.g., owner, contributor, guest, etc.)
-
 -- Old Name: lookup_document_store_role_code_seq;
 CREATE GENERATOR lookup_docume_ore_role_code_seq;
 CREATE TABLE lookup_document_store_role (
@@ -27,7 +25,6 @@ CREATE TABLE lookup_document_store_role (
 );
 
 -- Store the permissions in a document store (e.g., upload file, create version, create folder, download file, etc.)
-
 -- Old Name: lookup_document_store_permission_code_seq;
 CREATE GENERATOR lookup_docume_rmission_code_seq;
 -- Name shortened from  lookup_document_store_permission
@@ -75,9 +72,7 @@ CREATE TABLE document_store_permissions (
   userlevel INTEGER NOT NULL REFERENCES lookup_document_store_role(code)
 );
 
-
 -- Stores the scope of usage of the document stores for a user
-
 CREATE TABLE document_store_user_member (
   document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
   item_id INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -88,7 +83,8 @@ CREATE TABLE document_store_user_member (
   enteredby INTEGER NOT NULL  REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  role_type INTEGER
 );
 
 
@@ -104,12 +100,11 @@ CREATE TABLE document_store_role_member (
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  role_type INTEGER
 );
 
-
 -- Stores the scope of usage of the document stores for a department(i.e., members of a department)
-
 -- Name shorten from - document_store_department_member
 CREATE TABLE doc_store_depart_member (
   document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
@@ -121,5 +116,14 @@ CREATE TABLE doc_store_depart_member (
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  role_type INTEGER
+);
+
+CREATE GENERATOR document_accounts_id_seq;
+CREATE TABLE document_accounts (
+  id INTEGER NOT NULL PRIMARY KEY,
+  document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
+  org_id INTEGER NOT NULL REFERENCES organization(org_id),
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

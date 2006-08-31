@@ -57,12 +57,10 @@ CREATE TABLE action_plan (
   description VARCHAR(2048),
   enabled boolean DEFAULT true NOT NULL,
   approved TIMESTAMP DEFAULT NULL,
-	-- record status
 	entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INT NOT NULL REFERENCES access(user_id),
 	modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modifiedby INT NOT NULL REFERENCES access(user_id),
-  -- continuation
   archive_date TIMESTAMP,
   cat_code INT REFERENCES action_plan_category(id),
   subcat_code1 INT REFERENCES action_plan_category(id),
@@ -81,7 +79,6 @@ CREATE TABLE action_phase (
   phase_name VARCHAR(255) NOT NULL,
   description VARCHAR(2048),
   enabled boolean DEFAULT true NOT NULL,
-	-- record status
 	entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   random BOOLEAN DEFAULT false,
   "global" BOOLEAN DEFAULT false
@@ -123,7 +120,6 @@ CREATE TABLE action_step (
   role_id INTEGER REFERENCES role(role_id),
   department_id INTEGER REFERENCES lookup_department(code),
   enabled boolean DEFAULT true NOT NULL,
-	-- record status
 	entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   allow_skip_to_here boolean DEFAULT FALSE NOT NULL,
   label VARCHAR(80),

@@ -1,8 +1,6 @@
 
 
 CREATE SEQUENCE sites_site_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE sites(
     site_id INTEGER NOT NULL,
     sitecode VARGRAPHIC(255) NOT NULL,
@@ -21,9 +19,6 @@ CREATE TABLE sites(
 
 
 CREATE SEQUENCE events_event_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE events(
     event_id INTEGER NOT NULL,
     "second" VARGRAPHIC(64) DEFAULT G'0',
@@ -42,11 +37,7 @@ CREATE TABLE events(
 );
 
 
-
 CREATE SEQUENCE events_log_log_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE events_log(
     log_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL  REFERENCES events(event_id),

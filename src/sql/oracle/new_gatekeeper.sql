@@ -43,3 +43,4 @@ CREATE TABLE events_log (
   "message"       CLOB,
   PRIMARY KEY (LOG_ID)
 );
+

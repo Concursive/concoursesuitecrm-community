@@ -60,7 +60,6 @@ CREATE TABLE access_log (
   browser VARCHAR(255)
 );
 
-
 CREATE SEQUENCE usage_log_usage_id_seq;
 CREATE TABLE usage_log (
   usage_id INT PRIMARY KEY,
@@ -448,7 +447,8 @@ CREATE TABLE permission_category (
 	logos boolean DEFAULT false NOT NULL,
 	constant INT NOT NULL,
 	action_plans BOOLEAN DEFAULT false NOT NULL,
-	custom_list_views BOOLEAN DEFAULT false NOT NULL
+	custom_list_views BOOLEAN DEFAULT false NOT NULL,
+  importer BOOLEAN NOT NULL DEFAULT false
 );
 
 
@@ -548,7 +548,6 @@ CREATE TABLE organization_emailaddress (
   primary_email boolean DEFAULT false NOT NULL
 );
 
-
 CREATE SEQUENCE organization_phone_phone_id_seq;
 CREATE TABLE organization_phone (
   phone_id INT  PRIMARY KEY,
@@ -562,7 +561,6 @@ CREATE TABLE organization_phone (
   modifiedby INT  references access(user_id) NOT NULL,
   primary_number boolean DEFAULT false NOT NULL
 );
-
 
 CREATE SEQUENCE contact_address_address_id_seq;
 CREATE TABLE contact_address (
@@ -797,7 +795,6 @@ CREATE TABLE report_criteria (
   enabled boolean DEFAULT true
 );
 
-
 CREATE SEQUENCE report_criteria_parameter_parameter_id_seq;
 CREATE TABLE report_criteria_parameter (
   parameter_id INT  PRIMARY KEY,
@@ -805,7 +802,6 @@ CREATE TABLE report_criteria_parameter (
   "parameter" VARCHAR(255) NOT NULL,
   value CLOB
 );
-
 
 CREATE SEQUENCE report_queue_queue_id_seq;
 CREATE TABLE report_queue (
@@ -896,7 +892,6 @@ CREATE TABLE import(
 
 CREATE INDEX "import_entered_idx" ON "import" (entered);
 CREATE INDEX "import_name_idx" ON "import" (name);
-
 
 CREATE SEQUENCE database_version_version_id_seq;
 CREATE TABLE database_version (

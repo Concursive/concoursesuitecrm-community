@@ -52,3 +52,5 @@ CREATE TABLE revenue_detail (
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   PRIMARY KEY (ID)
 );
+
+

@@ -18,9 +18,9 @@ CREATE TABLE history (
   description TEXT,
   level INTEGER DEFAULT 10,
   enabled BIT DEFAULT 1,
-  -- record status
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
+

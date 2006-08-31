@@ -67,7 +67,6 @@ CREATE TABLE excluded_recipient (
   PRIMARY KEY (ID)
 );
 
-
 CREATE TABLE campaign_list_groups (
   campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
   group_id INTEGER NOT NULL REFERENCES saved_criterialist(id)
@@ -326,3 +325,4 @@ CREATE TABLE campaign_group_map (
   campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
   user_group_id INTEGER NOT NULL REFERENCES user_group(group_id)
 );
+

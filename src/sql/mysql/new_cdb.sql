@@ -1,5 +1,5 @@
 -- ----------------------------------------------------------------------------
---  PostgreSQL Table Creation
+--  MySQL Table Creation
 --
 --  @author     Andrei I. Holub
 --  @created    August 2, 2006
@@ -167,6 +167,7 @@ CREATE TABLE lookup_textmessage_types (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
 );
+
 
 CREATE TABLE lookup_employment_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -385,6 +386,7 @@ CREATE TABLE contact_lead_skipped_map (
 );
 
 CREATE INDEX contact_lead_skip_u_idx ON contact_lead_skipped_map(user_id);
+
 
 CREATE TABLE contact_lead_read_map (
   map_id INT AUTO_INCREMENT PRIMARY KEY,

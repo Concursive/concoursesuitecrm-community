@@ -434,7 +434,7 @@ CREATE TABLE permission_category (
   constant INT NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
   custom_list_views BOOLEAN NOT NULL DEFAULT false,
-  importer bool NOT NULL DEFAULT false
+  importer BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE permission (

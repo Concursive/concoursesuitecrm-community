@@ -1,9 +1,5 @@
 
-
 CREATE SEQUENCE help_module_module_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_module(
     module_id INTEGER NOT NULL,
     category_id INTEGER REFERENCES permission_category(category_id),
@@ -12,11 +8,7 @@ CREATE TABLE help_module(
     PRIMARY KEY(module_id)
 );
 
-
 CREATE SEQUENCE help_contents_help_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_contents(
     help_id INTEGER NOT NULL,
     category_id INTEGER REFERENCES permission_category(category_id),
@@ -37,12 +29,7 @@ CREATE TABLE help_contents(
     PRIMARY KEY(help_id)
 );
 
-
-
 CREATE SEQUENCE help_tableof__s_content_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_tableof_contents(
     content_id INTEGER NOT NULL,
     displaytext VARCHAR(255),
@@ -61,11 +48,7 @@ CREATE TABLE help_tableof_contents(
 );
 
 
-
 CREATE SEQUENCE help_tableofc_inks_link_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_tableofcontentitem_links(
     link_id INTEGER NOT NULL,
     global_link_id INTEGER NOT NULL  REFERENCES help_tableof_contents(content_id),
@@ -79,10 +62,7 @@ CREATE TABLE help_tableofcontentitem_links(
 );
 
 
-
 CREATE SEQUENCE lookup_help_features_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_help_features(
     code INTEGER NOT NULL,
     description VARGRAPHIC(1000) NOT NULL,
@@ -92,11 +72,7 @@ CREATE TABLE lookup_help_features(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE help_features_feature_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_features(
     feature_id INTEGER NOT NULL,
     link_help_id INTEGER NOT NULL  REFERENCES help_contents(help_id),
@@ -113,12 +89,7 @@ CREATE TABLE help_features(
     PRIMARY KEY(feature_id)
 );
 
-
-
 CREATE SEQUENCE help_related__latedlink_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_related_links(
     relatedlink_id INTEGER NOT NULL,
     owning_module_id INTEGER REFERENCES help_module(module_id),
@@ -132,12 +103,7 @@ CREATE TABLE help_related_links(
     PRIMARY KEY(relatedlink_id)
 );
 
-
-
 CREATE SEQUENCE help_faqs_faq_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_faqs(
     faq_id INTEGER NOT NULL,
     owning_module_id INTEGER NOT NULL  REFERENCES help_module(module_id),
@@ -153,12 +119,7 @@ CREATE TABLE help_faqs(
     PRIMARY KEY(faq_id)
 );
 
-
-
 CREATE SEQUENCE help_business_ules_rule_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_business_rules(
     rule_id INTEGER NOT NULL,
     link_help_id INTEGER NOT NULL  REFERENCES help_contents(help_id),
@@ -173,12 +134,7 @@ CREATE TABLE help_business_rules(
     PRIMARY KEY(rule_id)
 );
 
-
-
 CREATE SEQUENCE help_notes_note_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_notes(
     note_id INTEGER NOT NULL,
     link_help_id INTEGER NOT NULL  REFERENCES help_contents(help_id),
@@ -193,12 +149,7 @@ CREATE TABLE help_notes(
     CONSTRAINT PK_HELP_NOTES PRIMARY KEY(note_id)
 );
 
-
-
 CREATE SEQUENCE help_tips_tip_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE help_tips(
     tip_id INTEGER NOT NULL,
     link_help_id INTEGER NOT NULL  REFERENCES help_contents(help_id),
@@ -210,5 +161,3 @@ CREATE TABLE help_tips(
     enabled CHAR(1) DEFAULT '1' NOT NULL,
     CONSTRAINT PK_HELP_TIPS PRIMARY KEY(tip_id)
 );
-
-

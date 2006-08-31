@@ -330,3 +330,4 @@ CREATE TABLE order_payment_status (
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   PRIMARY KEY (PAYMENT_STATUS_ID)
 );
+

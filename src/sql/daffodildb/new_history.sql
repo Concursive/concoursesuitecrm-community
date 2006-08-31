@@ -19,7 +19,6 @@ CREATE TABLE history (
   description CLOB,
   "level" INTEGER DEFAULT 10,
   enabled BOOLEAN DEFAULT true,
-  -- record status
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INT REFERENCES access(user_id) NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

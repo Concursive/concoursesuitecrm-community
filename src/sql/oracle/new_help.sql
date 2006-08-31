@@ -62,6 +62,7 @@ CREATE TABLE help_tableofcontentitem_links (
   PRIMARY KEY (LINK_ID)
 );
 
+
 CREATE SEQUENCE lookup_help_features_code_seq;
 CREATE TABLE lookup_help_features (
   code INTEGER NOT NULL,

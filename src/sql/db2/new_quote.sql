@@ -120,13 +120,11 @@ CREATE TABLE quote_product_options(
     PRIMARY KEY(quote_product_option_id)
 );
 
-
 CREATE TABLE quote_product_option_boolean(
     quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
     "value" CHAR(1) NOT NULL,
     id INTEGER
 );
-
 
 CREATE TABLE quote_product_option_float(
     quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
@@ -134,13 +132,11 @@ CREATE TABLE quote_product_option_float(
     id INTEGER
 );
 
-
 CREATE TABLE quote_product_option_timestamp(
     quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
     "value" TIMESTAMP NOT NULL,
     id INTEGER
 );
-
 
 CREATE TABLE quote_product_option_integer(
     quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
@@ -148,10 +144,8 @@ CREATE TABLE quote_product_option_integer(
     id INTEGER
 );
 
-
 CREATE TABLE quote_product_option_text(
     quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
     "value" CLOB(2G) NOT LOGGED NOT NULL,
     id INTEGER
 );
-

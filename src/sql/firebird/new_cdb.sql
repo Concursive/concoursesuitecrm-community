@@ -103,7 +103,6 @@ CREATE TABLE lookup_account_types (
   PRIMARY KEY (CODE)
 );
 
-
 CREATE TABLE state (
   state_code CHAR(2) NOT NULL,
   state VARCHAR(80) NOT NULL,
@@ -505,6 +504,7 @@ CREATE TABLE permission_category (
   constant INTEGER NOT NULL,
   action_plans CHAR(1) DEFAULT 'N' NOT NULL,
   custom_list_views CHAR(1) DEFAULT 'N' NOT NULL,
+  importer CHAR(1) DEFAULT 'N' NOT NULL,
   PRIMARY KEY (CATEGORY_ID)
 );
 

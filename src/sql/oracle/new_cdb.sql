@@ -96,7 +96,6 @@ CREATE TABLE lookup_account_types (
   PRIMARY KEY (CODE)
 );
 
-
 CREATE TABLE state (
   state_code CHAR(2) NOT NULL,
   state NVARCHAR2(80) NOT NULL,
@@ -163,7 +162,6 @@ CREATE TABLE lookup_im_services (
   enabled CHAR(1) DEFAULT 1,
   PRIMARY KEY (CODE)
 );
-
 
 CREATE SEQUENCE lookup_contact_source_code_seq;
 CREATE TABLE lookup_contact_source (
@@ -607,7 +605,6 @@ CREATE TABLE organization_phone (
   PRIMARY KEY (PHONE_ID)
 );
 
-
 CREATE SEQUENCE contact_address_address_id_seq;
 CREATE TABLE contact_address (
   address_id INTEGER  NOT NULL,
@@ -785,7 +782,6 @@ CREATE TABLE webdav (
   PRIMARY KEY (ID)
 );
 
-
 CREATE SEQUENCE category_editor_lookup_id_seq;
 CREATE TABLE category_editor_lookup(
   id INTEGER NOT NULL,
@@ -799,7 +795,6 @@ CREATE TABLE category_editor_lookup(
   max_levels INTEGER NOT NULL,
   PRIMARY KEY (ID)
 );
-
 
 CREATE SEQUENCE viewpoint_viewpoint_id_seq;
 CREATE TABLE viewpoint(
@@ -827,7 +822,6 @@ CREATE TABLE viewpoint_permission (
  PRIMARY KEY (VP_PERMISSION_ID)
 );
 
-
 CREATE SEQUENCE report_report_id_seq;
 CREATE TABLE report (
   report_id INTEGER  NOT NULL,
@@ -846,7 +840,6 @@ CREATE TABLE report (
   PRIMARY KEY (REPORT_ID)
 );
 
-
 CREATE SEQUENCE report_criter__criteria_id_seq;
 CREATE TABLE report_criteria (
   criteria_id INTEGER  NOT NULL,
@@ -861,7 +854,6 @@ CREATE TABLE report_criteria (
   PRIMARY KEY (CRITERIA_ID)
 );
 
-
 -- Old Name: report_criteria_parameter_parameter_id_seq;
 CREATE SEQUENCE report_criter_parameter_id_seq;
 CREATE TABLE report_criteria_parameter (
@@ -871,7 +863,6 @@ CREATE TABLE report_criteria_parameter (
   "value" CLOB,
   PRIMARY KEY (PARAMETER_ID)
 );
-
 
 CREATE SEQUENCE report_queue_queue_id_seq;
 CREATE TABLE report_queue (
@@ -887,7 +878,6 @@ CREATE TABLE report_queue (
   PRIMARY KEY (QUEUE_ID)
 );
 
-
 -- Old Name: report_queue_criteria_criteria_id_seq;
 CREATE SEQUENCE report_queue___criteria_id_seq;
 CREATE TABLE report_queue_criteria (
@@ -897,7 +887,6 @@ CREATE TABLE report_queue_criteria (
   "value" CLOB,
   PRIMARY KEY (CRITERIA_ID)
 );
-
 
 CREATE SEQUENCE action_list_code_seq;
 CREATE TABLE action_list (
@@ -913,7 +902,6 @@ CREATE TABLE action_list (
   enabled CHAR(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (ACTION_ID)
 );
-
 
 CREATE SEQUENCE action_item_code_seq;
 CREATE TABLE action_item (

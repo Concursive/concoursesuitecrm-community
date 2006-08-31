@@ -242,3 +242,4 @@ CREATE TABLE asset_materials_map (
   quantity FLOAT,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
+

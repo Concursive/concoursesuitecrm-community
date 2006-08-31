@@ -420,7 +420,6 @@ CREATE TABLE product_keyword_map(
     keyword_id INTEGER NOT NULL  REFERENCES lookup_product_keyword(code)
 );
 
-
 CREATE INDEX idx_pr_key_map
     ON product_keyword_map(product_id,keyword_id);
 

@@ -185,6 +185,7 @@ CREATE TABLE lookup_payment_methods (
 );
 
 -- Example: Visa, Master Card, Discover, American Express
+
 CREATE SEQUENCE lookup_creditcard_type_code_seq;
 CREATE TABLE lookup_creditcard_types (
   code INT PRIMARY KEY,

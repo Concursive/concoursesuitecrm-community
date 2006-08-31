@@ -1,7 +1,5 @@
 
 CREATE SEQUENCE autoguide_make_make_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE autoguide_make(
     make_id INTEGER NOT NULL,
     make_name VARGRAPHIC(30),
@@ -15,8 +13,6 @@ CREATE TABLE autoguide_make(
 
 
 CREATE SEQUENCE autoguide_model_model_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE autoguide_model(
     model_id INTEGER NOT NULL,
     make_id INTEGER NOT NULL  REFERENCES autoguide_make(make_id),
@@ -30,8 +26,6 @@ CREATE TABLE autoguide_model(
 
 
 CREATE SEQUENCE autoguide_veh_l_vehicle_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE autoguide_vehicle(
     vehicle_id INTEGER NOT NULL,
     "year" VARGRAPHIC(4) NOT NULL,
@@ -46,8 +40,6 @@ CREATE TABLE autoguide_vehicle(
 
 
 CREATE SEQUENCE autoguide_inv_inventory_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE autoguide_inventory(
     inventory_id INTEGER NOT NULL,
     vehicle_id INTEGER NOT NULL  REFERENCES autoguide_vehicle(vehicle_id),
@@ -88,21 +80,15 @@ CREATE TABLE autoguide_options(
     PRIMARY KEY(option_id)
 );
 
-
-
 CREATE TABLE autoguide_inventory_options(
     inventory_id INTEGER NOT NULL  REFERENCES autoguide_inventory(inventory_id),
     option_id INTEGER NOT NULL
 );
 
-
 CREATE UNIQUE INDEX idx_autog_inv_opt
     ON autoguide_inventory_options(inventory_id,option_id);
 
-
 CREATE SEQUENCE autoguide_ad_run_ad_run_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE autoguide_ad_run(
     ad_run_id INTEGER NOT NULL,
     inventory_id INTEGER NOT NULL  REFERENCES autoguide_inventory(inventory_id),

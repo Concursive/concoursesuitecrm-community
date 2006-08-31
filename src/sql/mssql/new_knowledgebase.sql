@@ -5,7 +5,6 @@ CREATE TABLE knowledge_base (
   title VARCHAR(255) NOT NULL,
   description TEXT,
   item_id INTEGER REFERENCES project_files(item_id),
-	-- record status
 	entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
 	modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

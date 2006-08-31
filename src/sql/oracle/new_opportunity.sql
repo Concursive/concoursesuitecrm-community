@@ -161,6 +161,7 @@ CREATE TABLE opportunity_component (
 CREATE INDEX oppcomplist_closedate ON opportunity_component (closedate);
 CREATE INDEX oppcomplist_description ON opportunity_component (description);
 
+
 CREATE TABLE opportunity_component_levels (
   opp_id INTEGER NOT NULL REFERENCES opportunity_component(id),
   type_id INTEGER NOT NULL REFERENCES lookup_opportunity_types(code),

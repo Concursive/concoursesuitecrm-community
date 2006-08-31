@@ -44,12 +44,7 @@ CREATE TABLE netapp_contractexpiration(
     modifiedBy INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
 
-
-
 CREATE SEQUENCE netapp_contra_ation_log_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE netapp_contractexpiration_log(
     id INTEGER NOT NULL  PRIMARY KEY,
     expiration_id INTEGER REFERENCES netapp_contractexpiration(expiration_id),
@@ -63,5 +58,3 @@ CREATE TABLE netapp_contractexpiration_log(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modifiedBy INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
-
-

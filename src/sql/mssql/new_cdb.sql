@@ -168,6 +168,7 @@ CREATE TABLE lookup_textmessage_types (
   enabled BIT DEFAULT 1
 );
 
+
 CREATE TABLE lookup_employment_types (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -423,7 +424,8 @@ CREATE TABLE permission_category (
 	logos BIT NOT NULL DEFAULT 0,
   constant INT NOT NULL,
   action_plans BIT NOT NULL DEFAULT 0,
-  custom_list_views BIT NOT NULL DEFAULT 0
+  custom_list_views BIT NOT NULL DEFAULT 0,
+  importer BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE permission (

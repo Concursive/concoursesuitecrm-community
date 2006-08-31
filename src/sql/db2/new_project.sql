@@ -170,8 +170,6 @@ CREATE TABLE projects(
     PRIMARY KEY(project_id)
 );
 
-
-
 CREATE INDEX projects_idx
     ON projects(group_id,project_id);
 
@@ -577,12 +575,8 @@ CREATE TABLE project_accounts(
     PRIMARY KEY(id)
 );
 
-
-
 CREATE INDEX proj_acct_project1
     ON project_accounts(project_id);
-
-
 CREATE INDEX proj_acct_org_idx
     ON project_accounts(org_id);
 

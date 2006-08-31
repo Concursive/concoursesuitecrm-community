@@ -43,3 +43,4 @@ CREATE TABLE events_log (
   "message"       BLOB SUB_TYPE 1 SEGMENT SIZE 100,
   PRIMARY KEY (LOG_ID)
 );
+

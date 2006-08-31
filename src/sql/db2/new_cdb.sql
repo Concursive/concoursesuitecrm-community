@@ -47,8 +47,6 @@ CREATE TABLE "access"(
 
 
 CREATE SEQUENCE lookup_industry_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_industry(
     code INTEGER NOT NULL,
     order_id INTEGER,
@@ -60,8 +58,6 @@ CREATE TABLE lookup_industry(
 );
 
 CREATE SEQUENCE access_log_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE access_log(
     id INTEGER NOT NULL,
     user_id INTEGER NOT NULL  REFERENCES "access"(user_id),
@@ -74,8 +70,6 @@ CREATE TABLE access_log(
 
 
 CREATE SEQUENCE usage_log_usage_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE usage_log(
     usage_id INTEGER NOT NULL,
     entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -86,10 +80,7 @@ CREATE TABLE usage_log(
     PRIMARY KEY(usage_id)
 );
 
-
 CREATE SEQUENCE lookup_contact_types_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_contact_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -102,7 +93,6 @@ CREATE TABLE lookup_contact_types(
 );
 
 CREATE SEQUENCE lookup_account_types_code_seq AS DECIMAL(27,0);
-
 CREATE TABLE lookup_account_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -112,7 +102,6 @@ CREATE TABLE lookup_account_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE TABLE state(
     state_code CHAR(2) NOT NULL,
     state VARGRAPHIC(80) NOT NULL,
@@ -121,8 +110,6 @@ CREATE TABLE state(
 
 
 CREATE SEQUENCE lookup_department_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_department(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -144,10 +131,7 @@ CREATE TABLE lookup_orgaddress_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_orgemail_types_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_orgemail_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -157,10 +141,7 @@ CREATE TABLE lookup_orgemail_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_orgphone_types_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_orgphone_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -171,7 +152,6 @@ CREATE TABLE lookup_orgphone_types(
 );
 
 CREATE SEQUENCE lookup_im_types_code_seq AS DECIMAL(27,0);
-
 CREATE TABLE lookup_im_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -182,7 +162,6 @@ CREATE TABLE lookup_im_types(
 );
 
 CREATE SEQUENCE lookup_im_services_code_seq AS DECIMAL(27,0);
-
 CREATE TABLE lookup_im_services(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -208,8 +187,6 @@ CREATE TABLE lookup_contact_source(
 
 
 CREATE SEQUENCE lookup_contact_rating_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_contact_rating(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -221,8 +198,6 @@ CREATE TABLE lookup_contact_rating(
 
 
 CREATE SEQUENCE lookup_textme_age_typ_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_textmessage_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -234,8 +209,6 @@ CREATE TABLE lookup_textmessage_types(
 
 
 CREATE SEQUENCE lookup_employ_nt_type_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_employment_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -245,10 +218,7 @@ CREATE TABLE lookup_employment_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_locale_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_locale(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -260,8 +230,6 @@ CREATE TABLE lookup_locale(
 
 
 CREATE SEQUENCE lookup_contac_ddress__code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_contactaddress_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -273,8 +241,6 @@ CREATE TABLE lookup_contactaddress_types(
 
 
 CREATE SEQUENCE lookup_contac_mail_ty_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_contactemail_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -284,10 +250,7 @@ CREATE TABLE lookup_contactemail_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_contac_hone_ty_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_contactphone_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -297,10 +260,7 @@ CREATE TABLE lookup_contactphone_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_access_types_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_access_types(
     code INTEGER NOT NULL,
     link_module_id INTEGER NOT NULL,
@@ -312,10 +272,7 @@ CREATE TABLE lookup_access_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_account_size_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_account_size(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
@@ -324,10 +281,7 @@ CREATE TABLE lookup_account_size(
     enabled CHAR(1) DEFAULT '1'
 );
 
-
 CREATE SEQUENCE lookup_segments_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_segments(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
@@ -336,10 +290,7 @@ CREATE TABLE lookup_segments(
     enabled CHAR(1) DEFAULT '1'
 );
 
-
 CREATE SEQUENCE lookup_sub_segment_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_sub_segment(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
@@ -349,10 +300,7 @@ CREATE TABLE lookup_sub_segment(
     enabled CHAR(1) DEFAULT '1'
 );
 
-
 CREATE SEQUENCE lookup_title_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_title(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
@@ -366,8 +314,6 @@ CREATE SEQUENCE organization_org_id_seq AS DECIMAL(27,0)
     INCREMENT BY 1
     START WITH 0
     MINVALUE -1;
-
-
 CREATE TABLE organization(
     org_id INTEGER NOT NULL,
     name VARGRAPHIC(80) NOT NULL,
@@ -491,36 +437,24 @@ CREATE TABLE contact(
     PRIMARY KEY(contact_id)
 );
 
-
 CREATE INDEX contact_user_id_i1
     ON contact(user_id);
-
-
 CREATE INDEX contactlist_namec1
     ON contact(namelast,namefirst);
-
 CREATE INDEX contact_import_id1
     ON contact(import_id);
-
-
 CREATE INDEX contact_org_id_idx
     ON contact(org_id);
-
-
 CREATE INDEX contact_islead_idx
     ON contact(lead);
 
-
 CREATE SEQUENCE contact_lead__d_map_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE contact_lead_skipped_map(
     map_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL  REFERENCES "access"(user_id),
     contact_id INTEGER NOT NULL  REFERENCES contact(contact_id),
     PRIMARY KEY(map_id)
 );
-
 
 CREATE INDEX contact_lead_skip1
     ON contact_lead_skipped_map(user_id);
@@ -533,18 +467,13 @@ CREATE TABLE contact_lead_read_map(
     PRIMARY KEY(map_id)
 );
 
-
 CREATE INDEX contact_lead_read1
     ON contact_lead_read_map(user_id);
-
-
 CREATE INDEX contact_lead_read2
     ON contact_lead_read_map(contact_id);
 
 
 CREATE SEQUENCE role_role_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE "role"(
     role_id INTEGER NOT NULL,
     "role" VARGRAPHIC(80) NOT NULL,
@@ -607,8 +536,6 @@ CREATE TABLE permission(
 );
 
 CREATE SEQUENCE role_permission_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE role_permission(
     id INTEGER NOT NULL,
     role_id INTEGER NOT NULL  REFERENCES "role"(role_id),
@@ -622,8 +549,6 @@ CREATE TABLE role_permission(
 
 
 CREATE SEQUENCE lookup_stage_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_stage(
     code INTEGER NOT NULL,
     order_id INTEGER,
@@ -636,8 +561,6 @@ CREATE TABLE lookup_stage(
 
 
 CREATE SEQUENCE lookup_delive__option_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_delivery_options(
     code INTEGER NOT NULL,
     description VARGRAPHIC(100) NOT NULL,
@@ -649,9 +572,6 @@ CREATE TABLE lookup_delivery_options(
 
 
 CREATE SEQUENCE news_rec_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE news(
     rec_id INTEGER NOT NULL,
     org_id INTEGER REFERENCES organization(org_id),
@@ -667,8 +587,6 @@ CREATE TABLE news(
 
 
 CREATE SEQUENCE organization__d_address_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE organization_address(
     address_id INTEGER NOT NULL,
     org_id INTEGER REFERENCES organization(org_id),
@@ -689,15 +607,10 @@ CREATE TABLE organization_address(
     PRIMARY KEY(address_id)
 );
 
-
-
 CREATE INDEX organization_addr1
     ON organization_address(postalcode);
 
-
 CREATE SEQUENCE organization__mailaddress__seq AS DECIMAL(27,0);
-
-
 CREATE TABLE organization_emailaddress(
     emailaddress_id INTEGER NOT NULL,
     org_id INTEGER REFERENCES organization(org_id),
@@ -711,10 +624,7 @@ CREATE TABLE organization_emailaddress(
     PRIMARY KEY(emailaddress_id)
 );
 
-
 CREATE SEQUENCE organization__one_phone_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE organization_phone(
     phone_id INTEGER NOT NULL,
     org_id INTEGER REFERENCES organization(org_id),
@@ -729,11 +639,7 @@ CREATE TABLE organization_phone(
     PRIMARY KEY(phone_id)
 );
 
-
-
 CREATE SEQUENCE contact_address_address_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE contact_address(
     address_id INTEGER NOT NULL,
     contact_id INTEGER REFERENCES contact(contact_id),
@@ -754,26 +660,17 @@ CREATE TABLE contact_address(
     PRIMARY KEY(address_id)
 );
 
-
-
 CREATE INDEX contact_address_c1
     ON contact_address(contact_id);
-
-
 CREATE INDEX contact_address_p1
     ON contact_address(postalcode);
-
-
 CREATE INDEX contact_city_idx
     ON contact_address(city);
-
 CREATE INDEX contact_address_p2
     ON contact_address(primary_address);
 
 
 CREATE SEQUENCE contact_email_mailaddress__seq AS DECIMAL(27,0);
-
-
 CREATE TABLE contact_emailaddress(
     emailaddress_id INTEGER NOT NULL,
     contact_id INTEGER REFERENCES contact(contact_id),
@@ -787,18 +684,13 @@ CREATE TABLE contact_emailaddress(
     PRIMARY KEY(emailaddress_id)
 );
 
-
 CREATE INDEX contact_email_con1
     ON contact_emailaddress(contact_id);
-
-
 CREATE INDEX contact_email_pri1
     ON contact_emailaddress(primary_email);
 
 
 CREATE SEQUENCE contact_phone_phone_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE contact_phone(
     phone_id INTEGER NOT NULL,
     contact_id INTEGER REFERENCES contact(contact_id),
@@ -813,14 +705,10 @@ CREATE TABLE contact_phone(
     PRIMARY KEY(phone_id)
 );
 
-
 CREATE INDEX contact_phone_con1
     ON contact_phone(contact_id);
 
-
 CREATE SEQUENCE contact_imadd_s_address_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE contact_imaddress(
     address_id INTEGER NOT NULL,
     contact_id INTEGER REFERENCES contact(contact_id),
@@ -837,8 +725,6 @@ CREATE TABLE contact_imaddress(
 
 
 CREATE SEQUENCE contact_textm_s_address_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE contact_textmessageaddress(
     address_id INTEGER NOT NULL,
     contact_id INTEGER REFERENCES contact(contact_id),
@@ -852,10 +738,7 @@ CREATE TABLE contact_textmessageaddress(
     PRIMARY KEY(address_id)
 );
 
-
-
 CREATE SEQUENCE notification__tification_i_seq AS DECIMAL(27,0);
-
 CREATE TABLE notification(
     notification_id INTEGER NOT NULL,
     notify_user INTEGER NOT NULL,
@@ -873,7 +756,6 @@ CREATE TABLE notification(
 
 
 CREATE SEQUENCE cfsinbox_message_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE cfsinbox_message(
     id INTEGER NOT NULL,
     subject VARGRAPHIC(255),
@@ -914,10 +796,7 @@ CREATE TABLE contact_type_levels(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-
 CREATE SEQUENCE lookup_lists_lookup_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_lists_lookup(
     id INTEGER NOT NULL,
     module_id INTEGER NOT NULL  REFERENCES permission_category(category_id),
@@ -931,10 +810,7 @@ CREATE TABLE lookup_lists_lookup(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE webdav_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE webdav(
     id INTEGER NOT NULL,
     category_id INTEGER NOT NULL  REFERENCES permission_category(category_id),
@@ -946,10 +822,7 @@ CREATE TABLE webdav(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE category_editor_lookup_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE category_editor_lookup(
     id INTEGER NOT NULL,
     module_id INTEGER NOT NULL  REFERENCES permission_category(category_id),
@@ -963,9 +836,7 @@ CREATE TABLE category_editor_lookup(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE viewpoint_viewpoint_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE viewpoint(
     viewpoint_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL  REFERENCES "access"(user_id),
@@ -978,10 +849,7 @@ CREATE TABLE viewpoint(
     PRIMARY KEY(viewpoint_id)
 );
 
-
 CREATE SEQUENCE viewpoint_per_p_permission_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE viewpoint_permission(
     vp_permission_id INTEGER NOT NULL,
     viewpoint_id INTEGER NOT NULL  REFERENCES viewpoint(viewpoint_id),
@@ -994,8 +862,6 @@ CREATE TABLE viewpoint_permission(
 );
 
 CREATE SEQUENCE report_report_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE report(
     report_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL  REFERENCES permission_category(category_id),
@@ -1015,8 +881,6 @@ CREATE TABLE report(
 
 
 CREATE SEQUENCE report_criter__criteria_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE report_criteria(
     criteria_id INTEGER NOT NULL,
     report_id INTEGER NOT NULL  REFERENCES report(report_id),
@@ -1030,9 +894,7 @@ CREATE TABLE report_criteria(
     PRIMARY KEY(criteria_id)
 );
 
-
 CREATE SEQUENCE report_criter_parameter_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE report_criteria_parameter(
     parameter_id INTEGER NOT NULL,
     criteria_id INTEGER NOT NULL  REFERENCES report_criteria(criteria_id),
@@ -1041,10 +903,7 @@ CREATE TABLE report_criteria_parameter(
     PRIMARY KEY(parameter_id)
 );
 
-
 CREATE SEQUENCE report_queue_queue_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE report_queue(
     queue_id INTEGER NOT NULL,
     report_id INTEGER NOT NULL  REFERENCES report(report_id),
@@ -1058,9 +917,7 @@ CREATE TABLE report_queue(
     PRIMARY KEY(queue_id)
 );
 
-
 CREATE SEQUENCE report_queue___criteria_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE report_queue_criteria(
     criteria_id INTEGER NOT NULL,
     queue_id INTEGER NOT NULL  REFERENCES report_queue(queue_id),
@@ -1069,10 +926,7 @@ CREATE TABLE report_queue_criteria(
     PRIMARY KEY(criteria_id)
 );
 
-
 CREATE SEQUENCE action_list_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_list(
     action_id INTEGER NOT NULL,
     description VARGRAPHIC(255) NOT NULL,
@@ -1087,10 +941,7 @@ CREATE TABLE action_list(
     PRIMARY KEY(action_id)
 );
 
-
 CREATE SEQUENCE action_item_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_item(
     item_id INTEGER NOT NULL,
     action_id INTEGER NOT NULL  REFERENCES action_list(action_id),
@@ -1104,10 +955,7 @@ CREATE TABLE action_item(
     PRIMARY KEY(item_id)
 );
 
-
 CREATE SEQUENCE action_item_log_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_item_log(
     log_id INTEGER NOT NULL,
     item_id INTEGER NOT NULL  REFERENCES action_item(item_id),
@@ -1148,16 +996,13 @@ CREATE TABLE import(
     PRIMARY KEY(import_id)
 );
 
-
 CREATE INDEX import_entered_idx
     ON import(entered);
-
 CREATE INDEX import_name_idx
     ON import(name);
 
 
 CREATE SEQUENCE database_vers_n_version_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE database_version(
     version_id INTEGER NOT NULL,
     script_filename VARGRAPHIC(255) NOT NULL,
@@ -1167,8 +1012,6 @@ CREATE TABLE database_version(
 );
 
 CREATE SEQUENCE lookup_relati_ypes_type_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_relationship_types(
     type_id INTEGER NOT NULL,
     category_id_maps_from INTEGER NOT NULL,
@@ -1183,8 +1026,6 @@ CREATE TABLE lookup_relationship_types(
 
 
 CREATE SEQUENCE relationship__ationship_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE relationship(
     relationship_id INTEGER NOT NULL,
     type_id INTEGER REFERENCES lookup_relationship_types(type_id),
@@ -1203,8 +1044,6 @@ CREATE TABLE relationship(
 
 
 CREATE SEQUENCE user_group_group_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE user_group(
     group_id INTEGER NOT NULL  PRIMARY KEY,
     group_name VARGRAPHIC(255) NOT NULL,
@@ -1217,9 +1056,7 @@ CREATE TABLE user_group(
     site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
-
 CREATE SEQUENCE user_group_ma_group_map_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE user_group_map(
     group_map_id INTEGER NOT NULL  PRIMARY KEY,
     user_id INTEGER NOT NULL  REFERENCES "access"(user_id),
@@ -1229,10 +1066,7 @@ CREATE TABLE user_group_map(
     entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-
 CREATE SEQUENCE custom_list_v_or_editor_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE custom_list_view_editor(
     editor_id INTEGER NOT NULL  PRIMARY KEY,
     module_id INTEGER NOT NULL  REFERENCES permission_category(category_id),
@@ -1242,10 +1076,7 @@ CREATE TABLE custom_list_view_editor(
     category_id INTEGER NOT NULL
 );
 
-
 CREATE SEQUENCE custom_list_view_view_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE custom_list_view(
     view_id INTEGER NOT NULL  PRIMARY KEY,
     editor_id INTEGER NOT NULL  REFERENCES custom_list_view_editor(editor_id),
@@ -1255,11 +1086,7 @@ CREATE TABLE custom_list_view(
     entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-
 CREATE SEQUENCE custom_list_v_eld_field_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE custom_list_view_field(
     field_id INTEGER NOT NULL  PRIMARY KEY,
     view_id INTEGER NOT NULL  REFERENCES custom_list_view(view_id),

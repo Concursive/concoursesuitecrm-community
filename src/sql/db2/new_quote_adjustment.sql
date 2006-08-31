@@ -36,73 +36,39 @@ CREATE TABLE quote_group(
     PRIMARY KEY(group_id)
 );
 
-
 ALTER TABLE quote_entry
  ADD COLUMN product_id INTEGER REFERENCES product_catalog(product_id);
-
-
 ALTER TABLE quote_entry
  ADD COLUMN customer_product_id INTEGER REFERENCES customer_product(customer_product_id);
-
-
 ALTER TABLE quote_entry
  ADD COLUMN opp_id INTEGER REFERENCES opportunity_header(opp_id);
-
-
 ALTER TABLE quote_entry
  ADD COLUMN "version" VARGRAPHIC(255) DEFAULT G'0' NOT NULL;
-
-
 ALTER TABLE quote_entry
  ADD COLUMN group_id INTEGER REFERENCES quote_group(group_id);
-
-
 ALTER TABLE quote_entry ADD  CHECK (group_id IS NOT NULL);
-
-
 ALTER TABLE quote_entry
  ADD COLUMN delivery_id INTEGER REFERENCES lookup_quote_delivery(code);
-
-
 ALTER TABLE quote_entry
  ADD COLUMN email_address CLOB(2G) NOT LOGGED;
-
-
 ALTER TABLE quote_entry
  ADD COLUMN phone_number CLOB(2G) NOT LOGGED;
-
-
 ALTER TABLE quote_entry
  ADD COLUMN address CLOB(2G) NOT LOGGED;
-
-
 ALTER TABLE quote_entry
  ADD COLUMN fax_number CLOB(2G) NOT LOGGED;
-
-
 ALTER TABLE quote_entry
  ADD COLUMN submit_action INTEGER;
-
-
 ALTER TABLE quote_entry
  ADD COLUMN closed TIMESTAMP;
-
-
 ALTER TABLE quote_entry
  ADD COLUMN show_total CHAR(1) DEFAULT '1';
-
-
 ALTER TABLE quote_entry
  ADD COLUMN show_subtotal CHAR(1) DEFAULT '1';
-
-
 ALTER TABLE quote_entry
  ADD COLUMN logo_file_id INTEGER REFERENCES project_files(item_id);
-
-
 ALTER TABLE quote_entry
  ADD COLUMN trashed_date TIMESTAMP;
-
 
 CREATE SEQUENCE quote_condition_map_id_seq AS DECIMAL(27,0);
 
@@ -116,8 +82,6 @@ CREATE TABLE quote_condition(
 
 
 CREATE SEQUENCE quotelog_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE quotelog(
     id INTEGER NOT NULL,
     quote_id INTEGER NOT NULL  REFERENCES quote_entry(quote_id),
@@ -140,8 +104,6 @@ CREATE TABLE quotelog(
 
 
 CREATE SEQUENCE lookup_quote_remarks_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_quote_remarks(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -153,8 +115,6 @@ CREATE TABLE lookup_quote_remarks(
 
 
 CREATE SEQUENCE quote_remark_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE quote_remark(
     map_id INTEGER NOT NULL,
     quote_id INTEGER NOT NULL  REFERENCES quote_entry(quote_id),
@@ -164,8 +124,6 @@ CREATE TABLE quote_remark(
 
 
 CREATE SEQUENCE quote_notes_notes_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE quote_notes(
     notes_id INTEGER NOT NULL,
     quote_id INTEGER REFERENCES quote_entry(quote_id),
@@ -176,3 +134,4 @@ CREATE TABLE quote_notes(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY(notes_id)
 );
+

@@ -78,7 +78,6 @@ CREATE TABLE web_page_version (
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
-  page_id INTEGER,
   PRIMARY KEY (PAGE_VERSION_ID)
 );
 
@@ -140,7 +139,6 @@ CREATE TABLE web_page_row (
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
-  row_column_id INTEGER,
   PRIMARY KEY (PAGE_ROW_ID)
 );
 
@@ -251,3 +249,4 @@ CREATE TABLE web_product_email_log (
   site_log_id INT,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+

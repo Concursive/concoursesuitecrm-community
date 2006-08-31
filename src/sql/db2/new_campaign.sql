@@ -1,9 +1,5 @@
 
-
 CREATE SEQUENCE saved_criterialist_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE saved_criterialist(
     id INTEGER NOT NULL,
     entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP  NOT NULL,
@@ -18,11 +14,7 @@ CREATE TABLE saved_criterialist(
 );
 
 
-
 CREATE SEQUENCE campaign_campaign_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE campaign(
     campaign_id INTEGER NOT NULL,
     name VARGRAPHIC(80) NOT NULL,
@@ -53,11 +45,7 @@ CREATE TABLE campaign(
     PRIMARY KEY(campaign_id)
 );
 
-
 CREATE SEQUENCE campaign_run_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE campaign_run(
     id INTEGER NOT NULL,
     campaign_id INTEGER NOT NULL  REFERENCES campaign(campaign_id),
@@ -70,12 +58,7 @@ CREATE TABLE campaign_run(
     PRIMARY KEY(id)
 );
 
-
-
 CREATE SEQUENCE excluded_recipient_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE excluded_recipient(
     id INTEGER NOT NULL,
     campaign_id INTEGER NOT NULL  REFERENCES campaign(campaign_id),
@@ -83,16 +66,12 @@ CREATE TABLE excluded_recipient(
     PRIMARY KEY(id)
 );
 
-
 CREATE TABLE campaign_list_groups(
     campaign_id INTEGER NOT NULL  REFERENCES campaign(campaign_id),
     group_id INTEGER NOT NULL  REFERENCES saved_criterialist(id)
 );
 
-
 CREATE SEQUENCE active_campaign_groups_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE active_campaign_groups(
     id INTEGER NOT NULL,
     campaign_id INTEGER NOT NULL  REFERENCES campaign(campaign_id),
@@ -103,9 +82,6 @@ CREATE TABLE active_campaign_groups(
 
 
 CREATE SEQUENCE scheduled_recipient_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE scheduled_recipient(
     id INTEGER NOT NULL,
     campaign_id INTEGER NOT NULL  REFERENCES campaign(campaign_id),
@@ -121,11 +97,7 @@ CREATE TABLE scheduled_recipient(
     PRIMARY KEY(id)
 );
 
-
-
 CREATE SEQUENCE lookup_survey_types_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_survey_types(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -135,11 +107,7 @@ CREATE TABLE lookup_survey_types(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE survey_survey_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE survey(
     survey_id INTEGER NOT NULL,
     name VARGRAPHIC(80) NOT NULL,
@@ -156,8 +124,6 @@ CREATE TABLE survey(
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     PRIMARY KEY(survey_id)
 );
-
-
 
 CREATE TABLE campaign_survey_link(
     campaign_id INTEGER REFERENCES campaign(campaign_id),
@@ -180,8 +146,6 @@ CREATE TABLE survey_questions(
 
 
 CREATE SEQUENCE survey_items_item_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE survey_items(
     item_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL  REFERENCES survey_questions(question_id),
@@ -192,9 +156,6 @@ CREATE TABLE survey_items(
 
 
 CREATE SEQUENCE active_survey_ctive_survey_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE active_survey(
     active_survey_id INTEGER NOT NULL,
     campaign_id INTEGER NOT NULL  REFERENCES campaign(campaign_id),
@@ -212,11 +173,7 @@ CREATE TABLE active_survey(
     PRIMARY KEY(active_survey_id)
 );
 
-
-
 CREATE SEQUENCE active_survey__question_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE active_survey_questions(
     question_id INTEGER NOT NULL,
     active_survey_id INTEGER NOT NULL  REFERENCES active_survey(active_survey_id),
@@ -316,10 +273,7 @@ CREATE TABLE field_types(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE search_fields_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE search_fields(
     id INTEGER NOT NULL,
     field VARGRAPHIC(80),
@@ -332,10 +286,7 @@ CREATE TABLE search_fields(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE message_id_seq AS DECIMAL(27,0);
-
-
 
 CREATE TABLE "message"(
     id INTEGER NOT NULL,
@@ -356,12 +307,7 @@ CREATE TABLE "message"(
     PRIMARY KEY(id)
 );
 
-
-
 CREATE SEQUENCE message_template_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE message_template(
     id INTEGER NOT NULL,
     name VARGRAPHIC(80) NOT NULL,
@@ -377,8 +323,6 @@ CREATE TABLE message_template(
     PRIMARY KEY(id)
 );
 
-
-
 CREATE TABLE saved_criteriaelement(
     id INTEGER NOT NULL  REFERENCES saved_criterialist(id),
     field INTEGER NOT NULL  REFERENCES search_fields(id),
@@ -390,11 +334,7 @@ CREATE TABLE saved_criteriaelement(
     site_id INTEGER
 );
 
-
 CREATE SEQUENCE contact_message_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE contact_message(
     id INTEGER NOT NULL  PRIMARY KEY,
     message_id INTEGER NOT NULL  REFERENCES "message"(id),
@@ -403,11 +343,7 @@ CREATE TABLE contact_message(
     received_by INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
 
-
 CREATE SEQUENCE campaign_group_map_map_id_seq AS DECIMAL(27,0);
-
-
-
 CREATE TABLE campaign_group_map(
     map_id INTEGER NOT NULL  PRIMARY KEY,
     campaign_id INTEGER NOT NULL  REFERENCES campaign(campaign_id),

@@ -13,7 +13,7 @@ CREATE TABLE module_field_categorylink (
 CREATE SEQUENCE custom_field_ca_category_id_seq;
 CREATE TABLE custom_field_category (
   module_id INTEGER REFERENCES module_field_categorylink(category_id) NOT NULL,
-  category_id INT  PRIMARY KEY,
+  category_id INTEGER PRIMARY KEY,
   category_name VARCHAR(255) NOT NULL,
   "level" INTEGER DEFAULT 0,
   description CLOB,
@@ -31,7 +31,7 @@ CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" ("module_id");
 CREATE SEQUENCE custom_field_group_group_id_seq;
 CREATE TABLE custom_field_group (
   category_id INTEGER REFERENCES custom_field_category(category_id) NOT NULL,
-  group_id INT  PRIMARY KEY,
+  group_id INTEGER PRIMARY KEY,
   group_name VARCHAR(255) NOT NULL,
   "level" INTEGER DEFAULT 0,
   description CLOB,

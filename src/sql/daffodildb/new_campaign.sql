@@ -12,6 +12,7 @@ CREATE TABLE saved_criterialist (
   enabled boolean  DEFAULT true NOT NULL
 );
 
+
 CREATE SEQUENCE campaign_campaign_id_seq;
 CREATE TABLE campaign (
   campaign_id INT   PRIMARY KEY,
@@ -42,7 +43,6 @@ CREATE TABLE campaign (
   trashed_date TIMESTAMP
 );
 
-
 CREATE SEQUENCE campaign_run_id_seq;
 CREATE TABLE campaign_run (
   id INT   PRIMARY KEY,
@@ -55,14 +55,12 @@ CREATE TABLE campaign_run (
   total_bounced INTEGER DEFAULT 0
 );
 
-
 CREATE SEQUENCE excluded_recipient_id_seq;
 CREATE TABLE excluded_recipient (
   id INT  PRIMARY KEY,
   campaign_id INT  REFERENCES campaign(campaign_id) NOT NULL,
   contact_id INT REFERENCES contact(contact_id) NOT NULL
 );
-
 
 CREATE TABLE campaign_list_groups (
   campaign_id INT REFERENCES campaign(campaign_id) NOT NULL,
@@ -134,7 +132,6 @@ CREATE TABLE survey_questions (
   position INT DEFAULT 0  NOT NULL 
 );
 
-
 CREATE SEQUENCE survey_items_item_id_seq;
 CREATE TABLE survey_items (
   item_id INT  PRIMARY KEY,
@@ -142,7 +139,6 @@ CREATE TABLE survey_items (
   type INT DEFAULT -1,
   description VARCHAR(255)
 );
-
 
 CREATE SEQUENCE active_survey_active_survey_seq;
 CREATE TABLE active_survey (
@@ -160,7 +156,6 @@ CREATE TABLE active_survey (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INT REFERENCES access(user_id) NOT NULL
 );
-
 
 CREATE SEQUENCE active_survey_q_question_id_seq;
 CREATE TABLE active_survey_questions (
@@ -180,7 +175,6 @@ CREATE TABLE active_survey_questions (
   total7 INT DEFAULT 0
 );
 
-
 CREATE SEQUENCE active_survey_items_item_id_seq;
 CREATE TABLE active_survey_items (
   item_id INTEGER PRIMARY KEY,
@@ -188,7 +182,6 @@ CREATE TABLE active_survey_items (
   type INT DEFAULT -1,
   description VARCHAR(255)
 );
-
 
 CREATE SEQUENCE active_survey_r_response_id_seq;
 CREATE TABLE active_survey_responses (
@@ -200,7 +193,6 @@ CREATE TABLE active_survey_responses (
   entered TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,
   address_updated INT
 );
-
 
 CREATE SEQUENCE active_survey_ans_answer_id_seq;
 CREATE TABLE active_survey_answers (

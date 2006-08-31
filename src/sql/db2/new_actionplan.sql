@@ -14,10 +14,7 @@ CREATE TABLE action_plan_category(
     site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
-
 CREATE SEQUENCE action_plan_c_ory_draft_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_plan_category_draft(
     id INTEGER NOT NULL  PRIMARY KEY,
     link_id INTEGER DEFAULT -1,
@@ -33,22 +30,16 @@ CREATE TABLE action_plan_category_draft(
 
 
 CREATE SEQUENCE action_plan_c_tants_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_plan_constants(
     map_id INTEGER NOT NULL  PRIMARY KEY,
     constant_id INTEGER NOT NULL,
     description VARGRAPHIC(300)
 );
 
-
 CREATE INDEX action_plan_const1
     ON action_plan_constants(constant_id);
 
-
 CREATE SEQUENCE action_plan_editor_loo_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_plan_editor_lookup(
     id INTEGER NOT NULL  PRIMARY KEY,
     module_id INTEGER NOT NULL  REFERENCES permission_category(category_id),
@@ -59,10 +50,7 @@ CREATE TABLE action_plan_editor_lookup(
     category_id INTEGER NOT NULL
 );
 
-
 CREATE SEQUENCE action_plan_plan_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_plan(
     plan_id INTEGER NOT NULL  PRIMARY KEY,
     plan_name VARGRAPHIC(255) NOT NULL,
@@ -82,10 +70,7 @@ CREATE TABLE action_plan(
     site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
-
 CREATE SEQUENCE action_phase_phase_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_phase(
     phase_id INTEGER NOT NULL  PRIMARY KEY,
     parent_id INTEGER REFERENCES action_phase(phase_id),
@@ -98,11 +83,7 @@ CREATE TABLE action_phase(
     "global" CHAR(1) DEFAULT '0'
 );
 
-
-
 CREATE SEQUENCE lookup_duration_type_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_duration_type(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
@@ -111,10 +92,7 @@ CREATE TABLE lookup_duration_type(
     enabled CHAR(1) DEFAULT '1'
 );
 
-
 CREATE SEQUENCE lookup_step_actions_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_step_actions(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
@@ -125,8 +103,6 @@ CREATE TABLE lookup_step_actions(
 );
 
 CREATE SEQUENCE action_step_step_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_step(
     step_id INTEGER NOT NULL  PRIMARY KEY,
     parent_id INTEGER REFERENCES action_step(step_id),
@@ -152,19 +128,14 @@ CREATE TABLE action_step(
     allow_duplicate_recipient CHAR(1) DEFAULT '0' NOT NULL
 );
 
-
 CREATE SEQUENCE step_action_map_map_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE step_action_map(
     map_id INTEGER NOT NULL  PRIMARY KEY,
     constant_id INTEGER NOT NULL  REFERENCES action_plan_constants(map_id),
     action_constant_id INTEGER NOT NULL  REFERENCES lookup_step_actions(constant_id)
 );
 
-
 CREATE SEQUENCE action_plan_w_plan_work_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_plan_work(
     plan_work_id INTEGER NOT NULL  PRIMARY KEY,
     action_plan_id INTEGER NOT NULL  REFERENCES action_plan(plan_id),
@@ -180,11 +151,7 @@ CREATE TABLE action_plan_work(
     current_phase INTEGER REFERENCES action_phase(phase_id)
 );
 
-
-
 CREATE SEQUENCE action_plan_w_otes_note_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_plan_work_notes(
     note_id INTEGER NOT NULL  PRIMARY KEY,
     plan_work_id INTEGER NOT NULL  REFERENCES action_plan_work(plan_work_id),
@@ -193,10 +160,7 @@ CREATE TABLE action_plan_work_notes(
     submittedby INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
 
-
 CREATE SEQUENCE action_phase__hase_work_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_phase_work(
     phase_work_id INTEGER NOT NULL  PRIMARY KEY,
     plan_work_id INTEGER NOT NULL  REFERENCES action_plan_work(plan_work_id),
@@ -211,11 +175,7 @@ CREATE TABLE action_phase_work(
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
 
-
-
 CREATE SEQUENCE action_item_w_item_work_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_item_work(
     item_work_id INTEGER NOT NULL  PRIMARY KEY,
     phase_work_id INTEGER NOT NULL  REFERENCES action_phase_work(phase_work_id),
@@ -233,10 +193,7 @@ CREATE TABLE action_item_work(
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
 
-
 CREATE SEQUENCE action_item_w_otes_note_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_item_work_notes(
     note_id INTEGER NOT NULL  PRIMARY KEY,
     item_work_id INTEGER NOT NULL  REFERENCES action_item_work(item_work_id),
@@ -245,10 +202,7 @@ CREATE TABLE action_item_work_notes(
     submittedby INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
 
-
 CREATE SEQUENCE action_step_lookup_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_step_lookup(
     code INTEGER NOT NULL  PRIMARY KEY,
     step_id INTEGER NOT NULL  REFERENCES action_step(step_id),
@@ -258,32 +212,24 @@ CREATE TABLE action_step_lookup(
     enabled CHAR(1) DEFAULT '1'
 );
 
-
 CREATE TABLE action_step_account_types(
     step_id INTEGER NOT NULL  REFERENCES action_step(step_id),
     type_id INTEGER NOT NULL  REFERENCES lookup_account_types(code)
 );
 
-
 CREATE SEQUENCE action_item_w_selection_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE action_item_work_selection(
     selection_id INTEGER NOT NULL  PRIMARY KEY,
     item_work_id INTEGER NOT NULL  REFERENCES action_item_work(item_work_id),
     selection INTEGER NOT NULL  REFERENCES action_step_lookup(code)
 );
 
-
 CREATE SEQUENCE ticket_catego_n_map_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE ticket_category_plan_map(
     map_id INTEGER NOT NULL  PRIMARY KEY,
     plan_id INTEGER NOT NULL  REFERENCES action_plan(plan_id),
     category_id INTEGER NOT NULL  REFERENCES ticket_category(id)
 );
-
 
 CREATE TABLE ticket_category_draft_plan_map(
     map_id INTEGER NOT NULL  PRIMARY KEY,

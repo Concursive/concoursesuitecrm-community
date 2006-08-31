@@ -57,10 +57,7 @@ CREATE TABLE custom_field_group(
 CREATE INDEX custom_field_grp_1
     ON custom_field_group(category_id);
 
-
 CREATE SEQUENCE custom_field_info_field_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE custom_field_info(
     group_id INTEGER NOT NULL  REFERENCES custom_field_group(group_id),
     field_id INTEGER NOT NULL  UNIQUE,
@@ -83,8 +80,6 @@ CREATE INDEX custom_field_inf_1
     ON custom_field_info(group_id);
 
 CREATE SEQUENCE custom_field_lookup_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE custom_field_lookup(
     field_id INTEGER NOT NULL  REFERENCES custom_field_info(field_id),
     code INTEGER NOT NULL,
@@ -119,7 +114,6 @@ CREATE TABLE custom_field_record(
 CREATE INDEX custom_field_rec_1
     ON custom_field_record(link_module_id,link_item_id,category_id);
 
-
 CREATE TABLE custom_field_data(
     record_id INTEGER NOT NULL  REFERENCES custom_field_record(record_id),
     field_id INTEGER NOT NULL  REFERENCES custom_field_info(field_id),
@@ -132,4 +126,3 @@ CREATE TABLE custom_field_data(
 
 CREATE INDEX custom_field_dat_1
     ON custom_field_data(record_id,field_id);
-

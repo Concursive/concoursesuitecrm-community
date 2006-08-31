@@ -228,3 +228,4 @@ CREATE TABLE web_product_email_log (
   site_log_id INT,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+

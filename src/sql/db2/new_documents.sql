@@ -1,7 +1,5 @@
 
 CREATE SEQUENCE lookup_docume_ategory_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_doc_store_perm_cat(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
@@ -12,8 +10,6 @@ CREATE TABLE lookup_doc_store_perm_cat(
 );
 
 CREATE SEQUENCE lookup_docume_re_role_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_document_store_role(
     code INTEGER NOT NULL  PRIMARY KEY,
     description VARGRAPHIC(50) NOT NULL,
@@ -25,8 +21,6 @@ CREATE TABLE lookup_document_store_role(
 
 
 CREATE SEQUENCE lookup_docume_mission_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_doc_store_perm(
     code INTEGER NOT NULL  PRIMARY KEY,
     category_id INTEGER REFERENCES lookup_doc_store_perm_cat(code),
@@ -39,10 +33,7 @@ CREATE TABLE lookup_doc_store_perm(
     default_role INTEGER REFERENCES lookup_document_store_role(code)
 );
 
-
 CREATE SEQUENCE document_stor_ent_store_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE document_store(
     document_store_id INTEGER NOT NULL  PRIMARY KEY,
     template_id INTEGER,
@@ -62,17 +53,13 @@ CREATE TABLE document_store(
     trashed_date TIMESTAMP
 );
 
-
 CREATE SEQUENCE document_stor_rmissions_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE document_store_permissions(
     id INTEGER NOT NULL  PRIMARY KEY,
     document_store_id INTEGER NOT NULL  REFERENCES document_store(document_store_id),
     permission_id INTEGER NOT NULL  REFERENCES lookup_doc_store_perm(code),
     userlevel INTEGER NOT NULL  REFERENCES lookup_document_store_role(code)
 );
-
 
 CREATE TABLE document_store_user_member(
     document_store_id INTEGER NOT NULL  REFERENCES document_store(document_store_id),
@@ -87,8 +74,6 @@ CREATE TABLE document_store_user_member(
     site_id INTEGER REFERENCES lookup_site_id(code),
     role_type int
 );
-
-
 
 CREATE TABLE document_store_role_member(
     document_store_id INTEGER NOT NULL  REFERENCES document_store(document_store_id),

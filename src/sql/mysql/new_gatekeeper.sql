@@ -1,5 +1,5 @@
 -- ----------------------------------------------------------------------------
---  PostgreSQL Table Creation
+--  MySQL Table Creation
 --
 --  @author     Andrei I. Holub
 --  @created    August 2, 2006
@@ -49,3 +49,4 @@ CREATE TABLE events_log (
   status INT,
   message TEXT
 );
+
