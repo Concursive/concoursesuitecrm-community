@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -12,7 +12,7 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id: componentLogDetails.jsp 13324 2005-11-15 19:07:41Z partha $
   - Description:
   --%>
@@ -53,9 +53,9 @@ function reopenOpportunity(id) {
   <a href="Leads.do?command=SearchForm"><dhv:label name="">Search Form</dhv:label></a> >
 	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-<a href="Leads.do?command=DetailsOpp&headerId=<%= componentLogDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> > 
+<a href="Leads.do?command=DetailsOpp&headerId=<%= componentLogDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
 <dhv:evaluate if="<%= opportunityComponent.getId() == -1 %>">
-  <a href="LeadsComponents.do?command=ComponentHistory&headerId=<%= componentLogDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.ComponentHistory">History</dhv:label></a> > 
+  <a href="LeadsComponents.do?command=ComponentHistory&headerId=<%= componentLogDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.ComponentHistory">History</dhv:label></a> >
 </dhv:evaluate>
 <dhv:evaluate if="<%= opportunityComponent.getId() != -1 %>">
   <a href="LeadsComponents.do?command=ComponentHistory&headerId=<%= opportunityHeader.getId() %>&id=<%= opportunityComponent.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent.componentLog">Componet Log</dhv:label></a> >
@@ -70,7 +70,7 @@ function reopenOpportunity(id) {
   &nbsp;<br>
 </dhv:evaluate>
 <%-- Begin container --%>
-<% String param1 = "id=" + opportunityHeader.getId(); 
+<% String param1 = "id=" + opportunityHeader.getId();
    String param2 = addLinkParams(request, "viewSource");
 %>
 <dhv:container name="opportunities" selected="<%= (opportunityComponent.getId() != -1 ? "details" : "history") %>" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
@@ -86,6 +86,14 @@ function reopenOpportunity(id) {
       </td>
       <td>
         <%= toHtml(componentLogDetails.getDescription()) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= componentLogDetails.getOwner() %>"/>
       </td>
     </tr>
     <tr class="containerBody">

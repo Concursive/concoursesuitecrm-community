@@ -95,8 +95,12 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
         <br />
-        Users logged in: <span class="highlight"><%= User.getSystemStatus(getServletConfig()).getTracker().getUserCount() %></span>
-        Website visitors: <span class="highlight"><%= User.getSystemStatus(getServletConfig()).getTracker().getGuestCount() %></span>
+        <dhv:permission name="admin-usage-view">
+          Users logged in: <span class="highlight"><%= User.getSystemStatus(getServletConfig()).getTracker().getUserCount() %></span>
+        </dhv:permission>
+        <dhv:permission name="website-view">
+          Website visitors: <span class="highlight"><%= User.getSystemStatus(getServletConfig()).getTracker().getGuestCount() %></span>
+        </dhv:permission>
         <dhv:label name="admin.actionTook.colon" param="<%= "time=" + request.getAttribute("debug.action.time") %>">Action took:</dhv:label>
       </dhv:evaluate>
     </th>
