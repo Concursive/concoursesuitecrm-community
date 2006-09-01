@@ -31,6 +31,7 @@ import org.aspcfs.modules.website.base.Site;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -83,15 +84,18 @@ public final class ProcessFileItemImage extends CFSModule {
       FileItem fileItem = new FileItem(db, Integer.parseInt(id));
       // Prepare to download
       String filePath = null;
+      Timestamp lastModified = null;
       if (version != null) {
         fileItem.buildVersionList(db);
         FileItemVersion thisVersion = fileItem.getVersion(
             Double.parseDouble(version));
         filePath = this.getPath(context, path) + getDatePath(
             thisVersion.getModified()) + thisVersion.getFilename();
+        lastModified = thisVersion.getModificationDate();
       } else {
         filePath = this.getPath(context, path) + getDatePath(
             fileItem.getModified()) + fileItem.getFilename();
+        lastModified = fileItem.getModificationDate();
       }
       if (thumbnail != null) {
         filePath += "TH";
@@ -104,6 +108,9 @@ public final class ProcessFileItemImage extends CFSModule {
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(fileItem.getClientFilename());
       if (fileDownload.fileExists()) {
+        if (lastModified != null) {
+          fileDownload.setFileTimestamp(lastModified.getTime());
+        }
         fileDownload.streamContent(context);
       } else {
         System.err.println(
@@ -242,16 +249,19 @@ public final class ProcessFileItemImage extends CFSModule {
 		// Load the fileItem
 		FileItem fileItem = new FileItem(db, Integer.parseInt(imageId));
 		String filePath = null;
-		if (version != null) {
+    Timestamp lastModified = null;
+    if (version != null) {
 			fileItem.buildVersionList(db);
 			FileItemVersion thisVersion = fileItem.getVersion(
 					Double.parseDouble(version));
 			filePath = this.getPath(context, path) + getDatePath(
 					thisVersion.getModified()) + thisVersion.getFilename();
-		} else {
+      lastModified = thisVersion.getModificationDate();
+    } else {
 			filePath = this.getPath(context, path) + getDatePath(
 					fileItem.getModified()) + fileItem.getFilename();
-		}
+      lastModified = fileItem.getModificationDate();
+    }
 		if (thumbnail != null) {
 			filePath += "TH";
 		}
@@ -260,7 +270,10 @@ public final class ProcessFileItemImage extends CFSModule {
 		fileDownload.setFullPath(filePath);
 		fileDownload.setDisplayName(fileItem.getClientFilename());
 		if (fileDownload.fileExists()) {
-			fileDownload.streamContent(context);
+      if (lastModified != null) {
+        fileDownload.setFileTimestamp(lastModified.getTime());
+      }
+      fileDownload.streamContent(context);
 		} else {
 			System.err.println(
 					"ProcessFileItemImage-> Trying to send a file that does not exist: " + filePath + fileItem.getClientFilename());

@@ -284,7 +284,6 @@ public class Thumbnail extends GenericBean {
     }
   }
 
-
   /**
    * Description of the Method
    *

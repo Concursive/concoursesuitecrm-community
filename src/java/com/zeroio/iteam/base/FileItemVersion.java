@@ -18,10 +18,7 @@ package com.zeroio.iteam.base;
 import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.DateFormat;
 
 /**
@@ -630,6 +627,15 @@ public class FileItemVersion extends GenericBean {
     return "";
   }
 
+  public Timestamp getModificationDate() {
+    if (modified != null) {
+      return modified;
+    }
+    if (entered != null) {
+      return entered;
+    }
+    return new Timestamp((new java.util.Date()).getTime());
+  }
 
   /**
    * Gets the modifiedBy attribute of the FileItem object

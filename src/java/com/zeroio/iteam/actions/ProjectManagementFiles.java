@@ -453,6 +453,7 @@ public final class ProjectManagementFiles extends CFSModule {
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
           if (view != null && "true".equals(view)) {
+            fileDownload.setFileTimestamp(thisItem.getModificationDate().getTime());
             fileDownload.streamContent(context);
           } else {
             fileDownload.sendFile(context);
@@ -475,6 +476,7 @@ public final class ProjectManagementFiles extends CFSModule {
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
           if (view != null && "true".equals(view)) {
+            fileDownload.setFileTimestamp(itemToDownload.getModificationDate().getTime());
             fileDownload.streamContent(context);
           } else {
             fileDownload.sendFile(context);
@@ -808,6 +810,7 @@ public final class ProjectManagementFiles extends CFSModule {
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(thisItem.getThumbnailFilename());
       if (fileDownload.fileExists()) {
+        fileDownload.setFileTimestamp(thisItem.getModificationDate().getTime());
         fileDownload.streamContent(context);
         return "-none-";
       } else {

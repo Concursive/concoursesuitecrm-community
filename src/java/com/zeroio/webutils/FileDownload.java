@@ -32,6 +32,7 @@ public class FileDownload {
 
   private String fullPath = null;
   private String displayName = null;
+  private long fileTimestamp = 0;
 
 
   /**
@@ -73,6 +74,13 @@ public class FileDownload {
     return displayName;
   }
 
+  public long getFileTimestamp() {
+    return fileTimestamp;
+  }
+
+  public void setFileTimestamp(long fileTimestamp) {
+    this.fileTimestamp = fileTimestamp;
+  }
 
   /**
    * Description of the Method
@@ -184,7 +192,17 @@ public class FileDownload {
    * @throws Exception Description of the Exception
    */
   public void streamContent(ActionContext context) throws Exception {
-    context.getResponse().setContentType(getContentType(this.getDisplayName().toLowerCase()));
+    if (fullPath.endsWith("TH")) {
+      // NOTE: A temporary fix because all thumbnails (that are scaled)
+      // are saved as JPG.  Actual size thumbnails match the original
+      // filetype (PNG, GIF, JPG)
+      context.getResponse().setContentType(getContentType(".jpg"));
+    } else {
+      context.getResponse().setContentType(getContentType(this.getDisplayName().toLowerCase()));
+    }
+    if (fileTimestamp > 0) {
+      context.getResponse().setDateHeader("Last-Modified", fileTimestamp);
+    }
     this.send(context);
   }
 

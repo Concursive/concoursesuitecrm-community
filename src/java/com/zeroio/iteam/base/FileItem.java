@@ -23,10 +23,7 @@ import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.modules.actionplans.base.ActionItemWorkList;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -1068,6 +1065,16 @@ public class FileItem extends GenericBean {
     } catch (NullPointerException e) {
     }
     return tmp;
+  }
+
+  public Timestamp getModificationDate() {
+    if (modified != null) {
+      return modified;
+    }
+    if (entered != null) {
+      return entered;
+    }
+    return new Timestamp((new java.util.Date()).getTime());
   }
 
 

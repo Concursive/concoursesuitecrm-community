@@ -28,7 +28,6 @@ import org.aspcfs.utils.ImageUtils;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -130,7 +129,7 @@ public final class WebsiteMedia extends CFSModule {
 
     addModuleBean(context, "View Website", "Upload Document");
     if (errorMessage == null) {
-      return this.getReturn(context,"Add");
+      return this.getReturn(context, "Add");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -171,7 +170,8 @@ public final class WebsiteMedia extends CFSModule {
         context.getRequest().setAttribute("actionStepWork", actionStepWork);
       }
       db = getConnection(context);
-      if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
+      if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo)
+      {
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
         //Insert a file description record into the database
@@ -191,23 +191,23 @@ public final class WebsiteMedia extends CFSModule {
           recordInserted = thisItem.insert(db);
         }
         if (recordInserted) {
-					thisItem.setDirectory(filePath);
-					if (thisItem.isImageFormat()) {
-						//Create a thumbnail if this is an image
-						File thumbnailFile = new File(
-							newFileInfo.getLocalFile().getPath() + "TH");
-						ImageUtils.saveThumbnail(
-							newFileInfo.getLocalFile(), thumbnailFile, 133d, 133d);
-						//Store thumbnail in database
-						Thumbnail thumbnail = new Thumbnail();
-						thumbnail.setId(thisItem.getId());
-						thumbnail.setFilename(newFileInfo.getRealFilename() + "TH");
-						thumbnail.setVersion(thisItem.getVersion());
-						thumbnail.setSize((int) thumbnailFile.length());
-						thumbnail.setEnteredBy(thisItem.getEnteredBy());
-						thumbnail.setModifiedBy(thisItem.getModifiedBy());
-						thumbnail.insert(db);
-					}
+          thisItem.setDirectory(filePath);
+          if (thisItem.isImageFormat()) {
+            //Create a thumbnail if this is an image
+            File thumbnailFile = new File(
+                newFileInfo.getLocalFile().getPath() + "TH");
+            ImageUtils.saveThumbnail(
+                newFileInfo.getLocalFile(), thumbnailFile, 133d, 133d);
+            //Store thumbnail in database
+            Thumbnail thumbnail = new Thumbnail();
+            thumbnail.setId(thisItem.getId());
+            thumbnail.setFilename(newFileInfo.getRealFilename() + "TH");
+            thumbnail.setVersion(thisItem.getVersion());
+            thumbnail.setSize((int) thumbnailFile.length());
+            thumbnail.setEnteredBy(thisItem.getEnteredBy());
+            thumbnail.setModifiedBy(thisItem.getModifiedBy());
+            thumbnail.insert(db);
+          }
           context.getRequest().setAttribute("fileItem", thisItem);
           context.getRequest().setAttribute("subject", "");
         }
@@ -217,11 +217,11 @@ public final class WebsiteMedia extends CFSModule {
         SystemStatus systemStatus = this.getSystemStatus(context);
         errors.put(
             "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileName"));
+            "object.validation.incorrectFileName"));
         if (subject != null && "".equals(subject.trim())) {
           errors.put(
               "subjectError", systemStatus.getLabel(
-                  "object.validation.required"));
+              "object.validation.required"));
         }
         processErrors(context, errors);
       }
@@ -233,7 +233,7 @@ public final class WebsiteMedia extends CFSModule {
     }
 
     if (recordInserted) {
-      return this.getReturn(context,"Upload");
+      return this.getReturn(context, "Upload");
     }
     return (executeCommandAdd(context));
   }
@@ -274,7 +274,7 @@ public final class WebsiteMedia extends CFSModule {
     }
     addModuleBean(context, "View Website", "Upload New Document Version");
     if (errorMessage == null) {
-      return this.getReturn(context,"AddVersion");
+      return this.getReturn(context, "AddVersion");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -313,7 +313,8 @@ public final class WebsiteMedia extends CFSModule {
         context.getRequest().setAttribute("subject", subject);
       }
       db = getConnection(context);
-      if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
+      if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo)
+      {
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
 
@@ -323,7 +324,7 @@ public final class WebsiteMedia extends CFSModule {
         thisItem.setLinkItemId(Constants.DOCUMENTS_WEBSITE);
         thisItem.setId(Integer.parseInt(itemId));
         previousItem = new FileItem(
-            db, Integer.parseInt(itemId),thisItem.getLinkItemId(), thisItem.getLinkModuleId());
+            db, Integer.parseInt(itemId), thisItem.getLinkItemId(), thisItem.getLinkModuleId());
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
         thisItem.setSubject(subject);
@@ -341,11 +342,11 @@ public final class WebsiteMedia extends CFSModule {
         SystemStatus systemStatus = this.getSystemStatus(context);
         errors.put(
             "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileName"));
+            "object.validation.incorrectFileName"));
         if (subject != null && "".equals(subject.trim())) {
           errors.put(
               "subjectError", systemStatus.getLabel(
-                  "object.validation.required"));
+              "object.validation.required"));
         }
         processErrors(context, errors);
       }
@@ -358,7 +359,7 @@ public final class WebsiteMedia extends CFSModule {
     }
 
     if (recordInserted) {
-      return this.getReturn(context,"Upload");
+      return this.getReturn(context, "Upload");
     }
     return (executeCommandAddVersion(context));
   }
@@ -407,7 +408,7 @@ public final class WebsiteMedia extends CFSModule {
 
     addModuleBean(context, "View Website", "Document Details");
     if (errorMessage == null) {
-      return this.getReturn(context,"Details");
+      return this.getReturn(context, "Details");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -456,6 +457,7 @@ public final class WebsiteMedia extends CFSModule {
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
           if (view != null && "true".equals(view)) {
+            fileDownload.setFileTimestamp(thisItem.getModificationDate().getTime());
             fileDownload.streamContent(context);
           } else {
             fileDownload.sendFile(context);
@@ -469,7 +471,7 @@ public final class WebsiteMedia extends CFSModule {
               "LeadsDocuments-> Trying to send a file that does not exist");
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.downloadDoesNotExist"));
+              "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       } else {
@@ -483,6 +485,7 @@ public final class WebsiteMedia extends CFSModule {
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
           if (view != null && "true".equals(view)) {
+            fileDownload.setFileTimestamp(itemToDownload.getModificationDate().getTime());
             fileDownload.streamContent(context);
           } else {
             fileDownload.sendFile(context);
@@ -496,7 +499,7 @@ public final class WebsiteMedia extends CFSModule {
               "LeadsDocuments-> Trying to send a file that does not exist");
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.downloadDoesNotExist"));
+              "object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -557,7 +560,7 @@ public final class WebsiteMedia extends CFSModule {
     }
     addModuleBean(context, "View Website", "Modify Document Information");
     if (errorMessage == null) {
-      return this.getReturn(context,"Modify");
+      return this.getReturn(context, "Modify");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -602,7 +605,7 @@ public final class WebsiteMedia extends CFSModule {
     }
     addModuleBean(context, "View Website", "");
     if (recordInserted && isValid) {
-      return this.getReturn(context,"Update");
+      return this.getReturn(context, "Update");
     } else {
       context.getRequest().setAttribute("fid", itemId);
       return (executeCommandModify(context));
@@ -634,7 +637,7 @@ public final class WebsiteMedia extends CFSModule {
     addModuleBean(context, "View Website", "Delete Document");
     if (errorMessage == null) {
       if (recordDeleted) {
-        return this.getReturn(context,"Delete");
+        return this.getReturn(context, "Delete");
       } else {
         return ("DeleteERROR");
       }
@@ -667,7 +670,7 @@ public final class WebsiteMedia extends CFSModule {
       hierarchy.setLinkItemId(Constants.DOCUMENTS_WEBSITE);
       hierarchy.build(db);
       context.getRequest().setAttribute("folderHierarchy", hierarchy);
-      return this.getReturn(context,"Move");
+      return this.getReturn(context, "Move");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

@@ -760,6 +760,7 @@ public class ProductCatalogImports extends CFSModule {
           fileDownload.setDisplayName(itemToDownload.getClientFilename());
           if (fileDownload.fileExists()) {
             if ("true".equals(stream)) {
+              fileDownload.setFileTimestamp(thisItem.getModificationDate().getTime());
               fileDownload.streamContent(context);
             } else {
               fileDownload.sendFile(context);

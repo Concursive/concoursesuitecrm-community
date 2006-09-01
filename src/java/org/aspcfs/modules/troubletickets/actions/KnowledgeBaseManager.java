@@ -536,6 +536,7 @@ public final class KnowledgeBaseManager extends CFSModule {
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
           if (view != null && "true".equals(view)) {
+            fileDownload.setFileTimestamp(thisItem.getModificationDate().getTime());
             fileDownload.streamContent(context);
           } else {
             fileDownload.sendFile(context);
@@ -562,6 +563,7 @@ public final class KnowledgeBaseManager extends CFSModule {
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
           if (view != null && "true".equals(view)) {
+            fileDownload.setFileTimestamp(itemToDownload.getModificationDate().getTime());
             fileDownload.streamContent(context);
           } else {
             fileDownload.sendFile(context);
