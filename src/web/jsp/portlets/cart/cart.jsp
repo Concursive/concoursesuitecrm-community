@@ -51,10 +51,10 @@ The following items have been placed in the cart...<br />
 %>
 		<table border="0" cellpadding="0" cellspacing="5">
     <tr>
-      <TH>Remove</TH>
-      <TH>Thumbnail</TH>
-      <TH>Product Name</TH>
-      <TH>Quantity</TH>
+      <TH nowrap>Remove</TH>
+      <TH nowrap>Thumbnail</TH>
+      <TH nowrap>Product Name</TH>
+      <TH nowrap colspan="2">Quantity</TH>
     </tr>
     <%
     while (quoteProductIterator.hasNext()) {
@@ -62,18 +62,22 @@ The following items have been placed in the cart...<br />
     	QuoteProductBean quoteProductBean = (QuoteProductBean)cartBean.get(productId);
   %>
     <tr>
-      <td width="20">
+      <td>
       	<INPUT type="checkbox" name="quoteProductId" value="<%=productId%>">
       </td>
-      <td width="140">
-          <dhv:evaluate if="<%= quoteProductBean.getProduct().getThumbnailImageId() > -1 %>"><dhv:fileItemImage id="<%=  quoteProductBean.getProduct().getThumbnailImageId() %>" path="products" thumbnail="true" name="<%=  quoteProductBean.getProduct().getName() %>" /></dhv:evaluate>
-          <dhv:evaluate if="<%= quoteProductBean.getProduct().getThumbnailImageId() == -1 %>"><dhv:fileItemImage id="<%=  quoteProductBean.getProduct().getLargestImageId() %>" path="products" thumbnail="true" name="<%=  quoteProductBean.getProduct().getName() %>" /></dhv:evaluate>
+      <td width="140" nowrap>
+        <dhv:evaluate if="<%= quoteProductBean.getProduct().getThumbnailImageId() > -1 %>"><dhv:fileItemImage id="<%= quoteProductBean.getProduct().getThumbnailImageId() %>" path="products" thumbnail="true" name="<%=  quoteProductBean.getProduct().getName() %>" /></dhv:evaluate>
+        <dhv:evaluate if="<%= quoteProductBean.getProduct().getThumbnailImageId() == -1 && quoteProductBean.getProduct().getLargestImageId() > -1 %>"><dhv:fileItemImage id="<%= quoteProductBean.getProduct().getLargestImageId() %>" path="products" thumbnail="true" name="<%=  quoteProductBean.getProduct().getName() %>" /></dhv:evaluate>
+        &nbsp;
       </td>
       <td>
-      	<div><%= quoteProductBean.getProduct().getName()%></div>
+      	<div><%= StringUtils.toHtml(quoteProductBean.getProduct().getName()) %></div>
       </td>
       <td width="10">
-      	<INPUT type="text" name="quantity_<%=productId%>" value="<%=quoteProductBean.getQuantity()%>" size="6">
+      	<%= quoteProductBean.getQuantity() %>
+      </td>
+      <td width="10">
+      	<INPUT type="text" name="quantity_<%=productId%>" value="<%= quoteProductBean.getQuantity() %>" size="6">
       </td>
     </tr>
   <%  

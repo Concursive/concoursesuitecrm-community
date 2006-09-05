@@ -99,7 +99,7 @@
     <dhv:evaluate if="<%= quotes != null && quotes.containsKey(String.valueOf(productCatalog.getId())) %>">
       <tr>
         <td colspan="2">
-          <dhv:label name="quote.ProductQuoted">This item has been added to your cart.  You can add more items or submit the selected items to a sales representative from the cart page.</dhv:label>
+          <strong><dhv:label name="quote.ProductQuoted">This item has been added to your cart.  You can add more items or submit the selected items to a sales representative from the cart page.</dhv:label></strong>
         </td>
       </tr>
     </dhv:evaluate>
