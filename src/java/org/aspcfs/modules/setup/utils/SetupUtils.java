@@ -117,8 +117,13 @@ public class SetupUtils {
     DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-06-30");
     // Version 4.1 beta 4
     DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-07-11");
+    // Version 4.1 beta 7
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-09-05");
+
+
     // Events (last because a check for these is made later)
-    script.source(setupPath + "events_gk.bsh");
+    // NOTE: no longer used
+    //script.source(setupPath + "events_gk.bsh");
   }
 }
 

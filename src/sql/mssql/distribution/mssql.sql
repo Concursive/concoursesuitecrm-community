@@ -4,15 +4,16 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_sc_type](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
+CREATE TABLE [business_process_parameter_library](
+	[parameter_id] [int] IDENTITY(1,1) NOT NULL,
+	[component_id] [int] NULL,
+	[param_name] [varchar](255) NULL,
+	[description] [varchar](510) NULL,
+	[default_value] [varchar](4000) NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[code] ASC
+	[parameter_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -38,7 +39,24 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_quote_terms](
+CREATE TABLE [lookup_sc_category](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_quote_type](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -60,6 +78,96 @@ CREATE TABLE [lookup_opportunity_event_compelling](
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_sc_type](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [ticket_priority](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[style] [text] NOT NULL DEFAULT (''),
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[description] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_quote_terms](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_opportunity_budget](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_response_model](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL,
 	[enabled] [bit] NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
@@ -110,7 +218,46 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_response_model](
+CREATE TABLE [web_page_access_log](
+	[page_id] [int] NULL,
+	[site_log_id] [int] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate())
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_quote_source](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [web_product_access_log](
+	[product_id] [int] NULL,
+	[site_log_id] [int] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate())
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_phone_model](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -148,82 +295,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [events](
-	[event_id] [int] IDENTITY(1,1) NOT NULL,
-	[second] [varchar](64) NULL DEFAULT ('0'),
-	[minute] [varchar](64) NULL DEFAULT ('*'),
-	[hour] [varchar](64) NULL DEFAULT ('*'),
-	[dayofmonth] [varchar](64) NULL DEFAULT ('*'),
-	[month] [varchar](64) NULL DEFAULT ('*'),
-	[dayofweek] [varchar](64) NULL DEFAULT ('*'),
-	[year] [varchar](64) NULL DEFAULT ('*'),
-	[task] [varchar](255) NULL,
-	[extrainfo] [varchar](255) NULL,
-	[businessDays] [varchar](6) NULL DEFAULT ('true'),
-	[enabled] [bit] NULL DEFAULT ((0)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED 
-(
-	[event_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_quote_source](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_opportunity_budget](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_phone_model](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [lookup_task_loe](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
@@ -233,6 +304,44 @@ CREATE TABLE [lookup_task_loe](
 PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [web_product_email_log](
+	[product_id] [int] NULL,
+	[emails_to] [text] NOT NULL,
+	[from_name] [varchar](300) NOT NULL,
+	[comments] [varchar](1024) NULL,
+	[site_log_id] [int] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate())
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [sites](
+	[site_id] [int] IDENTITY(1,1) NOT NULL,
+	[sitecode] [varchar](255) NOT NULL,
+	[vhost] [varchar](255) NOT NULL DEFAULT (''),
+	[dbhost] [varchar](255) NOT NULL DEFAULT (''),
+	[dbname] [varchar](255) NOT NULL DEFAULT (''),
+	[dbport] [int] NOT NULL DEFAULT ((1433)),
+	[dbuser] [varchar](255) NOT NULL DEFAULT (''),
+	[dbpw] [varchar](255) NOT NULL DEFAULT (''),
+	[driver] [varchar](255) NOT NULL DEFAULT (''),
+	[code] [varchar](255) NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((0)),
+	[language] [varchar](11) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[site_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -258,9 +367,10 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_task_category](
+CREATE TABLE [lookup_industry](
 	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](255) NOT NULL,
+	[order_id] [int] NULL,
+	[description] [varchar](50) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
@@ -275,20 +385,15 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [web_layout](
-	[layout_id] [int] IDENTITY(1,1) NOT NULL,
-	[layout_constant] [int] NULL,
-	[layout_name] [varchar](300) NOT NULL,
-	[jsp] [varchar](300) NULL,
-	[thumbnail] [varchar](300) NULL,
-	[custom] [bit] NOT NULL DEFAULT ((0)),
+CREATE TABLE [lookup_task_category](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](255) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[layout_id] ASC
-) ON [PRIMARY],
-UNIQUE NONCLUSTERED 
-(
-	[layout_constant] ASC
+	[code] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -331,24 +436,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_industry](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[order_id] [int] NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [lookup_ticket_task_category](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](255) NOT NULL,
@@ -366,15 +453,41 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_hours_reason](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
+CREATE TABLE [events](
+	[event_id] [int] IDENTITY(1,1) NOT NULL,
+	[second] [varchar](64) NULL DEFAULT ('0'),
+	[minute] [varchar](64) NULL DEFAULT ('*'),
+	[hour] [varchar](64) NULL DEFAULT ('*'),
+	[dayofmonth] [varchar](64) NULL DEFAULT ('*'),
+	[month] [varchar](64) NULL DEFAULT ('*'),
+	[dayofweek] [varchar](64) NULL DEFAULT ('*'),
+	[year] [varchar](64) NULL DEFAULT ('*'),
+	[task] [varchar](255) NULL,
+	[extrainfo] [varchar](255) NULL,
+	[businessDays] [varchar](6) NULL DEFAULT ('true'),
+	[enabled] [bit] NULL DEFAULT ((0)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 PRIMARY KEY CLUSTERED 
 (
-	[code] ASC
+	[event_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [usage_log](
+	[usage_id] [int] IDENTITY(1,1) NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NULL,
+	[action] [int] NOT NULL,
+	[record_id] [int] NULL,
+	[record_size] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[usage_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -423,7 +536,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_asset_manufacturer](
+CREATE TABLE [lookup_hours_reason](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -440,12 +553,37 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [business_process_log](
-	[process_name] [varchar](255) NOT NULL,
-	[anchor] [datetime] NOT NULL,
+CREATE TABLE [web_layout](
+	[layout_id] [int] IDENTITY(1,1) NOT NULL,
+	[layout_constant] [int] NULL,
+	[layout_name] [varchar](300) NOT NULL,
+	[jsp] [varchar](300) NULL,
+	[thumbnail] [varchar](300) NULL,
+	[custom] [bit] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[layout_id] ASC
+) ON [PRIMARY],
 UNIQUE NONCLUSTERED 
 (
-	[process_name] ASC
+	[layout_constant] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_asset_manufacturer](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -466,24 +604,6 @@ CREATE TABLE [search_fields](
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [usage_log](
-	[usage_id] [int] IDENTITY(1,1) NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NULL,
-	[action] [int] NOT NULL,
-	[record_id] [int] NULL,
-	[record_size] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[usage_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -524,41 +644,21 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [business_process_log](
+	[process_name] [varchar](255) NOT NULL,
+	[anchor] [datetime] NOT NULL,
+UNIQUE NONCLUSTERED 
+(
+	[process_name] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [lookup_payment_methods](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_duration_type](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_creditcard_types](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -592,20 +692,15 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_step_actions](
+CREATE TABLE [lookup_creditcard_types](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-	[constant_id] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
-) ON [PRIMARY],
-UNIQUE NONCLUSTERED 
-(
-	[constant_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -663,7 +758,96 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [lookup_duration_type](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [lookup_orgaddress_types](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_step_actions](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[constant_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[constant_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_orgemail_types](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [database_version](
+	[version_id] [int] IDENTITY(1,1) NOT NULL,
+	[script_filename] [varchar](255) NOT NULL,
+	[script_version] [varchar](255) NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+PRIMARY KEY CLUSTERED 
+(
+	[version_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_orgphone_types](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -698,91 +882,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_orgemail_types](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_quote_delivery](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [database_version](
-	[version_id] [int] IDENTITY(1,1) NOT NULL,
-	[script_filename] [varchar](255) NOT NULL,
-	[script_version] [varchar](255) NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED 
-(
-	[version_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [autoguide_make](
-	[make_id] [int] IDENTITY(1,1) NOT NULL,
-	[make_name] [varchar](30) NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[make_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_orgphone_types](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [notification](
 	[notification_id] [int] IDENTITY(1,1) NOT NULL,
 	[notify_user] [int] NOT NULL,
@@ -800,24 +899,6 @@ PRIMARY KEY CLUSTERED
 	[notification_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_document_store_role](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -844,7 +925,42 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_quote_condition](
+CREATE TABLE [lookup_im_types](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [autoguide_make](
+	[make_id] [int] IDENTITY(1,1) NOT NULL,
+	[make_name] [varchar](30) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[make_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_quote_delivery](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -878,77 +994,13 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_im_types](
+CREATE TABLE [lookup_document_store_role](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_order_status](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [quote_group](
-	[group_id] [int] IDENTITY(1000,1) NOT NULL,
-	[unused] [char](1) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[group_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_product_conf_result](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_product_category_type](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
+	[group_id] [int] NOT NULL DEFAULT ((0)),
 PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
@@ -997,6 +1049,7 @@ CREATE TABLE [permission_category](
 	[constant] [int] NOT NULL,
 	[action_plans] [bit] NOT NULL DEFAULT ((0)),
 	[custom_list_views] [bit] NOT NULL DEFAULT ((0)),
+	[importer] [bit] NOT NULL DEFAULT ((0)),
 PRIMARY KEY CLUSTERED 
 (
 	[category_id] ASC
@@ -1008,7 +1061,58 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_order_type](
+CREATE TABLE [lookup_quote_condition](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_product_category_type](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_order_status](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_product_conf_result](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1042,7 +1146,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_order_terms](
+CREATE TABLE [lookup_order_type](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1078,6 +1182,20 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [quote_group](
+	[group_id] [int] IDENTITY(1000,1) NOT NULL,
+	[unused] [char](1) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[group_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [lookup_contact_rating](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
@@ -1095,7 +1213,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_order_source](
+CREATE TABLE [lookup_order_terms](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1112,7 +1230,61 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [lookup_project_priority](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[group_id] [int] NOT NULL DEFAULT ((0)),
+	[graphic] [varchar](75) NULL,
+	[type] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [lookup_payment_status](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_textmessage_types](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_order_source](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1165,27 +1337,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_project_priority](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[group_id] [int] NOT NULL DEFAULT ((0)),
-	[graphic] [varchar](75) NULL,
-	[type] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_textmessage_types](
+CREATE TABLE [lookup_employment_types](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1222,7 +1374,77 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_employment_types](
+CREATE TABLE [lookup_locale](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_project_loe](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[base_value] [int] NOT NULL DEFAULT ((0)),
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[group_id] [int] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_product_type](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_call_types](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_contactaddress_types](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1261,7 +1483,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_quote_remarks](
+CREATE TABLE [lookup_product_manufacturer](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1278,44 +1500,9 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_product_type](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_locale](
+CREATE TABLE [lookup_project_role](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_project_loe](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[base_value] [int] NOT NULL DEFAULT ((0)),
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
@@ -1365,12 +1552,13 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_call_types](
+CREATE TABLE [lookup_call_priority](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
+	[weight] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
@@ -1382,7 +1570,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_product_manufacturer](
+CREATE TABLE [lookup_quote_remarks](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1418,48 +1606,12 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_contactaddress_types](
+CREATE TABLE [lookup_contactemail_types](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_project_role](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_call_priority](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[weight] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
@@ -1488,9 +1640,80 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_contactemail_types](
+CREATE TABLE [lookup_project_category](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](80) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[group_id] [int] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_call_reminder](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](50) NOT NULL,
+	[base_value] [int] NOT NULL DEFAULT ((0)),
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_stage](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[order_id] [int] NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_contactphone_types](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_product_shipping](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
@@ -1560,10 +1783,9 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_stage](
+CREATE TABLE [lookup_delivery_options](
 	[code] [int] IDENTITY(1,1) NOT NULL,
-	[order_id] [int] NULL,
-	[description] [varchar](50) NOT NULL,
+	[description] [varchar](100) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
@@ -1578,65 +1800,38 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_project_category](
+CREATE TABLE [lookup_access_types](
 	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](80) NOT NULL,
+	[link_module_id] [int] NOT NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[rule_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_news_template](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](255) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 	[group_id] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_call_reminder](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[base_value] [int] NOT NULL DEFAULT ((0)),
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_product_shipping](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_contactphone_types](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
+	[load_article] [bit] NULL DEFAULT ((0)),
+	[load_project_article_list] [bit] NULL DEFAULT ((0)),
+	[load_article_linked_list] [bit] NULL DEFAULT ((0)),
+	[load_public_projects] [bit] NULL DEFAULT ((0)),
+	[load_article_category_list] [bit] NULL DEFAULT ((0)),
+	[mapped_jsp] [varchar](255) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
@@ -1682,9 +1877,26 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_delivery_options](
+CREATE TABLE [lookup_product_ship_time](
 	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](100) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_segments](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
@@ -1721,101 +1933,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_product_ship_time](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_news_template](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](255) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[group_id] [int] NOT NULL DEFAULT ((0)),
-	[load_article] [bit] NULL DEFAULT ((0)),
-	[load_project_article_list] [bit] NULL DEFAULT ((0)),
-	[load_article_linked_list] [bit] NULL DEFAULT ((0)),
-	[load_public_projects] [bit] NULL DEFAULT ((0)),
-	[load_article_category_list] [bit] NULL DEFAULT ((0)),
-	[mapped_jsp] [varchar](255) NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_access_types](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[link_module_id] [int] NOT NULL,
-	[description] [varchar](50) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[rule_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [business_process_component_library](
-	[component_id] [int] IDENTITY(1,1) NOT NULL,
-	[component_name] [varchar](255) NOT NULL,
-	[type_id] [int] NOT NULL,
-	[class_name] [varchar](255) NOT NULL,
-	[description] [varchar](510) NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[component_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_product_keyword](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [lookup_product_tax](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
@@ -1833,7 +1950,42 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_segments](
+CREATE TABLE [lookup_opportunity_types](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[order_id] [int] NULL,
+	[description] [varchar](50) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_account_size](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_product_keyword](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -1871,10 +2023,44 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_opportunity_types](
+CREATE TABLE [business_process_component_library](
+	[component_id] [int] IDENTITY(1,1) NOT NULL,
+	[component_name] [varchar](255) NOT NULL,
+	[type_id] [int] NOT NULL,
+	[class_name] [varchar](255) NOT NULL,
+	[description] [varchar](510) NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[component_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_ticket_state](
 	[code] [int] IDENTITY(1,1) NOT NULL,
-	[order_id] [int] NULL,
-	[description] [varchar](50) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [lookup_opportunity_environment](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
@@ -1906,44 +2092,10 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [business_process_parameter_library](
-	[parameter_id] [int] IDENTITY(1,1) NOT NULL,
-	[component_id] [int] NULL,
-	[param_name] [varchar](255) NULL,
-	[description] [varchar](510) NULL,
-	[default_value] [varchar](4000) NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[parameter_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_account_size](
+CREATE TABLE [lookup_site_id](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_ticket_state](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
+	[short_description] [varchar](300) NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
 	[level] [int] NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
@@ -1996,7 +2148,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_opportunity_environment](
+CREATE TABLE [lookup_opportunity_competitors](
 	[code] [int] IDENTITY(1,1) NOT NULL,
 	[description] [varchar](300) NOT NULL,
 	[default_item] [bit] NULL DEFAULT ((0)),
@@ -2022,234 +2174,6 @@ CREATE TABLE [lookup_asset_status](
 PRIMARY KEY CLUSTERED 
 (
 	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_site_id](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[short_description] [varchar](300) NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [sites](
-	[site_id] [int] IDENTITY(1,1) NOT NULL,
-	[sitecode] [varchar](255) NOT NULL,
-	[vhost] [varchar](255) NOT NULL DEFAULT (''),
-	[dbhost] [varchar](255) NOT NULL DEFAULT (''),
-	[dbname] [varchar](255) NOT NULL DEFAULT (''),
-	[dbport] [int] NOT NULL DEFAULT ((1433)),
-	[dbuser] [varchar](255) NOT NULL DEFAULT (''),
-	[dbpw] [varchar](255) NOT NULL DEFAULT (''),
-	[driver] [varchar](255) NOT NULL DEFAULT (''),
-	[code] [varchar](255) NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((0)),
-	[language] [varchar](11) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[site_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_sc_category](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_opportunity_competitors](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ticket_priority](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[style] [text] NOT NULL DEFAULT (''),
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY],
-UNIQUE NONCLUSTERED 
-(
-	[description] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_quote_type](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [help_business_rules](
-	[rule_id] [int] IDENTITY(1,1) NOT NULL,
-	[link_help_id] [int] NOT NULL,
-	[description] [varchar](1000) NOT NULL,
-	[enteredby] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[completedate] [datetime] NULL,
-	[completedby] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[rule_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_team](
-	[project_id] [int] NOT NULL,
-	[user_id] [int] NOT NULL,
-	[userlevel] [int] NOT NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[status] [int] NULL,
-	[last_accessed] [datetime] NULL
-) ON [PRIMARY]
-
-GO
-
-CREATE UNIQUE NONCLUSTERED INDEX [project_team_uni_idx] ON [project_team] 
-(
-	[project_id] ASC,
-	[user_id] ASC
-) ON [PRIMARY]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [organization_emailaddress](
-	[emailaddress_id] [int] IDENTITY(1,1) NOT NULL,
-	[org_id] [int] NULL,
-	[emailaddress_type] [int] NULL,
-	[email] [varchar](256) NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[primary_email] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[emailaddress_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [knowledge_base](
-	[kb_id] [int] IDENTITY(1,1) NOT NULL,
-	[category_id] [int] NULL,
-	[title] [varchar](255) NOT NULL,
-	[description] [text] NULL,
-	[item_id] [int] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[kb_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [report](
-	[report_id] [int] IDENTITY(1,1) NOT NULL,
-	[category_id] [int] NOT NULL,
-	[permission_id] [int] NULL,
-	[filename] [varchar](300) NOT NULL,
-	[type] [int] NOT NULL DEFAULT ((1)),
-	[title] [varchar](300) NOT NULL,
-	[description] [varchar](1024) NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[custom] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[report_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -2286,6 +2210,9 @@ CREATE TABLE [product_catalog](
 	[manufacturer_id] [int] NULL,
 	[trashed_date] [datetime] NULL,
 	[active] [bit] NOT NULL DEFAULT ((1)),
+	[comments] [varchar](255) NULL DEFAULT (NULL),
+	[import_id] [int] NULL,
+	[status_id] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[product_id] ASC
@@ -2297,20 +2224,102 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [revenue_detail](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[revenue_id] [int] NULL,
-	[amount] [float] NULL DEFAULT ((0)),
-	[type] [int] NULL,
-	[owner] [int] NULL,
-	[description] [varchar](255) NULL,
+CREATE TABLE [portfolio_item](
+	[item_id] [int] IDENTITY(1,1) NOT NULL,
+	[item_name] [varchar](300) NOT NULL,
+	[item_description] [text] NULL,
+	[item_position_id] [int] NULL,
+	[image_id] [int] NULL,
+	[caption] [varchar](300) NULL,
+	[portfolio_category_id] [int] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[id] ASC
+	[item_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [organization_emailaddress](
+	[emailaddress_id] [int] IDENTITY(1,1) NOT NULL,
+	[org_id] [int] NULL,
+	[emailaddress_type] [int] NULL,
+	[email] [varchar](256) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[primary_email] [bit] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[emailaddress_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [help_faqs](
+	[faq_id] [int] IDENTITY(1,1) NOT NULL,
+	[owning_module_id] [int] NOT NULL,
+	[question] [varchar](1000) NOT NULL,
+	[answer] [varchar](1000) NOT NULL,
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[completedate] [datetime] NULL,
+	[completedby] [int] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[faq_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_files_thumbnail](
+	[item_id] [int] NULL,
+	[filename] [varchar](255) NOT NULL,
+	[size] [int] NULL DEFAULT ((0)),
+	[version] [float] NULL DEFAULT ((0)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [order_product_status](
+	[order_product_status_id] [int] IDENTITY(1,1) NOT NULL,
+	[order_id] [int] NOT NULL,
+	[item_id] [int] NOT NULL,
+	[status_id] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[order_product_status_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -2394,15 +2403,36 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [project_files_thumbnail](
-	[item_id] [int] NULL,
-	[filename] [varchar](255) NOT NULL,
-	[size] [int] NULL DEFAULT ((0)),
-	[version] [float] NULL DEFAULT ((0)),
+CREATE TABLE [report](
+	[report_id] [int] IDENTITY(1,1) NOT NULL,
+	[category_id] [int] NOT NULL,
+	[permission_id] [int] NULL,
+	[filename] [varchar](300) NOT NULL,
+	[type] [int] NOT NULL DEFAULT ((1)),
+	[title] [varchar](300) NOT NULL,
+	[description] [varchar](1024) NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
+	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL
+	[modifiedby] [int] NOT NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[custom] [bit] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[report_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_files_download](
+	[item_id] [int] NOT NULL,
+	[version] [float] NULL DEFAULT ((0)),
+	[user_download_id] [int] NULL,
+	[download_date] [datetime] NOT NULL DEFAULT (getdate())
 ) ON [PRIMARY]
 
 GO
@@ -2444,69 +2474,12 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [help_faqs](
-	[faq_id] [int] IDENTITY(1,1) NOT NULL,
-	[owning_module_id] [int] NOT NULL,
-	[question] [varchar](1000) NOT NULL,
-	[answer] [varchar](1000) NOT NULL,
-	[enteredby] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[completedate] [datetime] NULL,
-	[completedby] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[faq_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_product_status](
-	[order_product_status_id] [int] IDENTITY(1,1) NOT NULL,
-	[order_id] [int] NOT NULL,
-	[item_id] [int] NOT NULL,
-	[status_id] [int] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[order_product_status_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_files_download](
-	[item_id] [int] NOT NULL,
-	[version] [float] NULL DEFAULT ((0)),
-	[user_download_id] [int] NULL,
-	[download_date] [datetime] NOT NULL DEFAULT (getdate())
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [portfolio_item](
-	[item_id] [int] IDENTITY(1,1) NOT NULL,
-	[item_name] [varchar](300) NOT NULL,
-	[item_description] [text] NULL,
-	[item_position_id] [int] NULL,
-	[image_id] [int] NULL,
-	[caption] [varchar](300) NULL,
-	[portfolio_category_id] [int] NULL,
+CREATE TABLE [portfolio_category](
+	[category_id] [int] IDENTITY(1,1) NOT NULL,
+	[category_name] [varchar](300) NOT NULL,
+	[category_description] [text] NULL,
+	[category_position_id] [int] NULL,
+	[parent_category_id] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
@@ -2514,7 +2487,33 @@ CREATE TABLE [portfolio_item](
 	[modifiedby] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[item_id] ASC
+	[category_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [history](
+	[history_id] [int] IDENTITY(1,1) NOT NULL,
+	[contact_id] [int] NULL,
+	[org_id] [int] NULL,
+	[link_object_id] [int] NOT NULL,
+	[link_item_id] [int] NULL,
+	[status] [varchar](255) NULL,
+	[type] [varchar](255) NULL,
+	[description] [text] NULL,
+	[level] [int] NULL DEFAULT ((10)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[history_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -2569,42 +2568,20 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [portfolio_category](
-	[category_id] [int] IDENTITY(1,1) NOT NULL,
-	[category_name] [varchar](300) NOT NULL,
-	[category_description] [text] NULL,
-	[category_position_id] [int] NULL,
-	[parent_category_id] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
+CREATE TABLE [web_icelet_property](
+	[property_id] [int] IDENTITY(1,1) NOT NULL,
+	[property_type_constant] [int] NULL,
+	[property_value] [text] NULL,
+	[row_column_id] [int] NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[category_id] ASC
+	[property_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_files_version](
-	[item_id] [int] NULL,
-	[client_filename] [varchar](255) NOT NULL,
-	[filename] [varchar](255) NOT NULL,
-	[subject] [varchar](500) NOT NULL,
-	[size] [int] NULL DEFAULT ((0)),
-	[version] [float] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[downloads] [int] NULL DEFAULT ((0)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL
-) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -2628,90 +2605,6 @@ CREATE TABLE [active_survey](
 PRIMARY KEY CLUSTERED 
 (
 	[active_survey_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [history](
-	[history_id] [int] IDENTITY(1,1) NOT NULL,
-	[contact_id] [int] NULL,
-	[org_id] [int] NULL,
-	[link_object_id] [int] NOT NULL,
-	[link_item_id] [int] NULL,
-	[status] [varchar](255) NULL,
-	[type] [varchar](255) NULL,
-	[description] [text] NULL,
-	[level] [int] NULL DEFAULT ((10)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[history_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [viewpoint](
-	[viewpoint_id] [int] IDENTITY(1,1) NOT NULL,
-	[user_id] [int] NOT NULL,
-	[vp_user_id] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[viewpoint_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [document_store_department_member](
-	[document_store_id] [int] NOT NULL,
-	[item_id] [int] NOT NULL,
-	[userlevel] [int] NOT NULL,
-	[status] [int] NULL,
-	[last_accessed] [datetime] NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[site_id] [int] NULL
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [web_icelet_property](
-	[property_id] [int] IDENTITY(1,1) NOT NULL,
-	[property_type_constant] [int] NULL,
-	[property_value] [text] NULL,
-	[row_column_id] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[property_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -2756,6 +2649,66 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [document_store_department_member](
+	[document_store_id] [int] NOT NULL,
+	[item_id] [int] NOT NULL,
+	[userlevel] [int] NOT NULL,
+	[status] [int] NULL,
+	[last_accessed] [datetime] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[site_id] [int] NULL,
+	[role_type] [int] NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_files_version](
+	[item_id] [int] NULL,
+	[client_filename] [varchar](255) NOT NULL,
+	[filename] [varchar](255) NOT NULL,
+	[subject] [varchar](500) NOT NULL,
+	[size] [int] NULL DEFAULT ((0)),
+	[version] [float] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[downloads] [int] NULL DEFAULT ((0)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
+	[allow_portal_access] [bit] NULL DEFAULT ((0))
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [viewpoint](
+	[viewpoint_id] [int] IDENTITY(1,1) NOT NULL,
+	[user_id] [int] NOT NULL,
+	[vp_user_id] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[viewpoint_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [help_features](
 	[feature_id] [int] IDENTITY(1,1) NOT NULL,
 	[link_help_id] [int] NOT NULL,
@@ -2780,97 +2733,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [project_files](
-	[item_id] [int] IDENTITY(1,1) NOT NULL,
-	[link_module_id] [int] NOT NULL,
-	[link_item_id] [int] NOT NULL,
-	[folder_id] [int] NULL,
-	[client_filename] [varchar](255) NOT NULL,
-	[filename] [varchar](255) NOT NULL,
-	[subject] [varchar](500) NOT NULL,
-	[size] [int] NULL DEFAULT ((0)),
-	[version] [float] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[downloads] [int] NULL DEFAULT ((0)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL,
-	[default_file] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[item_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [project_files_cidx] ON [project_files] 
-(
-	[link_module_id] ASC,
-	[link_item_id] ASC
-) ON [PRIMARY]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [document_store_role_member](
-	[document_store_id] [int] NOT NULL,
-	[item_id] [int] NOT NULL,
-	[userlevel] [int] NOT NULL,
-	[status] [int] NULL,
-	[last_accessed] [datetime] NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[site_id] [int] NULL
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_payment_status](
-	[payment_status_id] [int] IDENTITY(1,1) NOT NULL,
-	[payment_id] [int] NOT NULL,
-	[status_id] [int] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[payment_status_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [webdav](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[category_id] [int] NOT NULL,
-	[class_name] [varchar](300) NOT NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [web_row_column](
 	[row_column_id] [int] IDENTITY(1,1) NOT NULL,
 	[column_position] [int] NOT NULL,
@@ -2886,6 +2748,25 @@ PRIMARY KEY CLUSTERED
 (
 	[row_column_id] ASC
 ) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [document_store_role_member](
+	[document_store_id] [int] NOT NULL,
+	[item_id] [int] NOT NULL,
+	[userlevel] [int] NOT NULL,
+	[status] [int] NULL,
+	[last_accessed] [datetime] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[site_id] [int] NULL,
+	[role_type] [int] NULL
 ) ON [PRIMARY]
 
 GO
@@ -2919,23 +2800,55 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [project_folders](
-	[folder_id] [int] IDENTITY(1,1) NOT NULL,
+CREATE TABLE [project_files](
+	[item_id] [int] IDENTITY(1,1) NOT NULL,
 	[link_module_id] [int] NOT NULL,
 	[link_item_id] [int] NOT NULL,
-	[subject] [varchar](255) NOT NULL,
-	[description] [text] NULL,
-	[parent_id] [int] NULL,
+	[folder_id] [int] NULL,
+	[client_filename] [varchar](255) NOT NULL,
+	[filename] [varchar](255) NOT NULL,
+	[subject] [varchar](500) NOT NULL,
+	[size] [int] NULL DEFAULT ((0)),
+	[version] [float] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[downloads] [int] NULL DEFAULT ((0)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredBy] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedBy] [int] NOT NULL,
-	[display] [int] NULL,
+	[default_file] [bit] NULL DEFAULT ((0)),
+	[allow_portal_access] [bit] NULL DEFAULT ((0)),
 PRIMARY KEY CLUSTERED 
 (
-	[folder_id] ASC
+	[item_id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE NONCLUSTERED INDEX [project_files_cidx] ON [project_files] 
+(
+	[link_module_id] ASC,
+	[link_item_id] ASC
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [order_payment_status](
+	[payment_status_id] [int] IDENTITY(1,1) NOT NULL,
+	[payment_id] [int] NOT NULL,
+	[status_id] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[payment_status_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -2954,6 +2867,69 @@ CREATE TABLE [ticket_sun_form](
 PRIMARY KEY CLUSTERED 
 (
 	[form_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [webdav](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[category_id] [int] NOT NULL,
+	[class_name] [varchar](300) NOT NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [document_store_user_member](
+	[document_store_id] [int] NOT NULL,
+	[item_id] [int] NOT NULL,
+	[userlevel] [int] NOT NULL,
+	[status] [int] NULL,
+	[last_accessed] [datetime] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[site_id] [int] NULL,
+	[role_type] [int] NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [survey](
+	[survey_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](80) NOT NULL,
+	[description] [varchar](255) NULL,
+	[intro] [text] NULL,
+	[outro] [text] NULL,
+	[itemLength] [int] NULL DEFAULT ((-1)),
+	[type] [int] NULL DEFAULT ((-1)),
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[status] [int] NOT NULL DEFAULT ((-1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[survey_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -2982,17 +2958,22 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [document_store_user_member](
-	[document_store_id] [int] NOT NULL,
-	[item_id] [int] NOT NULL,
-	[userlevel] [int] NOT NULL,
-	[status] [int] NULL,
-	[last_accessed] [datetime] NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
+CREATE TABLE [action_phase_work](
+	[phase_work_id] [int] IDENTITY(1,1) NOT NULL,
+	[plan_work_id] [int] NOT NULL,
+	[action_phase_id] [int] NOT NULL,
+	[status_id] [int] NULL,
+	[start_date] [datetime] NULL,
+	[end_date] [datetime] NULL,
+	[level] [int] NULL DEFAULT ((0)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-	[site_id] [int] NULL
+PRIMARY KEY CLUSTERED 
+(
+	[phase_work_id] ASC
+) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
@@ -3000,25 +2981,118 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [survey](
-	[survey_id] [int] IDENTITY(1,1) NOT NULL,
-	[name] [varchar](80) NOT NULL,
-	[description] [varchar](255) NULL,
-	[intro] [text] NULL,
-	[outro] [text] NULL,
-	[itemLength] [int] NULL DEFAULT ((-1)),
-	[type] [int] NULL DEFAULT ((-1)),
+CREATE TABLE [project_folders](
+	[folder_id] [int] IDENTITY(1,1) NOT NULL,
+	[link_module_id] [int] NOT NULL,
+	[link_item_id] [int] NOT NULL,
+	[subject] [varchar](255) NOT NULL,
+	[description] [text] NULL,
+	[parent_id] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
+	[display] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[folder_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [web_page_row](
+	[page_row_id] [int] IDENTITY(1,1) NOT NULL,
+	[row_position] [int] NOT NULL,
+	[page_version_id] [int] NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[status] [int] NOT NULL DEFAULT ((-1)),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
+	[row_column_id] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[survey_id] ASC
+	[page_row_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_plan_work_notes](
+	[note_id] [int] IDENTITY(1,1) NOT NULL,
+	[plan_work_id] [int] NOT NULL,
+	[description] [varchar](4096) NOT NULL,
+	[submitted] [datetime] NOT NULL DEFAULT (getdate()),
+	[submittedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[note_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [quotelog](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[quote_id] [int] NOT NULL,
+	[source_id] [int] NULL,
+	[status_id] [int] NULL,
+	[terms_id] [int] NULL,
+	[type_id] [int] NULL,
+	[delivery_id] [int] NULL,
+	[notes] [text] NULL,
+	[grand_total] [float] NULL,
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[issued_date] [datetime] NULL,
+	[submit_action] [int] NULL,
+	[closed] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [order_payment](
+	[payment_id] [int] IDENTITY(1,1) NOT NULL,
+	[order_id] [int] NOT NULL,
+	[payment_method_id] [int] NOT NULL,
+	[payment_amount] [float] NULL,
+	[authorization_ref_number] [varchar](30) NULL,
+	[authorization_code] [varchar](30) NULL,
+	[authorization_date] [datetime] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[order_item_id] [int] NULL,
+	[history_id] [int] NULL,
+	[date_to_process] [datetime] NULL,
+	[creditcard_id] [int] NULL,
+	[bank_id] [int] NULL,
+	[status_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[payment_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -3059,29 +3133,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [action_phase_work](
-	[phase_work_id] [int] IDENTITY(1,1) NOT NULL,
-	[plan_work_id] [int] NOT NULL,
-	[action_phase_id] [int] NOT NULL,
-	[status_id] [int] NULL,
-	[start_date] [datetime] NULL,
-	[end_date] [datetime] NULL,
-	[level] [int] NULL DEFAULT ((0)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[phase_work_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [project_issue_replies](
 	[reply_id] [int] IDENTITY(1,1) NOT NULL,
 	[issue_id] [int] NOT NULL,
@@ -3096,119 +3147,6 @@ CREATE TABLE [project_issue_replies](
 PRIMARY KEY CLUSTERED 
 (
 	[reply_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [user_group_map](
-	[group_map_id] [int] IDENTITY(1,1) NOT NULL,
-	[user_id] [int] NOT NULL,
-	[group_id] [int] NOT NULL,
-	[level] [int] NOT NULL DEFAULT ((10)),
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[entered] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED 
-(
-	[group_map_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [action_plan_work_notes](
-	[note_id] [int] IDENTITY(1,1) NOT NULL,
-	[plan_work_id] [int] NOT NULL,
-	[description] [varchar](4096) NOT NULL,
-	[submitted] [datetime] NOT NULL DEFAULT (getdate()),
-	[submittedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[note_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [web_page_row](
-	[page_row_id] [int] IDENTITY(1,1) NOT NULL,
-	[row_position] [int] NOT NULL,
-	[page_version_id] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[row_column_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[page_row_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_payment](
-	[payment_id] [int] IDENTITY(1,1) NOT NULL,
-	[order_id] [int] NOT NULL,
-	[payment_method_id] [int] NOT NULL,
-	[payment_amount] [float] NULL,
-	[authorization_ref_number] [varchar](30) NULL,
-	[authorization_code] [varchar](30) NULL,
-	[authorization_date] [datetime] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[order_item_id] [int] NULL,
-	[history_id] [int] NULL,
-	[date_to_process] [datetime] NULL,
-	[creditcard_id] [int] NULL,
-	[bank_id] [int] NULL,
-	[status_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[payment_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [quotelog](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[quote_id] [int] NOT NULL,
-	[source_id] [int] NULL,
-	[status_id] [int] NULL,
-	[terms_id] [int] NULL,
-	[type_id] [int] NULL,
-	[delivery_id] [int] NULL,
-	[notes] [text] NULL,
-	[grand_total] [float] NULL,
-	[enteredby] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[issued_date] [datetime] NULL,
-	[submit_action] [int] NULL,
-	[closed] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -3267,6 +3205,34 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [document_store](
+	[document_store_id] [int] IDENTITY(1,1) NOT NULL,
+	[template_id] [int] NULL,
+	[title] [varchar](100) NOT NULL,
+	[shortDescription] [varchar](200) NOT NULL,
+	[requestedBy] [varchar](50) NULL,
+	[requestedDept] [varchar](50) NULL,
+	[requestDate] [datetime] NULL DEFAULT (getdate()),
+	[requestDate_timezone] [varchar](255) NULL,
+	[approvalDate] [datetime] NULL,
+	[approvalBy] [int] NULL,
+	[closeDate] [datetime] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
+	[trashed_date] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[document_store_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [help_tableof_contents](
 	[content_id] [int] IDENTITY(1,1) NOT NULL,
 	[displaytext] [varchar](255) NULL,
@@ -3319,79 +3285,18 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [document_store](
-	[document_store_id] [int] IDENTITY(1,1) NOT NULL,
-	[template_id] [int] NULL,
-	[title] [varchar](100) NOT NULL,
-	[shortDescription] [varchar](200) NOT NULL,
-	[requestedBy] [varchar](50) NULL,
-	[requestedDept] [varchar](50) NULL,
-	[requestDate] [datetime] NULL DEFAULT (getdate()),
-	[requestDate_timezone] [varchar](255) NULL,
-	[approvalDate] [datetime] NULL,
-	[approvalBy] [int] NULL,
-	[closeDate] [datetime] NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL,
-	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[document_store_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [product_category](
-	[category_id] [int] IDENTITY(1,1) NOT NULL,
-	[parent_id] [int] NULL,
-	[category_name] [varchar](255) NOT NULL,
-	[abbreviation] [varchar](30) NULL,
-	[short_description] [text] NULL,
-	[long_description] [text] NULL,
-	[type_id] [int] NULL,
-	[thumbnail_image_id] [int] NULL,
-	[small_image_id] [int] NULL,
-	[large_image_id] [int] NULL,
-	[list_order] [int] NULL DEFAULT ((10)),
-	[enteredby] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[start_date] [datetime] NULL DEFAULT (NULL),
-	[expiration_date] [datetime] NULL DEFAULT (NULL),
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[category_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [user_group](
-	[group_id] [int] IDENTITY(1,1) NOT NULL,
-	[group_name] [varchar](255) NOT NULL,
-	[description] [text] NULL,
+CREATE TABLE [user_group_map](
+	[group_map_id] [int] IDENTITY(1,1) NOT NULL,
+	[user_id] [int] NOT NULL,
+	[group_id] [int] NOT NULL,
+	[level] [int] NOT NULL DEFAULT ((10)),
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 	[entered] [datetime] NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[site_id] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[group_id] ASC
+	[group_map_id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -3423,26 +3328,56 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [project_issues](
-	[issue_id] [int] IDENTITY(1,1) NOT NULL,
-	[project_id] [int] NOT NULL,
-	[subject] [varchar](255) NOT NULL,
-	[message] [text] NOT NULL,
-	[importance] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
+CREATE TABLE [product_category](
+	[category_id] [int] IDENTITY(1,1) NOT NULL,
+	[parent_id] [int] NULL,
+	[category_name] [varchar](255) NOT NULL,
+	[abbreviation] [varchar](30) NULL,
+	[short_description] [text] NULL,
+	[long_description] [text] NULL,
+	[type_id] [int] NULL,
+	[thumbnail_image_id] [int] NULL,
+	[small_image_id] [int] NULL,
+	[large_image_id] [int] NULL,
+	[list_order] [int] NULL DEFAULT ((10)),
+	[enteredby] [int] NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
+	[modifiedby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL,
-	[category_id] [int] NULL,
-	[reply_count] [int] NOT NULL DEFAULT ((0)),
-	[last_reply_date] [datetime] NOT NULL DEFAULT (getdate()),
-	[last_reply_by] [int] NULL,
+	[start_date] [datetime] NULL DEFAULT (NULL),
+	[expiration_date] [datetime] NULL DEFAULT (NULL),
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[import_id] [int] NULL,
+	[status_id] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[issue_id] ASC
+	[category_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_plan_work](
+	[plan_work_id] [int] IDENTITY(1,1) NOT NULL,
+	[action_plan_id] [int] NOT NULL,
+	[manager] [int] NULL,
+	[assignedTo] [int] NOT NULL,
+	[link_module_id] [int] NOT NULL,
+	[link_item_id] [int] NOT NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[current_phase] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[plan_work_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -3463,50 +3398,17 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [opportunity_component_log](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[component_id] [int] NULL,
-	[header_id] [int] NULL,
-	[description] [varchar](80) NULL,
-	[closeprob] [float] NULL,
-	[closedate] [datetime] NOT NULL,
-	[terms] [float] NULL,
-	[units] [char](1) NULL,
-	[lowvalue] [float] NULL,
-	[guessvalue] [float] NULL,
-	[highvalue] [float] NULL,
-	[stage] [int] NULL,
-	[owner] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[closedate_timezone] [varchar](255) NULL,
-	[closed] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [customer_product_history](
-	[history_id] [int] IDENTITY(1,1) NOT NULL,
-	[customer_product_id] [int] NOT NULL,
-	[org_id] [int] NOT NULL,
-	[order_id] [int] NOT NULL,
-	[product_start_date] [datetime] NULL,
-	[product_end_date] [datetime] NULL,
+CREATE TABLE [web_tab_banner](
+	[tab_banner_id] [int] IDENTITY(1,1) NOT NULL,
+	[tab_id] [int] NULL,
+	[image_id] [int] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-	[order_item_id] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[history_id] ASC
+	[tab_banner_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -3543,24 +3445,70 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [action_plan_work](
-	[plan_work_id] [int] IDENTITY(1,1) NOT NULL,
-	[action_plan_id] [int] NOT NULL,
-	[manager] [int] NULL,
-	[assignedTo] [int] NOT NULL,
-	[link_module_id] [int] NOT NULL,
-	[link_item_id] [int] NOT NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
+CREATE TABLE [customer_product_history](
+	[history_id] [int] IDENTITY(1,1) NOT NULL,
+	[customer_product_id] [int] NOT NULL,
+	[org_id] [int] NOT NULL,
+	[order_id] [int] NOT NULL,
+	[product_start_date] [datetime] NULL,
+	[product_end_date] [datetime] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-	[current_phase] [int] NULL,
+	[order_item_id] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[plan_work_id] ASC
+	[history_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [user_group](
+	[group_id] [int] IDENTITY(1,1) NOT NULL,
+	[group_name] [varchar](255) NOT NULL,
+	[description] [text] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[site_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[group_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_issues](
+	[issue_id] [int] IDENTITY(1,1) NOT NULL,
+	[project_id] [int] NOT NULL,
+	[subject] [varchar](255) NOT NULL,
+	[message] [text] NOT NULL,
+	[importance] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
+	[category_id] [int] NULL,
+	[reply_count] [int] NOT NULL DEFAULT ((0)),
+	[last_reply_date] [datetime] NOT NULL DEFAULT (getdate()),
+	[last_reply_by] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[issue_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -3595,21 +3543,50 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [role](
-	[role_id] [int] IDENTITY(1,1) NOT NULL,
-	[role] [varchar](80) NOT NULL,
-	[description] [varchar](255) NOT NULL DEFAULT (''),
-	[enteredby] [int] NOT NULL,
+CREATE TABLE [opportunity_component_log](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[component_id] [int] NULL,
+	[header_id] [int] NULL,
+	[description] [varchar](80) NULL,
+	[closeprob] [float] NULL,
+	[closedate] [datetime] NOT NULL,
+	[terms] [float] NULL,
+	[units] [char](1) NULL,
+	[lowvalue] [float] NULL,
+	[guessvalue] [float] NULL,
+	[highvalue] [float] NULL,
+	[stage] [int] NULL,
+	[owner] [int] NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[role_type] [int] NULL,
+	[enteredby] [int] NOT NULL,
+	[closedate_timezone] [varchar](255) NULL,
+	[closed] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[role_id] ASC
+	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [web_page_group](
+	[page_group_id] [int] IDENTITY(1,1) NOT NULL,
+	[group_name] [varchar](300) NULL,
+	[internal_description] [text] NULL,
+	[group_position] [int] NOT NULL,
+	[tab_id] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[page_group_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -3639,17 +3616,43 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [web_tab_banner](
-	[tab_banner_id] [int] IDENTITY(1,1) NOT NULL,
-	[tab_id] [int] NULL,
-	[image_id] [int] NULL,
+CREATE TABLE [role](
+	[role_id] [int] IDENTITY(1,1) NOT NULL,
+	[role] [varchar](80) NOT NULL,
+	[description] [varchar](255) NOT NULL DEFAULT (''),
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[role_type] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[role_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [customer_product](
+	[customer_product_id] [int] IDENTITY(1,1) NOT NULL,
+	[org_id] [int] NOT NULL,
+	[order_id] [int] NULL,
+	[order_item_id] [int] NULL,
+	[description] [varchar](2048) NULL,
+	[status_id] [int] NULL,
+	[status_date] [datetime] NULL DEFAULT (getdate()),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[tab_banner_id] ASC
+	[customer_product_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -3684,6 +3687,46 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [contact_message](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[message_id] [int] NOT NULL,
+	[received_date] [datetime] NOT NULL,
+	[received_from] [int] NOT NULL,
+	[received_by] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [payment_eft](
+	[bank_id] [int] IDENTITY(1,1) NOT NULL,
+	[bank_name] [varchar](300) NULL,
+	[routing_number] [varchar](300) NULL,
+	[account_number] [varchar](300) NULL,
+	[name_on_account] [varchar](300) NULL,
+	[company_name_on_account] [varchar](300) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[order_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[bank_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [contact_lead_read_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[user_id] [int] NOT NULL,
@@ -3711,22 +3754,67 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [customer_product](
-	[customer_product_id] [int] IDENTITY(1,1) NOT NULL,
-	[org_id] [int] NOT NULL,
-	[order_id] [int] NULL,
-	[order_item_id] [int] NULL,
-	[description] [varchar](2048) NULL,
-	[status_id] [int] NULL,
-	[status_date] [datetime] NULL DEFAULT (getdate()),
+CREATE TABLE [web_page_version](
+	[page_version_id] [int] IDENTITY(1,1) NOT NULL,
+	[version_number] [int] NOT NULL,
+	[internal_description] [text] NULL,
+	[notes] [text] NULL,
+	[parent_page_version_id] [int] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
+	[page_id] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[customer_product_id] ASC
+	[page_version_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [package_products_map](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[package_id] [int] NOT NULL,
+	[product_id] [int] NOT NULL,
+	[description] [text] NULL,
+	[msrp_currency] [int] NULL,
+	[msrp_amount] [float] NOT NULL DEFAULT ((0)),
+	[price_currency] [int] NULL,
+	[price_amount] [float] NOT NULL DEFAULT ((0)),
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[start_date] [datetime] NULL DEFAULT (NULL),
+	[expiration_date] [datetime] NULL DEFAULT (NULL),
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [contact_textmessageaddress](
+	[address_id] [int] IDENTITY(1,1) NOT NULL,
+	[contact_id] [int] NULL,
+	[textmessageaddress] [varchar](256) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[primary_textmessage_address] [bit] NOT NULL DEFAULT ((0)),
+	[textmessageaddress_type] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[address_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -3735,19 +3823,19 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [web_page_group](
-	[page_group_id] [int] IDENTITY(1,1) NOT NULL,
-	[group_name] [varchar](300) NULL,
-	[internal_description] [text] NULL,
-	[group_position] [int] NOT NULL,
-	[tab_id] [int] NULL,
+CREATE TABLE [service_contract_hours](
+	[history_id] [int] IDENTITY(1,1) NOT NULL,
+	[link_contract_id] [int] NULL,
+	[adjustment_hours] [float] NULL,
+	[adjustment_reason] [int] NULL,
+	[adjustment_notes] [text] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[page_group_id] ASC
+	[history_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -3777,23 +3865,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [contact_message](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[message_id] [int] NOT NULL,
-	[received_date] [datetime] NOT NULL,
-	[received_from] [int] NOT NULL,
-	[received_by] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [project_assignments_status](
 	[status_id] [int] IDENTITY(1,1) NOT NULL,
 	[assignment_id] [int] NOT NULL,
@@ -3806,6 +3877,28 @@ CREATE TABLE [project_assignments_status](
 PRIMARY KEY CLUSTERED 
 (
 	[status_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [web_tab](
+	[tab_id] [int] IDENTITY(1,1) NOT NULL,
+	[display_text] [varchar](300) NOT NULL,
+	[internal_description] [text] NULL,
+	[site_id] [int] NULL,
+	[tab_position] [int] NOT NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[tab_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -3851,372 +3944,6 @@ GO
 CREATE NONCLUSTERED INDEX [import_name_idx] ON [import] 
 (
 	[name] ASC
-) ON [PRIMARY]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [payment_eft](
-	[bank_id] [int] IDENTITY(1,1) NOT NULL,
-	[bank_name] [varchar](300) NULL,
-	[routing_number] [varchar](300) NULL,
-	[account_number] [varchar](300) NULL,
-	[name_on_account] [varchar](300) NULL,
-	[company_name_on_account] [varchar](300) NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[order_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[bank_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [contact_textmessageaddress](
-	[address_id] [int] IDENTITY(1,1) NOT NULL,
-	[contact_id] [int] NULL,
-	[textmessageaddress] [varchar](256) NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[primary_textmessage_address] [bit] NOT NULL DEFAULT ((0)),
-	[textmessageaddress_type] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[address_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [package_products_map](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[package_id] [int] NOT NULL,
-	[product_id] [int] NOT NULL,
-	[description] [text] NULL,
-	[msrp_currency] [int] NULL,
-	[msrp_amount] [float] NOT NULL DEFAULT ((0)),
-	[price_currency] [int] NULL,
-	[price_amount] [float] NOT NULL DEFAULT ((0)),
-	[enteredby] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[start_date] [datetime] NULL DEFAULT (NULL),
-	[expiration_date] [datetime] NULL DEFAULT (NULL),
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [call_log](
-	[call_id] [int] IDENTITY(1,1) NOT NULL,
-	[org_id] [int] NULL,
-	[contact_id] [int] NULL,
-	[opp_id] [int] NULL,
-	[call_type_id] [int] NULL,
-	[length] [int] NULL,
-	[subject] [varchar](255) NULL,
-	[notes] [text] NULL,
-	[followup_date] [datetime] NULL,
-	[alertdate] [datetime] NULL,
-	[followup_notes] [text] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[alert] [varchar](255) NULL DEFAULT (NULL),
-	[alert_call_type_id] [int] NULL,
-	[parent_id] [int] NULL,
-	[owner] [int] NULL,
-	[assignedby] [int] NULL,
-	[assign_date] [datetime] NULL DEFAULT (getdate()),
-	[completedby] [int] NULL,
-	[complete_date] [datetime] NULL,
-	[result_id] [int] NULL,
-	[priority_id] [int] NULL,
-	[status_id] [int] NOT NULL DEFAULT ((1)),
-	[reminder_value] [int] NULL,
-	[reminder_type_id] [int] NULL,
-	[alertdate_timezone] [varchar](255) NULL,
-	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[call_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [call_contact_id_idx] ON [call_log] 
-(
-	[contact_id] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [call_log_cidx] ON [call_log] 
-(
-	[alertdate] ASC,
-	[enteredby] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [call_log_entered_idx] ON [call_log] 
-(
-	[entered] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [call_opp_id_idx] ON [call_log] 
-(
-	[opp_id] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [call_org_id_idx] ON [call_log] 
-(
-	[org_id] ASC
-) ON [PRIMARY]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [service_contract_hours](
-	[history_id] [int] IDENTITY(1,1) NOT NULL,
-	[link_contract_id] [int] NULL,
-	[adjustment_hours] [float] NULL,
-	[adjustment_reason] [int] NULL,
-	[adjustment_notes] [text] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[history_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [web_page_version](
-	[page_version_id] [int] IDENTITY(1,1) NOT NULL,
-	[version_number] [int] NOT NULL,
-	[internal_description] [text] NULL,
-	[notes] [text] NULL,
-	[parent_page_version_id] [int] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[page_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[page_version_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [web_tab](
-	[tab_id] [int] IDENTITY(1,1) NOT NULL,
-	[display_text] [varchar](300) NOT NULL,
-	[internal_description] [text] NULL,
-	[site_id] [int] NULL,
-	[tab_position] [int] NOT NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[tab_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [message_template](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[name] [varchar](80) NOT NULL,
-	[description] [varchar](255) NULL,
-	[template_file] [varchar](80) NULL,
-	[num_imgs] [int] NULL,
-	[num_urls] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [contact_imaddress](
-	[address_id] [int] IDENTITY(1,1) NOT NULL,
-	[contact_id] [int] NULL,
-	[imaddress_type] [int] NULL,
-	[imaddress_service] [int] NULL,
-	[imaddress] [varchar](256) NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[primary_im] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[address_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [payment_creditcard](
-	[creditcard_id] [int] IDENTITY(1,1) NOT NULL,
-	[card_type] [int] NULL,
-	[card_number] [varchar](300) NULL,
-	[card_security_code] [varchar](300) NULL,
-	[expiration_month] [int] NULL,
-	[expiration_year] [int] NULL,
-	[name_on_card] [varchar](300) NULL,
-	[company_name_on_card] [varchar](300) NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[order_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[creditcard_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [action_item_log](
-	[log_id] [int] IDENTITY(1,1) NOT NULL,
-	[item_id] [int] NOT NULL,
-	[link_item_id] [int] NULL DEFAULT ((-1)),
-	[type] [int] NOT NULL,
-	[enteredby] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED 
-(
-	[log_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ticket_category_assignment](
-	[map_id] [int] IDENTITY(1,1) NOT NULL,
-	[category_id] [int] NOT NULL,
-	[department_id] [int] NULL,
-	[assigned_to] [int] NULL,
-	[group_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[map_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_assignments](
-	[assignment_id] [int] IDENTITY(1,1) NOT NULL,
-	[project_id] [int] NOT NULL,
-	[requirement_id] [int] NULL,
-	[assignedBy] [int] NULL,
-	[user_assign_id] [int] NULL,
-	[technology] [varchar](50) NULL,
-	[role] [varchar](255) NULL,
-	[estimated_loevalue] [int] NULL,
-	[estimated_loetype] [int] NULL,
-	[actual_loevalue] [int] NULL,
-	[actual_loetype] [int] NULL,
-	[priority_id] [int] NULL,
-	[assign_date] [datetime] NULL DEFAULT (getdate()),
-	[est_start_date] [datetime] NULL,
-	[start_date] [datetime] NULL,
-	[due_date] [datetime] NULL,
-	[status_id] [int] NULL,
-	[status_date] [datetime] NOT NULL DEFAULT (getdate()),
-	[complete_date] [datetime] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL,
-	[folder_id] [int] NULL,
-	[percent_complete] [int] NULL,
-	[due_date_timezone] [varchar](255) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[assignment_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [proj_assign_req_id_idx] ON [project_assignments] 
-(
-	[requirement_id] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [project_assignments_cidx] ON [project_assignments] 
-(
-	[complete_date] ASC,
-	[user_assign_id] ASC
 ) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
@@ -4298,55 +4025,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [action_item](
-	[item_id] [int] IDENTITY(1,1) NOT NULL,
-	[action_id] [int] NOT NULL,
-	[link_item_id] [int] NOT NULL,
-	[completedate] [datetime] NULL,
-	[enteredby] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[item_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [contact_phone](
-	[phone_id] [int] IDENTITY(1,1) NOT NULL,
-	[contact_id] [int] NULL,
-	[phone_type] [int] NULL,
-	[number] [varchar](30) NULL,
-	[extension] [varchar](10) NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[primary_number] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[phone_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [contact_phone_contact_id_idx] ON [contact_phone] 
-(
-	[contact_id] ASC
-) ON [PRIMARY]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [web_site_log](
 	[site_log_id] [int] IDENTITY(1,1) NOT NULL,
 	[site_id] [int] NULL,
@@ -4358,6 +4036,147 @@ CREATE TABLE [web_site_log](
 PRIMARY KEY CLUSTERED 
 (
 	[site_log_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [message_template](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](80) NOT NULL,
+	[description] [varchar](255) NULL,
+	[template_file] [varchar](80) NULL,
+	[num_imgs] [int] NULL,
+	[num_urls] [int] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [payment_creditcard](
+	[creditcard_id] [int] IDENTITY(1,1) NOT NULL,
+	[card_type] [int] NULL,
+	[card_number] [varchar](300) NULL,
+	[card_security_code] [varchar](300) NULL,
+	[expiration_month] [int] NULL,
+	[expiration_year] [int] NULL,
+	[name_on_card] [varchar](300) NULL,
+	[company_name_on_card] [varchar](300) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[order_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[creditcard_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [call_log](
+	[call_id] [int] IDENTITY(1,1) NOT NULL,
+	[org_id] [int] NULL,
+	[contact_id] [int] NULL,
+	[opp_id] [int] NULL,
+	[call_type_id] [int] NULL,
+	[length] [int] NULL,
+	[subject] [varchar](255) NULL,
+	[notes] [text] NULL,
+	[followup_date] [datetime] NULL,
+	[alertdate] [datetime] NULL,
+	[followup_notes] [text] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[alert] [varchar](255) NULL DEFAULT (NULL),
+	[alert_call_type_id] [int] NULL,
+	[parent_id] [int] NULL,
+	[owner] [int] NULL,
+	[assignedby] [int] NULL,
+	[assign_date] [datetime] NULL DEFAULT (getdate()),
+	[completedby] [int] NULL,
+	[complete_date] [datetime] NULL,
+	[result_id] [int] NULL,
+	[priority_id] [int] NULL,
+	[status_id] [int] NOT NULL DEFAULT ((1)),
+	[reminder_value] [int] NULL,
+	[reminder_type_id] [int] NULL,
+	[alertdate_timezone] [varchar](255) NULL,
+	[trashed_date] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[call_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+CREATE NONCLUSTERED INDEX [call_contact_id_idx] ON [call_log] 
+(
+	[contact_id] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [call_log_cidx] ON [call_log] 
+(
+	[alertdate] ASC,
+	[enteredby] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [call_log_entered_idx] ON [call_log] 
+(
+	[entered] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [call_opp_id_idx] ON [call_log] 
+(
+	[opp_id] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [call_org_id_idx] ON [call_log] 
+(
+	[org_id] ASC
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_item_log](
+	[log_id] [int] IDENTITY(1,1) NOT NULL,
+	[item_id] [int] NOT NULL,
+	[link_item_id] [int] NULL DEFAULT ((-1)),
+	[type] [int] NOT NULL,
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+PRIMARY KEY CLUSTERED 
+(
+	[log_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -4395,6 +4214,28 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [contact_imaddress](
+	[address_id] [int] IDENTITY(1,1) NOT NULL,
+	[contact_id] [int] NULL,
+	[imaddress_type] [int] NULL,
+	[imaddress_service] [int] NULL,
+	[imaddress] [varchar](256) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[primary_im] [bit] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[address_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [message](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[name] [varchar](80) NOT NULL,
@@ -4414,6 +4255,121 @@ CREATE TABLE [message](
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [web_site](
+	[site_id] [int] IDENTITY(1,1) NOT NULL,
+	[site_name] [varchar](300) NOT NULL,
+	[internal_description] [text] NULL,
+	[hit_count] [int] NULL,
+	[notes] [text] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[layout_id] [int] NULL,
+	[style_id] [int] NULL,
+	[logo_image_id] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[site_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_assignments](
+	[assignment_id] [int] IDENTITY(1,1) NOT NULL,
+	[project_id] [int] NOT NULL,
+	[requirement_id] [int] NULL,
+	[assignedBy] [int] NULL,
+	[user_assign_id] [int] NULL,
+	[technology] [varchar](50) NULL,
+	[role] [varchar](255) NULL,
+	[estimated_loevalue] [int] NULL,
+	[estimated_loetype] [int] NULL,
+	[actual_loevalue] [int] NULL,
+	[actual_loetype] [int] NULL,
+	[priority_id] [int] NULL,
+	[assign_date] [datetime] NULL DEFAULT (getdate()),
+	[est_start_date] [datetime] NULL,
+	[start_date] [datetime] NULL,
+	[due_date] [datetime] NULL,
+	[status_id] [int] NULL,
+	[status_date] [datetime] NOT NULL DEFAULT (getdate()),
+	[complete_date] [datetime] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
+	[folder_id] [int] NULL,
+	[percent_complete] [int] NULL,
+	[due_date_timezone] [varchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[assignment_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE NONCLUSTERED INDEX [proj_assign_req_id_idx] ON [project_assignments] 
+(
+	[requirement_id] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [project_assignments_cidx] ON [project_assignments] 
+(
+	[complete_date] ASC,
+	[user_assign_id] ASC
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [service_contract](
+	[contract_id] [int] IDENTITY(1,1) NOT NULL,
+	[contract_number] [varchar](30) NULL,
+	[account_id] [int] NOT NULL,
+	[initial_start_date] [datetime] NOT NULL,
+	[current_start_date] [datetime] NULL,
+	[current_end_date] [datetime] NULL,
+	[category] [int] NULL,
+	[type] [int] NULL,
+	[contact_id] [int] NULL,
+	[description] [text] NULL,
+	[contract_billing_notes] [text] NULL,
+	[response_time] [int] NULL,
+	[telephone_service_model] [int] NULL,
+	[onsite_service_model] [int] NULL,
+	[email_service_model] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[contract_value] [float] NULL,
+	[total_hours_remaining] [float] NULL,
+	[service_model_notes] [text] NULL,
+	[initial_start_date_timezone] [varchar](255) NULL,
+	[current_start_date_timezone] [varchar](255) NULL,
+	[current_end_date_timezone] [varchar](255) NULL,
+	[trashed_date] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[contract_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -4460,12 +4416,28 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [action_list](
-	[action_id] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](255) NOT NULL,
-	[owner] [int] NOT NULL,
+CREATE TABLE [ticket_category_assignment](
+	[map_id] [int] IDENTITY(1,1) NOT NULL,
+	[category_id] [int] NOT NULL,
+	[department_id] [int] NULL,
+	[assigned_to] [int] NULL,
+	[group_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[map_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_item](
+	[item_id] [int] IDENTITY(1,1) NOT NULL,
+	[action_id] [int] NOT NULL,
+	[link_item_id] [int] NOT NULL,
 	[completedate] [datetime] NULL,
-	[link_module_id] [int] NOT NULL,
 	[enteredby] [int] NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
@@ -4473,7 +4445,7 @@ CREATE TABLE [action_list](
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[action_id] ASC
+	[item_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -4518,37 +4490,103 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [service_contract](
-	[contract_id] [int] IDENTITY(1,1) NOT NULL,
-	[contract_number] [varchar](30) NULL,
-	[account_id] [int] NOT NULL,
-	[initial_start_date] [datetime] NOT NULL,
-	[current_start_date] [datetime] NULL,
-	[current_end_date] [datetime] NULL,
-	[category] [int] NULL,
-	[type] [int] NULL,
+CREATE TABLE [contact_phone](
+	[phone_id] [int] IDENTITY(1,1) NOT NULL,
 	[contact_id] [int] NULL,
-	[description] [text] NULL,
-	[contract_billing_notes] [text] NULL,
-	[response_time] [int] NULL,
-	[telephone_service_model] [int] NULL,
-	[onsite_service_model] [int] NULL,
-	[email_service_model] [int] NULL,
+	[phone_type] [int] NULL,
+	[number] [varchar](30) NULL,
+	[extension] [varchar](10) NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[contract_value] [float] NULL,
-	[total_hours_remaining] [float] NULL,
-	[service_model_notes] [text] NULL,
-	[initial_start_date_timezone] [varchar](255) NULL,
-	[current_start_date_timezone] [varchar](255) NULL,
-	[current_end_date_timezone] [varchar](255) NULL,
-	[trashed_date] [datetime] NULL,
+	[primary_number] [bit] NOT NULL DEFAULT ((0)),
 PRIMARY KEY CLUSTERED 
 (
-	[contract_id] ASC
+	[phone_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE NONCLUSTERED INDEX [contact_phone_contact_id_idx] ON [contact_phone] 
+(
+	[contact_id] ASC
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [task](
+	[task_id] [int] IDENTITY(1,1) NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[priority] [int] NOT NULL,
+	[description] [varchar](255) NULL,
+	[duedate] [datetime] NULL,
+	[reminderid] [int] NULL,
+	[notes] [text] NULL,
+	[sharing] [int] NOT NULL,
+	[complete] [bit] NOT NULL DEFAULT ((0)),
+	[enabled] [bit] NOT NULL DEFAULT ((0)),
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NULL,
+	[estimatedloe] [float] NULL,
+	[estimatedloetype] [int] NULL,
+	[type] [int] NULL DEFAULT ((1)),
+	[owner] [int] NULL,
+	[completedate] [datetime] NULL,
+	[category_id] [int] NULL,
+	[duedate_timezone] [varchar](255) NULL,
+	[trashed_date] [datetime] NULL,
+	[ticket_task_category_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[task_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_list](
+	[action_id] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](255) NOT NULL,
+	[owner] [int] NOT NULL,
+	[completedate] [datetime] NULL,
+	[link_module_id] [int] NOT NULL,
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[action_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_assignments_folder](
+	[folder_id] [int] IDENTITY(1,1) NOT NULL,
+	[parent_id] [int] NULL,
+	[requirement_id] [int] NOT NULL,
+	[name] [varchar](255) NOT NULL,
+	[description] [text] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[folder_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -4619,13 +4657,16 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [access_log](
+CREATE TABLE [saved_criterialist](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[user_id] [int] NOT NULL,
-	[username] [varchar](80) NOT NULL,
-	[ip] [varchar](15) NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[browser] [varchar](255) NULL,
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[owner] [int] NOT NULL,
+	[name] [varchar](80) NOT NULL,
+	[contact_source] [int] NULL DEFAULT ((-1)),
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -4637,80 +4678,26 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [project_assignments_folder](
-	[folder_id] [int] IDENTITY(1,1) NOT NULL,
-	[parent_id] [int] NULL,
-	[requirement_id] [int] NOT NULL,
-	[name] [varchar](255) NOT NULL,
-	[description] [text] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[folder_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [task](
-	[task_id] [int] IDENTITY(1,1) NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[priority] [int] NOT NULL,
-	[description] [varchar](255) NULL,
-	[duedate] [datetime] NULL,
-	[reminderid] [int] NULL,
-	[notes] [text] NULL,
-	[sharing] [int] NOT NULL,
-	[complete] [bit] NOT NULL DEFAULT ((0)),
-	[enabled] [bit] NOT NULL DEFAULT ((0)),
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NULL,
-	[estimatedloe] [float] NULL,
-	[estimatedloetype] [int] NULL,
-	[type] [int] NULL DEFAULT ((1)),
-	[owner] [int] NULL,
-	[completedate] [datetime] NULL,
-	[category_id] [int] NULL,
-	[duedate_timezone] [varchar](255) NULL,
-	[trashed_date] [datetime] NULL,
-	[ticket_task_category_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[task_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [web_site](
-	[site_id] [int] IDENTITY(1,1) NOT NULL,
-	[site_name] [varchar](300) NOT NULL,
-	[internal_description] [text] NULL,
-	[hit_count] [int] NULL,
-	[notes] [text] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[layout_id] [int] NULL,
-	[style_id] [int] NULL,
-	[logo_image_id] [int] NULL,
+CREATE TABLE [order_address](
+	[address_id] [int] IDENTITY(1,1) NOT NULL,
+	[order_id] [int] NOT NULL,
+	[address_type] [int] NULL,
+	[addrline1] [varchar](300) NULL,
+	[addrline2] [varchar](300) NULL,
+	[addrline3] [varchar](300) NULL,
+	[city] [varchar](300) NULL,
+	[state] [varchar](300) NULL,
+	[country] [varchar](300) NULL,
+	[postalcode] [varchar](40) NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[site_id] ASC
+	[address_id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -4827,27 +4814,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [saved_criterialist](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[owner] [int] NOT NULL,
-	[name] [varchar](80) NOT NULL,
-	[contact_source] [int] NULL DEFAULT ((-1)),
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [contact_emailaddress](
 	[emailaddress_id] [int] IDENTITY(1,1) NOT NULL,
 	[contact_id] [int] NULL,
@@ -4881,24 +4847,64 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [order_address](
-	[address_id] [int] IDENTITY(1,1) NOT NULL,
-	[order_id] [int] NOT NULL,
-	[address_type] [int] NULL,
-	[addrline1] [varchar](300) NULL,
-	[addrline2] [varchar](300) NULL,
-	[addrline3] [varchar](300) NULL,
-	[city] [varchar](300) NULL,
-	[state] [varchar](300) NULL,
-	[country] [varchar](300) NULL,
-	[postalcode] [varchar](40) NULL,
+CREATE TABLE [access_log](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[user_id] [int] NOT NULL,
+	[username] [varchar](80) NOT NULL,
+	[ip] [varchar](15) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[browser] [varchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [help_tips](
+	[tip_id] [int] IDENTITY(1,1) NOT NULL,
+	[link_help_id] [int] NOT NULL,
+	[description] [varchar](1000) NOT NULL,
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[tip_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_plan](
+	[plan_id] [int] IDENTITY(1,1) NOT NULL,
+	[plan_name] [varchar](255) NOT NULL,
+	[description] [varchar](2048) NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[approved] [datetime] NULL DEFAULT (NULL),
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
+	[archive_date] [datetime] NULL,
+	[cat_code] [int] NULL,
+	[subcat_code1] [int] NULL,
+	[subcat_code2] [int] NULL,
+	[subcat_code3] [int] NULL,
+	[link_object_id] [int] NULL,
+	[site_id] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[address_id] ASC
+	[plan_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -4943,41 +4949,52 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [help_tips](
-	[tip_id] [int] IDENTITY(1,1) NOT NULL,
-	[link_help_id] [int] NOT NULL,
-	[description] [varchar](1000) NOT NULL,
-	[enteredby] [int] NOT NULL,
+CREATE TABLE [custom_field_record](
+	[link_module_id] [int] NOT NULL,
+	[link_item_id] [int] NOT NULL,
+	[category_id] [int] NOT NULL,
+	[record_id] [int] IDENTITY(1,1) NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
+	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[modifiedby] [int] NOT NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[tip_id] ASC
+	[record_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
+GO
+
+CREATE NONCLUSTERED INDEX [custom_field_rec_idx] ON [custom_field_record] 
+(
+	[link_module_id] ASC,
+	[link_item_id] ASC,
+	[category_id] ASC
+) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [report_queue](
-	[queue_id] [int] IDENTITY(1,1) NOT NULL,
-	[report_id] [int] NOT NULL,
+CREATE TABLE [netapp_contractexpiration_log](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[expiration_id] [int] NULL,
+	[quote_amount] [float] NULL,
+	[quotegenerateddate] [datetime] NULL,
+	[quoteaccepteddate] [datetime] NULL,
+	[quoterejecteddate] [datetime] NULL,
+	[comment] [text] NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[processed] [datetime] NULL DEFAULT (NULL),
-	[status] [int] NOT NULL DEFAULT ((0)),
-	[filename] [varchar](256) NULL,
-	[filesize] [int] NULL DEFAULT ((-1)),
-	[enabled] [bit] NULL DEFAULT ((1)),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[queue_id] ASC
+	[id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -5010,100 +5027,6 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [action_plan](
-	[plan_id] [int] IDENTITY(1,1) NOT NULL,
-	[plan_name] [varchar](255) NOT NULL,
-	[description] [varchar](2048) NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[approved] [datetime] NULL DEFAULT (NULL),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[archive_date] [datetime] NULL,
-	[cat_code] [int] NULL,
-	[subcat_code1] [int] NULL,
-	[subcat_code2] [int] NULL,
-	[subcat_code3] [int] NULL,
-	[link_object_id] [int] NULL,
-	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[plan_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_news](
-	[news_id] [int] IDENTITY(1,1) NOT NULL,
-	[project_id] [int] NOT NULL,
-	[category_id] [int] NULL,
-	[subject] [varchar](255) NOT NULL,
-	[intro] [text] NULL,
-	[message] [text] NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[start_date] [datetime] NULL DEFAULT (getdate()),
-	[end_date] [datetime] NULL DEFAULT (NULL),
-	[allow_replies] [bit] NULL DEFAULT ((0)),
-	[allow_rating] [bit] NULL DEFAULT ((0)),
-	[rating_count] [int] NOT NULL DEFAULT ((0)),
-	[avg_rating] [float] NULL DEFAULT ((0)),
-	[priority_id] [int] NULL DEFAULT ((10)),
-	[read_count] [int] NOT NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[status] [int] NULL DEFAULT (NULL),
-	[html] [bit] NOT NULL DEFAULT ((1)),
-	[start_date_timezone] [varchar](255) NULL,
-	[end_date_timezone] [varchar](255) NULL,
-	[classification_id] [int] NOT NULL,
-	[template_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[news_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [custom_field_record](
-	[link_module_id] [int] NOT NULL,
-	[link_item_id] [int] NOT NULL,
-	[category_id] [int] NOT NULL,
-	[record_id] [int] IDENTITY(1,1) NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[record_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [custom_field_rec_idx] ON [custom_field_record] 
-(
-	[link_module_id] ASC,
-	[link_item_id] ASC,
-	[category_id] ASC
-) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
 GO
@@ -5161,51 +5084,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [opportunity_header](
-	[opp_id] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](80) NULL,
-	[acctlink] [int] NULL,
-	[contactlink] [int] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[trashed_date] [datetime] NULL,
-	[access_type] [int] NOT NULL,
-	[manager] [int] NOT NULL,
-	[lock] [bit] NULL DEFAULT ((0)),
-	[contact_org_id] [int] NULL,
-	[custom1_integer] [int] NULL,
-	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[opp_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [opp_contactlink_idx] ON [opportunity_header] 
-(
-	[contactlink] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [opp_header_contact_org_id_idx] ON [opportunity_header] 
-(
-	[contact_org_id] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [oppheader_description_idx] ON [opportunity_header] 
-(
-	[description] ASC
-) ON [PRIMARY]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [quote_entry](
 	[quote_id] [int] IDENTITY(1,1) NOT NULL,
 	[parent_id] [int] NULL,
@@ -5253,6 +5131,158 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [report_queue](
+	[queue_id] [int] IDENTITY(1,1) NOT NULL,
+	[report_id] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[processed] [datetime] NULL DEFAULT (NULL),
+	[status] [int] NOT NULL DEFAULT ((0)),
+	[filename] [varchar](256) NULL,
+	[filesize] [int] NULL DEFAULT ((-1)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[queue_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_news](
+	[news_id] [int] IDENTITY(1,1) NOT NULL,
+	[project_id] [int] NOT NULL,
+	[category_id] [int] NULL,
+	[subject] [varchar](255) NOT NULL,
+	[intro] [text] NULL,
+	[message] [text] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[start_date] [datetime] NULL DEFAULT (getdate()),
+	[end_date] [datetime] NULL DEFAULT (NULL),
+	[allow_replies] [bit] NULL DEFAULT ((0)),
+	[allow_rating] [bit] NULL DEFAULT ((0)),
+	[rating_count] [int] NOT NULL DEFAULT ((0)),
+	[avg_rating] [float] NULL DEFAULT ((0)),
+	[priority_id] [int] NULL DEFAULT ((10)),
+	[read_count] [int] NOT NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[status] [int] NULL DEFAULT (NULL),
+	[html] [bit] NOT NULL DEFAULT ((1)),
+	[start_date_timezone] [varchar](255) NULL,
+	[end_date_timezone] [varchar](255) NULL,
+	[classification_id] [int] NOT NULL,
+	[template_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[news_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [netapp_contractexpiration](
+	[expiration_id] [int] IDENTITY(1,1) NOT NULL,
+	[serial_number] [varchar](255) NULL,
+	[agreement_number] [varchar](255) NULL,
+	[services] [varchar](1024) NULL,
+	[startdate] [datetime] NULL,
+	[enddate] [datetime] NULL,
+	[installed_at_company_name] [varchar](1024) NULL,
+	[installed_at_site_name] [varchar](1024) NULL,
+	[group_name] [varchar](255) NULL,
+	[product_number] [varchar](255) NULL,
+	[system_name] [varchar](255) NULL,
+	[operating_system] [varchar](255) NULL,
+	[no_of_shelves] [int] NULL,
+	[no_of_disks] [int] NULL,
+	[nvram] [int] NULL,
+	[memory] [int] NULL,
+	[auto_support_status] [varchar](255) NULL,
+	[installed_at_address] [varchar](1024) NULL,
+	[city] [varchar](255) NULL,
+	[state_province] [varchar](255) NULL,
+	[postal_code] [varchar](255) NULL,
+	[country] [varchar](255) NULL,
+	[installed_at_contact_firstname] [varchar](255) NULL,
+	[contact_lastname] [varchar](255) NULL,
+	[contact_email] [varchar](255) NULL,
+	[agreement_company] [varchar](255) NULL,
+	[quote_amount] [float] NULL,
+	[quotegenerateddate] [datetime] NULL,
+	[quoteaccepteddate] [datetime] NULL,
+	[quoterejecteddate] [datetime] NULL,
+	[comment] [text] NULL,
+	[import_id] [int] NULL,
+	[status_id] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredBy] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedBy] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[expiration_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [opportunity_header](
+	[opp_id] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](80) NULL,
+	[acctlink] [int] NULL,
+	[contactlink] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[trashed_date] [datetime] NULL,
+	[access_type] [int] NOT NULL,
+	[manager] [int] NOT NULL,
+	[lock] [bit] NULL DEFAULT ((0)),
+	[contact_org_id] [int] NULL,
+	[custom1_integer] [int] NULL,
+	[site_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[opp_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE NONCLUSTERED INDEX [opp_contactlink_idx] ON [opportunity_header] 
+(
+	[contactlink] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [opp_header_contact_org_id_idx] ON [opportunity_header] 
+(
+	[contact_org_id] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [oppheader_description_idx] ON [opportunity_header] 
+(
+	[description] ASC
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [help_notes](
 	[note_id] [int] IDENTITY(1,1) NOT NULL,
 	[link_help_id] [int] NOT NULL,
@@ -5275,23 +5305,19 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [netapp_contractexpiration_log](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[expiration_id] [int] NULL,
-	[quote_amount] [float] NULL,
-	[quotegenerateddate] [datetime] NULL,
-	[quoteaccepteddate] [datetime] NULL,
-	[quoterejecteddate] [datetime] NULL,
-	[comment] [text] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL,
+CREATE TABLE [web_site_access_log](
+	[site_log_id] [int] IDENTITY(1,1) NOT NULL,
+	[site_id] [int] NULL,
+	[user_id] [int] NULL,
+	[ip] [varchar](300) NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[browser] [varchar](255) NULL,
+	[referrer] [varchar](1024) NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[id] ASC
+	[site_log_id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -5312,6 +5338,48 @@ CREATE TABLE [organization_phone](
 PRIMARY KEY CLUSTERED 
 (
 	[phone_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [knowledge_base](
+	[kb_id] [int] IDENTITY(1,1) NOT NULL,
+	[category_id] [int] NULL,
+	[title] [varchar](255) NOT NULL,
+	[description] [text] NULL,
+	[item_id] [int] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[kb_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [report_criteria](
+	[criteria_id] [int] IDENTITY(1,1) NOT NULL,
+	[report_id] [int] NOT NULL,
+	[owner] [int] NOT NULL,
+	[subject] [varchar](512) NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[criteria_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -5386,19 +5454,67 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [report_criteria](
-	[criteria_id] [int] IDENTITY(1,1) NOT NULL,
-	[report_id] [int] NOT NULL,
-	[owner] [int] NOT NULL,
-	[subject] [varchar](512) NOT NULL,
+CREATE TABLE [help_business_rules](
+	[rule_id] [int] IDENTITY(1,1) NOT NULL,
+	[link_help_id] [int] NOT NULL,
+	[description] [varchar](1000) NOT NULL,
+	[enteredby] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[completedate] [datetime] NULL,
+	[completedby] [int] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[rule_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_team](
+	[project_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[userlevel] [int] NOT NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[status] [int] NULL,
+	[last_accessed] [datetime] NULL,
+	[role_type] [int] NULL
+) ON [PRIMARY]
+
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [project_team_uni_idx] ON [project_team] 
+(
+	[project_id] ASC,
+	[user_id] ASC
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [revenue_detail](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[revenue_id] [int] NULL,
+	[amount] [float] NULL DEFAULT ((0)),
+	[type] [int] NULL,
+	[owner] [int] NULL,
+	[description] [varchar](255) NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
 	[enteredby] [int] NOT NULL,
 	[modified] [datetime] NOT NULL DEFAULT (getdate()),
 	[modifiedby] [int] NOT NULL,
-	[enabled] [bit] NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[criteria_id] ASC
+	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -5407,48 +5523,46 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [netapp_contractexpiration](
-	[expiration_id] [int] IDENTITY(1,1) NOT NULL,
-	[serial_number] [varchar](255) NULL,
-	[agreement_number] [varchar](255) NULL,
-	[services] [varchar](1024) NULL,
-	[startdate] [datetime] NULL,
-	[enddate] [datetime] NULL,
-	[installed_at_company_name] [varchar](1024) NULL,
-	[installed_at_site_name] [varchar](1024) NULL,
-	[group_name] [varchar](255) NULL,
-	[product_number] [varchar](255) NULL,
-	[system_name] [varchar](255) NULL,
-	[operating_system] [varchar](255) NULL,
-	[no_of_shelves] [int] NULL,
-	[no_of_disks] [int] NULL,
-	[nvram] [int] NULL,
-	[memory] [int] NULL,
-	[auto_support_status] [varchar](255) NULL,
-	[installed_at_address] [varchar](1024) NULL,
-	[city] [varchar](255) NULL,
-	[state_province] [varchar](255) NULL,
-	[postal_code] [varchar](255) NULL,
-	[country] [varchar](255) NULL,
-	[installed_at_contact_firstname] [varchar](255) NULL,
-	[contact_lastname] [varchar](255) NULL,
-	[contact_email] [varchar](255) NULL,
-	[agreement_company] [varchar](255) NULL,
-	[quote_amount] [float] NULL,
-	[quotegenerateddate] [datetime] NULL,
-	[quoteaccepteddate] [datetime] NULL,
-	[quoterejecteddate] [datetime] NULL,
-	[comment] [text] NULL,
-	[import_id] [int] NULL,
-	[status_id] [int] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredBy] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedBy] [int] NOT NULL,
+CREATE TABLE [business_process_component_parameter](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[component_id] [int] NOT NULL,
+	[parameter_id] [int] NOT NULL,
+	[param_value] [varchar](4000) NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[expiration_id] ASC
+	[id] ASC
 ) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [order_product_option_timestamp](
+	[order_product_option_id] [int] NULL,
+	[value] [datetime] NOT NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [order_product_option_float](
+	[order_product_option_id] [int] NULL,
+	[value] [float] NOT NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [order_product_option_text](
+	[order_product_option_id] [int] NULL,
+	[value] [text] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
@@ -5456,31 +5570,19 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [active_survey_answer_items](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[item_id] [int] NOT NULL,
-	[answer_id] [int] NOT NULL,
-	[comments] [text] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
+CREATE TABLE [order_product_option_integer](
+	[order_product_option_id] [int] NULL,
+	[value] [int] NOT NULL
 ) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [active_survey_answer_avg](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[question_id] [int] NOT NULL,
-	[item_id] [int] NOT NULL,
-	[total] [int] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
+CREATE TABLE [order_product_option_boolean](
+	[order_product_option_id] [int] NULL,
+	[value] [bit] NOT NULL
 ) ON [PRIMARY]
 
 GO
@@ -5504,53 +5606,107 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [active_survey_answers](
-	[answer_id] [int] IDENTITY(1,1) NOT NULL,
-	[response_id] [int] NOT NULL,
-	[question_id] [int] NOT NULL,
-	[comments] [text] NULL,
-	[quant_ans] [int] NULL DEFAULT ((-1)),
-	[text_ans] [text] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[answer_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [step_action_map](
-	[map_id] [int] IDENTITY(1,1) NOT NULL,
-	[constant_id] [int] NOT NULL,
-	[action_constant_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[map_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [action_plan_editor_lookup](
+CREATE TABLE [business_process_parameter](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[module_id] [int] NOT NULL,
-	[constant_id] [int] NOT NULL,
-	[level] [int] NULL DEFAULT ((0)),
-	[description] [text] NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-	[category_id] [int] NOT NULL,
+	[process_id] [int] NOT NULL,
+	[param_name] [varchar](255) NULL,
+	[param_value] [varchar](4000) NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [business_process_component](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[process_id] [int] NOT NULL,
+	[component_id] [int] NOT NULL,
+	[parent_id] [int] NULL,
+	[parent_result_id] [int] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [business_process_events](
+	[event_id] [int] IDENTITY(1,1) NOT NULL,
+	[second] [varchar](64) NULL DEFAULT ('0'),
+	[minute] [varchar](64) NULL DEFAULT ('*'),
+	[hour] [varchar](64) NULL DEFAULT ('*'),
+	[dayofmonth] [varchar](64) NULL DEFAULT ('*'),
+	[month] [varchar](64) NULL DEFAULT ('*'),
+	[dayofweek] [varchar](64) NULL DEFAULT ('*'),
+	[year] [varchar](64) NULL DEFAULT ('*'),
+	[task] [varchar](255) NULL,
+	[extrainfo] [varchar](255) NULL,
+	[businessDays] [varchar](6) NULL DEFAULT ('true'),
+	[enabled] [bit] NULL DEFAULT ((0)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[process_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[event_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [business_process_hook](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[trigger_id] [int] NOT NULL,
+	[process_id] [int] NOT NULL,
+	[enabled] [bit] NULL DEFAULT ((0)),
+	[priority] [int] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_accounts](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[project_id] [int] NOT NULL,
+	[org_id] [int] NOT NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE NONCLUSTERED INDEX [proj_acct_org_idx] ON [project_accounts] 
+(
+	[org_id] ASC
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [proj_acct_project_idx] ON [project_accounts] 
+(
+	[project_id] ASC
+) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
 GO
@@ -5584,34 +5740,6 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_accounts](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[project_id] [int] NOT NULL,
-	[org_id] [int] NOT NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [proj_acct_org_idx] ON [project_accounts] 
-(
-	[org_id] ASC
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [proj_acct_project_idx] ON [project_accounts] 
-(
-	[project_id] ASC
-) ON [PRIMARY]
 GO
 SET ANSI_NULLS ON
 GO
@@ -5651,17 +5779,126 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [events_log](
-	[log_id] [int] IDENTITY(1,1) NOT NULL,
-	[event_id] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[status] [int] NULL,
-	[message] [text] NULL,
+CREATE TABLE [document_accounts](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[document_store_id] [int] NOT NULL,
+	[org_id] [int] NOT NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
 PRIMARY KEY CLUSTERED 
 (
-	[log_id] ASC
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [active_survey_answer_avg](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[question_id] [int] NOT NULL,
+	[item_id] [int] NOT NULL,
+	[total] [int] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [active_survey_answer_items](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[item_id] [int] NOT NULL,
+	[answer_id] [int] NOT NULL,
+	[comments] [text] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [active_survey_answers](
+	[answer_id] [int] IDENTITY(1,1) NOT NULL,
+	[response_id] [int] NOT NULL,
+	[question_id] [int] NOT NULL,
+	[comments] [text] NULL,
+	[quant_ans] [int] NULL DEFAULT ((-1)),
+	[text_ans] [text] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[answer_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_plan_editor_lookup](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[module_id] [int] NOT NULL,
+	[constant_id] [int] NOT NULL,
+	[level] [int] NULL DEFAULT ((0)),
+	[description] [text] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[category_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [step_action_map](
+	[map_id] [int] IDENTITY(1,1) NOT NULL,
+	[constant_id] [int] NOT NULL,
+	[action_constant_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[map_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [report_queue_criteria](
+	[criteria_id] [int] IDENTITY(1,1) NOT NULL,
+	[queue_id] [int] NOT NULL,
+	[parameter] [varchar](255) NOT NULL,
+	[value] [text] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[criteria_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [taskcategorylink_news](
+	[news_id] [int] NOT NULL,
+	[category_id] [int] NOT NULL
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -5732,6 +5969,21 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [quote_remark](
+	[map_id] [int] IDENTITY(1,1) NOT NULL,
+	[quote_id] [int] NOT NULL,
+	[remark_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[map_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [quote_condition](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
 	[quote_id] [int] NOT NULL,
@@ -5747,14 +5999,36 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [quote_remark](
+CREATE TABLE [project_requirements_map](
 	[map_id] [int] IDENTITY(1,1) NOT NULL,
-	[quote_id] [int] NOT NULL,
-	[remark_id] [int] NOT NULL,
+	[project_id] [int] NOT NULL,
+	[requirement_id] [int] NOT NULL,
+	[position] [int] NOT NULL,
+	[indent] [int] NOT NULL DEFAULT ((0)),
+	[folder_id] [int] NULL,
+	[assignment_id] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[map_id] ASC
 ) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE NONCLUSTERED INDEX [proj_req_map_pr_req_pos_idx] ON [project_requirements_map] 
+(
+	[project_id] ASC,
+	[requirement_id] ASC,
+	[position] ASC
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [taskcategory_project](
+	[category_id] [int] NOT NULL,
+	[project_id] [int] NOT NULL
 ) ON [PRIMARY]
 
 GO
@@ -5798,9 +6072,10 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [taskcategorylink_news](
-	[news_id] [int] NOT NULL,
-	[category_id] [int] NOT NULL
+CREATE TABLE [tasklink_ticket](
+	[task_id] [int] NOT NULL,
+	[ticket_id] [int] NOT NULL,
+	[category_id] [int] NULL
 ) ON [PRIMARY]
 
 GO
@@ -5808,15 +6083,10 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [report_queue_criteria](
-	[criteria_id] [int] IDENTITY(1,1) NOT NULL,
-	[queue_id] [int] NOT NULL,
-	[parameter] [varchar](255) NOT NULL,
-	[value] [text] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[criteria_id] ASC
-) ON [PRIMARY]
+CREATE TABLE [tasklink_contact](
+	[task_id] [int] NOT NULL,
+	[contact_id] [int] NOT NULL,
+	[notes] [text] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
@@ -5824,9 +6094,63 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [taskcategory_project](
-	[category_id] [int] NOT NULL,
-	[project_id] [int] NOT NULL
+CREATE TABLE [scheduled_recipient](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[campaign_id] [int] NOT NULL,
+	[contact_id] [int] NOT NULL,
+	[run_id] [int] NULL DEFAULT ((-1)),
+	[status_id] [int] NULL DEFAULT ((0)),
+	[status] [varchar](255) NULL,
+	[status_date] [datetime] NULL DEFAULT (getdate()),
+	[scheduled_date] [datetime] NULL DEFAULT (getdate()),
+	[sent_date] [datetime] NULL DEFAULT (NULL),
+	[reply_date] [datetime] NULL DEFAULT (NULL),
+	[bounce_date] [datetime] NULL DEFAULT (NULL),
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [excluded_recipient](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[campaign_id] [int] NOT NULL,
+	[contact_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [contact_type_levels](
+	[contact_id] [int] NOT NULL,
+	[type_id] [int] NOT NULL,
+	[level] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modified] [datetime] NOT NULL DEFAULT (getdate())
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [opportunity_component_levels](
+	[opp_id] [int] NOT NULL,
+	[type_id] [int] NOT NULL,
+	[level] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[modified] [datetime] NOT NULL DEFAULT (getdate())
 ) ON [PRIMARY]
 
 GO
@@ -5857,55 +6181,17 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [project_requirements_map](
-	[map_id] [int] IDENTITY(1,1) NOT NULL,
-	[project_id] [int] NOT NULL,
-	[requirement_id] [int] NOT NULL,
-	[position] [int] NOT NULL,
-	[indent] [int] NOT NULL DEFAULT ((0)),
-	[folder_id] [int] NULL,
-	[assignment_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[map_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-CREATE NONCLUSTERED INDEX [proj_req_map_pr_req_pos_idx] ON [project_requirements_map] 
-(
-	[project_id] ASC,
-	[requirement_id] ASC,
-	[position] ASC
-) ON [PRIMARY]
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [tasklink_ticket](
-	[task_id] [int] NOT NULL,
-	[ticket_id] [int] NOT NULL,
-	[category_id] [int] NULL
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [sync_log](
+CREATE TABLE [events_log](
 	[log_id] [int] IDENTITY(1,1) NOT NULL,
-	[system_id] [int] NOT NULL,
-	[client_id] [int] NOT NULL,
-	[ip] [varchar](15) NULL,
+	[event_id] [int] NOT NULL,
 	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[status] [int] NULL,
+	[message] [text] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[log_id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -5939,6 +6225,23 @@ CREATE TABLE [sync_conflict_log](
 	[table_id] [int] NOT NULL,
 	[record_id] [int] NOT NULL,
 	[status_date] [datetime] NOT NULL DEFAULT (getdate())
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [sync_log](
+	[log_id] [int] IDENTITY(1,1) NOT NULL,
+	[system_id] [int] NOT NULL,
+	[client_id] [int] NOT NULL,
+	[ip] [varchar](15) NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+PRIMARY KEY CLUSTERED 
+(
+	[log_id] ASC
+) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
@@ -6002,131 +6305,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [tasklink_contact](
-	[task_id] [int] NOT NULL,
-	[contact_id] [int] NOT NULL,
-	[notes] [text] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [opportunity_component_levels](
-	[opp_id] [int] NOT NULL,
-	[type_id] [int] NOT NULL,
-	[level] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modified] [datetime] NOT NULL DEFAULT (getdate())
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [scheduled_recipient](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[campaign_id] [int] NOT NULL,
-	[contact_id] [int] NOT NULL,
-	[run_id] [int] NULL DEFAULT ((-1)),
-	[status_id] [int] NULL DEFAULT ((0)),
-	[status] [varchar](255) NULL,
-	[status_date] [datetime] NULL DEFAULT (getdate()),
-	[scheduled_date] [datetime] NULL DEFAULT (getdate()),
-	[sent_date] [datetime] NULL DEFAULT (NULL),
-	[reply_date] [datetime] NULL DEFAULT (NULL),
-	[bounce_date] [datetime] NULL DEFAULT (NULL),
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [excluded_recipient](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[campaign_id] [int] NOT NULL,
-	[contact_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [contact_type_levels](
-	[contact_id] [int] NOT NULL,
-	[type_id] [int] NOT NULL,
-	[level] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[modified] [datetime] NOT NULL DEFAULT (getdate())
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [action_step](
-	[step_id] [int] IDENTITY(1,1) NOT NULL,
-	[parent_id] [int] NULL,
-	[phase_id] [int] NOT NULL,
-	[description] [varchar](2048) NULL,
-	[duration_type_id] [int] NULL,
-	[estimated_duration] [int] NULL,
-	[category_id] [int] NULL,
-	[field_id] [int] NULL,
-	[permission_type] [int] NULL,
-	[role_id] [int] NULL,
-	[department_id] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[allow_skip_to_here] [bit] NOT NULL DEFAULT ((0)),
-	[label] [varchar](80) NULL,
-	[action_required] [bit] NOT NULL DEFAULT ((0)),
-	[group_id] [int] NULL,
-	[target_relationship] [varchar](80) NULL,
-	[action_id] [int] NULL,
-	[allow_update] [bit] NOT NULL DEFAULT ((1)),
-	[campaign_id] [int] NULL,
-	[allow_duplicate_recipient] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[step_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [business_process_hook_triggers](
-	[trigger_id] [int] IDENTITY(1,1) NOT NULL,
-	[action_type_id] [int] NOT NULL,
-	[hook_id] [int] NOT NULL,
-	[enabled] [bit] NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[trigger_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [quote_product_options](
 	[quote_product_option_id] [int] IDENTITY(1,1) NOT NULL,
 	[item_id] [int] NOT NULL,
@@ -6173,6 +6351,50 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [action_step](
+	[step_id] [int] IDENTITY(1,1) NOT NULL,
+	[parent_id] [int] NULL,
+	[phase_id] [int] NOT NULL,
+	[description] [varchar](2048) NULL,
+	[duration_type_id] [int] NULL,
+	[estimated_duration] [int] NULL,
+	[category_id] [int] NULL,
+	[field_id] [int] NULL,
+	[permission_type] [int] NULL,
+	[role_id] [int] NULL,
+	[department_id] [int] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[allow_skip_to_here] [bit] NOT NULL DEFAULT ((0)),
+	[label] [varchar](80) NULL,
+	[action_required] [bit] NOT NULL DEFAULT ((0)),
+	[group_id] [int] NULL,
+	[target_relationship] [varchar](80) NULL,
+	[action_id] [int] NULL,
+	[allow_update] [bit] NOT NULL DEFAULT ((1)),
+	[campaign_id] [int] NULL,
+	[allow_duplicate_recipient] [bit] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[step_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_step_account_types](
+	[step_id] [int] NOT NULL,
+	[type_id] [int] NOT NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [service_contract_products](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[link_contract_id] [int] NULL,
@@ -6198,6 +6420,16 @@ PRIMARY KEY CLUSTERED
 	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [campaign_survey_link](
+	[campaign_id] [int] NULL,
+	[survey_id] [int] NULL
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -6239,36 +6471,15 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [campaign_survey_link](
-	[campaign_id] [int] NULL,
-	[survey_id] [int] NULL
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [business_process_hook](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[trigger_id] [int] NOT NULL,
-	[process_id] [int] NOT NULL,
+CREATE TABLE [business_process_hook_triggers](
+	[trigger_id] [int] IDENTITY(1,1) NOT NULL,
+	[action_type_id] [int] NOT NULL,
+	[hook_id] [int] NOT NULL,
 	[enabled] [bit] NULL DEFAULT ((0)),
-	[priority] [int] NOT NULL DEFAULT ((0)),
 PRIMARY KEY CLUSTERED 
 (
-	[id] ASC
+	[trigger_id] ASC
 ) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [action_step_account_types](
-	[step_id] [int] NOT NULL,
-	[type_id] [int] NOT NULL
 ) ON [PRIMARY]
 
 GO
@@ -6301,6 +6512,26 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [lookup_call_result](
+	[result_id] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](100) NOT NULL,
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[next_required] [bit] NOT NULL DEFAULT ((0)),
+	[next_days] [int] NOT NULL DEFAULT ((0)),
+	[next_call_type_id] [int] NULL,
+	[canceled_type] [bit] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[result_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [ticketlink_project](
 	[ticket_id] [int] NOT NULL,
 	[project_id] [int] NOT NULL
@@ -6317,10 +6548,15 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [quote_product_option_boolean](
-	[quote_product_option_id] [int] NULL,
-	[value] [bit] NOT NULL,
-	[id] [int] NULL
+CREATE TABLE [project_permissions](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[project_id] [int] NOT NULL,
+	[permission_id] [int] NOT NULL,
+	[userlevel] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
@@ -6342,6 +6578,17 @@ GO
 CREATE TABLE [quote_product_option_timestamp](
 	[quote_product_option_id] [int] NULL,
 	[value] [datetime] NOT NULL,
+	[id] [int] NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [quote_product_option_boolean](
+	[quote_product_option_id] [int] NULL,
+	[value] [bit] NOT NULL,
 	[id] [int] NULL
 ) ON [PRIMARY]
 
@@ -6372,60 +6619,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [action_step_lookup](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[step_id] [int] NOT NULL,
-	[description] [varchar](255) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_permissions](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[project_id] [int] NOT NULL,
-	[permission_id] [int] NOT NULL,
-	[userlevel] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [lookup_call_result](
-	[result_id] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](100) NOT NULL,
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[next_required] [bit] NOT NULL DEFAULT ((0)),
-	[next_days] [int] NOT NULL DEFAULT ((0)),
-	[next_call_type_id] [int] NULL,
-	[canceled_type] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[result_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [sync_transaction_log](
 	[transaction_id] [int] IDENTITY(1,1) NOT NULL,
 	[log_id] [int] NOT NULL,
@@ -6441,6 +6634,24 @@ PRIMARY KEY CLUSTERED
 	[transaction_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_step_lookup](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[step_id] [int] NOT NULL,
+	[description] [varchar](255) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -6464,6 +6675,48 @@ PRIMARY KEY CLUSTERED
 UNIQUE NONCLUSTERED 
 (
 	[permission] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [relationship](
+	[relationship_id] [int] IDENTITY(1,1) NOT NULL,
+	[type_id] [int] NULL,
+	[object_id_maps_from] [int] NOT NULL,
+	[category_id_maps_from] [int] NOT NULL,
+	[object_id_maps_to] [int] NOT NULL,
+	[category_id_maps_to] [int] NOT NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enteredby] [int] NOT NULL,
+	[modified] [datetime] NOT NULL DEFAULT (getdate()),
+	[modifiedby] [int] NOT NULL,
+	[trashed_date] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[relationship_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [role_permission](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[role_id] [int] NOT NULL,
+	[permission_id] [int] NOT NULL,
+	[role_view] [bit] NOT NULL DEFAULT ((0)),
+	[role_add] [bit] NOT NULL DEFAULT ((0)),
+	[role_edit] [bit] NOT NULL DEFAULT ((0)),
+	[role_delete] [bit] NOT NULL DEFAULT ((0)),
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -6527,55 +6780,11 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [relationship](
-	[relationship_id] [int] IDENTITY(1,1) NOT NULL,
-	[type_id] [int] NULL,
-	[object_id_maps_from] [int] NOT NULL,
-	[category_id_maps_from] [int] NOT NULL,
-	[object_id_maps_to] [int] NOT NULL,
-	[category_id_maps_to] [int] NOT NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enteredby] [int] NOT NULL,
-	[modified] [datetime] NOT NULL DEFAULT (getdate()),
-	[modifiedby] [int] NOT NULL,
-	[trashed_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[relationship_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [role_permission](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[role_id] [int] NOT NULL,
-	[permission_id] [int] NOT NULL,
-	[role_view] [bit] NOT NULL DEFAULT ((0)),
-	[role_add] [bit] NOT NULL DEFAULT ((0)),
-	[role_edit] [bit] NOT NULL DEFAULT ((0)),
-	[role_delete] [bit] NOT NULL DEFAULT ((0)),
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_product](
-	[item_id] [int] IDENTITY(1,1) NOT NULL,
-	[order_id] [int] NOT NULL,
-	[product_id] [int] NOT NULL,
+CREATE TABLE [order_product_options](
+	[order_product_option_id] [int] IDENTITY(1,1) NOT NULL,
+	[item_id] [int] NOT NULL,
+	[product_option_id] [int] NOT NULL,
 	[quantity] [int] NOT NULL DEFAULT ((0)),
-	[msrp_currency] [int] NULL,
-	[msrp_amount] [float] NOT NULL DEFAULT ((0)),
 	[price_currency] [int] NULL,
 	[price_amount] [float] NOT NULL DEFAULT ((0)),
 	[recurring_currency] [int] NULL,
@@ -6584,10 +6793,9 @@ CREATE TABLE [order_product](
 	[extended_price] [float] NOT NULL DEFAULT ((0)),
 	[total_price] [float] NOT NULL DEFAULT ((0)),
 	[status_id] [int] NULL,
-	[status_date] [datetime] NULL DEFAULT (getdate()),
 PRIMARY KEY CLUSTERED 
 (
-	[item_id] ASC
+	[order_product_option_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -6634,11 +6842,13 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [order_product_options](
-	[order_product_option_id] [int] IDENTITY(1,1) NOT NULL,
-	[item_id] [int] NOT NULL,
-	[product_option_id] [int] NOT NULL,
+CREATE TABLE [order_product](
+	[item_id] [int] IDENTITY(1,1) NOT NULL,
+	[order_id] [int] NOT NULL,
+	[product_id] [int] NOT NULL,
 	[quantity] [int] NOT NULL DEFAULT ((0)),
+	[msrp_currency] [int] NULL,
+	[msrp_amount] [float] NOT NULL DEFAULT ((0)),
 	[price_currency] [int] NULL,
 	[price_amount] [float] NOT NULL DEFAULT ((0)),
 	[recurring_currency] [int] NULL,
@@ -6647,29 +6857,12 @@ CREATE TABLE [order_product_options](
 	[extended_price] [float] NOT NULL DEFAULT ((0)),
 	[total_price] [float] NOT NULL DEFAULT ((0)),
 	[status_id] [int] NULL,
+	[status_date] [datetime] NULL DEFAULT (getdate()),
 PRIMARY KEY CLUSTERED 
 (
-	[order_product_option_id] ASC
+	[item_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [product_option_configurator](
-	[configurator_id] [int] IDENTITY(1,1) NOT NULL,
-	[short_description] [text] NULL,
-	[long_description] [text] NULL,
-	[class_name] [varchar](255) NULL,
-	[result_type] [int] NOT NULL,
-	[configurator_name] [varchar](300) NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[configurator_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -6684,6 +6877,30 @@ CREATE TABLE [business_process_hook_library](
 PRIMARY KEY CLUSTERED 
 (
 	[hook_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [business_process](
+	[process_id] [int] IDENTITY(1,1) NOT NULL,
+	[process_name] [varchar](255) NOT NULL,
+	[description] [varchar](510) NULL,
+	[type_id] [int] NOT NULL,
+	[link_module_id] [int] NOT NULL,
+	[component_start_id] [int] NULL,
+	[enabled] [bit] NOT NULL DEFAULT ((1)),
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+PRIMARY KEY CLUSTERED 
+(
+	[process_id] ASC
+) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[process_name] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -6708,16 +6925,19 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [custom_list_view_editor](
-	[editor_id] [int] IDENTITY(1,1) NOT NULL,
+CREATE TABLE [category_editor_lookup](
+	[id] [int] IDENTITY(1,1) NOT NULL,
 	[module_id] [int] NOT NULL,
 	[constant_id] [int] NOT NULL,
-	[description] [text] NULL,
+	[table_name] [varchar](60) NULL,
 	[level] [int] NULL DEFAULT ((0)),
+	[description] [text] NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
 	[category_id] [int] NOT NULL,
+	[max_levels] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[editor_id] ASC
+	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -6771,19 +6991,16 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [category_editor_lookup](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+CREATE TABLE [custom_list_view_editor](
+	[editor_id] [int] IDENTITY(1,1) NOT NULL,
 	[module_id] [int] NOT NULL,
 	[constant_id] [int] NOT NULL,
-	[table_name] [varchar](60) NULL,
-	[level] [int] NULL DEFAULT ((0)),
 	[description] [text] NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
+	[level] [int] NULL DEFAULT ((0)),
 	[category_id] [int] NOT NULL,
-	[max_levels] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[id] ASC
+	[editor_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -6814,22 +7031,46 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [business_process](
-	[process_id] [int] IDENTITY(1,1) NOT NULL,
-	[process_name] [varchar](255) NOT NULL,
-	[description] [varchar](510) NULL,
-	[type_id] [int] NOT NULL,
-	[link_module_id] [int] NOT NULL,
-	[component_start_id] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+CREATE TABLE [product_option_configurator](
+	[configurator_id] [int] IDENTITY(1,1) NOT NULL,
+	[short_description] [text] NULL,
+	[long_description] [text] NULL,
+	[class_name] [varchar](255) NULL,
+	[result_type] [int] NOT NULL,
+	[configurator_name] [varchar](300) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[process_id] ASC
-) ON [PRIMARY],
-UNIQUE NONCLUSTERED 
+	[configurator_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [product_category_map](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[category1_id] [int] NOT NULL,
+	[category2_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
 (
-	[process_name] ASC
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [product_catalog_category_map](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[product_id] [int] NOT NULL,
+	[category_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -6858,36 +7099,6 @@ PRIMARY KEY CLUSTERED
 	[option_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [product_catalog_category_map](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[product_id] [int] NOT NULL,
-	[category_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [product_category_map](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[category1_id] [int] NOT NULL,
-	[category2_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -6934,6 +7145,21 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [product_option_map](
+	[product_option_id] [int] IDENTITY(1,1) NOT NULL,
+	[product_id] [int] NOT NULL,
+	[option_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[product_option_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [product_option_boolean](
 	[product_option_id] [int] NOT NULL,
 	[value] [bit] NOT NULL,
@@ -6945,14 +7171,21 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [product_option_map](
-	[product_option_id] [int] IDENTITY(1,1) NOT NULL,
-	[product_id] [int] NOT NULL,
-	[option_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[product_option_id] ASC
+CREATE TABLE [product_option_float](
+	[product_option_id] [int] NOT NULL,
+	[value] [float] NOT NULL,
+	[id] [int] NULL
 ) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [product_option_timestamp](
+	[product_option_id] [int] NOT NULL,
+	[value] [datetime] NOT NULL,
+	[id] [int] NULL
 ) ON [PRIMARY]
 
 GO
@@ -6976,28 +7209,6 @@ CREATE TABLE [product_option_text](
 	[value] [text] NOT NULL,
 	[id] [int] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [product_option_float](
-	[product_option_id] [int] NOT NULL,
-	[value] [float] NOT NULL,
-	[id] [int] NULL
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [product_option_timestamp](
-	[product_option_id] [int] NOT NULL,
-	[value] [datetime] NOT NULL,
-	[id] [int] NULL
-) ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -7042,6 +7253,24 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE TABLE [custom_list_view](
+	[view_id] [int] IDENTITY(1,1) NOT NULL,
+	[editor_id] [int] NOT NULL,
+	[name] [varchar](80) NOT NULL,
+	[description] [text] NULL,
+	[is_default] [bit] NULL DEFAULT ((0)),
+	[entered] [datetime] NULL DEFAULT (getdate()),
+PRIMARY KEY CLUSTERED 
+(
+	[view_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [survey_questions](
 	[question_id] [int] IDENTITY(1,1) NOT NULL,
 	[survey_id] [int] NOT NULL,
@@ -7080,24 +7309,6 @@ PRIMARY KEY CLUSTERED
 	[question_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [custom_list_view](
-	[view_id] [int] IDENTITY(1,1) NOT NULL,
-	[editor_id] [int] NOT NULL,
-	[name] [varchar](80) NOT NULL,
-	[description] [text] NULL,
-	[is_default] [bit] NULL DEFAULT ((0)),
-	[entered] [datetime] NULL DEFAULT (getdate()),
-PRIMARY KEY CLUSTERED 
-(
-	[view_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -7261,34 +7472,16 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [business_process_component](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[process_id] [int] NOT NULL,
-	[component_id] [int] NOT NULL,
-	[parent_id] [int] NULL,
-	[parent_result_id] [int] NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
+CREATE TABLE [lookup_sub_segment](
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](300) NOT NULL,
+	[segment_id] [int] NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [business_process_component_result_lookup](
-	[result_id] [int] IDENTITY(1,1) NOT NULL,
-	[component_id] [int] NOT NULL,
-	[return_id] [int] NOT NULL,
-	[description] [varchar](255) NULL,
-	[level] [int] NOT NULL DEFAULT ((0)),
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[result_id] ASC
+	[code] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -7314,16 +7507,30 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [lookup_sub_segment](
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](300) NOT NULL,
-	[segment_id] [int] NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
+CREATE TABLE [project_news_category](
+	[category_id] [int] IDENTITY(1,1) NOT NULL,
+	[project_id] [int] NOT NULL,
+	[category_name] [varchar](255) NULL,
+	[entered] [datetime] NULL DEFAULT (getdate()),
+	[level] [int] NOT NULL DEFAULT ((0)),
 	[enabled] [bit] NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[code] ASC
+	[category_id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [project_ticket_count](
+	[project_id] [int] NOT NULL,
+	[key_count] [int] NOT NULL DEFAULT ((0)),
+UNIQUE NONCLUSTERED 
+(
+	[project_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -7379,111 +7586,16 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [business_process_component_parameter](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+CREATE TABLE [business_process_component_result_lookup](
+	[result_id] [int] IDENTITY(1,1) NOT NULL,
 	[component_id] [int] NOT NULL,
-	[parameter_id] [int] NOT NULL,
-	[param_value] [varchar](4000) NULL,
-	[enabled] [bit] NOT NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_news_category](
-	[category_id] [int] IDENTITY(1,1) NOT NULL,
-	[project_id] [int] NOT NULL,
-	[category_name] [varchar](255) NULL,
-	[entered] [datetime] NULL DEFAULT (getdate()),
+	[return_id] [int] NOT NULL,
+	[description] [varchar](255) NULL,
 	[level] [int] NOT NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[category_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [project_ticket_count](
-	[project_id] [int] NOT NULL,
-	[key_count] [int] NOT NULL DEFAULT ((0)),
-UNIQUE NONCLUSTERED 
-(
-	[project_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [business_process_events](
-	[event_id] [int] IDENTITY(1,1) NOT NULL,
-	[second] [varchar](64) NULL DEFAULT ('0'),
-	[minute] [varchar](64) NULL DEFAULT ('*'),
-	[hour] [varchar](64) NULL DEFAULT ('*'),
-	[dayofmonth] [varchar](64) NULL DEFAULT ('*'),
-	[month] [varchar](64) NULL DEFAULT ('*'),
-	[dayofweek] [varchar](64) NULL DEFAULT ('*'),
-	[year] [varchar](64) NULL DEFAULT ('*'),
-	[task] [varchar](255) NULL,
-	[extrainfo] [varchar](255) NULL,
-	[businessDays] [varchar](6) NULL DEFAULT ('true'),
-	[enabled] [bit] NULL DEFAULT ((0)),
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[process_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[event_id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [business_process_parameter](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[process_id] [int] NOT NULL,
-	[param_name] [varchar](255) NULL,
-	[param_value] [varchar](4000) NULL,
 	[enabled] [bit] NOT NULL DEFAULT ((1)),
 PRIMARY KEY CLUSTERED 
 (
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [custom_field_lookup](
-	[field_id] [int] NOT NULL,
-	[code] [int] IDENTITY(1,1) NOT NULL,
-	[description] [varchar](255) NOT NULL,
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[start_date] [datetime] NULL DEFAULT (getdate()),
-	[end_date] [datetime] NULL,
-	[entered] [datetime] NOT NULL DEFAULT (getdate()),
-	[enabled] [bit] NULL DEFAULT ((1)),
-PRIMARY KEY CLUSTERED 
-(
-	[code] ASC
+	[result_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -7525,6 +7637,28 @@ PRIMARY KEY CLUSTERED
 	[user_id] ASC
 ) ON [PRIMARY]
 ) ON [PRIMARY]
+
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [action_plan_category_draft](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[link_id] [int] NULL DEFAULT ((-1)),
+	[cat_level] [int] NOT NULL DEFAULT ((0)),
+	[parent_cat_code] [int] NOT NULL DEFAULT ((0)),
+	[description] [varchar](300) NOT NULL,
+	[full_description] [text] NOT NULL DEFAULT (''),
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[enabled] [bit] NULL DEFAULT ((1)),
+	[site_id] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 SET ANSI_NULLS ON
@@ -7574,27 +7708,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [asset_category](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[cat_level] [int] NOT NULL DEFAULT ((0)),
-	[parent_cat_code] [int] NOT NULL DEFAULT ((0)),
-	[description] [varchar](300) NOT NULL,
-	[full_description] [text] NOT NULL DEFAULT (''),
-	[default_item] [bit] NULL DEFAULT ((0)),
-	[level] [int] NULL DEFAULT ((0)),
-	[enabled] [bit] NULL DEFAULT ((1)),
-	[site_id] [int] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [asset_category_draft](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[link_id] [int] NULL DEFAULT ((-1)),
@@ -7617,7 +7730,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [action_plan_category](
+CREATE TABLE [asset_category](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[cat_level] [int] NOT NULL DEFAULT ((0)),
 	[parent_cat_code] [int] NOT NULL DEFAULT ((0)),
@@ -7658,9 +7771,8 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [action_plan_category_draft](
+CREATE TABLE [action_plan_category](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[link_id] [int] NULL DEFAULT ((-1)),
 	[cat_level] [int] NOT NULL DEFAULT ((0)),
 	[parent_cat_code] [int] NOT NULL DEFAULT ((0)),
 	[description] [varchar](300) NOT NULL,
@@ -7680,114 +7792,22 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [order_product_option_text](
-	[order_product_option_id] [int] NULL,
-	[value] [text] NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_product_option_timestamp](
-	[order_product_option_id] [int] NULL,
-	[value] [datetime] NOT NULL
+CREATE TABLE [custom_field_lookup](
+	[field_id] [int] NOT NULL,
+	[code] [int] IDENTITY(1,1) NOT NULL,
+	[description] [varchar](255) NOT NULL,
+	[default_item] [bit] NULL DEFAULT ((0)),
+	[level] [int] NULL DEFAULT ((0)),
+	[start_date] [datetime] NULL DEFAULT (getdate()),
+	[end_date] [datetime] NULL,
+	[entered] [datetime] NOT NULL DEFAULT (getdate()),
+	[enabled] [bit] NULL DEFAULT ((1)),
+PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+) ON [PRIMARY]
 ) ON [PRIMARY]
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_product_option_integer](
-	[order_product_option_id] [int] NULL,
-	[value] [int] NOT NULL
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_product_option_float](
-	[order_product_option_id] [int] NULL,
-	[value] [float] NOT NULL
-) ON [PRIMARY]
-
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [order_product_option_boolean](
-	[order_product_option_id] [int] NULL,
-	[value] [bit] NOT NULL
-) ON [PRIMARY]
-
-GO
-ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([completedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([link_help_id])
-REFERENCES [help_contents] ([help_id])
-GO
-ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
-GO
-ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([user_id])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([userlevel])
-REFERENCES [lookup_project_role] ([code])
-GO
-ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([emailaddress_type])
-REFERENCES [lookup_orgemail_types] ([code])
-GO
-ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([org_id])
-REFERENCES [organization] ([org_id])
-GO
-ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [ticket_category] ([id])
-GO
-ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([item_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [permission_category] ([category_id])
-GO
-ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([permission_id])
-REFERENCES [permission] ([permission_id])
 GO
 ALTER TABLE [product_catalog]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -7797,6 +7817,9 @@ REFERENCES [lookup_product_ship_time] ([code])
 GO
 ALTER TABLE [product_catalog]  WITH CHECK ADD FOREIGN KEY([format_id])
 REFERENCES [lookup_product_format] ([code])
+GO
+ALTER TABLE [product_catalog]  WITH CHECK ADD FOREIGN KEY([import_id])
+REFERENCES [import] ([import_id])
 GO
 ALTER TABLE [product_catalog]  WITH CHECK ADD FOREIGN KEY([large_image_id])
 REFERENCES [project_files] ([item_id])
@@ -7822,55 +7845,31 @@ GO
 ALTER TABLE [product_catalog]  WITH CHECK ADD FOREIGN KEY([type_id])
 REFERENCES [lookup_product_type] ([code])
 GO
-ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([owner])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([revenue_id])
-REFERENCES [revenue] ([id])
-GO
-ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([type])
-REFERENCES [lookup_revenue_types] ([code])
-GO
-ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([approvalBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [lookup_project_category] ([code])
-GO
-ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([department_id])
-REFERENCES [lookup_department] ([code])
-GO
-ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([enteredBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_files_thumbnail]  WITH CHECK ADD FOREIGN KEY([enteredBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_files_thumbnail]  WITH CHECK ADD FOREIGN KEY([item_id])
+ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([image_id])
 REFERENCES [project_files] ([item_id])
 GO
-ALTER TABLE [project_files_thumbnail]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([item_position_id])
+REFERENCES [portfolio_item] ([item_id])
+GO
+ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([address_type])
-REFERENCES [lookup_orgaddress_types] ([code])
+ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([portfolio_category_id])
+REFERENCES [portfolio_category] ([category_id])
 GO
-ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([emailaddress_type])
+REFERENCES [lookup_orgemail_types] ([code])
+GO
+ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([org_id])
+ALTER TABLE [organization_emailaddress]  WITH CHECK ADD FOREIGN KEY([org_id])
 REFERENCES [organization] ([org_id])
 GO
 ALTER TABLE [help_faqs]  WITH CHECK ADD FOREIGN KEY([completedby])
@@ -7884,6 +7883,15 @@ REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [help_faqs]  WITH CHECK ADD FOREIGN KEY([owning_module_id])
 REFERENCES [help_module] ([module_id])
+GO
+ALTER TABLE [project_files_thumbnail]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_files_thumbnail]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [project_files] ([item_id])
+GO
+ALTER TABLE [project_files_thumbnail]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [order_product_status]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -7900,26 +7908,74 @@ GO
 ALTER TABLE [order_product_status]  WITH CHECK ADD FOREIGN KEY([status_id])
 REFERENCES [lookup_order_status] ([code])
 GO
+ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([approvalBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [lookup_project_category] ([code])
+GO
+ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([department_id])
+REFERENCES [lookup_department] ([code])
+GO
+ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [projects]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [permission_category] ([category_id])
+GO
+ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report]  WITH CHECK ADD FOREIGN KEY([permission_id])
+REFERENCES [permission] ([permission_id])
+GO
 ALTER TABLE [project_files_download]  WITH CHECK ADD FOREIGN KEY([item_id])
 REFERENCES [project_files] ([item_id])
 GO
 ALTER TABLE [project_files_download]  WITH CHECK ADD FOREIGN KEY([user_download_id])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([address_type])
+REFERENCES [lookup_orgaddress_types] ([code])
+GO
+ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([image_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([item_position_id])
-REFERENCES [portfolio_item] ([item_id])
-GO
-ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [portfolio_item]  WITH CHECK ADD FOREIGN KEY([portfolio_category_id])
+ALTER TABLE [organization_address]  WITH CHECK ADD FOREIGN KEY([org_id])
+REFERENCES [organization] ([org_id])
+GO
+ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([category_position_id])
 REFERENCES [portfolio_category] ([category_id])
+GO
+ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([parent_category_id])
+REFERENCES [portfolio_category] ([category_id])
+GO
+ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([org_id])
+REFERENCES [organization] ([org_id])
 GO
 ALTER TABLE [revenue]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -7948,26 +8004,14 @@ GO
 ALTER TABLE [help_related_links]  WITH CHECK ADD FOREIGN KEY([owning_module_id])
 REFERENCES [help_module] ([module_id])
 GO
-ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([category_position_id])
-REFERENCES [portfolio_category] ([category_id])
-GO
-ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [portfolio_category]  WITH CHECK ADD FOREIGN KEY([parent_category_id])
-REFERENCES [portfolio_category] ([category_id])
-GO
-ALTER TABLE [project_files_version]  WITH CHECK ADD FOREIGN KEY([enteredBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_files_version]  WITH CHECK ADD FOREIGN KEY([item_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [project_files_version]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
-REFERENCES [access] ([user_id])
+ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([row_column_id])
+REFERENCES [web_row_column] ([row_column_id])
 GO
 ALTER TABLE [active_survey]  WITH CHECK ADD FOREIGN KEY([campaign_id])
 REFERENCES [campaign] ([campaign_id])
@@ -7981,29 +8025,20 @@ GO
 ALTER TABLE [active_survey]  WITH CHECK ADD FOREIGN KEY([type])
 REFERENCES [lookup_survey_types] ([code])
 GO
-ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
+ALTER TABLE [action_item_work_notes]  WITH CHECK ADD FOREIGN KEY([item_work_id])
+REFERENCES [action_item_work] ([item_work_id])
 GO
-ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [action_item_work_notes]  WITH CHECK ADD FOREIGN KEY([submittedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [quote_notes]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [history]  WITH CHECK ADD FOREIGN KEY([org_id])
-REFERENCES [organization] ([org_id])
-GO
-ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [quote_notes]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([user_id])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([vp_user_id])
-REFERENCES [access] ([user_id])
+ALTER TABLE [quote_notes]  WITH CHECK ADD FOREIGN KEY([quote_id])
+REFERENCES [quote_entry] ([quote_id])
 GO
 ALTER TABLE [document_store_department_member]  WITH CHECK ADD FOREIGN KEY([document_store_id])
 REFERENCES [document_store] ([document_store_id])
@@ -8023,29 +8058,26 @@ GO
 ALTER TABLE [document_store_department_member]  WITH CHECK ADD FOREIGN KEY([userlevel])
 REFERENCES [lookup_document_store_role] ([code])
 GO
-ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [project_files_version]  WITH CHECK ADD FOREIGN KEY([enteredBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [project_files_version]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [project_files] ([item_id])
+GO
+ALTER TABLE [project_files_version]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_icelet_property]  WITH CHECK ADD FOREIGN KEY([row_column_id])
-REFERENCES [web_row_column] ([row_column_id])
-GO
-ALTER TABLE [action_item_work_notes]  WITH CHECK ADD FOREIGN KEY([item_work_id])
-REFERENCES [action_item_work] ([item_work_id])
-GO
-ALTER TABLE [action_item_work_notes]  WITH CHECK ADD FOREIGN KEY([submittedby])
+ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [quote_notes]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [quote_notes]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [quote_notes]  WITH CHECK ADD FOREIGN KEY([quote_id])
-REFERENCES [quote_entry] ([quote_id])
+ALTER TABLE [viewpoint]  WITH CHECK ADD FOREIGN KEY([vp_user_id])
+REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [help_features]  WITH CHECK ADD FOREIGN KEY([completedby])
 REFERENCES [access] ([user_id])
@@ -8062,14 +8094,17 @@ GO
 ALTER TABLE [help_features]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_files]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_files]  WITH CHECK ADD FOREIGN KEY([folder_id])
-REFERENCES [project_folders] ([folder_id])
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([icelet_id])
+REFERENCES [web_icelet] ([icelet_id])
 GO
-ALTER TABLE [project_files]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([page_row_id])
+REFERENCES [web_page_row] ([page_row_id])
 GO
 ALTER TABLE [document_store_role_member]  WITH CHECK ADD FOREIGN KEY([document_store_id])
 REFERENCES [document_store] ([document_store_id])
@@ -8089,39 +8124,6 @@ GO
 ALTER TABLE [document_store_role_member]  WITH CHECK ADD FOREIGN KEY([userlevel])
 REFERENCES [lookup_document_store_role] ([code])
 GO
-ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([payment_id])
-REFERENCES [order_payment] ([payment_id])
-GO
-ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([status_id])
-REFERENCES [lookup_payment_status] ([code])
-GO
-ALTER TABLE [webdav]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [permission_category] ([category_id])
-GO
-ALTER TABLE [webdav]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [webdav]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([icelet_id])
-REFERENCES [web_icelet] ([icelet_id])
-GO
-ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_row_column]  WITH CHECK ADD FOREIGN KEY([page_row_id])
-REFERENCES [web_page_row] ([page_row_id])
-GO
 ALTER TABLE [action_item_work]  WITH CHECK ADD FOREIGN KEY([action_step_id])
 REFERENCES [action_step] ([step_id])
 GO
@@ -8140,11 +8142,26 @@ GO
 ALTER TABLE [action_item_work]  WITH CHECK ADD FOREIGN KEY([phase_work_id])
 REFERENCES [action_phase_work] ([phase_work_id])
 GO
-ALTER TABLE [project_folders]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+ALTER TABLE [project_files]  WITH CHECK ADD FOREIGN KEY([enteredBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_folders]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+ALTER TABLE [project_files]  WITH CHECK ADD FOREIGN KEY([folder_id])
+REFERENCES [project_folders] ([folder_id])
+GO
+ALTER TABLE [project_files]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
 REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([payment_id])
+REFERENCES [order_payment] ([payment_id])
+GO
+ALTER TABLE [order_payment_status]  WITH CHECK ADD FOREIGN KEY([status_id])
+REFERENCES [lookup_payment_status] ([code])
 GO
 ALTER TABLE [ticket_sun_form]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -8155,16 +8172,13 @@ GO
 ALTER TABLE [ticket_sun_form]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [webdav]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [permission_category] ([category_id])
+GO
+ALTER TABLE [webdav]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([global_link_id])
-REFERENCES [help_tableof_contents] ([content_id])
-GO
-ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([linkto_content_id])
-REFERENCES [help_contents] ([help_id])
-GO
-ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [webdav]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [document_store_user_member]  WITH CHECK ADD FOREIGN KEY([document_store_id])
@@ -8190,6 +8204,105 @@ REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [survey]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([global_link_id])
+REFERENCES [help_tableof_contents] ([content_id])
+GO
+ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([linkto_content_id])
+REFERENCES [help_contents] ([help_id])
+GO
+ALTER TABLE [help_tableofcontentitem_links]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([action_phase_id])
+REFERENCES [action_phase] ([phase_id])
+GO
+ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([plan_work_id])
+REFERENCES [action_plan_work] ([plan_work_id])
+GO
+ALTER TABLE [project_folders]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_folders]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([page_version_id])
+REFERENCES [web_page_version] ([page_version_id])
+GO
+ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([row_column_id])
+REFERENCES [web_row_column] ([row_column_id])
+GO
+ALTER TABLE [action_plan_work_notes]  WITH CHECK ADD FOREIGN KEY([plan_work_id])
+REFERENCES [action_plan_work] ([plan_work_id])
+GO
+ALTER TABLE [action_plan_work_notes]  WITH CHECK ADD FOREIGN KEY([submittedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([delivery_id])
+REFERENCES [lookup_quote_delivery] ([code])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([quote_id])
+REFERENCES [quote_entry] ([quote_id])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([source_id])
+REFERENCES [lookup_quote_source] ([code])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([status_id])
+REFERENCES [lookup_quote_status] ([code])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([terms_id])
+REFERENCES [lookup_quote_terms] ([code])
+GO
+ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([type_id])
+REFERENCES [lookup_quote_type] ([code])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([bank_id])
+REFERENCES [payment_eft] ([bank_id])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([creditcard_id])
+REFERENCES [payment_creditcard] ([creditcard_id])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([history_id])
+REFERENCES [customer_product_history] ([history_id])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([order_id])
+REFERENCES [order_entry] ([order_id])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([order_item_id])
+REFERENCES [order_product] ([item_id])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([payment_method_id])
+REFERENCES [lookup_payment_methods] ([code])
+GO
+ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([status_id])
+REFERENCES [lookup_payment_status] ([code])
 GO
 ALTER TABLE [order_entry]  WITH CHECK ADD FOREIGN KEY([billing_contact_id])
 REFERENCES [contact] ([contact_id])
@@ -8227,18 +8340,6 @@ GO
 ALTER TABLE [order_entry]  WITH CHECK ADD FOREIGN KEY([status_id])
 REFERENCES [lookup_order_status] ([code])
 GO
-ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([action_phase_id])
-REFERENCES [action_phase] ([phase_id])
-GO
-ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [action_phase_work]  WITH CHECK ADD FOREIGN KEY([plan_work_id])
-REFERENCES [action_plan_work] ([plan_work_id])
-GO
 ALTER TABLE [project_issue_replies]  WITH CHECK ADD FOREIGN KEY([enteredBy])
 REFERENCES [access] ([user_id])
 GO
@@ -8247,81 +8348,6 @@ REFERENCES [project_issues] ([issue_id])
 GO
 ALTER TABLE [project_issue_replies]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
 REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [user_group_map]  WITH CHECK ADD FOREIGN KEY([group_id])
-REFERENCES [user_group] ([group_id])
-GO
-ALTER TABLE [user_group_map]  WITH CHECK ADD FOREIGN KEY([user_id])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [action_plan_work_notes]  WITH CHECK ADD FOREIGN KEY([plan_work_id])
-REFERENCES [action_plan_work] ([plan_work_id])
-GO
-ALTER TABLE [action_plan_work_notes]  WITH CHECK ADD FOREIGN KEY([submittedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([page_version_id])
-REFERENCES [web_page_version] ([page_version_id])
-GO
-ALTER TABLE [web_page_row]  WITH CHECK ADD FOREIGN KEY([row_column_id])
-REFERENCES [web_row_column] ([row_column_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([bank_id])
-REFERENCES [payment_eft] ([bank_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([creditcard_id])
-REFERENCES [payment_creditcard] ([creditcard_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([history_id])
-REFERENCES [customer_product_history] ([history_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([order_id])
-REFERENCES [order_entry] ([order_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([order_item_id])
-REFERENCES [order_product] ([item_id])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([payment_method_id])
-REFERENCES [lookup_payment_methods] ([code])
-GO
-ALTER TABLE [order_payment]  WITH CHECK ADD FOREIGN KEY([status_id])
-REFERENCES [lookup_payment_status] ([code])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([delivery_id])
-REFERENCES [lookup_quote_delivery] ([code])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([quote_id])
-REFERENCES [quote_entry] ([quote_id])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([source_id])
-REFERENCES [lookup_quote_source] ([code])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([status_id])
-REFERENCES [lookup_quote_status] ([code])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([terms_id])
-REFERENCES [lookup_quote_terms] ([code])
-GO
-ALTER TABLE [quotelog]  WITH CHECK ADD FOREIGN KEY([type_id])
-REFERENCES [lookup_quote_type] ([code])
 GO
 ALTER TABLE [asset]  WITH CHECK ADD FOREIGN KEY([account_id])
 REFERENCES [organization] ([org_id])
@@ -8368,6 +8394,15 @@ GO
 ALTER TABLE [asset]  WITH CHECK ADD FOREIGN KEY([vendor_code])
 REFERENCES [lookup_asset_vendor] ([code])
 GO
+ALTER TABLE [document_store]  WITH CHECK ADD FOREIGN KEY([approvalBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [document_store]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [document_store]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
+GO
 ALTER TABLE [help_tableof_contents]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [permission_category] ([category_id])
 GO
@@ -8395,44 +8430,11 @@ GO
 ALTER TABLE [ticket_csstm_form]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [document_store]  WITH CHECK ADD FOREIGN KEY([approvalBy])
+ALTER TABLE [user_group_map]  WITH CHECK ADD FOREIGN KEY([group_id])
+REFERENCES [user_group] ([group_id])
+GO
+ALTER TABLE [user_group_map]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [document_store]  WITH CHECK ADD FOREIGN KEY([enteredBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [document_store]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([large_image_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([parent_id])
-REFERENCES [product_category] ([category_id])
-GO
-ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([small_image_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([thumbnail_image_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([type_id])
-REFERENCES [lookup_product_category_type] ([code])
-GO
-ALTER TABLE [user_group]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [user_group]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [user_group]  WITH CHECK ADD FOREIGN KEY([site_id])
-REFERENCES [lookup_site_id] ([code])
 GO
 ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([active_page_version_id])
 REFERENCES [web_page_version] ([page_version_id])
@@ -8452,17 +8454,47 @@ GO
 ALTER TABLE [web_page]  WITH CHECK ADD FOREIGN KEY([tab_banner_id])
 REFERENCES [web_tab_banner] ([tab_banner_id])
 GO
-ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [project_issues_categories] ([category_id])
-GO
-ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([import_id])
+REFERENCES [import] ([import_id])
+GO
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([large_image_id])
+REFERENCES [project_files] ([item_id])
+GO
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([parent_id])
+REFERENCES [product_category] ([category_id])
+GO
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([small_image_id])
+REFERENCES [project_files] ([item_id])
+GO
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([thumbnail_image_id])
+REFERENCES [project_files] ([item_id])
+GO
+ALTER TABLE [product_category]  WITH CHECK ADD FOREIGN KEY([type_id])
+REFERENCES [lookup_product_category_type] ([code])
+GO
+ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([action_plan_id])
+REFERENCES [action_plan] ([plan_id])
+GO
+ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([assignedTo])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([current_phase])
+REFERENCES [action_phase] ([phase_id])
+GO
+ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([link_module_id])
+REFERENCES [action_plan_constants] ([map_id])
+GO
+ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [cfsinbox_messagelink]  WITH CHECK ADD FOREIGN KEY([sent_to])
 REFERENCES [contact] ([contact_id])
@@ -8473,38 +8505,17 @@ GO
 ALTER TABLE [cfsinbox_messagelink]  WITH CHECK ADD FOREIGN KEY([id])
 REFERENCES [cfsinbox_message] ([id])
 GO
-ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([component_id])
-REFERENCES [opportunity_component] ([id])
-GO
-ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([header_id])
-REFERENCES [opportunity_header] ([opp_id])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([image_id])
+REFERENCES [project_files] ([item_id])
 GO
-ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([owner])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([stage])
-REFERENCES [lookup_stage] ([code])
-GO
-ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([customer_product_id])
-REFERENCES [customer_product] ([customer_product_id])
-GO
-ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([order_id])
-REFERENCES [order_entry] ([order_id])
-GO
-ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([order_item_id])
-REFERENCES [order_product] ([item_id])
-GO
-ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([org_id])
-REFERENCES [organization] ([org_id])
+ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([tab_id])
+REFERENCES [web_tab] ([tab_id])
 GO
 ALTER TABLE [ticketlog]  WITH CHECK ADD FOREIGN KEY([assigned_to])
 REFERENCES [access] ([user_id])
@@ -8533,23 +8544,44 @@ GO
 ALTER TABLE [ticketlog]  WITH CHECK ADD FOREIGN KEY([ticketid])
 REFERENCES [ticket] ([ticketid])
 GO
-ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([action_plan_id])
-REFERENCES [action_plan] ([plan_id])
+ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([customer_product_id])
+REFERENCES [customer_product] ([customer_product_id])
 GO
-ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([assignedTo])
+ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([current_phase])
-REFERENCES [action_phase] ([phase_id])
-GO
-ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([link_module_id])
-REFERENCES [action_plan_constants] ([map_id])
+ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([order_id])
+REFERENCES [order_entry] ([order_id])
 GO
-ALTER TABLE [action_plan_work]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([order_item_id])
+REFERENCES [order_product] ([item_id])
+GO
+ALTER TABLE [customer_product_history]  WITH CHECK ADD FOREIGN KEY([org_id])
+REFERENCES [organization] ([org_id])
+GO
+ALTER TABLE [user_group]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [user_group]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [user_group]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [lookup_site_id] ([code])
+GO
+ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [project_issues_categories] ([category_id])
+GO
+ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_issues]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
 GO
 ALTER TABLE [help_contents]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [permission_category] ([category_id])
@@ -8572,11 +8604,29 @@ GO
 ALTER TABLE [help_contents]  WITH CHECK ADD FOREIGN KEY([upcontent])
 REFERENCES [help_contents] ([help_id])
 GO
-ALTER TABLE [role]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([component_id])
+REFERENCES [opportunity_component] ([id])
+GO
+ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [role]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([header_id])
+REFERENCES [opportunity_header] ([opp_id])
+GO
+ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([owner])
 REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [opportunity_component_log]  WITH CHECK ADD FOREIGN KEY([stage])
+REFERENCES [lookup_stage] ([code])
+GO
+ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([tab_id])
+REFERENCES [web_tab] ([tab_id])
 GO
 ALTER TABLE [cfsinbox_message]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -8584,31 +8634,10 @@ GO
 ALTER TABLE [cfsinbox_message]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [role]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([image_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_tab_banner]  WITH CHECK ADD FOREIGN KEY([tab_id])
-REFERENCES [web_tab] ([tab_id])
-GO
-ALTER TABLE [project_issues_categories]  WITH CHECK ADD FOREIGN KEY([enteredBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_issues_categories]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_issues_categories]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
-GO
-ALTER TABLE [contact_lead_read_map]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
-GO
-ALTER TABLE [contact_lead_read_map]  WITH CHECK ADD FOREIGN KEY([user_id])
+ALTER TABLE [role]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [customer_product]  WITH CHECK ADD FOREIGN KEY([enteredby])
@@ -8629,20 +8658,14 @@ GO
 ALTER TABLE [customer_product]  WITH CHECK ADD FOREIGN KEY([status_id])
 REFERENCES [lookup_order_status] ([code])
 GO
-ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [project_issues_categories]  WITH CHECK ADD FOREIGN KEY([enteredBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [project_issues_categories]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_page_group]  WITH CHECK ADD FOREIGN KEY([tab_id])
-REFERENCES [web_tab] ([tab_id])
-GO
-ALTER TABLE [contact_lead_skipped_map]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
-GO
-ALTER TABLE [contact_lead_skipped_map]  WITH CHECK ADD FOREIGN KEY([user_id])
-REFERENCES [access] ([user_id])
+ALTER TABLE [project_issues_categories]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
 GO
 ALTER TABLE [contact_message]  WITH CHECK ADD FOREIGN KEY([message_id])
 REFERENCES [message] ([id])
@@ -8653,30 +8676,6 @@ GO
 ALTER TABLE [contact_message]  WITH CHECK ADD FOREIGN KEY([received_by])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([assignment_id])
-REFERENCES [project_assignments] ([assignment_id])
-GO
-ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([project_status_id])
-REFERENCES [lookup_project_status] ([code])
-GO
-ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([user_id])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([user_assign_id])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([rating])
-REFERENCES [lookup_contact_rating] ([code])
-GO
-ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([site_id])
-REFERENCES [lookup_site_id] ([code])
-GO
 ALTER TABLE [payment_eft]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
@@ -8686,17 +8685,23 @@ GO
 ALTER TABLE [payment_eft]  WITH CHECK ADD FOREIGN KEY([order_id])
 REFERENCES [order_entry] ([order_id])
 GO
-ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([contact_id])
+ALTER TABLE [contact_lead_read_map]  WITH CHECK ADD FOREIGN KEY([contact_id])
 REFERENCES [contact] ([contact_id])
 GO
-ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [contact_lead_read_map]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([textmessageaddress_type])
-REFERENCES [lookup_textmessage_types] ([code])
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([page_id])
+REFERENCES [web_page] ([page_id])
+GO
+ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([parent_page_version_id])
+REFERENCES [web_page_version] ([page_version_id])
 GO
 ALTER TABLE [package_products_map]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -8716,47 +8721,17 @@ GO
 ALTER TABLE [package_products_map]  WITH CHECK ADD FOREIGN KEY([product_id])
 REFERENCES [product_catalog] ([product_id])
 GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([alert_call_type_id])
-REFERENCES [lookup_call_types] ([code])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([assignedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([call_type_id])
-REFERENCES [lookup_call_types] ([code])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([completedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([contact_id])
+ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([contact_id])
 REFERENCES [contact] ([contact_id])
 GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([opp_id])
-REFERENCES [opportunity_header] ([opp_id])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([org_id])
-REFERENCES [organization] ([org_id])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([owner])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([parent_id])
-REFERENCES [call_log] ([call_id])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([priority_id])
-REFERENCES [lookup_call_priority] ([code])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([reminder_type_id])
-REFERENCES [lookup_call_reminder] ([code])
-GO
-ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([result_id])
-REFERENCES [lookup_call_result] ([result_id])
+ALTER TABLE [contact_textmessageaddress]  WITH CHECK ADD FOREIGN KEY([textmessageaddress_type])
+REFERENCES [lookup_textmessage_types] ([code])
 GO
 ALTER TABLE [service_contract_hours]  WITH CHECK ADD FOREIGN KEY([adjustment_reason])
 REFERENCES [lookup_hours_reason] ([code])
@@ -8770,17 +8745,23 @@ GO
 ALTER TABLE [service_contract_hours]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [contact_lead_skipped_map]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [contact_lead_skipped_map]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([assignment_id])
+REFERENCES [project_assignments] ([assignment_id])
+GO
+ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([project_status_id])
+REFERENCES [lookup_project_status] ([code])
+GO
+ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([page_id])
-REFERENCES [web_page] ([page_id])
-GO
-ALTER TABLE [web_page_version]  WITH CHECK ADD FOREIGN KEY([parent_page_version_id])
-REFERENCES [web_page_version] ([page_version_id])
+ALTER TABLE [project_assignments_status]  WITH CHECK ADD FOREIGN KEY([user_assign_id])
+REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [web_tab]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
@@ -8791,92 +8772,17 @@ GO
 ALTER TABLE [web_tab]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [web_site] ([site_id])
 GO
-ALTER TABLE [message_template]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [message_template]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
+ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([rating])
+REFERENCES [lookup_contact_rating] ([code])
 GO
-ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([imaddress_type])
-REFERENCES [lookup_im_types] ([code])
-GO
-ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([imaddress_service])
-REFERENCES [lookup_im_services] ([code])
-GO
-ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([card_type])
-REFERENCES [lookup_creditcard_types] ([code])
-GO
-ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([order_id])
-REFERENCES [order_entry] ([order_id])
-GO
-ALTER TABLE [action_item_log]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [action_item_log]  WITH CHECK ADD FOREIGN KEY([item_id])
-REFERENCES [action_item] ([item_id])
-GO
-ALTER TABLE [action_item_log]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([assigned_to])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [ticket_category] ([id])
-GO
-ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([department_id])
-REFERENCES [lookup_department] ([code])
-GO
-ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([group_id])
-REFERENCES [user_group] ([group_id])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([actual_loetype])
-REFERENCES [lookup_project_loe] ([code])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([assignedBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([enteredBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([estimated_loetype])
-REFERENCES [lookup_project_loe] ([code])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([folder_id])
-REFERENCES [project_assignments_folder] ([folder_id])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([priority_id])
-REFERENCES [lookup_project_priority] ([code])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([requirement_id])
-REFERENCES [project_requirements] ([requirement_id])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([status_id])
-REFERENCES [lookup_project_status] ([code])
-GO
-ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([user_assign_id])
-REFERENCES [access] ([user_id])
+ALTER TABLE [import]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [lookup_site_id] ([code])
 GO
 ALTER TABLE [ticket]  WITH CHECK ADD FOREIGN KEY([assigned_to])
 REFERENCES [access] ([user_id])
@@ -8962,31 +8868,79 @@ GO
 ALTER TABLE [ticket]  WITH CHECK ADD FOREIGN KEY([user_group_id])
 REFERENCES [user_group] ([group_id])
 GO
-ALTER TABLE [action_item]  WITH CHECK ADD FOREIGN KEY([action_id])
-REFERENCES [action_list] ([action_id])
-GO
-ALTER TABLE [action_item]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [action_item]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
-GO
-ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([phone_type])
-REFERENCES [lookup_contactphone_types] ([code])
-GO
 ALTER TABLE [web_site_log]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [web_site] ([site_id])
 GO
 ALTER TABLE [web_site_log]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [message_template]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [message_template]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([card_type])
+REFERENCES [lookup_creditcard_types] ([code])
+GO
+ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [payment_creditcard]  WITH CHECK ADD FOREIGN KEY([order_id])
+REFERENCES [order_entry] ([order_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([alert_call_type_id])
+REFERENCES [lookup_call_types] ([code])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([assignedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([call_type_id])
+REFERENCES [lookup_call_types] ([code])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([completedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([opp_id])
+REFERENCES [opportunity_header] ([opp_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([org_id])
+REFERENCES [organization] ([org_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([owner])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([parent_id])
+REFERENCES [call_log] ([call_id])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([priority_id])
+REFERENCES [lookup_call_priority] ([code])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([reminder_type_id])
+REFERENCES [lookup_call_reminder] ([code])
+GO
+ALTER TABLE [call_log]  WITH CHECK ADD FOREIGN KEY([result_id])
+REFERENCES [lookup_call_result] ([result_id])
+GO
+ALTER TABLE [action_item_log]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_item_log]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [action_item] ([item_id])
+GO
+ALTER TABLE [action_item_log]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [package]  WITH CHECK ADD FOREIGN KEY([category_id])
@@ -9007,6 +8961,21 @@ GO
 ALTER TABLE [package]  WITH CHECK ADD FOREIGN KEY([thumbnail_image_id])
 REFERENCES [project_files] ([item_id])
 GO
+ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([imaddress_type])
+REFERENCES [lookup_im_types] ([code])
+GO
+ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([imaddress_service])
+REFERENCES [lookup_im_services] ([code])
+GO
+ALTER TABLE [contact_imaddress]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
 ALTER TABLE [message]  WITH CHECK ADD FOREIGN KEY([access_type])
 REFERENCES [lookup_access_types] ([code])
 GO
@@ -9016,38 +8985,53 @@ GO
 ALTER TABLE [message]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [campaign]  WITH CHECK ADD FOREIGN KEY([approvedby])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [campaign]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([layout_id])
+REFERENCES [web_layout] ([layout_id])
+GO
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([logo_image_id])
+REFERENCES [project_files] ([item_id])
+GO
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [campaign]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([style_id])
+REFERENCES [web_style] ([style_id])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([actual_loetype])
+REFERENCES [lookup_project_loe] ([code])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([assignedBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [action_list]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([enteredBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [action_list]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([estimated_loetype])
+REFERENCES [lookup_project_loe] ([code])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([folder_id])
+REFERENCES [project_assignments_folder] ([folder_id])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [action_list]  WITH CHECK ADD FOREIGN KEY([owner])
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([priority_id])
+REFERENCES [lookup_project_priority] ([code])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([requirement_id])
+REFERENCES [project_requirements] ([requirement_id])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([status_id])
+REFERENCES [lookup_project_status] ([code])
+GO
+ALTER TABLE [project_assignments]  WITH CHECK ADD FOREIGN KEY([user_assign_id])
 REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [lookup_contact_types]  WITH CHECK ADD FOREIGN KEY([user_id])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([assigned_to])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [ticket_category_draft] ([id])
-GO
-ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([department_id])
-REFERENCES [lookup_department] ([code])
-GO
-ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([group_id])
-REFERENCES [user_group] ([group_id])
 GO
 ALTER TABLE [service_contract]  WITH CHECK ADD FOREIGN KEY([account_id])
 REFERENCES [organization] ([org_id])
@@ -9079,6 +9063,105 @@ GO
 ALTER TABLE [service_contract]  WITH CHECK ADD FOREIGN KEY([type])
 REFERENCES [lookup_sc_type] ([code])
 GO
+ALTER TABLE [campaign]  WITH CHECK ADD FOREIGN KEY([approvedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [campaign]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [campaign]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([assigned_to])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [ticket_category] ([id])
+GO
+ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([department_id])
+REFERENCES [lookup_department] ([code])
+GO
+ALTER TABLE [ticket_category_assignment]  WITH CHECK ADD FOREIGN KEY([group_id])
+REFERENCES [user_group] ([group_id])
+GO
+ALTER TABLE [action_item]  WITH CHECK ADD FOREIGN KEY([action_id])
+REFERENCES [action_list] ([action_id])
+GO
+ALTER TABLE [action_item]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_item]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [lookup_contact_types]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([assigned_to])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [ticket_category_draft] ([id])
+GO
+ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([department_id])
+REFERENCES [lookup_department] ([code])
+GO
+ALTER TABLE [ticket_category_draft_assignment]  WITH CHECK ADD FOREIGN KEY([group_id])
+REFERENCES [user_group] ([group_id])
+GO
+ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [contact_phone]  WITH CHECK ADD FOREIGN KEY([phone_type])
+REFERENCES [lookup_contactphone_types] ([code])
+GO
+ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [lookup_task_category] ([code])
+GO
+ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([estimatedloetype])
+REFERENCES [lookup_task_loe] ([code])
+GO
+ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([owner])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([priority])
+REFERENCES [lookup_task_priority] ([code])
+GO
+ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([ticket_task_category_id])
+REFERENCES [lookup_ticket_task_category] ([code])
+GO
+ALTER TABLE [action_list]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_list]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_list]  WITH CHECK ADD FOREIGN KEY([owner])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([parent_id])
+REFERENCES [project_assignments_folder] ([folder_id])
+GO
+ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([requirement_id])
+REFERENCES [project_requirements] ([requirement_id])
+GO
 ALTER TABLE [opportunity_component]  WITH CHECK ADD FOREIGN KEY([budget])
 REFERENCES [lookup_opportunity_budget] ([code])
 GO
@@ -9106,56 +9189,26 @@ GO
 ALTER TABLE [opportunity_component]  WITH CHECK ADD FOREIGN KEY([stage])
 REFERENCES [lookup_stage] ([code])
 GO
-ALTER TABLE [access_log]  WITH CHECK ADD FOREIGN KEY([user_id])
+ALTER TABLE [saved_criterialist]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+ALTER TABLE [saved_criterialist]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+ALTER TABLE [saved_criterialist]  WITH CHECK ADD FOREIGN KEY([owner])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([parent_id])
-REFERENCES [project_assignments_folder] ([folder_id])
+ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([address_type])
+REFERENCES [lookup_orderaddress_types] ([code])
 GO
-ALTER TABLE [project_assignments_folder]  WITH CHECK ADD FOREIGN KEY([requirement_id])
-REFERENCES [project_requirements] ([requirement_id])
-GO
-ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [lookup_task_category] ([code])
-GO
-ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([estimatedloetype])
-REFERENCES [lookup_task_loe] ([code])
-GO
-ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([owner])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([priority])
-REFERENCES [lookup_task_priority] ([code])
-GO
-ALTER TABLE [task]  WITH CHECK ADD FOREIGN KEY([ticket_task_category_id])
-REFERENCES [lookup_ticket_task_category] ([code])
-GO
-ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([layout_id])
-REFERENCES [web_layout] ([layout_id])
-GO
-ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([logo_image_id])
-REFERENCES [project_files] ([item_id])
-GO
-ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [web_site]  WITH CHECK ADD FOREIGN KEY([style_id])
-REFERENCES [web_style] ([style_id])
+ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([order_id])
+REFERENCES [order_entry] ([order_id])
 GO
 ALTER TABLE [contact]  WITH CHECK ADD FOREIGN KEY([access_type])
 REFERENCES [lookup_access_types] ([code])
@@ -9196,15 +9249,6 @@ GO
 ALTER TABLE [contact]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [saved_criterialist]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [saved_criterialist]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [saved_criterialist]  WITH CHECK ADD FOREIGN KEY([owner])
-REFERENCES [access] ([user_id])
-GO
 ALTER TABLE [contact_emailaddress]  WITH CHECK ADD FOREIGN KEY([contact_id])
 REFERENCES [contact] ([contact_id])
 GO
@@ -9217,17 +9261,41 @@ GO
 ALTER TABLE [contact_emailaddress]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([address_type])
-REFERENCES [lookup_orderaddress_types] ([code])
-GO
-ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [access_log]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [help_tips]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [order_address]  WITH CHECK ADD FOREIGN KEY([order_id])
-REFERENCES [order_entry] ([order_id])
+ALTER TABLE [help_tips]  WITH CHECK ADD FOREIGN KEY([link_help_id])
+REFERENCES [help_contents] ([help_id])
+GO
+ALTER TABLE [help_tips]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([cat_code])
+REFERENCES [action_plan_category] ([id])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([link_object_id])
+REFERENCES [action_plan_constants] ([map_id])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [lookup_site_id] ([code])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([subcat_code1])
+REFERENCES [action_plan_category] ([id])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([subcat_code2])
+REFERENCES [action_plan_category] ([id])
+GO
+ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([subcat_code3])
+REFERENCES [action_plan_category] ([id])
 GO
 ALTER TABLE [project_requirements]  WITH CHECK ADD FOREIGN KEY([actual_loetype])
 REFERENCES [lookup_project_loe] ([code])
@@ -9250,20 +9318,23 @@ GO
 ALTER TABLE [project_requirements]  WITH CHECK ADD FOREIGN KEY([project_id])
 REFERENCES [projects] ([project_id])
 GO
-ALTER TABLE [help_tips]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [custom_field_record]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [custom_field_category] ([category_id])
+GO
+ALTER TABLE [custom_field_record]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [help_tips]  WITH CHECK ADD FOREIGN KEY([link_help_id])
-REFERENCES [help_contents] ([help_id])
-GO
-ALTER TABLE [help_tips]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [custom_field_record]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [report_queue]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [netapp_contractexpiration_log]  WITH CHECK ADD FOREIGN KEY([enteredBy])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [report_queue]  WITH CHECK ADD FOREIGN KEY([report_id])
-REFERENCES [report] ([report_id])
+ALTER TABLE [netapp_contractexpiration_log]  WITH CHECK ADD FOREIGN KEY([expiration_id])
+REFERENCES [netapp_contractexpiration] ([expiration_id])
+GO
+ALTER TABLE [netapp_contractexpiration_log]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [product_catalog_pricing]  WITH CHECK ADD FOREIGN KEY([cost_currency])
 REFERENCES [lookup_currency] ([code])
@@ -9292,54 +9363,6 @@ GO
 ALTER TABLE [product_catalog_pricing]  WITH CHECK ADD FOREIGN KEY([tax_id])
 REFERENCES [lookup_product_tax] ([code])
 GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([cat_code])
-REFERENCES [action_plan_category] ([id])
-GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([link_object_id])
-REFERENCES [action_plan_constants] ([map_id])
-GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([site_id])
-REFERENCES [lookup_site_id] ([code])
-GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([subcat_code1])
-REFERENCES [action_plan_category] ([id])
-GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([subcat_code2])
-REFERENCES [action_plan_category] ([id])
-GO
-ALTER TABLE [action_plan]  WITH CHECK ADD FOREIGN KEY([subcat_code3])
-REFERENCES [action_plan_category] ([id])
-GO
-ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [project_news_category] ([category_id])
-GO
-ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
-GO
-ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([template_id])
-REFERENCES [lookup_news_template] ([code])
-GO
-ALTER TABLE [custom_field_record]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [custom_field_category] ([category_id])
-GO
-ALTER TABLE [custom_field_record]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [custom_field_record]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
 ALTER TABLE [contact_address]  WITH CHECK ADD FOREIGN KEY([address_type])
 REFERENCES [lookup_contactaddress_types] ([code])
 GO
@@ -9351,30 +9374,6 @@ REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [contact_address]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([access_type])
-REFERENCES [lookup_access_types] ([code])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([acctlink])
-REFERENCES [organization] ([org_id])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([contactlink])
-REFERENCES [contact] ([contact_id])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([contact_org_id])
-REFERENCES [organization] ([org_id])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([enteredby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([manager])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([modifiedby])
-REFERENCES [access] ([user_id])
-GO
-ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([site_id])
-REFERENCES [lookup_site_id] ([code])
 GO
 ALTER TABLE [quote_entry]  WITH CHECK ADD FOREIGN KEY([contact_id])
 REFERENCES [contact] ([contact_id])
@@ -9424,6 +9423,57 @@ GO
 ALTER TABLE [quote_entry]  WITH CHECK ADD FOREIGN KEY([ticketid])
 REFERENCES [ticket] ([ticketid])
 GO
+ALTER TABLE [report_queue]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report_queue]  WITH CHECK ADD FOREIGN KEY([report_id])
+REFERENCES [report] ([report_id])
+GO
+ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [project_news_category] ([category_id])
+GO
+ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
+GO
+ALTER TABLE [project_news]  WITH CHECK ADD FOREIGN KEY([template_id])
+REFERENCES [lookup_news_template] ([code])
+GO
+ALTER TABLE [netapp_contractexpiration]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [netapp_contractexpiration]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([access_type])
+REFERENCES [lookup_access_types] ([code])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([acctlink])
+REFERENCES [organization] ([org_id])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([contactlink])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([contact_org_id])
+REFERENCES [organization] ([org_id])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([manager])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [opportunity_header]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [lookup_site_id] ([code])
+GO
 ALTER TABLE [help_notes]  WITH CHECK ADD FOREIGN KEY([completedby])
 REFERENCES [access] ([user_id])
 GO
@@ -9436,13 +9486,10 @@ GO
 ALTER TABLE [help_notes]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [netapp_contractexpiration_log]  WITH CHECK ADD FOREIGN KEY([enteredBy])
-REFERENCES [access] ([user_id])
+ALTER TABLE [web_site_access_log]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [web_site] ([site_id])
 GO
-ALTER TABLE [netapp_contractexpiration_log]  WITH CHECK ADD FOREIGN KEY([expiration_id])
-REFERENCES [netapp_contractexpiration] ([expiration_id])
-GO
-ALTER TABLE [netapp_contractexpiration_log]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+ALTER TABLE [web_site_access_log]  WITH CHECK ADD FOREIGN KEY([user_id])
 REFERENCES [access] ([user_id])
 GO
 ALTER TABLE [organization_phone]  WITH CHECK ADD FOREIGN KEY([enteredby])
@@ -9456,6 +9503,30 @@ REFERENCES [organization] ([org_id])
 GO
 ALTER TABLE [organization_phone]  WITH CHECK ADD FOREIGN KEY([phone_type])
 REFERENCES [lookup_orgphone_types] ([code])
+GO
+ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [ticket_category] ([id])
+GO
+ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [project_files] ([item_id])
+GO
+ALTER TABLE [knowledge_base]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([owner])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([report_id])
+REFERENCES [report] ([report_id])
 GO
 ALTER TABLE [organization]  WITH CHECK ADD FOREIGN KEY([account_size])
 REFERENCES [lookup_account_size] ([code])
@@ -9484,68 +9555,104 @@ GO
 ALTER TABLE [organization]  WITH CHECK ADD FOREIGN KEY([sub_segment_id])
 REFERENCES [lookup_sub_segment] ([code])
 GO
-ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([enteredby])
+ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([completedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([owner])
+ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([link_help_id])
+REFERENCES [help_contents] ([help_id])
+GO
+ALTER TABLE [help_business_rules]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [report_criteria]  WITH CHECK ADD FOREIGN KEY([report_id])
-REFERENCES [report] ([report_id])
-GO
-ALTER TABLE [netapp_contractexpiration]  WITH CHECK ADD FOREIGN KEY([enteredBy])
+ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([enteredby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [netapp_contractexpiration]  WITH CHECK ADD FOREIGN KEY([modifiedBy])
+ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([modifiedby])
 REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [active_survey_answer_items]  WITH CHECK ADD FOREIGN KEY([answer_id])
-REFERENCES [active_survey_answers] ([answer_id])
+ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
 GO
-ALTER TABLE [active_survey_answer_items]  WITH CHECK ADD FOREIGN KEY([item_id])
-REFERENCES [active_survey_items] ([item_id])
+ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [access] ([user_id])
 GO
-ALTER TABLE [active_survey_answer_avg]  WITH CHECK ADD FOREIGN KEY([item_id])
-REFERENCES [active_survey_items] ([item_id])
+ALTER TABLE [project_team]  WITH CHECK ADD FOREIGN KEY([userlevel])
+REFERENCES [lookup_project_role] ([code])
 GO
-ALTER TABLE [active_survey_answer_avg]  WITH CHECK ADD FOREIGN KEY([question_id])
-REFERENCES [active_survey_questions] ([question_id])
+ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([enteredby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([modifiedby])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([owner])
+REFERENCES [access] ([user_id])
+GO
+ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([revenue_id])
+REFERENCES [revenue] ([id])
+GO
+ALTER TABLE [revenue_detail]  WITH CHECK ADD FOREIGN KEY([type])
+REFERENCES [lookup_revenue_types] ([code])
+GO
+ALTER TABLE [business_process_component_parameter]  WITH CHECK ADD FOREIGN KEY([component_id])
+REFERENCES [business_process_component] ([id])
+GO
+ALTER TABLE [business_process_component_parameter]  WITH CHECK ADD FOREIGN KEY([parameter_id])
+REFERENCES [business_process_parameter_library] ([parameter_id])
+GO
+ALTER TABLE [order_product_option_timestamp]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
+REFERENCES [order_product_options] ([order_product_option_id])
+GO
+ALTER TABLE [order_product_option_float]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
+REFERENCES [order_product_options] ([order_product_option_id])
+GO
+ALTER TABLE [order_product_option_text]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
+REFERENCES [order_product_options] ([order_product_option_id])
+GO
+ALTER TABLE [order_product_option_integer]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
+REFERENCES [order_product_options] ([order_product_option_id])
+GO
+ALTER TABLE [order_product_option_boolean]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
+REFERENCES [order_product_options] ([order_product_option_id])
 GO
 ALTER TABLE [report_criteria_parameter]  WITH CHECK ADD FOREIGN KEY([criteria_id])
 REFERENCES [report_criteria] ([criteria_id])
 GO
-ALTER TABLE [active_survey_answers]  WITH CHECK ADD FOREIGN KEY([question_id])
-REFERENCES [active_survey_questions] ([question_id])
+ALTER TABLE [business_process_parameter]  WITH CHECK ADD FOREIGN KEY([process_id])
+REFERENCES [business_process] ([process_id])
 GO
-ALTER TABLE [active_survey_answers]  WITH CHECK ADD FOREIGN KEY([response_id])
-REFERENCES [active_survey_responses] ([response_id])
+ALTER TABLE [business_process_component]  WITH CHECK ADD FOREIGN KEY([component_id])
+REFERENCES [business_process_component_library] ([component_id])
 GO
-ALTER TABLE [step_action_map]  WITH CHECK ADD FOREIGN KEY([action_constant_id])
-REFERENCES [lookup_step_actions] ([constant_id])
+ALTER TABLE [business_process_component]  WITH CHECK ADD FOREIGN KEY([parent_id])
+REFERENCES [business_process_component] ([id])
 GO
-ALTER TABLE [step_action_map]  WITH CHECK ADD FOREIGN KEY([constant_id])
-REFERENCES [action_plan_constants] ([map_id])
+ALTER TABLE [business_process_component]  WITH CHECK ADD FOREIGN KEY([process_id])
+REFERENCES [business_process] ([process_id])
 GO
-ALTER TABLE [action_plan_editor_lookup]  WITH CHECK ADD FOREIGN KEY([constant_id])
-REFERENCES [action_plan_constants] ([map_id])
+ALTER TABLE [business_process_events]  WITH CHECK ADD FOREIGN KEY([process_id])
+REFERENCES [business_process] ([process_id])
 GO
-ALTER TABLE [action_plan_editor_lookup]  WITH CHECK ADD FOREIGN KEY([module_id])
-REFERENCES [permission_category] ([category_id])
+ALTER TABLE [business_process_hook]  WITH CHECK ADD FOREIGN KEY([process_id])
+REFERENCES [business_process] ([process_id])
 GO
-ALTER TABLE [autoguide_inventory]  WITH CHECK ADD FOREIGN KEY([account_id])
-REFERENCES [organization] ([org_id])
-GO
-ALTER TABLE [autoguide_inventory]  WITH CHECK ADD FOREIGN KEY([vehicle_id])
-REFERENCES [autoguide_vehicle] ([vehicle_id])
+ALTER TABLE [business_process_hook]  WITH CHECK ADD FOREIGN KEY([trigger_id])
+REFERENCES [business_process_hook_triggers] ([trigger_id])
 GO
 ALTER TABLE [project_accounts]  WITH CHECK ADD FOREIGN KEY([org_id])
 REFERENCES [organization] ([org_id])
 GO
 ALTER TABLE [project_accounts]  WITH CHECK ADD FOREIGN KEY([project_id])
 REFERENCES [projects] ([project_id])
+GO
+ALTER TABLE [autoguide_inventory]  WITH CHECK ADD FOREIGN KEY([account_id])
+REFERENCES [organization] ([org_id])
+GO
+ALTER TABLE [autoguide_inventory]  WITH CHECK ADD FOREIGN KEY([vehicle_id])
+REFERENCES [autoguide_vehicle] ([vehicle_id])
 GO
 ALTER TABLE [account_type_levels]  WITH CHECK ADD FOREIGN KEY([org_id])
 REFERENCES [organization] ([org_id])
@@ -9556,8 +9663,50 @@ GO
 ALTER TABLE [news]  WITH CHECK ADD FOREIGN KEY([org_id])
 REFERENCES [organization] ([org_id])
 GO
-ALTER TABLE [events_log]  WITH CHECK ADD FOREIGN KEY([event_id])
-REFERENCES [events] ([event_id])
+ALTER TABLE [document_accounts]  WITH CHECK ADD FOREIGN KEY([document_store_id])
+REFERENCES [document_store] ([document_store_id])
+GO
+ALTER TABLE [document_accounts]  WITH CHECK ADD FOREIGN KEY([org_id])
+REFERENCES [organization] ([org_id])
+GO
+ALTER TABLE [active_survey_answer_avg]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [active_survey_items] ([item_id])
+GO
+ALTER TABLE [active_survey_answer_avg]  WITH CHECK ADD FOREIGN KEY([question_id])
+REFERENCES [active_survey_questions] ([question_id])
+GO
+ALTER TABLE [active_survey_answer_items]  WITH CHECK ADD FOREIGN KEY([answer_id])
+REFERENCES [active_survey_answers] ([answer_id])
+GO
+ALTER TABLE [active_survey_answer_items]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [active_survey_items] ([item_id])
+GO
+ALTER TABLE [active_survey_answers]  WITH CHECK ADD FOREIGN KEY([question_id])
+REFERENCES [active_survey_questions] ([question_id])
+GO
+ALTER TABLE [active_survey_answers]  WITH CHECK ADD FOREIGN KEY([response_id])
+REFERENCES [active_survey_responses] ([response_id])
+GO
+ALTER TABLE [action_plan_editor_lookup]  WITH CHECK ADD FOREIGN KEY([constant_id])
+REFERENCES [action_plan_constants] ([map_id])
+GO
+ALTER TABLE [action_plan_editor_lookup]  WITH CHECK ADD FOREIGN KEY([module_id])
+REFERENCES [permission_category] ([category_id])
+GO
+ALTER TABLE [step_action_map]  WITH CHECK ADD FOREIGN KEY([action_constant_id])
+REFERENCES [lookup_step_actions] ([constant_id])
+GO
+ALTER TABLE [step_action_map]  WITH CHECK ADD FOREIGN KEY([constant_id])
+REFERENCES [action_plan_constants] ([map_id])
+GO
+ALTER TABLE [report_queue_criteria]  WITH CHECK ADD FOREIGN KEY([queue_id])
+REFERENCES [report_queue] ([queue_id])
+GO
+ALTER TABLE [taskcategorylink_news]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [lookup_task_category] ([code])
+GO
+ALTER TABLE [taskcategorylink_news]  WITH CHECK ADD FOREIGN KEY([news_id])
+REFERENCES [project_news] ([news_id])
 GO
 ALTER TABLE [ticket_category_plan_map]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [ticket_category] ([id])
@@ -9589,47 +9738,17 @@ GO
 ALTER TABLE [quote_product]  WITH CHECK ADD FOREIGN KEY([status_id])
 REFERENCES [lookup_quote_status] ([code])
 GO
-ALTER TABLE [quote_condition]  WITH CHECK ADD FOREIGN KEY([condition_id])
-REFERENCES [lookup_quote_condition] ([code])
-GO
-ALTER TABLE [quote_condition]  WITH CHECK ADD FOREIGN KEY([quote_id])
-REFERENCES [quote_entry] ([quote_id])
-GO
 ALTER TABLE [quote_remark]  WITH CHECK ADD FOREIGN KEY([quote_id])
 REFERENCES [quote_entry] ([quote_id])
 GO
 ALTER TABLE [quote_remark]  WITH CHECK ADD FOREIGN KEY([remark_id])
 REFERENCES [lookup_quote_remarks] ([code])
 GO
-ALTER TABLE [action_phase]  WITH CHECK ADD FOREIGN KEY([parent_id])
-REFERENCES [action_phase] ([phase_id])
+ALTER TABLE [quote_condition]  WITH CHECK ADD FOREIGN KEY([condition_id])
+REFERENCES [lookup_quote_condition] ([code])
 GO
-ALTER TABLE [action_phase]  WITH CHECK ADD FOREIGN KEY([plan_id])
-REFERENCES [action_plan] ([plan_id])
-GO
-ALTER TABLE [ticket_category_draft_plan_map]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [ticket_category_draft] ([id])
-GO
-ALTER TABLE [ticket_category_draft_plan_map]  WITH CHECK ADD FOREIGN KEY([plan_id])
-REFERENCES [action_plan] ([plan_id])
-GO
-ALTER TABLE [taskcategorylink_news]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [lookup_task_category] ([code])
-GO
-ALTER TABLE [taskcategorylink_news]  WITH CHECK ADD FOREIGN KEY([news_id])
-REFERENCES [project_news] ([news_id])
-GO
-ALTER TABLE [report_queue_criteria]  WITH CHECK ADD FOREIGN KEY([queue_id])
-REFERENCES [report_queue] ([queue_id])
-GO
-ALTER TABLE [taskcategory_project]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [lookup_task_category] ([code])
-GO
-ALTER TABLE [taskcategory_project]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
-GO
-ALTER TABLE [web_style]  WITH CHECK ADD FOREIGN KEY([layout_id])
-REFERENCES [web_layout] ([layout_id])
+ALTER TABLE [quote_condition]  WITH CHECK ADD FOREIGN KEY([quote_id])
+REFERENCES [quote_entry] ([quote_id])
 GO
 ALTER TABLE [project_requirements_map]  WITH CHECK ADD FOREIGN KEY([assignment_id])
 REFERENCES [project_assignments] ([assignment_id])
@@ -9643,6 +9762,24 @@ GO
 ALTER TABLE [project_requirements_map]  WITH CHECK ADD FOREIGN KEY([requirement_id])
 REFERENCES [project_requirements] ([requirement_id])
 GO
+ALTER TABLE [taskcategory_project]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [lookup_task_category] ([code])
+GO
+ALTER TABLE [taskcategory_project]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
+GO
+ALTER TABLE [action_phase]  WITH CHECK ADD FOREIGN KEY([parent_id])
+REFERENCES [action_phase] ([phase_id])
+GO
+ALTER TABLE [action_phase]  WITH CHECK ADD FOREIGN KEY([plan_id])
+REFERENCES [action_plan] ([plan_id])
+GO
+ALTER TABLE [ticket_category_draft_plan_map]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [ticket_category_draft] ([id])
+GO
+ALTER TABLE [ticket_category_draft_plan_map]  WITH CHECK ADD FOREIGN KEY([plan_id])
+REFERENCES [action_plan] ([plan_id])
+GO
 ALTER TABLE [tasklink_ticket]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [lookup_ticket_task_category] ([code])
 GO
@@ -9652,11 +9789,41 @@ GO
 ALTER TABLE [tasklink_ticket]  WITH CHECK ADD FOREIGN KEY([ticket_id])
 REFERENCES [ticket] ([ticketid])
 GO
-ALTER TABLE [sync_log]  WITH CHECK ADD FOREIGN KEY([client_id])
-REFERENCES [sync_client] ([client_id])
+ALTER TABLE [tasklink_contact]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
 GO
-ALTER TABLE [sync_log]  WITH CHECK ADD FOREIGN KEY([system_id])
-REFERENCES [sync_system] ([system_id])
+ALTER TABLE [tasklink_contact]  WITH CHECK ADD FOREIGN KEY([task_id])
+REFERENCES [task] ([task_id])
+GO
+ALTER TABLE [scheduled_recipient]  WITH CHECK ADD FOREIGN KEY([campaign_id])
+REFERENCES [campaign] ([campaign_id])
+GO
+ALTER TABLE [scheduled_recipient]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [excluded_recipient]  WITH CHECK ADD FOREIGN KEY([campaign_id])
+REFERENCES [campaign] ([campaign_id])
+GO
+ALTER TABLE [excluded_recipient]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [contact_type_levels]  WITH CHECK ADD FOREIGN KEY([contact_id])
+REFERENCES [contact] ([contact_id])
+GO
+ALTER TABLE [contact_type_levels]  WITH CHECK ADD FOREIGN KEY([type_id])
+REFERENCES [lookup_contact_types] ([code])
+GO
+ALTER TABLE [opportunity_component_levels]  WITH CHECK ADD FOREIGN KEY([opp_id])
+REFERENCES [opportunity_component] ([id])
+GO
+ALTER TABLE [opportunity_component_levels]  WITH CHECK ADD FOREIGN KEY([type_id])
+REFERENCES [lookup_opportunity_types] ([code])
+GO
+ALTER TABLE [web_style]  WITH CHECK ADD FOREIGN KEY([layout_id])
+REFERENCES [web_layout] ([layout_id])
+GO
+ALTER TABLE [events_log]  WITH CHECK ADD FOREIGN KEY([event_id])
+REFERENCES [events] ([event_id])
 GO
 ALTER TABLE [sync_map]  WITH CHECK ADD FOREIGN KEY([client_id])
 REFERENCES [sync_client] ([client_id])
@@ -9669,6 +9836,12 @@ REFERENCES [sync_client] ([client_id])
 GO
 ALTER TABLE [sync_conflict_log]  WITH CHECK ADD FOREIGN KEY([table_id])
 REFERENCES [sync_table] ([table_id])
+GO
+ALTER TABLE [sync_log]  WITH CHECK ADD FOREIGN KEY([client_id])
+REFERENCES [sync_client] ([client_id])
+GO
+ALTER TABLE [sync_log]  WITH CHECK ADD FOREIGN KEY([system_id])
+REFERENCES [sync_system] ([system_id])
 GO
 ALTER TABLE [process_log]  WITH CHECK ADD FOREIGN KEY([client_id])
 REFERENCES [sync_client] ([client_id])
@@ -9697,35 +9870,26 @@ GO
 ALTER TABLE [tasklink_project]  WITH CHECK ADD FOREIGN KEY([task_id])
 REFERENCES [task] ([task_id])
 GO
-ALTER TABLE [tasklink_contact]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
+ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [quote_product] ([item_id])
 GO
-ALTER TABLE [tasklink_contact]  WITH CHECK ADD FOREIGN KEY([task_id])
-REFERENCES [task] ([task_id])
+ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([price_currency])
+REFERENCES [lookup_currency] ([code])
 GO
-ALTER TABLE [opportunity_component_levels]  WITH CHECK ADD FOREIGN KEY([opp_id])
-REFERENCES [opportunity_component] ([id])
+ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([product_option_id])
+REFERENCES [product_option_map] ([product_option_id])
 GO
-ALTER TABLE [opportunity_component_levels]  WITH CHECK ADD FOREIGN KEY([type_id])
-REFERENCES [lookup_opportunity_types] ([code])
+ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_currency])
+REFERENCES [lookup_currency] ([code])
 GO
-ALTER TABLE [scheduled_recipient]  WITH CHECK ADD FOREIGN KEY([campaign_id])
-REFERENCES [campaign] ([campaign_id])
+ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_type])
+REFERENCES [lookup_recurring_type] ([code])
 GO
-ALTER TABLE [scheduled_recipient]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
+ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([status_id])
+REFERENCES [lookup_quote_status] ([code])
 GO
-ALTER TABLE [excluded_recipient]  WITH CHECK ADD FOREIGN KEY([campaign_id])
-REFERENCES [campaign] ([campaign_id])
-GO
-ALTER TABLE [excluded_recipient]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
-GO
-ALTER TABLE [contact_type_levels]  WITH CHECK ADD FOREIGN KEY([contact_id])
-REFERENCES [contact] ([contact_id])
-GO
-ALTER TABLE [contact_type_levels]  WITH CHECK ADD FOREIGN KEY([type_id])
-REFERENCES [lookup_contact_types] ([code])
+ALTER TABLE [sync_table]  WITH CHECK ADD FOREIGN KEY([system_id])
+REFERENCES [sync_system] ([system_id])
 GO
 ALTER TABLE [action_step]  WITH CHECK ADD FOREIGN KEY([action_id])
 REFERENCES [lookup_step_actions] ([constant_id])
@@ -9757,29 +9921,11 @@ GO
 ALTER TABLE [action_step]  WITH CHECK ADD FOREIGN KEY([role_id])
 REFERENCES [role] ([role_id])
 GO
-ALTER TABLE [business_process_hook_triggers]  WITH CHECK ADD FOREIGN KEY([hook_id])
-REFERENCES [business_process_hook_library] ([hook_id])
+ALTER TABLE [action_step_account_types]  WITH CHECK ADD FOREIGN KEY([step_id])
+REFERENCES [action_step] ([step_id])
 GO
-ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([item_id])
-REFERENCES [quote_product] ([item_id])
-GO
-ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([price_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([product_option_id])
-REFERENCES [product_option_map] ([product_option_id])
-GO
-ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_type])
-REFERENCES [lookup_recurring_type] ([code])
-GO
-ALTER TABLE [quote_product_options]  WITH CHECK ADD FOREIGN KEY([status_id])
-REFERENCES [lookup_quote_status] ([code])
-GO
-ALTER TABLE [sync_table]  WITH CHECK ADD FOREIGN KEY([system_id])
-REFERENCES [sync_system] ([system_id])
+ALTER TABLE [action_step_account_types]  WITH CHECK ADD FOREIGN KEY([type_id])
+REFERENCES [lookup_account_types] ([code])
 GO
 ALTER TABLE [service_contract_products]  WITH CHECK ADD FOREIGN KEY([link_contract_id])
 REFERENCES [service_contract] ([contract_id])
@@ -9790,6 +9936,12 @@ GO
 ALTER TABLE [active_campaign_groups]  WITH CHECK ADD FOREIGN KEY([campaign_id])
 REFERENCES [campaign] ([campaign_id])
 GO
+ALTER TABLE [campaign_survey_link]  WITH CHECK ADD FOREIGN KEY([campaign_id])
+REFERENCES [campaign] ([campaign_id])
+GO
+ALTER TABLE [campaign_survey_link]  WITH CHECK ADD FOREIGN KEY([survey_id])
+REFERENCES [survey] ([survey_id])
+GO
 ALTER TABLE [campaign_run]  WITH CHECK ADD FOREIGN KEY([campaign_id])
 REFERENCES [campaign] ([campaign_id])
 GO
@@ -9799,23 +9951,8 @@ GO
 ALTER TABLE [campaign_group_map]  WITH CHECK ADD FOREIGN KEY([user_group_id])
 REFERENCES [user_group] ([group_id])
 GO
-ALTER TABLE [campaign_survey_link]  WITH CHECK ADD FOREIGN KEY([campaign_id])
-REFERENCES [campaign] ([campaign_id])
-GO
-ALTER TABLE [campaign_survey_link]  WITH CHECK ADD FOREIGN KEY([survey_id])
-REFERENCES [survey] ([survey_id])
-GO
-ALTER TABLE [business_process_hook]  WITH CHECK ADD FOREIGN KEY([process_id])
-REFERENCES [business_process] ([process_id])
-GO
-ALTER TABLE [business_process_hook]  WITH CHECK ADD FOREIGN KEY([trigger_id])
-REFERENCES [business_process_hook_triggers] ([trigger_id])
-GO
-ALTER TABLE [action_step_account_types]  WITH CHECK ADD FOREIGN KEY([step_id])
-REFERENCES [action_step] ([step_id])
-GO
-ALTER TABLE [action_step_account_types]  WITH CHECK ADD FOREIGN KEY([type_id])
-REFERENCES [lookup_account_types] ([code])
+ALTER TABLE [business_process_hook_triggers]  WITH CHECK ADD FOREIGN KEY([hook_id])
+REFERENCES [business_process_hook_library] ([hook_id])
 GO
 ALTER TABLE [lookup_project_permission]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [lookup_project_permission_category] ([code])
@@ -9823,29 +9960,14 @@ GO
 ALTER TABLE [lookup_project_permission]  WITH CHECK ADD FOREIGN KEY([default_role])
 REFERENCES [lookup_project_role] ([code])
 GO
+ALTER TABLE [lookup_call_result]  WITH CHECK ADD FOREIGN KEY([next_call_type_id])
+REFERENCES [call_log] ([call_id])
+GO
 ALTER TABLE [ticketlink_project]  WITH CHECK ADD FOREIGN KEY([project_id])
 REFERENCES [projects] ([project_id])
 GO
 ALTER TABLE [ticketlink_project]  WITH CHECK ADD FOREIGN KEY([ticket_id])
 REFERENCES [ticket] ([ticketid])
-GO
-ALTER TABLE [quote_product_option_boolean]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
-REFERENCES [quote_product_options] ([quote_product_option_id])
-GO
-ALTER TABLE [quote_product_option_float]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
-REFERENCES [quote_product_options] ([quote_product_option_id])
-GO
-ALTER TABLE [quote_product_option_timestamp]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
-REFERENCES [quote_product_options] ([quote_product_option_id])
-GO
-ALTER TABLE [quote_product_option_integer]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
-REFERENCES [quote_product_options] ([quote_product_option_id])
-GO
-ALTER TABLE [quote_product_option_text]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
-REFERENCES [quote_product_options] ([quote_product_option_id])
-GO
-ALTER TABLE [action_step_lookup]  WITH CHECK ADD FOREIGN KEY([step_id])
-REFERENCES [action_step] ([step_id])
 GO
 ALTER TABLE [project_permissions]  WITH CHECK ADD FOREIGN KEY([permission_id])
 REFERENCES [lookup_project_permission] ([code])
@@ -9856,17 +9978,41 @@ GO
 ALTER TABLE [project_permissions]  WITH CHECK ADD FOREIGN KEY([userlevel])
 REFERENCES [lookup_project_role] ([code])
 GO
-ALTER TABLE [lookup_call_result]  WITH CHECK ADD FOREIGN KEY([next_call_type_id])
-REFERENCES [call_log] ([call_id])
+ALTER TABLE [quote_product_option_float]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
+REFERENCES [quote_product_options] ([quote_product_option_id])
+GO
+ALTER TABLE [quote_product_option_timestamp]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
+REFERENCES [quote_product_options] ([quote_product_option_id])
+GO
+ALTER TABLE [quote_product_option_boolean]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
+REFERENCES [quote_product_options] ([quote_product_option_id])
+GO
+ALTER TABLE [quote_product_option_integer]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
+REFERENCES [quote_product_options] ([quote_product_option_id])
+GO
+ALTER TABLE [quote_product_option_text]  WITH CHECK ADD FOREIGN KEY([quote_product_option_id])
+REFERENCES [quote_product_options] ([quote_product_option_id])
 GO
 ALTER TABLE [sync_transaction_log]  WITH CHECK ADD FOREIGN KEY([log_id])
 REFERENCES [sync_log] ([log_id])
+GO
+ALTER TABLE [action_step_lookup]  WITH CHECK ADD FOREIGN KEY([step_id])
+REFERENCES [action_step] ([step_id])
 GO
 ALTER TABLE [lookup_document_store_permission]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [lookup_document_store_permission_category] ([code])
 GO
 ALTER TABLE [lookup_document_store_permission]  WITH CHECK ADD FOREIGN KEY([default_role])
 REFERENCES [lookup_document_store_role] ([code])
+GO
+ALTER TABLE [relationship]  WITH CHECK ADD FOREIGN KEY([type_id])
+REFERENCES [lookup_relationship_types] ([type_id])
+GO
+ALTER TABLE [role_permission]  WITH CHECK ADD FOREIGN KEY([permission_id])
+REFERENCES [permission] ([permission_id])
+GO
+ALTER TABLE [role_permission]  WITH CHECK ADD FOREIGN KEY([role_id])
+REFERENCES [role] ([role_id])
 GO
 ALTER TABLE [autoguide_vehicle]  WITH CHECK ADD FOREIGN KEY([make_id])
 REFERENCES [autoguide_make] ([make_id])
@@ -9886,14 +10032,41 @@ GO
 ALTER TABLE [document_store_permissions]  WITH CHECK ADD FOREIGN KEY([userlevel])
 REFERENCES [lookup_document_store_role] ([code])
 GO
-ALTER TABLE [relationship]  WITH CHECK ADD FOREIGN KEY([type_id])
-REFERENCES [lookup_relationship_types] ([type_id])
+ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([item_id])
+REFERENCES [order_product] ([item_id])
 GO
-ALTER TABLE [role_permission]  WITH CHECK ADD FOREIGN KEY([permission_id])
-REFERENCES [permission] ([permission_id])
+ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([price_currency])
+REFERENCES [lookup_currency] ([code])
 GO
-ALTER TABLE [role_permission]  WITH CHECK ADD FOREIGN KEY([role_id])
-REFERENCES [role] ([role_id])
+ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([product_option_id])
+REFERENCES [product_option_map] ([product_option_id])
+GO
+ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_currency])
+REFERENCES [lookup_currency] ([code])
+GO
+ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_type])
+REFERENCES [lookup_recurring_type] ([code])
+GO
+ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([status_id])
+REFERENCES [lookup_order_status] ([code])
+GO
+ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([cost_currency])
+REFERENCES [lookup_currency] ([code])
+GO
+ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([msrp_currency])
+REFERENCES [lookup_currency] ([code])
+GO
+ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([option_id])
+REFERENCES [product_option] ([option_id])
+GO
+ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([price_currency])
+REFERENCES [lookup_currency] ([code])
+GO
+ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([recurring_currency])
+REFERENCES [lookup_currency] ([code])
+GO
+ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([recurring_type])
+REFERENCES [lookup_recurring_type] ([code])
 GO
 ALTER TABLE [order_product]  WITH CHECK ADD FOREIGN KEY([msrp_currency])
 REFERENCES [lookup_currency] ([code])
@@ -9916,52 +10089,16 @@ GO
 ALTER TABLE [order_product]  WITH CHECK ADD FOREIGN KEY([status_id])
 REFERENCES [lookup_order_status] ([code])
 GO
-ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([cost_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([msrp_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([option_id])
-REFERENCES [product_option] ([option_id])
-GO
-ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([price_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([recurring_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [product_option_values]  WITH CHECK ADD FOREIGN KEY([recurring_type])
-REFERENCES [lookup_recurring_type] ([code])
-GO
-ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([item_id])
-REFERENCES [order_product] ([item_id])
-GO
-ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([price_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([product_option_id])
-REFERENCES [product_option_map] ([product_option_id])
-GO
-ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_currency])
-REFERENCES [lookup_currency] ([code])
-GO
-ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([recurring_type])
-REFERENCES [lookup_recurring_type] ([code])
-GO
-ALTER TABLE [order_product_options]  WITH CHECK ADD FOREIGN KEY([status_id])
-REFERENCES [lookup_order_status] ([code])
-GO
-ALTER TABLE [product_option_configurator]  WITH CHECK ADD FOREIGN KEY([result_type])
-REFERENCES [lookup_product_conf_result] ([code])
-GO
 ALTER TABLE [business_process_hook_library]  WITH CHECK ADD FOREIGN KEY([link_module_id])
+REFERENCES [permission_category] ([category_id])
+GO
+ALTER TABLE [business_process]  WITH CHECK ADD FOREIGN KEY([link_module_id])
 REFERENCES [permission_category] ([category_id])
 GO
 ALTER TABLE [help_module]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [permission_category] ([category_id])
 GO
-ALTER TABLE [custom_list_view_editor]  WITH CHECK ADD FOREIGN KEY([module_id])
+ALTER TABLE [category_editor_lookup]  WITH CHECK ADD FOREIGN KEY([module_id])
 REFERENCES [permission_category] ([category_id])
 GO
 ALTER TABLE [permission]  WITH CHECK ADD FOREIGN KEY([category_id])
@@ -9970,26 +10107,14 @@ GO
 ALTER TABLE [lookup_lists_lookup]  WITH CHECK ADD FOREIGN KEY([module_id])
 REFERENCES [permission_category] ([category_id])
 GO
-ALTER TABLE [category_editor_lookup]  WITH CHECK ADD FOREIGN KEY([module_id])
+ALTER TABLE [custom_list_view_editor]  WITH CHECK ADD FOREIGN KEY([module_id])
 REFERENCES [permission_category] ([category_id])
 GO
 ALTER TABLE [module_field_categorylink]  WITH CHECK ADD FOREIGN KEY([module_id])
 REFERENCES [permission_category] ([category_id])
 GO
-ALTER TABLE [business_process]  WITH CHECK ADD FOREIGN KEY([link_module_id])
-REFERENCES [permission_category] ([category_id])
-GO
-ALTER TABLE [product_option]  WITH CHECK ADD FOREIGN KEY([configurator_id])
-REFERENCES [product_option_configurator] ([configurator_id])
-GO
-ALTER TABLE [product_option]  WITH CHECK ADD FOREIGN KEY([parent_id])
-REFERENCES [product_option] ([option_id])
-GO
-ALTER TABLE [product_catalog_category_map]  WITH CHECK ADD FOREIGN KEY([category_id])
-REFERENCES [product_category] ([category_id])
-GO
-ALTER TABLE [product_catalog_category_map]  WITH CHECK ADD FOREIGN KEY([product_id])
-REFERENCES [product_catalog] ([product_id])
+ALTER TABLE [product_option_configurator]  WITH CHECK ADD FOREIGN KEY([result_type])
+REFERENCES [lookup_product_conf_result] ([code])
 GO
 ALTER TABLE [product_category_map]  WITH CHECK ADD FOREIGN KEY([category1_id])
 REFERENCES [product_category] ([category_id])
@@ -9997,14 +10122,23 @@ GO
 ALTER TABLE [product_category_map]  WITH CHECK ADD FOREIGN KEY([category2_id])
 REFERENCES [product_category] ([category_id])
 GO
+ALTER TABLE [product_catalog_category_map]  WITH CHECK ADD FOREIGN KEY([category_id])
+REFERENCES [product_category] ([category_id])
+GO
+ALTER TABLE [product_catalog_category_map]  WITH CHECK ADD FOREIGN KEY([product_id])
+REFERENCES [product_catalog] ([product_id])
+GO
+ALTER TABLE [product_option]  WITH CHECK ADD FOREIGN KEY([configurator_id])
+REFERENCES [product_option_configurator] ([configurator_id])
+GO
+ALTER TABLE [product_option]  WITH CHECK ADD FOREIGN KEY([parent_id])
+REFERENCES [product_option] ([option_id])
+GO
 ALTER TABLE [autoguide_inventory_options]  WITH CHECK ADD FOREIGN KEY([inventory_id])
 REFERENCES [autoguide_inventory] ([inventory_id])
 GO
 ALTER TABLE [autoguide_ad_run]  WITH CHECK ADD FOREIGN KEY([inventory_id])
 REFERENCES [autoguide_inventory] ([inventory_id])
-GO
-ALTER TABLE [product_option_boolean]  WITH CHECK ADD FOREIGN KEY([product_option_id])
-REFERENCES [product_option] ([option_id])
 GO
 ALTER TABLE [product_option_map]  WITH CHECK ADD FOREIGN KEY([option_id])
 REFERENCES [product_option] ([option_id])
@@ -10012,16 +10146,19 @@ GO
 ALTER TABLE [product_option_map]  WITH CHECK ADD FOREIGN KEY([product_id])
 REFERENCES [product_catalog] ([product_id])
 GO
-ALTER TABLE [product_option_integer]  WITH CHECK ADD FOREIGN KEY([product_option_id])
-REFERENCES [product_option] ([option_id])
-GO
-ALTER TABLE [product_option_text]  WITH CHECK ADD FOREIGN KEY([product_option_id])
+ALTER TABLE [product_option_boolean]  WITH CHECK ADD FOREIGN KEY([product_option_id])
 REFERENCES [product_option] ([option_id])
 GO
 ALTER TABLE [product_option_float]  WITH CHECK ADD FOREIGN KEY([product_option_id])
 REFERENCES [product_option] ([option_id])
 GO
 ALTER TABLE [product_option_timestamp]  WITH CHECK ADD FOREIGN KEY([product_option_id])
+REFERENCES [product_option] ([option_id])
+GO
+ALTER TABLE [product_option_integer]  WITH CHECK ADD FOREIGN KEY([product_option_id])
+REFERENCES [product_option] ([option_id])
+GO
+ALTER TABLE [product_option_text]  WITH CHECK ADD FOREIGN KEY([product_option_id])
 REFERENCES [product_option] ([option_id])
 GO
 ALTER TABLE [ticket_activity_item]  WITH CHECK ADD FOREIGN KEY([link_form_id])
@@ -10032,6 +10169,9 @@ REFERENCES [asset] ([asset_id])
 GO
 ALTER TABLE [asset_materials_map]  WITH CHECK ADD FOREIGN KEY([code])
 REFERENCES [lookup_asset_materials] ([code])
+GO
+ALTER TABLE [custom_list_view]  WITH CHECK ADD FOREIGN KEY([editor_id])
+REFERENCES [custom_list_view_editor] ([editor_id])
 GO
 ALTER TABLE [survey_questions]  WITH CHECK ADD FOREIGN KEY([survey_id])
 REFERENCES [survey] ([survey_id])
@@ -10044,9 +10184,6 @@ REFERENCES [active_survey] ([active_survey_id])
 GO
 ALTER TABLE [active_survey_questions]  WITH CHECK ADD FOREIGN KEY([type])
 REFERENCES [lookup_survey_types] ([code])
-GO
-ALTER TABLE [custom_list_view]  WITH CHECK ADD FOREIGN KEY([editor_id])
-REFERENCES [custom_list_view_editor] ([editor_id])
 GO
 ALTER TABLE [viewpoint_permission]  WITH CHECK ADD FOREIGN KEY([permission_id])
 REFERENCES [permission] ([permission_id])
@@ -10078,17 +10215,8 @@ GO
 ALTER TABLE [custom_field_group]  WITH CHECK ADD FOREIGN KEY([category_id])
 REFERENCES [custom_field_category] ([category_id])
 GO
-ALTER TABLE [business_process_component]  WITH CHECK ADD FOREIGN KEY([component_id])
-REFERENCES [business_process_component_library] ([component_id])
-GO
-ALTER TABLE [business_process_component]  WITH CHECK ADD FOREIGN KEY([parent_id])
-REFERENCES [business_process_component] ([id])
-GO
-ALTER TABLE [business_process_component]  WITH CHECK ADD FOREIGN KEY([process_id])
-REFERENCES [business_process] ([process_id])
-GO
-ALTER TABLE [business_process_component_result_lookup]  WITH CHECK ADD FOREIGN KEY([component_id])
-REFERENCES [business_process_component_library] ([component_id])
+ALTER TABLE [lookup_sub_segment]  WITH CHECK ADD FOREIGN KEY([segment_id])
+REFERENCES [lookup_segments] ([code])
 GO
 ALTER TABLE [product_keyword_map]  WITH CHECK ADD FOREIGN KEY([keyword_id])
 REFERENCES [lookup_product_keyword] ([code])
@@ -10096,8 +10224,11 @@ GO
 ALTER TABLE [product_keyword_map]  WITH CHECK ADD FOREIGN KEY([product_id])
 REFERENCES [product_catalog] ([product_id])
 GO
-ALTER TABLE [lookup_sub_segment]  WITH CHECK ADD FOREIGN KEY([segment_id])
-REFERENCES [lookup_segments] ([code])
+ALTER TABLE [project_news_category]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
+GO
+ALTER TABLE [project_ticket_count]  WITH CHECK ADD FOREIGN KEY([project_id])
+REFERENCES [projects] ([project_id])
 GO
 ALTER TABLE [active_survey_items]  WITH CHECK ADD FOREIGN KEY([question_id])
 REFERENCES [active_survey_questions] ([question_id])
@@ -10105,28 +10236,13 @@ GO
 ALTER TABLE [custom_field_info]  WITH CHECK ADD FOREIGN KEY([group_id])
 REFERENCES [custom_field_group] ([group_id])
 GO
-ALTER TABLE [business_process_component_parameter]  WITH CHECK ADD FOREIGN KEY([component_id])
-REFERENCES [business_process_component] ([id])
-GO
-ALTER TABLE [business_process_component_parameter]  WITH CHECK ADD FOREIGN KEY([parameter_id])
-REFERENCES [business_process_parameter_library] ([parameter_id])
-GO
-ALTER TABLE [project_news_category]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
-GO
-ALTER TABLE [project_ticket_count]  WITH CHECK ADD FOREIGN KEY([project_id])
-REFERENCES [projects] ([project_id])
-GO
-ALTER TABLE [business_process_events]  WITH CHECK ADD FOREIGN KEY([process_id])
-REFERENCES [business_process] ([process_id])
-GO
-ALTER TABLE [business_process_parameter]  WITH CHECK ADD FOREIGN KEY([process_id])
-REFERENCES [business_process] ([process_id])
-GO
-ALTER TABLE [custom_field_lookup]  WITH CHECK ADD FOREIGN KEY([field_id])
-REFERENCES [custom_field_info] ([field_id])
+ALTER TABLE [business_process_component_result_lookup]  WITH CHECK ADD FOREIGN KEY([component_id])
+REFERENCES [business_process_component_library] ([component_id])
 GO
 ALTER TABLE [access]  WITH CHECK ADD FOREIGN KEY([site_id])
+REFERENCES [lookup_site_id] ([code])
+GO
+ALTER TABLE [action_plan_category_draft]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [lookup_site_id] ([code])
 GO
 ALTER TABLE [ticket_category]  WITH CHECK ADD FOREIGN KEY([site_id])
@@ -10135,32 +10251,17 @@ GO
 ALTER TABLE [ticket_category_draft]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [lookup_site_id] ([code])
 GO
-ALTER TABLE [asset_category]  WITH CHECK ADD FOREIGN KEY([site_id])
-REFERENCES [lookup_site_id] ([code])
-GO
 ALTER TABLE [asset_category_draft]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [lookup_site_id] ([code])
 GO
-ALTER TABLE [action_plan_category]  WITH CHECK ADD FOREIGN KEY([site_id])
+ALTER TABLE [asset_category]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [lookup_site_id] ([code])
 GO
 ALTER TABLE [ticket_defect]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [lookup_site_id] ([code])
 GO
-ALTER TABLE [action_plan_category_draft]  WITH CHECK ADD FOREIGN KEY([site_id])
+ALTER TABLE [action_plan_category]  WITH CHECK ADD FOREIGN KEY([site_id])
 REFERENCES [lookup_site_id] ([code])
 GO
-ALTER TABLE [order_product_option_text]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
-REFERENCES [order_product_options] ([order_product_option_id])
-GO
-ALTER TABLE [order_product_option_timestamp]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
-REFERENCES [order_product_options] ([order_product_option_id])
-GO
-ALTER TABLE [order_product_option_integer]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
-REFERENCES [order_product_options] ([order_product_option_id])
-GO
-ALTER TABLE [order_product_option_float]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
-REFERENCES [order_product_options] ([order_product_option_id])
-GO
-ALTER TABLE [order_product_option_boolean]  WITH CHECK ADD FOREIGN KEY([order_product_option_id])
-REFERENCES [order_product_options] ([order_product_option_id])
+ALTER TABLE [custom_field_lookup]  WITH CHECK ADD FOREIGN KEY([field_id])
+REFERENCES [custom_field_info] ([field_id])

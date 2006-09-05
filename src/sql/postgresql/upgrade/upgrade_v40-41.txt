@@ -15,7 +15,6 @@
 # Web access log
 2006-06-09-script01-kailash.sql
 
-# TODO: verify and add to next 4.1 .war
 # 4.0 fixes
 2006-06-14-script01-mr.sql
 2006-06-28-script01-partha.sql
@@ -33,10 +32,13 @@
 
 # Upgrade scripts
 2006-07-21-script01-ananth.bsh
+
+############################ TODO: verify and add the following to next 4.1 .war
+
 ### needs BSH
 2006-07-25-script01-ananth.sql
 
 
-# Run each time after upgrading a system
+# Run each time after upgrading a system (NOTE: this is a temporary measure)
 2005-07-20-script01-mr.bsh
 2006-06-01-script01-mr.bsh

@@ -970,12 +970,14 @@
       </fileset>
     </copy>
     <!-- Copy the database files (MySQL) -->
+    <!--
     <copy file="${src.sql.dir}/mysql/distribution/mysql.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/setup">
       <fileset dir="${src.sql.dir}/mysql/distribution">
         <include name="mysql_*.sql"/>
       </fileset>
     </copy>
+    -->
     <!-- Copy the database upgrade files -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup">
       <fileset dir="${src.sql.dir}/upgrade">

@@ -1,80 +1,5 @@
 -- Script (C) 2006 Dark Horse Ventures LLC, all rights reserved
 
-SET client_encoding = 'UNICODE';
-SET check_function_bodies = false;
-
-CREATE TABLE sites (
-    site_id serial NOT NULL,
-    sitecode character varying(255) NOT NULL,
-    vhost character varying(255) DEFAULT '' NOT NULL,
-    dbhost character varying(255) DEFAULT '' NOT NULL,
-    dbname character varying(255) DEFAULT '' NOT NULL,
-    dbport integer DEFAULT 5432 NOT NULL,
-    dbuser character varying(255) DEFAULT '' NOT NULL,
-    dbpw character varying(255) DEFAULT '' NOT NULL,
-    driver character varying(255) DEFAULT '' NOT NULL,
-    code character varying(255),
-    enabled boolean DEFAULT false NOT NULL
-);
-
-
-CREATE TABLE events (
-    event_id serial NOT NULL,
-    "second" character varying(64) DEFAULT '0',
-    "minute" character varying(64) DEFAULT '*',
-    "hour" character varying(64) DEFAULT '*',
-    dayofmonth character varying(64) DEFAULT '*',
-    "month" character varying(64) DEFAULT '*',
-    dayofweek character varying(64) DEFAULT '*',
-    "year" character varying(64) DEFAULT '*',
-    task character varying(255),
-    extrainfo character varying(255),
-    businessdays character varying(6) DEFAULT 'true',
-    enabled boolean DEFAULT false,
-    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
-);
-
-
-CREATE TABLE events_log (
-    log_id serial NOT NULL,
-    event_id integer NOT NULL,
-    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    status integer,
-    message text
-);
-
-
-ALTER TABLE ONLY sites
-    ADD CONSTRAINT sites_pkey PRIMARY KEY (site_id);
-
-
-
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_pkey PRIMARY KEY (event_id);
-
-
-
-ALTER TABLE ONLY events_log
-    ADD CONSTRAINT events_log_pkey PRIMARY KEY (log_id);
-
-
-
-ALTER TABLE ONLY events_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (event_id) REFERENCES events(event_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-SELECT pg_catalog.setval ('sites_site_id_seq', 1, false);
-
-
-
-SELECT pg_catalog.setval ('events_event_id_seq', 1, true);
-
-
-
-SELECT pg_catalog.setval ('events_log_log_id_seq', 1, false);
-
-
 CREATE TABLE lookup_site_id (
     code serial NOT NULL,
     description character varying(300) NOT NULL,
@@ -1945,7 +1870,8 @@ CREATE TABLE project_files (
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
-    default_file boolean DEFAULT false
+    default_file boolean DEFAULT false,
+    allow_portal_access boolean DEFAULT false
 );
 
 
@@ -1962,7 +1888,8 @@ CREATE TABLE project_files_version (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    allow_portal_access boolean DEFAULT false
 );
 
 
@@ -1998,7 +1925,8 @@ CREATE TABLE project_team (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
     modifiedby integer NOT NULL,
     status integer,
-    last_accessed timestamp(3) without time zone
+    last_accessed timestamp(3) without time zone,
+    role_type integer
 );
 
 
@@ -4772,7 +4700,8 @@ CREATE TABLE document_store_user_member (
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
     modifiedby integer NOT NULL,
-    site_id integer
+    site_id integer,
+    role_type integer
 );
 
 
@@ -4787,7 +4716,8 @@ CREATE TABLE document_store_role_member (
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
     modifiedby integer NOT NULL,
-    site_id integer
+    site_id integer,
+    role_type integer
 );
 
 
@@ -4802,7 +4732,17 @@ CREATE TABLE document_store_department_member (
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
     modifiedby integer NOT NULL,
-    site_id integer
+    site_id integer,
+    role_type integer
+);
+
+
+
+CREATE TABLE document_accounts (
+    id serial NOT NULL,
+    document_store_id integer NOT NULL,
+    org_id integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
 
@@ -5704,6 +5644,91 @@ CREATE TABLE portfolio_item (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL
 );
+
+
+
+CREATE TABLE web_site_access_log (
+    site_log_id serial NOT NULL,
+    site_id integer,
+    user_id integer,
+    ip character varying(300),
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    browser character varying(255),
+    referrer character varying(1024)
+);
+
+
+
+CREATE TABLE web_page_access_log (
+    page_id integer,
+    site_log_id integer,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+);
+
+
+
+CREATE TABLE web_product_access_log (
+    product_id integer,
+    site_log_id integer,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+);
+
+
+
+CREATE TABLE web_product_email_log (
+    product_id integer,
+    emails_to text NOT NULL,
+    from_name character varying(300) NOT NULL,
+    comments character varying(1024),
+    site_log_id integer,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+);
+
+
+
+CREATE TABLE sites (
+    site_id serial NOT NULL,
+    sitecode character varying(255) NOT NULL,
+    vhost character varying(255) DEFAULT ''::character varying NOT NULL,
+    dbhost character varying(255) DEFAULT ''::character varying NOT NULL,
+    dbname character varying(255) DEFAULT ''::character varying NOT NULL,
+    dbport integer DEFAULT 5432 NOT NULL,
+    dbuser character varying(255) DEFAULT ''::character varying NOT NULL,
+    dbpw character varying(255) DEFAULT ''::character varying NOT NULL,
+    driver character varying(255) DEFAULT ''::character varying NOT NULL,
+    code character varying(255),
+    enabled boolean DEFAULT false NOT NULL,
+    "language" character varying(11)
+);
+
+
+
+CREATE TABLE events (
+    event_id serial NOT NULL,
+    "second" character varying(64) DEFAULT '0'::character varying,
+    "minute" character varying(64) DEFAULT '*'::character varying,
+    "hour" character varying(64) DEFAULT '*'::character varying,
+    dayofmonth character varying(64) DEFAULT '*'::character varying,
+    "month" character varying(64) DEFAULT '*'::character varying,
+    dayofweek character varying(64) DEFAULT '*'::character varying,
+    "year" character varying(64) DEFAULT '*'::character varying,
+    task character varying(255),
+    extrainfo character varying(255),
+    businessdays character varying(6) DEFAULT 'true'::character varying,
+    enabled boolean DEFAULT false,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
+);
+
+
+
+CREATE TABLE events_log (
+    log_id serial NOT NULL,
+    event_id integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    status integer,
+    message text
+);
+
 
 
 CREATE INDEX orglist_name ON organization USING btree (name);
@@ -7276,6 +7301,11 @@ ALTER TABLE ONLY document_store_permissions
 
 
 
+ALTER TABLE ONLY document_accounts
+    ADD CONSTRAINT document_accounts_pkey PRIMARY KEY (id);
+
+
+
 ALTER TABLE ONLY business_process_component_library
     ADD CONSTRAINT business_process_component_library_pkey PRIMARY KEY (component_id);
 
@@ -7588,6 +7618,26 @@ ALTER TABLE ONLY portfolio_category
 
 ALTER TABLE ONLY portfolio_item
     ADD CONSTRAINT portfolio_item_pkey PRIMARY KEY (item_id);
+
+
+
+ALTER TABLE ONLY web_site_access_log
+    ADD CONSTRAINT web_site_access_log_pkey PRIMARY KEY (site_log_id);
+
+
+
+ALTER TABLE ONLY sites
+    ADD CONSTRAINT sites_pkey PRIMARY KEY (site_id);
+
+
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (event_id);
+
+
+
+ALTER TABLE ONLY events_log
+    ADD CONSTRAINT events_log_pkey PRIMARY KEY (log_id);
 
 
 
@@ -10846,6 +10896,16 @@ ALTER TABLE ONLY document_store_department_member
 
 
 
+ALTER TABLE ONLY document_accounts
+    ADD CONSTRAINT "$1" FOREIGN KEY (document_store_id) REFERENCES document_store(document_store_id);
+
+
+
+ALTER TABLE ONLY document_accounts
+    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
 ALTER TABLE ONLY business_process_component_result_lookup
     ADD CONSTRAINT "$1" FOREIGN KEY (component_id) REFERENCES business_process_component_library(component_id);
 
@@ -11658,6 +11718,21 @@ ALTER TABLE ONLY portfolio_item
 
 ALTER TABLE ONLY portfolio_item
     ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY web_site_access_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (site_id) REFERENCES web_site(site_id);
+
+
+
+ALTER TABLE ONLY web_site_access_log
+    ADD CONSTRAINT "$2" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY events_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (event_id) REFERENCES events(event_id);
 
 
 
@@ -12697,6 +12772,10 @@ SELECT pg_catalog.setval('document_store_permissions_id_seq', 1, false);
 
 
 
+SELECT pg_catalog.setval('document_accounts_id_seq', 1, false);
+
+
+
 SELECT pg_catalog.setval('business_process_com_lb_id_seq', 1, false);
 
 
@@ -12924,4 +13003,18 @@ SELECT pg_catalog.setval('portfolio_cat_y_category_id_seq', 1, false);
 SELECT pg_catalog.setval('portfolio_item_item_id_seq', 1, false);
 
 
+
+SELECT pg_catalog.setval('web_site_access_log_site_log_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('sites_site_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('events_event_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('events_log_log_id_seq', 1, false);
 

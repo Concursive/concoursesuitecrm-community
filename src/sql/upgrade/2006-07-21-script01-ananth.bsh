@@ -30,7 +30,7 @@ if (systemId > -1) {
       thisTable.setMappedClassName(className);
       thisTable.insert(db);
     } else {
-      print("Mapping alredy exists for class: " + className);
+      print("Mapping already exists for class: " + className);
     }
   }
   //Add ContactMessage Mapping
@@ -43,7 +43,7 @@ if (systemId > -1) {
       thisTable.setMappedClassName(className);
       thisTable.insert(db);
     } else {
-      print("Mapping alredy exists for class: " + className);
+      print("Mapping already exists for class: " + className);
     }
   }
   //Add Contact Source Lookup Mapping
