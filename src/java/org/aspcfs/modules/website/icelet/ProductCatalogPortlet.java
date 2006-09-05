@@ -114,6 +114,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
       }
       String viewType = request.getParameter("viewType");
       boolean isSearchAsDefault = DatabaseUtils.parseBoolean(request.getPreferences().getValue(PRODUCT_SEARCH_AS_DEFAULT, "false"));
+      request.setAttribute("SHOW_PRICE", request.getPreferences().getValue(SHOW_PRICE, "true"));
       if ("details".equals(viewType)) {
         boolean productExists = buildProduct(request, response);
         if (productExists) {
@@ -272,7 +273,6 @@ public class ProductCatalogPortlet extends GenericPortlet {
     // Retrieve the product preferences
     request.setAttribute("SHOW_SKU", request.getPreferences().getValue(SHOW_SKU, "true"));
     request.setAttribute("SKU_TEXT", request.getPreferences().getValue(SKU_TEXT, "Item #"));
-    request.setAttribute("SHOW_PRICE", request.getPreferences().getValue(SHOW_PRICE, "true"));
     request.setAttribute("PRICE_TEXT", request.getPreferences().getValue(PRICE_TEXT, ""));
     request.setAttribute("SHOW_PRICE_SAVINGS", request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "true"));
     request.setAttribute("ORIGINAL_PRICE_TEXT", request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
@@ -318,6 +318,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
 
     // building a single item as a list
     ProductCatalogList productCatalogList = new ProductCatalogList();
+    if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
+      productCatalogList.setBuildActivePrice(true);
+    }
     //if (!"searchResult".equals(request.getPortletSession().getAttribute("previousPage"))) {
     if (!"true".equals(request.getParameter("searchResults"))) {
       productCatalogList.setCategoryId(request.getParameter("categoryId"));
@@ -352,7 +355,6 @@ public class ProductCatalogPortlet extends GenericPortlet {
       }
       request.setAttribute("productCatalog", productCatalog);
     }
-
     // fetching parent category for the specified product/category
     ProductCategory parentCategory = null;
     if (Integer.parseInt(request.getParameter("categoryId")) != -1) {
@@ -432,6 +434,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
     if (productCatalogList.getCategoryId() == -1) {
       productCatalogList.setHasCategories(Constants.FALSE);
+    }
+    if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
+      productCatalogList.setBuildActivePrice(true);
     }
     productCatalogList.buildList(db);
     if (System.getProperty("DEBUG") != null) {

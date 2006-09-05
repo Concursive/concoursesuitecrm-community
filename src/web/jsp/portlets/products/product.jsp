@@ -125,16 +125,23 @@
         <br />
       </dhv:evaluate>
       <%-- show price: must be greater than 0 --%>
-      <dhv:evaluate if="<%= productCatalog.getActivePrice() != null && productCatalog.getActivePrice().getPriceAmount() > 0 %>">
-        <dhv:evaluate if="<%= "true".equals(SHOW_PRICE_SAVINGS) %>">
-          <dhv:evaluate if="<%= productCatalog.getActivePrice().getMsrpAmount() > productCatalog.getActivePrice().getPriceAmount() && productCatalog.getActivePrice().getMsrpAmount() > 0 %>">
-            <%= toHtml(ORIGINAL_PRICE_TEXT) %> <zeroio:currency value="<%= productCatalog.getActivePrice().getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;"/><br />
-            <%= toHtml(PRICE_SAVINGS_TEXT) %> <zeroio:currency value="<%= (productCatalog.getActivePrice().getPriceAmount() - productCatalog.getActivePrice().getMsrpAmount()) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;" allowNegative="true"/><br />
-            <br />
+      <dhv:evaluate if="<%= "true".equals(SHOW_PRICE) %>">
+        <dhv:evaluate if="<%= productCatalog.getActivePrice() != null && productCatalog.getActivePrice().getPriceAmount() > 0 %>">
+          <dhv:evaluate if="<%= "true".equals(SHOW_PRICE_SAVINGS) %>">
+            <dhv:evaluate if="<%= productCatalog.getActivePrice().getMsrpAmount() > productCatalog.getActivePrice().getPriceAmount() && productCatalog.getActivePrice().getMsrpAmount() > 0 %>">
+              <%= toHtml(ORIGINAL_PRICE_TEXT) %> <zeroio:currency value="<%= productCatalog.getActivePrice().getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;"/><br />
+              <%= toHtml(PRICE_SAVINGS_TEXT) %> <zeroio:currency value="<%= (productCatalog.getActivePrice().getPriceAmount() - productCatalog.getActivePrice().getMsrpAmount()) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;" allowNegative="true"/><br />
+              <br />
+            </dhv:evaluate>
           </dhv:evaluate>
           <strong><%= toHtml(PRICE_TEXT) %><zeroio:currency value="<%= productCatalog.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;"/></strong><br />
           <br />
         </dhv:evaluate>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= hasText(productCatalog.getShippingTimeName()) %>">
+        <dhv:label name="product.productShipTime">Product Ship Time</dhv:label>:
+        <%= toHtml(productCatalog.getShippingTimeName()) %><br />
+        <br />
       </dhv:evaluate>
       <%-- show options --%>
     </td>

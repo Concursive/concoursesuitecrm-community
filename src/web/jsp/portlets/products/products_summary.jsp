@@ -27,7 +27,9 @@
 <jsp:useBean id="productCategoryList" class="org.aspcfs.modules.products.base.ProductCategoryList" scope="request"/>
 <jsp:useBean id="productCatalogList" class="org.aspcfs.modules.products.base.ProductCatalogList" scope="request"/>
 <jsp:useBean id="searchResults" class="java.lang.String" scope="request"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="PRODUCT_SEARCH" class="java.lang.String" scope="request"/>
+<jsp:useBean id="SHOW_PRICE" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPopupMenu.jsp" %>
 <portlet:defineObjects/>
@@ -124,9 +126,14 @@
 							<td width="140" height="160" valign="top">
 								<a href="<%= pageContext.getAttribute("url") %>">
                   <dhv:evaluate if="<%= productCatalog.getThumbnailImageId() > -1 %>"><dhv:fileItemImage id="<%=  productCatalog.getThumbnailImageId() %>" path="products" thumbnail="true" name="<%=  productCatalog.getName() %>" /></dhv:evaluate>
-                  <dhv:evaluate if="<%= productCatalog.getThumbnailImageId() == -1 %>"><dhv:fileItemImage id="<%=  productCatalog.getLargestImageId() %>" path="products" thumbnail="true" name="<%=  productCatalog.getName() %>" /></dhv:evaluate>
+                  <dhv:evaluate if="<%= productCatalog.getThumbnailImageId() == -1 && productCatalog.getLargestImageId() > -1 %>"><dhv:fileItemImage id="<%=  productCatalog.getLargestImageId() %>" path="products" thumbnail="true" name="<%=  productCatalog.getName() %>" /></dhv:evaluate>
 									<div><%=  StringUtils.toHtml(productCatalog.getName()) %></div></a>
-							</td>
+                  <dhv:evaluate if="<%= "true".equals(SHOW_PRICE) %>">
+                    <dhv:evaluate if="<%= productCatalog.getActivePrice() != null && productCatalog.getActivePrice().getPriceAmount() > 0 %>">
+                      <zeroio:currency value="<%= productCatalog.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;"/>
+                    </dhv:evaluate>
+                  </dhv:evaluate>
+              </td>
 						</tr>
           </table>
 				</div>
