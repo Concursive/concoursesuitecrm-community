@@ -2,7 +2,7 @@
 Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-August 9, 2006
+September 5, 2006
 ----------------------------------------------------------------------------
 
 ** UNDER DEVELOPMENT **
@@ -15,20 +15,22 @@ http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109
 New features:
 - IBM DB2 Database support
 - IBM WAS-CE Websphere Application Server Community Edition support
-
-Enhancements:
-- Usability and stability improvements as assigned (details online)
-- Upgraded TinyMCE HTML Editor to 2.0.6.1
-- Email user a password when a user is added, previously only when modified
 - Portal Role editor allows for admins to define roles and permissions for
   portal users
   - Added Projects to portal role
   - Added Document Stores to portal role
   - Added Account Documents to portal role
 
+Enhancements:
+- Usability and stability improvements as assigned (details online)
+- Upgraded TinyMCE HTML Editor to 2.0.6.1
+- Email user a password when a user is added, previously only when modified
+
 Developer changes:
 - JUnit added with tests
 - "ant deploy" now supports WEBSERVER.TYPE geronimo and jboss
+- "ant ws" installs the appropriate Web Services to Axis
+- Web Service additions
 
 Unreleased features, target version to be determined:
 - Web Content Management module and Portal using Apache Pluto JSR-168 Embedded
