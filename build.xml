@@ -426,8 +426,8 @@
   <target name="init" depends="init.loadproperties,init.classpath,init.axis"
     description="Verify system environment needed by install">
     <!-- Default properties if not otherwise specified in build.properties -->
-    <property name="DEBUG" value="false"/>
-    <property name="DEBUGLEVEL" value="none"/>
+    <property name="DEBUG" value="true"/>
+    <property name="DEBUGLEVEL" value="lines,vars,source"/>
     <property name="build.config.filename" value="${base.dir}/build.properties"/>
     <property name="build.config.present" value="ERROR: UNDEFINED"/>
     <!-- Gatekeeper database -->
@@ -521,12 +521,12 @@
     unless="compile.donotdelete">
     <!-- Get rid of any classes in the source dir that shouldn't be there -->
     <delete>
-      <fileset dir="${src.classes.dir}" includes="**/*.class"/>
+      <fileset dir="${src.classes.dir}" includes="**/*.class" />      
     </delete>
     <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
   </target>
-
+  
   <!-- Compile the Java source code -->
   <target name="compile"
     description="Compile all .java source files"
@@ -541,6 +541,12 @@
         <path refid="cfs2.classpath"/>
       </classpath>
     </javac>
+    <!-- copy log4j file properties-->
+    <copy todir="${build.classes.dir}">
+        <fileset dir="${src.classes.dir}">
+            <include name="log4j.properties"/>
+        </fileset>    
+    </copy>
   </target>
 
   <!-- Generate the .jar files -->
@@ -568,7 +574,7 @@
     <!-- aspcfs.jar -->
     <jar jarfile="${build.lib.dir}/aspcfs.jar"
       basedir="${build.classes.dir}"
-      includes="org/aspcfs/**/*.class"/>
+      includes="org/aspcfs/**/*.class log4j.properties"/>
     <!-- jcrontab.jar -->
     <jar jarfile="${build.lib.dir}/jcrontab.jar"
       basedir="${build.classes.dir}"
@@ -1239,7 +1245,7 @@
 
   <target name="tools.archive">
     <property name="zip.dir" value="centric_crm_tools"/>
-    <property name="tools.version" value="4.0"/>
+    <property name="tools.version" value="4.1"/>
     <delete dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}"/>
     <!-- Update the build number -->
