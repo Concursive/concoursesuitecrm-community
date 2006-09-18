@@ -108,7 +108,11 @@
       result = '<%= (opportunityHeader.getId() == -1 || !allowMultiple) && User.getUserRecord().getSiteId() == -1 && ContactDetails.getId() == -1 && OrgDetails.getOrgId() == -1 %>';
     </dhv:include>
     if (result == 'true') {
-      result = site.options[site.options.selectedIndex].value;
+      try {
+        result = site.options[site.options.selectedIndex].value;
+      } catch(ex) {
+        result = site.value;
+      }
     } else {
       result = site.value;
     }
