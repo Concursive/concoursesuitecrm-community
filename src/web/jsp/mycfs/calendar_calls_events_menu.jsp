@@ -61,13 +61,24 @@
     
     if(thisAccountId > -1){
       showSpan('menuAccountCall');
+      showSpan('menuViewAccountCall');
     }else{
       hideSpan('menuAccountCall');
+      hideSpan('menuViewAccountCall');
+    }
+     if(thisContactId > -1){
+      showSpan('menuGoToContactCall');
+      showSpan('menuViewContactHistory');
+      showSpan('menuViewContactDetail');
+    }else{
+      hideSpan('menuGoToContactCall');
+      hideSpan('menuViewContactHistory');
+      hideSpan('menuViewContactDetail');
     }
   }
   
   function completeCall() {
-    var url = 'CalendarCalls.do?command=Complete&contactId=' + thisContactId + '&id=' + thisCallId + '&popup=true';
+    var url = 'CalendarCalls.do?command=Complete&contactId=' + thisContactId + '&id=' + thisCallId +'&orgId=' + thisAccountId + '&popup=true';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -75,7 +86,7 @@
   }
   
   function modifyCall() {
-    var url = 'CalendarCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId + '&popup=true';
+    var url = 'CalendarCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId +'&orgId=' + thisAccountId+ '&popup=true';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -83,7 +94,7 @@
   }
   
   function deleteCall() {
-  var url = 'CalendarCalls.do?command=Cancel&contactId=' + thisContactId + '&id=' + thisCallId + '&action=cancel&popup=true';
+  var url = 'CalendarCalls.do?command=Cancel&contactId=' + thisContactId + '&id=' + thisCallId+'&orgId=' + thisAccountId + '&action=cancel&popup=true';
     if(thisView == 'pending'){
       url += '&view=pending';
     }
@@ -108,6 +119,11 @@
   function goToAccountCall() {
     window.parent.location.href = 'Accounts.do?command=Details&orgId=' + thisAccountId;
   }
+
+  function viewAccountCall() {
+    popURL('Accounts.do?command=Details&orgId=' + thisAccountId + '&popup=true&viewOnly=true','Details','650','500','yes','yes');
+  }
+
 </script>
 <div id="menuCallContainer" class="menu">
   <div id="menuCallContent">
@@ -157,7 +173,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuViewContactDetail" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="showContactCall()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -166,7 +182,7 @@
           <dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>
         </td>
       </tr>
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuViewContactHistory" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="showContactHistory()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -177,7 +193,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+      <tr id="menuGoToContactCall"  onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="goToContactCall()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -188,6 +204,15 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-view">
+      <tr id="menuViewAccountCall" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="viewAccountCall()">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="calendar.viewAccount">View Account</dhv:label>
+        </td>
+      </tr>
       <tr id="menuAccountCall" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="goToAccountCall()">
         <th>

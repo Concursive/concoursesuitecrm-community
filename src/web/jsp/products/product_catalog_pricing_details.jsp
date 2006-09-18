@@ -31,9 +31,7 @@
 <table class="trails" cellspacing="0">
 	<tr>
 		<td>
-			<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-			<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-			<a href="Admin.do?command=ConfigDetails&moduleId=<%= permissionCategory.getId() %>"><%= toHtml(permissionCategory.getCategory()) %></a> >
+			<a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
       <dhv:label name="product.editor">Editor</dhv:label>
 		</td>
 	</tr>
@@ -60,7 +58,7 @@
     <td>
 			<strong><dhv:label name="product.priceNumber.symbol">Price #</dhv:label><%= Pricing.getId() %></strong><br>
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="admin-sysconfig-products-edit">
+        <dhv:permission name="product-catalog-edit">
           &nbsp;<br />
           <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogPricings.do?command=ModifyPricing&pricingId=<%= Pricing.getId() %>&categoryId=<%= productCategory.getId() %>&productId=<%= productCatalog.getId() %>&moduleId=<%= permissionCategory.getId() %>'"/>
           <% if (Pricing.getEnabled()) { %>
@@ -179,7 +177,7 @@
 			<input type="hidden" name="catalogId" value="<%= productCatalog.getId() %>" />
 			<input type="hidden" name="moduleId" value="<%= permissionCategory.getId() %>" />
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="admin-sysconfig-products-edit">
+        <dhv:permission name="product-catalog-edit">
         <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogPricings.do?command=ModifyPricing&pricingId=<%= Pricing.getId() %>&categoryId=<%= productCategory.getId() %>&productId=<%= productCatalog.getId() %>&moduleId=<%= permissionCategory.getId() %>'"/>
         <% if (Pricing.getEnabled()) { %>
           <input type="button" value="<dhv:label name="button.disable">Disable</dhv:label>" onClick="javascript:confirmDelete('ProductCatalogPricings.do?command=DisablePricing&productId=<%= productCatalog.getId() %>&pricingId=<%= Pricing.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&return=details');"/>

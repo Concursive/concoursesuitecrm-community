@@ -993,13 +993,22 @@ public final class ExternalContacts extends CFSModule {
       thisContact = new Contact(db, contactId);
       if (!(hasPermission(context, "contacts-external_contacts-view")) || (thisContact.getOrgId() > 0 && !(hasPermission(
           context, "accounts-accounts-contacts-view")))) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ExternalContacts-> permission error");
+        }
         return ("PermissionError");
       }
       if (!(hasAuthority(db, context, thisContact) || OpportunityHeaderList.isComponentOwner(
           db, getUserId(context)))) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ExternalContacts-> authority or isComponentOwner error");
+        }
         return ("PermissionError");
       }
       if (!isRecordAccessPermitted(context, thisContact)) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ExternalContacts-> isRecordAccessPermitted error");
+        }
         return ("PermissionError");
       }
       SystemStatus systemStatus = this.getSystemStatus(context);

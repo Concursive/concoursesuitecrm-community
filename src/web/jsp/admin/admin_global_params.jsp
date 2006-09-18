@@ -25,11 +25,13 @@
 <jsp:useBean id="processes" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
+<jsp:useBean id="merchantPaymentGateway" class="org.aspcfs.modules.admin.base.MerchantPaymentGateway" scope="request"/>
 <jsp:useBean id="countrySelect" class="org.aspcfs.utils.web.CountrySelect"
              scope="request"/>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectCurrency" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectLanguage" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
+<%@ page import="org.aspcfs.modules.admin.base.MerchantPaymentGateway" %>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -297,6 +299,21 @@
   </td>
   <td>
     <%= countrySelect.getValueFromId(getPref(getServletConfig().getServletContext(), "SYSTEM.COUNTRY")) %>
+  </td>
+</tr>
+<tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+  <dhv:permission name="admin-sysconfig-edit">
+    <td align="center">
+      <a href="AdminConfig.do?command=Modify&param=PAYMENTGATEWAY"><dhv:label
+          name="accounts.accounts_contacts_oppcomponent_list.Edit">
+        Edit</dhv:label></a>
+    </td>
+  </dhv:permission>
+  <td>
+    <dhv:label name="admin.PaymentGateway">Payment Gateway</dhv:label>
+  </td>
+  <td>
+    <%=toHtml(merchantPaymentGateway.getGatewayName())%>
   </td>
 </tr>
 <%--

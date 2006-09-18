@@ -229,3 +229,9 @@ CREATE TABLE web_product_email_log (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE url_map_url_id_seq;
+CREATE TABLE url_map (
+  url_id INTEGER NOT NULL PRIMARY KEY,
+  time_in_millis INT NOT NULL,
+  url TEXT
+);

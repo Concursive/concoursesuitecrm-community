@@ -100,8 +100,9 @@ public class OrderAddressList extends AddressList {
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT * " +
-        "FROM order_address a, lookup_orderaddress_types l " +
-        "WHERE a.address_type = l.code ");
+        "FROM order_address a " +
+        "left join lookup_orderaddress_types l " +
+        "on (a.address_type = l.code) WHERE 1=1 ");
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(

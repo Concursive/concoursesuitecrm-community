@@ -76,6 +76,8 @@ CREATE TABLE order_entry(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     submitted TIMESTAMP,
+    approx_ship_date TIMESTAMP DEFAULT NULL,
+    approx_delivery_date TIMESTAMP DEFAULT NULL,     
     PRIMARY KEY(order_id)
 );
 
@@ -200,6 +202,7 @@ CREATE TABLE order_address(
     enteredby INTEGER NOT NULL  REFERENCES "access"(user_id),
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
+    addrline4 VARGRAPHIC(300),
     PRIMARY KEY(address_id)
 );
 
@@ -286,6 +289,7 @@ CREATE TABLE customer_product(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     enabled CHAR(1) DEFAULT '1',
+    contact_id INTEGER,    
     PRIMARY KEY(customer_product_id)
 );
 
@@ -305,6 +309,7 @@ CREATE TABLE customer_product_history(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     order_item_id INTEGER NOT NULL  REFERENCES order_product(item_id),
+    contact_id INTEGER,    
     PRIMARY KEY(history_id)
 );
 
@@ -361,3 +366,49 @@ CREATE TABLE order_payment_status(
     PRIMARY KEY(payment_status_id)
 );
 
+-- Table CREDIT_CARD
+
+CREATE SEQUENCE creditcard_creditcard_id_seq;
+
+CREATE TABLE credit_card (
+  creditcard_id int NOT NULL,
+  card_type INTEGER REFERENCES lookup_creditcard_types(code),
+  card_number VARGRAPHIC(300),
+  card_security_code VARGRAPHIC(300),
+  expiration_month int,
+  expiration_year int,
+  name_on_card VARGRAPHIC(300),
+  company_name_on_card VARGRAPHIC(300),
+  entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby int NOT NULL REFERENCES "access"(user_id),
+  modified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby int NOT NULL REFERENCES "access"(user_id),
+  PRIMARY KEY (creditcard_id)
+);
+
+-- Table LOOKUP_PAYMENT_GATEWAY
+CREATE SEQUENCE lookup_payment_gateway_seq;
+
+CREATE TABLE lookup_payment_gateway (
+  code int NOT NULL,
+  description VARGRAPHIC(50) NOT NULL,
+  default_item CHAR(1) DEFAULT 0,
+  "level" int DEFAULT 0,
+  enabled CHAR(1) DEFAULT 1,
+  constant_id int,
+  PRIMARY KEY (code)
+);        
+-- Table MERCHANT_PAYMENT_GATEWAY
+CREATE SEQUENCE merchant_payment_gateway_seq;
+
+CREATE TABLE merchant_payment_gateway (
+  merchant_payment_gateway_id int4 NOT NULL DEFAULT nextval('merchant_payment_gateway_seq'),
+  gateway_id int REFERENCES lookup_payment_gateway (code),
+  merchant_id VARGRAPHIC(300),
+  merchant_code VARGRAPHIC(1024),
+  entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby int NOT NULL,
+  modified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby int NOT NULL,
+  PRIMARY KEY (merchant_payment_gateway_id)
+);

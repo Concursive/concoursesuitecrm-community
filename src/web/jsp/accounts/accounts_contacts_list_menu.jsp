@@ -74,9 +74,13 @@
   function deleteContact() {
     popURLReturn('Contacts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContactId + '&popup=true<%= isPopup(request)?"&accountpopup=true":"" %>','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');
   }
-  
+
   function addActivity(){
-    window.location.href='AccountContactsCalls.do?command=Add&contactId=' + thisContactId + '&return=list<%= isPopup(request)?"&popup=true":"" %>';
+    window.location.href='AccountContactsCalls.do?command=Log&contactId=' + thisContactId + '&return=list<%= isPopup(request)?"&popup=true":"" %>';
+  }
+  
+ function scheduleActivity(){
+    window.location.href='AccountContactsCalls.do?command=Schedule&contactId=' + thisContactId + '&return=list';
   }
   
   function viewActivityList(){
@@ -125,7 +129,18 @@
             <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
           </th>
           <td width="100%">
-            <dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label>
+            <dhv:label name="accounts.accounts_contacts_calls_list.LogAnActivity">Log an Activity</dhv:label>
+          </td>
+        </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-calls-add">
+        <tr id="menuScheduleActivity" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+             onclick="scheduleActivity()">
+          <th>
+            <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          </th>
+          <td width="100%">
+            <dhv:label name="accounts.accounts_contacts_calls_list.SchduleActivity">Schedule an Activity</dhv:label>
           </td>
         </tr>
       </dhv:permission>

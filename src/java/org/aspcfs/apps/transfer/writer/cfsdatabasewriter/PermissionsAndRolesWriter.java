@@ -236,8 +236,6 @@ public class PermissionsAndRolesWriter
         thisCategory.setCategories(record.getValue("categories"));
         thisCategory.setScheduledEvents(record.getValue("scheduledEvents"));
         thisCategory.setObjectEvents(record.getValue("objectEvents"));
-        thisCategory.setProducts(record.getValue("products"));
-        thisCategory.setImporter(record.getValue("importer"));        
         thisCategory.setWebdav(record.getValue("webdav"));
         thisCategory.setLogos(record.getValue("logos"));
         thisCategory.setActionPlans(record.getValue("actionPlans"));

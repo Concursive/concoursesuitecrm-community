@@ -200,7 +200,7 @@ public final class LeadsCalls extends CFSModule {
    * @param context Description of the Parameter
    * @return Description of the Return Value
    */
-  public String executeCommandAdd(ActionContext context) {
+  public String executeCommandLog(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-calls-add")) {
       return ("PermissionError");
     }
@@ -271,9 +271,92 @@ public final class LeadsCalls extends CFSModule {
     }
     //if a different module reuses this action then do a explicit return
     if (context.getRequest().getParameter("actionSource") != null) {
-      return getReturn(context, "AddCall");
+      return getReturn(context, "LogCall");
     }
-    return getReturn(context, "Add");
+    return getReturn(context, "Log");
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandSchedule(ActionContext context) {
+    if (!hasPermission(context, "pipeline-opportunities-calls-add")) {
+      return ("PermissionError");
+    }
+
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(
+        context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
+    String headerId = context.getRequest().getParameter("headerId");
+
+    addModuleBean(context, "View Opportunities", "Opportunity Activities");
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+
+      if (oppHeader.getAccountLink() > -1) {
+        Organization oppOrg = new Organization(db, oppHeader.getAccountLink());
+        context.getRequest().setAttribute("OrgDetails", oppOrg);
+        ContactList contactList = new ContactList();
+        if (oppOrg.getOwner() != userId && userId != this.getUserId(context)) {
+          contactList.setOwner(userId);
+        } else if (oppOrg.getOwner() == this.getUserId(context)) {
+          contactList.setOwner(this.getUserId(context));
+        }
+        contactList.setBuildDetails(false);
+        contactList.setBuildTypes(false);
+        contactList.setOrgId(oppHeader.getAccountLink());
+        contactList.buildList(db);
+        context.getRequest().setAttribute("ContactList", contactList);
+      } else {
+        Contact contact = new Contact(db, oppHeader.getContactLink());
+        context.getRequest().setAttribute("ContactDetails", contact);
+      }
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      //Type Lookup
+      LookupList callTypeList = systemStatus.getLookupList(
+          db, "lookup_call_types");
+      callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("CallTypeList", callTypeList);
+
+      //Result Lookup
+      CallResultList resultList = new CallResultList();
+      resultList.buildList(db);
+      context.getRequest().setAttribute("callResultList", resultList);
+
+      //Priority Lookup
+      LookupList priorityList = systemStatus.getLookupList(
+          db, "lookup_call_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+
+      //Reminder Type Lookup
+      LookupList reminderList = systemStatus.getLookupList(
+          db, "lookup_call_reminder");
+      reminderList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("ReminderTypeList", reminderList);
+      context.getRequest().setAttribute("systemStatus", systemStatus);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("action", "schedule");
+    //if a different module reuses this action then do a explicit return
+    if (context.getRequest().getParameter("actionSource") != null) {
+      return getReturn(context, "LogCall");
+    }
+    return getReturn(context, "Log");
   }
 
 
@@ -295,6 +378,8 @@ public final class LeadsCalls extends CFSModule {
     //Process the parameters
     String parentId = context.getRequest().getParameter("parentId");
     String action = context.getRequest().getParameter("action");
+    if("schedule".equals(context.getRequest().getParameter("action")))
+    { context.getRequest().setAttribute("action","schedule");}
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(
         context, "PipelineViewpointInfo");
@@ -429,7 +514,7 @@ public final class LeadsCalls extends CFSModule {
     if (thisCall.getId() > 0) {
       return getReturn(context, "Modify");
     }
-    return (executeCommandAdd(context));
+    return (executeCommandLog(context));
   }
 
 
@@ -480,8 +565,9 @@ public final class LeadsCalls extends CFSModule {
 
       //Result Lookup
       //Need the result types for display purposes
+      if(thisCall.getResultId()>-1){
       CallResult thisResult = new CallResult(db, thisCall.getResultId());
-      context.getRequest().setAttribute("CallResult", thisResult);
+      context.getRequest().setAttribute("CallResult", thisResult);}
 
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -830,7 +916,7 @@ public final class LeadsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return getReturn(context, "Add");
+    return getReturn(context, "Log");
   }
 
 
@@ -912,7 +998,7 @@ public final class LeadsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return getReturn(context, "Add");
+    return getReturn(context, "Log");
   }
 
 
@@ -949,9 +1035,10 @@ public final class LeadsCalls extends CFSModule {
     if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute(
         "alertDateWarning") != null))) {
       //Result
+      if(thisCall.getResultId()>-1){
       CallResult thisResult = new CallResult(db, thisCall.getResultId());
       context.getRequest().setAttribute("CallResult", thisResult);
-
+      }
       //include the callResultList if it is a completed activity with no followup
       if (!"pending".equals(context.getRequest().getParameter("view"))) {
         CallResultList resultList = new CallResultList();

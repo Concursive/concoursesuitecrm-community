@@ -16,8 +16,7 @@
   - Version: $Id$
   - Description:
   --%>
-<%@ page import="org.aspcfs.utils.web.HtmlSelect,org.aspcfs.utils.StringUtils,org.aspcfs.utils.web.LookupList" %>
-<jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
+<%@ page import="org.aspcfs.utils.web.HtmlSelect,org.aspcfs.utils.StringUtils,java.util.Iterator,org.aspcfs.utils.web.LookupList,org.aspcfs.modules.contacts.base.Contact" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 
@@ -73,7 +72,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><dhv:label name="contact.pendingActivityReminder">Pending Activity Reminder</dhv:label></strong>  
+      <strong><dhv:label name="contact.pendingActivityReminder">Pending Activity Reminder</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
@@ -114,7 +113,7 @@
         <% if(CallDetails.getId() > 0) {%>
           <dhv:label name="contact.call.modifyActivity">Modify  Activity</dhv:label>
         <%} else {%>
-          <dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label>
+          <dhv:label name="accounts.accounts_contacts_calls_list.LogAnActivity">Log an Activity</dhv:label>
         <%}%>
       <% } %>
       </strong>
@@ -160,6 +159,30 @@
       </dhv:include>
     </td>
   </tr>
+<% if(!contactList.isEmpty() && "accountItem".equals(actionSource)){%>    
+  <tr class="containerBody">
+  <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.Contact">Contact</dhv:label>
+   </td>
+   <td>
+   <select name="contactId">
+   <option value="-1"><dhv:label name="calendar.none.4dashes">-- None --</dhv:label></option>
+   <% Iterator j = contactList.iterator();
+      if ( j.hasNext() ) {
+          while (j.hasNext()) {
+             Contact thisContact = (Contact) j.next();%>
+         <%if (CallDetails!=null && thisContact.getId()==CallDetails.getContactId()){%>
+         <option value="<%= thisContact.getId()%>" selected="selected"><%= thisContact.getNameLast()%></option>
+         <%}else{%>
+         <option value="<%= thisContact.getId()%>"><%= thisContact.getNameLast()%></option>
+         <%}%>
+     <%}
+     }
+     %>       
+   </select>
+   </td>
+  </tr>
+  <%}%>
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>

@@ -35,15 +35,13 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-<a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
+<a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
 <dhv:label name="product.laborCategoryEditor">Labor Category Editor</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="admin-sysconfig-products-add"><a href="ProductsCatalog.do?command=AddProduct&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.addItem">Add Item</dhv:label></a></dhv:permission>
+<dhv:permission name="product-catalog-add"><a href="ProductsCatalog.do?command=AddProduct&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.addItem">Add Item</dhv:label></a></dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="productCatalogListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

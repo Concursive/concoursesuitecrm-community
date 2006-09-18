@@ -125,8 +125,13 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
           items.append(
               "<option value='call'>" + systemStatus.getLabel(
-                  "quickactions.addActivity") + "</option>");
-        }         
+                  "quickactions.logActivity") + "</option>");
+        }
+        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
+          items.append(
+              "<option value='schedule'>" + systemStatus.getLabel(
+                  "quickactions.scheduleActivity") + "</option>");
+        }       
         if (systemStatus.hasPermission(userId, "contacts-external_contacts-add")) {
           items.append(
               "<option value='contact'>" + systemStatus.getLabel(

@@ -47,7 +47,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documentStore" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="documentStore" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountsSharedDocumentsInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>

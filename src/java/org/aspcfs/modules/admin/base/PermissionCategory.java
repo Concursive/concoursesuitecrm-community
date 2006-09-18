@@ -48,8 +48,6 @@ public class PermissionCategory extends GenericBean {
   private boolean scheduledEvents = false;
   private boolean objectEvents = false;
   private boolean reports = false;
-  private boolean products = false;
-  private boolean importer = false;
   private boolean webdav = false;
   private boolean logos = false;
   private boolean actionPlans = false;
@@ -653,66 +651,6 @@ public class PermissionCategory extends GenericBean {
   public boolean getReports() {
     return reports;
   }
-
-
-  /**
-   * Gets the products attribute of the PermissionCategory object
-   *
-   * @return    The products value
-   */
-  public boolean getProducts() {
-    return products;
-  }
-
-
-  /**
-   * Sets the products attribute of the PermissionCategory object
-   *
-   * @param  tmp  The new products value
-   */
-  public void setProducts(boolean tmp) {
-    this.products = tmp;
-  }
-
-
-  /**
-   * Sets the products attribute of the PermissionCategory object
-   *
-   * @param  tmp  The new products value
-   */
-  public void setProducts(String tmp) {
-    this.products = DatabaseUtils.parseBoolean(tmp);
-  }
-
-
-  /**
-   * Gets the importer attribute of the PermissionCategory object
-   *
-   * @return The importer value
-   */
-  public boolean getImporter() {
-    return importer;
-  }
-
-
-  /**
-   * Sets the importer attribute of the PermissionCategory object
-   *  
-   * @param importer The new importer value
-   */
-  public void setImporter(boolean importer) {
-    this.importer = importer;
-  }
-
-  /**
-   * Sets the importer attribute of the PermissionCategory object
-   *  
-   * @param tmp The new importer value
-   */  
-  public void setImporter(String tmp) {
-    this.importer = DatabaseUtils.parseBoolean(tmp);
-  }
-
   
   /**
    * Gets the scheduledEvents attribute of the PermissionCategory object
@@ -901,8 +839,8 @@ public class PermissionCategory extends GenericBean {
         DatabaseUtils.addQuotes(db, "level") +
         ", enabled, " + DatabaseUtils.addQuotes(db, "active") + 
         ", lookups, folders, viewpoints, categories, scheduled_events, " +
-        "object_events, reports, products, webdav, logos, constant, action_plans, custom_list_views, importer) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "object_events, reports, webdav, logos, constant, action_plans, custom_list_views) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -919,13 +857,11 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, scheduledEvents);
     pst.setBoolean(++i, objectEvents);
     pst.setBoolean(++i, reports);
-    pst.setBoolean(++i, products);
     pst.setBoolean(++i, webdav);
     pst.setBoolean(++i, logos);
     pst.setInt(++i, constant);
     pst.setBoolean(++i, actionPlans);
     pst.setBoolean(++i, customListViews);
-    pst.setBoolean(++i, importer);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq", id);
@@ -953,13 +889,11 @@ public class PermissionCategory extends GenericBean {
     scheduledEvents = rs.getBoolean("scheduled_events");
     objectEvents = rs.getBoolean("object_events");
     reports = rs.getBoolean("reports");
-    products = rs.getBoolean("products");
     webdav = rs.getBoolean("webdav");
     logos = rs.getBoolean("logos");
     constant = rs.getInt("constant");
     actionPlans = rs.getBoolean("action_plans");
     customListViews = rs.getBoolean("custom_list_views");
-    importer = rs.getBoolean("importer");
   }
 
 
@@ -1003,26 +937,7 @@ public class PermissionCategory extends GenericBean {
     pst.close();
   }
 
-  /**
-   * Description of the Method
-   *
-   * @param  db             Description of the Parameter
-   * @param  categoryId     Description of the Parameter
-   * @param  enabled        Description of the Parameter
-   * @throws  SQLException  Description of the Exception
-   */
-  public static void updateImporterAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "UPDATE permission_category " +
-        "SET importer = ? " +
-        "WHERE category_id = ? ");
-    pst.setBoolean(1, enabled);
-    pst.setInt(2, categoryId);
-    pst.execute();
-    pst.close();
-  }
   
-
   /**
    * Description of the Method
    *

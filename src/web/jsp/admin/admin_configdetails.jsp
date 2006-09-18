@@ -129,32 +129,6 @@
   </tr>
   </dhv:permission>
 <%}%>
-<%-- Product Catalog Editor --%>
-<%
-  if (PermissionCategory.getProducts()) {
-%>
-  <dhv:permission name="admin-sysconfig-products-view">
-  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
-	<tr class="row<%= rowid %>">
-		<td>
-			<a href="ProductCatalogEditor.do?command=List&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.productCatalogEditor">Product Catalog Editor</dhv:label></a>
-		</td>
-	</tr>
-  </dhv:permission>
-<%}%>
-<%-- Product Catalog Imports --%>
-<%
-  if (PermissionCategory.getImporter()) {
-%>
-  <dhv:permission name="product-catalog-product-imports-view">
-  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
-  <tr class="row<%= rowid %>">
-    <td>
-      <a href="ProductCatalogImports.do?command=View&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.productCatalogImporter">Product Catalog Importer</dhv:label></a>
-    </td>
-  </tr>
-  </dhv:permission>
-<%}%>
 <%-- Custom List View Editor --%>
 <%
   if (PermissionCategory.getCustomListViews()) {

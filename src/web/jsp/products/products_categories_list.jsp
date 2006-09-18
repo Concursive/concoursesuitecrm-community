@@ -41,9 +41,7 @@
 <table class="trails" cellspacing="0">
 	<tr>
 		<td>
-			<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-			<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-			<a href="Admin.do?command=ConfigDetails&moduleId=<%= permissionCategory.getId() %>"><%= toHtml(permissionCategory.getCategory()) %></a> >
+			<a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
 			<dhv:label name="product.editor">Editor</dhv:label>
 		</td>
 	</tr>
@@ -57,8 +55,7 @@
     </td>
   </tr>
 </table>
-<br />
-<dhv:permission name="admin-sysconfig-products-add">
+<dhv:permission name="product-catalog-add">
   <table border="0" cellpadding="1" cellspacing="0" width="100%">
     <tr>
       <td>
@@ -69,7 +66,6 @@
        </td>
     </tr>
   </table>
-  <br />
 </dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="productListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">

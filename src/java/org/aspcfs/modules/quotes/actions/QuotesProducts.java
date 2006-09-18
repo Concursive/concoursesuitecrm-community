@@ -217,7 +217,7 @@ public final class QuotesProducts extends CFSModule {
     if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
         context, "accounts-quotes-edit")
         || hasPermission(context, "leads-opportunities-edit")) && !hasPermission(
-            context, "admin-sysconfig-products-add")) {
+            context, "product-catalog-add")) {
       return ("PermissionError");
     }
     String quoteIdString = (String) context.getRequest().getParameter(
@@ -279,7 +279,7 @@ public final class QuotesProducts extends CFSModule {
     if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(
         context, "accounts-quotes-edit")
         || hasPermission(context, "leads-opportunities-edit")) && !hasPermission(
-            context, "admin-sysconfig-products-add")) {
+            context, "product-catalog-add")) {
       return ("PermissionError");
     }
     String quoteIdString = (String) context.getRequest().getParameter(

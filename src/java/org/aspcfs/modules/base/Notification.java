@@ -612,11 +612,15 @@ public class Notification extends Thread {
   /**
    * Description of the Method
    */
-  public void notifyAddress() {
+  public boolean notifyAddress() {
     if (type > -1) {
       try {
         if (type == EMAIL) {
-          System.out.println("Notification-> To: " + emailToNotify);
+          if (emailToNotify == null || "".equals(emailToNotify.trim())) {
+            result = 2;
+            return false;
+          }
+          System.out.println("Notification-> notifyAddress: " + emailToNotify);
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
           mail.setFrom(from);
@@ -647,10 +651,13 @@ public class Notification extends Thread {
       } catch (Exception e) {
         result = 2;
         errorMessage = e.toString();
+        return false;
       }
     } else {
       System.out.println("Notification-> Type not set");
+      return false;
     }
+    return true;
   }
 
 
@@ -668,7 +675,7 @@ public class Notification extends Thread {
         thisUser.buildRecord(db, userToNotify);
         if (type == EMAIL) {
           System.out.println(
-              "Notification-> To: " + thisUser.getContact().getPrimaryEmailAddress());
+              "Notification-> notifyUser: " + thisUser.getContact().getPrimaryEmailAddress());
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
           mail.setFrom(from);
@@ -747,7 +754,7 @@ public class Notification extends Thread {
             status = "Email opt out";
           } else{
             System.out.println(
-                "Notification-> To: " + thisContact.getPrimaryEmailAddress());
+                "Notification-> notifyContact: " + thisContact.getPrimaryEmailAddress());
             SMTPMessage mail = new SMTPMessage();
             mail.setHost(host);
             mail.setFrom(from);
@@ -983,15 +990,15 @@ public class Notification extends Thread {
   public String toString() {
 
     StringBuffer text = new StringBuffer();
-    text.append("==[ NOTIFICATION ]============================" + lf);
-    text.append("User to notify: " + userToNotify + lf);
-    text.append("Module: " + module + lf);
-    text.append("Item Id: " + itemId + lf);
-    text.append("Item Modified: " + itemModified + lf);
-    text.append("Subject: " + subject + lf);
-    text.append("From: " + from + lf);
-    text.append("Message: " + messageToSend + lf);
-    text.append("Type: " + type + lf);
+    text.append("==[ NOTIFICATION ]============================").append(lf);
+    text.append("User to notify: ").append(userToNotify).append(lf);
+    text.append("Module: ").append(module).append(lf);
+    text.append("Item Id: ").append(itemId).append(lf);
+    text.append("Item Modified: ").append(itemModified).append(lf);
+    text.append("Subject: ").append(subject).append(lf);
+    text.append("From: ").append(from).append(lf);
+    text.append("Message: ").append(messageToSend).append(lf);
+    text.append("Type: ").append(type).append(lf);
     text.append("==============================================");
     return text.toString();
   }

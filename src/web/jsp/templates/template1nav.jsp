@@ -39,7 +39,7 @@
   <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<script language="JavaScript" type="text/javascript" src="javascript/quickAction.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/quickAction.js?1"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/spanDisplay.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/globalItemsPane.js"></script>
 <body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">

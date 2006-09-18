@@ -14,19 +14,21 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisContactId = -1;
   var thisCallId = -1;
+   var thisOrgId = -1;
   var thisView = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, callId, view) {
+  function displayMenu(loc, id, contactId, callId, view, orgId) {
     thisContactId = contactId;
     thisCallId = callId;
     thisView = view;
+    thisOrgId = orgId;
     updateMenu();
     if (!menu_init) {
       menu_init = true;
@@ -34,7 +36,7 @@
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
-  
+
   //Update menu for this Contact based on permissions
   function updateMenu(){
     if(thisView == 'pending'){
@@ -53,49 +55,48 @@
        }
       }
     }
-  
+
   //Menu link functions
   function details() {
-    var url = 'AccountContactsCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId + 
-   '&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    var url = 'AccountsCalls.do?command=Details&contactId=' + thisContactId+ '&orgId=' + thisOrgId + '&id=' + thisCallId +
+   '&trailSource=accounts&return=list';
     if(thisView == 'pending'){
-      url += '&view=pending';
+      url += '&view=pending&action=schedule';
     }
     window.location.href=url;
   }
-  
+
   function complete() {
-    var url = 'AccountContactsCalls.do?command=Complete&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list' + 
-   '&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    var url = 'AccountsCalls.do?command=Complete&contactId=' + thisContactId+ '&orgId=' + thisOrgId + '&id=' + thisCallId +
+   '&trailSource=accounts&return=list';
     if(thisView == 'pending'){
-      url += '&view=pending';
+      url += '&view=pending&action=schedule';
     }
     window.location.href=url;
   }
-  
+
   function modify() {
-    var url = 'AccountContactsCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list' + 
-   '&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    var url = 'AccountsCalls.do?command=Modify&contactId=' + thisContactId + '&orgId=' + thisOrgId+ '&id=' + thisCallId +
+   '&trailSource=accounts&return=list';
     if(thisView == 'pending'){
-      url += '&view=pending';
+      url += '&view=pending&action=schedule';
     }
     window.location.href=url;
   }
-  
+
   function forward() {
-    var url ='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '&id=' + thisCallId + 
-   '&trailSource=accounts&return=list&forwardType=<%= Constants.TASKS %><%= addLinkParams(request, "popup|popupType|actionId") %>';
+    var url ='AccountsCalls.do?command=ForwardCall&contactId=' + thisContactId+ '&orgId=' + thisOrgId + '&id=' + thisCallId +
+   '&trailSource=accounts&return=list&forwardType=<%= Constants.TASKS %>';
     if(thisView == 'pending'){
-      url += '&view=pending';
+      url += '&view=pending&action=schedule';
     }
     window.location.href=url;
   }
-  
+
   function deleteCall() {
-  var url = 'AccountContactsCalls.do?command=Cancel&contactId=' + thisContactId + '&id=' + thisCallId + 
-            '&return=list&action=cancel&trailSource=accounts<%= addLinkParams(request, "popup|popupType|actionId") %>';
+  var url = 'AccountsCalls.do?command=Cancel&contactId=' + thisContactId + '&orgId=' + thisOrgId+ '&id=' + thisCallId + '&return=list&action=cancel&trailSource=accounts';
     if(thisView == 'pending'){
-      url += '&view=pending';
+      url += '&view=pending&action=schedule';
     }
     window.location.href=url;
   }

@@ -104,7 +104,7 @@
       <th colspan="2">
         <strong>
         <% if(Assignment.getId()==-1) { %>
-          <dhv:label name="accounts.accounts_contacts_calls_add.AddActivity">Add Activity</dhv:label>
+          <dhv:label name="projects.center_assignments.AddAnActivity">Add an Activity</dhv:label>
         <%} else {%>
           <dhv:label name="accounts.accounts_contacts_calls_modify.UpdateActivity">Update Activity</dhv:label>
         <%}%></strong>

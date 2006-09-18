@@ -55,6 +55,7 @@ public class Call extends GenericBean {
   private int orgId = -1;
   private int contactId = -1;
   private int callTypeId = -1;
+  private int followupContactId = -1;
   private int oppHeaderId = -1;
   private int length = 0;
   private int enteredBy = -1;
@@ -78,12 +79,14 @@ public class Call extends GenericBean {
   private String notes = null;
   private String followupNotes = null;
   private String contactName = "";
+  private String followupContactName = "";
   private String alertText = null;
   private String alertCallType = "";
   private String priorityString = "";
   private String orgName = null;
   private String alertDateTimeZone = null;
 
+  private String action = null;
   private java.sql.Timestamp alertDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
@@ -102,7 +105,7 @@ public class Call extends GenericBean {
   Contact contact = new Contact();
 
 
-  /**
+   /**
    *  Constructor for the Call object
    */
   public Call() { }
@@ -160,13 +163,15 @@ public class Call extends GenericBean {
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, t.*, talert.description AS alertType, " +
-        "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, p.description AS priority " +
+        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, c.followup_contact_Id, t.*, talert.description AS alertType, " +
+        "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name AS orgname, p.description AS priority " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
         "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "WHERE call_id > -1 ");
     if (callId > -1) {
       sql.append("AND call_id = " + callId + " ");
@@ -328,6 +333,32 @@ public class Call extends GenericBean {
     this.actionId = Integer.parseInt(actionId);
   }
 
+  /**
+   * Gets the followupContactId attribute of the Call object
+   *
+   * @return followupContactId The followupContactId value
+   */
+  public int getFollowupContactId() {
+    return this.followupContactId;
+  }
+
+
+  /**
+   * Sets the followupContactId attribute of the Call object
+   *
+   * @param followupContactId The new followupContactId value
+   */
+  public void setFollowupContactId(int followupContactId) {
+    this.followupContactId = followupContactId;
+  }
+  /**
+   *  Sets the actionId attribute of the Call object
+   *
+   *@param  followupContactId  The new FollowupContactId value
+   */
+  public void setFollowupContactId(String followupContactId) {
+    this.followupContactId = Integer.parseInt(followupContactId);
+  }
 
   /**
    *  Sets the parentId attribute of the Call object
@@ -1448,14 +1479,16 @@ public class Call extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
-      Contact thisContact = new Contact(db, this.getContactId());
+      Contact thisContact =new Contact();
+      if(this.getContactId()>0){
+        thisContact = new Contact(db, this.getContactId());}
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "call_log_call_id_seq");
       sql.append(
           "INSERT INTO call_log " +
           "(org_id, contact_id, opp_id, call_type_id, \"length\", subject, notes, " +
           "alertdate, alert, alert_call_type_id, result_id, parent_id, owner, followup_notes, status_id, " +
-          "reminder_value, reminder_type_id, priority_id, followup_date, alertdate_timezone, ");
+          "reminder_value, reminder_type_id, priority_id, followup_date, alertdate_timezone, followup_contact_id, ");
       if (id > -1) {
         sql.append("call_id, ");
       }
@@ -1468,7 +1501,7 @@ public class Call extends GenericBean {
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append(
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
       if (id > -1) {
         sql.append("?, ");
       }
@@ -1483,6 +1516,8 @@ public class Call extends GenericBean {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (thisContact.getOrgId() > 0) {
         pst.setInt(++i, thisContact.getOrgId());
+      } else if (this.getOrgId() > 0) {
+        pst.setInt(++i, this.getOrgId());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
@@ -1518,6 +1553,13 @@ public class Call extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, priorityId);
       DatabaseUtils.setTimestamp(pst, ++i, followupDate);
       pst.setString(++i, alertDateTimeZone);
+      if (this.getFollowupContactId() > 0) {
+        pst.setInt(++i, this.getFollowupContactId());
+      } else if (this.getContactId() > 0) {
+        pst.setInt(++i, this.getContactId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -1681,7 +1723,7 @@ public class Call extends GenericBean {
         "modifiedby = ?, alertdate = ?, alert = ?, alert_call_type_id = ?, " +
         "followup_notes = ?, status_id = ?, result_id = ?, owner = ?, " +
         "reminder_value = ?, reminder_type_id = ?, priority_id = ?, " +
-        "followup_date = ?, alertdate_timezone = ?, trashed_date = ?, opp_id = ?, " +
+        "followup_date = ?, alertdate_timezone = ?, trashed_date = ?, opp_id = ?, followup_contact_id=?, contact_id=?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE call_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
@@ -1717,6 +1759,8 @@ public class Call extends GenericBean {
     pst.setString(++i, alertDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, trashedDate);
     DatabaseUtils.setInt(pst, ++i, this.getOppHeaderId());
+    DatabaseUtils.setInt(pst, ++i, this.getFollowupContactId());
+    DatabaseUtils.setInt(pst, ++i, this.getContactId());
     pst.setInt(++i, this.getId());
     if(this.getModified() != null){
       pst.setTimestamp(++i, this.getModified());
@@ -1894,6 +1938,7 @@ public class Call extends GenericBean {
     followupNotes = rs.getString("followup_notes");
     alertDateTimeZone = rs.getString("alertdate_timezone");
     trashedDate = rs.getTimestamp("trashed_date");
+    followupContactId  = DatabaseUtils.getInt(rs, "followup_contact_id");
     //lookup_call_types table
     callTypeId = DatabaseUtils.getInt(rs, "code");
     callType = rs.getString("description");
@@ -1904,6 +1949,12 @@ public class Call extends GenericBean {
     if (contactName == null || "".equals(contactName)) {
       contactName = rs.getString("ctcompany");
     }
+    followupContactName = Contact.getNameLastFirst(
+        rs.getString("fctlast"), rs.getString("fctfirst"));
+    if (followupContactName == null || "".equals(followupContactName)) {
+      followupContactName = rs.getString("fctcompany");
+    }
+    orgName = rs.getString("orgname");
     priorityString = rs.getString("priority");
   }
 
@@ -2067,6 +2118,46 @@ public class Call extends GenericBean {
     webcal.append("END:VEVENT" + CRLF);
 
     return webcal.toString();
+  }
+
+
+  /**
+   * Gets the action attribute of the Call object
+   *
+   * @return action The action value
+   */
+  public String getAction() {
+    return this.action;
+  }
+
+
+  /**
+   * Sets the action attribute of the Call object
+   *
+   * @param action The new action value
+   */
+  public void setAction(String action) {
+    this.action = action;
+  }
+
+
+  /**
+   * Gets the followupContactName attribute of the Call object
+   *
+   * @return followupContactName The followupContactName value
+   */
+  public String getFollowupContactName() {
+    return this.followupContactName;
+  }
+
+
+  /**
+   * Sets the followupContactName attribute of the Call object
+   *
+   * @param followupContactName The new followupContactName value
+   */
+  public void setFollowupContactName(String followupContactName) {
+    this.followupContactName = followupContactName;
   }
 }
 

@@ -35,8 +35,28 @@
 
 ############################ TODO: verify and add the following to next 4.1 .war
 
-### needs BSH
+### TODO: needs BSH
 2006-07-25-script01-ananth.sql
+
+
+### TODO: THE INSTALL SCRIPTS ARE NOT IN SYNC WITH THESE (YET)!
+# Url
+2006-07-17-script01-holub.sql
+
+# Orders
+2006-08-25-script1-olga.sql
+
+# Activities
+2006-07-24-script01-holub.sql
+
+# Product Editing, Product Importer
+2006-07-20-script01-alex.sql
+
+# Product & Leads speedup
+2006-08-30-script01-alexy.sql
+
+
+
 
 
 # Run each time after upgrading a system (NOTE: this is a temporary measure)

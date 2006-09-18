@@ -24,18 +24,19 @@
 <jsp:useBean id="PreviousCallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.addCall.subject.focus();">
+<body onLoad="javascript:if(document.addCall.subject){document.addCall.subject.focus();}">
 <% 
-  String actionSource = request.getParameter("actionSource");
-  if (actionSource == null) {
-    actionSource = "MyActionContacts";
+  String actionSourceLink = request.getParameter("actionSource");
+  if (actionSourceLink == null) {
+    actionSourceLink = "MyActionContacts";
   }
 %>
 <% if(ContactDetails.getOrgId() == -1){ %>
-<form name="addCall" action="ExternalContactsCalls.do?command=Save&auto-populate=true&actionSource=<%= actionSource %>" onSubmit="return doCheck(this);" method="post">
+<form name="addCall" action="ExternalContactsCalls.do?command=Save&auto-populate=true&actionSource=<%= actionSourceLink %>" onSubmit="return doCheck(this);" method="post">
 <% }else{ %>
-<form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=<%= actionSource %>" onSubmit="return doCheck(this);" method="post">
+<form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=<%= actionSourceLink %>" onSubmit="return doCheck(this);" method="post">
 <% } %>
   <dhv:formMessage showSpace="false" />
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

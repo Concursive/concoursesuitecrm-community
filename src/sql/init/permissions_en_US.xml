@@ -156,6 +156,21 @@
       <report file="action_plan_activity.xml" type="user" permission="accounts-action-plans" title="Action Plan Activity" description="What are the action plan activities by date for each account?"/>
       <actionPlanEditor constantId="42420034" description="Action Plans related to Accounts"/>
     </category>
+    <category id="330041409" name="Product Catalog" folders="true" lookups="true" reports="false" categories="false">
+      <folder constantId="200403192" description="Product Catalog Categories" enabled="false"/>
+      <permission name="product-catalog" attributes="vaed" description="Access to Product Catalog module" enabled="true"/>
+      <permission name="product-catalog-product" attributes="vaed" description="Products" enabled="false"/>
+      <permission name="product-catalog-product-imports" attributes="vaed" description="Product Catalog Import" enabled="true"/>
+      <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Product Types"/>
+      <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product Format Types"/>
+      <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Product Shipping Types"/>
+      <lookup constantId="1017040904" class="lookupList" table="lookup_product_ship_time" description="Product Shipping Times"/>
+      <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="Product Category Types"/>
+      <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="Product Tax Types"/>
+      <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="Currency Types"/>
+      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Price Recurring Types"/>
+      <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Product Manufacturer Types"/>
+    </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
@@ -270,21 +285,6 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Projects"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Employees" description="Who are the employees in my organization?"/>
     </category>
-    <category id="330041409" name="Product Catalog" folders="true" lookups="true" reports="false" categories="false" importer="true" products="true">
-      <folder constantId="200403192" description="Product Catalog Categories" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Access to Product Catalog module" enabled="false"/>
-      <permission name="product-catalog-product" attributes="vaed" description="Products" enabled="false"/>
-      <permission name="product-catalog-product-imports" attributes="vaed" description="Product Catalog Import" enabled="true"/>
-      <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Product Types"/>
-      <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product Format Types"/>
-      <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Product Shipping Types"/>
-      <lookup constantId="1017040904" class="lookupList" table="lookup_product_ship_time" description="Product Shipping Times"/>
-      <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="Product Category Types"/>
-      <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="Product Tax Types"/>
-      <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="Currency Types"/>
-      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Price Recurring Types"/>
-      <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Product Manufacturer Types"/>
-    </category>
     <category id="16" name="Reports" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Access to Reports module"/>
     </category>
@@ -299,7 +299,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Configure Object Workflow"/>
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Configure Module Categories"/>
-      <permission name="admin-sysconfig-products" attributes="vaed" description="Product Catalog Editor"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" description="Configure Module Logos"/>
       <permission name="admin-actionplans" attributes="vaed" description="Configure Action Plans"/>
       <report file="users.xml" type="user" permission="admin" title="System Users" description="Who are all the users of the system?"/>
@@ -421,7 +420,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
-      <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" />
       <permission name="admin-actionplans" attributes="vaed" />
       <permission name="help" attributes="v---"/>

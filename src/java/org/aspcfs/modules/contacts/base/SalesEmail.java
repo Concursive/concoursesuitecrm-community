@@ -22,8 +22,6 @@ import org.aspcfs.utils.web.RequestUtils;
 import org.w3c.dom.Element;
 
 import java.io.File;
-import java.util.*;
-import java.sql.*;
 
 /**
  *  Generates a custom contact email contents for use with actions that send

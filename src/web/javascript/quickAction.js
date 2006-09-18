@@ -3,7 +3,7 @@ function quickAction(id) {
     return true;
   }
 //  if (id == 'call') {
-//    popURL('ExternalContactsCalls.do?command=Add&actionSource=GlobalItem&popup=true','Call','600','300','yes','yes');
+//    popURL('ExternalContactsCalls.do?command=Log&actionSource=GlobalItem&popup=true','Call','600','300','yes','yes');
 //  }
 //  if (id == 'opportunity') {
 //    popURL('OpportunityForm.do?command=Prepare&actionSource=GlobalItem','Opportunity','600','500','yes','yes');
@@ -27,7 +27,10 @@ function quickAction(id) {
   }
 
   if (id == 'call') {
-    popURL('ExternalContactsCalls.do?command=Add&contactId=-1&actionSource=GlobalItem&popup=true','Activity','600','425','yes','yes');
+    popURL('ExternalContactsCalls.do?command=Log&contactId=-1&actionSource=GlobalItem&popup=true','Activity','600','425','yes','yes');
+	}
+    if (id == 'schedule') {
+    popURL('ExternalContactsCalls.do?command=Schedule&contactId=-1&actionSource=GlobalItem&popup=true','Activity','600','425','yes','yes');
 	}
 
 }

@@ -509,9 +509,7 @@ public class ObjectValidator {
         addWarning(
             systemStatus, object, "owner", "object.validation.expiredUser");
       }
-
-      checkError(systemStatus, object, "subject", REQUIRED_FIELD);
-      if (call.getContactId() == -1 && call.getOrgId() == -1 && call.getOppHeaderId() == -1)
+      if (call.getFollowupContactId() == -1 && call.getContactId() == -1 && call.getOrgId() == -1 && call.getOppHeaderId() == -1)
       {
         addError(
             systemStatus, object, "link", "object.validation.call.notAssociated");
@@ -519,12 +517,6 @@ public class ObjectValidator {
       if (call.getLength() < 0) {
         addError(
             systemStatus, object, "length", "object.validation.call.lengthNotLTZero");
-      }
-      if (call.getResultId() == -1) {
-        addError(systemStatus, object, "result", REQUIRED_FIELD);
-      }
-      if (call.getCallTypeId() < 1) {
-        addError(systemStatus, object, "type", REQUIRED_FIELD);
       }
       if (call.getAlertDate() != null || call.getHasFollowup()) {
         if ("".equals(StringUtils.toString(call.getAlertText().trim()))) {

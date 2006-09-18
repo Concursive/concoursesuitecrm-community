@@ -1113,4 +1113,9 @@
 				<thumbnail><![CDATA[style_2006051909_red_black.jpg]]></thumbnail>
 			</record>
 		</lookup>
+	 <lookup table="lookup_payment_gateway">
+	 	<attribute name="constant_id" type="integer"/>
+	 	<record constant_id="8110621" enabled="true" level="10"><![CDATA[Authorize.net]]></record>
+	 	<record constant_id="8110622" enabled="true" level="10"><![CDATA[PPIPaymover]]></record>
+	 </lookup>	
 </lookupLists>

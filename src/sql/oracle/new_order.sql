@@ -1,5 +1,12 @@
--- Each order can have a status, which changes as the order is completed
+-- PostgreSQL Table Creation
+-- @created    March 18, 2004
+-- @version    $Id: new_order.sql 15821 2006-09-14 11:20:53Z Olga.Kaptyug@corratech.com $
+-- This schema represents an Order Entry System.
+-- REQUIRES: new_product.sql
+-- REQUIRES: new_project.sql
+-- REQUIRES: new_quote.sql
 
+-- Each order can have a status, which changes as the order is completed
 -- Example: Pending, In Progress, Cancelled, Rejected, Completed
 CREATE SEQUENCE lookup_order_status_code_seq;
 CREATE TABLE lookup_order_status (
@@ -71,6 +78,8 @@ CREATE TABLE order_entry (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   submitted TIMESTAMP,
+  approx_ship_date TIMESTAMP DEFAULT NULL,
+  approx_delivery_date TIMESTAMP DEFAULT NULL,  
   PRIMARY KEY (ORDER_ID)
 );
 
@@ -176,6 +185,7 @@ CREATE TABLE order_address (
   addrline1 NVARCHAR2(300),
   addrline2 NVARCHAR2(300),
   addrline3 NVARCHAR2(300),
+  addrline4 VARCHAR(300),  
   city NVARCHAR2(300),
   state NVARCHAR2(300),
   country NVARCHAR2(300),
@@ -261,6 +271,7 @@ CREATE TABLE customer_product (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   enabled CHAR(1) DEFAULT 1,
+  contact_id INTEGER,  
   PRIMARY KEY (CUSTOMER_PRODUCT_ID)
 );
 
@@ -279,6 +290,7 @@ CREATE TABLE customer_product_history (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   order_item_id INTEGER NOT NULL REFERENCES order_product(item_id),
+  contact_id INTEGER,  
   PRIMARY KEY (HISTORY_ID)
 );
 
@@ -331,3 +343,64 @@ CREATE TABLE order_payment_status (
   PRIMARY KEY (PAYMENT_STATUS_ID)
 );
 
+-- Table CREDIT_CARD
+
+CREATE SEQUENCE creditcard_creditcard_id_seq;
+
+CREATE TABLE credit_card
+(
+  creditcard_id int NOT NULL DEFAULT nextval('creditcard_creditcard_id_seq'),
+  card_type int4,
+  card_number varchar(300),
+  card_security_code varchar(300),
+  expiration_month int,
+  expiration_year int,
+  name_on_card varchar(300),
+  company_name_on_card varchar(300),
+  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby int NOT NULL,
+  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby int NOT NULL,
+  CONSTRAINT creditcard_pkey PRIMARY KEY (creditcard_id),
+  CONSTRAINT creditcard_card_type_fkey FOREIGN KEY (card_type)
+      REFERENCES lookup_creditcard_types (code) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT creditcard_enteredby_fkey FOREIGN KEY (enteredby)
+      REFERENCES "access" (user_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT creditcard_modifiedby_fkey FOREIGN KEY (modifiedby)
+      REFERENCES "access" (user_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Table LOOKUP_PAYMENT_GATEWAY
+CREATE SEQUENCE lookup_payment_gateway_seq;
+
+CREATE TABLE lookup_payment_gateway
+(
+  code int NOT NULL DEFAULT nextval('lookup_payment_gateway_seq'),
+  description varchar(50) NOT NULL,
+  default_item bool DEFAULT false,
+  "level" int DEFAULT 0,
+  enabled bool DEFAULT true,
+  constant_id int,
+  CONSTRAINT lookup_payment_gateway_pkey PRIMARY KEY (code)
+);
+-- Table MERCHANT_PAYMENT_GATEWAY
+CREATE SEQUENCE merchant_payment_gateway_seq;
+
+CREATE TABLE merchant_payment_gateway
+(
+  merchant_payment_gateway_id int4 NOT NULL DEFAULT nextval('merchant_payment_gateway_seq'),
+  gateway_id int,
+  merchant_id varchar(300),
+  merchant_code varchar(1024),
+  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby int NOT NULL,
+  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby int NOT NULL,
+  CONSTRAINT merchant_payment_gateway_id_pkey PRIMARY KEY (merchant_payment_gateway_id),
+  CONSTRAINT merchant_payment_gateway_gateway_id_fkey FOREIGN KEY (gateway_id)
+      REFERENCES lookup_payment_gateway (code) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);

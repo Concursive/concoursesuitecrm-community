@@ -225,6 +225,7 @@ CREATE TABLE lookup_access_types (
   enabled BOOLEAN DEFAULT true,
   rule_id INT NOT NULL
 );
+create index laccess_types_rule_id on lookup_access_types (rule_id);
 
 CREATE TABLE lookup_account_size (
   code SERIAL PRIMARY KEY,
@@ -380,7 +381,21 @@ CREATE INDEX "contactlist_company" ON "contact" (company, namelast, namefirst);
 CREATE INDEX "contact_import_id_idx" ON "contact" ("import_id");
 CREATE INDEX contact_org_id_idx ON contact(org_id) WHERE org_id IS NOT NULL AND org_id > 0;
 CREATE INDEX contact_islead_idx ON contact(lead) WHERE lead = true;
-
+create index contact_access_type on contact  (access_type);
+create index contact_assistant on contact  (assistant);
+create index contact_department on contact  (department);
+create index contact_enteredby on contact  (enteredby);
+create index contact_industry_temp_code on contact  (industry_temp_code);
+create index contact_modifiedby on contact  (modifiedby);
+create index contact_org_id on contact  (org_id);
+create index contact_owner on contact  ("owner");
+create index contact_rating on contact  (rating);
+create index contact_site_id on contact  (site_id);
+create index contact_source on contact  (source);
+create index contact_super on contact  (super);
+create index contact_user_id on contact  (user_id);
+create index contact_employee_id on contact (employee_id);
+create index contact_entered on contact (entered);
 
 CREATE TABLE contact_lead_skipped_map (
   map_id SERIAL PRIMARY KEY,
@@ -428,13 +443,11 @@ CREATE TABLE permission_category (
   scheduled_events BOOLEAN NOT NULL DEFAULT false,
   object_events BOOLEAN NOT NULL DEFAULT false,
   reports BOOLEAN NOT NULL DEFAULT false,
-  products BOOLEAN NOT NULL DEFAULT false,
   webdav BOOLEAN NOT NULL DEFAULT false,
 	logos BOOLEAN NOT NULL DEFAULT false,
   constant INT NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
-  custom_list_views BOOLEAN NOT NULL DEFAULT false,
-  importer BOOLEAN NOT NULL DEFAULT false
+  custom_list_views BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE permission (
@@ -566,7 +579,7 @@ CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
 CREATE INDEX contact_address_postalcode_idx ON contact_address(postalcode);
 CREATE INDEX "contact_city_idx" on contact_address(city);
 CREATE INDEX contact_address_prim_idx ON contact_address(primary_address);
-
+create index caddress_primary_address on  contact_address (primary_address);
 
 CREATE SEQUENCE contact_email_emailaddress__seq;
 CREATE TABLE contact_emailaddress (
@@ -679,6 +692,7 @@ CREATE TABLE contact_type_levels (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+create index tcontactlevels_level on contact_type_levels ("level");
 
 CREATE TABLE lookup_lists_lookup (
   id SERIAL PRIMARY KEY,
@@ -938,3 +952,41 @@ CREATE TABLE custom_list_view_field (
   view_id INT NOT NULL REFERENCES custom_list_view(view_id),
   name VARCHAR(80) NOT NULL
 );
+
+-- Create Indexes
+
+create index contact_access_type on contact (access_type);
+
+create index contact_assistant on contact (assistant);
+
+create index contact_department on contact (department);
+
+create index contact_enteredby on contact (enteredby);
+
+create index contact_industry_temp_code on contact  (industry_temp_code);
+
+create index contact_modifiedby on contact  (modifiedby);
+
+create index contact_org_id on contact  (org_id);
+
+create index contact_owner on contact  ("owner");
+
+create index contact_rating on contact  (rating);
+
+create index contact_site_id on contact  (site_id);
+
+create index contact_source on contact  (source);
+
+create index contact_super on contact  (super);
+
+create index contact_user_id on contact  (user_id);
+
+create index contact_employee_id on contact (employee_id);
+
+create index tcontactlevels_level on contact_type_levels ("level");
+
+create index caddress_primary_address on  contact_address (primary_address);
+
+create index contact_entered on contact (entered);
+
+create index laccess_types_rule_id on lookup_access_types (rule_id);

@@ -929,7 +929,7 @@ public final class Users extends CFSModule {
         context.getRequest().setAttribute("SiteIdList", siteid);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("generatePass") != null) {
-          String password = newUser.generateRandomPassword(db, context);
+          String password = newUser.generateRandomPassword(db);
           newUser.setBuildContact(true);
           newUser.setBuildContactDetails(true);
           newUser.buildRecord(db, newUser.getId());

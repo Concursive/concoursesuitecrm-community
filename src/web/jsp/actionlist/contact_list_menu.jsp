@@ -52,9 +52,9 @@
   }
   function addCall() {
     if(thisOrgId == -1){
-      popURL('ExternalContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Activity','600','300','yes','yes');
+      popURL('ExternalContactsCalls.do?command=Log&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Activity','600','300','yes','yes');
     }else{
-      popURL('AccountContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Activity','600','300','yes','yes');
+      popURL('AccountContactsCalls.do?command=Log&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Activity','600','300','yes','yes');
     }
   }
   function addTicket() {
@@ -95,7 +95,7 @@
           &nbsp;
         </th>
         <td width="100%">
-          <dhv:label name="accounts.accounts_contacts_calls_add.AddActivity">Add Activity</dhv:label>
+          <dhv:label name="accounts.accounts_contacts_calls_add.LogActivity">Log Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>

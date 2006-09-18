@@ -66,7 +66,9 @@ CREATE TABLE order_entry (
   enteredby INT REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INT REFERENCES access(user_id) NOT NULL,
-  submitted TIMESTAMP
+  submitted TIMESTAMP,
+  approx_ship_date TIMESTAMP DEFAULT NULL,
+  approx_delivery_date TIMESTAMP DEFAULT NULL  
 );
 
 -- Each order can contain multiple products
@@ -163,14 +165,15 @@ CREATE TABLE order_address (
 	addrline1 VARCHAR(300),
 	addrline2 VARCHAR(300),
 	addrline3 VARCHAR(300),
-	city VARCHAR(300),
+  city VARCHAR(300),
 	state VARCHAR(300),
 	country VARCHAR(300),
 	postalcode VARCHAR(40),
 	entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	enteredby INT REFERENCES access(user_id) NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modifiedby INT REFERENCES access(user_id) NOT NULL 
+  modifiedby INT REFERENCES access(user_id) NOT NULL,
+  addrline4 VARCHAR(300)
 );
 
 -- The method in which a payment is made
@@ -242,6 +245,7 @@ CREATE TABLE customer_product (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,  
   modifiedby INT REFERENCES access(user_id) NOT NULL ,
   enabled boolean DEFAULT true
+  contact_id INTEGER
 );
 
 -- Some products get returned or are finished being used
@@ -257,7 +261,8 @@ CREATE TABLE customer_product_history (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL , 
   modifiedby INT REFERENCES access(user_id) NOT NULL ,
-  order_item_id INTEGER REFERENCES order_product(item_id) NOT NULL 
+  order_item_id INTEGER REFERENCES order_product(item_id) NOT NULL
+  contact_id INTEGER
 );
 
 -- Each order_payment has an associated status
@@ -305,3 +310,47 @@ CREATE TABLE order_payment_status (
   modifiedby INT REFERENCES access(user_id) NOT NULL 
 );
 
+-- Table CREDIT_CARD
+
+CREATE SEQUENCE creditcard_creditcard_id_seq;
+
+CREATE TABLE credit_card (
+  creditcard_id int PRIMARY KEY,
+  card_type INTEGER REFERENCES lookup_creditcard_types (code),
+  card_number varchar(300),
+  card_security_code varchar(300),
+  expiration_month INTEGER,
+  expiration_year INTEGER,
+  name_on_card varchar(300),
+  company_name_on_card varchar(300),
+  entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby int REFERENCES "access" (user_id) NOT NULL,
+  modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby int REFERENCES "access" (user_id) NOT NULL
+);
+
+-- Table LOOKUP_PAYMENT_GATEWAY
+CREATE SEQUENCE lookup_payment_gateway_seq;
+
+CREATE TABLE lookup_payment_gateway (
+  code int PRIMARY KEY,
+  description varchar(50) NOT NULL,
+  default_item boolean DEFAULT false,
+  "level" int DEFAULT 0,
+  enabled boolean DEFAULT true,
+  constant_id int
+);
+
+-- Table MERCHANT_PAYMENT_GATEWAY
+CREATE SEQUENCE merchant_payment_gateway_seq;
+
+CREATE TABLE merchant_payment_gateway (
+  merchant_payment_gateway_id INT PRIMARY KEY,
+  gateway_id int REFERENCES lookup_payment_gateway (code),
+  merchant_id varchar(300),
+  merchant_code varchar(1024),
+  entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby int NOT NULL,
+  modified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby int NOT NULL
+);

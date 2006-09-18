@@ -29,8 +29,9 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
+<jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.addCall.callTypeId.focus();">
+<body>
 <script type="text/javascript">
 function reopenOpportunity(id) {
   if (id == '<%= opportunityHeader.getId() %>') {
@@ -69,7 +70,7 @@ function reopenOpportunity(id) {
   <% } %>
   <dhv:label name="accounts.accounts_calls_list_menu.CancelActivity">Cancel Activity</dhv:label>
 <% }else{ %>
-<dhv:label name="accounts.accounts_contacts_calls_add.AddActivity">Add Activity</dhv:label>
+<dhv:label name="accounts.accounts_contacts_calls_add.LogAnActivity">Log an Activity</dhv:label>
 <% } %>
 </td>
 </tr>

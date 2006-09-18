@@ -82,7 +82,10 @@ function reopenOpportunity(id) {
   <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">
   <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>" >
     <dhv:permission name="pipeline-opportunities-calls-add">
-      <a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a>
+      <a href="LeadsCalls.do?command=Log&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.LogAnActivity">Log an Activity</dhv:label></a>
+      |
+      <a href="LeadsCalls.do?command=Schedule&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">Schedule an Activity</dhv:label></a><br />
+      
       <br /><br />
     </dhv:permission>
   </dhv:evaluate>

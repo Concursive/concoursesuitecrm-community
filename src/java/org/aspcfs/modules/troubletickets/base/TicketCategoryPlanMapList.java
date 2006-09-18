@@ -15,13 +15,6 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.database.ConnectionElement;
-import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.*;

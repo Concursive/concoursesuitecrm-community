@@ -62,7 +62,7 @@
 <div id="menuOptionContainer" class="menu">
   <div id="menuOptionContent">
     <table id="menuOptionTable" class="pulldown" width="170" cellspacing="0">
-      <dhv:permission name="admin-sysconfig-products-view">
+      <dhv:permission name="product-catalog-view">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -82,7 +82,7 @@
         </td>
       </tr>
       --%>
-      <dhv:permission name="admin-sysconfig-products-edit">
+      <dhv:permission name="product-catalog-edit">
       <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -92,7 +92,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="admin-sysconfig-products-delete">
+      <dhv:permission name="product-catalog-delete">
       <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOption()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>

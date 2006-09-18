@@ -22,6 +22,9 @@
 <jsp:useBean id="callResultList" class="org.aspcfs.modules.contacts.base.CallResultList" scope="request"/>
 <jsp:useBean id="ReminderTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="action" class="java.lang.String" scope="request"/>
+<jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
+<jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
@@ -40,18 +43,18 @@
     formTest = true;
     message = "";
     alertMessage = "";
- 
-    if ((form.contactId.value == "-1")) { 
+     
+    if ((form.actionSource) && (form.actionSource.value == "GlobalItem") && (((form.contactId) && (form.contactId.value == "-1")) || ((form.followupContactId) && (form.followupContactId.value == "-1")))) { 
       message += label("check.ticket.contact.entered","- Check that a Contact is selected\r\n");
       formTest = false;
     }
     
-    if (checkNullString(form.subject.value)) { 
-      message += label("specify.blank.records","- Blank recordsdsdsd cannot be saved\r\n");
+    if (form.subject && checkNullString(form.subject.value)) { 
+      message += label("specify.blank.records","- Blank records cannot be saved\r\n");
       formTest = false;
     }
     
-    if (form.callTypeId.value == "0") { 
+    if (form.callTypeId && form.callTypeId.value == "0") { 
       message += label("specify.type","- Please specify a type\r\n");
       formTest = false;
     }
@@ -61,7 +64,7 @@
       message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
-    if (checkNullString(form.alertText.value)) { 
+    if (form.alertText && checkNullString(form.alertText.value)) { 
       message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
@@ -143,13 +146,18 @@
   }
 </script>
 <%-- include completed activity form --%>
+<dhv:evaluate if="<%= !("schedule".equals(action)) %>">
 <%@ include file="../contacts/call_completed_include.jsp" %>
+</dhv:evaluate>
 <dhv:evaluate if="<%= !("cancel".equals(request.getParameter("action"))) || CallDetails.getStatusId() != Call.CANCELED %>">
-<zeroio:debug value="call_followup_include.jsp is being included" />
+<dhv:evaluate if="<%= !("schedule".equals(action)) %>">
 <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
-<br>
+</dhv:evaluate>
 <%-- include pending activity form --%>
 <%@ include file="../contacts/call_followup_include.jsp" %>
+<dhv:evaluate if="<%= !("schedule".equals(action)) %>">
 </span>
 </dhv:evaluate>
-<%= addHiddenParams(request, "popup|popupType|actionId|view") %>
+</dhv:evaluate>
+<input type="hidden" name="action" value="<%=action %>">
+<%= addHiddenParams(request, "popup|popupType|actionId|view|actionSource") %>

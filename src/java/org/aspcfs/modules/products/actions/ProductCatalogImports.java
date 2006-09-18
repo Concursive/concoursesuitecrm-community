@@ -87,9 +87,11 @@ public class ProductCatalogImports extends CFSModule {
       PagedListInfo pagedListInfo = this.getPagedListInfo(
           context, "ProductCatalogImportListInfo");
       String moduleId = context.getRequest().getParameter("moduleId");
-      pagedListInfo.setLink("ProductCatalogImports.do?command=View&moduleId="+moduleId);
       try {
         db = this.getConnection(context);
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId = Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
+        pagedListInfo.setLink("ProductCatalogImports.do?command=View&moduleId="+moduleId);
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -133,11 +135,12 @@ public class ProductCatalogImports extends CFSModule {
       if (!(hasPermission(context, "product-catalog-product-imports-add"))) {
         return ("PermissionError");
       }
-
       Connection db = null;
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -177,6 +180,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -329,6 +334,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -383,6 +390,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
             "permissionCategory", permissionCategory);
@@ -455,6 +464,8 @@ public class ProductCatalogImports extends CFSModule {
         
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -529,6 +540,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db=this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -593,6 +606,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -635,6 +650,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -684,7 +701,8 @@ public class ProductCatalogImports extends CFSModule {
       String importId = (String) context.getRequest().getParameter("importId");
       try {
         db = this.getConnection(context);
-        
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -838,6 +856,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -883,6 +903,8 @@ public class ProductCatalogImports extends CFSModule {
           "ProductCatalogImports.do?command=ViewResults&importId=" + importId+"&moduleId="+moduleId);
 
       try {
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         db = this.getConnection(context);
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
@@ -928,6 +950,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(
@@ -981,6 +1005,8 @@ public class ProductCatalogImports extends CFSModule {
       try {
         db = this.getConnection(context);
         String moduleId = context.getRequest().getParameter("moduleId");
+        if (moduleId==null || "-1".equals(moduleId))
+        {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
         PermissionCategory permissionCategory = new PermissionCategory(
             db, Integer.parseInt(moduleId));
         context.getRequest().setAttribute(

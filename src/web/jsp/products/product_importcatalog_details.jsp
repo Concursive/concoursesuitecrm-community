@@ -39,9 +39,7 @@
 <table class="trails" cellspacing="0">
   <tr>
     <td>
-      <a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-      <a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> > 
-      <a href="Admin.do?command=ConfigDetails&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="product.productCatalog">Product Catalog</dhv:label></a> > 
+      <a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> > 
       <a href="ProductCatalogImports.do?command=View&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="product.ViewImports">View Imports</dhv:label></a> > 
       <a href="ProductCatalogImports.do?command=Details&moduleId=<%=permissionCategory.getId()%>&importId=<%= ImportDetails.getId() %>"><dhv:label name="product.ImportDetails">Import Details</dhv:label></a> > 
       <a href="ProductCatalogImports.do?command=ViewResults&moduleId=<%=permissionCategory.getId()%>&importId=<%= ImportDetails.getId() %>"><dhv:label name="global.button.ViewResults">View Results</dhv:label></a> >
@@ -58,10 +56,10 @@
         <%if (!ProductDetails.isApproved()) {
 
 			%>
-        <dhv:permission name="admin-sysconfig-products-delete">
+        <dhv:permission name="product-catalog-delete">
           <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteProduct();">
         </dhv:permission>
-        <dhv:permission name="admin-sysconfig-products-delete">
+        <dhv:permission name="product-catalog-delete">
         &nbsp;<br />
           <br />
         </dhv:permission>
@@ -416,7 +414,7 @@
         <%if (!ProductDetails.isApproved()) {
 
 			%>
-        <dhv:permission name="admin-sysconfig-products-delete">
+        <dhv:permission name="product-catalog-delete">
           <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteProduct();">
         </dhv:permission>
         <%}%>

@@ -53,10 +53,15 @@ public final class ProductCatalogEditor extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandOptions(ActionContext context) {
+    if (!(hasPermission(context, "product-catalog-view"))) {
+      return ("PermissionError");
+    }
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -79,11 +84,16 @@ public final class ProductCatalogEditor extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
+    if (!(hasPermission(context, "product-catalog-view"))) {
+      return ("PermissionError");
+    }
     Connection db = null;
     ProductCategory thisCategory = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(

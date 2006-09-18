@@ -595,11 +595,11 @@
     <forward name="ParentCategoriesOK"
              resource="/products/product_parent_categories.jsp" layout="style"/>
     <forward name="ProductsOK" resource="/products/product_products.jsp"
-             layout="style"/>
+             layout="nav"/>
     <forward name="AddProductsOK" resource="/products/product_options.jsp"
-             layout="style"/>
+             layout="nav"/>
     <forward name="AddOptionsOK" resource="/products/product_set_opener.jsp"
-             layout="style"/>
+             layout="nav"/>
     <forward name="AccountProductCategoriesOK"
              resource="/accounts/account_product_categories.jsp"
              layout="style"/>
@@ -1056,11 +1056,15 @@
           class="org.aspcfs.modules.accounts.actions.AccountContactsCalls">
     <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call"
           scope="request"/>
-    <forward name="AddPopupOK" resource="/mycfs/calendar_calls_add.jsp"
+    <forward name="LogPopupOK" resource="/mycfs/calendar_calls_add.jsp"
+             layout="style"/>
+   <forward name="LogAccountPopupOK" resource="/mycfs/calendar_calls_add.jsp"
              layout="style"/>
     <forward name="ViewPopupOK" resource="/mycfs/calendar_calls_list.jsp"
              layout="style"/>
     <forward name="ModifyPopupOK" resource="/mycfs/calendar_calls_modify.jsp"
+             layout="style"/>
+    <forward name="ModifyAccountPopupOK" resource="/mycfs/calendar_calls_modify.jsp"
              layout="style"/>
     <forward name="SuggestCallPopupOK"
              resource="/contacts/companydirectory_calls_suggest.jsp"
@@ -1393,7 +1397,7 @@
     <forward name="UpdateOK" resource="/MyActionContacts.do?command=List"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/MyActionContacts.do?command=List"/>
-    <forward name="AddCallPopupOK"
+    <forward name="LogCallPopupOK"
              resource="/actionlist/action_contacts_addcall.jsp" layout="style"/>
     <forward name="InsertCallPopupOK" resource="/closepopupandreload.jsp"/>
     <forward name="AddTicketOK"
@@ -1745,11 +1749,11 @@
     <forward name="DetailsOK"
              resource="/contacts/companydirectory_detailscall.jsp"
              layout="nav"/>
-    <forward name="AddOK" resource="/contacts/companydirectory_addcall.jsp"
+    <forward name="LogOK" resource="/contacts/companydirectory_addcall.jsp"
              layout="nav"/>
     <forward name="InsertOK" resource="/ExternalContactsCalls.do?command=View"/>
     <forward name="InsertRetryOK"
-             resource="/ExternalContactsCalls.do?command=Add"/>
+             resource="/ExternalContactsCalls.do?command=Log"/>
     <forward name="ModifyOK"
              resource="/contacts/companydirectory_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK"
@@ -1769,12 +1773,12 @@
     <forward name="DetailsPopupOK"
              resource="/contacts/companydirectory_detailscall.jsp"
              layout="style"/>
-    <forward name="AddPopupOK" resource="/contacts/companydirectory_addcall.jsp"
+    <forward name="LogPopupOK" resource="/contacts/companydirectory_addcall.jsp"
              layout="style"/>
     <forward name="InsertPopupOK"
              resource="/ExternalContactsCalls.do?command=View"/>
     <forward name="InsertRetryPopupOK"
-             resource="/ExternalContactsCalls.do?command=Add"/>
+             resource="/ExternalContactsCalls.do?command=Log"/>
     <forward name="ModifyPopupOK"
              resource="/contacts/companydirectory_modifycall.jsp"
              layout="style"/>
@@ -2092,7 +2096,7 @@
           scope="request"/>
     <forward name="ViewOK" resource="/pipeline/leads_listcalls.jsp"
              layout="nav"/>
-    <forward name="AddOK" resource="/pipeline/leads_addcall.jsp" layout="nav"/>
+    <forward name="LogOK" resource="/pipeline/leads_addcall.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="DetailsOK" resource="/pipeline/leads_detailscall.jsp"
              layout="nav"/>
@@ -2341,6 +2345,44 @@
              layout="nav"/>
     <forward name="ViewPopupOK" resource="/accounts/accounts_calls_list.jsp"
              layout="style"/>
+    <forward name="LogOK" resource="/accounts/accounts_calls_add.jsp"
+             layout="nav"/>
+    <forward name="LogPopupOK" resource="/accounts/accounts_calls_add.jsp"
+             layout="style"/>
+    <forward name="ScheduleOK" resource="/accounts/accounts_calls_add.jsp"
+             layout="nav"/>
+    <forward name="SchedulePopupOK" resource="/accounts/accounts_calls_add.jsp"
+             layout="style"/>
+    <forward name="DetailsOK"
+             resource="/accounts/accounts_calls_details.jsp"
+             layout="nav"/>
+    <forward name="DetailsPopupOK"
+             resource="/accounts/accounts_calls_details.jsp"
+             layout="style"/>
+    <forward name="SendMessageOK"
+             resource="/accounts/accounts_calls_confirmsend.jsp"
+             layout="nav"/>
+    <forward name="SendMessagePopupOK"
+             resource="/accounts/accounts_calls_confirmsend.jsp"
+             layout="style"/>
+    <forward name="ListOK" resource="/AccountsCalls.do?command=View"/>
+    <forward name="UpdateOK"
+            resource="/AccountsCalls.do?command=Details"/>
+    <forward name="ModifyOK"
+             resource="/accounts/accounts_calls_modify.jsp"
+            layout="nav"/>
+    <forward name="ModifyPopupOK"
+             resource="/accounts/accounts_calls_modify.jsp"
+            layout="style"/>
+    <forward name="SendCallOK"
+              resource="/MyCFS.do?command=SendMessage&amp;actionSource=AccountsCalls"/>
+    <forward name="ForwardMessageOK"
+           resource="/accounts/accounts_calls_forward.jsp"
+           layout="nav"/>
+    <forward name="ForwardMessagePopupOK"
+           resource="/accounts/accounts_calls_forward.jsp"
+           layout="style"/>
+    <forward name="InsertCallPopupOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="Contacts" class="org.aspcfs.modules.accounts.actions.Contacts">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact"
@@ -2524,6 +2566,10 @@
     <forward name="DetailsOK"
              resource="/accounts/accounts_contacts_calls_details.jsp"
              layout="nav"/>
+    <forward name="LogOK" resource="/accounts/accounts_contacts_calls_add.jsp"
+             layout="nav"/>
+    <forward name="LogPopupOK" resource="/accounts/accounts_contacts_calls_add.jsp"
+             layout="style"/>
     <forward name="DetailsPopupOK"
              resource="/accounts/accounts_contacts_calls_details.jsp"
              layout="style"/>
@@ -2794,6 +2840,8 @@
           class="org.aspcfs.modules.accounts.actions.AccountsSharedDocuments">
     <forward name="ListOK"
              resource="/accounts/accounts_shared_document_list.jsp" layout="nav"/>
+    <forward name="ListPopupOK"
+             resource="/accounts/accounts_shared_document_list.jsp" layout="style"/>
   </action>
 
   <action name="AccountsServiceContracts"
@@ -4852,6 +4900,8 @@
              layout="nav"/>
     <forward name="ModifyCountryOK" resource="/admin/admin_modify_country.jsp"
              layout="nav"/>
+  	<forward name="ModifyPaymentGatewayOK" resource="/MerchantPaymentGateways.do?command=Default"
+  		/>
     <forward name="LicenseUpdatedOK"
              resource="/admin/admin_modify_license_updated.jsp" layout="nav"/>
     <forward name="LicenseCheckOK" resource="/admin/admin_modify_license_ok.jsp"
@@ -5367,7 +5417,7 @@
     <forward name="ClosePopupOK" resource="/closepopup.jsp"/>
     <forward name="AddAccountPopupOK" resource="/accounts/accounts_add.jsp" layout="style"/>
     <forward name="PrepareContactPopupOK" resource="/ContactForm.do?command=Prepare&amp;actionSource=ExternalContacts&amp;entity=contact"/>
-    <forward name="AddCallPopupOK" resource="/actionlist/action_contacts_addcall.jsp" layout="style"/>
+    <forward name="LogCallPopupOK" resource="/actionlist/action_contacts_addcall.jsp" layout="style"/>
   </action>
 
   <action name="ReportGenerator"
@@ -5508,4 +5558,13 @@
   <action name="MyCFSHH" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <forward name="HomeOK" resource="/mycfshh.jsp" layout="nav"/>
   </action>
+<!-- Merchant Payment Gateway --> 
+	<action name="MerchantPaymentGateways" class="org.aspcfs.modules.admin.actions.MerchantPaymentGateways">
+		<bean name="MerchantPaymentGateway" class="org.aspcfs.modules.admin.base.MerchantPaymentGateway"
+			scope="request"/>
+            <forward name="ModifyOK" resource="/admin/merchant_payment_gateway.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/admin/merchant_payment_gateway_details.jsp"
+    layout="nav"/>
+    <forward name="DeleteOK" resource="/AdminConfig.do?command=ListGlobalParams" />
+    </action>
 </mvc-app>

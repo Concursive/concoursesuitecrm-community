@@ -36,9 +36,7 @@
 <table class="trails" cellspacing="0">
 	<tr>
 		<td>
-			<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-			<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-			<a href="Admin.do?command=ConfigDetails&moduleId=<%= permissionCategory.getId() %>"><%= toHtml(permissionCategory.getCategory()) %></a> >
+		<a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
 			<dhv:label name="product.editor">Editor</dhv:label>
 		</td>
 	</tr>
@@ -65,13 +63,13 @@
     <td>
     	<strong><%= toHtml(productOption.getLabel()) %></strong><br/><br/>
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="admin-sysconfig-products-edit">
+        <dhv:permission name="product-catalog-edit">
           <input type="submit" value="<dhv:label name="button.modify">Modify</dhv:label>">
         </dhv:permission>
-        <dhv:permission name="admin-sysconfig-products-delete">
+        <dhv:permission name="product-catalog-delete">
           <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogOptions.do?command=ConfirmDelete&optionId=<%= productOption.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&popup=true', 'ProductCatalogOptions.do?command=List', 'Delete_productoption', '330', '200', 'yes', 'no');"/>
         </dhv:permission>
-        <dhv:permission name="admin-sysconfig-products-edit,admin-sysconfig-products-delete">
+        <dhv:permission name="product-catalog-edit,product-catalog-delete">
           &nbsp;<br /><br />
         </dhv:permission>
       </dhv:evaluate>
@@ -277,10 +275,10 @@
     </table>
     <br />
     <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-      <dhv:permission name="admin-sysconfig-products-edit">
+      <dhv:permission name="product-catalog-edit">
         <input type="submit" value="<dhv:label name="button.modify">Modify</dhv:label>">
       </dhv:permission>
-      <dhv:permission name="admin-sysconfig-products-delete">
+      <dhv:permission name="product-catalog-delete">
 			  <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogOptions.do?command=ConfirmDelete&optionId=<%= productOption.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&popup=true', 'ProductCatalogOptions.do?command=List', 'Delete_productoption', '330', '200', 'yes', 'no');"/>
       </dhv:permission>
     </dhv:evaluate>

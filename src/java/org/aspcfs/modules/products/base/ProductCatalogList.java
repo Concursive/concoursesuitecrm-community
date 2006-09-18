@@ -15,6 +15,8 @@
  */
 package org.aspcfs.modules.products.base;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Import;
 import org.aspcfs.modules.base.SyncableList;
@@ -82,6 +84,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private String[] keywords = null;
   
   private boolean excludeUnapprovedProducts = true;
+  //Logger
+  private long milies = -1;
+  private static Logger logger = Logger.getLogger(ProductCatalogList.class);
+  static{
+    if(System.getProperty("DEBUG")!= null){
+      logger.setLevel(Level.DEBUG);
+    }
+  }  
+  
 
   //resources
   private boolean buildResources = false;
@@ -1164,7 +1175,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
@@ -1180,7 +1199,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
                 "AND " + DatabaseUtils.toLowerCase(db) + "(pctlg.product_name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        if (System.getProperty("DEBUG") != null) {
+          milies = System.currentTimeMillis();
+          logger.debug(pst.toString());
+        }
         rs = pst.executeQuery();
+        if (System.getProperty("DEBUG") != null) {
+          milies = System.currentTimeMillis() - milies;
+          logger.debug(String.valueOf(milies) + " ms");
+        }
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
           pagedListInfo.setCurrentOffset(offsetCount);
@@ -1218,7 +1245,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }

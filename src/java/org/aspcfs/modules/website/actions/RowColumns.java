@@ -17,6 +17,8 @@ package org.aspcfs.modules.website.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.RoleList;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.controller.SystemStatus;
@@ -408,6 +410,12 @@ public final class RowColumns extends CFSModule {
         LookupList leadSourceSelect = systemStatus.getLookupList(db, "lookup_contact_source");
         leadSourceSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
         context.getRequest().setAttribute("leadSourceSelect", leadSourceSelect);
+        RoleList roleList = new RoleList();
+        roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
+        roleList.setEnabledState(Constants.TRUE);
+        roleList.buildList(db);
+        roleList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
+        context.getRequest().setAttribute("rolelistSelect", roleList);
       }
     } catch (Exception e) {
       e.printStackTrace();

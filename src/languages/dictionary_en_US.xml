@@ -1904,6 +1904,9 @@
     <param name="accounts.accounts_contacts_calls_details_followup_include.FollowupActivityReminder">
       <value><![CDATA[Follow-up Activity Reminder]]></value>
     </param>
+    <param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
+      <value><![CDATA[Schedule an Activity]]></value>
+    </param>
     <param name="global.button.ProcessLater">
       <value><![CDATA[Process Later]]></value>
     </param>
@@ -1973,8 +1976,17 @@
     <param name="search.results.searchString">
       <value><![CDATA[Your search for <b>${searchText}</b> returned:]]></value>
     </param>
-    <param name="accounts.accounts_contacts_calls_list.AddAnActivity">
-      <value><![CDATA[Add an Activity]]></value>
+    <param name="accounts.accounts_contacts_calls_list.LogAnActivity">
+      <value><![CDATA[Log an Activity]]></value>
+    </param>
+     <param name="accounts.accounts_contacts_calls_add.LogAnActivity">
+      <value><![CDATA[Log an Activity]]></value>
+    </param>
+    <param name="accounts.accounts_contacts_calls_list.LogActivity">
+      <value><![CDATA[Log Activity]]></value>
+    </param>
+    <param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
+      <value><![CDATA[Schedule an Activity]]></value>
     </param>
     <param name="accounts.accounts_dashboard.ContractEndDates">
       <value><![CDATA[Contract End Dates]]></value>
@@ -9853,6 +9865,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.actionError.productDeletion">
       <value><![CDATA[Product could not be deleted because of referential integrity.]]></value>
     </param>
+  	<param name="object.validation.actionError.gatewayDeletion">
+  		<value><![CDATA[Merchant Payment Gateway could not be deleted.]]></value>
+  	</param>
     <param name="object.validation.actionError.relationshipDeletion">
       <value><![CDATA[Relationship could not be deleted because it no longer exists.]]></value>
     </param>
@@ -9977,8 +9992,11 @@ You do not have the permissions to perform this action.]]></value>
     <param name="quickactions.addContact">
       <value><![CDATA[Add a Contact]]></value>
     </param>
-    <param name="quickactions.addActivity">
-      <value><![CDATA[Add an Activity]]></value>
+    <param name="quickactions.logActivity">
+      <value><![CDATA[Log an Activity]]></value>
+    </param>
+     <param name="quickactions.scheduleActivity">
+      <value><![CDATA[Schedule an Activity]]></value>
     </param>
 
     <param name="quickactions.addAccount">
@@ -9986,9 +10004,6 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="quickactions.addContact">
       <value><![CDATA[Add a Contact]]></value>
-    </param>
-    <param name="quickactions.addActivity">
-      <value><![CDATA[Add an Activity]]></value>
     </param>
 
     <param name="myitems.header">
@@ -11831,6 +11846,27 @@ You do not have the permissions to perform this action.]]></value>
     <param name="quote.ProductQuoted">
       <value>This item has been added to your cart.  You can add more items or submit the selected items to a sales representative from the cart page.</value>
     </param>
+    <param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
+      <value><![CDATA[Scheduled Activity]]></value>
+    </param>
+    <param name="admin.paymentGateway">
+      <value><![CDATA[Payment Gateway]]></value>
+    </param>
+    <param name="admin.merchantId">
+      <value><![CDATA[Merchant Id]]></value>
+    </param>
+    <param name="admin.merchantCode">
+      <value><![CDATA[Merchant Code]]></value>
+    </param>
+    <param name="admin.addMerchantPaymentGateway">
+      <value><![CDATA[Add Merchant Payment Gateway]]></value>
+    </param>
+  	<param name="admin.merchantPaymentGatewayDetails">
+  		<value><![CDATA[Merchant Payment Gateway Details]]></value>
+  	</param>
+    <param name="projects.center_assignments.AddAnActivity">
+      <value><![CDATA[Add an Activity]]></value>
+    </param>
   </config>
 
 
@@ -12238,5 +12274,6 @@ You do not have the permissions to perform this action.]]></value>
     <param name="accountsQuotes.notes.long_html">
       <value>Notes</value>
     </param>
+
   </config>
 </aspcfs>

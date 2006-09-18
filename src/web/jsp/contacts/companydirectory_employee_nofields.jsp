@@ -29,9 +29,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.employees">Employees</dhv:label></a> >
-<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.view">View Employees</dhv:label></a> >
-<a href="CompanyDirectory.do?command=EmployeeDetails"<dhv:label name="employees.details">Employee Details</dhv:label></a> > 
+<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.employees">Employees</dhv:label></a> &gt;
+<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.view">View Employees</dhv:label></a> &gt;
+<a href="CompanyDirectory.do?command=EmployeeDetails"><dhv:label name="employees.details">Employee Details</dhv:label></a> &gt;
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record == null) %>">
   <dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label>
 </dhv:evaluate>

@@ -34,14 +34,14 @@
   loadImages('select');
 </script>
 <%-- Trails --%>
-<table class="trails" cellspacing="0"><tr>
-	<td>
-		<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-		<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-		<a href="Admin.do?command=ConfigDetails&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="products.productCatalog">Product Catalog</dhv:label></a> >
-		<dhv:label name="products.viewImports">View Imports</dhv:label>
-	</td>
-</tr></table>
+<table class="trails" cellspacing="0">
+  <tr>
+    <td>
+      <a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
+      <dhv:label name="product.viewImports">View Imports</dhv:label>
+    </td>
+  </tr>
+</table>
 <%-- End Trails --%>
 <dhv:permission name="product-catalog-product-imports-add">
   <a href="ProductCatalogImports.do?command=New&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="products.newImport">New Import</dhv:label></a><br>

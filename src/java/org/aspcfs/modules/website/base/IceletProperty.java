@@ -41,6 +41,7 @@ public class IceletProperty extends GenericBean {
   public final static String PORTFOLIO_CATEGORY = "portfolioCategory";
   public final static String PRODUCT_CATEGORY = "productCategory";
   public final static String LEAD_SOURCE = "leadsource";
+  public final static String PORTAL_ROLELIST = "portal-rolelist";
 
   private int id = -1;
   private int typeConstant = -1;

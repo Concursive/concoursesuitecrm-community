@@ -263,9 +263,9 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Projekti"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Zaposleni" description="Kdo so zaposleni v moji organizaciji?"/>
     </category>
-    <category id="330041409" name="Katalog produktov" folders="true" lookups="true" reports="false" categories="false" products="true">
+    <category id="330041409" name="Katalog produktov" folders="true" lookups="true" reports="false" categories="false">
       <folder constantId="200403192" description="Kategorije kataloga produktov" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Dostop do modula kategorij kataloga produktov" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Dostop do modula kategorij kataloga produktov" enabled="true"/>
       <permission name="product-catalog-product" attributes="vaed" description="Produkti" enabled="false"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Vrste produktov"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Vrste formatov produktov"/>
@@ -290,7 +290,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Konfiguracija poljubnih map in polj"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Konfiguracija napredka"/>
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Konfiguracija modula kategorij"/>
-      <permission name="admin-sysconfig-products" attributes="vaed" description="Urejanje kataloga produktov"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" description="Urejanje zapisov modula"/>
       <permission name="admin-actionplans" attributes="vaed" description="Configure Action Plans"/>
       <report file="users.xml" type="user" permission="admin" title="Sistemski uporabniki" description="Kdo so vsi uporabniki sistema?"/>
@@ -409,7 +408,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
-      <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" />
       <permission name="admin-actionplans" attributes="vaed" />
       <permission name="help" attributes="v---"/>

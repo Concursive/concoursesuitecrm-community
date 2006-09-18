@@ -86,7 +86,7 @@
   <dhv:permission name="website-portfolio-view"><tr>
     <td><strong><a href="PortfolioEditor.do?command=List"><dhv:label name="website.portfolio.setupExamplesOfPastWork">Setup Examples of Past Work</dhv:label></a></strong></td>
   </tr></dhv:permission>
-  <dhv:permission name="admin-sysconfig-products-view"><tr>
+  <dhv:permission name="product-catalog-view"><tr>
     <td><strong><a href="ProductCatalogEditor.do?command=List&moduleId=<%= moduleId %>"><dhv:label name="website.products.setupProductsAndServices">Setup Products and Services</dhv:label></a></strong></td>
   </tr></dhv:permission>
 <!--

@@ -1,4 +1,13 @@
+-- PostgreSQL Table Creation
+-- @created    March 18, 2004
+-- @version    $Id: new_product.sql 15821 2006-09-14 11:20:53Z Olga.Kaptyug@corratech.com $
+-- This schema represents a product catalog.  A product catalog is a
+-- classification and definition of products that a company can sell.
+-- REQUIRES: new_cdb.sql
+-- REQUIRES: new_project.sql
 
+-- Currency table, could extend to exchange rates
+-- Example: USD
 CREATE SEQUENCE lookup_currency_code_seq;
 CREATE TABLE lookup_currency (
   code INTEGER NOT NULL,
@@ -395,3 +404,53 @@ CREATE TABLE product_keyword_map (
 );
 
 CREATE INDEX idx_pr_key_map ON product_keyword_map (product_id, keyword_id);
+
+-- Create Indexes
+
+create index pcatalog_pid on product_catalog (parent_id);
+
+create index pcatalog_name on product_catalog (product_name);
+
+create index product_category_map_cid on product_catalog_category_map (category_id);
+
+create index pcatalog_enteredby on product_catalog (enteredby);
+      
+create index pcatalog_estimated_ship_time on product_catalog (estimated_ship_time);
+
+create index pcatalog_format_id on product_catalog (format_id);
+
+create index pcatalog_import_id on product_catalog (import_id);
+
+create index pcatalog_large_image_id on product_catalog (large_image_id);
+
+create index pcatalog_manufacturer_id on product_catalog (manufacturer_id);
+
+create index pcatalog_modifiedby on product_catalog (modifiedby);
+
+create index pcatalog_parent_id on product_catalog (parent_id);
+
+create index pcatalog_shipping_id on product_catalog (shipping_id);
+
+create index pcatalog_small_image_id on product_catalog (small_image_id);
+
+create index pcatalog_thumbnail_image_id on product_catalog (thumbnail_image_id);
+
+create index pcatalog_type_id on product_catalog (type_id);
+
+create index pcategory_enteredby on product_category (enteredby);
+
+create index pcategory_import_id on product_category (import_id);
+
+create index pcategory_large_image_id on product_category (large_image_id);
+
+create index pcategory_modifiedby on product_category (modifiedby);
+
+create index pcategory_parent_id on product_category (parent_id);
+
+create index pcategory_small_image_id on product_category (small_image_id);
+
+create index pcategory_thumbnail_image_id on product_category (thumbnail_image_id);
+
+create index pcategory_type_id on product_category (type_id);
+
+

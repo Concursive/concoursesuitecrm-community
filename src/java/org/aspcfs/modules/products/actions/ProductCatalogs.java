@@ -60,6 +60,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -111,6 +113,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -155,6 +159,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -204,6 +210,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -238,6 +246,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(db,
           Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory",
@@ -297,13 +307,15 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-add")) {
+    if (!hasPermission(context, "product-catalog-add")) {
       return ("PermissionError");
     }
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -358,7 +370,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-add")) {
+    if (!hasPermission(context, "product-catalog-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -371,6 +383,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -434,13 +448,15 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-add")) {
+    if (!hasPermission(context, "product-catalog-add")) {
       return ("PermissionError");
     }
     Connection db = null;
     try {
       db = getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -503,7 +519,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandSaveClone(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-add")) {
+    if (!hasPermission(context, "product-catalog-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -516,6 +532,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -586,7 +604,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -596,6 +614,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       String returnAction = context.getRequest().getParameter("returnAction");
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
@@ -675,7 +695,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -723,7 +743,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-view")) {
+    if (!hasPermission(context, "product-catalog-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -733,6 +753,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -775,7 +797,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -785,6 +807,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -852,7 +876,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -864,6 +888,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -919,7 +945,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-delete")) {
+    if (!hasPermission(context, "product-catalog-delete")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -973,7 +999,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-delete")) {
+    if (!hasPermission(context, "product-catalog-delete")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -983,8 +1009,10 @@ public final class ProductCatalogs extends CFSModule {
     String moduleId = context.getRequest().getParameter("moduleId");
     String categoryId = context.getRequest().getParameter("categoryId");
     String returnUrl = context.getRequest().getParameter("return");
-    returnUrl += "&moduleId=" + moduleId + "&categoryId=" + (categoryId != null ? categoryId : "");
     try {
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
+      returnUrl += "&moduleId=" + moduleId + "&categoryId=" + (categoryId != null ? categoryId : "");
       db = this.getConnection(context);
       String productId = context.getRequest().getParameter("productId");
       thisProduct = new ProductCatalog(db, Integer.parseInt(productId));
@@ -1033,7 +1061,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandTrash(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-delete")) {
+    if (!hasPermission(context, "product-catalog-delete")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -1043,8 +1071,10 @@ public final class ProductCatalogs extends CFSModule {
     String moduleId = context.getRequest().getParameter("moduleId");
     String categoryId = context.getRequest().getParameter("categoryId");
     String returnUrl = context.getRequest().getParameter("return");
-    returnUrl += "&moduleId=" + moduleId + "&categoryId=" + (categoryId != null ? categoryId : "");
     try {
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
+      returnUrl += "&moduleId=" + moduleId + "&categoryId=" + (categoryId != null ? categoryId : "");
       db = this.getConnection(context);
       String productId = context.getRequest().getParameter("productId");
       thisProduct = new ProductCatalog(db, Integer.parseInt(productId));
@@ -1089,7 +1119,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandRestore(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-delete")) {
+    if (!hasPermission(context, "product-catalog-delete")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -1099,6 +1129,8 @@ public final class ProductCatalogs extends CFSModule {
     String moduleId = context.getRequest().getParameter("moduleId");
     String categoryId = context.getRequest().getParameter("categoryId");
     try {
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       db = this.getConnection(context);
       String productId = context.getRequest().getParameter("productId");
       thisProduct = new ProductCatalog(db, Integer.parseInt(productId));
@@ -1138,6 +1170,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("permissionCategory", permissionCategory);
       String categoryId = context.getRequest().getParameter("categoryId");
@@ -1199,6 +1233,8 @@ public final class ProductCatalogs extends CFSModule {
       db = getConnection(context);
 
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1426,7 +1462,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandPricingList(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-view")) {
+    if (!hasPermission(context, "product-catalog-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1436,6 +1472,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1492,7 +1530,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAddPricing(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-add")) {
+    if (!hasPermission(context, "product-catalog-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1502,6 +1540,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1563,7 +1603,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandModifyPricing(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1573,6 +1613,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1642,7 +1684,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandInsertPricing(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-add")) {
+    if (!hasPermission(context, "product-catalog-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1656,6 +1698,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1709,7 +1753,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandUpdatePricing(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1724,6 +1768,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1776,7 +1822,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandPricingDetails(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-view")) {
+    if (!hasPermission(context, "product-catalog-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1785,6 +1831,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1825,7 +1873,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDisablePricing(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1834,6 +1882,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1881,7 +1931,7 @@ public final class ProductCatalogs extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandEnablePricing(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-products-edit")) {
+    if (!hasPermission(context, "product-catalog-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1891,6 +1941,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(
@@ -1960,6 +2012,8 @@ public final class ProductCatalogs extends CFSModule {
     try {
       db = this.getConnection(context);
       String moduleId = context.getRequest().getParameter("moduleId");
+      if (moduleId==null || "-1".equals(moduleId))
+      {moduleId =Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));}
       PermissionCategory permissionCategory = new PermissionCategory(
           db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute(

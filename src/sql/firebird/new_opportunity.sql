@@ -200,6 +200,7 @@ CREATE TABLE call_log (
   reminder_type_id INTEGER  REFERENCES lookup_call_reminder(code),
   alertdate_timezone VARCHAR(255),
   trashed_date TIMESTAMP,
+  followup_contact_id INTEGER  REFERENCES contact(contact_id),
   PRIMARY KEY (CALL_ID)
 );
 
@@ -215,6 +216,7 @@ CREATE INDEX call_log_entered_idx ON call_log ( entered );
 CREATE INDEX call_contact_id_idx ON call_log ( contact_id );
 CREATE INDEX call_org_id_idx ON call_log ( org_id );
 CREATE INDEX call_opp_id_idx ON call_log ( opp_id );
+CREATE INDEX call_fcontact_id_idx  ON call_log (followup_contact_id);
 
 -- Used at end of script because it references a table that has not been created
 -- =============================================================================

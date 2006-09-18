@@ -48,6 +48,8 @@ public class Order extends GenericBean {
   private Timestamp statusDate = null;
   private Timestamp contractDate = null;
   private Timestamp expirationDate = null;
+  private Timestamp approxShipDate = null;
+  private Timestamp approxDeliveryDate = null;
   private int orderTermsId = -1;
   private int orderTypeId = -1;
   private String description = null;
@@ -939,7 +941,8 @@ public class Order extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-
+    approxDeliveryDate = rs.getTimestamp("approx_delivery_date");
+    approxShipDate = rs.getTimestamp("approx_ship_date");
     // Organization and billing contact information
     name = rs.getString("name");
     nameFirst = rs.getString("namefirst");
@@ -1019,7 +1022,12 @@ public class Order extends GenericBean {
     if (id > -1) {
       sql.append("order_id, ");
     }
-
+    if (approxDeliveryDate !=null) {
+      sql.append("approx_delivery_date, ");
+    }
+    if (approxShipDate !=null) {
+      sql.append("approx_ship_date, ");
+    }
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1060,6 +1068,12 @@ public class Order extends GenericBean {
     pst.setString(++i, this.getNotes());
     if (id > -1) {
       pst.setInt(++i, id);
+    }
+    if (approxDeliveryDate != null) {
+      pst.setTimestamp(++i, this.getApproxDeliveryDate());
+    }
+    if (approxShipDate != null) {
+      pst.setTimestamp(++i, this.getApproxShipDate());
     }
     if (entered != null) {
       pst.setTimestamp(++i, this.getEntered());
@@ -1369,6 +1383,63 @@ public class Order extends GenericBean {
       }
     }
     return result;
+  }
+
+
+  /**
+   * Gets the approxDeliveryDate attribute of the Order object
+   *
+   * @return approxDeliveryDate The approxDeliveryDate value
+   */
+  public Timestamp getApproxDeliveryDate() {
+    return this.approxDeliveryDate;
+  }
+
+
+  /**
+   * Sets the approxDeliveryDate attribute of the Order object
+   *
+   * @param approxDeliveryDate The new approxDeliveryDate value
+   */
+  public void setApproxDeliveryDate(Timestamp approxDeliveryDate) {
+    this.approxDeliveryDate = approxDeliveryDate;
+  }
+
+  /**
+   * Sets the approxDeliveryDate attribute of the Order object
+   *
+   * @param approxDeliveryDate The new approxDeliveryDate value
+   */
+  public void setApproxDeliveryDate(String approxDeliveryDate) {
+    this.approxDeliveryDate = DatabaseUtils.parseTimestamp(approxDeliveryDate);
+  }
+
+
+  /**
+   * Gets the approxShipDate attribute of the Order object
+   *
+   * @return approxShipDate The approxShipDate value
+   */
+  public Timestamp getApproxShipDate() {
+    return this.approxShipDate;
+  }
+
+
+  /**
+   * Sets the approxShipDate attribute of the Order object
+   *
+   * @param approxShipDate The new approxShipDate value
+   */
+  public void setApproxShipDate(Timestamp approxShipDate) {
+    this.approxShipDate = approxShipDate;
+  }
+  /**
+   * Sets the approxShipDate attribute of the Order object
+   *
+   * @param approxShipDate The new approxShipDate value
+   */
+  public void setApproxShipDate(String approxShipDate) {
+    this.approxShipDate = DatabaseUtils.parseTimestamp(approxShipDate);
   }
 }
 

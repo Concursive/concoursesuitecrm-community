@@ -156,13 +156,17 @@ public final class AccountContactsCalls extends CFSModule {
       }
       completedCallList.setPagedListInfo(completedCallListInfo);
       completedCallList.setContactId(contactId);
+      completedCallList.setOnlyCompletedOrCanceled(true);
     }
     try {
       db = this.getConnection(context);
+      if(contactId!=null && !"-1".equals(contactId)){
       Contact tmpContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", tmpContact);
       if (tmpContact.isTrashed()) {
         callList.setIncludeOnlyTrashed(true);
         completedCallList.setIncludeOnlyTrashed(true);
+      }
       }
       if (sectionId == null || pendingPagedListId.equals(sectionId)) {
         callList.buildList(db);
@@ -250,12 +254,12 @@ public final class AccountContactsCalls extends CFSModule {
    * @param context Description of the Parameter
    * @return Description of the Return Value
    */
-  public String executeCommandAdd(ActionContext context) {
+  public String executeCommandLog(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-calls-add"))) {
       return ("PermissionError");
     }
     String contactId = context.getRequest().getParameter("contactId");
-    addModuleBean(context, "View Accounts", "Add an Activity");
+    addModuleBean(context, "View Accounts", "Log an Activity");
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -292,9 +296,63 @@ public final class AccountContactsCalls extends CFSModule {
     }
     //if a different module reuses this action then do a explicit return
     if (context.getRequest().getParameter("actionSource") != null) {
-      return getReturn(context, "AddCall");
+      return getReturn(context, "LogCall");
     }
-    return getReturn(context, "Add");
+    return getReturn(context, "Log");
+  }
+
+  /**
+   * Add a Call for an Account Contact
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandSchedule(ActionContext context) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-calls-add"))) {
+      return ("PermissionError");
+    }
+    String contactId = context.getRequest().getParameter("contactId");
+    addModuleBean(context, "View Accounts", "Log an Activity");
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      //add account and contact to the request
+      addFormElements(context, db);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      //Type Lookup
+      LookupList callTypeList = systemStatus.getLookupList(
+          db, "lookup_call_types");
+      callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("CallTypeList", callTypeList);
+
+      //Result Lookup
+      CallResultList resultList = new CallResultList();
+      resultList.buildList(db);
+      context.getRequest().setAttribute("callResultList", resultList);
+
+      //Priority Lookup
+      LookupList priorityList = systemStatus.getLookupList(
+          db, "lookup_call_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+
+      //Reminder Type Lookup
+      LookupList reminderList = systemStatus.getLookupList(
+          db, "lookup_call_reminder");
+      reminderList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("ReminderTypeList", reminderList);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("action", "schedule");
+    //if a different module reuses this action then do a explicit return
+    if (context.getRequest().getParameter("actionSource") != null) {
+      return getReturn(context, "LogCall");
+    }
+    return getReturn(context, "Log");
   }
 
 
@@ -324,6 +382,7 @@ public final class AccountContactsCalls extends CFSModule {
     Call thisCall = (Call) context.getFormBean();
     Call previousParentCall = null;
     thisCall.setModifiedBy(getUserId(context));
+    thisCall.setContactId(contactId);
     if (thisCall.getId() > 0) {
       permission = "accounts-accounts-contacts-calls-edit";
     }
@@ -371,11 +430,15 @@ public final class AccountContactsCalls extends CFSModule {
         if (parentCall != null && parentCall.getOppHeaderId() != -1) {
           thisCall.setOppHeaderId(parentCall.getOppHeaderId());
         }
+        thisCall.setAction(context.getRequest().getParameter("action"));
         isValid = this.validateObject(context, db, thisCall);
         if (isValid) {
           recordInserted = thisCall.insert(db, context);
         }
       }
+      if("schedule".equals(context.getRequest().getParameter("action")))
+      { context.getRequest().setAttribute("actionSource","accountItem");
+      context.getRequest().setAttribute("action","schedule");}
       //add account and contact to the request
       addFormElements(context, db);
 
@@ -426,12 +489,12 @@ public final class AccountContactsCalls extends CFSModule {
       if (context.getRequest().getParameter("actionSource") != null) {
         return getReturn(context, "InsertCall");
       }
-      return "InsertOK";
+      return getReturn(context, "Insert");
     } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
         return "UpdateListOK";
       }
-      return "UpdateOK";
+      return getReturn(context, "Update");
     }
     if (parentId != null && Integer.parseInt(parentId) > -1) {
       if (action != null && "cancel".equals(action)) {
@@ -443,7 +506,7 @@ public final class AccountContactsCalls extends CFSModule {
     if (thisCall.getId() > 0) {
       return getReturn(context, "Modify");
     }
-    return (executeCommandAdd(context));
+    return (executeCommandLog(context));
   }
 
 
@@ -460,6 +523,7 @@ public final class AccountContactsCalls extends CFSModule {
     addModuleBean(context, "View Accounts", "Modify an Activity");
 
     String contactId = context.getRequest().getParameter("contactId");
+    String orgId = context.getRequest().getParameter("orgId");
 
     int callId = Integer.parseInt(context.getRequest().getParameter("id"));
 
@@ -481,6 +545,7 @@ public final class AccountContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("CallDetails", thisCall);
+    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
     return getReturn(context, "Modify");
   }
 
@@ -543,7 +608,8 @@ public final class AccountContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return getReturn(context, "Add");
+    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
+    return getReturn(context, "Log");
   }
 
 
@@ -602,7 +668,8 @@ public final class AccountContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return getReturn(context, "Add");
+    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
+   return getReturn(context, "Log");
   }
 
 
@@ -650,6 +717,7 @@ public final class AccountContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
     context.getSession().setAttribute("Dialog", htmlDialog);
     return ("ConfirmDeleteOK");
   }
@@ -744,7 +812,7 @@ public final class AccountContactsCalls extends CFSModule {
           contactName + StringUtils.toString(thisCall.getContactName()) + "\n" +
           type + StringUtils.toString(thisCall.getCallType()) + "\n" +
           length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-          subject + StringUtils.toString(thisCall.getSubject()) + 
+          subject + StringUtils.toString(thisCall.getSubject()) +
                 (((!StringUtils.toString(thisCall.getSubject()).equals(StringUtils.toString(thisCall.getAlertText()))) && (!"".equals(StringUtils.toString(thisCall.getAlertText()))))? "\\" + StringUtils.toString(thisCall.getAlertText()):"") + "\n" +
           notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
           entered + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(
@@ -759,6 +827,7 @@ public final class AccountContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
     context.getRequest().setAttribute("Note", newNote);
     return getReturn(context, "ForwardMessage");
   }
@@ -790,7 +859,8 @@ public final class AccountContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "SendCallOK";
+    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
+    return getReturn(context, "SendCall");
   }
 
 
@@ -806,17 +876,22 @@ public final class AccountContactsCalls extends CFSModule {
    */
   public Contact addFormElements(ActionContext context, Connection db) throws SQLException {
     String contactId = context.getRequest().getParameter("contactId");
+    String orgId = context.getRequest().getParameter("orgId");
     Contact thisContact = (Contact) context.getRequest().getAttribute(
         "ContactDetails");
     Organization thisOrganization = null;
-    if (thisContact == null) {
+    if (thisContact == null && contactId!=null && !"-1".equals(contactId)) {
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-    }
+    
     if (thisContact.getOrgId() > -1) {
       thisOrganization = new Organization(db, thisContact.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
     }
-    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    }
+    else if(orgId!=null && !"-1".equals(orgId))
+    { thisOrganization = new Organization(db, Integer.parseInt(orgId));
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);}
     return thisContact;
   }
 
@@ -853,9 +928,10 @@ public final class AccountContactsCalls extends CFSModule {
     if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute(
         "alertDateWarning") != null))) {
       //Result
+      if(thisCall.getResultId()!=-1){
       CallResult thisResult = new CallResult(db, thisCall.getResultId());
       context.getRequest().setAttribute("CallResult", thisResult);
-
+      }
       //include the callResultList if it is a completed activity with no followup
       if (!"pending".equals(context.getRequest().getParameter("view"))) {
         CallResultList resultList = new CallResultList();
@@ -890,6 +966,7 @@ public final class AccountContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
     return getReturn(context, "SuggestCall");
   }
 }

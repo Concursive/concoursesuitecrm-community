@@ -152,7 +152,7 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-<servlet>
+  <servlet>
     <servlet-name>CartPortlet</servlet-name>
     <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
     <init-param>
@@ -161,6 +161,12 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>URL</servlet-name>
+    <servlet-class>org.aspcfs.servlets.url.URLServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
   <!-- Portlet Mappings -->
   <servlet-mapping>
     <servlet-name>AboutPortlet</servlet-name>
@@ -202,6 +208,13 @@
     <servlet-name>Webdav</servlet-name>
     <url-pattern>/files/*</url-pattern>
   </servlet-mapping>
+
+  <!-- The mapping for the URL servlet -->
+  <servlet-mapping>
+    <servlet-name>URL</servlet-name>
+    <url-pattern>/url/*</url-pattern>
+  </servlet-mapping>
+  
   <session-config>
         <session-timeout>65</session-timeout>
   </session-config>

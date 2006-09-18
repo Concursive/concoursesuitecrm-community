@@ -77,9 +77,7 @@
 <table class="trails" cellspacing="0">
 <tr>
   <td>
-    <a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> > 
-    <a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-    <a href="Admin.do?command=ConfigDetails&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="product.ProductCatalog">Product Catalog</dhv:label></a> >
+   <a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
     <a href="ProductCatalogImports.do?command=View&moduleId=<%=permissionCategory.getId()%>"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
     <dhv:label name="products.newImport">New Import</dhv:label>
   </td>

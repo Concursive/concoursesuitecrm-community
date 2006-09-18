@@ -35,6 +35,8 @@
 <jsp:useBean id="PRICE_SAVINGS_TEXT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PRODUCT_SEARCH" class="java.lang.String" scope="request"/>
 <jsp:useBean id="INCLUDE_EMAIL" class="java.lang.String" scope="request"/>
+<jsp:useBean id="ADDED_TO_QUOTE_MESSAGE" class="java.lang.String" scope="request"/>
+<jsp:useBean id="EMAIL_SUBJECT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="previousPage" class="java.lang.String" scope="request"/>
 <jsp:useBean id="offset" class="java.lang.String" scope="request"/>
 <jsp:useBean id="searchResult" class="java.lang.String" scope="request"/>
@@ -149,7 +151,8 @@
 </table>
 <%-- show email option --%>
 <dhv:evaluate if="<%= "true".equals(ADD_QUOTE) %>">
-  <dhv:evaluate if="<%= quotes == null || !quotes.containsKey(String.valueOf(productCatalog.getId())) %>">
+ <% if(quotes==null || !quotes.containsKey(String.valueOf(productCatalog.getId()))){%>
+  
   <form name="addQuote" action="<portlet:actionURL/>" method="POST">
     <input type="hidden" name="actionType" value="quote"/>
     <input type="hidden" name="forwardpage" value="<%= String.valueOf((String) request.getAttribute("page"))%>"/>
@@ -158,9 +161,9 @@
     <input type="hidden" name="forwardcategoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
     <input type="hidden" name="forwardoffset" value="<%=offset%>"/>
     <input type="hidden" name="forwardsearchResult" value="<%= searchResult %>"/>
-    <input type="submit" name="Add Quote" value="Receive a quote for this item"/>
+    <input type="submit" name="Add Quote" value="Add to Cart"/>
    </form>
-  </dhv:evaluate>
+   <%}%>
 </dhv:evaluate>
 <dhv:evaluate if="<%= "true".equals(INCLUDE_EMAIL) %>">
   <span name="emailSpanLink" id="emailSpanLink">
@@ -198,6 +201,14 @@
 					<input type="text" size="35" maxlength="80" name="yourFriendsAddress" value="" />
 				</td>
 			</tr>
+      <tr>
+        <td nowrap class="formLabel">
+          Email subject
+        </td>
+        <td>
+          <input type="text" size="35" maxlength="80" name="emailSubject" value="<%= EMAIL_SUBJECT%>" />
+        </td>
+      </tr>
 			<tr>
 				<td nowrap class="formLabel">
 					Comments
@@ -208,7 +219,7 @@
 			</tr>
       <TR>
         <td>&nbsp;</td>
-        <td><input type="submit" name="Submit" value="Submit" /></td>
+        <td><input type="submit" name="Submit" value="Send" /></td>
       </tr>
       <input type="hidden" name="actionType" value="sendEmail" />
       <input type="hidden" name="productURL" value="<%=  request.getAttribute("productURL") %>" />

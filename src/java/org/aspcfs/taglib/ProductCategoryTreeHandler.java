@@ -15,24 +15,15 @@
  */
 package org.aspcfs.taglib;
 
-import com.darkhorseventures.database.ConnectionElement;
-import org.aspcfs.controller.ApplicationPrefs;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.products.base.ProductCategory;
 import org.aspcfs.modules.products.base.ProductCategoryList;
 import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.Template;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 /**
  * This Class evaluates whether a SystemStatus preference exists for the

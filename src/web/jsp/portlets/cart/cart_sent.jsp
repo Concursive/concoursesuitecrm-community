@@ -21,11 +21,9 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio"%>
 <%@ taglib uri="/WEB-INF/portlet.tld" prefix="portlet"%>
 <%@ include file="../../initPage.jsp"%>
+<jsp:useBean id="QUOTE_SENT_MESSAGE" class="java.lang.String" scope="request"/>
 <portlet:defineObjects />
-Thank you for submitting a list for review.<br />
-<br />
-A representative will follow-up with you soon.<br />
-<br />
+<%= QUOTE_SENT_MESSAGE%>
 <%--
 The following information was sent for review:<br />
 Name<br />

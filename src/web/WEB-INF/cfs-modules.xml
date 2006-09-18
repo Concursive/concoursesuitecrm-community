@@ -343,31 +343,40 @@
       <short_html value="Export"/>
       <link value="Accounts.do?command=Reports"/>
     </submenu>
-  </menu>
-  
-<!--
-  <menu>
-    <action name="ProductsCatalog" />
-    <page title="Catalog" />
+  </menu> 
+ <menu>
+    <action name="ProductsCatalog"/>
+    <action name="ProductCatalogs"/>
+    <action name="ProductCatalogImports"/>
+    <action name="ProductCatalogEditor"/>
+    <action name="ProductCategories"/>
+    <action name="ProductCategoryProducts"/>
+    <action name="ProductCatalogOptions"/>
+    <action name="ProductCatalogOptionPricings"/>
+    <action name="ProductCatalogPricings"/>
+    <action name="ProductOptions"/>
+    <action name="ProductOptionPricings"/>
+    <action name="Products"/>
+    <page title="Products"/>
     <permission value="product-catalog-view"/>
-    <long_html value="Catalog"/>
-    <short_html value="Catalog"/>
-    <link value="ProductsCatalog.do?command=ListAllProducts"/>
+    <long_html value="Products"/>
+    <short_html value="Products"/>
+    <link value="ProductCatalogEditor.do?command=List"/>
     <graphic width="83" height="36" on="menu-products-on.gif" off="menu-products-off.gif" rollover=""/>
+
     <submenu name="View">
-    <permission value="product-catalog-product-view"/>
+      <permission value="product-catalog-view"/>
       <long_html value="View"/>
       <short_html value="View"/>
-      <link value="ProductsCatalog.do?command=ListAllProducts"/>
+      <link value="ProductCatalogEditor.do?command=List"/>
     </submenu>
-    <submenu name="Add">
-    <permission value="product-catalog-product-add"/>
-      <long_html value="Add"/>
-      <short_html value="Add"/>
-      <link value="ProductsCatalog.do?command=AddProduct"/>
+    <submenu name="Import">
+      <permission value="product-catalog-product-imports-view"/>
+      <long_html value="Import"/>
+      <short_html value="Import"/>
+      <link value="ProductCatalogImports.do?command=View"/>
     </submenu>
   </menu>
--->
   <menu>
     <action name="AutoGuide"/>
     <page title="Auto Guide"/>
@@ -746,6 +755,6 @@
       <link value="Reports.do?command=RunReport"/>
     </submenu>
   </menu>
-
+ 
 </application>
   

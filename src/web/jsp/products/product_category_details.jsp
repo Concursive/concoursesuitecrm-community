@@ -28,9 +28,7 @@
 <table class="trails" cellspacing="0">
 	<tr>
 		<td>
-			<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-			<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-			<a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
+			<a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
 			<a href="ProductCatalogEditor.do?command=Options&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.editor">Editor</dhv:label></a> >
 			<a href="ProductCategories.do?command=SearchForm&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.searchCategories">Search Categories</dhv:label></a> >
       <a href="ProductCategories.do?command=Search&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
@@ -44,7 +42,7 @@
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
 <dhv:container name="productcategories" selected="details" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
       <input type="hidden" name="categoryId" value="<%= ProductCategory.getId() %>">
-      <dhv:permission name="admin-sysconfig-products-edit">
+      <dhv:permission name="product-catalog-edit">
         <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCategories.do?command=Modify&categoryId=<%= ProductCategory.getId() %>&moduleId=<%= PermissionCategory.getId() %>'">
       </dhv:permission>
 			<%-- <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCategories.do?command=ConfirmDelete&categoryId=<%=ProductCategory.getId()%>&popup=true','ProductCategories.do?command=List&moduleId=<%=PermissionCategory.getId()%>', 'Delete_category','320','200','yes','no');"> --%>
@@ -149,7 +147,7 @@
 				</tr>
 			</table>
 			&nbsp;<br />
-			<dhv:permission name="admin-sysconfig-products-edit">
+			<dhv:permission name="product-catalog-edit">
         <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCategories.do?command=Modify&categoryId=<%= ProductCategory.getId() %>&moduleId=<%= PermissionCategory.getId() %>'">
       </dhv:permission>
 			<%-- <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCategories.do?command=ConfirmDelete&categoryId=<%=ProductCategory.getId()%>&popup=true','ProductCategories.do?command=List&moduleId=<%=PermissionCategory.getId()%>', 'Delete_category','320','200','yes','no');"> --%>

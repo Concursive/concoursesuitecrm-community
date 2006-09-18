@@ -22,6 +22,7 @@ import org.aspcfs.modules.products.base.*;
 import org.aspcfs.modules.quotes.base.QuoteProductBean;
 import org.aspcfs.modules.website.base.WebProductAccessLog;
 import org.aspcfs.modules.website.utils.PortletUtils;
+import org.aspcfs.servlets.url.base.URLMap;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.SMTPMessage;
 import org.aspcfs.utils.StringUtils;
@@ -29,8 +30,11 @@ import org.aspcfs.utils.web.PagedListInfo;
 
 import javax.portlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -68,12 +72,12 @@ public class ProductCatalogPortlet extends GenericPortlet {
   public final static String PRICE_SAVINGS_TEXT = "6051006";
   public final static String PRODUCT_SEARCH = "6060610";
   public final static String PRODUCT_SEARCH_AS_DEFAULT = "6060611";
-
+  public final static String ADDED_TO_QUOTE_MESSAGE = "6071315";
   //For emailing product information to a friend
   public final static String INCLUDE_EMAIL = "6060717";
   public final static String SITE_URL = "6060718";
   public final static String EMAIL_SUBJECT = "6060719";
-  public final static String EMAIL_INTRODUCTION = "6060720";
+  public final static String EMAIL_BODY = "6071316";
 
   public final static String fs = System.getProperty("file.separator");
 
@@ -279,8 +283,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
     request.setAttribute("PRICE_SAVINGS_TEXT", request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Instant Savings:"));
     request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
     request.setAttribute("INCLUDE_EMAIL", request.getPreferences().getValue(INCLUDE_EMAIL, "false"));
-    request.setAttribute("ADD_QUOTE", request.getPreferences().getValue(ADD_QUOTE, "true"));
-
+    request.setAttribute("ADD_QUOTE", request.getPreferences().getValue(ADD_QUOTE, "false"));
+    request.setAttribute("EMAIL_SUBJECT", request.getPreferences().getValue(EMAIL_SUBJECT, "A product from our catalog"));
+    request.setAttribute("ADDED_TO_QUOTE_MESSAGE", (String) request.getPreferences().getValue(ADDED_TO_QUOTE_MESSAGE, "This product has been added to the quote."));
     // Compose a url for emailing
     StringBuffer completeProductURL = new StringBuffer();
     completeProductURL.append(((HttpServletRequest) request).getRequestURL());
@@ -339,9 +344,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
       productCategoryList.buildCompleteHierarchy();
       productCatalogListInfo.setSearchCriteria(productCatalogList, (HttpServletRequest) request, PortletUtils.getSystemStatus(request), null);
       productCatalogList.setProductCategoryList(productCategoryList);
-      if (productCatalogList.getCategoryId() == -1) {
-        productCatalogList.setHasCategories(Constants.UNDEFINED);
-      }
+			if (productCatalogList.getCategoryId() == -1) {
+				productCatalogList.setHasCategories(Constants.UNDEFINED);
+			}
     }
     productCatalogList.setPagedListInfo(productCatalogListInfo);
     productCatalogList.buildList(db);
@@ -349,8 +354,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     ProductCatalog productCatalog = null;
     if (productCatalogList.size() > 0) {
       productCatalog = (ProductCatalog) productCatalogList.get(0);
-      if (checkProductId && productCatalog.getId() != Integer.parseInt(request.getParameter("productId")))
-      {
+      if (checkProductId && productCatalog.getId() != Integer.parseInt(request.getParameter("productId"))){
         return false;
       }
       request.setAttribute("productCatalog", productCatalog);
@@ -525,6 +529,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
       System.out.println(request.getParameter("yourName"));
       System.out.println(request.getParameter("yourEmailAddress"));
       System.out.println(request.getParameter("yourFriendsAddress"));
+      System.out.println(request.getParameter("emailSubject"));
       System.out.println(request.getParameter("comments"));
       System.out.println(request.getParameter("productId"));
       System.out.println(request.getParameter("viewType"));
@@ -533,11 +538,25 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
 
     Connection db = PortletUtils.getConnection(request);
+    URL url = new URL(request.getParameter("productURL"));
+    String friendlyURL = null;
+    URLMap urlMap = new URLMap();
+    urlMap.setUrl(url.getFile());
+    try{
+      urlMap.insert(db);
+      friendlyURL = urlMap.getURLAlias();
+    }catch (SQLException e) {
+      friendlyURL = url.getFile();
+    }
+    friendlyURL =
+      url.getProtocol()
+      + "://"
+      + PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL")
+      + friendlyURL;
 
     ProductEmailFormatter productEmailFormatter = new ProductEmailFormatter();
-    productEmailFormatter.setIntroduction(request.getPreferences().getValue(EMAIL_INTRODUCTION, "-1"));
     productEmailFormatter.setSiteURL(request.getPreferences().getValue(SITE_URL, ""));
-    productEmailFormatter.setProductURL(request.getParameter("productURL"));
+    productEmailFormatter.setProductURL(friendlyURL);
     productEmailFormatter.setFromName(request.getParameter("yourName"));
     productEmailFormatter.setShowSku(request.getPreferences().getValue(SHOW_SKU, "false"));
     productEmailFormatter.setSkuText(request.getPreferences().getValue(SKU_TEXT, "Sku:"));
@@ -579,14 +598,13 @@ public class ProductCatalogPortlet extends GenericPortlet {
         }
       }
     }
-    String templateFilePath = PortletUtils.getDbNamePath(request) + "templates_" + PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE") + ".xml";
-
-    String productInformation = productEmailFormatter.getProductInformation(
-        productCatalog, templateFilePath);
+    //String templateFilePath = PortletUtils.getDbNamePath(request) + "templates_" + PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE") + ".xml";
+    String productInformation =
+        productEmailFormatter.getProductInformation(productCatalog, request.getPreferences().getValue(EMAIL_BODY,""));
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ProductCatalogPortlet-> Product Information: " + productInformation);
     }
-    mail.setSubject(request.getPreferences().getValue(EMAIL_SUBJECT, "Product Information"));
+    mail.setSubject(request.getPreferences().getValue(EMAIL_SUBJECT, request.getParameter("emailSubject")));
     mail.setBody(productInformation);
     int mailReturn = mail.send();
     if (mailReturn == 2) {
@@ -595,4 +613,5 @@ public class ProductCatalogPortlet extends GenericPortlet {
   }
 
 }
+
 

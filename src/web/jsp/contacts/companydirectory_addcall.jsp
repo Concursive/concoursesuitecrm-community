@@ -25,6 +25,7 @@
 <jsp:useBean id="PreviousCallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script type="text/javascript">
 function reopenContact(id) {
@@ -36,7 +37,7 @@ function reopenContact(id) {
   }
 }
 </script>
-<body onLoad="javascript:document.addCall.callTypeId.focus();">
+<body onLoad="javascript:if(document.addCall.callTypeId){document.addCall.callTypeId.focus();}">
 <form name="addCall" action="ExternalContactsCalls.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -58,7 +59,7 @@ function reopenContact(id) {
   <% } %>
   <dhv:label name="accounts.accounts_calls_list_menu.CancelActivity">Cancel Activity</dhv:label>
 <% }else{ %>
-<dhv:label name="accounts.accounts_contacts_calls_add.AddActivity">Add Activity</dhv:label>
+<dhv:label name="accounts.accounts_contacts_calls_add.LogActivity">Log an Activity</dhv:label>
 <% } %>
 </td>
 </tr>

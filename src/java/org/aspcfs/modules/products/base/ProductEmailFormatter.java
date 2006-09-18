@@ -336,16 +336,9 @@ public class ProductEmailFormatter {
 	 *@return                 The productInformation value
 	 *@exception  Exception   Description of the Exception
 	 */
-	public String getProductInformation(ProductCatalog productCatalog, String propertyFile) throws Exception {
-    File configFile = new File(propertyFile);
-		XMLUtils xml = new XMLUtils(configFile);
-		Element mappings = xml.getFirstChild("mappings");
-
+	public String getProductInformation(ProductCatalog productCatalog, String emailTemplate) throws Exception {
     Template template = new Template();
-		template.setText(
-				XMLUtils.getNodeText(
-				XMLUtils.getElement(
-				mappings, "map", "id", "productInformation.details")));
+		template.setText(emailTemplate);
 		template.addParseElement("${email.fromName}", this.getFromName());
 		template.addParseElement("${product.name}", productCatalog.getName());
 		if (productCatalog.getLargeImageId() != -1) {

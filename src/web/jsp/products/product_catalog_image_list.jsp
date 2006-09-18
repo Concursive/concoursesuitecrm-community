@@ -56,9 +56,7 @@
 <table class="trails" cellspacing="0">
 	<tr>
 		<td>
-			<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-			<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-			<a href="Admin.do?command=ConfigDetails&moduleId=<%= permissionCategory.getId() %>"><%= toHtml(permissionCategory.getCategory()) %></a> >
+			<a href="ProductCatalogEditor.do?command=List"><dhv:label name="product.products">Products</dhv:label></a> >
 			<dhv:label name="product.editor">Editor</dhv:label>
   	</td>
 	</tr>
@@ -74,6 +72,7 @@
     </td>
   </tr>
 </table>
+<br />
 <dhv:formMessage showSpace="false"/>
 <% String param1 = "productId=" + productCatalog.getId(); %>
 <% String param2 = "moduleId=" + permissionCategory.getId(); %>

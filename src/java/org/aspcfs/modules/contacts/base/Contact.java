@@ -18,6 +18,8 @@ package org.aspcfs.modules.contacts.base;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
@@ -32,6 +34,7 @@ import org.aspcfs.modules.communications.base.RecipientList;
 import org.aspcfs.modules.communications.base.SurveyResponseList;
 import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
+import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.modules.quotes.base.QuoteList;
 import org.aspcfs.modules.servicecontracts.base.ServiceContractList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
@@ -46,25 +49,25 @@ import java.text.DateFormat;
 import java.util.*;
 
 /**
- *  Represents a Contact
+ * Represents a Contact
  *
- * @author     mrajkowski
- * @created    August 29, 2001
- * @version    $Id: Contact.java,v 1.106.4.3.2.3 2005/01/10 17:58:55 kbhoopal
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: Contact.java,v 1.106.4.3.2.3 2005/01/10 17:58:55 kbhoopal
+ *          Exp $
+ * @created August 29, 2001
  */
 public class Contact extends GenericBean {
   /**
-   *  HTTP API User Mode checks to see if the user has the required permission
-   *  to execute the corresponding method on the object. If the object can exist
-   *  in various forms and each form has a unique permission then override
-   *  method 'getPermission()' eg: Contact can be an Account Contact or General
-   *  Contact
+   * HTTP API User Mode checks to see if the user has the required permission
+   * to execute the corresponding method on the object. If the object can exist
+   * in various forms and each form has a unique permission then override
+   * method 'getPermission()' eg: Contact can be an Account Contact or General
+   * Contact
    */
   protected String permission = "contacts-external_contacts";
 
   /**
-   *  Type 1 in the database refers to an Employee
+   * Type 1 in the database refers to an Employee
    */
   public final static int EMPLOYEE_TYPE = 1;
   public final static int LEAD_TYPE = 2;
@@ -169,11 +172,20 @@ public class Contact extends GenericBean {
   private boolean forceDelete = false;
   private boolean checkRevertingBackToLead = false;
 
+  //Logger
+  private static long milies = -1;
+  private static Logger logger = Logger.getLogger(ProductCatalog.class);
+
+  static {
+    if (System.getProperty("DEBUG") != null) {
+      logger.setLevel(Level.DEBUG);
+    }
+  }
 
   /**
-   *  Gets the permission attribute of the Contact object
+   * Gets the permission attribute of the Contact object
    *
-   * @return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     if (orgId != -1) {
@@ -186,9 +198,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the industryName attribute of the Contact object
+   * Gets the industryName attribute of the Contact object
    *
-   * @return    The industryName value
+   * @return The industryName value
    */
   public String getIndustryName() {
     return industryName;
@@ -196,9 +208,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the sourceName attribute of the Contact object
+   * Gets the sourceName attribute of the Contact object
    *
-   * @return    The sourceName value
+   * @return The sourceName value
    */
   public String getSourceName() {
     return sourceName;
@@ -206,9 +218,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the ratingName attribute of the Contact object
+   * Gets the ratingName attribute of the Contact object
    *
-   * @return    The ratingName value
+   * @return The ratingName value
    */
   public String getRatingName() {
     return ratingName;
@@ -216,9 +228,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the instantMessageAddressList attribute of the Contact object
+   * Gets the instantMessageAddressList attribute of the Contact object
    *
-   * @return    The instantMessageAddressList value
+   * @return The instantMessageAddressList value
    */
   public ContactInstantMessageAddressList getInstantMessageAddressList() {
     return instantMessageAddressList;
@@ -226,9 +238,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the instantMessageAddressList attribute of the Contact object
+   * Sets the instantMessageAddressList attribute of the Contact object
    *
-   * @param  tmp  The new instantMessageAddressList value
+   * @param tmp The new instantMessageAddressList value
    */
   public void setInstantMessageAddressList(ContactInstantMessageAddressList tmp) {
     this.instantMessageAddressList = tmp;
@@ -236,9 +248,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the city attribute of the Contact object
+   * Gets the city attribute of the Contact object
    *
-   * @return    The city value
+   * @return The city value
    */
   public String getCity() {
     return city;
@@ -246,9 +258,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the city attribute of the Contact object
+   * Sets the city attribute of the Contact object
    *
-   * @param  tmp  The new city value
+   * @param tmp The new city value
    */
   public void setCity(String tmp) {
     this.city = tmp;
@@ -256,9 +268,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the postalcode attribute of the Contact object
+   * Gets the postalcode attribute of the Contact object
    *
-   * @return    The postalcode value
+   * @return The postalcode value
    */
   public String getPostalcode() {
     return postalcode;
@@ -266,9 +278,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the postalcode attribute of the Contact object
+   * Sets the postalcode attribute of the Contact object
    *
-   * @param  tmp  The new postalcode value
+   * @param tmp The new postalcode value
    */
   public void setPostalcode(String tmp) {
     this.postalcode = tmp;
@@ -276,9 +288,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the siteId attribute of the Contact object
+   * Sets the siteId attribute of the Contact object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -286,9 +298,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the siteId attribute of the Contact object
+   * Sets the siteId attribute of the Contact object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -296,9 +308,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the siteId attribute of the Contact object
+   * Gets the siteId attribute of the Contact object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -306,21 +318,22 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Constructor for the Contact object
+   * Constructor for the Contact object
    *
-   * @since    1.1
+   * @since 1.1
    */
-  public Contact() { }
+  public Contact() {
+  }
 
 
   /**
-   *  Constructor for the Contact object
+   * Constructor for the Contact object
    *
-   * @param  rs                Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of Exception
-   * @since                    1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public Contact(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -328,15 +341,15 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Constructor for the Employee object, populates all attributes by
-   *  performing a SQL query based on the employeeId parameter
+   * Constructor for the Employee object, populates all attributes by
+   * performing a SQL query based on the employeeId parameter
    *
-   * @param  db                Description of Parameter
-   * @param  contactId         Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of Exception
-   * @since                    1.1
+   * @param db        Description of Parameter
+   * @param contactId Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public Contact(Connection db, String contactId) throws SQLException {
     queryRecord(db, Integer.parseInt(contactId));
@@ -344,13 +357,13 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Constructor for the Contact object
+   * Constructor for the Contact object
    *
-   * @param  db                Description of the Parameter
-   * @param  contactId         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public Contact(Connection db, int contactId) throws SQLException {
     queryRecord(db, contactId);
@@ -358,10 +371,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  obj  Description of the Parameter
-   * @return      Description of the Return Value
+   * @param obj Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean equals(Object obj) {
     if (this.getId() == ((Contact) obj).getId()) {
@@ -373,10 +386,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void build(Connection db) throws SQLException {
     queryRecord(db, this.getId());
@@ -384,11 +397,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  contactId      Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int contactId) throws SQLException {
     if (contactId < 0) {
@@ -398,31 +411,39 @@ public class Contact extends GenericBean {
     //NOTE: Update the UserList query if any changes are made to the contact query
     sql.append(
         "SELECT c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate," +
-        " d.description as departmentname, " +
-        " ca.city AS city, " +
-        " ca.postalcode AS postalcode, " +
-        " lsi.description AS site_id_name, " +
-        " lind.description AS industry_name, " +
-        " lcs.description AS source_name, " +
-        " lcr.description AS rating_name " +
-        "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
-        "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
-        "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
-        "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
-        "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
-        "WHERE c.contact_id = ? " +
-        "AND (ca.address_id IS NULL OR ca.address_id IN ( " +
-        "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
-        "OR ca.address_id IN (SELECT MIN(ctadd.address_id) FROM contact_address ctadd WHERE ctadd.contact_id = c.contact_id AND " +
-        " ctadd.contact_id NOT IN (SELECT contact_id FROM contact_address WHERE contact_address.primary_address = ?))) ");
+            " d.description as departmentname, " +
+            " ca.city AS city, " +
+            " ca.postalcode AS postalcode, " +
+            " lsi.description AS site_id_name, " +
+            " lind.description AS industry_name, " +
+            " lcs.description AS source_name, " +
+            " lcr.description AS rating_name " +
+            "FROM contact c " +
+            "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+            "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+            "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
+            "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+            "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
+            "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
+            "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
+            "WHERE c.contact_id = ? " +
+            "AND (ca.address_id IS NULL OR ca.address_id IN ( " +
+            "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
+            "OR ca.address_id IN (SELECT MIN(ctadd.address_id) FROM contact_address ctadd WHERE ctadd.contact_id = c.contact_id AND " +
+            " ctadd.contact_id NOT IN (SELECT contact_id FROM contact_address WHERE contact_address.primary_address = ?))) ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, contactId);
     pst.setBoolean(2, true);
     pst.setBoolean(3, true);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       buildRecord(rs);
     }
@@ -450,9 +471,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the additionalNames attribute of the Contact object
+   * Gets the additionalNames attribute of the Contact object
    *
-   * @return    The additionalNames value
+   * @return The additionalNames value
    */
   public String getAdditionalNames() {
     return additionalNames;
@@ -460,9 +481,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the additionalNames attribute of the Contact object
+   * Sets the additionalNames attribute of the Contact object
    *
-   * @param  tmp  The new additionalNames value
+   * @param tmp The new additionalNames value
    */
   public void setAdditionalNames(String tmp) {
     this.additionalNames = tmp;
@@ -470,9 +491,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the nickname attribute of the Contact object
+   * Gets the nickname attribute of the Contact object
    *
-   * @return    The nickname value
+   * @return The nickname value
    */
   public String getNickname() {
     return nickname;
@@ -480,9 +501,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the nickname attribute of the Contact object
+   * Sets the nickname attribute of the Contact object
    *
-   * @param  tmp  The new nickname value
+   * @param tmp The new nickname value
    */
   public void setNickname(String tmp) {
     this.nickname = tmp;
@@ -490,9 +511,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the role attribute of the Contact object
+   * Gets the role attribute of the Contact object
    *
-   * @return    The role value
+   * @return The role value
    */
   public String getRole() {
     return role;
@@ -500,9 +521,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the role attribute of the Contact object
+   * Sets the role attribute of the Contact object
    *
-   * @param  tmp  The new role value
+   * @param tmp The new role value
    */
   public void setRole(String tmp) {
     this.role = tmp;
@@ -510,9 +531,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the birthDate attribute of the Contact object
+   * Gets the birthDate attribute of the Contact object
    *
-   * @return    The birthDate value
+   * @return The birthDate value
    */
   public java.sql.Timestamp getBirthDate() {
     return birthDate;
@@ -520,9 +541,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the secretWord attribute of the Contact object
+   * Gets the secretWord attribute of the Contact object
    *
-   * @return    The secretWord value
+   * @return The secretWord value
    */
   public String getSecretWord() {
     return secretWord;
@@ -530,9 +551,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the secretWord attribute of the Contact object
+   * Sets the secretWord attribute of the Contact object
    *
-   * @param  tmp  The new secretWord value
+   * @param tmp The new secretWord value
    */
   public void setSecretWord(String tmp) {
     this.secretWord = tmp;
@@ -540,9 +561,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the revenue attribute of the Contact object
+   * Sets the revenue attribute of the Contact object
    *
-   * @param  tmp  The new revenue value
+   * @param tmp The new revenue value
    */
   public void setRevenue(double tmp) {
     this.revenue = tmp;
@@ -550,9 +571,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the potential attribute of the Contact object
+   * Sets the potential attribute of the Contact object
    *
-   * @param  tmp  The new potential value
+   * @param tmp The new potential value
    */
   public void setPotential(double tmp) {
     this.potential = tmp;
@@ -560,9 +581,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the potential attribute of the Contact object
+   * Sets the potential attribute of the Contact object
    *
-   * @param  tmp  The new potential value
+   * @param tmp The new potential value
    */
   public void setPotential(String tmp) {
     this.potential = Double.parseDouble(tmp);
@@ -570,9 +591,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the industryTempCode attribute of the Contact object
+   * Sets the industryTempCode attribute of the Contact object
    *
-   * @param  tmp  The new industryTempCode value
+   * @param tmp The new industryTempCode value
    */
   public void setIndustryTempCode(int tmp) {
     this.industryTempCode = tmp;
@@ -580,9 +601,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the industryTempCode attribute of the Contact object
+   * Sets the industryTempCode attribute of the Contact object
    *
-   * @param  tmp  The new industryTempCode value
+   * @param tmp The new industryTempCode value
    */
   public void setIndustryTempCode(String tmp) {
     this.industryTempCode = Integer.parseInt(tmp);
@@ -590,9 +611,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the revenue attribute of the Contact object
+   * Gets the revenue attribute of the Contact object
    *
-   * @return    The revenue value
+   * @return The revenue value
    */
   public double getRevenue() {
     return revenue;
@@ -600,9 +621,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the potential attribute of the Contact object
+   * Gets the potential attribute of the Contact object
    *
-   * @return    The potential value
+   * @return The potential value
    */
   public double getPotential() {
     return potential;
@@ -610,10 +631,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the grossPotential attribute of the Contact object
+   * Gets the grossPotential attribute of the Contact object
    *
-   * @param  divisor  Description of the Parameter
-   * @return          The grossPotential value
+   * @param divisor Description of the Parameter
+   * @return The grossPotential value
    */
   public double getGrossPotential(int divisor) {
     return (java.lang.Math.round(potential) / (double) divisor);
@@ -621,9 +642,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the industryTempCode attribute of the Contact object
+   * Gets the industryTempCode attribute of the Contact object
    *
-   * @return    The industryTempCode value
+   * @return The industryTempCode value
    */
   public int getIndustryTempCode() {
     return industryTempCode;
@@ -631,9 +652,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the birthDate attribute of the Contact object
+   * Sets the birthDate attribute of the Contact object
    *
-   * @param  tmp  The new birthDate value
+   * @param tmp The new birthDate value
    */
   public void setBirthDate(java.sql.Timestamp tmp) {
     this.birthDate = tmp;
@@ -641,9 +662,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the birthDate attribute of the Contact object
+   * Sets the birthDate attribute of the Contact object
    *
-   * @param  tmp  The new birthDate value
+   * @param tmp The new birthDate value
    */
   public void setBirthDate(String tmp) {
     this.birthDate = DatabaseUtils.parseTimestamp(tmp, Locale.getDefault(), true);
@@ -651,9 +672,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the OwnerName attribute of the Contact object
+   * Sets the OwnerName attribute of the Contact object
    *
-   * @param  ownerName  The new OwnerName value
+   * @param ownerName The new OwnerName value
    */
   public void setOwnerName(String ownerName) {
     this.ownerName = ownerName;
@@ -661,9 +682,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the hasEnabledOwnerAccount attribute of the Contact object
+   * Sets the hasEnabledOwnerAccount attribute of the Contact object
    *
-   * @param  hasEnabledOwnerAccount  The new hasEnabledOwnerAccount value
+   * @param hasEnabledOwnerAccount The new hasEnabledOwnerAccount value
    */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
@@ -671,9 +692,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noEmail attribute of the Contact object
+   * Sets the noEmail attribute of the Contact object
    *
-   * @param  tmp  The new noEmail value
+   * @param tmp The new noEmail value
    */
   public void setNoEmail(boolean tmp) {
     this.noEmail = tmp;
@@ -681,9 +702,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the employee attribute of the Contact object
+   * Sets the employee attribute of the Contact object
    *
-   * @param  tmp  The new employee value
+   * @param tmp The new employee value
    */
   public void setEmployee(boolean tmp) {
     this.employee = tmp;
@@ -691,9 +712,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noMail attribute of the Contact object
+   * Sets the noMail attribute of the Contact object
    *
-   * @param  tmp  The new noMail value
+   * @param tmp The new noMail value
    */
   public void setNoMail(boolean tmp) {
     this.noMail = tmp;
@@ -701,9 +722,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noPhone attribute of the Contact object
+   * Sets the noPhone attribute of the Contact object
    *
-   * @param  tmp  The new noPhone value
+   * @param tmp The new noPhone value
    */
   public void setNoPhone(boolean tmp) {
     this.noPhone = tmp;
@@ -711,9 +732,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noPhone attribute of the Contact object
+   * Sets the noPhone attribute of the Contact object
    *
-   * @param  tmp  The new noPhone value
+   * @param tmp The new noPhone value
    */
   public void setNoPhone(String tmp) {
     this.noPhone = DatabaseUtils.parseBoolean(tmp);
@@ -721,9 +742,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noTextMessage attribute of the Contact object
+   * Sets the noTextMessage attribute of the Contact object
    *
-   * @param  tmp  The new noTextMessage value
+   * @param tmp The new noTextMessage value
    */
   public void setNoTextMessage(boolean tmp) {
     this.noTextMessage = tmp;
@@ -731,9 +752,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noTextMessage attribute of the Contact object
+   * Sets the noTextMessage attribute of the Contact object
    *
-   * @param  tmp  The new noTextMessage value
+   * @param tmp The new noTextMessage value
    */
   public void setNoTextMessage(String tmp) {
     this.noTextMessage = DatabaseUtils.parseBoolean(tmp);
@@ -741,9 +762,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noInstantMessage attribute of the Contact object
+   * Sets the noInstantMessage attribute of the Contact object
    *
-   * @param  tmp  The new noInstantMessage value
+   * @param tmp The new noInstantMessage value
    */
   public void setNoInstantMessage(boolean tmp) {
     this.noInstantMessage = tmp;
@@ -751,9 +772,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noInstantMessage attribute of the Contact object
+   * Sets the noInstantMessage attribute of the Contact object
    *
-   * @param  tmp  The new noInstantMessage value
+   * @param tmp The new noInstantMessage value
    */
   public void setNoInstantMessage(String tmp) {
     this.noInstantMessage = DatabaseUtils.parseBoolean(tmp);
@@ -761,9 +782,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noFax attribute of the Contact object
+   * Sets the noFax attribute of the Contact object
    *
-   * @param  tmp  The new noFax value
+   * @param tmp The new noFax value
    */
   public void setNoFax(boolean tmp) {
     this.noFax = tmp;
@@ -771,9 +792,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noFax attribute of the Contact object
+   * Sets the noFax attribute of the Contact object
    *
-   * @param  tmp  The new noFax value
+   * @param tmp The new noFax value
    */
   public void setNoFax(String tmp) {
     this.noFax = DatabaseUtils.parseBoolean(tmp);
@@ -781,9 +802,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the accessType attribute of the Contact object
+   * Sets the accessType attribute of the Contact object
    *
-   * @param  accessType  The new accessType value
+   * @param accessType The new accessType value
    */
   public void setAccessType(int accessType) {
     this.accessType = accessType;
@@ -791,9 +812,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the accessType attribute of the Contact object
+   * Sets the accessType attribute of the Contact object
    *
-   * @param  accessType  The new accessType value
+   * @param accessType The new accessType value
    */
   public void setAccessType(String accessType) {
     this.accessType = Integer.parseInt(accessType);
@@ -801,9 +822,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the clientId attribute of the Contact object
+   * Sets the clientId attribute of the Contact object
    *
-   * @param  clientId  The new clientId value
+   * @param clientId The new clientId value
    */
   public void setClientId(int clientId) {
     this.clientId = clientId;
@@ -811,9 +832,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the clientId attribute of the Contact object
+   * Sets the clientId attribute of the Contact object
    *
-   * @param  clientId  The new clientId value
+   * @param clientId The new clientId value
    */
   public void setClientId(String clientId) {
     this.clientId = Integer.parseInt(clientId);
@@ -821,9 +842,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the clientId attribute of the Contact object
+   * Gets the clientId attribute of the Contact object
    *
-   * @return    The clientId value
+   * @return The clientId value
    */
   public int getClientId() {
     return clientId;
@@ -831,9 +852,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Contact object
+   * Sets the statusId attribute of the Contact object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -841,9 +862,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Contact object
+   * Sets the statusId attribute of the Contact object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -851,9 +872,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the importId attribute of the Contact object
+   * Sets the importId attribute of the Contact object
    *
-   * @param  tmp  The new importId value
+   * @param tmp The new importId value
    */
   public void setImportId(int tmp) {
     this.importId = tmp;
@@ -861,9 +882,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the importId attribute of the Contact object
+   * Sets the importId attribute of the Contact object
    *
-   * @param  tmp  The new importId value
+   * @param tmp The new importId value
    */
   public void setImportId(String tmp) {
     this.importId = Integer.parseInt(tmp);
@@ -871,9 +892,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the hasAccess attribute of the Contact object
+   * Sets the hasAccess attribute of the Contact object
    *
-   * @param  tmp  The new hasAccess value
+   * @param tmp The new hasAccess value
    */
   public void setHasAccess(boolean tmp) {
     this.hasAccess = tmp;
@@ -881,9 +902,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the hasAccess attribute of the Contact object
+   * Sets the hasAccess attribute of the Contact object
    *
-   * @param  tmp  The new hasAccess value
+   * @param tmp The new hasAccess value
    */
   public void setHasAccess(String tmp) {
     this.hasAccess = DatabaseUtils.parseBoolean(tmp);
@@ -891,9 +912,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the isEnabled attribute of the Contact object
+   * Sets the isEnabled attribute of the Contact object
    *
-   * @param  tmp  The new isEnabled value
+   * @param tmp The new isEnabled value
    */
   public void setIsEnabled(boolean tmp) {
     this.isEnabled = tmp;
@@ -901,9 +922,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the isEnabled attribute of the Contact object
+   * Sets the isEnabled attribute of the Contact object
    *
-   * @param  tmp  The new isEnabled value
+   * @param tmp The new isEnabled value
    */
   public void setIsEnabled(String tmp) {
     this.isEnabled = DatabaseUtils.parseBoolean(tmp);
@@ -911,9 +932,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the forceDelete attribute of the Contact object
+   * Sets the forceDelete attribute of the Contact object
    *
-   * @param  tmp  The new forceDelete value
+   * @param tmp The new forceDelete value
    */
   public void setForceDelete(boolean tmp) {
     this.forceDelete = tmp;
@@ -921,9 +942,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the forceDelete attribute of the Contact object
+   * Sets the forceDelete attribute of the Contact object
    *
-   * @param  tmp  The new forceDelete value
+   * @param tmp The new forceDelete value
    */
   public void setForceDelete(String tmp) {
     this.forceDelete = DatabaseUtils.parseBoolean(tmp);
@@ -931,9 +952,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the hasAccess attribute of the Contact object
+   * Gets the hasAccess attribute of the Contact object
    *
-   * @return    The hasAccess value
+   * @return The hasAccess value
    */
   public boolean getHasAccess() {
     return hasAccess;
@@ -941,9 +962,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the isEnabled attribute of the Contact object
+   * Gets the isEnabled attribute of the Contact object
    *
-   * @return    The isEnabled value
+   * @return The isEnabled value
    */
   public boolean getIsEnabled() {
     return isEnabled;
@@ -951,9 +972,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Contact object
+   * Sets the trashedDate attribute of the Contact object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -961,9 +982,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Contact object
+   * Sets the trashedDate attribute of the Contact object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -971,9 +992,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the trashedDate attribute of the Contact object
+   * Gets the trashedDate attribute of the Contact object
    *
-   * @return    The trashedDate value
+   * @return The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -981,9 +1002,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the trashed attribute of the Contact object
+   * Gets the trashed attribute of the Contact object
    *
-   * @return    The trashed value
+   * @return The trashed value
    */
   public boolean isTrashed() {
     return (trashedDate != null);
@@ -991,9 +1012,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the forceDelete attribute of the Contact object
+   * Gets the forceDelete attribute of the Contact object
    *
-   * @return    The forceDelete value
+   * @return The forceDelete value
    */
   public boolean getForceDelete() {
     return forceDelete;
@@ -1001,9 +1022,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Contact object
+   * Gets the statusId attribute of the Contact object
    *
-   * @return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -1011,9 +1032,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the importId attribute of the Contact object
+   * Gets the importId attribute of the Contact object
    *
-   * @return    The importId value
+   * @return The importId value
    */
   public int getImportId() {
     return importId;
@@ -1021,9 +1042,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the accessType attribute of the Contact object
+   * Gets the accessType attribute of the Contact object
    *
-   * @return    The accessType value
+   * @return The accessType value
    */
   public int getAccessType() {
     return accessType;
@@ -1031,9 +1052,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the accessType attribute of the Contact object
+   * Gets the accessType attribute of the Contact object
    *
-   * @return    The accessType value
+   * @return The accessType value
    */
   public String getAccessTypeString() {
     return String.valueOf(accessType);
@@ -1041,9 +1062,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the employee attribute of the Contact object
+   * Gets the employee attribute of the Contact object
    *
-   * @return    The employee value
+   * @return The employee value
    */
   public boolean getEmployee() {
     return employee;
@@ -1051,9 +1072,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the hasEnabledOwnerAccount attribute of the Contact object
+   * Gets the hasEnabledOwnerAccount attribute of the Contact object
    *
-   * @return    The hasEnabledOwnerAccount value
+   * @return The hasEnabledOwnerAccount value
    */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
@@ -1061,9 +1082,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the url attribute of the Contact object
+   * Gets the url attribute of the Contact object
    *
-   * @return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -1071,9 +1092,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the hasOpportunities attribute of the Contact object
+   * Gets the hasOpportunities attribute of the Contact object
    *
-   * @return    The hasOpportunities value
+   * @return The hasOpportunities value
    */
   public boolean getHasOpportunities() {
     return hasOpportunities;
@@ -1081,9 +1102,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the hasOpportunities attribute of the Contact object
+   * Sets the hasOpportunities attribute of the Contact object
    *
-   * @param  hasOpportunities  The new hasOpportunities value
+   * @param hasOpportunities The new hasOpportunities value
    */
   public void setHasOpportunities(boolean hasOpportunities) {
     this.hasOpportunities = hasOpportunities;
@@ -1091,9 +1112,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the url attribute of the Contact object
+   * Sets the url attribute of the Contact object
    *
-   * @param  url  The new url value
+   * @param url The new url value
    */
   public void setUrl(String url) {
     this.url = url;
@@ -1101,9 +1122,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the primaryContact attribute of the Contact object
+   * Sets the primaryContact attribute of the Contact object
    *
-   * @param  primaryContact  The new primaryContact value
+   * @param primaryContact The new primaryContact value
    */
   public void setPrimaryContact(boolean primaryContact) {
     this.primaryContact = primaryContact;
@@ -1111,9 +1132,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the primaryContact attribute of the Contact object
+   * Sets the primaryContact attribute of the Contact object
    *
-   * @param  tmp  The new primaryContact value
+   * @param tmp The new primaryContact value
    */
   public void setPrimaryContact(String tmp) {
     this.primaryContact = DatabaseUtils.parseBoolean(tmp);
@@ -1121,9 +1142,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the typeList attribute of the Contact object
+   * Sets the typeList attribute of the Contact object
    *
-   * @param  typeList  The new typeList value
+   * @param typeList The new typeList value
    */
   public void setTypeList(ArrayList typeList) {
     this.typeList = typeList;
@@ -1131,9 +1152,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the typeList attribute of the Contact object
+   * Gets the typeList attribute of the Contact object
    *
-   * @return    The typeList value
+   * @return The typeList value
    */
   public ArrayList getTypeList() {
     return typeList;
@@ -1141,9 +1162,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the primaryContact attribute of the Contact object
+   * Gets the primaryContact attribute of the Contact object
    *
-   * @return    The primaryContact value
+   * @return The primaryContact value
    */
   public boolean getPrimaryContact() {
     return primaryContact;
@@ -1151,10 +1172,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Returns a name for the contact checking (last,first) name and company name
-   *  in that order
+   * Returns a name for the contact checking (last,first) name and company name
+   * in that order
    *
-   * @return    The validName value
+   * @return The validName value
    */
   public String getValidName() {
     String validName = StringUtils.toString(getNameLastFirst());
@@ -1166,9 +1187,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the fullNameAbbr attribute of the Contact object
+   * Gets the fullNameAbbr attribute of the Contact object
    *
-   * @return    The fullNameAbbr value
+   * @return The fullNameAbbr value
    */
   public String getFullNameAbbr() {
     StringBuffer out = new StringBuffer();
@@ -1183,9 +1204,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the custom1 attribute of the Contact object
+   * Gets the custom1 attribute of the Contact object
    *
-   * @return    The custom1 value
+   * @return The custom1 value
    */
   public int getCustom1() {
     return custom1;
@@ -1193,9 +1214,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the custom1 attribute of the Contact object
+   * Sets the custom1 attribute of the Contact object
    *
-   * @param  custom1  The new custom1 value
+   * @param custom1 The new custom1 value
    */
   public void setCustom1(int custom1) {
     this.custom1 = custom1;
@@ -1203,9 +1224,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasEnabledAccount() {
     return hasEnabledAccount;
@@ -1213,9 +1234,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the hasEnabledAccount attribute of the Contact object
+   * Sets the hasEnabledAccount attribute of the Contact object
    *
-   * @param  hasEnabledAccount  The new hasEnabledAccount value
+   * @param hasEnabledAccount The new hasEnabledAccount value
    */
   public void setHasEnabledAccount(boolean hasEnabledAccount) {
     this.hasEnabledAccount = hasEnabledAccount;
@@ -1223,9 +1244,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the custom1 attribute of the Contact object
+   * Sets the custom1 attribute of the Contact object
    *
-   * @param  custom1  The new custom1 value
+   * @param custom1 The new custom1 value
    */
   public void setCustom1(String custom1) {
     this.custom1 = Integer.parseInt(custom1);
@@ -1233,9 +1254,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the buildDetails attribute of the Contact object
+   * Sets the buildDetails attribute of the Contact object
    *
-   * @param  tmp  The new buildDetails value
+   * @param tmp The new buildDetails value
    */
   public void setBuildDetails(boolean tmp) {
     this.buildDetails = tmp;
@@ -1243,9 +1264,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the buildTypes attribute of the Contact object
+   * Sets the buildTypes attribute of the Contact object
    *
-   * @param  tmp  The new buildTypes value
+   * @param tmp The new buildTypes value
    */
   public void setBuildTypes(boolean tmp) {
     this.buildTypes = tmp;
@@ -1253,9 +1274,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the buildTypes attribute of the Contact object
+   * Sets the buildTypes attribute of the Contact object
    *
-   * @param  tmp  The new buildTypes value
+   * @param tmp The new buildTypes value
    */
   public void setBuildTypes(String tmp) {
     this.buildTypes = DatabaseUtils.parseBoolean(tmp);
@@ -1263,23 +1284,30 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE user_id = ? AND enabled = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       this.setHasEnabledOwnerAccount(true);
     } else {
@@ -1291,10 +1319,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Contact object
+   * Sets the Id attribute of the Contact object
    *
-   * @param  tmp  The new Id value
-   * @since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -1307,9 +1335,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Contact object
+   * Sets the entered attribute of the Contact object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -1317,9 +1345,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Contact object
+   * Sets the modified attribute of the Contact object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -1327,9 +1355,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Contact object
+   * Sets the entered attribute of the Contact object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -1337,9 +1365,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Contact object
+   * Sets the modified attribute of the Contact object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -1347,9 +1375,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Owner attribute of the Opportunity object
+   * Sets the Owner attribute of the Opportunity object
    *
-   * @param  owner  The new Owner value
+   * @param owner The new Owner value
    */
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
@@ -1357,9 +1385,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Owner attribute of the Opportunity object
+   * Sets the Owner attribute of the Opportunity object
    *
-   * @param  owner  The new Owner value
+   * @param owner The new Owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -1367,10 +1395,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Contact object
+   * Sets the Id attribute of the Contact object
    *
-   * @param  tmp  The new Id value
-   * @since       1.1
+   * @param tmp The new Id value
+   * @since 1.1
    */
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
@@ -1378,10 +1406,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Contact object
+   * Sets the OrgId attribute of the Contact object
    *
-   * @param  tmp  The new OrgId value
-   * @since       1.1
+   * @param tmp The new OrgId value
+   * @since 1.1
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -1389,10 +1417,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Contact object
+   * Sets the OrgId attribute of the Contact object
    *
-   * @param  tmp  The new OrgId value
-   * @since       1.2
+   * @param tmp The new OrgId value
+   * @since 1.2
    */
   public void setOrgId(String tmp) {
     if (tmp != null) {
@@ -1402,9 +1430,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the prospectClient attribute of the Contact object
+   * Sets the prospectClient attribute of the Contact object
    *
-   * @param  prospectClient  The new prospectClient value
+   * @param prospectClient The new prospectClient value
    */
   public void setProspectClient(boolean prospectClient) {
     this.prospectClient = prospectClient;
@@ -1412,9 +1440,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the prospectClient attribute of the Contact object
+   * Gets the prospectClient attribute of the Contact object
    *
-   * @return    The prospectClient value
+   * @return The prospectClient value
    */
   public boolean getProspectClient() {
     return prospectClient;
@@ -1422,10 +1450,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the listSalutation attribute of the Contact object
+   * Sets the listSalutation attribute of the Contact object
    *
-   * @param  tmp  The new listSalutation value
-   * @since       1.2
+   * @param tmp The new listSalutation value
+   * @since 1.2
    */
   public void setListSalutation(String tmp) {
     if (tmp != null) {
@@ -1435,9 +1463,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the listSalutation attribute of the Contact object
+   * Sets the listSalutation attribute of the Contact object
    *
-   * @param  tmp  The new listSalutation value
+   * @param tmp The new listSalutation value
    */
   public void setListSalutation(int tmp) {
     this.listSalutation = tmp;
@@ -1445,9 +1473,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the orgSiteId attribute of the Contact object
+   * Sets the orgSiteId attribute of the Contact object
    *
-   * @param  orgSiteId  The new orgSiteId value
+   * @param orgSiteId The new orgSiteId value
    */
   public void setOrgSiteId(int orgSiteId) {
     this.orgSiteId = orgSiteId;
@@ -1455,9 +1483,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the orgSiteId attribute of the Contact object
+   * Sets the orgSiteId attribute of the Contact object
    *
-   * @param  tmp  The new orgSiteId value
+   * @param tmp The new orgSiteId value
    */
   public void setOrgSiteId(String tmp) {
     this.orgSiteId = Integer.parseInt(tmp);
@@ -1465,9 +1493,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the orgSiteId attribute of the Organization object
+   * Gets the orgSiteId attribute of the Organization object
    *
-   * @return    The orgSiteId value
+   * @return The orgSiteId value
    */
   public int getOrgSiteId() {
     return orgSiteId;
@@ -1475,9 +1503,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedByName attribute of the Contact object
+   * Sets the ModifiedByName attribute of the Contact object
    *
-   * @param  modifiedByName  The new ModifiedByName value
+   * @param modifiedByName The new ModifiedByName value
    */
   public void setModifiedByName(String modifiedByName) {
     this.modifiedByName = modifiedByName;
@@ -1485,10 +1513,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the NameSalutation attribute of the Contact object
+   * Sets the NameSalutation attribute of the Contact object
    *
-   * @param  tmp  The new NameSalutation value
-   * @since       1.1
+   * @param tmp The new NameSalutation value
+   * @since 1.1
    */
   public void setNameSalutation(String tmp) {
     this.nameSalutation = tmp;
@@ -1496,10 +1524,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the NameFirst attribute of the Contact object
+   * Sets the NameFirst attribute of the Contact object
    *
-   * @param  tmp  The new NameFirst value
-   * @since       1.1
+   * @param tmp The new NameFirst value
+   * @since 1.1
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -1507,9 +1535,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the EnteredByName attribute of the Contact object
+   * Sets the EnteredByName attribute of the Contact object
    *
-   * @param  enteredByName  The new EnteredByName value
+   * @param enteredByName The new EnteredByName value
    */
   public void setEnteredByName(String enteredByName) {
     this.enteredByName = enteredByName;
@@ -1517,10 +1545,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the NameMiddle attribute of the Contact object
+   * Sets the NameMiddle attribute of the Contact object
    *
-   * @param  tmp  The new NameMiddle value
-   * @since       1.1
+   * @param tmp The new NameMiddle value
+   * @since 1.1
    */
   public void setNameMiddle(String tmp) {
     this.nameMiddle = tmp;
@@ -1528,10 +1556,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the NameLast attribute of the Contact object
+   * Sets the NameLast attribute of the Contact object
    *
-   * @param  tmp  The new NameLast value
-   * @since       1.1
+   * @param tmp The new NameLast value
+   * @since 1.1
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -1539,10 +1567,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the NameSuffix attribute of the Contact object
+   * Sets the NameSuffix attribute of the Contact object
    *
-   * @param  tmp  The new NameSuffix value
-   * @since       1.1
+   * @param tmp The new NameSuffix value
+   * @since 1.1
    */
   public void setNameSuffix(String tmp) {
     this.nameSuffix = tmp;
@@ -1550,10 +1578,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Company attribute of the Contact object
+   * Sets the Company attribute of the Contact object
    *
-   * @param  tmp  The new Company value
-   * @since       1.34
+   * @param tmp The new Company value
+   * @since 1.34
    */
   public void setCompany(String tmp) {
     this.company = tmp;
@@ -1561,9 +1589,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the AccountNumber attribute of the Contact object
+   * Sets the AccountNumber attribute of the Contact object
    *
-   * @param  tmp  The new AccountNumber value
+   * @param tmp The new AccountNumber value
    */
   public void setAccountNumber(String tmp) {
     this.accountNumber = tmp;
@@ -1571,10 +1599,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Title attribute of the Contact object
+   * Sets the Title attribute of the Contact object
    *
-   * @param  tmp  The new Title value
-   * @since       1.1
+   * @param tmp The new Title value
+   * @since 1.1
    */
   public void setTitle(String tmp) {
     if (tmp != null && tmp.length() > 80) {
@@ -1585,10 +1613,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the DepartmentName attribute of the Contact object
+   * Sets the DepartmentName attribute of the Contact object
    *
-   * @param  tmp  The new DepartmentName value
-   * @since       1.1
+   * @param tmp The new DepartmentName value
+   * @since 1.1
    */
   public void setDepartmentName(String tmp) {
     this.departmentName = tmp;
@@ -1596,10 +1624,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Department attribute of the Contact object
+   * Sets the Department attribute of the Contact object
    *
-   * @param  tmp  The new Department value
-   * @since       1.1
+   * @param tmp The new Department value
+   * @since 1.1
    */
   public void setDepartment(int tmp) {
     this.department = tmp;
@@ -1607,10 +1635,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Department attribute of the Contact object
+   * Sets the Department attribute of the Contact object
    *
-   * @param  tmp  The new Department value
-   * @since       1.1
+   * @param tmp The new Department value
+   * @since 1.1
    */
   public void setDepartment(String tmp) {
     this.department = Integer.parseInt(tmp);
@@ -1618,10 +1646,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the EmailAddresses attribute of the Contact object
+   * Sets the EmailAddresses attribute of the Contact object
    *
-   * @param  tmp  The new EmailAddresses value
-   * @since       1.1
+   * @param tmp The new EmailAddresses value
+   * @since 1.1
    */
   public void setEmailAddressList(ContactEmailAddressList tmp) {
     this.emailAddressList = tmp;
@@ -1629,10 +1657,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the ContactPhoneNumberList attribute of the Contact object
+   * Sets the ContactPhoneNumberList attribute of the Contact object
    *
-   * @param  tmp  The new ContactPhoneNumberList value
-   * @since       1.13
+   * @param tmp The new ContactPhoneNumberList value
+   * @since 1.13
    */
   public void setPhoneNumberList(ContactPhoneNumberList tmp) {
     this.phoneNumberList = tmp;
@@ -1640,9 +1668,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the textMessageAddressList attribute of the Contact object
+   * Sets the textMessageAddressList attribute of the Contact object
    *
-   * @param  tmp  The new textMessageAddressList value
+   * @param tmp The new textMessageAddressList value
    */
   public void setTextMessageAddressList(ContactTextMessageAddressList tmp) {
     this.textMessageAddressList = tmp;
@@ -1650,9 +1678,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the orgEnabled attribute of the Contact object
+   * Gets the orgEnabled attribute of the Contact object
    *
-   * @return    The orgEnabled value
+   * @return The orgEnabled value
    */
   public boolean getOrgEnabled() {
     return orgEnabled;
@@ -1660,9 +1688,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the orgTrashedDate attribute of the Contact object
+   * Gets the orgTrashedDate attribute of the Contact object
    *
-   * @return    The orgTrashedDate value
+   * @return The orgTrashedDate value
    */
   public java.sql.Timestamp getOrgTrashedDate() {
     return orgTrashedDate;
@@ -1670,9 +1698,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the noEmail attribute of the Contact object
+   * Gets the noEmail attribute of the Contact object
    *
-   * @return    The getNoEmail value
+   * @return The getNoEmail value
    */
   public boolean getNoEmail() {
     return noEmail;
@@ -1680,9 +1708,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the NoEmail and noMail attribute of the Organization object
+   * Sets the NoEmail and noMail attribute of the Organization object
    *
-   * @param  tmp  The new NoEmail value
+   * @param tmp The new NoEmail value
    */
   public void setNoEmail(String tmp) {
     this.noEmail = DatabaseUtils.parseBoolean(tmp);
@@ -1690,9 +1718,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the noMail attribute of the Contact object
+   * Sets the noMail attribute of the Contact object
    *
-   * @param  tmp  The new noMail value
+   * @param tmp The new noMail value
    */
   public void setNoMail(String tmp) {
     this.noMail = DatabaseUtils.parseBoolean(tmp);
@@ -1700,9 +1728,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the noMail attribute of the Contact object
+   * Gets the noMail attribute of the Contact object
    *
-   * @return    The noMail value
+   * @return The noMail value
    */
   public boolean getNoMail() {
     return noMail;
@@ -1710,9 +1738,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the noPhone attribute of the Contact object
+   * Gets the noPhone attribute of the Contact object
    *
-   * @return    The noPhone value
+   * @return The noPhone value
    */
   public boolean getNoPhone() {
     return noPhone;
@@ -1720,9 +1748,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the noTextMessage attribute of the Contact object
+   * Gets the noTextMessage attribute of the Contact object
    *
-   * @return    The noTextMessage value
+   * @return The noTextMessage value
    */
   public boolean getNoTextMessage() {
     return noTextMessage;
@@ -1730,9 +1758,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the noInstantMessage attribute of the Contact object
+   * Gets the noInstantMessage attribute of the Contact object
    *
-   * @return    The noInstantMessage value
+   * @return The noInstantMessage value
    */
   public boolean getNoInstantMessage() {
     return noInstantMessage;
@@ -1740,9 +1768,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the noFax attribute of the Contact object
+   * Gets the noFax attribute of the Contact object
    *
-   * @return    The noFax value
+   * @return The noFax value
    */
   public boolean getNoFax() {
     return noFax;
@@ -1750,9 +1778,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the orgEnabled attribute of the Contact object
+   * Sets the orgEnabled attribute of the Contact object
    *
-   * @param  orgEnabled  The new orgEnabled value
+   * @param orgEnabled The new orgEnabled value
    */
   public void setOrgEnabled(boolean orgEnabled) {
     this.orgEnabled = orgEnabled;
@@ -1760,9 +1788,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the orgTrashedDate attribute of the Contact object
+   * Sets the orgTrashedDate attribute of the Contact object
    *
-   * @param  tmp             The new orgTrashedDate value
+   * @param tmp The new orgTrashedDate value
    */
   public void setOrgTrashedDate(java.sql.Timestamp tmp) {
     this.orgTrashedDate = tmp;
@@ -1770,9 +1798,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the orgTrashedDate attribute of the Contact object
+   * Sets the orgTrashedDate attribute of the Contact object
    *
-   * @param  tmp             The new orgTrashedDate value
+   * @param tmp The new orgTrashedDate value
    */
   public void setOrgTrashedDate(String tmp) {
     this.orgTrashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -1780,9 +1808,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the excludedFromCampaign attribute of the Contact object
+   * Sets the excludedFromCampaign attribute of the Contact object
    *
-   * @param  excludedFromCampaign  The new excludedFromCampaign value
+   * @param excludedFromCampaign The new excludedFromCampaign value
    */
   public void setExcludedFromCampaign(boolean excludedFromCampaign) {
     this.excludedFromCampaign = excludedFromCampaign;
@@ -1790,10 +1818,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the AddressList attribute of the Contact object
+   * Sets the AddressList attribute of the Contact object
    *
-   * @param  tmp  The new AddressList value
-   * @since       1.1
+   * @param tmp The new AddressList value
+   * @since 1.1
    */
   public void setAddressList(ContactAddressList tmp) {
     this.addressList = tmp;
@@ -1801,10 +1829,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Notes attribute of the Contact object
+   * Sets the Notes attribute of the Contact object
    *
-   * @param  tmp  The new Notes value
-   * @since       1.1
+   * @param tmp The new Notes value
+   * @since 1.1
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -1812,10 +1840,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Site attribute of the Contact object
+   * Sets the Site attribute of the Contact object
    *
-   * @param  tmp  The new Site value
-   * @since       1.1
+   * @param tmp The new Site value
+   * @since 1.1
    */
   public void setSite(String tmp) {
     this.site = tmp;
@@ -1823,10 +1851,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the EmploymentType attribute of the Contact object
+   * Sets the EmploymentType attribute of the Contact object
    *
-   * @param  tmp  The new EmploymentType value
-   * @since       1.1
+   * @param tmp The new EmploymentType value
+   * @since 1.1
    */
   public void setEmploymentType(int tmp) {
     this.employmentType = tmp;
@@ -1834,10 +1862,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the EmploymentType attribute of the Contact object
+   * Sets the EmploymentType attribute of the Contact object
    *
-   * @param  tmp  The new EmploymentType value
-   * @since       1.2
+   * @param tmp The new EmploymentType value
+   * @since 1.2
    */
   public void setEmploymentType(String tmp) {
     this.employmentType = Integer.parseInt(tmp);
@@ -1845,10 +1873,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Locale attribute of the Contact object
+   * Sets the Locale attribute of the Contact object
    *
-   * @param  tmp  The new Locale value
-   * @since       1.1
+   * @param tmp The new Locale value
+   * @since 1.1
    */
   public void setLocale(int tmp) {
     this.locale = tmp;
@@ -1856,10 +1884,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Locale attribute of the Contact object
+   * Sets the Locale attribute of the Contact object
    *
-   * @param  tmp  The new Locale value
-   * @since       1.2
+   * @param tmp The new Locale value
+   * @since 1.2
    */
   public void setLocale(String tmp) {
     this.locale = Integer.parseInt(tmp);
@@ -1867,10 +1895,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the EmployeeId attribute of the Contact object
+   * Sets the EmployeeId attribute of the Contact object
    *
-   * @param  tmp  The new EmployeeId value
-   * @since       1.1
+   * @param tmp The new EmployeeId value
+   * @since 1.1
    */
   public void setEmployeeId(String tmp) {
     this.employeeId = tmp;
@@ -1878,10 +1906,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the StartOfDay attribute of the Contact object
+   * Sets the StartOfDay attribute of the Contact object
    *
-   * @param  tmp  The new StartOfDay value
-   * @since       1.1
+   * @param tmp The new StartOfDay value
+   * @since 1.1
    */
   public void setStartOfDay(String tmp) {
     this.startOfDay = tmp;
@@ -1889,10 +1917,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the EndOfDay attribute of the Contact object
+   * Sets the EndOfDay attribute of the Contact object
    *
-   * @param  tmp  The new EndOfDay value
-   * @since       1.1
+   * @param tmp The new EndOfDay value
+   * @since 1.1
    */
   public void setEndOfDay(String tmp) {
     this.endOfDay = tmp;
@@ -1900,10 +1928,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the Contact object
+   * Sets the Enabled attribute of the Contact object
    *
-   * @param  tmp  The new Enabled value
-   * @since       1.2
+   * @param tmp The new Enabled value
+   * @since 1.2
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -1911,10 +1939,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Enabled attribute of the Contact object
+   * Sets the Enabled attribute of the Contact object
    *
-   * @param  tmp  The new Enabled value
-   * @since       1.2
+   * @param tmp The new Enabled value
+   * @since 1.2
    */
   public void setEnabled(String tmp) {
     enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -1922,10 +1950,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Contact object
+   * Sets the EnteredBy attribute of the Contact object
    *
-   * @param  tmp  The new EnteredBy value
-   * @since       1.12
+   * @param tmp The new EnteredBy value
+   * @since 1.12
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -1933,9 +1961,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Contact object
+   * Sets the enteredBy attribute of the Contact object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -1943,10 +1971,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Contact object
+   * Sets the ModifiedBy attribute of the Contact object
    *
-   * @param  tmp  The new ModifiedBy value
-   * @since       1.12
+   * @param tmp The new ModifiedBy value
+   * @since 1.12
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -1954,9 +1982,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Contact object
+   * Sets the modifiedBy attribute of the Contact object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -1964,10 +1992,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the HasAccount attribute of the Contact object
+   * Sets the HasAccount attribute of the Contact object
    *
-   * @param  tmp  The new HasAccount value
-   * @since       1.20
+   * @param tmp The new HasAccount value
+   * @since 1.20
    */
   public void setHasAccount(boolean tmp) {
     this.hasAccount = tmp;
@@ -1975,9 +2003,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the approved attribute of the Contact object
+   * Gets the approved attribute of the Contact object
    *
-   * @return    The approved value
+   * @return The approved value
    */
   public boolean isApproved() {
     return (statusId == Import.PROCESSED_UNAPPROVED ? false : true);
@@ -1985,11 +2013,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Since dynamic fields cannot be auto-populated, passing the request to this
-   *  method will populate the indicated fields.
+   * Since dynamic fields cannot be auto-populated, passing the request to this
+   * method will populate the indicated fields.
    *
-   * @param  context  The new requestItems value
-   * @since           1.15
+   * @param context The new requestItems value
+   * @since 1.15
    */
   public void setRequestItems(ActionContext context) {
     phoneNumberList = new ContactPhoneNumberList(context);
@@ -2003,9 +2031,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the typeList attribute of the Contact object
+   * Sets the typeList attribute of the Contact object
    *
-   * @param  criteriaString  The new typeList value
+   * @param criteriaString The new typeList value
    */
   public void setTypeList(String[] criteriaString) {
     if (criteriaString != null) {
@@ -2018,9 +2046,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Adds a feature to the Type attribute of the Contact object
+   * Adds a feature to the Type attribute of the Contact object
    *
-   * @param  typeId  The feature to be added to the Type attribute
+   * @param typeId The feature to be added to the Type attribute
    */
   public void addType(int typeId) {
     if (typeList == null) {
@@ -2031,9 +2059,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Adds a feature to the Type attribute of the Contact object
+   * Adds a feature to the Type attribute of the Contact object
    *
-   * @param  typeId  The feature to be added to the Type attribute
+   * @param typeId The feature to be added to the Type attribute
    */
   public void addType(String typeId) {
     if (typeList == null) {
@@ -2044,9 +2072,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the typesNameString attribute of the Contact object
+   * Gets the typesNameString attribute of the Contact object
    *
-   * @return    The typesNameString value
+   * @return The typesNameString value
    */
   public String getTypesNameString() {
     StringBuffer types = new StringBuffer();
@@ -2063,10 +2091,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  type  Description of the Parameter
-   * @return       Description of the Return Value
+   * @param type Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasType(int type) {
     boolean gotType = false;
@@ -2083,9 +2111,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Contact object
+   * Gets the entered attribute of the Contact object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -2093,9 +2121,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Contact object
+   * Gets the modified attribute of the Contact object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -2103,9 +2131,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the user_id attribute of the Contact object
+   * Gets the user_id attribute of the Contact object
    *
-   * @return    The user_id value
+   * @return The user_id value
    */
   public int getUserId() {
     return userId;
@@ -2113,9 +2141,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the Contact object
+   * Sets the userId attribute of the Contact object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     userId = tmp;
@@ -2123,9 +2151,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the userId attribute of the Contact object
+   * Sets the userId attribute of the Contact object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     userId = Integer.parseInt(tmp);
@@ -2133,9 +2161,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the types attribute of the Contact object
+   * Sets the types attribute of the Contact object
    *
-   * @param  types  The new types value
+   * @param types The new types value
    */
   public void setTypes(LookupList types) {
     this.types = types;
@@ -2143,9 +2171,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the types attribute of the Contact object
+   * Gets the types attribute of the Contact object
    *
-   * @return    The types value
+   * @return The types value
    */
   public LookupList getTypes() {
     return types;
@@ -2153,9 +2181,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the Contact object
+   * Gets the modifiedString attribute of the Contact object
    *
-   * @return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
@@ -2169,9 +2197,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Contact object
+   * Gets the enteredString attribute of the Contact object
    *
-   * @return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -2185,9 +2213,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedByName attribute of the Contact object
+   * Gets the ModifiedByName attribute of the Contact object
    *
-   * @return    The ModifiedByName value
+   * @return The ModifiedByName value
    */
   public String getModifiedByName() {
     return modifiedByName;
@@ -2195,9 +2223,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EnteredByName attribute of the Contact object
+   * Gets the EnteredByName attribute of the Contact object
    *
-   * @return    The EnteredByName value
+   * @return The EnteredByName value
    */
   public String getEnteredByName() {
     return enteredByName;
@@ -2205,9 +2233,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the OwnerName attribute of the Contact object
+   * Gets the OwnerName attribute of the Contact object
    *
-   * @return    The OwnerName value
+   * @return The OwnerName value
    */
   public String getOwnerName() {
     return ownerName;
@@ -2215,9 +2243,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Owner attribute of the Opportunity object
+   * Gets the Owner attribute of the Opportunity object
    *
-   * @return    The Owner value
+   * @return The Owner value
    */
   public int getOwner() {
     return owner;
@@ -2225,9 +2253,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the ownerString attribute of the Contact object
+   * Gets the ownerString attribute of the Contact object
    *
-   * @return    The ownerString value
+   * @return The ownerString value
    */
   public String getOwnerString() {
     return String.valueOf(owner);
@@ -2235,10 +2263,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the Contact object
+   * Gets the Id attribute of the Contact object
    *
-   * @return    The Id value
-   * @since     1.1
+   * @return The Id value
+   * @since 1.1
    */
   public int getId() {
     return id;
@@ -2246,10 +2274,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the OrgId attribute of the Contact object
+   * Gets the OrgId attribute of the Contact object
    *
-   * @return    The OrgId value
-   * @since     1.1
+   * @return The OrgId value
+   * @since 1.1
    */
   public int getOrgId() {
     return orgId;
@@ -2257,10 +2285,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the listSalutation attribute of the Contact object
+   * Gets the listSalutation attribute of the Contact object
    *
-   * @return    The OrgId value
-   * @since     1.1
+   * @return The OrgId value
+   * @since 1.1
    */
   public int getListSalutation() {
     return listSalutation;
@@ -2268,9 +2296,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the orgName attribute of the Contact object
+   * Sets the orgName attribute of the Contact object
    *
-   * @param  orgName  The new orgName value
+   * @param orgName The new orgName value
    */
   public void setOrgName(String orgName) {
     this.orgName = orgName;
@@ -2278,10 +2306,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the OrgName attribute of the Contact object
+   * Gets the OrgName attribute of the Contact object
    *
-   * @return    The OrgName value
-   * @since     1.28
+   * @return The OrgName value
+   * @since 1.28
    */
   public String getOrgName() {
     return orgName;
@@ -2289,10 +2317,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameSalutation attribute of the Contact object
+   * Gets the NameSalutation attribute of the Contact object
    *
-   * @return    The NameSalutation value
-   * @since     1.1
+   * @return The NameSalutation value
+   * @since 1.1
    */
   public String getNameSalutation() {
     return nameSalutation;
@@ -2300,10 +2328,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameFirst attribute of the Contact object
+   * Gets the NameFirst attribute of the Contact object
    *
-   * @return    The NameFirst value
-   * @since     1.1
+   * @return The NameFirst value
+   * @since 1.1
    */
   public String getNameFirst() {
     return nameFirst;
@@ -2311,10 +2339,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameMiddle attribute of the Contact object
+   * Gets the NameMiddle attribute of the Contact object
    *
-   * @return    The NameMiddle value
-   * @since     1.1
+   * @return The NameMiddle value
+   * @since 1.1
    */
   public String getNameMiddle() {
     return nameMiddle;
@@ -2322,10 +2350,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameLast attribute of the Contact object
+   * Gets the NameLast attribute of the Contact object
    *
-   * @return    The NameLast value
-   * @since     1.1
+   * @return The NameLast value
+   * @since 1.1
    */
   public String getNameLast() {
     return nameLast;
@@ -2333,10 +2361,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameSuffix attribute of the Contact object
+   * Gets the NameSuffix attribute of the Contact object
    *
-   * @return    The NameSuffix value
-   * @since     1.1
+   * @return The NameSuffix value
+   * @since 1.1
    */
   public String getNameSuffix() {
     return nameSuffix;
@@ -2344,10 +2372,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameFull attribute of the Contact object
+   * Gets the NameFull attribute of the Contact object
    *
-   * @return    The NameFull value
-   * @since     1.33
+   * @return The NameFull value
+   * @since 1.33
    */
   public String getNameFull() {
     StringBuffer out = new StringBuffer();
@@ -2381,9 +2409,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameFirstLast attribute of the Contact object
+   * Gets the NameFirstLast attribute of the Contact object
    *
-   * @return    The NameFirstLast value
+   * @return The NameFirstLast value
    */
   public String getNameFirstLast() {
     StringBuffer out = new StringBuffer();
@@ -2405,9 +2433,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the userIdParams attribute of the Contact class
+   * Gets the userIdParams attribute of the Contact class
    *
-   * @return    The userIdParams value
+   * @return The userIdParams value
    */
   public static ArrayList getUserIdParams() {
     ArrayList thisList = new ArrayList();
@@ -2419,9 +2447,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the timeZoneParams attribute of the Contact class
+   * Gets the timeZoneParams attribute of the Contact class
    *
-   * @return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -2431,9 +2459,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the Organization class
+   * Gets the numberParams attribute of the Organization class
    *
-   * @return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
@@ -2444,9 +2472,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the nameFirstInitialLast attribute of the Contact object
+   * Gets the nameFirstInitialLast attribute of the Contact object
    *
-   * @return    The nameFirstInitialLast value
+   * @return The nameFirstInitialLast value
    */
   public String getNameFirstInitialLast() {
     StringBuffer out = new StringBuffer();
@@ -2467,9 +2495,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the NameLastFirst attribute of the Contact object
+   * Gets the NameLastFirst attribute of the Contact object
    *
-   * @return    The NameLastFirst value
+   * @return The NameLastFirst value
    */
   public String getNameLastFirst() {
     return Contact.getNameLastFirst(nameLast, nameFirst);
@@ -2477,10 +2505,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Company attribute of the Contact object
+   * Gets the Company attribute of the Contact object
    *
-   * @return    The Company value
-   * @since     1.34
+   * @return The Company value
+   * @since 1.34
    */
 
   public String getCompany() {
@@ -2493,9 +2521,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the accountNumber attribute of the Contact object
+   * Gets the accountNumber attribute of the Contact object
    *
-   * @return    The accountNumber value
+   * @return The accountNumber value
    */
   public String getAccountNumber() {
     return accountNumber;
@@ -2503,9 +2531,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the affiliation attribute of the Contact object
+   * Gets the affiliation attribute of the Contact object
    *
-   * @return    The affiliation value
+   * @return The affiliation value
    */
   public String getAffiliation() {
     if (orgId > -1) {
@@ -2517,9 +2545,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the companyOnly attribute of the Contact object
+   * Gets the companyOnly attribute of the Contact object
    *
-   * @return    The companyOnly value
+   * @return The companyOnly value
    */
   public String getCompanyOnly() {
     return company;
@@ -2527,10 +2555,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Title attribute of the Contact object
+   * Gets the Title attribute of the Contact object
    *
-   * @return    The Title value
-   * @since     1.1
+   * @return The Title value
+   * @since 1.1
    */
   public String getTitle() {
     return title;
@@ -2538,10 +2566,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the DepartmentName attribute of the Contact object
+   * Gets the DepartmentName attribute of the Contact object
    *
-   * @return    The DepartmentName value
-   * @since     1.1
+   * @return The DepartmentName value
+   * @since 1.1
    */
   public String getDepartmentName() {
     return departmentName;
@@ -2549,10 +2577,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Department attribute of the Contact object
+   * Gets the Department attribute of the Contact object
    *
-   * @return    The Department value
-   * @since     1.1
+   * @return The Department value
+   * @since 1.1
    */
   public int getDepartment() {
     return department;
@@ -2560,10 +2588,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EmailAddresses attribute of the Contact object
+   * Gets the EmailAddresses attribute of the Contact object
    *
-   * @return    The EmailAddresses value
-   * @since     1.1
+   * @return The EmailAddresses value
+   * @since 1.1
    */
   public ContactEmailAddressList getEmailAddressList() {
     return emailAddressList;
@@ -2571,11 +2599,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the ContactPhoneNumberList attribute of the Contact object
+   * Gets the ContactPhoneNumberList attribute of the Contact object
    *
-   * @param  thisType  Description of Parameter
-   * @return           The PhoneNumber value
-   * @since            1.13
+   * @param thisType Description of Parameter
+   * @return The PhoneNumber value
+   * @since 1.13
    */
   public String getPhoneNumber(String thisType) {
     return phoneNumberList.getPhoneNumber(thisType);
@@ -2583,7 +2611,7 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void resetBaseInfo() {
     this.nameFirst = null;
@@ -2628,10 +2656,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the phoneNumber attribute of the Contact object
+   * Gets the phoneNumber attribute of the Contact object
    *
-   * @param  position  Description of the Parameter
-   * @return           The phoneNumber value
+   * @param position Description of the Parameter
+   * @return The phoneNumber value
    */
   public String getPhoneNumber(int position) {
     return phoneNumberList.getPhoneNumber(position);
@@ -2639,11 +2667,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EmailAddress attribute of the Contact object
+   * Gets the EmailAddress attribute of the Contact object
    *
-   * @param  thisType  Description of Parameter
-   * @return           The EmailAddress value
-   * @since            1.10
+   * @param thisType Description of Parameter
+   * @return The EmailAddress value
+   * @since 1.10
    */
   public String getEmailAddress(String thisType) {
     return emailAddressList.getEmailAddress(thisType);
@@ -2651,13 +2679,13 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EmailAddressTag attribute of the Contact object
+   * Gets the EmailAddressTag attribute of the Contact object
    *
-   * @param  thisType    Description of Parameter
-   * @param  linkText    Description of Parameter
-   * @param  noLinkText  Description of Parameter
-   * @return             The EmailAddressTag value
-   * @since              1.50
+   * @param thisType   Description of Parameter
+   * @param linkText   Description of Parameter
+   * @param noLinkText Description of Parameter
+   * @return The EmailAddressTag value
+   * @since 1.50
    */
   public String getEmailAddressTag(String thisType, String linkText, String noLinkText) {
     String tmpAddress = emailAddressList.getEmailAddress(thisType);
@@ -2673,12 +2701,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EmailAddress attribute of the Contact object using the specified
-   *  position in the emailAddressList
+   * Gets the EmailAddress attribute of the Contact object using the specified
+   * position in the emailAddressList
    *
-   * @param  thisPosition  Description of Parameter
-   * @return               The EmailAddress value
-   * @since                1.24
+   * @param thisPosition Description of Parameter
+   * @return The EmailAddress value
+   * @since 1.24
    */
   public String getEmailAddress(int thisPosition) {
     return emailAddressList.getEmailAddress(thisPosition);
@@ -2686,11 +2714,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EmailAddressTypeId attribute of the Contact object
+   * Gets the EmailAddressTypeId attribute of the Contact object
    *
-   * @param  thisPosition  Description of Parameter
-   * @return               The EmailAddressTypeId value
-   * @since                1.24
+   * @param thisPosition Description of Parameter
+   * @return The EmailAddressTypeId value
+   * @since 1.24
    */
   public int getEmailAddressTypeId(int thisPosition) {
     return emailAddressList.getEmailAddressTypeId(thisPosition);
@@ -2698,11 +2726,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Address attribute of the Contact object
+   * Gets the Address attribute of the Contact object
    *
-   * @param  thisType  Description of Parameter
-   * @return           The Address value
-   * @since            1.1
+   * @param thisType Description of Parameter
+   * @return The Address value
+   * @since 1.1
    */
   public Address getAddress(String thisType) {
     return addressList.getAddress(thisType);
@@ -2710,9 +2738,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the primaryEmailAddress attribute of the Contact object
+   * Gets the primaryEmailAddress attribute of the Contact object
    *
-   * @return    The primaryEmailAddress value
+   * @return The primaryEmailAddress value
    */
   public String getPrimaryEmailAddress() {
     return emailAddressList.getPrimaryEmailAddress();
@@ -2720,9 +2748,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the primaryPhoneNumber attribute of the Contact object
+   * Gets the primaryPhoneNumber attribute of the Contact object
    *
-   * @return    The primaryPhoneNumber value
+   * @return The primaryPhoneNumber value
    */
   public String getPrimaryPhoneNumber() {
     return phoneNumberList.getPrimaryPhoneNumber();
@@ -2730,9 +2758,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the primaryTextMessageAddress attribute of the Contact object
+   * Gets the primaryTextMessageAddress attribute of the Contact object
    *
-   * @return    The primaryTextMessageAddress value
+   * @return The primaryTextMessageAddress value
    */
   public String getPrimaryTextMessageAddress() {
     return textMessageAddressList.getPrimaryTextMessageAddress();
@@ -2740,9 +2768,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the primaryInstantMessageAddress attribute of the Contact object
+   * Gets the primaryInstantMessageAddress attribute of the Contact object
    *
-   * @return    The primaryInstantMessageAddress value
+   * @return The primaryInstantMessageAddress value
    */
   public String getPrimaryInstantMessageAddress() {
     return instantMessageAddressList.getPrimaryInstantMessageAddress();
@@ -2750,9 +2778,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the primaryAddress attribute of the Contact object
+   * Gets the primaryAddress attribute of the Contact object
    *
-   * @return    The primaryAddress value
+   * @return The primaryAddress value
    */
   public Address getPrimaryAddress() {
     return addressList.getPrimaryAddress();
@@ -2760,10 +2788,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Addresses attribute of the Contact object
+   * Gets the Addresses attribute of the Contact object
    *
-   * @return    The Addresses value
-   * @since     1.1
+   * @return The Addresses value
+   * @since 1.1
    */
   public ContactAddressList getAddressList() {
     return addressList;
@@ -2771,10 +2799,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Notes attribute of the Contact object
+   * Gets the Notes attribute of the Contact object
    *
-   * @return    The Notes value
-   * @since     1.1
+   * @return The Notes value
+   * @since 1.1
    */
   public String getNotes() {
     return notes;
@@ -2782,10 +2810,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Site attribute of the Contact object
+   * Gets the Site attribute of the Contact object
    *
-   * @return    The Site value
-   * @since     1.1
+   * @return The Site value
+   * @since 1.1
    */
   public String getSite() {
     return site;
@@ -2793,10 +2821,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EmploymentType attribute of the Contact object
+   * Gets the EmploymentType attribute of the Contact object
    *
-   * @return    The EmploymentType value
-   * @since     1.1
+   * @return The EmploymentType value
+   * @since 1.1
    */
   public int getEmploymentType() {
     return employmentType;
@@ -2804,10 +2832,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Locale attribute of the Contact object
+   * Gets the Locale attribute of the Contact object
    *
-   * @return    The Locale value
-   * @since     1.1
+   * @return The Locale value
+   * @since 1.1
    */
   public int getLocale() {
     return locale;
@@ -2815,10 +2843,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EmployeeId attribute of the Contact object
+   * Gets the EmployeeId attribute of the Contact object
    *
-   * @return    The EmployeeId value
-   * @since     1.1
+   * @return The EmployeeId value
+   * @since 1.1
    */
   public String getEmployeeId() {
     return employeeId;
@@ -2826,10 +2854,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the StartOfDay attribute of the Contact object
+   * Gets the StartOfDay attribute of the Contact object
    *
-   * @return    The StartOfDay value
-   * @since     1.esn'
+   * @return The StartOfDay value
+   * @since 1.esn'
    */
   public String getStartOfDay() {
     return startOfDay;
@@ -2837,10 +2865,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EndOfDay attribute of the Contact object
+   * Gets the EndOfDay attribute of the Contact object
    *
-   * @return    The EndOfDay value
-   * @since     1.1
+   * @return The EndOfDay value
+   * @since 1.1
    */
   public String getEndOfDay() {
     return endOfDay;
@@ -2848,10 +2876,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Enabled attribute of the Contact object
+   * Gets the Enabled attribute of the Contact object
    *
-   * @return    The Enabled value
-   * @since     1.2
+   * @return The Enabled value
+   * @since 1.2
    */
   public boolean getEnabled() {
     return enabled;
@@ -2859,10 +2887,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the PhoneNumberList attribute of the Contact object
+   * Gets the PhoneNumberList attribute of the Contact object
    *
-   * @return    The PhoneNumberList value
-   * @since     1.13
+   * @return The PhoneNumberList value
+   * @since 1.13
    */
   public ContactPhoneNumberList getPhoneNumberList() {
     return phoneNumberList;
@@ -2870,9 +2898,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the textMessageAddressList attribute of the Contact object
+   * Gets the textMessageAddressList attribute of the Contact object
    *
-   * @return    The textMessageAddressList value
+   * @return The textMessageAddressList value
    */
   public ContactTextMessageAddressList getTextMessageAddressList() {
     return textMessageAddressList;
@@ -2880,10 +2908,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the textMessageAddressTypeId attribute of the Contact object
+   * Gets the textMessageAddressTypeId attribute of the Contact object
    *
-   * @param  thisPosition  Description of the Parameter
-   * @return               The textMessageAddressTypeId value
+   * @param thisPosition Description of the Parameter
+   * @return The textMessageAddressTypeId value
    */
   public int getTextMessageAddressTypeId(int thisPosition) {
     return textMessageAddressList.getTextMessageAddressTypeId(thisPosition);
@@ -2891,10 +2919,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the instantMessageAddressTypeId attribute of the Contact object
+   * Gets the instantMessageAddressTypeId attribute of the Contact object
    *
-   * @param  thisPosition  Description of the Parameter
-   * @return               The instantMessageAddressTypeId value
+   * @param thisPosition Description of the Parameter
+   * @return The instantMessageAddressTypeId value
    */
   public int getInstantMessageAddressTypeId(int thisPosition) {
     return instantMessageAddressList.getInstantMessageAddressTypeId(
@@ -2903,10 +2931,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the instantMessageAddressServiceId attribute of the Contact object
+   * Gets the instantMessageAddressServiceId attribute of the Contact object
    *
-   * @param  thisPosition  Description of the Parameter
-   * @return               The instantMessageAddressServiceId value
+   * @param thisPosition Description of the Parameter
+   * @return The instantMessageAddressServiceId value
    */
   public int getInstantMessageAddressServiceId(int thisPosition) {
     return instantMessageAddressList.getInstantMessageAddressServiceId(
@@ -2915,10 +2943,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Contact object
+   * Gets the EnteredBy attribute of the Contact object
    *
-   * @return    The EnteredBy value
-   * @since     1.1
+   * @return The EnteredBy value
+   * @since 1.1
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -2926,10 +2954,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Contact object
+   * Gets the ModifiedBy attribute of the Contact object
    *
-   * @return    The ModifiedBy value
-   * @since     1.1
+   * @return The ModifiedBy value
+   * @since 1.1
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -2937,9 +2965,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public boolean excludedFromCampaign() {
     return getExcludedFromCampaign();
@@ -2947,9 +2975,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the excludedFromCampaign attribute of the Contact object
+   * Gets the excludedFromCampaign attribute of the Contact object
    *
-   * @return    The excludedFromCampaign value
+   * @return The excludedFromCampaign value
    */
   public boolean getExcludedFromCampaign() {
     return excludedFromCampaign;
@@ -2957,9 +2985,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the isLead attribute of the Contact object
+   * Gets the isLead attribute of the Contact object
    *
-   * @return    The isLead value
+   * @return The isLead value
    */
   public boolean getIsLead() {
     return isLead;
@@ -2967,9 +2995,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the isLead attribute of the Contact object
+   * Sets the isLead attribute of the Contact object
    *
-   * @param  tmp  The new isLead value
+   * @param tmp The new isLead value
    */
   public void setIsLead(boolean tmp) {
     this.isLead = tmp;
@@ -2977,9 +3005,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the isLead attribute of the Contact object
+   * Sets the isLead attribute of the Contact object
    *
-   * @param  tmp  The new isLead value
+   * @param tmp The new isLead value
    */
   public void setIsLead(String tmp) {
     this.isLead = DatabaseUtils.parseBoolean(tmp);
@@ -2987,9 +3015,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the leadStatus attribute of the Contact object
+   * Gets the leadStatus attribute of the Contact object
    *
-   * @return    The leadStatus value
+   * @return The leadStatus value
    */
   public int getLeadStatus() {
     return leadStatus;
@@ -2997,9 +3025,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the leadStatus attribute of the Contact object
+   * Sets the leadStatus attribute of the Contact object
    *
-   * @param  tmp  The new leadStatus value
+   * @param tmp The new leadStatus value
    */
   public void setLeadStatus(int tmp) {
     this.leadStatus = tmp;
@@ -3007,9 +3035,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the leadStatus attribute of the Contact object
+   * Sets the leadStatus attribute of the Contact object
    *
-   * @param  tmp  The new leadStatus value
+   * @param tmp The new leadStatus value
    */
   public void setLeadStatus(String tmp) {
     this.leadStatus = Integer.parseInt(tmp);
@@ -3017,9 +3045,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the leadStatusString attribute of the Contact object
+   * Gets the leadStatusString attribute of the Contact object
    *
-   * @return    The leadStatusString value
+   * @return The leadStatusString value
    */
   public String getLeadStatusString() {
     if (leadStatus == LEAD_ASSIGNED) {
@@ -3034,9 +3062,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the source attribute of the Contact object
+   * Gets the source attribute of the Contact object
    *
-   * @return    The source value
+   * @return The source value
    */
   public int getSource() {
     return source;
@@ -3044,9 +3072,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the source attribute of the Contact object
+   * Sets the source attribute of the Contact object
    *
-   * @param  tmp  The new source value
+   * @param tmp The new source value
    */
   public void setSource(int tmp) {
     this.source = tmp;
@@ -3054,9 +3082,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the source attribute of the Contact object
+   * Sets the source attribute of the Contact object
    *
-   * @param  tmp  The new source value
+   * @param tmp The new source value
    */
   public void setSource(String tmp) {
     this.source = Integer.parseInt(tmp);
@@ -3064,9 +3092,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the rating attribute of the Contact object
+   * Gets the rating attribute of the Contact object
    *
-   * @return    The rating value
+   * @return The rating value
    */
   public int getRating() {
     return rating;
@@ -3074,9 +3102,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the rating attribute of the Contact object
+   * Sets the rating attribute of the Contact object
    *
-   * @param  tmp  The new rating value
+   * @param tmp The new rating value
    */
   public void setRating(int tmp) {
     this.rating = tmp;
@@ -3084,9 +3112,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the rating attribute of the Contact object
+   * Sets the rating attribute of the Contact object
    *
-   * @param  tmp  The new rating value
+   * @param tmp The new rating value
    */
   public void setRating(String tmp) {
     this.rating = Integer.parseInt(tmp);
@@ -3094,9 +3122,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the comments attribute of the Contact object
+   * Gets the comments attribute of the Contact object
    *
-   * @return    The comments value
+   * @return The comments value
    */
   public String getComments() {
     return comments;
@@ -3104,9 +3132,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the comments attribute of the Contact object
+   * Sets the comments attribute of the Contact object
    *
-   * @param  tmp  The new comments value
+   * @param tmp The new comments value
    */
   public void setComments(String tmp) {
     this.comments = tmp;
@@ -3114,9 +3142,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the conversionDate attribute of the Contact object
+   * Gets the conversionDate attribute of the Contact object
    *
-   * @return    The conversionDate value
+   * @return The conversionDate value
    */
   public java.sql.Timestamp getConversionDate() {
     return conversionDate;
@@ -3124,9 +3152,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the conversionDate attribute of the Contact object
+   * Sets the conversionDate attribute of the Contact object
    *
-   * @param  tmp  The new conversionDate value
+   * @param tmp The new conversionDate value
    */
   public void setConversionDate(java.sql.Timestamp tmp) {
     this.conversionDate = tmp;
@@ -3134,9 +3162,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the conversionDate attribute of the Contact object
+   * Sets the conversionDate attribute of the Contact object
    *
-   * @param  tmp  The new conversionDate value
+   * @param tmp The new conversionDate value
    */
   public void setConversionDate(String tmp) {
     this.conversionDate = DatabaseUtils.parseTimestamp(tmp);
@@ -3144,9 +3172,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the siteName attribute of the Contact object
+   * Gets the siteName attribute of the Contact object
    *
-   * @return    The siteName value
+   * @return The siteName value
    */
   public String getSiteName() {
     return siteName;
@@ -3154,9 +3182,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the siteName attribute of the Contact object
+   * Sets the siteName attribute of the Contact object
    *
-   * @param  tmp  The new siteName value
+   * @param tmp The new siteName value
    */
   public void setSiteName(String tmp) {
     this.siteName = tmp;
@@ -3164,9 +3192,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the checkRevertingBackToLead attribute of the Contact object
+   * Gets the checkRevertingBackToLead attribute of the Contact object
    *
-   * @return    The checkRevertingBackToLead value
+   * @return The checkRevertingBackToLead value
    */
   public boolean getCheckRevertingBackToLead() {
     return checkRevertingBackToLead;
@@ -3174,9 +3202,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the checkRevertingBackToLead attribute of the Contact object
+   * Sets the checkRevertingBackToLead attribute of the Contact object
    *
-   * @param  tmp  The new checkRevertingBackToLead value
+   * @param tmp The new checkRevertingBackToLead value
    */
   public void setCheckRevertingBackToLead(boolean tmp) {
     this.checkRevertingBackToLead = tmp;
@@ -3184,9 +3212,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the checkRevertingBackToLead attribute of the Contact object
+   * Sets the checkRevertingBackToLead attribute of the Contact object
    *
-   * @param  tmp  The new checkRevertingBackToLead value
+   * @param tmp The new checkRevertingBackToLead value
    */
   public void setCheckRevertingBackToLead(String tmp) {
     this.checkRevertingBackToLead = DatabaseUtils.parseBoolean(tmp);
@@ -3194,12 +3222,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  campaignId     Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db         Description of Parameter
+   * @param campaignId Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean toggleExcluded(Connection db, int campaignId) throws SQLException {
     if (id == -1) {
@@ -3221,10 +3249,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Returns whether or not this Contact has a User Account in the system
+   * Returns whether or not this Contact has a User Account in the system
    *
-   * @return    Description of the Returned Value
-   * @since     1.10
+   * @return Description of the Returned Value
+   * @since 1.10
    */
   public boolean hasAccount() {
     return hasAccount;
@@ -3232,10 +3260,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPhoneNumberList(Connection db) throws SQLException {
     phoneNumberList.setContactId(this.getId());
@@ -3244,14 +3272,14 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Inserts this object into the database, and populates this Id. For
-   *  maintenance, only the required fields are inserted, then an update is
-   *  executed to finish the record.
+   * Inserts this object into the database, and populates this Id. For
+   * maintenance, only the required fields are inserted, then an update is
+   * executed to finish the record.
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -3263,7 +3291,7 @@ public class Contact extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "contact_contact_id_seq");
       sql.append(
           "INSERT INTO contact " +
-          "(user_id, namefirst, namelast, owner, primary_contact, org_name, account_number, ");
+              "(user_id, namefirst, namelast, owner, primary_contact, org_name, account_number, ");
       sql.append(
           "access_type, source, rating, comments, conversion_date, trashed_date, ");
       if (id > -1) {
@@ -3271,7 +3299,7 @@ public class Contact extends GenericBean {
       }
       sql.append(
           "additional_names, nickname, birthdate, " + DatabaseUtils.addQuotes(db, "role") + ", site_id, " +
-          "revenue, industry_temp_code, potential, ");
+              "revenue, industry_temp_code, potential, ");
 
       if (this.getIsLead()) {
         sql.append("lead, lead_status,");
@@ -3439,12 +3467,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Update the contact's information
+   * Update the contact's information
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -3454,12 +3482,14 @@ public class Contact extends GenericBean {
         db.setAutoCommit(false);
       }
       resultCount = this.update(db, false);
-      if (this.getPrimaryContact() && !this.getIsLead() && !this.getEmployee()) {
+      if (this.getPrimaryContact() && !this.getIsLead() && !this.getEmployee())
+      {
         Organization thisOrg = new Organization(db, this.getOrgId());
         if (!((thisOrg.getNameFirst() != null && this.getNameFirst() != null && thisOrg.getNameFirst().equals(this.getNameFirst())) &&
             (thisOrg.getNameLast() != null && this.getNameLast() != null && thisOrg.getNameLast().equals(this.getNameLast())) &&
             (thisOrg.getNameMiddle() != null && this.getNameMiddle() != null && thisOrg.getNameMiddle().equals(this.getNameMiddle()))) ||
-            (thisOrg.getOwnerId() != this.getOwner() && this.getLeadStatus() > -1)) {
+            (thisOrg.getOwnerId() != this.getOwner() && this.getLeadStatus() > -1))
+        {
           thisOrg.setNameFirst(this.getNameFirst());
           thisOrg.setNameLast(this.getNameLast());
           thisOrg.setNameMiddle(this.getNameMiddle());
@@ -3498,10 +3528,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   void processPhoneNumbers(Connection db) throws SQLException {
     Iterator iphone = phoneNumberList.iterator();
@@ -3514,10 +3544,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   void processAddress(Connection db) throws SQLException {
     Iterator iaddress = addressList.iterator();
@@ -3530,10 +3560,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   void processEmailAddress(Connection db) throws SQLException {
     Iterator iemail = emailAddressList.iterator();
@@ -3546,10 +3576,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   void processTextMessageAddress(Connection db) throws SQLException {
     Iterator itextMessageAddress = textMessageAddressList.iterator();
@@ -3562,10 +3592,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   void processInstantMessageAddress(Connection db) throws SQLException {
     Iterator instantMessageAddress = instantMessageAddressList.iterator();
@@ -3578,13 +3608,13 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Delete the current object from the database
+   * Delete the current object from the database
    *
-   * @param  db             Description of Parameter
-   * @param  baseFilePath   Description of the Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param db           Description of Parameter
+   * @param baseFilePath Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
     boolean commit = db.getAutoCommit();
@@ -3682,11 +3712,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Deletes contact records from the database
+   * Deletes contact records from the database
    *
-   * @param  db             Description of the Parameter
-   * @param  baseFilePath   Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void deleteFromDatabase(Connection db, String baseFilePath) throws SQLException {
 
@@ -3727,35 +3757,35 @@ public class Contact extends GenericBean {
 
     pst = db.prepareStatement(
         "DELETE FROM contact_phone " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
 
     pst = db.prepareStatement(
         "DELETE FROM contact_emailaddress " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
 
     pst = db.prepareStatement(
         "DELETE FROM contact_address " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
 
     pst = db.prepareStatement(
         "DELETE FROM contact_textmessageaddress " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
 
     pst = db.prepareStatement(
         "DELETE FROM contact_imaddress " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3763,10 +3793,18 @@ public class Contact extends GenericBean {
     int fieldId = -1;
     pst = db.prepareStatement(
         "SELECT id " +
-        "FROM search_fields " +
-        "WHERE description = ? ");
+            "FROM search_fields " +
+            "WHERE description = ? ");
     pst.setString(1, "Contact ID");
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       fieldId = rs.getInt("id");
     }
@@ -3776,8 +3814,8 @@ public class Contact extends GenericBean {
     if (fieldId > -1) {
       pst = db.prepareStatement(
           "DELETE FROM saved_criteriaelement " +
-          "WHERE field = ? " +
-          "AND value_id = ? ");
+              "WHERE field = ? " +
+              "AND value_id = ? ");
       pst.setInt(1, fieldId);
       pst.setInt(2, this.getId());
       pst.execute();
@@ -3786,7 +3824,7 @@ public class Contact extends GenericBean {
 
     pst = db.prepareStatement(
         "DELETE FROM excluded_recipient " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3794,7 +3832,7 @@ public class Contact extends GenericBean {
     // delete all types associated with this contact
     pst = db.prepareStatement(
         "DELETE FROM contact_type_levels " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3802,7 +3840,7 @@ public class Contact extends GenericBean {
     // delete all task links associated with this contact
     pst = db.prepareStatement(
         "DELETE FROM tasklink_contact " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3810,9 +3848,9 @@ public class Contact extends GenericBean {
     //Delete the history of the inbox message associated with this contact
     pst = db.prepareStatement(
         "DELETE FROM history " +
-        "WHERE link_object_id = ? " +
-        "AND link_item_id IN ( " +
-        "SELECT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
+            "WHERE link_object_id = ? " +
+            "AND link_item_id IN ( " +
+            "SELECT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
     pst.setInt(1, OrganizationHistory.CFSNOTE);
     pst.setInt(2, this.getId());
     boolean result = pst.execute();
@@ -3821,7 +3859,7 @@ public class Contact extends GenericBean {
     // delete all inbox message links associated with this contact
     pst = db.prepareStatement(
         "DELETE FROM cfsinbox_messagelink " +
-        "WHERE sent_to = ? ");
+            "WHERE sent_to = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3829,7 +3867,7 @@ public class Contact extends GenericBean {
     // delete the action item log data for this contact
     pst = db.prepareStatement(
         "DELETE FROM action_item_log " +
-        "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
+            "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3837,7 +3875,7 @@ public class Contact extends GenericBean {
     // delete from any action list this contact appeared on
     pst = db.prepareStatement(
         "DELETE FROM action_item " +
-        "WHERE link_item_id = ? ");
+            "WHERE link_item_id = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3845,7 +3883,7 @@ public class Contact extends GenericBean {
     // delete the contact history
     pst = db.prepareStatement(
         "DELETE FROM history " +
-        "WHERE contact_id = ?");
+            "WHERE contact_id = ?");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3854,9 +3892,9 @@ public class Contact extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(
         "UPDATE action_item_work " +
-        "SET link_item_id = ? " +
-        "WHERE link_module_id = ? " +
-        "AND link_item_id = ? ");
+            "SET link_item_id = ? " +
+            "WHERE link_module_id = ? " +
+            "AND link_item_id = ? ");
     DatabaseUtils.setInt(pst, ++i, -1);
     pst.setInt(++i, Constants.CONTACTS);
     pst.setInt(++i, this.getId());
@@ -3866,7 +3904,7 @@ public class Contact extends GenericBean {
     // finally, delete the contact
     pst = db.prepareStatement(
         "DELETE FROM contact " +
-        "WHERE contact_id = ?");
+            "WHERE contact_id = ?");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -3875,11 +3913,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Resets the types for this Contact
+   * Resets the types for this Contact
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean resetType(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -3895,8 +3933,8 @@ public class Contact extends GenericBean {
     i = 0;
     pst = db.prepareStatement(
         "UPDATE contact " +
-        "set employee = ? " +
-        "WHERE contact_id = ? ");
+            "set employee = ? " +
+            "WHERE contact_id = ? ");
     pst.setBoolean(++i, false);
     pst.setInt(++i, this.getId());
     pst.execute();
@@ -3907,13 +3945,13 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Inserts Type of Contact.
+   * Inserts Type of Contact.
    *
-   * @param  db             Description of the Parameter
-   * @param  type_id        Description of the Parameter
-   * @param  level          Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param type_id Description of the Parameter
+   * @param level   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insertType(Connection db, int type_id, int level) throws SQLException {
     if (id == -1) {
@@ -3922,8 +3960,8 @@ public class Contact extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO contact_type_levels " +
-        "(contact_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ") " +
-        "VALUES (?, ?, ?) ");
+            "(contact_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ") " +
+            "VALUES (?, ?, ?) ");
     pst.setInt(++i, this.getId());
     pst.setInt(++i, type_id);
     pst.setInt(++i, level);
@@ -3934,11 +3972,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Performs a query and sets whether this user has an account or not
+   * Performs a query and sets whether this user has an account or not
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
-   * @since                 1.25
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.25
    */
   public void checkUserAccount(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -3946,10 +3984,18 @@ public class Contact extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT user_id " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE contact_id = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       userId = rs.getInt("user_id");
       setHasAccount(true);
@@ -3963,25 +4009,33 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildTypes(Connection db) throws SQLException {
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT ctl.type_id, lct.description, lct.enabled " +
-        "FROM contact_type_levels ctl " +
-        "LEFT JOIN lookup_contact_types lct " +
-        "ON ctl.type_id = lct.code " +
-        "WHERE ctl.contact_id = ? " +
-        "ORDER BY ctl." + DatabaseUtils.addQuotes(db, "level") + " ");
+            "FROM contact_type_levels ctl " +
+            "LEFT JOIN lookup_contact_types lct " +
+            "ON ctl.type_id = lct.code " +
+            "WHERE ctl.contact_id = ? " +
+            "ORDER BY ctl." + DatabaseUtils.addQuotes(db, "level") + " ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, id);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     while (rs.next()) {
       LookupElement thisType = new LookupElement();
       thisType.setCode(rs.getInt("type_id"));
@@ -3999,10 +4053,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void checkEnabledUserAccount(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -4011,12 +4065,20 @@ public class Contact extends GenericBean {
     checkUserAccount(db);
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE contact_id = ? " +
-        "AND enabled = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE contact_id = ? " +
+            "AND enabled = ? ");
     pst.setInt(1, this.getId());
     pst.setBoolean(2, true);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       setHasEnabledAccount(true);
     } else {
@@ -4028,11 +4090,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  campaignId     Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db         Description of Parameter
+   * @param campaignId Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void checkExcludedFromCampaign(Connection db, int campaignId) throws SQLException {
     if (this.getId() == -1) {
@@ -4040,12 +4102,20 @@ public class Contact extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM excluded_recipient " +
-        "WHERE contact_id = ? " +
-        "AND campaign_id = ? ");
+            "FROM excluded_recipient " +
+            "WHERE contact_id = ? " +
+            "AND campaign_id = ? ");
     pst.setInt(1, this.getId());
     pst.setInt(2, campaignId);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       setExcludedFromCampaign(true);
     } else {
@@ -4057,15 +4127,15 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  On a typical update of the Contact record, do not execute this method
-   *  directly, use Update(db), this was intended for the insert statement.
+   * On a typical update of the Contact record, do not execute this method
+   * directly, use Update(db), this was intended for the insert statement.
    *
-   * @param  db             Description of Parameter
-   * @param  override       Overrides checking the lastmodified date on an
-   *      insert
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param db       Description of Parameter
+   * @param override Overrides checking the lastmodified date on an
+   *                 insert
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -4076,23 +4146,23 @@ public class Contact extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE contact " +
-        "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
-        "namefirst = ?, namelast = ?, " +
-        "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
-        "org_id = ?, primary_contact = ?, org_name = ?, access_type = ?,");
+            "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
+            "namefirst = ?, namelast = ?, " +
+            "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
+            "org_id = ?, primary_contact = ?, org_name = ?, access_type = ?,");
     sql.append(
         "source = ?, rating = ?, comments = ?, conversion_date = ?, lead = ?, lead_status = ?, industry_temp_code = ?, potential = ?, ");
     sql.append(
         "no_email = ?, " +
-        "no_mail = ?, " +
-        "no_phone = ?, " +
-        "no_textmessage = ?, " +
-        "no_im = ?, " +
-        "no_fax = ?, "
-        );
+            "no_mail = ?, " +
+            "no_phone = ?, " +
+            "no_textmessage = ?, " +
+            "no_im = ?, " +
+            "no_fax = ?, "
+    );
     sql.append(
         "trashed_date = ?, additional_names = ?, nickname = ?, birthdate = ?, " +
-        "" + DatabaseUtils.addQuotes(db, "role") + " = ?, employee_id = ?, site_id = ?, ");
+            "" + DatabaseUtils.addQuotes(db, "role") + " = ?, employee_id = ?, site_id = ?, ");
     if (locale > -1) {
       sql.append("locale = ?, ");
     }
@@ -4109,7 +4179,7 @@ public class Contact extends GenericBean {
     }
     sql.append("modifiedby = ? WHERE contact_id = ? ");
     if (!override) {
-      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+      sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -4206,24 +4276,24 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Update name and address
+   * Update name and address
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateNameandAddress(Connection db) throws SQLException {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE contact " +
-        "SET secret_word = ?, " +
-        "additional_names = ?, " +
-        "nickname = ?, " +
-        "birthdate = ?, " +
-        "title = ?, " +
-        "" + DatabaseUtils.addQuotes(db, "role") + " = ?, " +
-        "information_update_date = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
-        "WHERE contact_id = ? ");
+            "SET secret_word = ?, " +
+            "additional_names = ?, " +
+            "nickname = ?, " +
+            "birthdate = ?, " +
+            "title = ?, " +
+            "" + DatabaseUtils.addQuotes(db, "role") + " = ?, " +
+            "information_update_date = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "WHERE contact_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getSecretWord());
@@ -4249,11 +4319,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Populates this object from a result set
+   * Populates this object from a result set
    *
-   * @param  rs             Description of Parameter
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //contact table
@@ -4334,12 +4404,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.30?
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.30?
    */
   private boolean hasRelatedRecords(Connection db) throws SQLException {
 
@@ -4409,10 +4479,18 @@ public class Contact extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         "SELECT COUNT(*) AS  excludedcount " +
-        "FROM excluded_recipient " +
-        "WHERE contact_id = ? ");
+            "FROM excluded_recipient " +
+            "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       excludedCount = rs.getInt("excludedcount");
     }
@@ -4428,10 +4506,18 @@ public class Contact extends GenericBean {
     pst = null;
     pst = db.prepareStatement(
         "SELECT COUNT(*) AS  messagecount " +
-        "FROM cfsinbox_messagelink " +
-        "WHERE sent_to = ? ");
+            "FROM cfsinbox_messagelink " +
+            "WHERE sent_to = ? ");
     pst.setInt(1, this.getId());
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       messageCount = rs.getInt("messagecount");
     }
@@ -4450,10 +4536,18 @@ public class Contact extends GenericBean {
     int actionItemLogCount = 0;
     pst = db.prepareStatement(
         "SELECT COUNT(*) AS  actionitemlogcount " +
-        "FROM action_item_log " +
-        "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
+            "FROM action_item_log " +
+            "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
     pst.setInt(1, this.getId());
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       actionItemLogCount = rs.getInt("actionitemlogcount");
     }
@@ -4467,10 +4561,18 @@ public class Contact extends GenericBean {
     int actionItemCount = 0;
     pst = db.prepareStatement(
         "SELECT COUNT(*) AS  actionitemcount " +
-        "FROM action_item " +
-        "WHERE link_item_id = ? ");
+            "FROM action_item " +
+            "WHERE link_item_id = ? ");
     pst.setInt(1, this.getId());
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       actionItemCount = rs.getInt("actionitemcount");
     }
@@ -4485,12 +4587,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  newOwner       Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
@@ -4504,22 +4606,22 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Updates the contact record with a new organization id
+   * Updates the contact record with a new organization id
    *
-   * @param  db             Description of the Parameter
-   * @param  contactId      Description of the Parameter
-   * @param  orgId          Description of the Parameter
-   * @param  orgName        Description of the Parameter
-   * @param  userId         Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param contactId Description of the Parameter
+   * @param orgId     Description of the Parameter
+   * @param orgName   Description of the Parameter
+   * @param userId    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void move(Connection db, int contactId, int orgId, String orgName, int userId) throws SQLException {
     int i = 0;
     String timestamp = DatabaseUtils.getCurrentTimestamp(db);
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact " +
-        "SET org_id = ?, org_name = ?, modifiedBy = ?, modified = " + timestamp + " " +
-        "WHERE contact_id = ? ");
+            "SET org_id = ?, org_name = ?, modifiedBy = ?, modified = " + timestamp + " " +
+            "WHERE contact_id = ? ");
     pst.setInt(++i, orgId);
     pst.setString(++i, orgName);
     pst.setInt(++i, userId);
@@ -4530,12 +4632,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Combines the first and last name of a contact, depending on the length of
-   *  the strings
+   * Combines the first and last name of a contact, depending on the length of
+   * the strings
    *
-   * @param  nameLast   Description of the Parameter
-   * @param  nameFirst  Description of the Parameter
-   * @return            The nameLastFirst value
+   * @param nameLast  Description of the Parameter
+   * @param nameFirst Description of the Parameter
+   * @return The nameLastFirst value
    */
   public static String getNameLastFirst(String nameLast, String nameFirst) {
     StringBuffer out = new StringBuffer();
@@ -4556,11 +4658,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the nameFirstLast attribute of the Contact class
+   * Gets the nameFirstLast attribute of the Contact class
    *
-   * @param  nameFirst  Description of the Parameter
-   * @param  nameLast   Description of the Parameter
-   * @return            The nameFirstLast value
+   * @param nameFirst Description of the Parameter
+   * @param nameLast  Description of the Parameter
+   * @return The nameFirstLast value
    */
   public static String getNameFirstLast(String nameFirst, String nameLast) {
     StringBuffer out = new StringBuffer();
@@ -4581,12 +4683,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the nameFirstLastOrCompany attribute of the Contact class
+   * Gets the nameFirstLastOrCompany attribute of the Contact class
    *
-   * @param  tmpNameFirst  Description of the Parameter
-   * @param  tmpNameLast   Description of the Parameter
-   * @param  tmpCompany    Description of the Parameter
-   * @return               The nameFirstLastOrCompany value
+   * @param tmpNameFirst Description of the Parameter
+   * @param tmpNameLast  Description of the Parameter
+   * @param tmpCompany   Description of the Parameter
+   * @return The nameFirstLastOrCompany value
    */
   public static String getNameFirstLastOrCompany(String tmpNameFirst, String tmpNameLast, String tmpCompany) {
     String firstLastOrCompany = Contact.getNameFirstLast(tmpNameFirst, tmpNameLast);
@@ -4600,11 +4702,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Makes a list of this a Contact's dependencies to other entities.
+   * Makes a list of this a Contact's dependencies to other entities.
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -4625,11 +4727,19 @@ public class Contact extends GenericBean {
       int i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as callcount " +
-          "FROM call_log " +
-          "WHERE contact_id = ? " +
-          (this.getOrgId() != -1 ? "AND opp_id IS NULL " : ""));
+              "FROM call_log " +
+              "WHERE contact_id = ? " +
+              (this.getOrgId() != -1 ? "AND opp_id IS NULL " : ""));
       pst.setInt(++i, this.getId());
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("activities");
@@ -4643,11 +4753,19 @@ public class Contact extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as foldercount " +
-          "FROM custom_field_record cfr " +
-          "WHERE cfr.link_module_id = " + Constants.CONTACTS + " " +
-          "AND cfr.link_item_id = ? ");
+              "FROM custom_field_record cfr " +
+              "WHERE cfr.link_module_id = " + Constants.CONTACTS + " " +
+              "AND cfr.link_item_id = ? ");
       pst.setInt(++i, this.getId());
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("folders");
@@ -4661,12 +4779,20 @@ public class Contact extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as ticketcount " +
-          "FROM ticket " +
-          "WHERE contact_id = ? " +
-          "AND trashed_date IS NULL " +
-          "AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ");
+              "FROM ticket " +
+              "WHERE contact_id = ? " +
+              "AND trashed_date IS NULL " +
+              "AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ");
       pst.setInt(++i, this.getId());
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("tickets");
@@ -4680,10 +4806,18 @@ public class Contact extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as taskcount " +
-          "FROM tasklink_contact " +
-          "WHERE contact_id = ? ");
+              "FROM tasklink_contact " +
+              "WHERE contact_id = ? ");
       pst.setInt(++i, this.getId());
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("tasks");
@@ -4698,10 +4832,18 @@ public class Contact extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as servicecontractcount " +
-          "FROM service_contract " +
-          "WHERE contact_id = ? AND trashed_date IS NULL");
+              "FROM service_contract " +
+              "WHERE contact_id = ? AND trashed_date IS NULL");
       pst.setInt(++i, this.getId());
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("contracts");
@@ -4716,10 +4858,18 @@ public class Contact extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as assetcount " +
-          "FROM asset " +
-          "WHERE contact_id = ? AND trashed_date IS NULL");
+              "FROM asset " +
+              "WHERE contact_id = ? AND trashed_date IS NULL");
       pst.setInt(++i, this.getId());
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("assets");
@@ -4773,16 +4923,16 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void disable(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact " +
-        "SET enabled = ? " +
-        "WHERE contact_id = ?");
+            "SET enabled = ? " +
+            "WHERE contact_id = ?");
     pst.setBoolean(1, false);
     pst.setInt(2, this.getId());
     pst.executeUpdate();
@@ -4797,13 +4947,13 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Approves all records for a specific import
+   * Approves all records for a specific import
    *
-   * @param  db             Description of the Parameter
-   * @param  importId       Description of the Parameter
-   * @param  status         Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param importId Description of the Parameter
+   * @param status   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int updateImportStatus(Connection db, int importId, int status) throws SQLException {
     int count = 0;
@@ -4841,12 +4991,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the contactSiteId attribute of the Contact class
+   * Gets the contactSiteId attribute of the Contact class
    *
-   * @param  db             Description of the Parameter
-   * @param  tmpContactId   Description of the Parameter
-   * @return                The contactSiteId value
-   * @throws  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param tmpContactId Description of the Parameter
+   * @return The contactSiteId value
+   * @throws SQLException Description of the Exception
    */
   public static int getContactSiteId(Connection db, int tmpContactId) throws SQLException {
     PreparedStatement pst = null;
@@ -4854,12 +5004,20 @@ public class Contact extends GenericBean {
     int contactSiteId = -1;
     String sqlSelect =
         "SELECT site_id " +
-        "FROM contact " +
-        "WHERE contact_id = ? ";
+            "FROM contact " +
+            "WHERE contact_id = ? ";
     int i = 0;
     pst = db.prepareStatement(sqlSelect);
     pst.setInt(++i, tmpContactId);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       contactSiteId = DatabaseUtils.getInt(rs, "site_id");
     }
@@ -4870,14 +5028,14 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  toTrash        Description of the Parameter
-   * @param  tmpUserId      Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @param context   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, ActionContext context, boolean toTrash, int tmpUserId) throws SQLException {
     int count = 0;
@@ -4890,10 +5048,10 @@ public class Contact extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE contact " +
-          "SET trashed_date = ? , " +
-          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
-          "modifiedby = ? " +
-          "WHERE contact_id = ? ");
+              "SET trashed_date = ? , " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+              "modifiedby = ? " +
+              "WHERE contact_id = ? ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (toTrash) {
@@ -4917,10 +5075,18 @@ public class Contact extends GenericBean {
         int fieldId = -1;
         pst = db.prepareStatement(
             "SELECT id " +
-            "FROM search_fields " +
-            "WHERE description = ? ");
+                "FROM search_fields " +
+                "WHERE description = ? ");
         pst.setString(1, "Contact ID");
+        if (System.getProperty("DEBUG") != null) {
+          milies = System.currentTimeMillis();
+          logger.debug(pst.toString());
+        }
         ResultSet rs = pst.executeQuery();
+        if (System.getProperty("DEBUG") != null) {
+          milies = System.currentTimeMillis() - milies;
+          logger.debug(String.valueOf(milies) + " ms");
+        }
         if (rs.next()) {
           fieldId = rs.getInt("id");
         }
@@ -4930,8 +5096,8 @@ public class Contact extends GenericBean {
         if (fieldId > -1) {
           pst = db.prepareStatement(
               "DELETE FROM saved_criteriaelement " +
-              "WHERE field = ? " +
-              "AND value_id = ? ");
+                  "WHERE field = ? " +
+                  "AND value_id = ? ");
           pst.setInt(1, fieldId);
           pst.setInt(2, this.getId());
           pst.execute();
@@ -4941,7 +5107,7 @@ public class Contact extends GenericBean {
         // delete the action item log data for this contact
         pst = db.prepareStatement(
             "DELETE FROM action_item_log " +
-            "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
+                "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
         pst.setInt(1, this.getId());
         pst.execute();
         pst.close();
@@ -4949,7 +5115,7 @@ public class Contact extends GenericBean {
         // delete from any action list this contact appeared on
         pst = db.prepareStatement(
             "DELETE FROM action_item " +
-            "WHERE link_item_id = ? ");
+                "WHERE link_item_id = ? ");
         pst.setInt(1, this.getId());
         pst.execute();
         pst.close();
@@ -4999,9 +5165,9 @@ public class Contact extends GenericBean {
       int contactLinkModuleId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS);
       pst = db.prepareStatement(
           "UPDATE action_item_work " +
-          "SET link_item_id = ? " +
-          "WHERE link_module_id = ? " +
-          "AND link_item_id = ? ");
+              "SET link_item_id = ? " +
+              "WHERE link_module_id = ? " +
+              "AND link_item_id = ? ");
       DatabaseUtils.setInt(pst, ++i, -1);
       pst.setInt(++i, contactLinkModuleId);
       pst.setInt(++i, this.getId());
@@ -5026,16 +5192,16 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void enable(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact " +
-        "SET enabled = ? " +
-        "WHERE contact_id = ?");
+            "SET enabled = ? " +
+            "WHERE contact_id = ?");
     pst.setBoolean(1, true);
     pst.setInt(2, this.getId());
     pst.executeUpdate();
@@ -5044,19 +5210,19 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void deleteMessages(Connection db) throws SQLException {
     PreparedStatement pst = null;
     //Delete the history of the inbox message associated with this contact
     pst = db.prepareStatement(
         "DELETE FROM history " +
-        "WHERE link_object_id = ? " +
-        "AND link_item_id IN ( " +
-        "SELECT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
+            "WHERE link_object_id = ? " +
+            "AND link_item_id IN ( " +
+            "SELECT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
     pst.setInt(1, OrganizationHistory.CFSNOTE);
     pst.setInt(2, this.getId());
     boolean result = pst.execute();
@@ -5065,7 +5231,7 @@ public class Contact extends GenericBean {
     // delete all inbox message links associated with this contact
     pst = db.prepareStatement(
         "DELETE FROM cfsinbox_messagelink " +
-        "WHERE sent_to = ? ");
+            "WHERE sent_to = ? ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -5073,13 +5239,13 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @param  baseFilePath   Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param context      Description of the Parameter
+   * @param baseFilePath Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, ActionContext context, String baseFilePath) throws SQLException {
     if (delete(db, baseFilePath)) {
@@ -5092,21 +5258,29 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT owner " +
-        "FROM contact " +
-        "WHERE contact_id = ?");
+            "FROM contact " +
+            "WHERE contact_id = ?");
     pst.setInt(1, this.getId());
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       oldId = rs.getInt("owner");
     }
@@ -5124,12 +5298,12 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     if (insert(db)) {
@@ -5142,9 +5316,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public void invalidateUserData(ActionContext context) {
     invalidateUserData(context, owner);
@@ -5152,10 +5326,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  userId   Description of the Parameter
+   * @param context Description of the Parameter
+   * @param userId  Description of the Parameter
    */
   public void invalidateUserData(ActionContext context, int userId) {
     if (userId != -1) {
@@ -5170,11 +5344,11 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the htmlString attribute of the Contact object
+   * Gets the htmlString attribute of the Contact object
    *
-   * @param  dependencies  Description of the Parameter
-   * @param  systemStatus  Description of the Parameter
-   * @return               The htmlString value
+   * @param dependencies Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @return The htmlString value
    */
   public String getHtmlString(DependencyList dependencies, SystemStatus systemStatus) {
     boolean canMove = true;
@@ -5209,14 +5383,14 @@ public class Contact extends GenericBean {
       if (systemStatus != null) {
         html.append(
             "&nbsp;&nbsp;" + systemStatus.getLabel(
-            "dependency.noDependencyForAction") + "<br />");
+                "dependency.noDependencyForAction") + "<br />");
       }
     }
     if (!canMove) {
       if (systemStatus != null) {
         html.append(
             "<br />(*) " + systemStatus.getLabel(
-            "dependency.preventingContactMove"));
+                "dependency.preventingContactMove"));
         html.append(
             "<br />" + systemStatus.getLabel("dependency.note") + "<br />");
       }
@@ -5226,10 +5400,10 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  dependencies  Description of the Parameter
-   * @return               Description of the Return Value
+   * @param dependencies Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean canMoveContact(DependencyList dependencies) {
     Iterator thisList = dependencies.iterator();
@@ -5251,9 +5425,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public String toString() {
     return this.getNameFull();
@@ -5261,15 +5435,15 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updatePrimaryContactInformation(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact SET primary_contact = ? " +
-        "WHERE contact_id = ? ");
+            "WHERE contact_id = ? ");
     pst.setBoolean(1, this.getPrimaryContact());
     pst.setInt(2, this.getId());
     pst.executeUpdate();
@@ -5278,17 +5452,17 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                 Description of the Parameter
-   * @param  context            Description of the Parameter
-   * @param  dbNamePath         Description of the Parameter
-   * @param  newOrgId           Description of the Parameter
-   * @param  moveOpportunities  Description of the Parameter
-   * @param  moveFolders        Description of the Parameter
-   * @param  moveActivities     Description of the Parameter
-   * @return                    Description of the Return Value
-   * @exception  SQLException   Description of the Exception
+   * @param db                Description of the Parameter
+   * @param context           Description of the Parameter
+   * @param dbNamePath        Description of the Parameter
+   * @param newOrgId          Description of the Parameter
+   * @param moveOpportunities Description of the Parameter
+   * @param moveFolders       Description of the Parameter
+   * @param moveActivities    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean moveContact(Connection db, ActionContext context, String dbNamePath, int newOrgId, int moveOpportunities, int moveFolders, int moveActivities) throws SQLException {
     Organization organization = new Organization(db, newOrgId);
@@ -5340,9 +5514,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean canWorkAsContact() {
     boolean result = true;

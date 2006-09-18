@@ -54,9 +54,15 @@
 </dhv:evaluate>
 <% int i = 0; %>
 <dhv:container name="accounts" selected="activities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:permission name="accounts-accounts-contacts-calls-add">
+  <a href="AccountsCalls.do?command=Log&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list&trailSource=accounts"><dhv:label name="accounts.accounts_contacts_calls_list.LogAnActivity">Log an Activity</dhv:label></a>
+|
+  <a href="AccountsCalls.do?command=Schedule&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list&trailSource=accounts"><dhv:label name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">Schedule an Activity</dhv:label></a><br />
+<br />
+</dhv:permission>
   <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
   <%-- Pending list --%>
-  <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" object="AccountContactCallsListInfo"/>
+  <dhv:pagedListStatus showExpandLink="true" title="Scheduled Activities" object="AccountContactCallsListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th width="8">
@@ -90,7 +96,7 @@
     <tr class="row<%= rowid %>">
       <td <%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) ? "rowspan=\"2\"" : ""%> width="9" valign="top" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', 'pending');"
+         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', 'pending','<%= thisCall.getOrgId()%>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="top" nowrap>
@@ -110,7 +116,7 @@
         <%= toHtml(CallTypeList.getSelectedValue(thisCall.getAlertCallTypeId())) %>
       </td>
       <td width="100%" valign="top">
-        <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&view=pending&trailSource=accounts">
+        <a href="AccountsCalls.do?command=Details&id=<%= thisCall.getId() %>&orgId=<%= thisCall.getOrgId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&view=pending&trailSource=accounts">
         <%= toHtml(thisCall.getAlertText()) %>
         </a>
       </td>
@@ -172,11 +178,11 @@
     <tr class="row<%= rowid %>">
       <td <%= AccountContactCompletedCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getNotes())) ? "rowspan=\"2\"" : ""%> width="9" valign="top" nowrap>
          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', '<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>');"
+         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', '<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>', '<%= thisCall.getOrgId() %>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="top" nowrap>
-        <%= thisCall.getContactName() %>
+        <%= toHtml(thisCall.getContactName()) %>
       </td>
       <td valign="top" nowrap>
         <%= thisCall.getStatusString() %>
@@ -185,7 +191,7 @@
         <%= toHtml(CallTypeList.getSelectedValue(thisCall.getCallTypeId())) %>
       </td>
       <td width="50%" valign="top">
-        <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&trailSource=accounts">
+        <a href="AccountsCalls.do?command=Details&id=<%= thisCall.getId() %>&orgId=<%= thisCall.getOrgId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&trailSource=accounts">
           <%= toHtml(thisCall.getSubject()) %>
         </a>
       </td>

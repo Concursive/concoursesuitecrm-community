@@ -60,7 +60,7 @@
       <permission name="contacts-external_contacts-calls" attributes="vaed" description="Activiteiten"/>
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Boodschappen"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Kansen"/>
-      <permission name="contacts-external_contacts-imports" attributes="vaed" description="Geïmporteerde data"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" description="GeГЇmporteerde data"/>
       <permission name="contacts-external-contact-updater" attributes="v---" description="Verzoek update contactpersooninformatie"/>
       <permission name="contacts-external_contacts-history" attributes="vaed" description="Geschiedenis contactpersoon"/>
       <report file="contacts_user.xml" type="user" permission="contacts" title="Contactpersonen" description="Wie zijn mijn contactpersonen?"/>
@@ -201,7 +201,7 @@
       <lookup constantId="928051135" class="lookupList" table="lookup_asset_materials" description="Asset Materials"/>
       <lookup constantId="910040914" class="lookupList" table="lookup_asset_vendor" description="Asset Vendor"/>
       <lookup constantId="910040915" class="lookupList" table="lookup_asset_manufacturer" description="Asset Manufacturer"/>
-      <multipleCategory constantId="202041400" table="asset_category" maxLevels="3" description="Activa categoriën"/>
+      <multipleCategory constantId="202041400" table="asset_category" maxLevels="3" description="Activa categoriГ«n"/>
     </category>
     <category id="8" name="Helpdesk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true" actionPlans="true" customListViews="true">
       <folder constantId="11072003" description="Tickets"/>
@@ -240,7 +240,7 @@
       <report file="callvolume_resolvable_account.xml" type="user" permission="tickets-tickets" title="Call Volume per Account (Resolvable)" description="How many tickets are resolvable per account?"/>
       <report file="callvolume_resolvable_category.xml" type="user" permission="tickets-tickets" title="Call Volume per Category (Resolvable)" description="How many tickets are resolvable per category?"/>
       <report file="callvolume_entered_timeofday.xml" type="user" permission="tickets-tickets" title="Call Volume (Time of Day)" description="How many tickets have been entered at a specific time of day??"/>
-      <multipleCategory constantId="202041401" table="ticket_category" maxLevels="4" description="Ticketcategoriën"/>
+      <multipleCategory constantId="202041401" table="ticket_category" maxLevels="4" description="TicketcategoriГ«n"/>
       <actionPlanEditor constantId="912051329" description="Action Plans related to Tickets"/>
       <customListViewCategory constantId="113051436" description="Ticket Custom List Views"/>
     </category>
@@ -263,9 +263,9 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Projecten"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Medewerkers" description="Wie zijn de medewerkers in mijn organisatie?"/>
     </category>
-    <category id="330041409" name="Productcatalogus" folders="true" lookups="true" reports="false" categories="false" products="true">
-      <folder constantId="200403192" description="Categoriën productcatalogus" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Toegang tot de Productcatalogus module" enabled="false"/>
+    <category id="330041409" name="Productcatalogus" folders="true" lookups="true" reports="false" categories="false" >
+      <folder constantId="200403192" description="CategoriГ«n productcatalogus" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Toegang tot de Productcatalogus module" enabled="true"/>
       <permission name="product-catalog-product" attributes="vaed" description="Producten" enabled="false"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Producttypes"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product formaattypes"/>
@@ -290,7 +290,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configureer maatwerkmappen &amp; -velden"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Configureer objectenworkflow"/>
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Configureer categoriemodule"/>
-      <permission name="admin-sysconfig-products" attributes="vaed" description="Productcatalogus-editor"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" description="Configureer logo's module"/>
       <permission name="admin-actionplans" attributes="vaed" description="Configure Action Plans"/>
       <report file="users.xml" type="user" permission="admin" title="Systeemgebruikers" description="Wie zijn de gebruikers van het systeem?"/>
@@ -409,7 +408,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
-      <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" />
       <permission name="admin-actionplans" attributes="vaed" />
       <permission name="help" attributes="v---"/>

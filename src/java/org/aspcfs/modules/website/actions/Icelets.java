@@ -21,10 +21,6 @@ import org.aspcfs.modules.website.base.*;
 import org.aspcfs.modules.actions.CFSModule;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  *  Actions for the Icelets module

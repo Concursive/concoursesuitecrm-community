@@ -263,9 +263,9 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Progetti"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Impiegati" description="Chi sono gli impiegati nella mia organizzazione?"/>
     </category>
-    <category id="330041409" name="Catalogo Prodotti" folders="true" lookups="true" reports="false" categories="false" products="true">
+    <category id="330041409" name="Catalogo Prodotti" folders="true" lookups="true" reports="false" categories="false">
       <folder constantId="200403192" description="Catalogo Categorie Prodotto" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Accesso al modulo Catologo Prodotti" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Accesso al modulo Catologo Prodotti" enabled="true"/>
       <permission name="product-catalog-product" attributes="vaed" description="Prodotti" enabled="false"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Tipi Prodotto"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Tipi Formato Prodotto"/>
@@ -290,7 +290,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configura Cartelle &amp; Campi personalizzati"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Configura Flussi"/>
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Configura Modulo Categorie"/>
-      <permission name="admin-sysconfig-products" attributes="vaed" description="Editor dle Catalogo Prodotti"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" description="Configura Modulo Loghi"/>
       <permission name="admin-actionplans" attributes="vaed" description="Configure Action Plans"/>
       <report file="users.xml" type="user" permission="admin" title="Utenti del Sistemas" description="Chi sono tutti gli utenti del sistema?"/>
@@ -409,7 +408,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
-      <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" />
       <permission name="admin-actionplans" attributes="vaed" />
       <permission name="help" attributes="v---"/>

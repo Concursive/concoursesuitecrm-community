@@ -81,13 +81,13 @@ public class OrderAddress extends Address {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT addr.address_id, addr.order_id, addr.address_type, addr.addrline1, addr.addrline2, " +
-        "        addr.addrline3, addr.city, addr.state, addr.country, addr.postalcode, " +
+        " SELECT addr.address_id, addr.contact_id, addr.address_type, addr.addrline1, addr.addrline2, " +
+        "        addr.addrline3, addr.addrline4, addr.city, addr.state, addr.country, addr.postalcode, addr.primary_address, " +
         "				 addr.entered, addr.enteredby, addr.modified, addr.modifiedby, l.description " +
         " FROM order_address addr " +
         " LEFT JOIN lookup_orderaddress_types l " +
         " ON ( addr.address_type = l.code ) " +
-        " AND addr.address_id = ? ");
+        " WHERE addr.address_id = ? ");
     pst.setInt(1, addressId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -157,7 +157,7 @@ public class OrderAddress extends Address {
     this.setId(DatabaseUtils.getNextSeq(db, "order_address_address_id_seq"));
     int id = getId();
     sql.append(
-        " INSERT INTO order_address(order_id, address_type, addrline1, addrline2, addrline3, " +
+        " INSERT INTO order_address(contact_id, address_type, addrline1, addrline2, addrline3, addrline4, " +
         " 	city, state, postalcode, country, ");
     if (id > -1) {
       sql.append("address_id, ");
@@ -170,7 +170,7 @@ public class OrderAddress extends Address {
       sql.append("modified, ");
     }
     sql.append("modifiedby ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
       sql.append("?,");
     }
@@ -184,8 +184,8 @@ public class OrderAddress extends Address {
     sql.append("?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    if (this.getOrderId() > -1) {
-      pst.setInt(++i, this.getOrderId());
+    if (this.getContactId() > -1) {
+      pst.setInt(++i, this.getContactId());
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
@@ -197,6 +197,7 @@ public class OrderAddress extends Address {
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());
+    pst.setString(++i, this.getStreetAddressLine4());
     pst.setString(++i, this.getCity());
     pst.setString(++i, this.getState());
     if (this.getEntered() != null) {
@@ -287,13 +288,13 @@ public class OrderAddress extends Address {
         "     modifiedby = ? " +
         " WHERE address_id = ? ");
 
+    pst = db.prepareStatement(sql.toString());
     int i = 0;
     if (this.getType() > -1) {
       pst.setInt(++i, this.getType());
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-    pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getStreetAddressLine3());

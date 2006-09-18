@@ -69,7 +69,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><dhv:label name="contact.pendingActivityReminder">Pending Activity Reminder</dhv:label></strong>  
+      <strong><dhv:label name="contact.pendingActivityReminder">Pending Activity Reminder</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
@@ -110,7 +110,7 @@
         <% if(CallDetails.getId() > 0) {%>
           <dhv:label name="contact.call.modifyActivity">Modify Activity</dhv:label>
         <%} else {%>
-          <dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label>
+          <dhv:label name="accounts.accounts_contacts_calls_list.LogAnActivity">Log an Activity</dhv:label>
         <%}%>
       <% } %>
       </strong>

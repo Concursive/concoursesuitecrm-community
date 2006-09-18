@@ -17,7 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.text.DateFormat,org.aspcfs.utils.DatabaseUtils" %>
+<%@ page import="java.text.DateFormat,org.aspcfs.utils.DatabaseUtils,java.util.Iterator" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <br>
@@ -26,7 +26,7 @@
     <th colspan="2">
       <strong>
         <% if((CallDetails.getAlertDate() == null) || (request.getAttribute("alertDateWarning") != null)) {%>
-          <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.FollowupActivityReminder">Follow-up Activity Reminder</dhv:label>
+          <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">Schedule an Activity</dhv:label>
         <%} else {%>
           <dhv:label name="contact.call.modifyActivity">Modify Activity</dhv:label>
         <%}%>
@@ -41,6 +41,58 @@
       <%= CallTypeList.getHtmlSelect("alertCallTypeId", CallDetails.getAlertCallTypeId()) %><font color="red">*</font><%= showAttribute(request, "followupTypeError") %>
     </td>
   </tr>
+  <dhv:evaluate if="<%= "GlobalItem".equals(request.getParameter("actionSource")) %>">  
+  <tr>
+    <td class="formLabel">
+      <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
+    </td>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="4" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            <div id="changefollowupcontact">
+              <% if(ContactDetails.getId() != -1) {%>
+                <%= toHtml(ContactDetails.getValidName()) %>
+              <%} else {%>
+                <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+              <%}%>
+            </div>
+          </td>
+          <td valign="top" width="100%" nowrap>
+            <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
+            [<a href="javascript:popContactsListSingle('followupContactLink','changefollowupcontact','listView=mycontacts<%= User.getUserRecord().getSiteId() == -1?"&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&nonUsersOnly=true&reset=true&filters=all|accountcontacts|mycontacts');"><dhv:label name="admin.selectContact">Select Contact</dhv:label></a>]
+            <input type="hidden" name="followupContactId" id="followupContactLink" value="<%= ContactDetails.getId() %>">
+            [<a href="javascript:popURL('ExternalContacts.do?command=Prepare&source=addactivity&actionSource=GlobalItem&popup=true', 'New_Contact','600','550','yes','yes');"><dhv:label name="admin.createContact">Create new contact</dhv:label></a>]
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</dhv:evaluate>
+<% if(contactList!=null && !contactList.isEmpty() && "accountItem".equals(actionSource)){%>    
+  <tr class="containerBody">
+  <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.Contact">Contact</dhv:label>
+   </td>
+   <td>
+   <select name="followupContactId">
+   <option value="-1"><dhv:label name="calendar.none.4dashes">-- None --</dhv:label></option>
+   <% Iterator j = contactList.iterator();
+      if ( j.hasNext() ) {
+          while (j.hasNext()) {
+             Contact thisContact = (Contact) j.next();%>
+         <%if (CallDetails!=null && thisContact.getId()==CallDetails.getFollowupContactId()){%>
+         <option value="<%= thisContact.getId()%>" selected="selected"><%= thisContact.getNameLast()%></option>
+         <%}else{%>
+         <option value="<%= thisContact.getId()%>"><%= thisContact.getNameLast()%></option>
+         <%}%>
+     <%}
+     }
+     %>       
+   </select>
+   </td>
+  </tr>
+  <%}%>
     <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="quotes.date">Date</dhv:label>

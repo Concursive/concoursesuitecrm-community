@@ -44,7 +44,7 @@
               additionalText=""><defaultValue><![CDATA[-1]]></defaultValue>
     </property>
   </icelet>
-  <icelet name="Cart" class="CartPortlet" version="1">
+  <icelet name="Cart" class="CartPortlet" version="2">
     <description>Displays the products added to a quote</description>
     <property constant="6062311"
               label="Email To"
@@ -57,6 +57,18 @@
               description="Email subject"
               type="text"
               additionalText=""><defaultValue><![CDATA[]]></defaultValue>
+    </property>
+    <property constant="6071314"
+              label="Quote sent message"
+              description="Message to convey that a quote has been sent"
+              type="text"
+              additionalText=""><defaultValue><![CDATA[Your quote has been sent.]]></defaultValue>
+    </property>
+    <property constant="6071313"
+              label="Cart empty message"
+              description="Message to convey that the cart is empty"
+              type="text"
+              additionalText=""><defaultValue><![CDATA[Your cart is empty.]]></defaultValue>
     </property>
     <property constant="6062313"
               label="Email message to the quote reviewer"
@@ -71,8 +83,44 @@
               additionalText=""><defaultValue><![CDATA[You have requested a quote for the items listed below. <br /> 
 							Your quote has been sent to ${quoteReviewer.email}. Your request will be reviewed, and you will receive an email soon.]]></defaultValue>
      </property>
+     <property constant="6080315"
+              label="Order"
+              description="Determines whether order entry can be initiated from the cart"
+              type="checkbox"
+              additionalText="Include Order"><defaultValue><![CDATA[false]]></defaultValue>
+      </property>
+      <property constant="6080316"
+              label="Order"
+              description="The role determines the permissions of the customer"
+              type="portal-rolelist"
+              additionalText=" Role for Web Customers"><defaultValue><![CDATA[-1]]></defaultValue>
+      </property>
+      <property constant="6080317"
+              label="Order"
+              description="Welcome message when a user starts to create an account"
+              type="htmleditor"
+              additionalText=" Account creation welcome message "><defaultValue><![CDATA[]]></defaultValue>
+      </property>
+      <property constant="6080318"
+              label="Order"
+              description="Thank you message when a user completes the account creation process"
+              type="htmleditor"
+              additionalText="Account creation thank you message"><defaultValue><![CDATA[]]></defaultValue>
+      </property>
+      <property constant="6080319"
+              label="Order"
+              description="Thank you message when a customer completes the order"
+              type="htmleditor"
+              additionalText="Order thank you message"><defaultValue><![CDATA[]]></defaultValue>
+      </property>
+      <property constant="6080320"
+              label="Order"
+              description="Error message when an order fails"
+              type="htmleditor"
+              additionalText="Order error message"><defaultValue><![CDATA[]]></defaultValue>
+      </property>
    </icelet>
-  <icelet name="Product Catalog" class="ProductCatalogPortlet" version="1">
+  <icelet name="Product Catalog" class="ProductCatalogPortlet" version="2">
     <description>Displays the products for the selected category</description>
     <property constant="6050816"
               label="Category"
@@ -131,30 +179,52 @@
               description="Allow products to be added to cart for quoting and follow-up"
               type="checkbox"
               additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+     <property constant="6071315"
+              label="Added to quote message"
+              description="Message to convey that the product being viewed has already been added to the quote"
+              type="text"
+              additionalText=""><defaultValue><![CDATA[This product has been added to the quote.]]></defaultValue>
+    </property>
     <property constant="6060717"
               label="Email"
               description="Allow products to be emailed to a friend"
               type="checkbox"
               defaultValue="false"
               additionalText=""/>
-    <!-- TODO: remove the web address of site and read it from SystemStatus -->
-    <property constant="6060718"
-              label="Email"
-              description="Web address of the site"
-              type="text"
-              defaultValue=""
-              additionalText=""/>
+    <property constant="6071316"
+              label="Email body"
+              description="Product details message template"
+              type="htmleditor"
+              additionalText=""><defaultValue><![CDATA[<body>
+              Hello,<br /><br />
+              ${email.fromName} wanted to share the following product with you:
+              <table>
+              <tr>
+              <td>
+              ${product.name}<br />
+              ${product.imageSource}<br />
+              ${product.allowedInformation}<br />
+              </td>
+              </tr>
+              <tr>
+              <td>
+              The following comments were made:<br />
+              ${email.comments} <br /><br />
+              You may view this product at our website by clicking <a href="${product.link}">here<a>.<br />
+              If this does not automatically open your browser and take you to that page, cut and paste the following url into your browser's address bar and hit enter : <br /><br />
+              <a href="${product.link}">${product.link}</a>
+              <br /><br />
+              Please visit us anytime at <a href="${site.link}">${site.link}</a> to learn more about our products and services. <br />
+              </td>
+              </tr>
+              </table>
+              </body>]]></defaultValue>
+    </property>
     <property constant="6060719"
               label="Email"
               description="Subject"
               type="text"
-              defaultValue="A product from our catalog"
-              additionalText=""/>
-    <property constant="6060720"
-              label="Email"
-              description="Introductory message"
-              type="textarea"
-              defaultValue="We have an exciting range of products."
+              defaultValue="Forwarded from our web site"
               additionalText=""/>
 	</icelet>
 </icelets>

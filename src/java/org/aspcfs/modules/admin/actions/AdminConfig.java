@@ -15,11 +15,10 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import com.darkhorseventures.database.ConnectionElement;
-import com.darkhorseventures.framework.actions.ActionContext;
-import com.darkhorseventures.framework.hooks.CustomHook;
-import com.isavvix.tools.FileInfo;
-import com.isavvix.tools.HttpMultiPartParser;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Hashtable;
+
 import org.aspcfs.apps.workFlowManager.BusinessProcessImporter;
 import org.aspcfs.apps.workFlowManager.BusinessProcessList;
 import org.aspcfs.controller.ApplicationPrefs;
@@ -27,6 +26,7 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.controller.objectHookManager.ObjectHookList;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.MerchantPaymentGateway;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.service.base.SyncClientList;
@@ -35,9 +35,11 @@ import org.aspcfs.utils.web.CountrySelect;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.StateSelect;
 
-import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Hashtable;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.hooks.CustomHook;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
 
 /**
  * Description of the Class
@@ -68,6 +70,8 @@ public final class AdminConfig extends CFSModule {
       BusinessProcessList processList = new BusinessProcessList();
       processList.setEnabled(Constants.TRUE);
       processList.buildList(db);
+      MerchantPaymentGateway gateway = new MerchantPaymentGateway(db);
+      context.getRequest().setAttribute("merchantPaymentGateway", gateway);
       ObjectHookList hookList = new ObjectHookList();
       hookList.setEnabled(Constants.TRUE);
       hookList.buildList(db);
@@ -241,6 +245,9 @@ public final class AdminConfig extends CFSModule {
     }
     if ("SYSTEM.COUNTRY".equals(module)) {
       return "ModifyCountryOK";
+    }
+    if ("PAYMENTGATEWAY".equals(module)) {
+      return "ModifyPaymentGatewayOK";
     }
     String value = CustomHook.populateAdminConfig(module);
     if (value != null) {

@@ -505,13 +505,11 @@ CREATE TABLE permission_category(
     scheduled_events CHAR(1) DEFAULT '0' NOT NULL,
     object_events CHAR(1) DEFAULT '0' NOT NULL,
     reports CHAR(1) DEFAULT '0' NOT NULL,
-    products CHAR(1) DEFAULT '0' NOT NULL,
     webdav CHAR(1) DEFAULT '0' NOT NULL,
     logos CHAR(1) DEFAULT '0' NOT NULL,
     constant INTEGER NOT NULL,
     action_plans CHAR(1) DEFAULT '0' NOT NULL,
     custom_list_views CHAR(1) DEFAULT '0' NOT NULL,
-    importer CHAR(1) DEFAULT '0' NOT NULL,
     PRIMARY KEY(category_id)
 );
 
@@ -1092,3 +1090,41 @@ CREATE TABLE custom_list_view_field(
     view_id INTEGER NOT NULL  REFERENCES custom_list_view(view_id),
     name VARGRAPHIC(80) NOT NULL
 );
+
+-- Create Indexes
+
+create index contact_access_type on contact  (access_type);
+
+create index contact_assistant on contact  (assistant);
+
+create index contact_department on contact  (department);
+
+create index contact_enteredby on contact  (enteredby);
+
+create index contact_industry_temp_code on contact  (industry_temp_code);
+
+create index contact_modifiedby on contact  (modifiedby);
+
+create index contact_org_id on contact  (org_id);
+
+create index contact_owner on contact  ("owner");
+
+create index contact_rating on contact  (rating);
+
+create index contact_site_id on contact  (site_id);
+
+create index contact_source on contact  (source);
+
+create index contact_super on contact  (super);
+
+create index contact_user_id on contact  (user_id);
+
+create index contact_employee_id on contact (employee_id);
+create index tcontactlevels_level on contact_type_levels ("level");
+
+create index caddress_primary_address on  contact_address (primary_address);
+
+create index contact_entered on contact (entered);
+
+create index laccess_types_rule_id on lookup_access_types (rule_id);
+

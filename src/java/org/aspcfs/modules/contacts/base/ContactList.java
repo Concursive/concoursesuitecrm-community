@@ -16,6 +16,8 @@
 package org.aspcfs.modules.contacts.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.AccessType;
@@ -28,6 +30,7 @@ import org.aspcfs.modules.base.UserCentric;
 import org.aspcfs.modules.communications.base.SearchCriteriaElement;
 import org.aspcfs.modules.communications.base.SearchCriteriaGroup;
 import org.aspcfs.modules.communications.base.SearchCriteriaList;
+import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -37,13 +40,13 @@ import java.text.DateFormat;
 import java.util.*;
 
 /**
- *  Contains a list of contacts... currently used to build the list from the
- *  database with any of the parameters to limit the results.
+ * Contains a list of contacts... currently used to build the list from the
+ * database with any of the parameters to limit the results.
  *
- * @author     mrajkowski
- * @created    August 29, 2001
- * @version    $Id: ContactList.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: ContactList.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
+ *          Exp $
+ * @created August 29, 2001
  */
 public class ContactList extends Vector implements UserCentric {
 
@@ -189,19 +192,30 @@ public class ContactList extends Vector implements UserCentric {
   private boolean includeAllSites = false;
   private int portalUsersOnly = Constants.UNDEFINED;
 
+  //Logger
+  private static long milies = -1;
+  private static Logger logger = Logger.getLogger(ProductCatalog.class);
+
+  static {
+    if (System.getProperty("DEBUG") != null) {
+      logger.setLevel(Level.DEBUG);
+    }
+  }
+
 
   /**
-   *  Constructor for the ContactList object
+   * Constructor for the ContactList object
    *
-   * @since    1.1
+   * @since 1.1
    */
-  public ContactList() { }
+  public ContactList() {
+  }
 
 
   /**
-   *  Gets the contactUserId attribute of the ContactList object
+   * Gets the contactUserId attribute of the ContactList object
    *
-   * @return    The contactUserId value
+   * @return The contactUserId value
    */
   public int getContactUserId() {
     return contactUserId;
@@ -209,9 +223,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactUserId attribute of the ContactList object
+   * Sets the contactUserId attribute of the ContactList object
    *
-   * @param  tmp  The new contactUserId value
+   * @param tmp The new contactUserId value
    */
   public void setContactUserId(int tmp) {
     this.contactUserId = tmp;
@@ -219,9 +233,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactUserId attribute of the ContactList object
+   * Sets the contactUserId attribute of the ContactList object
    *
-   * @param  tmp  The new contactUserId value
+   * @param tmp The new contactUserId value
    */
   public void setContactUserId(String tmp) {
     this.contactUserId = Integer.parseInt(tmp);
@@ -229,9 +243,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeUsersOnly attribute of the ContactList object
+   * Sets the includeUsersOnly attribute of the ContactList object
    *
-   * @param  includeUsersOnly  The new includeUsersOnly value
+   * @param includeUsersOnly The new includeUsersOnly value
    */
   public void setIncludeUsersOnly(boolean includeUsersOnly) {
     this.includeUsersOnly = includeUsersOnly;
@@ -239,9 +253,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeUsersOnly attribute of the ContactList object
+   * Sets the includeUsersOnly attribute of the ContactList object
    *
-   * @param  includeUsersOnly  The new includeUsersOnly value
+   * @param includeUsersOnly The new includeUsersOnly value
    */
   public void setIncludeUsersOnly(String includeUsersOnly) {
     this.includeUsersOnly = DatabaseUtils.parseBoolean(includeUsersOnly);
@@ -249,9 +263,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the userRoleType attribute of the ContactList object
+   * Gets the userRoleType attribute of the ContactList object
    *
-   * @return    The userRoleType value
+   * @return The userRoleType value
    */
   public int getUserRoleType() {
     return userRoleType;
@@ -259,9 +273,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the userRoleType attribute of the ContactList object
+   * Sets the userRoleType attribute of the ContactList object
    *
-   * @param  tmp  The new userRoleType value
+   * @param tmp The new userRoleType value
    */
   public void setUserRoleType(int tmp) {
     this.userRoleType = tmp;
@@ -269,9 +283,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the userRoleType attribute of the ContactList object
+   * Sets the userRoleType attribute of the ContactList object
    *
-   * @param  tmp  The new userRoleType value
+   * @param tmp The new userRoleType value
    */
   public void setUserRoleType(String tmp) {
     this.userRoleType = Integer.parseInt(tmp);
@@ -279,9 +293,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the industry attribute of the ContactList object
+   * Gets the industry attribute of the ContactList object
    *
-   * @return    The industry value
+   * @return The industry value
    */
   public int getIndustry() {
     return industry;
@@ -289,9 +303,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the industry attribute of the ContactList object
+   * Sets the industry attribute of the ContactList object
    *
-   * @param  tmp  The new industry value
+   * @param tmp The new industry value
    */
   public void setIndustry(int tmp) {
     this.industry = tmp;
@@ -299,9 +313,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the industry attribute of the ContactList object
+   * Sets the industry attribute of the ContactList object
    *
-   * @param  tmp  The new industry value
+   * @param tmp The new industry value
    */
   public void setIndustry(String tmp) {
     this.industry = Integer.parseInt(tmp);
@@ -309,9 +323,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the checkExcludedFromCampaign attribute of the ContactList object
+   * Sets the checkExcludedFromCampaign attribute of the ContactList object
    *
-   * @param  checkExcludedFromCampaign  The new checkExcludedFromCampaign value
+   * @param checkExcludedFromCampaign The new checkExcludedFromCampaign value
    */
   public void setCheckExcludedFromCampaign(int checkExcludedFromCampaign) {
     this.checkExcludedFromCampaign = checkExcludedFromCampaign;
@@ -319,9 +333,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactIdRange attribute of the ContactList object
+   * Sets the contactIdRange attribute of the ContactList object
    *
-   * @param  contactIdRange  The new contactIdRange value
+   * @param contactIdRange The new contactIdRange value
    */
   public void setContactIdRange(String contactIdRange) {
     this.contactIdRange = contactIdRange;
@@ -329,9 +343,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the excludeAccountContacts attribute of the ContactList object
+   * Sets the excludeAccountContacts attribute of the ContactList object
    *
-   * @param  excludeAccountContacts  The new excludeAccountContacts value
+   * @param excludeAccountContacts The new excludeAccountContacts value
    */
   public void setExcludeAccountContacts(boolean excludeAccountContacts) {
     this.excludeAccountContacts = excludeAccountContacts;
@@ -339,9 +353,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the excludeAccountContacts attribute of the ContactList object
+   * Gets the excludeAccountContacts attribute of the ContactList object
    *
-   * @return    The excludeAccountContacts value
+   * @return The excludeAccountContacts value
    */
   public boolean getExcludeAccountContacts() {
     return excludeAccountContacts;
@@ -349,9 +363,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the employeesOnly attribute of the ContactList object
+   * Gets the employeesOnly attribute of the ContactList object
    *
-   * @return    The employeesOnly value
+   * @return The employeesOnly value
    */
   public int getEmployeesOnly() {
     return employeesOnly;
@@ -359,9 +373,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the employeesOnly attribute of the ContactList object
+   * Sets the employeesOnly attribute of the ContactList object
    *
-   * @param  tmp  The new employeesOnly value
+   * @param tmp The new employeesOnly value
    */
   public void setEmployeesOnly(int tmp) {
     this.employeesOnly = tmp;
@@ -369,9 +383,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the employeesOnly attribute of the ContactList object
+   * Sets the employeesOnly attribute of the ContactList object
    *
-   * @param  tmp  The new employeesOnly value
+   * @param tmp The new employeesOnly value
    */
   public void setEmployeesOnly(String tmp) {
     this.employeesOnly = Integer.parseInt(tmp);
@@ -379,9 +393,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accountTypeIdHash attribute of the ContactList object
+   * Gets the accountTypeIdHash attribute of the ContactList object
    *
-   * @return    The accountTypeIdHash value
+   * @return The accountTypeIdHash value
    */
   public HashMap getAccountTypeIdHash() {
     return accountTypeIdHash;
@@ -389,9 +403,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountTypeIdHash attribute of the ContactList object
+   * Sets the accountTypeIdHash attribute of the ContactList object
    *
-   * @param  accountTypeIdHash  The new accountTypeIdHash value
+   * @param accountTypeIdHash The new accountTypeIdHash value
    */
   public void setAccountTypeIdHash(HashMap accountTypeIdHash) {
     this.accountTypeIdHash = accountTypeIdHash;
@@ -399,9 +413,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the siteIdHash attribute of the ContactList object
+   * Sets the siteIdHash attribute of the ContactList object
    *
-   * @param  tmp  The new siteIdHash value
+   * @param tmp The new siteIdHash value
    */
   public void setSiteIdHash(HashMap tmp) {
     this.siteIdHash = tmp;
@@ -409,9 +423,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the siteIdHash attribute of the ContactList object
+   * Gets the siteIdHash attribute of the ContactList object
    *
-   * @return    The siteIdHash value
+   * @return The siteIdHash value
    */
   public HashMap getSiteIdHash() {
     return siteIdHash;
@@ -419,9 +433,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeEnabledUsersOnly attribute of the ContactList object
+   * Sets the includeEnabledUsersOnly attribute of the ContactList object
    *
-   * @param  includeEnabledUsersOnly  The new includeEnabledUsersOnly value
+   * @param includeEnabledUsersOnly The new includeEnabledUsersOnly value
    */
   public void setIncludeEnabledUsersOnly(boolean includeEnabledUsersOnly) {
     this.includeEnabledUsersOnly = includeEnabledUsersOnly;
@@ -429,9 +443,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeEnabledUsersOnly attribute of the ContactList object
+   * Sets the includeEnabledUsersOnly attribute of the ContactList object
    *
-   * @param  tmp  The new includeEnabledUsersOnly value
+   * @param tmp The new includeEnabledUsersOnly value
    */
   public void setIncludeEnabledUsersOnly(String tmp) {
     this.includeEnabledUsersOnly = DatabaseUtils.parseBoolean(tmp);
@@ -439,9 +453,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accessTypes attribute of the ContactList object
+   * Sets the accessTypes attribute of the ContactList object
    *
-   * @param  accessTypes  The new accessTypes value
+   * @param accessTypes The new accessTypes value
    */
   public void setAccessTypes(AccessTypeList accessTypes) {
     this.accessTypes = accessTypes;
@@ -449,9 +463,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accessTypes attribute of the ContactList object
+   * Gets the accessTypes attribute of the ContactList object
    *
-   * @return    The accessTypes value
+   * @return The accessTypes value
    */
   public AccessTypeList getAccessTypes() {
     return accessTypes;
@@ -459,9 +473,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the generalContactAccessTypes attribute of the ContactList object
+   * Gets the generalContactAccessTypes attribute of the ContactList object
    *
-   * @return    The generalContactAccessTypes value
+   * @return The generalContactAccessTypes value
    */
   public AccessTypeList getGeneralContactAccessTypes() {
     return generalContactAccessTypes;
@@ -469,9 +483,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the generalContactAccessTypes attribute of the ContactList object
+   * Sets the generalContactAccessTypes attribute of the ContactList object
    *
-   * @param  tmp  The new generalContactAccessTypes value
+   * @param tmp The new generalContactAccessTypes value
    */
   public void setGeneralContactAccessTypes(AccessTypeList tmp) {
     this.generalContactAccessTypes = tmp;
@@ -479,9 +493,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeEnabledUsersOnly attribute of the ContactList object
+   * Gets the includeEnabledUsersOnly attribute of the ContactList object
    *
-   * @return    The includeEnabledUsersOnly value
+   * @return The includeEnabledUsersOnly value
    */
   public boolean getIncludeEnabledUsersOnly() {
     return includeEnabledUsersOnly;
@@ -489,9 +503,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the FirstName attribute of the ContactList object
+   * Sets the FirstName attribute of the ContactList object
    *
-   * @param  firstName  The new FirstName value
+   * @param firstName The new FirstName value
    */
   public void setFirstName(String firstName) {
     this.firstName = firstName;
@@ -499,20 +513,16 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Filters personal contacts based on the argument specified<p />
+   * Filters personal contacts based on the argument specified<p />
+   * <p/>
+   * Usage: EXCLUDE_PERSONAL to exclude personal contacts IGNORE_PERSONAL to
+   * ignore personal contacts Set UserId to include personal contacts<p />
+   * <p/>
+   * Note: If owner is set personal contacts are included by default so
+   * personalId can be set to IGNORE_PERSONAL<br>
+   * Also set the AccessTypeList for speed up of the query
    *
-   *  <p/>
-   *
-   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts IGNORE_PERSONAL to
-   *  ignore personal contacts Set UserId to include personal contacts<p />
-   *
-   *  <p/>
-   *
-   *  Note: If owner is set personal contacts are included by default so
-   *  personalId can be set to IGNORE_PERSONAL<br>
-   *  Also set the AccessTypeList for speed up of the query
-   *
-   * @param  personalId  The new personalId value
+   * @param personalId The new personalId value
    */
   public void setPersonalId(int personalId) {
     this.personalId = personalId;
@@ -520,22 +530,18 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Filters personal contacts based on the argument specified<p />
+   * Filters personal contacts based on the argument specified<p />
+   * <p/>
+   * Usage: EXCLUDE_PERSONAL to exclude personal contacts IGNORE_PERSONAL to
+   * ignore personal contacts Set UserId to include personal contacts<p />
+   * <p/>
+   * Note: If owner is set personal contacts are included by default so
+   * personalId can be set to IGNORE_PERSONAL<br>
+   * For external applications using ContactList it works without accessTypes
+   * too
    *
-   *  <p/>
-   *
-   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts IGNORE_PERSONAL to
-   *  ignore personal contacts Set UserId to include personal contacts<p />
-   *
-   *  <p/>
-   *
-   *  Note: If owner is set personal contacts are included by default so
-   *  personalId can be set to IGNORE_PERSONAL<br>
-   *  For external applications using ContactList it works without accessTypes
-   *  too
-   *
-   * @param  personalId   The new personalId value
-   * @param  accessTypes  The new personalId value
+   * @param personalId  The new personalId value
+   * @param accessTypes The new personalId value
    */
   public void setPersonalId(int personalId, AccessTypeList accessTypes) {
     this.personalId = personalId;
@@ -544,9 +550,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the personalId attribute of the ContactList object
+   * Gets the personalId attribute of the ContactList object
    *
-   * @return    The personalId value
+   * @return The personalId value
    */
   public int getPersonalId() {
     return personalId;
@@ -554,9 +560,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the nameFirstHash attribute of the ContactList object
+   * Gets the nameFirstHash attribute of the ContactList object
    *
-   * @return    The nameFirstHash value
+   * @return The nameFirstHash value
    */
   public HashMap getNameFirstHash() {
     return nameFirstHash;
@@ -564,9 +570,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the nameFirstHash attribute of the ContactList object
+   * Sets the nameFirstHash attribute of the ContactList object
    *
-   * @param  nameFirstHash  The new nameFirstHash value
+   * @param nameFirstHash The new nameFirstHash value
    */
   public void setNameFirstHash(HashMap nameFirstHash) {
     this.nameFirstHash = nameFirstHash;
@@ -574,9 +580,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the allContacts attribute of the ContactList object
+   * Sets the allContacts attribute of the ContactList object
    *
-   * @param  allContacts  The new allContacts value
+   * @param allContacts The new allContacts value
    */
   public void setAllContacts(boolean allContacts) {
     this.allContacts = allContacts;
@@ -584,13 +590,13 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Method to get all contacts including personal Optionally the three
-   *  arguments can be set seperately but it is highly recommended to use this
-   *  method Note: AccessTypeList has to be set for the personalId to work
+   * Method to get all contacts including personal Optionally the three
+   * arguments can be set seperately but it is highly recommended to use this
+   * method Note: AccessTypeList has to be set for the personalId to work
    *
-   * @param  allContacts   The new allContacts value
-   * @param  ownerIdRange  The new allContacts value
-   * @param  owner         The new allContacts value
+   * @param allContacts  The new allContacts value
+   * @param ownerIdRange The new allContacts value
+   * @param owner        The new allContacts value
    */
   public void setAllContacts(boolean allContacts, int owner, String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -600,9 +606,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountName attribute of the ContactList object
+   * Sets the accountName attribute of the ContactList object
    *
-   * @param  accountName  The new accountName value
+   * @param accountName The new accountName value
    */
   public void setAccountName(String accountName) {
     this.accountName = accountName;
@@ -610,9 +616,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactPhoneNumber attribute of the ContactList object
+   * Sets the contactPhoneNumber attribute of the ContactList object
    *
-   * @param  tmp  The new contactPhoneNumber value
+   * @param tmp The new contactPhoneNumber value
    */
   public void setContactPhoneNumber(String tmp) {
     this.contactPhoneNumber = tmp;
@@ -620,9 +626,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountSegment attribute of the ContactList object
+   * Sets the accountSegment attribute of the ContactList object
    *
-   * @param  accountSegment  The new accountSegment value
+   * @param accountSegment The new accountSegment value
    */
   public void setAccountSegment(String accountSegment) {
     this.accountSegment = accountSegment;
@@ -630,9 +636,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactCity attribute of the ContactList object
+   * Sets the contactCity attribute of the ContactList object
    *
-   * @param  tmp  The new contactCity value
+   * @param tmp The new contactCity value
    */
   public void setContactCity(String tmp) {
     this.contactCity = tmp;
@@ -640,9 +646,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactState attribute of the ContactList object
+   * Sets the contactState attribute of the ContactList object
    *
-   * @param  tmp  The new contactState value
+   * @param tmp The new contactState value
    */
   public void setContactState(String tmp) {
     this.contactState = tmp;
@@ -650,9 +656,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactCountry attribute of the ContactList object
+   * Sets the contactCountry attribute of the ContactList object
    *
-   * @param  tmp  The new contactCountry value
+   * @param tmp The new contactCountry value
    */
   public void setContactCountry(String tmp) {
     this.country = tmp;
@@ -660,9 +666,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountPostalCode attribute of the ContactList object
+   * Sets the accountPostalCode attribute of the ContactList object
    *
-   * @param  tmp  The new accountPostalCode value
+   * @param tmp The new accountPostalCode value
    */
   public void setAccountPostalCode(String tmp) {
     this.accountPostalCode = tmp;
@@ -670,9 +676,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the orgSiteId attribute of the ContactList object
+   * Sets the orgSiteId attribute of the ContactList object
    *
-   * @param  orgSiteId  The new orgSiteId value
+   * @param orgSiteId The new orgSiteId value
    */
   public void setOrgSiteId(int orgSiteId) {
     this.orgSiteId = orgSiteId;
@@ -680,9 +686,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the orgSiteId attribute of the ContactList object
+   * Sets the orgSiteId attribute of the ContactList object
    *
-   * @param  orgSiteId  The new orgSiteId value
+   * @param orgSiteId The new orgSiteId value
    */
   public void setOrgSiteId(String orgSiteId) {
     this.orgSiteId = Integer.parseInt(orgSiteId);
@@ -690,9 +696,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the orgSiteId attribute of the ContactList object
+   * Gets the orgSiteId attribute of the ContactList object
    *
-   * @return    The orgSiteId value
+   * @return The orgSiteId value
    */
   public int getOrgSiteId() {
     return orgSiteId;
@@ -700,9 +706,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the orgSiteId attribute of the ContactList object
+   * Gets the orgSiteId attribute of the ContactList object
    *
-   * @param  tmp  The new userSiteId value
+   * @param tmp The new userSiteId value
    */
   public void setUserSiteId(int tmp) {
     this.userSiteId = tmp;
@@ -710,9 +716,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the userSiteId attribute of the ContactList object
+   * Gets the userSiteId attribute of the ContactList object
    *
-   * @param  tmp  The new userSiteId value
+   * @param tmp The new userSiteId value
    */
   public void setUserSiteId(String tmp) {
     this.userSiteId = Integer.parseInt(tmp);
@@ -720,9 +726,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the userSiteId attribute of the ContactList object
+   * Gets the userSiteId attribute of the ContactList object
    *
-   * @return    The userSiteId value
+   * @return The userSiteId value
    */
   public int getUserSiteId() {
     return userSiteId;
@@ -730,10 +736,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeContactsFromOrganizationsWithoutSite attribute of the
-   *  ContactList object
+   * Gets the includeContactsFromOrganizationsWithoutSite attribute of the
+   * ContactList object
    *
-   * @param  tmp  The new includeContactsFromOrganizationsWithoutSite value
+   * @param tmp The new includeContactsFromOrganizationsWithoutSite value
    */
   public void setIncludeContactsFromOrganizationsWithoutSite(boolean tmp) {
     this.includeContactsFromOrganizationsWithoutSite = tmp;
@@ -741,10 +747,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeContactsFromOrganizationsWithoutSite attribute of the
-   *  ContactList object
+   * Gets the includeContactsFromOrganizationsWithoutSite attribute of the
+   * ContactList object
    *
-   * @param  tmp  The new includeContactsFromOrganizationsWithoutSite value
+   * @param tmp The new includeContactsFromOrganizationsWithoutSite value
    */
   public void setIncludeContactsFromOrganizationsWithoutSite(String tmp) {
     this.includeContactsFromOrganizationsWithoutSite = DatabaseUtils.parseBoolean(tmp);
@@ -752,10 +758,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeUsersWithAccessToAllSites attribute of the ContactList
-   *  object
+   * Gets the includeUsersWithAccessToAllSites attribute of the ContactList
+   * object
    *
-   * @param  tmp  The new includeUsersWithAccessToAllSites value
+   * @param tmp The new includeUsersWithAccessToAllSites value
    */
   public void setIncludeUsersWithAccessToAllSites(boolean tmp) {
     this.includeUsersWithAccessToAllSites = tmp;
@@ -763,10 +769,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeUsersWithAccessToAllSites attribute of the ContactList
-   *  object
+   * Gets the includeUsersWithAccessToAllSites attribute of the ContactList
+   * object
    *
-   * @param  tmp  The new includeUsersWithAccessToAllSites value
+   * @param tmp The new includeUsersWithAccessToAllSites value
    */
   public void setIncludeUsersWithAccessToAllSites(String tmp) {
     this.includeUsersWithAccessToAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -774,10 +780,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeContactsFromOrganizationsWithoutSite attribute of the
-   *  ContactList object
+   * Gets the includeContactsFromOrganizationsWithoutSite attribute of the
+   * ContactList object
    *
-   * @return    The includeContactsFromOrganizationsWithoutSite value
+   * @return The includeContactsFromOrganizationsWithoutSite value
    */
   public boolean getIncludeContactsFromOrganizationsWithoutSite() {
     return includeContactsFromOrganizationsWithoutSite;
@@ -785,10 +791,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeUsersWithAccessToAllSites attribute of the ContactList
-   *  object
+   * Gets the includeUsersWithAccessToAllSites attribute of the ContactList
+   * object
    *
-   * @return    The includeUsersWithAccessToAllSites value
+   * @return The includeUsersWithAccessToAllSites value
    */
   public boolean getIncludeUsersWithAccessToAllSites() {
     return includeUsersWithAccessToAllSites;
@@ -796,9 +802,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the importSiteId attribute of the ContactList object
+   * Sets the importSiteId attribute of the ContactList object
    *
-   * @param  tmp  The new importSiteId value
+   * @param tmp The new importSiteId value
    */
   public void setImportSiteId(int tmp) {
     this.importSiteId = tmp;
@@ -806,9 +812,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the importSiteId attribute of the ContactList object
+   * Sets the importSiteId attribute of the ContactList object
    *
-   * @param  tmp  The new importSiteId value
+   * @param tmp The new importSiteId value
    */
   public void setImportSiteId(String tmp) {
     this.importSiteId = Integer.parseInt(tmp);
@@ -816,10 +822,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeContactsFromImportsOfAllSites attribute of the ContactList
-   *  object
+   * Sets the includeContactsFromImportsOfAllSites attribute of the ContactList
+   * object
    *
-   * @param  tmp  The new includeContactsFromImportsOfAllSites value
+   * @param tmp The new includeContactsFromImportsOfAllSites value
    */
   public void setIncludeContactsFromImportsOfAllSites(boolean tmp) {
     this.includeContactsFromImportsOfAllSites = tmp;
@@ -827,10 +833,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeContactsFromImportsOfAllSites attribute of the ContactList
-   *  object
+   * Sets the includeContactsFromImportsOfAllSites attribute of the ContactList
+   * object
    *
-   * @param  tmp  The new includeContactsFromImportsOfAllSites value
+   * @param tmp The new includeContactsFromImportsOfAllSites value
    */
   public void setIncludeContactsFromImportsOfAllSites(String tmp) {
     this.includeContactsFromImportsOfAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -838,9 +844,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the importSiteId attribute of the ContactList object
+   * Gets the importSiteId attribute of the ContactList object
    *
-   * @return    The importSiteId value
+   * @return The importSiteId value
    */
   public int getImportSiteId() {
     return importSiteId;
@@ -848,10 +854,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeContactsFromImportsOfAllSites attribute of the ContactList
-   *  object
+   * Gets the includeContactsFromImportsOfAllSites attribute of the ContactList
+   * object
    *
-   * @return    The includeContactsFromImportsOfAllSites value
+   * @return The includeContactsFromImportsOfAllSites value
    */
   public boolean getIncludeContactsFromImportsOfAllSites() {
     return includeContactsFromImportsOfAllSites;
@@ -859,9 +865,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the siteId attribute of the ContactList object
+   * Sets the siteId attribute of the ContactList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -869,9 +875,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the siteId attribute of the ContactList object
+   * Sets the siteId attribute of the ContactList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -879,9 +885,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the siteId attribute of the ContactList object
+   * Gets the siteId attribute of the ContactList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -889,9 +895,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountNumber attribute of the ContactList object
+   * Sets the accountNumber attribute of the ContactList object
    *
-   * @param  tmp  The new accountNumber value
+   * @param tmp The new accountNumber value
    */
   public void setAccountNumber(String tmp) {
     this.accountNumber = tmp;
@@ -899,9 +905,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accountNumber attribute of the ContactList object
+   * Gets the accountNumber attribute of the ContactList object
    *
-   * @return    The accountNumber value
+   * @return The accountNumber value
    */
   public String getAccountNumber() {
     return accountNumber;
@@ -909,9 +915,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountTypeId attribute of the ContactList object
+   * Sets the accountTypeId attribute of the ContactList object
    *
-   * @param  tmp  The new accountTypeId value
+   * @param tmp The new accountTypeId value
    */
   public void setAccountTypeId(int tmp) {
     this.accountTypeId = tmp;
@@ -919,9 +925,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountTypeId attribute of the ContactList object
+   * Sets the accountTypeId attribute of the ContactList object
    *
-   * @param  tmp  The new accountTypeId value
+   * @param tmp The new accountTypeId value
    */
   public void setAccountTypeId(String tmp) {
     this.accountTypeId = Integer.parseInt(tmp);
@@ -929,9 +935,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accountTypeId attribute of the ContactList object
+   * Gets the accountTypeId attribute of the ContactList object
    *
-   * @return    The accountTypeId value
+   * @return The accountTypeId value
    */
   public int getAccountTypeId() {
     return accountTypeId;
@@ -939,9 +945,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountOwnerId attribute of the ContactList object
+   * Sets the accountOwnerId attribute of the ContactList object
    *
-   * @param  tmp  The new accountOwnerId value
+   * @param tmp The new accountOwnerId value
    */
   public void setAccountOwnerId(int tmp) {
     this.accountOwnerId = tmp;
@@ -949,9 +955,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountOwnerId attribute of the ContactList object
+   * Sets the accountOwnerId attribute of the ContactList object
    *
-   * @param  tmp  The new accountOwnerId value
+   * @param tmp The new accountOwnerId value
    */
   public void setAccountOwnerId(String tmp) {
     this.accountOwnerId = Integer.parseInt(tmp);
@@ -959,9 +965,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accountOwnerId attribute of the ContactList object
+   * Gets the accountOwnerId attribute of the ContactList object
    *
-   * @return    The accountOwnerId value
+   * @return The accountOwnerId value
    */
   public int getAccountOwnerId() {
     return accountOwnerId;
@@ -969,9 +975,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeEnabledAccount attribute of the ContactList object
+   * Sets the includeEnabledAccount attribute of the ContactList object
    *
-   * @param  tmp  The new includeEnabledAccount value
+   * @param tmp The new includeEnabledAccount value
    */
   public void setIncludeEnabledAccount(int tmp) {
     this.includeEnabledAccount = tmp;
@@ -979,9 +985,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeEnabledAccount attribute of the ContactList object
+   * Sets the includeEnabledAccount attribute of the ContactList object
    *
-   * @param  tmp  The new includeEnabledAccount value
+   * @param tmp The new includeEnabledAccount value
    */
   public void setIncludeEnabledAccount(String tmp) {
     this.includeEnabledAccount = Integer.parseInt(tmp);
@@ -989,9 +995,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeEnabledAccount attribute of the ContactList object
+   * Gets the includeEnabledAccount attribute of the ContactList object
    *
-   * @return    The includeEnabledAccount value
+   * @return The includeEnabledAccount value
    */
   public int getIncludeEnabledAccount() {
     return includeEnabledAccount;
@@ -999,9 +1005,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the assetSerialNumber attribute of the ContactList object
+   * Sets the assetSerialNumber attribute of the ContactList object
    *
-   * @param  tmp  The new assetSerialNumber value
+   * @param tmp The new assetSerialNumber value
    */
   public void setAssetSerialNumber(String tmp) {
     this.assetSerialNumber = tmp;
@@ -1009,9 +1015,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the assetSerialNumber attribute of the ContactList object
+   * Gets the assetSerialNumber attribute of the ContactList object
    *
-   * @return    The assetSerialNumber value
+   * @return The assetSerialNumber value
    */
   public String getAssetSerialNumber() {
     return assetSerialNumber;
@@ -1019,9 +1025,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accountName attribute of the ContactList object
+   * Gets the accountName attribute of the ContactList object
    *
-   * @return    The accountName value
+   * @return The accountName value
    */
   public String getAccountName() {
     return accountName;
@@ -1029,9 +1035,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the contactPhoneNumber attribute of the ContactList object
+   * Gets the contactPhoneNumber attribute of the ContactList object
    *
-   * @return    The contactPhoneNumber value
+   * @return The contactPhoneNumber value
    */
   public String getContactPhoneNumber() {
     return contactPhoneNumber;
@@ -1039,9 +1045,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accountSegment attribute of the ContactList object
+   * Gets the accountSegment attribute of the ContactList object
    *
-   * @return    The accountSegment value
+   * @return The accountSegment value
    */
   public String getAccountSegment() {
     return accountSegment;
@@ -1049,9 +1055,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the contactCity attribute of the ContactList object
+   * Gets the contactCity attribute of the ContactList object
    *
-   * @return    The contactCity value
+   * @return The contactCity value
    */
   public String getContactCity() {
     return contactCity;
@@ -1059,9 +1065,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the contactState attribute of the ContactList object
+   * Gets the contactState attribute of the ContactList object
    *
-   * @return    The contactState value
+   * @return The contactState value
    */
   public String getContactState() {
     return contactState;
@@ -1069,9 +1075,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountPostalCode attribute of the ContactList object
+   * Sets the accountPostalCode attribute of the ContactList object
    *
-   * @return    The accountPostalCode value
+   * @return The accountPostalCode value
    */
   public String getAccountPostalCode() {
     return accountPostalCode;
@@ -1079,9 +1085,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the allContacts attribute of the ContactList object
+   * Gets the allContacts attribute of the ContactList object
    *
-   * @return    The allContacts value
+   * @return The allContacts value
    */
   public boolean getAllContacts() {
     return allContacts;
@@ -1089,9 +1095,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the dateHash attribute of the ContactList object
+   * Gets the dateHash attribute of the ContactList object
    *
-   * @return    The dateHash value
+   * @return The dateHash value
    */
   public HashMap getDateHash() {
     return dateHash;
@@ -1099,9 +1105,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the dateHash attribute of the ContactList object
+   * Sets the dateHash attribute of the ContactList object
    *
-   * @param  dateHash  The new dateHash value
+   * @param dateHash The new dateHash value
    */
   public void setDateHash(HashMap dateHash) {
     this.dateHash = dateHash;
@@ -1109,9 +1115,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the zipHash attribute of the ContactList object
+   * Gets the zipHash attribute of the ContactList object
    *
-   * @return    The zipHash value
+   * @return The zipHash value
    */
   public HashMap getZipHash() {
     return zipHash;
@@ -1119,9 +1125,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the ruleId attribute of the ContactList object
+   * Sets the ruleId attribute of the ContactList object
    *
-   * @param  ruleId  The new ruleId value
+   * @param ruleId The new ruleId value
    */
   public void setRuleId(int ruleId) {
     this.ruleId = ruleId;
@@ -1129,10 +1135,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Set the rule Id to get only contacts which follow a certain rule e.g
-   *  Personal
+   * Set the rule Id to get only contacts which follow a certain rule e.g
+   * Personal
    *
-   * @return    The ruleId value
+   * @return The ruleId value
    */
   public int getRuleId() {
     return ruleId;
@@ -1140,9 +1146,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the zipHash attribute of the ContactList object
+   * Sets the zipHash attribute of the ContactList object
    *
-   * @param  zipHash  The new zipHash value
+   * @param zipHash The new zipHash value
    */
   public void setZipHash(HashMap zipHash) {
     this.zipHash = zipHash;
@@ -1150,9 +1156,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the contactIdHash attribute of the ContactList object
+   * Sets the contactIdHash attribute of the ContactList object
    *
-   * @param  contactIdHash  The new contactIdHash value
+   * @param contactIdHash The new contactIdHash value
    */
   public void setContactIdHash(HashMap contactIdHash) {
     this.contactIdHash = contactIdHash;
@@ -1160,9 +1166,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the contactIdHash attribute of the ContactList object
+   * Gets the contactIdHash attribute of the ContactList object
    *
-   * @return    The contactIdHash value
+   * @return The contactIdHash value
    */
   public HashMap getContactIdHash() {
     return contactIdHash;
@@ -1170,9 +1176,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the SearchText attribute of the ContactList object
+   * Sets the SearchText attribute of the ContactList object
    *
-   * @param  searchText  The new SearchText value
+   * @param searchText The new SearchText value
    */
   public void setSearchText(String searchText) {
     this.searchText = searchText;
@@ -1180,9 +1186,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the controlledHierarchyOnly attribute of the ContactList object
+   * Sets the controlledHierarchyOnly attribute of the ContactList object
    *
-   * @param  controlledHierarchyOnly  The new controlledHierarchyOnly value
+   * @param controlledHierarchyOnly The new controlledHierarchyOnly value
    */
   public void setControlledHierarchyOnly(boolean controlledHierarchyOnly) {
     this.controlledHierarchyOnly = controlledHierarchyOnly;
@@ -1190,13 +1196,13 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets all hierarchy contacts<br>
-   *  Optionally could set the two arguments seperately but using this method is
-   *  highly recommended for clarity purposes Note: Also set the AccessTypeList
-   *  for speed up of the query
+   * Gets all hierarchy contacts<br>
+   * Optionally could set the two arguments seperately but using this method is
+   * highly recommended for clarity purposes Note: Also set the AccessTypeList
+   * for speed up of the query
    *
-   * @param  controlledHierarchyOnly  The new controlledHierarchyOnly value
-   * @param  ownerIdRange             The new controlledHierarchyOnly value
+   * @param controlledHierarchyOnly The new controlledHierarchyOnly value
+   * @param ownerIdRange            The new controlledHierarchyOnly value
    */
   public void setControlledHierarchyOnly(boolean controlledHierarchyOnly, String ownerIdRange) {
     this.controlledHierarchyOnly = controlledHierarchyOnly;
@@ -1205,9 +1211,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the controlledHierarchyOnly attribute of the ContactList object
+   * Gets the controlledHierarchyOnly attribute of the ContactList object
    *
-   * @return    The controlledHierarchyOnly value
+   * @return The controlledHierarchyOnly value
    */
   public boolean getControlledHierarchyOnly() {
     return controlledHierarchyOnly;
@@ -1215,9 +1221,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the firstCriteria attribute of the ContactList object
+   * Gets the firstCriteria attribute of the ContactList object
    *
-   * @return    The firstCriteria value
+   * @return The firstCriteria value
    */
   public boolean getFirstCriteria() {
     return firstCriteria;
@@ -1225,9 +1231,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the firstCriteria attribute of the ContactList object
+   * Sets the firstCriteria attribute of the ContactList object
    *
-   * @param  firstCriteria  The new firstCriteria value
+   * @param firstCriteria The new firstCriteria value
    */
   public void setFirstCriteria(boolean firstCriteria) {
     this.firstCriteria = firstCriteria;
@@ -1235,9 +1241,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the Company attribute of the ContactList object
+   * Sets the Company attribute of the ContactList object
    *
-   * @param  company  The new Company value
+   * @param company The new Company value
    */
   public void setCompany(String company) {
     this.company = company;
@@ -1245,9 +1251,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the cityHash attribute of the ContactList object
+   * Gets the cityHash attribute of the ContactList object
    *
-   * @return    The cityHash value
+   * @return The cityHash value
    */
   public HashMap getCityHash() {
     return cityHash;
@@ -1255,9 +1261,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the cityHash attribute of the ContactList object
+   * Sets the cityHash attribute of the ContactList object
    *
-   * @param  cityHash  The new cityHash value
+   * @param cityHash The new cityHash value
    */
   public void setCityHash(HashMap cityHash) {
     this.cityHash = cityHash;
@@ -1265,9 +1271,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the OwnerIdRange attribute of the ContactList object
+   * Sets the OwnerIdRange attribute of the ContactList object
    *
-   * @param  ownerIdRange  The new OwnerIdRange value
+   * @param ownerIdRange The new OwnerIdRange value
    */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -1275,9 +1281,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the emptyHtmlSelectRecord attribute of the ContactList object
+   * Gets the emptyHtmlSelectRecord attribute of the ContactList object
    *
-   * @return    The emptyHtmlSelectRecord value
+   * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -1285,9 +1291,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the ContactList object
+   * Sets the emptyHtmlSelectRecord attribute of the ContactList object
    *
-   * @param  emptyHtmlSelectRecord  The new emptyHtmlSelectRecord value
+   * @param emptyHtmlSelectRecord The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String emptyHtmlSelectRecord) {
     this.emptyHtmlSelectRecord = emptyHtmlSelectRecord;
@@ -1295,9 +1301,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the accountOwnerIdRange attribute of the ContactList object
+   * Sets the accountOwnerIdRange attribute of the ContactList object
    *
-   * @param  tmp  The new accountOwnerIdRange value
+   * @param tmp The new accountOwnerIdRange value
    */
   public void setAccountOwnerIdRange(String tmp) {
     this.accountOwnerIdRange = tmp;
@@ -1305,9 +1311,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the withAccountsOnly attribute of the ContactList object
+   * Sets the withAccountsOnly attribute of the ContactList object
    *
-   * @param  tmp  The new withAccountsOnly value
+   * @param tmp The new withAccountsOnly value
    */
   public void setWithAccountsOnly(boolean tmp) {
     this.withAccountsOnly = tmp;
@@ -1315,9 +1321,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the Owner attribute of the ContactList object
+   * Sets the Owner attribute of the ContactList object
    *
-   * @param  owner  The new Owner value
+   * @param owner The new Owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -1325,9 +1331,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the owner attribute of the ContactList object
+   * Sets the owner attribute of the ContactList object
    *
-   * @param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
@@ -1335,9 +1341,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the nameLastHash attribute of the ContactList object
+   * Gets the nameLastHash attribute of the ContactList object
    *
-   * @return    The nameLastHash value
+   * @return The nameLastHash value
    */
   public HashMap getNameLastHash() {
     return nameLastHash;
@@ -1345,9 +1351,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the nameLastHash attribute of the ContactList object
+   * Sets the nameLastHash attribute of the ContactList object
    *
-   * @param  nameLastHash  The new nameLastHash value
+   * @param nameLastHash The new nameLastHash value
    */
   public void setNameLastHash(HashMap nameLastHash) {
     this.nameLastHash = nameLastHash;
@@ -1355,11 +1361,11 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the Scl attribute of the ContactList object
+   * Sets the Scl attribute of the ContactList object
    *
-   * @param  scl            The new Scl value
-   * @param  thisOwnerId    The new scl value
-   * @param  thisUserRange  The new scl value
+   * @param scl           The new Scl value
+   * @param thisOwnerId   The new scl value
+   * @param thisUserRange The new scl value
    */
   public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange) {
     this.scl = scl;
@@ -1370,9 +1376,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the jsEvent attribute of the ContactList object
+   * Gets the jsEvent attribute of the ContactList object
    *
-   * @return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -1380,9 +1386,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the jsEvent attribute of the ContactList object
+   * Sets the jsEvent attribute of the ContactList object
    *
-   * @param  jsEvent  The new jsEvent value
+   * @param jsEvent The new jsEvent value
    */
   public void setJsEvent(String jsEvent) {
     this.jsEvent = jsEvent;
@@ -1390,9 +1396,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the checkEnabledUserAccess attribute of the ContactList object
+   * Gets the checkEnabledUserAccess attribute of the ContactList object
    *
-   * @return    The checkEnabledUserAccess value
+   * @return The checkEnabledUserAccess value
    */
   public boolean getCheckEnabledUserAccess() {
     return checkEnabledUserAccess;
@@ -1400,9 +1406,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the checkEnabledUserAccess attribute of the ContactList object
+   * Sets the checkEnabledUserAccess attribute of the ContactList object
    *
-   * @param  checkEnabledUserAccess  The new checkEnabledUserAccess value
+   * @param checkEnabledUserAccess The new checkEnabledUserAccess value
    */
   public void setCheckEnabledUserAccess(boolean checkEnabledUserAccess) {
     this.checkEnabledUserAccess = checkEnabledUserAccess;
@@ -1410,9 +1416,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the MiddleName attribute of the ContactList object
+   * Sets the MiddleName attribute of the ContactList object
    *
-   * @param  tmp  The new MiddleName value
+   * @param tmp The new MiddleName value
    */
   public void setMiddleName(String tmp) {
     this.middleName = tmp;
@@ -1420,9 +1426,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the LastName attribute of the ContactList object
+   * Sets the LastName attribute of the ContactList object
    *
-   * @param  tmp  The new LastName value
+   * @param tmp The new LastName value
    */
   public void setLastName(String tmp) {
     this.lastName = tmp;
@@ -1430,9 +1436,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the companyHash attribute of the ContactList object
+   * Gets the companyHash attribute of the ContactList object
    *
-   * @return    The companyHash value
+   * @return The companyHash value
    */
   public HashMap getCompanyHash() {
     return companyHash;
@@ -1440,9 +1446,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the companyHash attribute of the ContactList object
+   * Sets the companyHash attribute of the ContactList object
    *
-   * @param  companyHash  The new companyHash value
+   * @param companyHash The new companyHash value
    */
   public void setCompanyHash(HashMap companyHash) {
     this.companyHash = companyHash;
@@ -1450,9 +1456,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the sclOwnerId attribute of the ContactList object
+   * Gets the sclOwnerId attribute of the ContactList object
    *
-   * @return    The sclOwnerId value
+   * @return The sclOwnerId value
    */
   public int getSclOwnerId() {
     return sclOwnerId;
@@ -1460,9 +1466,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the sclOwnerIdRange attribute of the ContactList object
+   * Gets the sclOwnerIdRange attribute of the ContactList object
    *
-   * @return    The sclOwnerIdRange value
+   * @return The sclOwnerIdRange value
    */
   public String getSclOwnerIdRange() {
     return sclOwnerIdRange;
@@ -1470,9 +1476,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the sclOwnerId attribute of the ContactList object
+   * Sets the sclOwnerId attribute of the ContactList object
    *
-   * @param  tmp  The new sclOwnerId value
+   * @param tmp The new sclOwnerId value
    */
   public void setSclOwnerId(int tmp) {
     this.sclOwnerId = tmp;
@@ -1480,9 +1486,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the sclOwnerIdRange attribute of the ContactList object
+   * Sets the sclOwnerIdRange attribute of the ContactList object
    *
-   * @param  tmp  The new sclOwnerIdRange value
+   * @param tmp The new sclOwnerIdRange value
    */
   public void setSclOwnerIdRange(String tmp) {
     this.sclOwnerIdRange = tmp;
@@ -1490,10 +1496,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the PagedListInfo attribute of the ContactList object
+   * Sets the PagedListInfo attribute of the ContactList object
    *
-   * @param  tmp  The new PagedListInfo value
-   * @since       1.1
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -1501,9 +1507,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the Title attribute of the ContactList object
+   * Sets the Title attribute of the ContactList object
    *
-   * @param  title  The new Title value
+   * @param title The new Title value
    */
   public void setTitle(String title) {
     this.title = title;
@@ -1511,9 +1517,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the orgId attribute of the ContactList object
+   * Gets the orgId attribute of the ContactList object
    *
-   * @return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -1521,9 +1527,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the orgId attribute of the ContactList object
+   * Sets the orgId attribute of the ContactList object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -1531,9 +1537,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the orgId attribute of the ContactList object
+   * Sets the orgId attribute of the ContactList object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -1541,9 +1547,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the EmailNotNull attribute of the ContactList object
+   * Sets the EmailNotNull attribute of the ContactList object
    *
-   * @param  emailNotNull  The new EmailNotNull value
+   * @param emailNotNull The new EmailNotNull value
    */
   public void setEmailNotNull(boolean emailNotNull) {
     this.emailNotNull = emailNotNull;
@@ -1551,10 +1557,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the TypeId attribute of the ContactList object
+   * Sets the TypeId attribute of the ContactList object
    *
-   * @param  tmp  The new TypeId value
-   * @since       1.1
+   * @param tmp The new TypeId value
+   * @since 1.1
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -1562,10 +1568,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the CheckUserAccess attribute of the ContactList object
+   * Sets the CheckUserAccess attribute of the ContactList object
    *
-   * @param  tmp  The new CheckUserAccess value
-   * @since       1.8
+   * @param tmp The new CheckUserAccess value
+   * @since 1.8
    */
   public void setCheckUserAccess(boolean tmp) {
     this.checkUserAccess = tmp;
@@ -1573,9 +1579,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the BuildDetails attribute of the ContactList object
+   * Sets the BuildDetails attribute of the ContactList object
    *
-   * @param  tmp  The new BuildDetails value
+   * @param tmp The new BuildDetails value
    */
   public void setBuildDetails(boolean tmp) {
     this.buildDetails = tmp;
@@ -1583,9 +1589,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the buildTypes attribute of the ContactList object
+   * Sets the buildTypes attribute of the ContactList object
    *
-   * @param  tmp  The new buildTypes value
+   * @param tmp The new buildTypes value
    */
   public void setBuildTypes(boolean tmp) {
     this.buildTypes = tmp;
@@ -1593,9 +1599,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the SearchValues attribute of the ContactList object
+   * Sets the SearchValues attribute of the ContactList object
    *
-   * @param  outerHash  The new SearchValues value
+   * @param outerHash The new SearchValues value
    */
   public void setSearchValues(HashMap[] outerHash) {
     this.companyHash = outerHash[0];
@@ -1614,9 +1620,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the departmentId attribute of the ContactList object
+   * Sets the departmentId attribute of the ContactList object
    *
-   * @param  departmentId  The new departmentId value
+   * @param departmentId The new departmentId value
    */
   public void setDepartmentId(int departmentId) {
     this.departmentId = departmentId;
@@ -1624,9 +1630,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the withProjectsOnly attribute of the ContactList object
+   * Sets the withProjectsOnly attribute of the ContactList object
    *
-   * @param  withProjectsOnly  The new withProjectsOnly value
+   * @param withProjectsOnly The new withProjectsOnly value
    */
   public void setWithProjectsOnly(boolean withProjectsOnly) {
     this.withProjectsOnly = withProjectsOnly;
@@ -1634,9 +1640,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the projectId attribute of the ContactList object
+   * Sets the projectId attribute of the ContactList object
    *
-   * @param  projectId  The new projectId value
+   * @param projectId The new projectId value
    */
   public void setProjectId(int projectId) {
     this.projectId = projectId;
@@ -1644,9 +1650,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the contactIdRange attribute of the ContactList object
+   * Gets the contactIdRange attribute of the ContactList object
    *
-   * @return    The contactIdRange value
+   * @return The contactIdRange value
    */
   public String getContactIdRange() {
     return contactIdRange;
@@ -1654,9 +1660,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the checkExcludedFromCampaign attribute of the ContactList object
+   * Gets the checkExcludedFromCampaign attribute of the ContactList object
    *
-   * @return    The checkExcludedFromCampaign value
+   * @return The checkExcludedFromCampaign value
    */
   public int getCheckExcludedFromCampaign() {
     return checkExcludedFromCampaign;
@@ -1664,9 +1670,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ContactList object
+   * Gets the pagedListInfo attribute of the ContactList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -1674,9 +1680,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the typeIdHash attribute of the ContactList object
+   * Gets the typeIdHash attribute of the ContactList object
    *
-   * @return    The typeIdHash value
+   * @return The typeIdHash value
    */
   public HashMap getTypeIdHash() {
     return typeIdHash;
@@ -1684,9 +1690,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the typeIdHash attribute of the ContactList object
+   * Sets the typeIdHash attribute of the ContactList object
    *
-   * @param  typeIdHash  The new typeIdHash value
+   * @param typeIdHash The new typeIdHash value
    */
   public void setTypeIdHash(HashMap typeIdHash) {
     this.typeIdHash = typeIdHash;
@@ -1694,9 +1700,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeEnabled attribute of the ContactList object
+   * Gets the includeEnabled attribute of the ContactList object
    *
-   * @return    The includeEnabled value
+   * @return The includeEnabled value
    */
   public int getIncludeEnabled() {
     return includeEnabled;
@@ -1704,9 +1710,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeEnabled attribute of the ContactList object
+   * Sets the includeEnabled attribute of the ContactList object
    *
-   * @param  includeEnabled  The new includeEnabled value
+   * @param includeEnabled The new includeEnabled value
    */
   public void setIncludeEnabled(int includeEnabled) {
     this.includeEnabled = includeEnabled;
@@ -1714,9 +1720,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the areaCodeHash attribute of the ContactList object
+   * Gets the areaCodeHash attribute of the ContactList object
    *
-   * @return    The areaCodeHash value
+   * @return The areaCodeHash value
    */
   public HashMap getAreaCodeHash() {
     return areaCodeHash;
@@ -1724,9 +1730,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the areaCodeHash attribute of the ContactList object
+   * Sets the areaCodeHash attribute of the ContactList object
    *
-   * @param  areaCodeHash  The new areaCodeHash value
+   * @param areaCodeHash The new areaCodeHash value
    */
   public void setAreaCodeHash(HashMap areaCodeHash) {
     this.areaCodeHash = areaCodeHash;
@@ -1734,9 +1740,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the SearchText attribute of the ContactList object
+   * Gets the SearchText attribute of the ContactList object
    *
-   * @return    The SearchText value
+   * @return The SearchText value
    */
   public String getSearchText() {
     return searchText;
@@ -1744,9 +1750,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the OwnerIdRange attribute of the ContactList object
+   * Gets the OwnerIdRange attribute of the ContactList object
    *
-   * @return    The OwnerIdRange value
+   * @return The OwnerIdRange value
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -1754,9 +1760,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the accountOwnerIdRange attribute of the ContactList object
+   * Gets the accountOwnerIdRange attribute of the ContactList object
    *
-   * @return    The accountOwnerIdRange value
+   * @return The accountOwnerIdRange value
    */
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
@@ -1764,9 +1770,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the withAccountsOnly attribute of the ContactList object
+   * Gets the withAccountsOnly attribute of the ContactList object
    *
-   * @return    The withAccountsOnly value
+   * @return The withAccountsOnly value
    */
   public boolean getWithAccountsOnly() {
     return withAccountsOnly;
@@ -1774,9 +1780,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the Scl attribute of the ContactList object
+   * Gets the Scl attribute of the ContactList object
    *
-   * @return    The Scl value
+   * @return The Scl value
    */
   public SearchCriteriaList getScl() {
     return scl;
@@ -1784,9 +1790,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the importId attribute of the ContactList object
+   * Sets the importId attribute of the ContactList object
    *
-   * @param  tmp  The new importId value
+   * @param tmp The new importId value
    */
   public void setImportId(int tmp) {
     this.importId = tmp;
@@ -1794,9 +1800,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the excludeUnapprovedContacts attribute of the ContactList object
+   * Sets the excludeUnapprovedContacts attribute of the ContactList object
    *
-   * @param  tmp  The new excludeUnapprovedContacts value
+   * @param tmp The new excludeUnapprovedContacts value
    */
   public void setExcludeUnapprovedContacts(boolean tmp) {
     this.excludeUnapprovedContacts = tmp;
@@ -1804,9 +1810,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the excludeUnapprovedContacts attribute of the ContactList object
+   * Sets the excludeUnapprovedContacts attribute of the ContactList object
    *
-   * @param  tmp  The new excludeUnapprovedContacts value
+   * @param tmp The new excludeUnapprovedContacts value
    */
   public void setExcludeUnapprovedContacts(String tmp) {
     this.excludeUnapprovedContacts = DatabaseUtils.parseBoolean(tmp);
@@ -1814,9 +1820,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the excludeUnapprovedContacts attribute of the ContactList object
+   * Gets the excludeUnapprovedContacts attribute of the ContactList object
    *
-   * @return    The excludeUnapprovedContacts value
+   * @return The excludeUnapprovedContacts value
    */
   public boolean getExcludeUnapprovedContacts() {
     return excludeUnapprovedContacts;
@@ -1824,9 +1830,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the trashedDate attribute of the ContactList object
+   * Sets the trashedDate attribute of the ContactList object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -1834,9 +1840,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the trashedDate attribute of the ContactList object
+   * Sets the trashedDate attribute of the ContactList object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -1844,9 +1850,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeOnlyTrashed attribute of the ContactList object
+   * Sets the includeOnlyTrashed attribute of the ContactList object
    *
-   * @param  tmp  The new includeOnlyTrashed value
+   * @param tmp The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(boolean tmp) {
     this.includeOnlyTrashed = tmp;
@@ -1854,9 +1860,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeOnlyTrashed attribute of the ContactList object
+   * Sets the includeOnlyTrashed attribute of the ContactList object
    *
-   * @param  tmp  The new includeOnlyTrashed value
+   * @param tmp The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(String tmp) {
     this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
@@ -1864,9 +1870,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the trashedDate attribute of the ContactList object
+   * Gets the trashedDate attribute of the ContactList object
    *
-   * @return    The trashedDate value
+   * @return The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -1874,9 +1880,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeOnlyTrashed attribute of the ContactList object
+   * Gets the includeOnlyTrashed attribute of the ContactList object
    *
-   * @return    The includeOnlyTrashed value
+   * @return The includeOnlyTrashed value
    */
   public boolean getIncludeOnlyTrashed() {
     return includeOnlyTrashed;
@@ -1884,9 +1890,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the showTrashedAndNormal attribute of the ContactList object
+   * Gets the showTrashedAndNormal attribute of the ContactList object
    *
-   * @return    The showTrashedAndNormal value
+   * @return The showTrashedAndNormal value
    */
   public boolean getShowTrashedAndNormal() {
     return showTrashedAndNormal;
@@ -1894,9 +1900,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the showTrashedAndNormal attribute of the ContactList object
+   * Sets the showTrashedAndNormal attribute of the ContactList object
    *
-   * @param  tmp  The new showTrashedAndNormal value
+   * @param tmp The new showTrashedAndNormal value
    */
   public void setShowTrashedAndNormal(boolean tmp) {
     this.showTrashedAndNormal = tmp;
@@ -1904,9 +1910,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the showTrashedAndNormal attribute of the ContactList object
+   * Sets the showTrashedAndNormal attribute of the ContactList object
    *
-   * @param  tmp  The new showTrashedAndNormal value
+   * @param tmp The new showTrashedAndNormal value
    */
   public void setShowTrashedAndNormal(String tmp) {
     this.showTrashedAndNormal = DatabaseUtils.parseBoolean(tmp);
@@ -1914,9 +1920,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the importId attribute of the ContactList object
+   * Sets the importId attribute of the ContactList object
    *
-   * @param  tmp  The new importId value
+   * @param tmp The new importId value
    */
   public void setImportId(String tmp) {
     this.importId = Integer.parseInt(tmp);
@@ -1924,9 +1930,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the statusId attribute of the ContactList object
+   * Sets the statusId attribute of the ContactList object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -1934,9 +1940,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the statusId attribute of the ContactList object
+   * Sets the statusId attribute of the ContactList object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -1944,9 +1950,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the importId attribute of the ContactList object
+   * Gets the importId attribute of the ContactList object
    *
-   * @return    The importId value
+   * @return The importId value
    */
   public int getImportId() {
     return importId;
@@ -1954,9 +1960,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the statusId attribute of the ContactList object
+   * Gets the statusId attribute of the ContactList object
    *
-   * @return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -1964,9 +1970,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the EmailNotNull attribute of the ContactList object
+   * Gets the EmailNotNull attribute of the ContactList object
    *
-   * @return    The EmailNotNull value
+   * @return The EmailNotNull value
    */
   public boolean getEmailNotNull() {
     return emailNotNull;
@@ -1974,9 +1980,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the Owner attribute of the ContactList object
+   * Gets the Owner attribute of the ContactList object
    *
-   * @return    The Owner value
+   * @return The Owner value
    */
   public int getOwner() {
     return owner;
@@ -1984,9 +1990,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the Company attribute of the ContactList object
+   * Gets the Company attribute of the ContactList object
    *
-   * @return    The Company value
+   * @return The Company value
    */
   public String getCompany() {
     return company;
@@ -1994,9 +2000,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the Title attribute of the ContactList object
+   * Gets the Title attribute of the ContactList object
    *
-   * @return    The Title value
+   * @return The Title value
    */
   public String getTitle() {
     return title;
@@ -2004,9 +2010,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeNonUsersOnly attribute of the ContactList object
+   * Gets the includeNonUsersOnly attribute of the ContactList object
    *
-   * @return    The includeNonUsersOnly value
+   * @return The includeNonUsersOnly value
    */
   public boolean getIncludeNonUsersOnly() {
     return includeNonUsersOnly;
@@ -2014,9 +2020,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeNonUsersOnly attribute of the ContactList object
+   * Sets the includeNonUsersOnly attribute of the ContactList object
    *
-   * @param  includeNonUsersOnly  The new includeNonUsersOnly value
+   * @param includeNonUsersOnly The new includeNonUsersOnly value
    */
   public void setIncludeNonUsersOnly(boolean includeNonUsersOnly) {
     this.includeNonUsersOnly = includeNonUsersOnly;
@@ -2024,9 +2030,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the MiddleName attribute of the ContactList object
+   * Gets the MiddleName attribute of the ContactList object
    *
-   * @return    The MiddleName value
+   * @return The MiddleName value
    */
   public String getMiddleName() {
     return middleName;
@@ -2034,9 +2040,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the LastName attribute of the ContactList object
+   * Gets the LastName attribute of the ContactList object
    *
-   * @return    The LastName value
+   * @return The LastName value
    */
   public String getLastName() {
     return lastName;
@@ -2044,9 +2050,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the FirstName attribute of the ContactList object
+   * Gets the FirstName attribute of the ContactList object
    *
-   * @return    The FirstName value
+   * @return The FirstName value
    */
   public String getFirstName() {
     return firstName;
@@ -2054,9 +2060,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the hierarchialUsers attribute of the ContactList object
+   * Gets the hierarchialUsers attribute of the ContactList object
    *
-   * @return    The hierarchialUsers value
+   * @return The hierarchialUsers value
    */
   public int getHierarchialUsers() {
     return hierarchialUsers;
@@ -2064,9 +2070,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the hierarchialUsers attribute of the ContactList object
+   * Sets the hierarchialUsers attribute of the ContactList object
    *
-   * @param  tmp  The new hierarchialUsers value
+   * @param tmp The new hierarchialUsers value
    */
   public void setHierarchialUsers(int tmp) {
     this.hierarchialUsers = tmp;
@@ -2074,9 +2080,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the hierarchialUsers attribute of the ContactList object
+   * Sets the hierarchialUsers attribute of the ContactList object
    *
-   * @param  tmp  The new hierarchialUsers value
+   * @param tmp The new hierarchialUsers value
    */
   public void setHierarchialUsers(String tmp) {
     this.hierarchialUsers = Integer.parseInt(tmp);
@@ -2084,9 +2090,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the users attribute of the ContactList object
+   * Gets the users attribute of the ContactList object
    *
-   * @return    The users value
+   * @return The users value
    */
   public UserList getUsers() {
     return users;
@@ -2094,9 +2100,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the users attribute of the ContactList object
+   * Sets the users attribute of the ContactList object
    *
-   * @param  tmp  The new users value
+   * @param tmp The new users value
    */
   public void setUsers(UserList tmp) {
     this.users = tmp;
@@ -2104,11 +2110,11 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the ContactList object
+   * Gets the HtmlSelect attribute of the ContactList object
    *
-   * @param  selectName  Description of Parameter
-   * @return             The HtmlSelect value
-   * @since              1.8
+   * @param selectName Description of Parameter
+   * @return The HtmlSelect value
+   * @since 1.8
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -2116,11 +2122,11 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the EmptyHtmlSelect attribute of the ContactList object
+   * Gets the EmptyHtmlSelect attribute of the ContactList object
    *
-   * @param  selectName  Description of Parameter
-   * @param  thisSystem  Description of the Parameter
-   * @return             The EmptyHtmlSelect value
+   * @param selectName Description of Parameter
+   * @param thisSystem Description of the Parameter
+   * @return The EmptyHtmlSelect value
    */
   public String getEmptyHtmlSelect(SystemStatus thisSystem, String selectName) {
     HtmlSelect contactListSelect = new HtmlSelect();
@@ -2132,9 +2138,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the leadStatus attribute of the ContactList object
+   * Gets the leadStatus attribute of the ContactList object
    *
-   * @return    The leadStatus value
+   * @return The leadStatus value
    */
   public int getLeadStatus() {
     return leadStatus;
@@ -2142,9 +2148,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the leadStatus attribute of the ContactList object
+   * Sets the leadStatus attribute of the ContactList object
    *
-   * @param  tmp  The new leadStatus value
+   * @param tmp The new leadStatus value
    */
   public void setLeadStatus(int tmp) {
     this.leadStatus = tmp;
@@ -2152,9 +2158,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the leadStatus attribute of the ContactList object
+   * Sets the leadStatus attribute of the ContactList object
    *
-   * @param  tmp  The new leadStatus value
+   * @param tmp The new leadStatus value
    */
   public void setLeadStatus(String tmp) {
     this.leadStatus = Integer.parseInt(tmp);
@@ -2162,9 +2168,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the source attribute of the ContactList object
+   * Gets the source attribute of the ContactList object
    *
-   * @return    The source value
+   * @return The source value
    */
   public int getSource() {
     return source;
@@ -2172,9 +2178,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the source attribute of the ContactList object
+   * Sets the source attribute of the ContactList object
    *
-   * @param  tmp  The new source value
+   * @param tmp The new source value
    */
   public void setSource(int tmp) {
     this.source = tmp;
@@ -2182,9 +2188,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the source attribute of the ContactList object
+   * Sets the source attribute of the ContactList object
    *
-   * @param  tmp  The new source value
+   * @param tmp The new source value
    */
   public void setSource(String tmp) {
     this.source = Integer.parseInt(tmp);
@@ -2192,9 +2198,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the rating attribute of the ContactList object
+   * Gets the rating attribute of the ContactList object
    *
-   * @return    The rating value
+   * @return The rating value
    */
   public int getRating() {
     return rating;
@@ -2202,9 +2208,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the rating attribute of the ContactList object
+   * Sets the rating attribute of the ContactList object
    *
-   * @param  tmp  The new rating value
+   * @param tmp The new rating value
    */
   public void setRating(int tmp) {
     this.rating = tmp;
@@ -2212,9 +2218,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the rating attribute of the ContactList object
+   * Sets the rating attribute of the ContactList object
    *
-   * @param  tmp  The new rating value
+   * @param tmp The new rating value
    */
   public void setRating(String tmp) {
     this.rating = Integer.parseInt(tmp);
@@ -2222,9 +2228,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the comments attribute of the ContactList object
+   * Gets the comments attribute of the ContactList object
    *
-   * @return    The comments value
+   * @return The comments value
    */
   public String getComments() {
     return comments;
@@ -2232,9 +2238,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the comments attribute of the ContactList object
+   * Sets the comments attribute of the ContactList object
    *
-   * @param  tmp  The new comments value
+   * @param tmp The new comments value
    */
   public void setComments(String tmp) {
     this.comments = tmp;
@@ -2242,9 +2248,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the leadsOnly attribute of the ContactList object
+   * Gets the leadsOnly attribute of the ContactList object
    *
-   * @return    The leadsOnly value
+   * @return The leadsOnly value
    */
   public int getLeadsOnly() {
     return leadsOnly;
@@ -2252,9 +2258,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the leadsOnly attribute of the ContactList object
+   * Sets the leadsOnly attribute of the ContactList object
    *
-   * @param  tmp  The new leadsOnly value
+   * @param tmp The new leadsOnly value
    */
   public void setLeadsOnly(int tmp) {
     this.leadsOnly = tmp;
@@ -2262,9 +2268,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the leadsOnly attribute of the ContactList object
+   * Sets the leadsOnly attribute of the ContactList object
    *
-   * @param  tmp  The new leadsOnly value
+   * @param tmp The new leadsOnly value
    */
   public void setLeadsOnly(String tmp) {
     this.leadsOnly = Integer.parseInt(tmp);
@@ -2272,9 +2278,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the userId attribute of the ContactList object
+   * Gets the userId attribute of the ContactList object
    *
-   * @return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -2282,9 +2288,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the userId attribute of the ContactList object
+   * Sets the userId attribute of the ContactList object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -2292,9 +2298,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the userId attribute of the ContactList object
+   * Sets the userId attribute of the ContactList object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -2302,9 +2308,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the leadStatusExists attribute of the ContactList object
+   * Gets the leadStatusExists attribute of the ContactList object
    *
-   * @return    The leadStatusExists value
+   * @return The leadStatusExists value
    */
   public int getLeadStatusExists() {
     return leadStatusExists;
@@ -2312,9 +2318,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the leadStatusExists attribute of the ContactList object
+   * Sets the leadStatusExists attribute of the ContactList object
    *
-   * @param  tmp  The new leadStatusExists value
+   * @param tmp The new leadStatusExists value
    */
   public void setLeadStatusExists(int tmp) {
     this.leadStatusExists = tmp;
@@ -2322,9 +2328,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the leadStatusExists attribute of the ContactList object
+   * Sets the leadStatusExists attribute of the ContactList object
    *
-   * @param  tmp  The new leadStatusExists value
+   * @param tmp The new leadStatusExists value
    */
   public void setLeadStatusExists(String tmp) {
     this.leadStatusExists = Integer.parseInt(tmp);
@@ -2332,9 +2338,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the readBy attribute of the ContactList object
+   * Gets the readBy attribute of the ContactList object
    *
-   * @return    The readBy value
+   * @return The readBy value
    */
   public int getReadBy() {
     return readBy;
@@ -2342,9 +2348,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the readBy attribute of the ContactList object
+   * Sets the readBy attribute of the ContactList object
    *
-   * @param  tmp  The new readBy value
+   * @param tmp The new readBy value
    */
   public void setReadBy(int tmp) {
     this.readBy = tmp;
@@ -2352,9 +2358,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the readBy attribute of the ContactList object
+   * Sets the readBy attribute of the ContactList object
    *
-   * @param  tmp  The new readBy value
+   * @param tmp The new readBy value
    */
   public void setReadBy(String tmp) {
     this.readBy = Integer.parseInt(tmp);
@@ -2362,9 +2368,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the enteredStart attribute of the ContactList object
+   * Gets the enteredStart attribute of the ContactList object
    *
-   * @return    The enteredStart value
+   * @return The enteredStart value
    */
   public Timestamp getEnteredStart() {
     return enteredStart;
@@ -2372,9 +2378,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the enteredStart attribute of the ContactList object
+   * Sets the enteredStart attribute of the ContactList object
    *
-   * @param  tmp  The new enteredStart value
+   * @param tmp The new enteredStart value
    */
   public void setEnteredStart(Timestamp tmp) {
     this.enteredStart = tmp;
@@ -2382,9 +2388,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the enteredStart attribute of the ContactList object
+   * Sets the enteredStart attribute of the ContactList object
    *
-   * @param  tmp  The new enteredStart value
+   * @param tmp The new enteredStart value
    */
   public void setEnteredStart(java.sql.Date tmp) {
     try {
@@ -2395,9 +2401,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the enteredStart attribute of the ContactList object
+   * Sets the enteredStart attribute of the ContactList object
    *
-   * @param  tmp  The new enteredStart value
+   * @param tmp The new enteredStart value
    */
   public void setEnteredStart(String tmp) {
     try {
@@ -2414,9 +2420,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the enteredEnd attribute of the ContactList object
+   * Gets the enteredEnd attribute of the ContactList object
    *
-   * @return    The enteredEnd value
+   * @return The enteredEnd value
    */
   public Timestamp getEnteredEnd() {
     return enteredEnd;
@@ -2424,9 +2430,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the enteredEnd attribute of the ContactList object
+   * Sets the enteredEnd attribute of the ContactList object
    *
-   * @param  tmp  The new enteredEnd value
+   * @param tmp The new enteredEnd value
    */
   public void setEnteredEnd(Timestamp tmp) {
     this.enteredEnd = tmp;
@@ -2434,9 +2440,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the enteredEnd attribute of the ContactList object
+   * Sets the enteredEnd attribute of the ContactList object
    *
-   * @param  tmp  The new enteredEnd value
+   * @param tmp The new enteredEnd value
    */
   public void setEnteredEnd(java.sql.Date tmp) {
     try {
@@ -2447,9 +2453,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the enteredEnd attribute of the ContactList object
+   * Sets the enteredEnd attribute of the ContactList object
    *
-   * @param  tmp  The new enteredEnd value
+   * @param tmp The new enteredEnd value
    */
   public void setEnteredEnd(String tmp) {
     try {
@@ -2465,9 +2471,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the conversionDateStart attribute of the ContactList object
+   * Gets the conversionDateStart attribute of the ContactList object
    *
-   * @return    The conversionDateStart value
+   * @return The conversionDateStart value
    */
   public Timestamp getConversionDateStart() {
     return conversionDateStart;
@@ -2475,9 +2481,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the conversionDateStart attribute of the ContactList object
+   * Sets the conversionDateStart attribute of the ContactList object
    *
-   * @param  tmp  The new conversionDateStart value
+   * @param tmp The new conversionDateStart value
    */
   public void setConversionDateStart(Timestamp tmp) {
     this.conversionDateStart = tmp;
@@ -2485,9 +2491,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the conversionDateStart attribute of the ContactList object
+   * Sets the conversionDateStart attribute of the ContactList object
    *
-   * @param  tmp  The new conversionDateStart value
+   * @param tmp The new conversionDateStart value
    */
   public void setConversionDateStart(java.sql.Date tmp) {
     try {
@@ -2498,9 +2504,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the conversionDateStart attribute of the ContactList object
+   * Sets the conversionDateStart attribute of the ContactList object
    *
-   * @param  tmp  The new conversionDateStart value
+   * @param tmp The new conversionDateStart value
    */
   public void setConversionDateStart(String tmp) {
     try {
@@ -2516,9 +2522,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the conversionDateEnd attribute of the ContactList object
+   * Gets the conversionDateEnd attribute of the ContactList object
    *
-   * @return    The conversionDateEnd value
+   * @return The conversionDateEnd value
    */
   public Timestamp getConversionDateEnd() {
     return conversionDateEnd;
@@ -2526,9 +2532,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the conversionDateEnd attribute of the ContactList object
+   * Sets the conversionDateEnd attribute of the ContactList object
    *
-   * @param  tmp  The new conversionDateEnd value
+   * @param tmp The new conversionDateEnd value
    */
   public void setConversionDateEnd(Timestamp tmp) {
     this.conversionDateEnd = tmp;
@@ -2536,9 +2542,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the conversionDateEnd attribute of the ContactList object
+   * Sets the conversionDateEnd attribute of the ContactList object
    *
-   * @param  tmp  The new conversionDateEnd value
+   * @param tmp The new conversionDateEnd value
    */
   public void setConversionDateEnd(java.sql.Date tmp) {
     try {
@@ -2549,9 +2555,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the conversionDateEnd attribute of the ContactList object
+   * Sets the conversionDateEnd attribute of the ContactList object
    *
-   * @param  tmp  The new conversionDateEnd value
+   * @param tmp The new conversionDateEnd value
    */
   public void setConversionDateEnd(String tmp) {
     try {
@@ -2567,9 +2573,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the hasConversionDate attribute of the ContactList object
+   * Gets the hasConversionDate attribute of the ContactList object
    *
-   * @return    The hasConversionDate value
+   * @return The hasConversionDate value
    */
   public int getHasConversionDate() {
     return hasConversionDate;
@@ -2577,9 +2583,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the hasConversionDate attribute of the ContactList object
+   * Sets the hasConversionDate attribute of the ContactList object
    *
-   * @param  tmp  The new hasConversionDate value
+   * @param tmp The new hasConversionDate value
    */
   public void setHasConversionDate(int tmp) {
     this.hasConversionDate = tmp;
@@ -2587,9 +2593,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the hasConversionDate attribute of the ContactList object
+   * Sets the hasConversionDate attribute of the ContactList object
    *
-   * @param  tmp  The new hasConversionDate value
+   * @param tmp The new hasConversionDate value
    */
   public void setHasConversionDate(String tmp) {
     this.hasConversionDate = Integer.parseInt(tmp);
@@ -2597,9 +2603,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the oldestFirst attribute of the ContactList object
+   * Gets the oldestFirst attribute of the ContactList object
    *
-   * @return    The oldestFirst value
+   * @return The oldestFirst value
    */
   public int getOldestFirst() {
     return oldestFirst;
@@ -2607,9 +2613,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the oldestFirst attribute of the ContactList object
+   * Sets the oldestFirst attribute of the ContactList object
    *
-   * @param  tmp  The new oldestFirst value
+   * @param tmp The new oldestFirst value
    */
   public void setOldestFirst(int tmp) {
     this.oldestFirst = tmp;
@@ -2617,9 +2623,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the oldestFirst attribute of the ContactList object
+   * Sets the oldestFirst attribute of the ContactList object
    *
-   * @param  tmp  The new oldestFirst value
+   * @param tmp The new oldestFirst value
    */
   public void setOldestFirst(String tmp) {
     this.oldestFirst = Integer.parseInt(tmp);
@@ -2627,9 +2633,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the emailAddress attribute of the ContactList object
+   * Gets the emailAddress attribute of the ContactList object
    *
-   * @return    The emailAddress value
+   * @return The emailAddress value
    */
   public String getEmailAddress() {
     return emailAddress;
@@ -2637,9 +2643,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the emailAddress attribute of the ContactList object
+   * Sets the emailAddress attribute of the ContactList object
    *
-   * @param  tmp  The new emailAddress value
+   * @param tmp The new emailAddress value
    */
   public void setEmailAddress(String tmp) {
     this.emailAddress = tmp;
@@ -2647,9 +2653,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the country attribute of the ContactList object
+   * Gets the country attribute of the ContactList object
    *
-   * @return    The country value
+   * @return The country value
    */
   public String getCountry() {
     return country;
@@ -2657,9 +2663,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the country attribute of the ContactList object
+   * Sets the country attribute of the ContactList object
    *
-   * @param  tmp  The new country value
+   * @param tmp The new country value
    */
   public void setCountry(String tmp) {
     this.country = tmp;
@@ -2667,9 +2673,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the ownerOrReader attribute of the ContactList object
+   * Gets the ownerOrReader attribute of the ContactList object
    *
-   * @return    The ownerOrReader value
+   * @return The ownerOrReader value
    */
   public boolean getOwnerOrReader() {
     return ownerOrReader;
@@ -2677,9 +2683,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the ownerOrReader attribute of the ContactList object
+   * Sets the ownerOrReader attribute of the ContactList object
    *
-   * @param  tmp  The new ownerOrReader value
+   * @param tmp The new ownerOrReader value
    */
   public void setOwnerOrReader(boolean tmp) {
     this.ownerOrReader = tmp;
@@ -2687,9 +2693,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the ownerOrReader attribute of the ContactList object
+   * Sets the ownerOrReader attribute of the ContactList object
    *
-   * @param  tmp  The new ownerOrReader value
+   * @param tmp The new ownerOrReader value
    */
   public void setOwnerOrReader(String tmp) {
     this.ownerOrReader = DatabaseUtils.parseBoolean(tmp);
@@ -2697,9 +2703,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the permission attribute of the ContactList object
+   * Gets the permission attribute of the ContactList object
    *
-   * @return    The permission value
+   * @return The permission value
    */
   public String getPermission() {
     return permission;
@@ -2707,9 +2713,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the permission attribute of the ContactList object
+   * Sets the permission attribute of the ContactList object
    *
-   * @param  tmp  The new permission value
+   * @param tmp The new permission value
    */
   public void setPermission(String tmp) {
     this.permission = tmp;
@@ -2717,9 +2723,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the errors attribute of the ContactList object
+   * Gets the errors attribute of the ContactList object
    *
-   * @return    The errors value
+   * @return The errors value
    */
   public HashMap getErrors() {
     return errors;
@@ -2727,9 +2733,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the errors attribute of the ContactList object
+   * Sets the errors attribute of the ContactList object
    *
-   * @param  tmp  The new errors value
+   * @param tmp The new errors value
    */
   public void setErrors(HashMap tmp) {
     this.errors = tmp;
@@ -2737,9 +2743,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the warnings attribute of the ContactList object
+   * Gets the warnings attribute of the ContactList object
    *
-   * @return    The warnings value
+   * @return The warnings value
    */
   public HashMap getWarnings() {
     return warnings;
@@ -2747,9 +2753,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the warnings attribute of the ContactList object
+   * Sets the warnings attribute of the ContactList object
    *
-   * @param  tmp  The new warnings value
+   * @param tmp The new warnings value
    */
   public void setWarnings(HashMap tmp) {
     this.warnings = tmp;
@@ -2757,9 +2763,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the nextValue attribute of the ContactList object
+   * Gets the nextValue attribute of the ContactList object
    *
-   * @return    The nextValue value
+   * @return The nextValue value
    */
   public String getNextValue() {
     return nextValue;
@@ -2767,9 +2773,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the nextValue attribute of the ContactList object
+   * Sets the nextValue attribute of the ContactList object
    *
-   * @param  tmp  The new nextValue value
+   * @param tmp The new nextValue value
    */
   public void setNextValue(String tmp) {
     this.nextValue = tmp;
@@ -2777,9 +2783,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the defaultContactId attribute of the ContactList object
+   * Gets the defaultContactId attribute of the ContactList object
    *
-   * @return    The defaultContactId value
+   * @return The defaultContactId value
    */
   public int getDefaultContactId() {
     return defaultContactId;
@@ -2787,9 +2793,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the defaultContactId attribute of the ContactList object
+   * Sets the defaultContactId attribute of the ContactList object
    *
-   * @param  defaultContactId  The new defaultContactId value
+   * @param defaultContactId The new defaultContactId value
    */
   public void setDefaultContactId(int defaultContactId) {
     this.defaultContactId = defaultContactId;
@@ -2797,9 +2803,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the city attribute of the ContactList object
+   * Gets the city attribute of the ContactList object
    *
-   * @return    The city value
+   * @return The city value
    */
   public String getCity() {
     return city;
@@ -2807,9 +2813,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the city attribute of the ContactList object
+   * Sets the city attribute of the ContactList object
    *
-   * @param  tmp  The new city value
+   * @param tmp The new city value
    */
   public void setCity(String tmp) {
     this.city = tmp;
@@ -2817,9 +2823,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the zipCodeAscPotentialDesc attribute of the ContactList object
+   * Gets the zipCodeAscPotentialDesc attribute of the ContactList object
    *
-   * @return    The zipCodeAscPotentialDesc value
+   * @return The zipCodeAscPotentialDesc value
    */
   public boolean getZipCodeAscPotentialDesc() {
     return zipCodeAscPotentialDesc;
@@ -2827,9 +2833,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the zipCodeAscPotentialDesc attribute of the ContactList object
+   * Sets the zipCodeAscPotentialDesc attribute of the ContactList object
    *
-   * @param  tmp  The new zipCodeAscPotentialDesc value
+   * @param tmp The new zipCodeAscPotentialDesc value
    */
   public void setZipCodeAscPotentialDesc(boolean tmp) {
     this.zipCodeAscPotentialDesc = tmp;
@@ -2837,9 +2843,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the zipCodeAscPotentialDesc attribute of the ContactList object
+   * Sets the zipCodeAscPotentialDesc attribute of the ContactList object
    *
-   * @param  tmp  The new zipCodeAscPotentialDesc value
+   * @param tmp The new zipCodeAscPotentialDesc value
    */
   public void setZipCodeAscPotentialDesc(String tmp) {
     this.zipCodeAscPotentialDesc = DatabaseUtils.parseBoolean(tmp);
@@ -2847,9 +2853,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the postalCode attribute of the ContactList object
+   * Gets the postalCode attribute of the ContactList object
    *
-   * @return    The postalCode value
+   * @return The postalCode value
    */
   public String getPostalCode() {
     return postalCode;
@@ -2857,9 +2863,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the postalCode attribute of the ContactList object
+   * Sets the postalCode attribute of the ContactList object
    *
-   * @param  tmp  The new postalCode value
+   * @param tmp The new postalCode value
    */
   public void setPostalCode(String tmp) {
     this.postalCode = tmp;
@@ -2867,9 +2873,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the ContactList object
+   * Gets the exclusiveToSite attribute of the ContactList object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -2877,9 +2883,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ContactList object
+   * Sets the exclusiveToSite attribute of the ContactList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -2887,9 +2893,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ContactList object
+   * Sets the exclusiveToSite attribute of the ContactList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
@@ -2897,9 +2903,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the includeAllSites attribute of the ContactList object
+   * Gets the includeAllSites attribute of the ContactList object
    *
-   * @return    The includeAllSites value
+   * @return The includeAllSites value
    */
   public boolean getIncludeAllSites() {
     return includeAllSites;
@@ -2907,9 +2913,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeAllSites attribute of the ContactList object
+   * Sets the includeAllSites attribute of the ContactList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(boolean tmp) {
     this.includeAllSites = tmp;
@@ -2917,9 +2923,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the includeAllSites attribute of the ContactList object
+   * Sets the includeAllSites attribute of the ContactList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(String tmp) {
     this.includeAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -2927,9 +2933,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the portalUsersOnly attribute of the ContactList object
+   * Gets the portalUsersOnly attribute of the ContactList object
    *
-   * @return    The portalUsersOnly value
+   * @return The portalUsersOnly value
    */
   public int getPortalUsersOnly() {
     return portalUsersOnly;
@@ -2937,9 +2943,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the portalUsersOnly attribute of the ContactList object
+   * Sets the portalUsersOnly attribute of the ContactList object
    *
-   * @param  tmp  The new portalUsersOnly value
+   * @param tmp The new portalUsersOnly value
    */
   public void setPortalUsersOnly(int tmp) {
     this.portalUsersOnly = tmp;
@@ -2947,9 +2953,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the state attribute of the ContactList object
+   * Gets the state attribute of the ContactList object
    *
-   * @return    The state value
+   * @return The state value
    */
   public String getState() {
     return state;
@@ -2957,9 +2963,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the state attribute of the ContactList object
+   * Sets the state attribute of the ContactList object
    *
-   * @param  tmp  The new state value
+   * @param tmp The new state value
    */
   public void setState(String tmp) {
     this.state = tmp;
@@ -2967,9 +2973,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the state1 attribute of the ContactList object
+   * Gets the state1 attribute of the ContactList object
    *
-   * @return    The state1 value
+   * @return The state1 value
    */
   public String getState1() {
     return state1;
@@ -2977,9 +2983,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the state1 attribute of the ContactList object
+   * Sets the state1 attribute of the ContactList object
    *
-   * @param  tmp  The new state1 value
+   * @param tmp The new state1 value
    */
   public void setState1(String tmp) {
     this.state1 = tmp;
@@ -2987,12 +2993,12 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the HtmlSelect attribute of the ContactList object
+   * Gets the HtmlSelect attribute of the ContactList object
    *
-   * @param  selectName  Description of Parameter
-   * @param  defaultKey  Description of Parameter
-   * @return             The HtmlSelect value
-   * @since              1.8
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The HtmlSelect value
+   * @since 1.8
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect contactListSelect = new HtmlSelect();
@@ -3013,9 +3019,9 @@ public class ContactList extends Vector implements UserCentric {
       contactListSelect.addItem(
           thisContact.getId(),
           Contact.getNameLastFirst(
-          thisContact.getNameLast(),
-          thisContact.getNameFirst()) +
-          ((!thisContact.getEnabled() || thisContact.isTrashed()) ? " (X)" : (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : "")));
+              thisContact.getNameLast(),
+              thisContact.getNameFirst()) +
+              ((!thisContact.getEnabled() || thisContact.isTrashed()) ? " (X)" : (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : "")));
     }
 
     return contactListSelect.getHtml(selectName, defaultKey);
@@ -3023,9 +3029,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the htmlSelectObj attribute of the ContactList object
+   * Gets the htmlSelectObj attribute of the ContactList object
    *
-   * @return    The htmlSelectObj value
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj() {
     HtmlSelect contactListSelect = new HtmlSelect();
@@ -3044,9 +3050,9 @@ public class ContactList extends Vector implements UserCentric {
       contactListSelect.addItem(
           thisContact.getId(),
           Contact.getNameLastFirst(
-          thisContact.getNameLast(),
-          thisContact.getNameFirst()) +
-          ((!thisContact.getEnabled() || thisContact.isTrashed()) ? " (X)" : (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : "")));
+              thisContact.getNameLast(),
+              thisContact.getNameFirst()) +
+              ((!thisContact.getEnabled() || thisContact.isTrashed()) ? " (X)" : (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : "")));
     }
 
     return contactListSelect;
@@ -3054,10 +3060,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  thisOwnerId    Description of the Parameter
-   * @param  thisUserRange  Description of the Parameter
+   * @param thisOwnerId   Description of the Parameter
+   * @param thisUserRange Description of the Parameter
    */
   public void buildQuery(int thisOwnerId, String thisUserRange) {
     String readyToGo = "";
@@ -3092,7 +3098,7 @@ public class ContactList extends Vector implements UserCentric {
         title,
         accountTypeId,
         siteId
-        };
+    };
     if (System.getProperty("DEBUG") != null) {
       System.out.println(
           "ContactList-> SCL Size: " + this.getScl().size() + " name: " + this.getScl().getGroupName());
@@ -3133,7 +3139,8 @@ public class ContactList extends Vector implements UserCentric {
 
             Calendar tmpCal = new GregorianCalendar(year, (month - 1), day);
             //fix it if "on or before" or "after" is selected.
-            if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10) {
+            if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10)
+            {
               tmpCal.add(java.util.Calendar.DATE, +1);
             }
 
@@ -3173,10 +3180,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  This will force the contact list to include records that are owned by the
-   *  user
+   * This will force the contact list to include records that are owned by the
+   * user
    *
-   * @param  userId  Description of the Parameter
+   * @param userId Description of the Parameter
    */
   public void accessedBy(int userId) {
     if (userId > -1) {
@@ -3186,10 +3193,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Builds a list, a part of the XML API
+   * Builds a list, a part of the XML API
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -3197,14 +3204,14 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Builds a list of contacts based on several parameters. The parameters are
-   *  set after this object is constructed, then the buildList method is called
-   *  to generate the list.
+   * Builds a list of contacts based on several parameters. The parameters are
+   * set after this object is constructed, then the buildList method is called
+   * to generate the list.
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param db Description of Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public boolean buildList(Connection db) throws SQLException {
 
@@ -3220,15 +3227,15 @@ public class ContactList extends Vector implements UserCentric {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
-        "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
-        "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
-        "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
-        "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
-        "WHERE c.contact_id > -1 ");
+            "FROM contact c " +
+            "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+            "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+            "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
+            "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+            "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
+            "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
+            "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
+            "WHERE c.contact_id > -1 ");
 
     createFilter(db, sqlFilter);
 
@@ -3236,7 +3243,15 @@ public class ContactList extends Vector implements UserCentric {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
       rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
@@ -3248,11 +3263,19 @@ public class ContactList extends Vector implements UserCentric {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        if (System.getProperty("DEBUG") != null) {
+          milies = System.currentTimeMillis();
+          logger.debug(pst.toString());
+        }
         rs = pst.executeQuery();
+        if (System.getProperty("DEBUG") != null) {
+          milies = System.currentTimeMillis() - milies;
+          logger.debug(String.valueOf(milies) + " ms");
+        }
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
           pagedListInfo.setCurrentOffset(offsetCount);
@@ -3267,12 +3290,12 @@ public class ContactList extends Vector implements UserCentric {
           pagedListInfo.setColumnToSortBy(
               "ca.postalcode asc, c.potential desc, c.entered, c.namelast, c.namefirst, c.org_name");
         } else
-            if (this.oldestFirst == Constants.FALSE && (pagedListInfo.getColumnToSortBy() == null || "".equals(
+        if (this.oldestFirst == Constants.FALSE && (pagedListInfo.getColumnToSortBy() == null || "".equals(
             pagedListInfo.getColumnToSortBy()))) {
           pagedListInfo.setColumnToSortBy(
               "ca.postalcode asc, c.potential desc, c.entered DESC, c.namelast, c.namefirst, c.org_name");
         } else
-            if (this.oldestFirst == Constants.UNDEFINED && (pagedListInfo.getColumnToSortBy() == null || "".equals(
+        if (this.oldestFirst == Constants.UNDEFINED && (pagedListInfo.getColumnToSortBy() == null || "".equals(
             pagedListInfo.getColumnToSortBy()))) {
           pagedListInfo.setColumnToSortBy("ca.postalcode asc, c.potential desc, c.namelast, c.namefirst, c.org_name");
         }
@@ -3282,12 +3305,12 @@ public class ContactList extends Vector implements UserCentric {
           pagedListInfo.setColumnToSortBy(
               "c.entered, c.namelast, c.namefirst, c.org_name");
         } else
-            if (this.oldestFirst == Constants.FALSE && (pagedListInfo.getColumnToSortBy() == null || "".equals(
+        if (this.oldestFirst == Constants.FALSE && (pagedListInfo.getColumnToSortBy() == null || "".equals(
             pagedListInfo.getColumnToSortBy()))) {
           pagedListInfo.setColumnToSortBy(
               "c.entered DESC, c.namelast, c.namefirst, c.org_name");
         } else
-            if (this.oldestFirst == Constants.UNDEFINED && (pagedListInfo.getColumnToSortBy() == null || "".equals(
+        if (this.oldestFirst == Constants.UNDEFINED && (pagedListInfo.getColumnToSortBy() == null || "".equals(
             pagedListInfo.getColumnToSortBy()))) {
           pagedListInfo.setColumnToSortBy("c.namelast, c.namefirst, c.org_name");
         }
@@ -3325,26 +3348,34 @@ public class ContactList extends Vector implements UserCentric {
     }
     sqlSelect.append(
         "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, " +
-        " d.description as departmentname, " +
-        " ca.city AS city, " +
-        " ca.postalcode AS postalcode, " +
-        " lsi.description AS site_id_name, " +
-        " lind.description AS industry_name, " +
-        " lcs.description AS source_name, " +
-        " lcr.description AS rating_name " +
-        "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
-        "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
-        "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
-        "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
-        "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
-        "WHERE c.contact_id > -1 ");
+            " d.description as departmentname, " +
+            " ca.city AS city, " +
+            " ca.postalcode AS postalcode, " +
+            " lsi.description AS site_id_name, " +
+            " lind.description AS industry_name, " +
+            " lcs.description AS source_name, " +
+            " lcr.description AS rating_name " +
+            "FROM contact c " +
+            "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+            "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+            "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
+            "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+            "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
+            "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
+            "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
+            "WHERE c.contact_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
@@ -3368,10 +3399,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
+   * Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
-   * @param  tmp  The feature to be added to the IgnoreTypeId attribute
-   * @since       1.2
+   * @param tmp The feature to be added to the IgnoreTypeId attribute
+   * @since 1.2
    */
   public void addIgnoreTypeId(String tmp) {
     ignoreTypeIdList.addElement(tmp);
@@ -3379,10 +3410,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
+   * Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
-   * @param  tmp  The feature to be added to the IgnoreTypeId attribute
-   * @since       1.2
+   * @param tmp The feature to be added to the IgnoreTypeId attribute
+   * @since 1.2
    */
   public void addIgnoreTypeId(int tmp) {
     ignoreTypeIdList.addElement(String.valueOf(tmp));
@@ -3390,12 +3421,12 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  baseFilePath   Description of the Parameter
-   * @param  forceDelete    Description of the Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db           Description of Parameter
+   * @param baseFilePath Description of the Parameter
+   * @param forceDelete  Description of the Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db, String baseFilePath, boolean forceDelete) throws SQLException {
     Iterator contacts = this.iterator();
@@ -3408,12 +3439,12 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  str      Description of Parameter
-   * @param  oldChar  Description of Parameter
-   * @param  newStr   Description of Parameter
-   * @return          Description of the Returned Value
+   * @param str     Description of Parameter
+   * @param oldChar Description of Parameter
+   * @param newStr  Description of Parameter
+   * @return Description of the Returned Value
    */
   String replace(String str, char oldChar, String newStr) {
     String replacedStr = "";
@@ -3430,15 +3461,16 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Convenience method to get a list of phone numbers for each contact
+   * Convenience method to get a list of phone numbers for each contact
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.5
+   * @param db Description of Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of Exception
+   * @since 1.5
    */
   private boolean buildResources(Connection db) throws SQLException {
-    if (!buildTypes && !buildDetails && !checkUserAccess && !checkEnabledUserAccess && checkExcludedFromCampaign == -1) {
+    if (!buildTypes && !buildDetails && !checkUserAccess && !checkEnabledUserAccess && checkExcludedFromCampaign == -1)
+    {
       return false;
     }
     Iterator i = this.iterator();
@@ -3470,12 +3502,12 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
+   * Builds a base SQL where statement for filtering records to be used by
+   * sqlSelect and sqlCount
    *
-   * @param  sqlFilter  Description of Parameter
-   * @param  db         Description of the Parameter
-   * @since             1.3
+   * @param sqlFilter Description of Parameter
+   * @param db        Description of the Parameter
+   * @since 1.3
    */
   private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -3483,9 +3515,9 @@ public class ContactList extends Vector implements UserCentric {
     }
     sqlFilter.append(
         "AND (ca.address_id IS NULL OR ca.address_id IN ( " +
-        "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
-        "OR ca.address_id IN (SELECT MIN(ctadd.address_id) FROM contact_address ctadd WHERE ctadd.contact_id = c.contact_id AND " +
-        " ctadd.contact_id NOT IN (SELECT contact_id FROM contact_address WHERE contact_address.primary_address = ?))) ");
+            "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
+            "OR ca.address_id IN (SELECT MIN(ctadd.address_id) FROM contact_address ctadd WHERE ctadd.contact_id = c.contact_id AND " +
+            " ctadd.contact_id NOT IN (SELECT contact_id FROM contact_address WHERE contact_address.primary_address = ?))) ");
 
     if (contactUserId != -1) {
       sqlFilter.append("AND c.user_id = ? ");
@@ -3501,7 +3533,7 @@ public class ContactList extends Vector implements UserCentric {
     if (owner != -1 && !ownerOrReader) {
       sqlFilter.append(
           "AND c.owner = ? " +
-          "AND ((c.org_id = 0 AND employee = ?) OR c.org_id <> 0 OR c.org_id IS NULL) ");
+              "AND ((c.org_id = 0 AND employee = ?) OR c.org_id <> 0 OR c.org_id IS NULL) ");
     }
 
     if (typeId != -1) {
@@ -3580,7 +3612,8 @@ public class ContactList extends Vector implements UserCentric {
       sqlFilter.append("AND o.owner = ? ");
     }
 
-    if (includeEnabledAccount == Constants.TRUE || includeEnabledAccount == Constants.FALSE) {
+    if (includeEnabledAccount == Constants.TRUE || includeEnabledAccount == Constants.FALSE)
+    {
       sqlFilter.append("AND o.enabled = ? ");
     }
 
@@ -3617,13 +3650,13 @@ public class ContactList extends Vector implements UserCentric {
       if (accountPostalCode.indexOf("%") >= 0) {
         sqlFilter.append(
             "AND EXISTS (SELECT o.org_id FROM organization o WHERE o.org_id = c.org_id AND o.org_id IN (SELECT org_id FROM organization_address " +
-            "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " LIKE ? " +
-            "AND postalcode IS NOT NULL)) ");
+                "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " LIKE ? " +
+                "AND postalcode IS NOT NULL)) ");
       } else {
         sqlFilter.append(
             "AND EXISTS (SELECT o.org_id FROM organization o WHERE o.org_id = c.org_id AND o.org_id IN (SELECT org_id FROM organization_address " +
-            "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " = ? " +
-            "AND postalcode IS NOT NULL)) ");
+                "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " = ? " +
+                "AND postalcode IS NOT NULL)) ");
       }
     }
 
@@ -3744,8 +3777,8 @@ public class ContactList extends Vector implements UserCentric {
       if (userRoleType > -1) {
         sqlFilter.append(
             "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
-            "WHERE c.user_id = a.user_id AND a.enabled = ? " +
-            "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role") + " r WHERE r.role_type = ?)) ");
+                "WHERE c.user_id = a.user_id AND a.enabled = ? " +
+                "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role") + " r WHERE r.role_type = ?)) ");
       } else {
         sqlFilter.append(
             "AND c.user_id IN (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE enabled = ?) ");
@@ -3755,15 +3788,15 @@ public class ContactList extends Vector implements UserCentric {
     if (portalUsersOnly == Constants.TRUE) {
       sqlFilter.append(
           "AND EXISTS (SELECT user_id FROM \"access\" a " +
-          "WHERE c.user_id = a.user_id AND a.enabled = ? " +
-          "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type = ?)) ");
+              "WHERE c.user_id = a.user_id AND a.enabled = ? " +
+              "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type = ?)) ");
     } else if (portalUsersOnly == Constants.FALSE) {
       sqlFilter.append(
           "AND EXISTS (SELECT user_id FROM \"access\" a " +
-          "WHERE c.user_id = a.user_id " +
-          "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type != ?)) ");
+              "WHERE c.user_id = a.user_id " +
+              "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type != ?)) ");
     }
-    
+
     if (includeNonUsersOnly) {
       sqlFilter.append(
           "AND c.contact_id NOT IN (SELECT contact_id FROM " + DatabaseUtils.addQuotes(db, "access") + ") ");
@@ -3777,10 +3810,10 @@ public class ContactList extends Vector implements UserCentric {
         permission)) {
       sqlFilter.append(
           "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
-          "WHERE c.user_id = a.user_id AND a.role_id IN " +
-          "(SELECT rp.role_id FROM role_permission rp " +
-          "LEFT JOIN permission p ON (rp.permission_id = p.permission_id) " +
-          "WHERE rp.role_id > 0 ");
+              "WHERE c.user_id = a.user_id AND a.role_id IN " +
+              "(SELECT rp.role_id FROM role_permission rp " +
+              "LEFT JOIN permission p ON (rp.permission_id = p.permission_id) " +
+              "WHERE rp.role_id > 0 ");
       String[] temp = permission.split(",");
       for (int i = 0; i < temp.length; i++) {
         String str = temp[i];
@@ -3789,8 +3822,8 @@ public class ContactList extends Vector implements UserCentric {
         }
         sqlFilter.append(
             "p.permission = ? " +
-            "AND role_" + str.substring(
-            str.lastIndexOf("-") + 1, str.length()) + " = ? ");
+                "AND role_" + str.substring(
+                str.lastIndexOf("-") + 1, str.length()) + " = ? ");
         if (i < temp.length - 1) {
           sqlFilter.append(") OR ( ");
         } else if (i == temp.length - 1) {
@@ -3837,20 +3870,23 @@ public class ContactList extends Vector implements UserCentric {
       sqlFilter.append("AND c.lead = ? ");
     }
     if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
-      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
+      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED)
+      {
         sqlFilter.append("AND c.lead_status = ? ");
       }
     } else
-        if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
+    if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED)
+    {
       sqlFilter.append("AND c.lead_status = ? ");
       sqlFilter.append(
           "AND c.contact_id NOT IN ( " +
-          "SELECT contact_id FROM contact_lead_read_map WHERE user_id <> ? ) " +
-          "AND c.contact_id NOT IN ( " +
-          "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
-          "");
+              "SELECT contact_id FROM contact_lead_read_map WHERE user_id <> ? ) " +
+              "AND c.contact_id NOT IN ( " +
+              "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
+              "");
     } else
-        if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
+    if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE)
+    {
       sqlFilter.append("AND c.lead_status IN (?, ?, ?) ");
     }
     if (source > -1) {
@@ -3868,9 +3904,9 @@ public class ContactList extends Vector implements UserCentric {
     if (leadsOnly == Constants.TRUE && readBy > -1 && !ownerOrReader) {
       sqlFilter.append(
           "AND c.contact_id NOT IN ( " +
-          "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
-          "AND c.contact_id IN ( " +
-          "SELECT contact_id FROM contact_lead_read_map WHERE user_id = ? ) ");
+              "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
+              "AND c.contact_id IN ( " +
+              "SELECT contact_id FROM contact_lead_read_map WHERE user_id = ? ) ");
     }
 
     if (leadStatusExists == Constants.TRUE) {
@@ -3899,13 +3935,13 @@ public class ContactList extends Vector implements UserCentric {
       if (emailAddress.indexOf("%") >= 0) {
         sqlFilter.append(
             "AND c.contact_id IN (SELECT cc.contact_id FROM " +
-            "contact cc LEFT JOIN contact_emailaddress ce ON (cc.contact_id = ce.contact_id ) " +
-            "WHERE cc.contact_id = c.contact_id AND (" + DatabaseUtils.toLowerCase(db) + "(ce.email) LIKE ?)) ");
+                "contact cc LEFT JOIN contact_emailaddress ce ON (cc.contact_id = ce.contact_id ) " +
+                "WHERE cc.contact_id = c.contact_id AND (" + DatabaseUtils.toLowerCase(db) + "(ce.email) LIKE ?)) ");
       } else {
         sqlFilter.append(
             "AND c.contact_id IN (SELECT cc.contact_id FROM " +
-            "contact cc LEFT JOIN contact_emailaddress ce ON (cc.contact_id = ce.contact_id ) " +
-            "WHERE cc.contact_id = c.contact_id AND ce.email = ? ) ");
+                "contact cc LEFT JOIN contact_emailaddress ce ON (cc.contact_id = ce.contact_id ) " +
+                "WHERE cc.contact_id = c.contact_id AND ce.email = ? ) ");
       }
     }
 
@@ -3950,9 +3986,9 @@ public class ContactList extends Vector implements UserCentric {
     if (ownerOrReader) {
       sqlFilter.append(
           "AND c.contact_id NOT IN ( " +
-          "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
-          "AND (c.owner = ? OR c.contact_id IN (SELECT contact_id " +
-          "FROM contact_lead_read_map WHERE user_id = ?)) ");
+              "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
+              "AND (c.owner = ? OR c.contact_id IN (SELECT contact_id " +
+              "FROM contact_lead_read_map WHERE user_id = ?)) ");
     }
 
     if (this.getHierarchialUsers() != -1) {
@@ -3982,35 +4018,35 @@ public class ContactList extends Vector implements UserCentric {
     if (allContacts) {
       sqlFilter.append(
           "AND (c.owner IN (" + ownerIdRange + ") " +
-          "OR c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)) " +
-          "AND ((c.org_id = 0 AND employee = ?) OR c.org_id <> 0 OR c.org_id IS NULL) ");
+              "OR c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)) " +
+              "AND ((c.org_id = 0 AND employee = ?) OR c.org_id <> 0 OR c.org_id IS NULL) ");
     }
 
     //NOTE: Only general contacts can be personal and so AccessTypeList has to be for the General Contacts
     switch (personalId) {
-        case IGNORE_PERSONAL:
-          break;
-        case EXCLUDE_PERSONAL:
-          if (accessTypes == null) {
-            sqlFilter.append(
-                "AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
-          } else {
-            sqlFilter.append(
-                "AND c.access_type NOT IN (" + accessTypes.getCode(
-                AccessType.PERSONAL) + ") ");
-          }
-          break;
-        default:
-          if (accessTypes == null) {
-            sqlFilter.append(
-                "AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
-          } else {
-            sqlFilter.append(
-                "AND (c.access_type NOT IN (" + accessTypes.getCode(
-                AccessType.PERSONAL) + ")  OR (c.access_type IN (" + accessTypes.getCode(
-                AccessType.PERSONAL) + ") AND c.owner = ?)) ");
-          }
-          break;
+      case IGNORE_PERSONAL:
+        break;
+      case EXCLUDE_PERSONAL:
+        if (accessTypes == null) {
+          sqlFilter.append(
+              "AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
+        } else {
+          sqlFilter.append(
+              "AND c.access_type NOT IN (" + accessTypes.getCode(
+                  AccessType.PERSONAL) + ") ");
+        }
+        break;
+      default:
+        if (accessTypes == null) {
+          sqlFilter.append(
+              "AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
+        } else {
+          sqlFilter.append(
+              "AND (c.access_type NOT IN (" + accessTypes.getCode(
+                  AccessType.PERSONAL) + ")  OR (c.access_type IN (" + accessTypes.getCode(
+                  AccessType.PERSONAL) + ") AND c.owner = ?)) ");
+        }
+        break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
@@ -4301,7 +4337,7 @@ public class ContactList extends Vector implements UserCentric {
 
               sqlFilter.append(
                   " (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 AND " + DatabaseUtils.toLowerCase(db) +
-                  " (postalcode) " + key1 + " '" + key2 + "' )) ");
+                      " (postalcode) " + key1 + " '" + key2 + "' )) ");
               previousKey = key1;
               processElementType(db, sqlFilter, elementType);
               processSite(sqlFilter, elementType, site);
@@ -4514,7 +4550,7 @@ public class ContactList extends Vector implements UserCentric {
 
               sqlFilter.append(
                   " (c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and " + DatabaseUtils.getSubString(
-                  db, "" + DatabaseUtils.addQuotes(db, "number") + "", 2, 3) + " " + key1 + " '" + key2 + "' )) ");
+                      db, "" + DatabaseUtils.addQuotes(db, "number") + "", 2, 3) + " " + key1 + " '" + key2 + "' )) ");
               previousKey = key1;
               processElementType(db, sqlFilter, elementType);
               processSite(sqlFilter, elementType, site);
@@ -4565,7 +4601,7 @@ public class ContactList extends Vector implements UserCentric {
 
               sqlFilter.append(
                   " (c.contact_id IN (SELECT distinct contact_id FROM contact_address WHERE address_type = 1 AND " + DatabaseUtils.toLowerCase(
-                  db) + "(city) " + key1 + " '" + key2 + "' )) ");
+                      db) + "(city) " + key1 + " '" + key2 + "' )) ");
               previousKey = key1;
               processElementType(db, sqlFilter, elementType);
               processSite(sqlFilter, elementType, site);
@@ -4587,13 +4623,13 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Sets the parameters for the preparedStatement - these items must
-   *  correspond with the createFilter statement
+   * Sets the parameters for the preparedStatement - these items must
+   * correspond with the createFilter statement
    *
-   * @param  pst            Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.3
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.3
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -4730,9 +4766,9 @@ public class ContactList extends Vector implements UserCentric {
     }
 
     if (portalUsersOnly != Constants.UNDEFINED) {
-    	pst.setInt(++i, Constants.ROLETYPE_CUSTOMER);
-    } 
-    
+      pst.setInt(++i, Constants.ROLETYPE_CUSTOMER);
+    }
+
     if ((includeEnabledUsersOnly || includeUsersOnly) && permission != null && !"".equals(
         permission)) {
       String[] temp = permission.split(",");
@@ -4772,16 +4808,19 @@ public class ContactList extends Vector implements UserCentric {
       pst.setBoolean(++i, (leadsOnly == Constants.TRUE));
     }
     if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
-      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
+      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED)
+      {
         pst.setInt(++i, leadStatus);
       }
     } else
-        if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
+    if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED)
+    {
       pst.setInt(++i, Contact.LEAD_UNPROCESSED);
       pst.setInt(++i, userId);
       pst.setInt(++i, userId);
     } else
-        if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
+    if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE)
+    {
       pst.setInt(++i, Contact.LEAD_TRASHED);
       pst.setInt(++i, Contact.LEAD_ASSIGNED);
       pst.setInt(++i, Contact.LEAD_UNPROCESSED);
@@ -4856,20 +4895,20 @@ public class ContactList extends Vector implements UserCentric {
     }
 
     switch (personalId) {
-        case IGNORE_PERSONAL:
-          break;
-        case EXCLUDE_PERSONAL:
-          if (accessTypes == null) {
-            pst.setInt(++i, AccessType.PERSONAL);
-          }
-          break;
-        default:
-          if (accessTypes == null) {
-            pst.setInt(++i, AccessType.PERSONAL);
-            pst.setInt(++i, AccessType.PERSONAL);
-          }
-          pst.setInt(++i, personalId);
-          break;
+      case IGNORE_PERSONAL:
+        break;
+      case EXCLUDE_PERSONAL:
+        if (accessTypes == null) {
+          pst.setInt(++i, AccessType.PERSONAL);
+        }
+        break;
+      default:
+        if (accessTypes == null) {
+          pst.setInt(++i, AccessType.PERSONAL);
+          pst.setInt(++i, AccessType.PERSONAL);
+        }
+        pst.setInt(++i, personalId);
+        break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
@@ -5084,12 +5123,12 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  newOwner       Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -5105,13 +5144,13 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  newOwner       Description of the Parameter
-   * @param  userId         Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @param userId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
     int total = 0;
@@ -5128,78 +5167,78 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  type       Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param type      Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void processElementType(Connection db, StringBuffer sqlFilter, int type) {
     switch (type) {
-        case SearchCriteriaList.SOURCE_MY_CONTACTS:
-          sqlFilter.append("AND c.owner = ? ");
-          sqlFilter.append("AND c.employee = ? ");
-          break;
-        case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-          if (this.getGeneralContactAccessTypes() != null) {
-            sqlFilter.append("AND ((c.owner IN (" + sclOwnerIdRange + ") AND c.access_type = " + 
+      case SearchCriteriaList.SOURCE_MY_CONTACTS:
+        sqlFilter.append("AND c.owner = ? ");
+        sqlFilter.append("AND c.employee = ? ");
+        break;
+      case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+        if (this.getGeneralContactAccessTypes() != null) {
+          sqlFilter.append("AND ((c.owner IN (" + sclOwnerIdRange + ") AND c.access_type = " +
               this.getGeneralContactAccessTypes().getCode(AccessType.CONTROLLED_HIERARCHY) +
-              ") OR (c.access_type = "+ this.getGeneralContactAccessTypes().getCode(AccessType.PUBLIC) +"))");
-          } else {
-            sqlFilter.append("AND c.owner IN (" + sclOwnerIdRange + ") ");
-          }
-          sqlFilter.append("AND c.employee = ? ");
-          break;
-        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-          sqlFilter.append("AND c.org_id > 0 ");
-          sqlFilter.append("AND c.employee = ? ");
-          break;
-        case SearchCriteriaList.SOURCE_EMPLOYEES:
-          sqlFilter.append("AND c.employee = ? ");
-          break;
-        default:
-          break;
+              ") OR (c.access_type = " + this.getGeneralContactAccessTypes().getCode(AccessType.PUBLIC) + "))");
+        } else {
+          sqlFilter.append("AND c.owner IN (" + sclOwnerIdRange + ") ");
+        }
+        sqlFilter.append("AND c.employee = ? ");
+        break;
+      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+        sqlFilter.append("AND c.org_id > 0 ");
+        sqlFilter.append("AND c.employee = ? ");
+        break;
+      case SearchCriteriaList.SOURCE_EMPLOYEES:
+        sqlFilter.append("AND c.employee = ? ");
+        break;
+      default:
+        break;
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst            Description of the Parameter
-   * @param  i              Description of the Parameter
-   * @param  type           Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param pst  Description of the Parameter
+   * @param i    Description of the Parameter
+   * @param type Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int processElementTypeParam(PreparedStatement pst, int i, int type) throws SQLException {
     switch (type) {
-        case SearchCriteriaList.SOURCE_MY_CONTACTS:
-          pst.setInt(++i, sclOwnerId);
-          pst.setBoolean(++i, false);
-          break;
-        case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-          pst.setBoolean(++i, false);
-          break;
-        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-          pst.setBoolean(++i, false);
-          break;
-        case SearchCriteriaList.SOURCE_EMPLOYEES:
-          pst.setBoolean(++i, true);
-          break;
-        default:
-          break;
+      case SearchCriteriaList.SOURCE_MY_CONTACTS:
+        pst.setInt(++i, sclOwnerId);
+        pst.setBoolean(++i, false);
+        break;
+      case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+        pst.setBoolean(++i, false);
+        break;
+      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+        pst.setBoolean(++i, false);
+        break;
+      case SearchCriteriaList.SOURCE_EMPLOYEES:
+        pst.setBoolean(++i, true);
+        break;
+      default:
+        break;
     }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  type       Description of the Parameter
-   * @param  site       Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param type      Description of the Parameter
+   * @param site      Description of the Parameter
    */
   public void processSite(StringBuffer sqlFilter, int type, String site) {
     if (Integer.parseInt(site) != -1) {
@@ -5211,12 +5250,12 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter       Description of the Parameter
-   * @param  newTerm         Description of the Parameter
-   * @param  termsProcessed  Description of the Parameter
-   * @return                 Description of the Return Value
+   * @param sqlFilter      Description of the Parameter
+   * @param newTerm        Description of the Parameter
+   * @param termsProcessed Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean processElementHeader(StringBuffer sqlFilter, boolean newTerm, int termsProcessed) {
     if (firstCriteria && newTerm) {
@@ -5236,10 +5275,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  inputString  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param inputString Description of the Parameter
+   * @return Description of the Return Value
    */
   private int processType(String inputString) {
     StringTokenizer st = new StringTokenizer(inputString, "[*|]");
@@ -5252,10 +5291,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  inputString  Description of the Parameter
-   * @return              Description of the Return Value
+   * @param inputString Description of the Parameter
+   * @return Description of the Return Value
    */
   private String processSite(String inputString) {
     StringTokenizer st = new StringTokenizer(inputString, "[*|]");
@@ -5272,24 +5311,24 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  moduleId       Description of the Parameter
-   * @param  itemId         Description of the Parameter
-   * @param  tmpEnabled     Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param moduleId   Description of the Parameter
+   * @param itemId     Description of the Parameter
+   * @param tmpEnabled Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId, boolean tmpEnabled) throws SQLException {
     int count = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT COUNT(*) as itemcount " +
-        "FROM contact c " +
-        "WHERE contact_id > 0 " +
-        "AND c.enabled = ? " +
-        (tmpEnabled ? "AND c.trashed_date IS NULL " : ""));
+            "FROM contact c " +
+            "WHERE contact_id > 0 " +
+            "AND c.enabled = ? " +
+            (tmpEnabled ? "AND c.trashed_date IS NULL " : ""));
     if (moduleId == Constants.ACCOUNTS) {
       sql.append("AND c.org_id = ? ");
     }
@@ -5298,7 +5337,15 @@ public class ContactList extends Vector implements UserCentric {
     if (moduleId == Constants.ACCOUNTS) {
       pst.setInt(2, itemId);
     }
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
     ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
     if (rs.next()) {
       count = rs.getInt("itemcount");
     }
@@ -5309,17 +5356,17 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Updates the organization name of all contacts linked to this organization
+   * Updates the organization name of all contacts linked to this organization
    *
-   * @param  db             Description of the Parameter
-   * @param  thisOrg        Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param thisOrg Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void updateOrgName(Connection db, Organization thisOrg) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact " +
-        "SET org_name = ? " +
-        "WHERE org_id = ?");
+            "SET org_name = ? " +
+            "WHERE org_id = ?");
     pst.setString(1, thisOrg.getName());
     pst.setInt(2, thisOrg.getOrgId());
     pst.executeUpdate();
@@ -5328,10 +5375,10 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the contactFromId attribute of the ContactList object
+   * Gets the contactFromId attribute of the ContactList object
    *
-   * @param  id  Description of the Parameter
-   * @return     The contactFromId value
+   * @param id Description of the Parameter
+   * @return The contactFromId value
    */
   public Contact getContactFromId(int id) {
     Iterator iterator = this.iterator();
@@ -5346,9 +5393,9 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Gets the hashMapOfContacts attribute of the ContactList object
+   * Gets the hashMapOfContacts attribute of the ContactList object
    *
-   * @return    The hashMapOfContacts value
+   * @return The hashMapOfContacts value
    */
   public HashMap getHashMapOfContacts() {
     HashMap contactList = new HashMap();
@@ -5358,8 +5405,8 @@ public class ContactList extends Vector implements UserCentric {
       contactList.put(
           new Integer(thisContact.getId()), (thisContact.isTrashed() ? "<font color=\"red\">" : "") +
           Contact.getNameLastFirst(
-          thisContact.getNameLast(),
-          thisContact.getNameFirst()) +
+              thisContact.getNameLast(),
+              thisContact.getNameFirst()) +
           (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : "") + (thisContact.isTrashed() ? "</font>" : ""));
     }
     return contactList;
@@ -5367,14 +5414,14 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  toTrash        Description of the Parameter
-   * @param  tmpUserId      Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @param context   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, ActionContext context, boolean toTrash, int tmpUserId) throws SQLException {
     Iterator itr = this.iterator();
@@ -5387,13 +5434,13 @@ public class ContactList extends Vector implements UserCentric {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @param  userId         Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @param userId  Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int revertBackToLead(Connection db, ActionContext context, int userId) throws SQLException {
     int contactId = -1;

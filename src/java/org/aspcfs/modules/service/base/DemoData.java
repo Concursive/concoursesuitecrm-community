@@ -235,7 +235,6 @@ public class DemoData {
     role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-folders"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-object-workflow"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-categories"), true, true, true, true);
-    role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-products"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-logos"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-actionplans"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "help"), false, true, false, false);

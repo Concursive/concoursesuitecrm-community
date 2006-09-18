@@ -1,0 +1,8 @@
+# These scripts upgrade the 4.0 production databases to 4.1, in order
+
+# Product Editing, Product Importer
+2006-07-20-script01-alex.sql
+
+# Product& Leads speedup
+2006-07-24-script01-holub.sql
+2006-08-30-script01-alexy.sql 

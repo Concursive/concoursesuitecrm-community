@@ -76,8 +76,11 @@
        <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" timeOnly="true"/>
      </td>
      <td nowrap valign="top">
-       <%= toString(pendingCall.getContactName()) %><br />
-       <%= StringUtils.trimToSize(toString(pendingCall.getOrgName()), 20) %>
+     <% if(pendingCall.getContactName()!=null){ %>
+      <%= toString(pendingCall.getContactName()) %>
+       <%} else {%>
+      <%= StringUtils.trimToSize(toString(pendingCall.getOrgName()), 20) %>
+       <%}%>
      </td>
      <td nowrap valign="top">
         <% if (pendingCall.getContact().getPhoneNumberList().size() > 1) { %>
@@ -140,7 +143,7 @@
   <tr>
    <td valign="top">
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-     <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
+     <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= completedCall.getOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
         onMouseOver="over(0, <%= menuCount %>)" 
         onMouseOut="out(0, <%= menuCount %>);hideMenu('menuCall');"><img 
         src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0"></a>
@@ -149,8 +152,11 @@
      <zeroio:tz timestamp="<%= completedCall.getCompleteDate() %>" timeOnly="true"/>
    </td>
    <td nowrap valign="top">
-     <%= toString(completedCall.getContactName()) %><br />
-     <%= StringUtils.trimToSize(toString(completedCall.getOrgName()), 20) %>
+         <% if(completedCall.getContactName()!=null){ %>
+      <%= toString(completedCall.getContactName()) %>
+       <%} else {%>
+      <%= StringUtils.trimToSize(toString(completedCall.getOrgName()), 20) %>
+       <%}%>
    </td>
    <td valign="top">
      <%= StringUtils.trimToSize(toHtml(completedCall.getSubject()), 30) %>

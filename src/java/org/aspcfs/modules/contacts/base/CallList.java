@@ -61,12 +61,33 @@ public class CallList extends ArrayList {
   protected boolean onlyPending = false;
   protected boolean excludeCanceled = false;
   protected boolean onlyCompleted = false;
+  protected boolean onlyCompletedOrCanceled = false;
   protected boolean allContactsInAccount = false;
   protected int contactOrgId = -1;
   protected java.sql.Timestamp trashedDate = null;
   protected boolean includeOnlyTrashed = false;
   protected int oppCallsOnly = Constants.UNDEFINED;
   protected int avoidDisabledContacts = Constants.UNDEFINED;
+
+
+  /**
+   * Gets the onlyCompletedOrCancelled attribute of the CallList object
+   *
+   * @return onlyCompletedOrCancelled The onlyCompletedOrCancelled value
+   */
+  public boolean isOnlyCompletedOrCanceled() {
+    return this.onlyCompletedOrCanceled;
+  }
+
+
+  /**
+   * Sets the onlyCompletedOrCancelled attribute of the CallList object
+   *
+   * @param onlyCompletedOrCancelled The new onlyCompletedOrCancelled value
+   */
+  public void setOnlyCompletedOrCanceled(boolean tmp) {
+    this.onlyCompletedOrCanceled = tmp;
+  }
 
 
   /**
@@ -113,6 +134,15 @@ public class CallList extends ArrayList {
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
+  }
+
+  /**
+   * Sets the OrgId attribute of the CallList object
+   *
+   * @param tmp The new OrgId value
+   */
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
   }
 
 
@@ -726,10 +756,13 @@ public class CallList extends ArrayList {
     createFilter(sqlFilter);
     sqlSelect.append(
         "SELECT c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate, c.alert, " +
-        "c.owner, c.notes, c.\"length\", c.followup_notes, c.complete_date, ct.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " + "ct.org_name as ctcompany, ct.org_name as orgname, c.status_id, c.entered, p.description as priority " +
+        "c.owner, c.notes, c.\"length\", c.followup_notes, c.complete_date, c.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " +
+        "ct.org_name as ctcompany, o.name as orgname, c.status_id, c.entered, p.description as priority, " +
+        "c.followup_contact_id "+
         "FROM call_log c " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "WHERE c.call_id > -1 ");
     if (onlyCompleted) {
       sqlOrder.append("ORDER BY c.entered ");
@@ -766,6 +799,7 @@ public class CallList extends ArrayList {
       thisCall.setStatusId(rs.getInt("status_id"));
       thisCall.setEntered(rs.getTimestamp("entered"));
       thisCall.setPriorityString(rs.getString("priority"));
+      thisCall.setFollowupContactId(rs.getInt("followup_contact_id"));
 
       //build Contact Details
       Contact thisContact = new Contact();
@@ -808,6 +842,7 @@ public class CallList extends ArrayList {
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
         "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
+        "LEFT JOIN contact ct2 ON (c.followup_contact_id = ct2.contact_id) " +
         "WHERE call_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -839,13 +874,16 @@ public class CallList extends ArrayList {
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, t.*, talert.description as alertType, " +
-        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.org_name as ctcompany, p.description as priority " +
+        "c.alert_call_type_id, c.followup_contact_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, t.*, talert.description as alertType, " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.org_name as ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name as orgname, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
         "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
+        "LEFT JOIN contact ct2 ON (c.followup_contact_id = ct2.contact_id) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "WHERE call_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -888,12 +926,15 @@ public class CallList extends ArrayList {
       sqlFilter = new StringBuffer();
     }
     if (contactId != -1) {
-      sqlFilter.append("AND c.contact_id = ? ");
+      sqlFilter.append("AND (c.contact_id = ? ");
+      sqlFilter.append("OR c.followup_contact_id = ? )");
     }
-
+  
     if (allContactsInAccount) {
       sqlFilter.append(
-          "AND c.contact_id IN ( SELECT contact_id " +
+          "AND " );
+      sqlFilter.append( "(" );
+          sqlFilter.append("c.contact_id IN ( SELECT contact_id " +
           " FROM contact cnt WHERE cnt.org_id = ? ");
       if (this.getAvoidDisabledContacts() == Constants.TRUE) {
         sqlFilter.append(
@@ -904,7 +945,9 @@ public class CallList extends ArrayList {
             "AND (cnt.enabled = ? " +
             "OR cnt.trashed_date IS NOT NULL) ");
       }
-      sqlFilter.append(") ");
+      sqlFilter.append(") " );
+     
+      sqlFilter.append("OR c.contact_id IS NULL) ");
     }
 
     if (hasAlertDate == true) {
@@ -952,15 +995,19 @@ public class CallList extends ArrayList {
     }
 
     if (onlyPending) {
-      sqlFilter.append("AND c.status_id = ? AND alertdate is NOT NULL ");
+      sqlFilter.append("AND c.status_id = ? AND c.alertdate is NOT NULL ");
     }
-
+   
     if (onlyCompleted) {
-      sqlFilter.append("AND (c.status_id = ? OR c.status_id = ?) ");
+      sqlFilter.append("AND (c.status_id = ? OR c.status_id = ?) AND result_id IS NOT NULL ");
     }
 
     if (excludeCanceled) {
       sqlFilter.append("AND c.status_id != ? ");
+    }
+    
+    if (onlyCompletedOrCanceled) {
+      sqlFilter.append("AND (c.result_id = ? OR c.result_id = ?) ");
     }
 
     if (includeOnlyTrashed) {
@@ -999,6 +1046,7 @@ public class CallList extends ArrayList {
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (contactId != -1) {
+      pst.setInt(++i, contactId);
       pst.setInt(++i, contactId);
     }
 
@@ -1048,6 +1096,11 @@ public class CallList extends ArrayList {
     if (excludeCanceled) {
       pst.setInt(++i, Call.CANCELED);
     }
+    if (onlyCompletedOrCanceled) {
+      pst.setInt(++i, Call.CANCELED);
+      pst.setInt(++i, Call.COMPLETE);
+    }
+
     if (includeOnlyTrashed) {
       // do nothing
     } else if (trashedDate != null) {

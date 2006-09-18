@@ -8,36 +8,36 @@
   <!-- Permission attributes include: View, Add, Edit, Delete (vaed) and can be in any order -->
   <permissions>
     <category id="13" name="Sistema" folders="false" lookups="false">
-      <permission name="globalitems-search" attributes="v---" description="Acesso à Busca Global"/>
+      <permission name="globalitems-search" attributes="v---" description="Acesso Г  Busca Global"/>
       <permission name="globalitems-myitems" attributes="v---" description="Acesso ao Meus Itens"/>
       <permission name="globalitems-recentitems" attributes="v---" description="Acesso ao Itens Recentes"/>
     </category>
     <category id="14" name="Principal" folders="false" lookups="false" reports="true">
-      <permission name="myhomepage" attributes="v---" description="Accesso ao Módulo Principal"/>
-      <permission name="myhomepage-dashboard" attributes="v---" description="Visão Painel de Performance"/>
-      <permission name="myhomepage-miner" attributes="va-d" description="Registros de Notícias da Indústria" enabled="false"/>
+      <permission name="myhomepage" attributes="v---" description="Accesso ao MГіdulo Principal"/>
+      <permission name="myhomepage-dashboard" attributes="v---" description="VisГЈo Painel de Performance"/>
+      <permission name="myhomepage-miner" attributes="va-d" description="Registros de NotГ­cias da IndГєstria" enabled="false"/>
       <permission name="myhomepage-inbox" attributes="v---" description="Mailbox"/>
       <permission name="myhomepage-tasks" attributes="vaed" description="Tarefas"/>
-      <permission name="myhomepage-reassign" attributes="v-e-" description="Reatribuição de Itens"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" description="ReatribuiГ§ГЈo de Itens"/>
       <permission name="myhomepage-profile" attributes="v---" description="Perfil"/>
-      <permission name="myhomepage-profile-personal" attributes="v-e-" description="Informações Pessoais"/>
-      <permission name="myhomepage-profile-settings" attributes="v-e-" description="Configurações" enabled="false"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" description="InformaГ§Гµes Pessoais"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" description="ConfiguraГ§Гµes" enabled="false"/>
       <permission name="myhomepage-profile-password" attributes="--e-" description="Senha"/>
-      <permission name="myhomepage-action-lists" attributes="vaed" description="Listas de Ações"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" description="Listas de AГ§Гµes"/>
       <permission name="myhomepage-action-plans" attributes="vaed" description="Action Plans"/>
-      <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Lista de Tarefas por Data de Vencimento" description="Quais são as tarefas vencidas em um período?"/>
-      <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Lista de Tarefas" description="Quais são todas as tarefas no sistema?"/>
+      <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Lista de Tarefas por Data de Vencimento" description="Quais sГЈo as tarefas vencidas em um perГ­odo?"/>
+      <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Lista de Tarefas" description="Quais sГЈo todas as tarefas no sistema?"/>
       <report file="contact_activities.xml" type="user" permission="contacts-external_contacts-calls" title="Contact Activities" description="What are the activities associated with a contact?"/>
     </category>
-    <category id="420041014" name="Produtos e Serviços" folders="false" lookups="false" reports="false" enabled="false">
-      <permission name="products" attributes="v---" description="Acesso ao Módulo Produtos e Serviços"/>
+    <category id="420041014" name="Produtos e ServiГ§os" folders="false" lookups="false" reports="false" enabled="false">
+      <permission name="products" attributes="v---" description="Acesso ao MГіdulo Produtos e ServiГ§os"/>
     </category>
     <category id="228051100" name="Leads" folders="false" lookups="true" reports="false">
-      <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="Avaliação do Contato"/>
+      <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="AvaliaГ§ГЈo do Contato"/>
       <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description="Origem do Contato"/>
-      <permission name="sales" attributes="v---" description="Acesso ao Módulo Leads"/>
+      <permission name="sales" attributes="v---" description="Acesso ao MГіdulo Leads"/>
       <permission name="sales-leads" attributes="vaed" description="Registros de Leads"/>
-      <permission name="sales-import" attributes="v---" description="Acesso à Importação de Leads"/>
+      <permission name="sales-import" attributes="v---" description="Acesso Г  ImportaГ§ГЈo de Leads"/>
       <permission name="sales-dashboard" attributes="v---" description="Leads Dashboard"/>
       <permission name="sales-reports" attributes="va-d" description="Export Leads Data"/>
       <report file="leads_user.xml" type="user" permission="sales-leads" title="User Leads" description="Who are the leads owned by a specific user?"/>
@@ -46,46 +46,46 @@
       <folder constantId="2" description="Contatos"/>
       <lookup constantId="1" class="contactType" table="lookup_contact_types" description="Tipos"/>
       <lookup constantId="2" class="lookupList" table="lookup_contactemail_types" description="Tipos de Email"/>
-      <lookup constantId="3" class="lookupList" table="lookup_contactaddress_types" description="Tipos de Endereço"/>
+      <lookup constantId="3" class="lookupList" table="lookup_contactaddress_types" description="Tipos de EndereГ§o"/>
       <lookup constantId="4" class="lookupList" table="lookup_contactphone_types" description="Tipos de Telefone"/>
       <lookup constantId="111051354" class="lookupList" table="lookup_textmessage_types" description="Tipos de Mensagem de Texto"/>
       <lookup constantId="128051433" class="lookupList" table="lookup_title" description="Salutation"/>
       <!--
       <lookup constantId="111051308" class="lookupList" table="lookup_im_types" description="Instant Messaging Types"/>
       -->
-      <permission name="contacts" attributes="v---" description="Acesso ao Módulo Contatos"/>
+      <permission name="contacts" attributes="v---" description="Acesso ao MГіdulo Contatos"/>
       <permission name="contacts-external_contacts" attributes="vaed" description="Registros de Contatos Gerais"/>
-      <permission name="contacts-external_contacts-reports" attributes="va-d" description="Exportação dos Dados de Contatos"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" description="ExportaГ§ГЈo dos Dados de Contatos"/>
       <permission name="contacts-external_contacts-folders" attributes="vaed" description="Pastas"/>
       <permission name="contacts-external_contacts-calls" attributes="vaed" description="Atividades"/>
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Mensagens"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Oportunidades"/>
-      <permission name="contacts-external_contacts-imports" attributes="vaed" description="Importação"/>
-      <permission name="contacts-external-contact-updater" attributes="v---" description="Requisição de Atualização de Informações de Contato"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" description="ImportaГ§ГЈo"/>
+      <permission name="contacts-external-contact-updater" attributes="v---" description="RequisiГ§ГЈo de AtualizaГ§ГЈo de InformaГ§Гµes de Contato"/>
       <permission name="contacts-external_contacts-history" attributes="vaed" description="Contact History"/>
-      <report file="contacts_user.xml" type="user" permission="contacts" title="Contatos" description="Quem são os meus contatos?"/>
+      <report file="contacts_user.xml" type="user" permission="contacts" title="Contatos" description="Quem sГЈo os meus contatos?"/>
     </category>
     <category id="4" name="Oportunidades" folders="true" lookups="true" viewpoints="true" reports="true">
       <folder constantId="120200514" description="Oportunidades"/>
-      <lookup constantId="1" class="lookupList" table="lookup_stage" description="Estágio"/>
+      <lookup constantId="1" class="lookupList" table="lookup_stage" description="EstГЎgio"/>
       <lookup constantId="2" class="lookupList" table="lookup_opportunity_types" description="Tipos de Oportunidades"/>
       <lookup constantId="707050229" class="lookupList" table="lookup_opportunity_environment" description="Environment"/>
       <lookup constantId="707050230" class="lookupList" table="lookup_opportunity_competitors" description="Competitors"/>
       <lookup constantId="707050231" class="lookupList" table="lookup_opportunity_event_compelling" description="Compelling Event"/>
       <lookup constantId="707050232" class="lookupList" table="lookup_opportunity_budget" description="Budget"/>
       <lookup constantId="206061500" class="lookupList" table="lookup_call_types" description="Activity Type"/>
-      <permission name="pipeline" attributes="v---" description="Acesso ao Módulo Oportunidades" viewpoints="true"/>
+      <permission name="pipeline" attributes="v---" description="Acesso ao MГіdulo Oportunidades" viewpoints="true"/>
       <permission name="pipeline-opportunities" attributes="vaed" description="Registros de Oportunidades"/>
       <permission name="pipeline-dashboard" attributes="v---" description="Painel"/>
-      <permission name="pipeline-reports" attributes="va-d" description="Exportação dos Dados de Oportunidades"/>
+      <permission name="pipeline-reports" attributes="va-d" description="ExportaГ§ГЈo dos Dados de Oportunidades"/>
       <permission name="pipeline-opportunities-calls" attributes="vaed" description="Atividades"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documentos"/>
       <permission name="pipeline-folders" attributes="vaed" description="Folders"/>
       <permission name="pipeline-quotes" attributes="vaed" description="Quotes"/>
-      <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Oportunidades por Estágio" description="Quais são as minhas oportunidades mais iminentes por estágio?"/>
-      <report file="opportunity_account.xml" type="user" permission="pipeline-opportunities" title="Oportunidades por Empresa" description="Quais são os clientes associados às minhas oportunidades?"/>
-      <report file="opportunity_owner.xml" type="user" permission="pipeline-opportunities" title="Oportunidades por Proprietário" description="Quais são as oportunidades baseadas em propriedade?"/>
-      <report file="opportunity_contact.xml" type="user" permission="pipeline-opportunities" title="Contatos das Oportunidades" description="Quem são os contatos das minhas oportunidades?"/>
+      <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Oportunidades por EstГЎgio" description="Quais sГЈo as minhas oportunidades mais iminentes por estГЎgio?"/>
+      <report file="opportunity_account.xml" type="user" permission="pipeline-opportunities" title="Oportunidades por Empresa" description="Quais sГЈo os clientes associados Г s minhas oportunidades?"/>
+      <report file="opportunity_owner.xml" type="user" permission="pipeline-opportunities" title="Oportunidades por ProprietГЎrio" description="Quais sГЈo as oportunidades baseadas em propriedade?"/>
+      <report file="opportunity_contact.xml" type="user" permission="pipeline-opportunities" title="Contatos das Oportunidades" description="Quem sГЈo os contatos das minhas oportunidades?"/>
     </category>
     <category id="1" name="Empresas" folders="true" lookups="true" reports="true" webdav="true" actionPlans="true">
       <folder constantId="1" description="Empresas"/>
@@ -93,21 +93,21 @@
       <lookup constantId="2" class="lookupList" table="lookup_revenue_types" description="Tipos de Receitas"/>
       <lookup constantId="3" class="contactType" table="lookup_contact_types" description="Tipos de Contatos"/>
       <lookup constantId="819041648" class="lookupList" table="lookup_orgemail_types" description="Tipos de Email"/>
-      <lookup constantId="819041649" class="lookupList" table="lookup_orgaddress_types" description="Tipos de Endereços"/>
+      <lookup constantId="819041649" class="lookupList" table="lookup_orgaddress_types" description="Tipos de EndereГ§os"/>
       <lookup constantId="819041650" class="lookupList" table="lookup_orgphone_types" description="Tipos de Telefones"/>
-      <lookup constantId="302051030" class="lookupList" table="lookup_industry" description="Tipos de Indústrias"/>
+      <lookup constantId="302051030" class="lookupList" table="lookup_industry" description="Tipos de IndГєstrias"/>
       <lookup constantId="128051430" class="lookupList" table="lookup_segments" description="Segment"/>
       <lookup constantId="128051431" class="lookupList" table="lookup_sub_segment" description="Sub Segment"/>
       <lookup constantId="128051432" class="lookupList" table="lookup_site_id" description="Site"/>
       <lookup constantId="158051538" class="lookupList" table="lookup_account_size" description="Account Size"/>
       <webdav class="org.aspcfs.modules.accounts.webdav.AccountsWebdavContext"/>
-      <permission name="accounts" attributes="v---" description="Acesso ao Módulo Empresas"/>
+      <permission name="accounts" attributes="v---" description="Acesso ao MГіdulo Empresas"/>
       <permission name="accounts-accounts" attributes="vaed" description="Registros de Empresas"/>
       <permission name="accounts-accounts-folders" attributes="vaed" description="Pastas"/>
       <permission name="accounts-accounts-contacts" attributes="vaed" description="Contatos"/>
       <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" description="Oportunidades de Contatos"/>
       <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="Atividades de Contatos"/>
-      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" description="Atividades Concluídas"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" description="Atividades ConcluГ­das"/>
       <permission name="accounts-accounts-contacts-messages" attributes="vaed" description="Mensagens de Contatos"/>
       <permission name="accounts-accounts-contacts-move" attributes="v---" description="Mover Contatos para outras Empresas"/>
       <permission name="accounts-accounts-contacts-history" attributes="vaed" description="Contact History"/>
@@ -117,34 +117,34 @@
       <permission name="accounts-accounts-tickets-folders" attributes="vaed" description="Pastas de Ticket"/>
       <permission name="accounts-accounts-tickets-documents" attributes="vaed" description="Documentos de Ticket"/>
       <permission name="accounts-accounts-documents" attributes="vaed" description="Documentos"/>
-      <permission name="accounts-accounts-reports" attributes="va-d" description="Exportação dos Dados de Empresas"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" description="ExportaГ§ГЈo dos Dados de Empresas"/>
       <permission name="accounts-accounts-history" attributes="vaed" description="Account History"/>
       <permission name="accounts-dashboard" attributes="v---" description="Painel"/>
       <permission name="accounts-accounts-revenue" attributes="vaed" description="Receita" enabled="false"/>
       <permission name="accounts-autoguide-inventory" attributes="vaed" description="Auto Guide Vehicle Inventory" enabled="false"/>
-      <permission name="accounts-service-contracts" attributes="vaed" description="Contratos de Serviços"/>
+      <permission name="accounts-service-contracts" attributes="vaed" description="Contratos de ServiГ§os"/>
       <permission name="accounts-assets" attributes="vaed" description="Ativos"/>
-      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" description="Notas de Manutenção de Ticket"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" description="Notas de ManutenГ§ГЈo de Ticket"/>
       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" description="Atividades de Ticket"/>
-      <permission name="portal-user" attributes="vaed" description="Usuário do Portal Clientes"/>
+      <permission name="portal-user" attributes="vaed" description="UsuГЎrio do Portal Clientes"/>
       <permission name="accounts-quotes" attributes="vaed" description="Propostas" />
       <permission name="accounts-orders" attributes="vaed" description="Pedidos" enabled="false"/>
-      <permission name="accounts-products" attributes="vaed" description="Produtos e Serviços" enabled="false"/>
-      <permission name="accounts-accounts-contacts-imports" attributes="vaed" description="Importação de Empresas/Contatos"/>
+      <permission name="accounts-products" attributes="vaed" description="Produtos e ServiГ§os" enabled="false"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" description="ImportaГ§ГЈo de Empresas/Contatos"/>
       <permission name="accounts-accounts-relationships" attributes="vaed" description="Relacionamentos"/>
-      <permission name="accounts-accounts-contact-updater" attributes="v---" description="Requisição de Atualização de Informações de Contato"/>
+      <permission name="accounts-accounts-contact-updater" attributes="v---" description="RequisiГ§ГЈo de AtualizaГ§ГЈo de InformaГ§Гµes de Contato"/>
       <permission name="accounts-projects" attributes="v---" description="Projetos"/>
       <permission name="accounts-action-plans" attributes="vaed" description="Action Plans"/>
       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" description="Contact Opportunities Quotes"/>
       <permission name="accounts-directbill" attributes="vaed" description="Direct Bill" enabled="false"/>
       <permission name="accounts-accounts-contacts-folders" attributes="vaed" description="Contact Folders"/>
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" description="Contact Opportunity Folders"/>
-      <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Empresas por Tipo" description="Quais são as minhas empresas por tipo?"/>
-      <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Empresas por Data de Inserção" description="Quais são as minhas empresas mais recentes?"/>
-      <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Empresas por Data de Término de Contrato" description="Quais empresas estão com contrato expirando?"/>
-      <report file="accounts_current.xml" type="user" permission="accounts-accounts" title="Empresas Atuais" description="Quais são as minhas empresas atuais?"/>
-      <report file="accounts_contacts.xml" type="user" permission="accounts-accounts-contacts" title="Contatos da Empresa" description="Quem são os contatos em cada empresa?"/>
-      <report file="folder_accounts.xml" type="user" permission="accounts-accounts-folders" title="Pastas da Empresa" description="Quais são os dados das pastas de cada empresa?"/>
+      <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Empresas por Tipo" description="Quais sГЈo as minhas empresas por tipo?"/>
+      <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Empresas por Data de InserГ§ГЈo" description="Quais sГЈo as minhas empresas mais recentes?"/>
+      <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Empresas por Data de TГ©rmino de Contrato" description="Quais empresas estГЈo com contrato expirando?"/>
+      <report file="accounts_current.xml" type="user" permission="accounts-accounts" title="Empresas Atuais" description="Quais sГЈo as minhas empresas atuais?"/>
+      <report file="accounts_contacts.xml" type="user" permission="accounts-accounts-contacts" title="Contatos da Empresa" description="Quem sГЈo os contatos em cada empresa?"/>
+      <report file="folder_accounts.xml" type="user" permission="accounts-accounts-folders" title="Pastas da Empresa" description="Quais sГЈo os dados das pastas de cada empresa?"/>
       <report file="action_plan_summary.xml" type="user" permission="accounts-action-plans" title="Action Plan Summary" description="What is the action plan summary for each account?"/>
       <report file="action_plan_activity.xml" type="user" permission="accounts-action-plans" title="Action Plan Activity" description="What are the action plan activities by date for each account?"/>
       <actionPlanEditor constantId="42420034" description="Action Plans related to Accounts"/>
@@ -154,7 +154,7 @@
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
     </category>
     <category id="420041017" name="Propostas" folders="false" lookups="true" reports="false" logos="true">
-      <permission name="quotes" attributes="v---" description="Acesso ao Módulo Propostas"/>
+      <permission name="quotes" attributes="v---" description="Acesso ao MГіdulo Propostas"/>
       <permission name="quotes-quotes" attributes="vaed" description="Registros de Propostas"/>
       <lookup constantId="1123041000" class="lookupList" table="lookup_quote_status" description="Status da Proposta"/>
       <!--
@@ -163,38 +163,38 @@
       -->
       <lookup constantId="1123041003" class="lookupList" table="lookup_quote_source" description="Origem da Proposta"/>
       <lookup constantId="1123041004" class="lookupList" table="lookup_quote_delivery" description="Entrega da Proposta"/>
-      <lookup constantId="1123041005" class="lookupList" table="lookup_quote_condition" description="Termos &amp; Condições da Proposta"/>
-      <lookup constantId="1123041006" class="lookupList" table="lookup_quote_remarks" description="Observações da Proposta"/>
+      <lookup constantId="1123041005" class="lookupList" table="lookup_quote_condition" description="Termos &amp; CondiГ§Гµes da Proposta"/>
+      <lookup constantId="1123041006" class="lookupList" table="lookup_quote_remarks" description="ObservaГ§Гµes da Proposta"/>
     </category>
     <category id="420041018" name="Pedidos" folders="false" lookups="false" reports="true" enabled="false">
-      <permission name="orders" attributes="v---" description="Acesso ao Módulo Pedidos"/>
+      <permission name="orders" attributes="v---" description="Acesso ao MГіdulo Pedidos"/>
       <permission name="orders-orders" attributes="vaed" description="Registros de Pedidos"/>
     </category>
     <category id="6" name="Marketing" folders="false" lookups="false" reports="true">
-      <permission name="campaign" attributes="v---" description="Acesso ao Módulo Marketing"/>
+      <permission name="campaign" attributes="v---" description="Acesso ao MГіdulo Marketing"/>
       <permission name="campaign-dashboard" attributes="v---" description="Painel"/>
       <permission name="campaign-campaigns" attributes="vaed" description="Registros de Campanhas"/>
       <permission name="campaign-campaigns-groups" attributes="vaed" description="Registros de Grupos"/>
       <permission name="campaign-campaigns-messages" attributes="vaed" description="Registros de Mensagens"/>
       <permission name="campaign-campaigns-surveys" attributes="vaed" description="Registros de Pesquisas"/>
-      <permission name="campaign-campaign-contact-updater" attributes="v---" description="Requisição de Atualização de Informações de Contato"/>
-      <report file="campaign.xml" type="user" permission="campaign-campaigns" title="Campanhas por Data" description="Quais são as minhas campanhas ativas?"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" description="RequisiГ§ГЈo de AtualizaГ§ГЈo de InformaГ§Гµes de Contato"/>
+      <report file="campaign.xml" type="user" permission="campaign-campaigns" title="Campanhas por Data" description="Quais sГЈo as minhas campanhas ativas?"/>
     </category>
     <category id="7" name="Projetos" folders="false" lookups="false" enabled="true" webdav="true">
       <webdav class="com.zeroio.iteam.webdav.ProjectsWebdavContext"/>
-      <permission name="projects" attributes="v---" description="Acesso ao Módulo Gerenciamento de Projetos"/>
-      <permission name="projects-personal" attributes="v---" description="Visão Pessoal"/>
-      <permission name="projects-enterprise" attributes="v---" description="Visão Corporativa"/>
+      <permission name="projects" attributes="v---" description="Acesso ao MГіdulo Gerenciamento de Projetos"/>
+      <permission name="projects-personal" attributes="v---" description="VisГЈo Pessoal"/>
+      <permission name="projects-enterprise" attributes="v---" description="VisГЈo Corporativa"/>
       <permission name="projects-projects" attributes="vaed" description="Registros de Projetos"/>
     </category>
-    <category id="130041100" name="Contratos de Serviços" folders="false" lookups="true" reports="false" categories="false">
-      <lookup constantId="130041305" class="lookupList" table="lookup_sc_category" description="Categoria de Contratos de Serviço"/>
-      <lookup constantId="130041306" class="lookupList" table="lookup_sc_type" description="Tipo de Contratos de Serviço"/>
+    <category id="130041100" name="Contratos de ServiГ§os" folders="false" lookups="true" reports="false" categories="false">
+      <lookup constantId="130041305" class="lookupList" table="lookup_sc_category" description="Categoria de Contratos de ServiГ§o"/>
+      <lookup constantId="130041306" class="lookupList" table="lookup_sc_type" description="Tipo de Contratos de ServiГ§o"/>
       <lookup constantId="116041409" class="lookupList" table="lookup_response_model" description="Modelo de Tempo de Resposta"/>
-      <lookup constantId="116041410" class="lookupList" table="lookup_phone_model" description="Modelo de Serviço por Telefone"/>
-      <lookup constantId="116041411" class="lookupList" table="lookup_onsite_model" description="Modelo de Serviço In-Loco"/>
-      <lookup constantId="116041412" class="lookupList" table="lookup_email_model" description="Modelo de Serviço por Email"/>
-      <lookup constantId="308041546" class="lookupList" table="lookup_hours_reason" description="Razões de Ajuste de Horas do Contrato"/>
+      <lookup constantId="116041410" class="lookupList" table="lookup_phone_model" description="Modelo de ServiГ§o por Telefone"/>
+      <lookup constantId="116041411" class="lookupList" table="lookup_onsite_model" description="Modelo de ServiГ§o In-Loco"/>
+      <lookup constantId="116041412" class="lookupList" table="lookup_email_model" description="Modelo de ServiГ§o por Email"/>
+      <lookup constantId="308041546" class="lookupList" table="lookup_hours_reason" description="RazГµes de Ajuste de Horas do Contrato"/>
     </category>
     <category id="130041000" name="Ativos" folders="false" lookups="true" reports="false" categories="true">
       <lookup constantId="130041304" class="lookupList" table="lookup_asset_status" description="Status do Ativo"/>
@@ -213,29 +213,29 @@
       <lookup constantId="101705190" class="lookupList" table="lookup_ticket_task_category" description="Ticket Task Categories"/>
       <lookup constantId="910040913" class="lookupList" table="lookup_ticket_escalation" description="Ticket Escalation Level"/>
       <lookup constantId="112205113" class="lookupList" table="lookup_ticket_state" description="Ticket State"/>
-      <permission name="tickets" attributes="v---" description="Acesso ao Módulo Help Desk"/>
+      <permission name="tickets" attributes="v---" description="Acesso ao MГіdulo Help Desk"/>
       <permission name="tickets-tickets" attributes="vaed" description="Registros de Tickets"/>
-      <permission name="tickets-reports" attributes="vaed" description="Exportação dos Dados de Tickets"/>
+      <permission name="tickets-reports" attributes="vaed" description="ExportaГ§ГЈo dos Dados de Tickets"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tarefas"/>
-      <permission name="tickets-maintenance-report" attributes="vaed" description="Notas de Manutenção"/>
+      <permission name="tickets-maintenance-report" attributes="vaed" description="Notas de ManutenГ§ГЈo"/>
       <permission name="tickets-activity-log" attributes="vaed" description="Atividades"/>
       <permission name="tickets-knowledge-base" attributes="vaed" description="Knowledge Base"/>
       <permission name="tickets-defects" attributes="vaed" description="Ticket Defects"/>
       <permission name="tickets-action-plans" attributes="vaed" description="Action Plans"/>
-      <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets por Departamento" description="Quais são os tickets existentes em cada departamento?"/>
-      <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Número de Tickets por Departamento" description="Quantos tickets existem no sistema em uma data particular?"/>
-      <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Atividades do Ticket por Departamento" description="Quantos tickets existem em um período?"/>
-      <report file="open_calls_report.xml" type="user" permission="tickets-tickets" title="Chamados Abertos" description="Quais tickets estão abertos?"/>
-      <report file="contract_review_report.xml" type="user" permission="tickets-tickets" title="Revisão de Contrato" description="Qual é a data de expiração de cada contrato?"/>
-      <report file="call_history_report.xml" type="user" permission="tickets-tickets" title="Histórico de Chamados" description="Como os tickets foram solucionados?"/>
-      <report file="assets_under_contract_report.xml" type="user" permission="tickets-tickets" title="Ativos sob Contrato" description="Quais ativos estão cobertos por contrato?"/>
-      <report file="activity_log_report.xml" type="user" permission="tickets-tickets" title="Resumo das Atividades do Contrato" description="Qual é o resumo de horas de cada contrato?"/>
-      <report file="callvolume_day_assignee.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por Responsável por Dia" description="Quantos tickets existem por responsável por dia?"/>
-      <report file="callvolume_month_assignee.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por Responsável por Mês" description="Quantos tickets existem por responsável por mês?"/>
+      <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets por Departamento" description="Quais sГЈo os tickets existentes em cada departamento?"/>
+      <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="NГєmero de Tickets por Departamento" description="Quantos tickets existem no sistema em uma data particular?"/>
+      <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Atividades do Ticket por Departamento" description="Quantos tickets existem em um perГ­odo?"/>
+      <report file="open_calls_report.xml" type="user" permission="tickets-tickets" title="Chamados Abertos" description="Quais tickets estГЈo abertos?"/>
+      <report file="contract_review_report.xml" type="user" permission="tickets-tickets" title="RevisГЈo de Contrato" description="Qual Г© a data de expiraГ§ГЈo de cada contrato?"/>
+      <report file="call_history_report.xml" type="user" permission="tickets-tickets" title="HistГіrico de Chamados" description="Como os tickets foram solucionados?"/>
+      <report file="assets_under_contract_report.xml" type="user" permission="tickets-tickets" title="Ativos sob Contrato" description="Quais ativos estГЈo cobertos por contrato?"/>
+      <report file="activity_log_report.xml" type="user" permission="tickets-tickets" title="Resumo das Atividades do Contrato" description="Qual Г© o resumo de horas de cada contrato?"/>
+      <report file="callvolume_day_assignee.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por ResponsГЎvel por Dia" description="Quantos tickets existem por responsГЎvel por dia?"/>
+      <report file="callvolume_month_assignee.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por ResponsГЎvel por MГЄs" description="Quantos tickets existem por responsГЎvel por mГЄs?"/>
       <report file="callvolume_day_cat.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por Categoria por Dia" description="Quantos tickets existem por categoria por dia?"/>
-      <report file="callvolume_month_cat.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por Categoria por Mês" description="Quantos tickets existem por categoria por mês?"/>
-      <report file="callvolume_day_enteredby.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por Usuário Inserido por Dia" description="Quantos tickets existem por usuário que abriu o ticket por o dia?"/>
-      <report file="callvolume_month_ent.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por Usuário Inserido por Mês" description="Quantos tickets existem por usuário que abriu o ticket por o mês?"/>
+      <report file="callvolume_month_cat.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por Categoria por MГЄs" description="Quantos tickets existem por categoria por mГЄs?"/>
+      <report file="callvolume_day_enteredby.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por UsuГЎrio Inserido por Dia" description="Quantos tickets existem por usuГЎrio que abriu o ticket por o dia?"/>
+      <report file="callvolume_month_ent.xml" type="user" permission="tickets-tickets" title="Volume de Chamados por UsuГЎrio Inserido por MГЄs" description="Quantos tickets existem por usuГЎrio que abriu o ticket por o mГЄs?"/>
       <report file="callvolume_resolved_by.xml" type="user" permission="tickets-tickets" title="Call Volume by User Resolved" description="How many tickets have been resolved by an user?"/>
       <report file="callvolume_resolvable_account.xml" type="user" permission="tickets-tickets" title="Call Volume per Account (Resolvable)" description="How many tickets are resolvable per account?"/>
       <report file="callvolume_resolvable_category.xml" type="user" permission="tickets-tickets" title="Call Volume per Category (Resolvable)" description="How many tickets are resolvable per category?"/>
@@ -246,8 +246,8 @@
     </category>
     <category id="1202041528" name="Documentos" lookups="false" enabled="true" webdav="true">
       <webdav class="org.aspcfs.modules.documents.webdav.DocumentsWebdavContext"/>
-      <permission name="documents" attributes="v---" description="Acesso ao Módulo Documentos"/>
-      <permission name="documents_documentstore" attributes="vaed" description="Gerenciamento de Repositórios de Documentos"/>
+      <permission name="documents" attributes="v---" description="Acesso ao MГіdulo Documentos"/>
+      <permission name="documents_documentstore" attributes="vaed" description="Gerenciamento de RepositГіrios de Documentos"/>
     </category>
     <category id="1021051129" name="NetApp" reports="true" enabled="false">
       <permission name="netapps_expiration_contracts" attributes="vaed" description="Manage Network Application Information"/>
@@ -257,15 +257,15 @@
     <category id="1111031131" name="Colaboradores" folders="true" lookups="true" reports="true">
       <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departamentos"/>
       <folder constantId="120200513" description="Colaboradores"/>
-      <permission name="employees" attributes="v---" description="Acesso ao Módulo Colaboradores"/>
+      <permission name="employees" attributes="v---" description="Acesso ao MГіdulo Colaboradores"/>
       <permission name="contacts-internal_contacts" attributes="vaed" description="Colaboradores"/>
       <permission name="contacts-internal_contacts-folders" attributes="vaed" description="Pastas" />
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Projetos"/>
-      <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Colaboradores" description="Quem são os colaboradores da minha empresa?"/>
+      <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Colaboradores" description="Quem sГЈo os colaboradores da minha empresa?"/>
     </category>
-    <category id="330041409" name="Catálogo de Produtos" folders="true" lookups="true" reports="false" categories="false" products="true">
-      <folder constantId="200403192" description="Categorias de Catálogo de Produtos" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Acesso ao Módulo Catálogo de Produtos" enabled="false"/>
+    <category id="330041409" name="CatГЎlogo de Produtos" folders="true" lookups="true" reports="false" categories="false">
+      <folder constantId="200403192" description="Categorias de CatГЎlogo de Produtos" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Acesso ao MГіdulo CatГЎlogo de Produtos" enabled="true"/>
       <permission name="product-catalog-product" attributes="vaed" description="Produtos" enabled="false"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Tipos de Produtos"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Tipos de Formatos de Produto"/>
@@ -274,41 +274,40 @@
       <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="Tipos de Categorias de Produtos"/>
       <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="Tipos de Taxas de Produtos"/>
       <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="Tipos de Moeda"/>
-      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Tipos de Preços Recorrentes"/>
+      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Tipos de PreГ§os Recorrentes"/>
       <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Tipos de Fabricante de Produtos"/>
     </category>
-    <category id="16" name="Relatórios" folders="false" lookups="false">
-      <permission name="reports" attributes="v---" description="Acesso ao Módulo Relatórios"/>
+    <category id="16" name="RelatГіrios" folders="false" lookups="false">
+      <permission name="reports" attributes="v---" description="Acesso ao MГіdulo RelatГіrios"/>
     </category>
     <category id="9" name="Admin" folders="false" lookups="false" reports="true">
-      <permission name="admin" attributes="v---" description="Acesso ao módulo Admin"/>
-      <permission name="admin-users" attributes="vaed" description="Usuários"/>
+      <permission name="admin" attributes="v---" description="Acesso ao mГіdulo Admin"/>
+      <permission name="admin-users" attributes="vaed" description="UsuГЎrios"/>
       <permission name="admin-roles" attributes="vaed" description="Perfis"/>
       <permission name="admin-usage" attributes="v---" description="Uso do Sistema"/>
-      <permission name="admin-sysconfig" attributes="v-e-" description="Configuração do Sistema"/>
-      <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configuração de Lookup Lists"/>
-      <permission name="admin-sysconfig-folders" attributes="vaed" description="Configuração de Pastas &amp; Campos Personalizados"/>
-      <permission name="admin-object-workflow" attributes="vaed" description="Configuração de Workflow de Objetos"/>
-      <permission name="admin-sysconfig-categories" attributes="vaed" description="Configuração do Módulo Categorias"/>
-      <permission name="admin-sysconfig-products" attributes="vaed" description="Editor de Catálogo de Produtos"/>
-      <permission name="admin-sysconfig-logos" attributes="vaed" description="Configuração do Módulo Logos"/>
+      <permission name="admin-sysconfig" attributes="v-e-" description="ConfiguraГ§ГЈo do Sistema"/>
+      <permission name="admin-sysconfig-lists" attributes="v-e-" description="ConfiguraГ§ГЈo de Lookup Lists"/>
+      <permission name="admin-sysconfig-folders" attributes="vaed" description="ConfiguraГ§ГЈo de Pastas &amp; Campos Personalizados"/>
+      <permission name="admin-object-workflow" attributes="vaed" description="ConfiguraГ§ГЈo de Workflow de Objetos"/>
+      <permission name="admin-sysconfig-categories" attributes="vaed" description="ConfiguraГ§ГЈo do MГіdulo Categorias"/>
+      <permission name="admin-sysconfig-logos" attributes="vaed" description="ConfiguraГ§ГЈo do MГіdulo Logos"/>
       <permission name="admin-actionplans" attributes="vaed" description="Configure Action Plans"/>
-      <report file="users.xml" type="user" permission="admin" title="Usuários do Sistema" description="Quem são os usuários do sistema?"/>
+      <report file="users.xml" type="user" permission="admin" title="UsuГЎrios do Sistema" description="Quem sГЈo os usuГЎrios do sistema?"/>
       <report file="login_usage.xml" type="user" permission="admin-usage" title="System Usage" description="What is the login activity per user on a day?"/>
       <multipleCategory constantId="907051127" table="action_plan_category" maxLevels="4" description="Action Plan Categories"/>
     </category>
     <category id="10" name="Ajuda" folders="false" lookups="false">
-      <permission name="help" attributes="v---" description="Acesso à Ajuda do Sistema"/>
+      <permission name="help" attributes="v---" description="Acesso Г  Ajuda do Sistema"/>
     </category>
     <category id="15" name="QA" folders="false" lookups="false" enabled="false">
-      <permission name="qa" attributes="vaed" description="Acesso à Ferramenta QA"/>
+      <permission name="qa" attributes="vaed" description="Acesso Г  Ferramenta QA"/>
     </category>
     <category id="5" name="Demo" folders="false" lookups="false" enabled="false">
-      <permission name="demo" attributes="vaed" description="Acesso às características Demo/Avaliação"/>
+      <permission name="demo" attributes="vaed" description="Acesso Г s caracterГ­sticas Demo/AvaliaГ§ГЈo"/>
     </category>
   </permissions>
   <roles>
-    <role name="Administrador" description="Executa a configuração e a manutenção do sistema">
+    <role name="Administrador" description="Executa a configuraГ§ГЈo e a manutenГ§ГЈo do sistema">
       <permission name="myhomepage" attributes="v---"/>
       <permission name="myhomepage-dashboard" attributes="v---"/>
       <permission name="myhomepage-miner" attributes="va-d"/>
@@ -409,7 +408,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
-      <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" />
       <permission name="admin-actionplans" attributes="vaed" />
       <permission name="help" attributes="v---"/>
@@ -423,7 +421,7 @@
       <permission name="documents" attributes="v---" />
       <permission name="documents_documentstore" attributes="vaed" />
     </role>
-    <role name="Gerente de Operações" description="Gerencia as Operações da Empresa">
+    <role name="Gerente de OperaГ§Гµes" description="Gerencia as OperaГ§Гµes da Empresa">
        <permission name="myhomepage" attributes="v---"/>
        <permission name="myhomepage-dashboard" attributes="v---"/>
        <permission name="myhomepage-inbox" attributes="v---"/>
@@ -613,7 +611,7 @@
        <permission name="contacts-external-contact-updater" attributes="v---" />
        <permission name="accounts-accounts-contact-updater" attributes="v---" />
     </role>
-    <role name="Consultor de Negócios" description="Gerencia suas próprias empresas e oportunidades">
+    <role name="Consultor de NegГіcios" description="Gerencia suas prГіprias empresas e oportunidades">
        <permission name="myhomepage" attributes="v---"/>
        <permission name="myhomepage-dashboard" attributes="v---"/>
        <permission name="myhomepage-inbox" attributes="v---"/>
@@ -779,7 +777,7 @@
        <permission name="documents" attributes="v---" />
        <permission name="documents_documentstore" attributes="vaed" />
     </role>
-    <role name="Atendimento ao Cliente" description="Gerencia seus próprios tickets">
+    <role name="Atendimento ao Cliente" description="Gerencia seus prГіprios tickets">
        <permission name="myhomepage" attributes="v---"/>
        <permission name="myhomepage-dashboard" attributes="v---"/>
        <permission name="myhomepage-inbox" attributes="v---"/>
@@ -845,7 +843,7 @@
        <permission name="documents" attributes="v---" />
        <permission name="documents_documentstore" attributes="v---" />
     </role>
-    <role name="Gerente de Marketing" description="Gerencia a comunicação e campanhas de marketing">
+    <role name="Gerente de Marketing" description="Gerencia a comunicaГ§ГЈo e campanhas de marketing">
        <permission name="myhomepage" attributes="v---"/>
        <permission name="myhomepage-dashboard" attributes="v---"/>
        <permission name="myhomepage-inbox" attributes="v---"/>
@@ -1016,7 +1014,7 @@
        <permission name="documents" attributes="v---" />
        <permission name="documents_documentstore" attributes="vaed" />
     </role>
-    <role name="Recursos Humanos" description="Gerencia as informações dos colaboradores">
+    <role name="Recursos Humanos" description="Gerencia as informaГ§Гµes dos colaboradores">
        <permission name="myhomepage" attributes="v---"/>
        <permission name="myhomepage-dashboard" attributes="v---"/>
        <permission name="myhomepage-inbox" attributes="v---"/>
@@ -1050,7 +1048,7 @@
        <permission name="documents_documentstore" attributes="vaed" />
        <permission name="contacts-internal_contacts-folders" attributes="vaed" />
     </role>
-    <role name="Cliente" description="Usuário do Portal Clientes" type="1">
+    <role name="Cliente" description="UsuГЎrio do Portal Clientes" type="1">
        <permission name="accounts" attributes="v---"/>
        <permission name="accounts-accounts" attributes="v---"/>
        <permission name="accounts-accounts-contacts" attributes="v---"/>
@@ -1061,7 +1059,7 @@
        <permission name="accounts-accounts-contacts" attributes="v---"/>
        <permission name="accounts-accounts-tickets" attributes="va--"/>
     </role>
-    <role name="Clientes de Produtos e Serviços" description="Usuário do Portal Produtos e Serviços" type="420041011" enabled="false">
+    <role name="Clientes de Produtos e ServiГ§os" description="UsuГЎrio do Portal Produtos e ServiГ§os" type="420041011" enabled="false">
        <permission name="myhomepage" attributes="v---"/>
        <permission name="myhomepage-dashboard" attributes="v---"/>
        <permission name="products" attributes="v---"/>

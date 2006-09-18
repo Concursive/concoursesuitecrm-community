@@ -234,9 +234,11 @@ CREATE TABLE call_log(
     reminder_type_id INTEGER REFERENCES lookup_call_reminder(code),
     alertdate_timezone VARGRAPHIC(255),
     trashed_date TIMESTAMP,
+    followup_contact_id INTEGER REFERENCES contact(contact_id),
     PRIMARY KEY(call_id)
 );
 
+CREATE INDEX call_fcontact_id_idx  ON call_log (followup_contact_id);
 
 CREATE INDEX call_log_cidx
     ON call_log(alertdate,enteredby);

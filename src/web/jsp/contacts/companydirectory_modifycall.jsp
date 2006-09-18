@@ -30,6 +30,9 @@
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
+<jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
+<jsp:useBean id="action" class="java.lang.String" scope="request"/>
+<jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -165,7 +168,7 @@
 <% if("pending".equals(request.getParameter("view"))){ %>
 <body onLoad="javascript:document.addCall.alertText.focus();">
 <%}else{%>
-<body onLoad="javascript:document.addCall.subject.focus();">
+<body onLoad="javascript:if(document.addCall.subject){document.addCall.subject.focus();}">
 <%}%>
 <form name="addCall" action="ExternalContactsCalls.do?command=Save&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">

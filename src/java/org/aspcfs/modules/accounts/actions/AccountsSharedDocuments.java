@@ -71,7 +71,7 @@ public class AccountsSharedDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("ListOK");
+    return getReturn(context, "List");
   }
 
   private static Organization setOrganization(ActionContext context, Connection db) throws SQLException {

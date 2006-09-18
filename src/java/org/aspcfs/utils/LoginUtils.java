@@ -64,7 +64,7 @@ public class LoginUtils {
    */
   public LoginUtils(Connection db, String username, String password) throws Exception {
     this.username = username;
-    this.password = password;
+    this.password = PasswordHash.encrypt(password);
     build(db);
   }
 
@@ -262,6 +262,51 @@ public class LoginUtils {
       thisUser.setUserId(aliasId > 0 ? aliasId : userId);
       thisUser.setActualUserId(userId);
       thisUser.setClientType(context.getRequest());
+    }
+
+    return (userId > -1);
+  }
+  
+  public boolean isPortalUserValid(Connection db) throws Exception {
+    return (isPortalUserValid(db, null));
+  }
+  
+  public boolean isPortalUserValid(Connection db, LoginBean loginBean) throws Exception {
+    if (!built) {
+      this.build(db);
+    }
+    if (tmpUserId == -1) {
+      // NOTE: This could be modified so that LDAP records get inserted into CRM on the fly if they do not exist yet
+      // User record not found in database
+      if (loginBean != null) {
+        loginBean.setMessage("* " + (thisSystem != null ? thisSystem.getLabel("login.msg.invalidLoginInfo") : "Invalid Login Info"));
+      }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Login-> User record not found in database for: " + username.toLowerCase());
+      }
+    } else if (hasExpired()) {
+      // Login expired
+      if (loginBean != null) {
+        loginBean.setMessage("* " + (thisSystem != null ? thisSystem.getLabel("login.msg.accountExpired") : "Account Expired"));
+      }
+    } else {
+    
+        // Validate against Centric CRM
+        if (code == null || code.trim().equals("") ||
+            (!code.equals(password) )) {
+          if (loginBean != null) {
+            loginBean.setMessage("* " + (thisSystem != null ? thisSystem.getLabel("login.msg.invalidLoginInfo") : "Invalid Login Info"));
+          }
+        } else {
+          userId = tmpUserId;
+        }
+     
+    }
+
+    if (tmpUserId > -1) {
+      thisUser.setUserId(aliasId > 0 ? aliasId : userId);
+      thisUser.setActualUserId(userId);
+
     }
 
     return (userId > -1);

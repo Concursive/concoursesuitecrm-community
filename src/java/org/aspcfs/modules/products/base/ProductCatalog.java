@@ -18,6 +18,9 @@ package org.aspcfs.modules.products.base;
 import com.darkhorseventures.framework.beans.GenericBean;
 import com.isavvix.tools.FileInfo;
 import com.zeroio.iteam.base.FileItem;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
@@ -44,7 +47,8 @@ import java.util.Iterator;
  * @created March 18, 2004
  */
 public class ProductCatalog extends GenericBean {
-	private int id = -1;
+  private static final long serialVersionUID = -8112814592797357413L;
+  private int id = -1;
 	private int parentId = -1;
 	private int typeId = -1;
 	private int formatId = -1;
@@ -110,6 +114,16 @@ public class ProductCatalog extends GenericBean {
   private double priceAmount = 0.0;
   private double costAmount = 0.0;
 
+  //Logger
+  private long milies = -1;
+  private static Logger logger = Logger.getLogger(ProductCatalog.class);
+
+  static{
+    if(System.getProperty("DEBUG")!= null){
+      logger.setLevel(Level.DEBUG);
+    }
+  }
+  
   /**
 	 * Gets the largeImageFile attribute of the ProductCatalog object
 	 *
@@ -1521,6 +1535,7 @@ public class ProductCatalog extends GenericBean {
 		buildRecord(rs);
 	}
 
+  
 	/**
 	 * Description of the Method
 	 *
@@ -1551,8 +1566,16 @@ public class ProductCatalog extends GenericBean {
 						+ "LEFT JOIN lookup_product_ship_time pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) "
 						+ "WHERE pctlg.product_id = ? ");
 		pst.setInt(1, id);
-		ResultSet rs = pst.executeQuery();
-		if (rs.next()) {
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
+    ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
+    if (rs.next()) {
 			buildRecord(rs);
 		}
 		rs.close();
@@ -1620,8 +1643,16 @@ public class ProductCatalog extends GenericBean {
 					"from product_catalog_category_map pctlgcm, product_category pc " +
 					"where pctlgcm.category_id=pc.category_id and pctlgcm.product_id=?");
 			pst.setInt(1, id);
-			ResultSet rs = pst.executeQuery();
-			if(rs.next())
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis();
+        logger.debug(pst.toString());
+      }
+      ResultSet rs = pst.executeQuery();
+      if (System.getProperty("DEBUG") != null) {
+        milies = System.currentTimeMillis() - milies;
+        logger.debug(String.valueOf(milies) + " ms");
+      }
+      if(rs.next())
 			{
 				result = rs.getString(1);
 				while(rs.next())
@@ -2414,8 +2445,16 @@ public class ProductCatalog extends GenericBean {
 		pst = db.prepareStatement("SELECT count(*) AS optioncount "
 				+ "FROM product_option_map " + "WHERE product_id = ? ");
 		pst.setInt(++i, this.getId());
-		rs = pst.executeQuery();
-		if (rs.next()) {
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
+    rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
+    if (rs.next()) {
 			int catalogCount = rs.getInt("optioncount");
 			if (catalogCount != 0) {
 				Dependency thisDependency = new Dependency();
@@ -2434,8 +2473,16 @@ public class ProductCatalog extends GenericBean {
 				+ "FROM service_contract_products "
 				+ "WHERE link_product_id = ? ");
 		pst.setInt(++i, this.getId());
-		rs = pst.executeQuery();
-		if (rs.next()) {
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
+    rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
+    if (rs.next()) {
 			int catalogCount = rs.getInt("catalogcount");
 			if (catalogCount != 0) {
 				Dependency thisDependency = new Dependency();
@@ -2456,8 +2503,16 @@ public class ProductCatalog extends GenericBean {
 		pst = db.prepareStatement("SELECT count(*) AS catalogcount "
 				+ "FROM ticket " + "WHERE product_id = ? ");
 		pst.setInt(++i, this.getId());
-		rs = pst.executeQuery();
-		if (rs.next()) {
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
+    rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
+    if (rs.next()) {
 			int catalogCount = rs.getInt("catalogcount");
 			if (catalogCount != 0) {
 				Dependency thisDependency = new Dependency();
@@ -2477,8 +2532,16 @@ public class ProductCatalog extends GenericBean {
 		pst = db.prepareStatement("SELECT count(*) AS catalogcount "
 				+ "FROM quote_product " + "WHERE product_id = ? ");
 		pst.setInt(++i, this.getId());
-		rs = pst.executeQuery();
-		if (rs.next()) {
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
+    rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
+    if (rs.next()) {
 			int catalogCount = rs.getInt("catalogcount");
 			if (catalogCount != 0) {
 				Dependency thisDependency = new Dependency();
@@ -2532,8 +2595,16 @@ public class ProductCatalog extends GenericBean {
 		} else {
 			pst.setString(++i, productName);
 		}
-		ResultSet rs = pst.executeQuery();
-		if (rs.next()) {
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis();
+      logger.debug(pst.toString());
+    }
+    ResultSet rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+      milies = System.currentTimeMillis() - milies;
+      logger.debug(String.valueOf(milies) + " ms");
+    }
+    if (rs.next()) {
 			this.setBuildOptions(true);
 			this.queryRecord(db, rs.getInt("product_id"));
 		}

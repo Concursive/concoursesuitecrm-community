@@ -193,7 +193,8 @@ CREATE TABLE call_log (
   reminder_value INT NULL,
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
   alertdate_timezone VARCHAR(255),
-  trashed_date TIMESTAMP(3)
+  trashed_date TIMESTAMP(3).
+  followup_contact_id INT REFERENCES contact(contact_id)
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");
@@ -201,6 +202,8 @@ CREATE INDEX "call_log_entered_idx" ON "call_log" (entered);
 CREATE INDEX "call_contact_id_idx" ON "call_log" (contact_id);
 CREATE INDEX "call_org_id_idx" ON "call_log" (org_id);
 CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
+CREATE INDEX call_fcontact_id_idx  ON call_log (followup_contact_id);
+
 
 ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id); 
 

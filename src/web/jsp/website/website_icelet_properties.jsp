@@ -25,6 +25,7 @@
 <jsp:useBean id="icelet" class="org.aspcfs.modules.website.base.Icelet" scope="request"/>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
 <jsp:useBean id="leadSourceSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="rolelistSelect" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -170,6 +171,16 @@
             <td>
             <%  IceletProperty iceletProperty = (rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null ? (IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) : null); %>  
             <%= leadSourceSelect.getHtmlSelect("property_"+rowColumn.getId()+"_"+property.getTypeConstant(),(iceletProperty != null?Integer.parseInt(iceletProperty.getValue()):-1)) %></td>
+          </tr>
+        </table>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= property.getType().equals(IceletProperty.PORTAL_ROLELIST) %>">
+        <table cellspacing="0" cellpadding="0" border="0" class="empty">
+          <tr><td colspan="2"><%= toHtml(property.getDescription()) %></td></tr>
+          <tr>
+            <td>
+            <%IceletProperty iceletProperty = (rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null ? (IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) : null); %>  
+            <%= rolelistSelect.getHtmlSelect("property_"+rowColumn.getId()+"_"+property.getTypeConstant(),(iceletProperty != null?Integer.parseInt(iceletProperty.getValue()):-1)) %></td>
           </tr>
         </table>
       </dhv:evaluate>

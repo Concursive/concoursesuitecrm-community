@@ -263,9 +263,9 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Proiect"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Angajati" description="Care sunt angajatii in organizatia mea?"/>
     </category>
-    <category id="330041409" name="Catalog Produse" folders="true" lookups="true" reports="false" categories="false" products="true">
+    <category id="330041409" name="Catalog Produse" folders="true" lookups="true" reports="false" categories="false">
       <folder constantId="200403192" description="Categorii Catalog Produse" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Acces la modulul Catalog Produse" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Acces la modulul Catalog Produse" enabled="true"/>
       <permission name="product-catalog-product" attributes="vaed" description="Produse" enabled="false"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Tipuri Produse"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Tipuri Format Produs"/>
@@ -290,7 +290,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configureaza Directoare customizate &amp; Campuri"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Configureaza Stilul de Munca la obiect"/>
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Configureaza Modul Categorii"/>
-      <permission name="admin-sysconfig-products" attributes="vaed" description="Editor Catalog Produse"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" description="Configureaza Modulul logouri"/>
       <permission name="admin-actionplans" attributes="vaed" description="Configure Action Plans"/>
       <report file="users.xml" type="user" permission="admin" title="Userii din Sistem" description="Care sunt toti userii din sistem?"/>
@@ -409,7 +408,6 @@
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
-      <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="admin-sysconfig-logos" attributes="vaed" />
       <permission name="admin-actionplans" attributes="vaed" />
       <permission name="help" attributes="v---"/>
