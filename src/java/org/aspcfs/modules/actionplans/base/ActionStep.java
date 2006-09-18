@@ -146,7 +146,7 @@ public class ActionStep extends GenericBean {
         " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
         " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
         " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
-        " LEFT JOIN \"role\" r ON (astp.role_id = r.role_id) " +
+        " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role")+ " r ON (astp.role_id = r.role_id) " +
         " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
         " LEFT JOIN user_group ug ON (astp.group_id = ug.group_id) " +
         " WHERE astp.step_id = ? ");

@@ -412,7 +412,7 @@ public class Parameter
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO report_criteria_parameter " +
-        "(" + (id > -1 ? "parameter_id, " : "") + "criteria_id, \"parameter\", \"value\") ");
+        "(" + (id > -1 ? "parameter_id, " : "") + "criteria_id, " + DatabaseUtils.addQuotes(db, "parameter")+ ", " + DatabaseUtils.addQuotes(db, "value")+ ") ");
     sql.append("VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     if (id > -1) {

@@ -434,7 +434,7 @@ public abstract class Configurator {
     }
     String text = null;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"value\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "value")+ " " +
         "FROM quote_product_option_text " +
         "WHERE quote_product_option_id = ? AND id = ? ");
     pst.setInt(1, quoteProductOptionId);
@@ -464,7 +464,7 @@ public abstract class Configurator {
     }
     double value = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"value\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "value")+ " " +
         "FROM quote_product_option_float " +
         "WHERE quote_product_option_id = ? AND id = ? ");
     pst.setInt(1, quoteProductOptionId);
@@ -493,7 +493,7 @@ public abstract class Configurator {
       throw new SQLException("Invalid Product Option Id");
     }
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO quote_product_option_text(quote_product_option_id, id, \"value\") " +
+        "INSERT INTO quote_product_option_text(quote_product_option_id, id, " + DatabaseUtils.addQuotes(db, "value")+ ") " +
         "VALUES (?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, quoteProductOptionId);
@@ -518,7 +518,7 @@ public abstract class Configurator {
       throw new SQLException("Invalid Product Option Id");
     }
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO quote_product_option_float(quote_product_option_id, id, \"value\") " +
+        "INSERT INTO quote_product_option_float(quote_product_option_id, id, " + DatabaseUtils.addQuotes(db, "value")+ ") " +
         "VALUES (?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, quoteProductOptionId);
@@ -544,7 +544,7 @@ public abstract class Configurator {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE quote_product_option_text " +
-        "SET \"value\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         "WHERE quote_product_option_id = ? " +
         "AND id = ? ");
     int i = 0;
@@ -571,7 +571,7 @@ public abstract class Configurator {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE quote_product_option_float " +
-        "SET \"value\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         "WHERE quote_product_option_id = ? " +
         "AND id = ? ");
     int i = 0;
@@ -612,7 +612,7 @@ public abstract class Configurator {
     }
     String text = null;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"value\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "value")+ " " +
         "FROM product_option_text " +
         "WHERE product_option_id = ? AND id = ? ");
     pst.setInt(1, optionId);
@@ -641,7 +641,7 @@ public abstract class Configurator {
       throw new SQLException("Invalid Option Id");
     }
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO product_option_text(product_option_id, id, \"value\") " +
+        "INSERT INTO product_option_text(product_option_id, id, " + DatabaseUtils.addQuotes(db, "value")+ ") " +
         "VALUES (?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, optionId);
@@ -667,7 +667,7 @@ public abstract class Configurator {
     }
     int value = -1;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"value\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "value")+ " " +
         "FROM product_option_integer " +
         "WHERE product_option_id = ? AND id = ? ");
     pst.setInt(1, optionId);
@@ -696,7 +696,7 @@ public abstract class Configurator {
       throw new SQLException("Invalid Option Id");
     }
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO product_option_integer(product_option_id, id, \"value\") " +
+        "INSERT INTO product_option_integer(product_option_id, id, " + DatabaseUtils.addQuotes(db, "value")+ ") " +
         "VALUES (?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, optionId);
@@ -722,7 +722,7 @@ public abstract class Configurator {
     }
     boolean value = false;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"value\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "value")+ " " +
         "FROM product_option_boolean " +
         "WHERE product_option_id = ? AND id = ? ");
     pst.setInt(1, optionId);
@@ -751,7 +751,7 @@ public abstract class Configurator {
       throw new SQLException("Invalid Option Id");
     }
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO product_option_boolean(product_option_id, id, \"value\") " +
+        "INSERT INTO product_option_boolean(product_option_id, id, " + DatabaseUtils.addQuotes(db, "value")+ ") " +
         "VALUES (?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, optionId);
@@ -777,7 +777,7 @@ public abstract class Configurator {
     }
     double value = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"value\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "value")+ " " +
         "FROM product_option_float " +
         "WHERE product_option_id = ? AND id = ? ");
     pst.setInt(1, optionId);
@@ -806,7 +806,7 @@ public abstract class Configurator {
       throw new SQLException("Invalid Option Id");
     }
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO product_option_float(product_option_id, id, \"value\") " +
+        "INSERT INTO product_option_float(product_option_id, id, " + DatabaseUtils.addQuotes(db, "value")+ ") " +
         "VALUES (?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, optionId);
@@ -832,7 +832,7 @@ public abstract class Configurator {
     }
     Timestamp value = null;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"value\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "value")+ " " +
         "FROM product_option_timestamp " +
         "WHERE product_option_id = ? AND id = ? ");
     pst.setInt(1, optionId);
@@ -861,7 +861,7 @@ public abstract class Configurator {
       throw new SQLException("Invalid Option Id");
     }
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO product_option_timestamp(product_option_id, id, \"value\") " +
+        "INSERT INTO product_option_timestamp(product_option_id, id, " + DatabaseUtils.addQuotes(db, "value")+ ") " +
         "VALUES (?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, optionId);
@@ -916,7 +916,7 @@ public abstract class Configurator {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE product_option_text " +
-        "SET \"value\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         "WHERE product_option_id = ? AND id = ? ");
     int i = 0;
     pst.setString(++i, value);
@@ -945,7 +945,7 @@ public abstract class Configurator {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE product_option_integer " +
-        "SET \"value\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         "WHERE product_option_id = ? AND id = ? ");
     int i = 0;
     pst.setInt(++i, value);
@@ -974,7 +974,7 @@ public abstract class Configurator {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE product_option_boolean " +
-        "SET \"value\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         "WHERE product_option_id = ? AND id = ? ");
     int i = 0;
     pst.setBoolean(++i, value);
@@ -1003,7 +1003,7 @@ public abstract class Configurator {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE product_option_float " +
-        "SET \"value\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         "WHERE product_option_id = ? AND id = ? ");
     int i = 0;
     pst.setDouble(++i, value);
@@ -1032,7 +1032,7 @@ public abstract class Configurator {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE product_option_timestamp " +
-        "SET \"value\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         "WHERE product_option_id = ? AND id = ? ");
     int i = 0;
     pst.setTimestamp(++i, value);

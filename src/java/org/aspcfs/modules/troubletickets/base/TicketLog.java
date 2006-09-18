@@ -874,7 +874,7 @@ public class TicketLog extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "ticketlog_id_seq");
       sql.append(
           "INSERT INTO ticketlog (pri_code, level_code, department_code, " + 
-          "cat_code, scode, escalation_code, ticketid, \"comment\", closed, state_id, ");
+          "cat_code, scode, escalation_code, ticketid, " + DatabaseUtils.addQuotes(db, "comment")+ ", closed, state_id, ");
       if (id > -1) {
         sql.append("id, ");
       }

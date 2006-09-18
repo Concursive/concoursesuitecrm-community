@@ -717,7 +717,7 @@ public class Issue extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "project_issues_issue_id_seq");
     sql.append(
         "INSERT INTO project_issues " +
-        "(project_id, category_id, subject, \"message\", importance, enabled, ");
+        "(project_id, category_id, subject, " + DatabaseUtils.addQuotes(db, "message")+ ", importance, enabled, ");
     if (id > -1) {
       sql.append("issue_id, ");
     }
@@ -913,7 +913,7 @@ public class Issue extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_issues " +
-        "SET subject = ?, \"message\" = ?, importance = ?, " +
+        "SET subject = ?, " + DatabaseUtils.addQuotes(db, "message")+ " = ?, importance = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE issue_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));

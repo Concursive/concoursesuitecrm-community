@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 /**
  * A tree of items for displaying
  *
@@ -119,7 +121,7 @@ public class RequirementMapList extends ArrayList {
         "FROM project_requirements_map " +
         "WHERE project_id = ? " +
         "AND requirement_id = ? " +
-        "ORDER BY \"position\" ");
+        "ORDER BY " + DatabaseUtils.addQuotes(db, "position")+ " ");
     pst.setInt(1, projectId);
     pst.setInt(2, requirementId);
     ResultSet rs = pst.executeQuery();

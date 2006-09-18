@@ -1019,7 +1019,7 @@ public class SearchCriteriaList extends HashMap {
       pst = db.prepareStatement(
           "SELECT COUNT(*) AS group_count " +
           "FROM campaign " +
-          "WHERE \"active\" = ? " +
+          "WHERE " + DatabaseUtils.addQuotes(db, "active")+ " = ? " +
           "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?) ");
       pst.setBoolean(1, true);
       pst.setInt(2, this.getId());

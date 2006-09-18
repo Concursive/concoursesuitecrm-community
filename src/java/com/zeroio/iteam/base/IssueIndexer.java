@@ -50,7 +50,7 @@ public class IssueIndexer implements Indexer {
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT issue_id, project_id, category_id, subject, \"message\", modified " +
+        "SELECT issue_id, project_id, category_id, subject, " + DatabaseUtils.addQuotes(db, "message")+ ", modified " +
         "FROM project_issues " +
         "WHERE project_id > -1 ");
     ResultSet rs = pst.executeQuery();

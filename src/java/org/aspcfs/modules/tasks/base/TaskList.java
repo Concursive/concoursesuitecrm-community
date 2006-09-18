@@ -539,7 +539,7 @@ public class TaskList extends ArrayList implements UserCentric {
     sqlSelect.append(
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
             "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
-            "t.estimatedloetype, t.\"type\", t.owner, t.completedate, t.modified, " +
+            "t.estimatedloetype, t." + DatabaseUtils.addQuotes(db, "type")+ ", t.owner, t.completedate, t.modified, " +
             "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date, t.ticket_task_category_id " +
             "FROM task t " +
             "WHERE t.task_id > -1 ");

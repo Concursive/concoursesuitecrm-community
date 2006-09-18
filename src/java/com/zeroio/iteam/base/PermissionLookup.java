@@ -218,7 +218,7 @@ public class PermissionLookup extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "lookup_project_permission_code_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO lookup_project_permission " +
-        "(" + (id > -1 ? "code, " : "") + "category_id, permission, description, \"level\", default_role, group_id) VALUES " +
+        "(" + (id > -1 ? "code, " : "") + "category_id, permission, description, " + DatabaseUtils.addQuotes(db, "level")+ ", default_role, group_id) VALUES " +
         "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?)"
     );
     int i = 0;

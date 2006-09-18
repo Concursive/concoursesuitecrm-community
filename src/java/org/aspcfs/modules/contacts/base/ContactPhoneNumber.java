@@ -160,7 +160,7 @@ public class ContactPhoneNumber extends PhoneNumber {
     int id = getId();
     sql.append(
         "INSERT INTO contact_phone " +
-        "(contact_id, phone_type, \"number\", extension, primary_number, ");
+        "(contact_id, phone_type, " + DatabaseUtils.addQuotes(db, "number")+ ", extension, primary_number, ");
     if (id > -1) {
       sql.append("phone_id, ");
     }
@@ -225,7 +225,7 @@ public class ContactPhoneNumber extends PhoneNumber {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact_phone " +
-        "SET phone_type = ?, \"number\" = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
+        "SET phone_type = ?, " + DatabaseUtils.addQuotes(db, "number")+ " = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE phone_id = ? ");
     int i = 0;

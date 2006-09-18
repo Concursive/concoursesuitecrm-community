@@ -223,7 +223,7 @@ public class FileItemVersionList extends ArrayList {
       pagedListInfo.setDefaultSort("version", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY \"version\" DESC ");
+      sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "version")+ " DESC ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -353,7 +353,7 @@ public class FileItemVersionList extends ArrayList {
     long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(\"size\") AS recordsize " +
+        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size")+ ") AS recordsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
@@ -381,7 +381,7 @@ public class FileItemVersionList extends ArrayList {
   public static long queryOwnerSize(Connection db, int ownerId) throws SQLException {
     long recordSize = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT SUM(\"size\") AS recordsize " +
+        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size")+ ") AS recordsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 " +
         "AND v.enteredby = ? ");
@@ -435,7 +435,7 @@ public class FileItemVersionList extends ArrayList {
     int downloadSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(downloads * \"size\") AS downloadsize " +
+        "SELECT SUM(downloads * " + DatabaseUtils.addQuotes(db, "size")+ ") AS downloadsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);

@@ -180,7 +180,7 @@ public class Item {
       id = DatabaseUtils.getNextSeq(db, "survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO survey_items " +
-          "(" + (id > -1 ? "item_id, " : "") + "question_id, \"type\", description ) " +
+          "(" + (id > -1 ? "item_id, " : "") + "question_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description ) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
       int i = 0;
       if (id > -1) {

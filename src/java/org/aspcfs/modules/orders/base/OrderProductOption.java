@@ -878,7 +878,7 @@ public class OrderProductOption extends GenericBean {
     sql = new StringBuffer("");
     sql.append(
         " UPDATE order_product_option_boolean " +
-        " SET \"value\" = ? " +
+        " SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(1, this.getBooleanValue());
@@ -889,7 +889,7 @@ public class OrderProductOption extends GenericBean {
     sql = new StringBuffer("");
     sql.append(
         " UPDATE order_product_option_float " +
-        " SET \"value\" = ? " +
+        " SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setDouble(1, this.getFloatValue());
@@ -900,7 +900,7 @@ public class OrderProductOption extends GenericBean {
     sql = new StringBuffer("");
     sql.append(
         " UPDATE order_product_option_timestamp " +
-        " SET \"value\" = ? " +
+        " SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setTimestamp(1, this.getTimestampValue());
@@ -911,7 +911,7 @@ public class OrderProductOption extends GenericBean {
     sql = new StringBuffer("");
     sql.append(
         " UPDATE order_product_option_integer " +
-        " SET \"value\" = ? " +
+        " SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, 1, this.getIntegerValue());
@@ -922,7 +922,7 @@ public class OrderProductOption extends GenericBean {
     sql = new StringBuffer("");
     sql.append(
         " UPDATE order_product_option_text " +
-        " SET \"value\" = ? " +
+        " SET " + DatabaseUtils.addQuotes(db, "value")+ " = ? " +
         " WHERE order_product_option_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setString(1, this.getTextValue());

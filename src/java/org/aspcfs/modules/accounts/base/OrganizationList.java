@@ -1293,7 +1293,7 @@ public class OrganizationList extends Vector implements SyncableList {
     createFilter(db, sqlFilter);
 
     sqlSelect.append(
-        "SELECT " + sqlDate + " AS \"date\", count(*) AS nocols " +
+        "SELECT " + sqlDate + " AS " + DatabaseUtils.addQuotes(db, "date")+ ", count(*) AS nocols " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
     sqlTail.append("GROUP BY " + sqlDate);

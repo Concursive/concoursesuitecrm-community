@@ -195,7 +195,7 @@ public class ContactMessageList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
             "FROM contact_message cm " +
-            "LEFT JOIN \"message\" m ON (cm.message_id = m.id) " +
+            "LEFT JOIN " + DatabaseUtils.addQuotes(db, "message")+ " m ON (cm.message_id = m.id) " +
             "LEFT JOIN contact ct_rf ON (cm.received_from = ct_rf.contact_id) " +
             "LEFT JOIN contact ct_rb ON (cm.received_by = ct_rb.user_id) " +
             "WHERE cm.id > -1 ");
@@ -249,7 +249,7 @@ public class ContactMessageList extends ArrayList {
     sqlSelect.append(
         "cm.* " +
             "FROM contact_message cm " +
-            "LEFT JOIN \"message\" m ON (cm.message_id = m.id) " +
+            "LEFT JOIN " + DatabaseUtils.addQuotes(db, "message")+ " m ON (cm.message_id = m.id) " +
             "LEFT JOIN contact ct_rf ON (cm.received_from = ct_rf.contact_id) " +
             "LEFT JOIN contact ct_rb ON (cm.received_by = ct_rb.user_id) " +
             "WHERE cm.id > -1 ");

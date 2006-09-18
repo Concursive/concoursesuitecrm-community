@@ -407,7 +407,7 @@ public class ActiveSurveyQuestion {
     int i = 0;
     pst = db.prepareStatement(
         "INSERT INTO active_survey_questions " +
-        "(" + (id > -1 ? "question_id, " : "") + "active_survey_id, \"type\", description, required, \"position\") " +
+        "(" + (id > -1 ? "question_id, " : "") + "active_survey_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description, required, " + DatabaseUtils.addQuotes(db, "position")+ ") " +
         "VALUES " +
         "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
     if (id > -1) {
@@ -443,7 +443,7 @@ public class ActiveSurveyQuestion {
   public void update(Connection db, int activeSurveyId, int surveyType) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE active_survey_questions " +
-        "SET active_survey_id = ?, \"type\" = ?, description = ?, required = ?, \"position\" = ? " +
+        "SET active_survey_id = ?, " + DatabaseUtils.addQuotes(db, "type")+ " = ?, description = ?, required = ?, " + DatabaseUtils.addQuotes(db, "position")+ " = ? " +
         "WHERE question_id = ? ");
     int i = 0;
     pst.setInt(++i, activeSurveyId);

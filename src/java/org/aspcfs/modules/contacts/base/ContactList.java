@@ -3787,14 +3787,14 @@ public class ContactList extends Vector implements UserCentric {
 
     if (portalUsersOnly == Constants.TRUE) {
       sqlFilter.append(
-          "AND EXISTS (SELECT user_id FROM \"access\" a " +
-              "WHERE c.user_id = a.user_id AND a.enabled = ? " +
-              "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type = ?)) ");
+          "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access")+ " a " +
+          "WHERE c.user_id = a.user_id AND a.enabled = ? " +
+          "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role")+ " r WHERE r.role_type = ?)) ");
     } else if (portalUsersOnly == Constants.FALSE) {
       sqlFilter.append(
-          "AND EXISTS (SELECT user_id FROM \"access\" a " +
-              "WHERE c.user_id = a.user_id " +
-              "AND a.role_id IN (SELECT r.role_id FROM \"role\" r WHERE r.role_type != ?)) ");
+          "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access")+ " a " +
+          "WHERE c.user_id = a.user_id " +
+          "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role")+ " r WHERE r.role_type != ?)) ");
     }
 
     if (includeNonUsersOnly) {

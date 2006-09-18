@@ -177,12 +177,15 @@ public class DatabaseBean extends GenericBean {
       if ("MySQL".equals(type)) {
         driver = "com.mysql.jdbc.Driver";
       }
+      if ("Derby".equals(type)) {
+        driver = "org.apache.derby.jdbc.EmbeddedDriver";
+      }
     }
     return driver;
   }
 
   public boolean isEmbedded() {
-    return ("DaffodilDB".equals(type) || "Firebird".equals(type));
+    return ("DaffodilDB".equals(type) || "Firebird".equals(type) || "Derby".equals(type));
   }
 
 
@@ -269,6 +272,9 @@ public class DatabaseBean extends GenericBean {
       // jdbc:mysql://127.0.0.1:3306/centric_crm
       return "jdbc:mysql://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
+    if ("org.apache.derby.jdbc.EmbeddedDriver".equals(this.getDriver())) {
+      return "jdbc:derby:" + path;
+    }
     return "";
   }
 
@@ -339,6 +345,9 @@ public class DatabaseBean extends GenericBean {
     }
     if ("MySQL".equals(type)) {
       return "mysql";
+    }
+    if ("Derby".equals(type)) {
+      return "derby";
     }
     return null;
   }

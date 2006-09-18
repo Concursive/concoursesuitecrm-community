@@ -51,7 +51,7 @@ public class IssueReplyIndexer implements Indexer {
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT r.reply_id, r.issue_id, i.project_id, i.category_id, r.subject, r.\"message\", r.modified " +
+        "SELECT r.reply_id, r.issue_id, i.project_id, i.category_id, r.subject, r." + DatabaseUtils.addQuotes(db, "message")+ ", r.modified " +
         "FROM project_issue_replies r " +
         "LEFT JOIN project_issues i ON r.issue_id = i.issue_id " +
         "WHERE i.project_id > -1 ");

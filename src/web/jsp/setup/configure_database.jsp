@@ -33,7 +33,7 @@
     }
   }
   function configureDB() {
-    if (document.configure.type.value == "DaffodilDB") {
+    if (document.configure.type.value == "DaffodilDB" || document.configure.type.value == "Derby") {
       hideSpan("span-ip");
       showSpan("span-ip-no");
       hideSpan("span-port");
@@ -119,6 +119,7 @@
               <option value="DB2"<%= "DB2".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.db2">DB2</dhv:label></option>
               <option value="Firebird"<%= "Firebird".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.firebird">Firebird</dhv:label></option>
               <option value="MySQL"<%= "MySQL".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.mysql">MySQL</dhv:label></option>
+              <option value="Derby"<%= "Derby".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.derby">Apache Derby (Embedded)</dhv:label></option>
               <option value="Oracle"<%= "Oracle".equals(database.getType()) ? " selected" : "" %>><dhv:label name="setup.oracle">Oracle</dhv:label></option>
             </dhv:evaluate>
             </select>

@@ -192,7 +192,7 @@ public class Usage {
     id = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO usage_log " +
-        "(" + (id > -1 ? "usage_id, " : "") + "enteredby, \"action\", record_id, record_size) " +
+        "(" + (id > -1 ? "usage_id, " : "") + "enteredby, " + DatabaseUtils.addQuotes(db, "action")+ ", record_id, record_size) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

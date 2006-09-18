@@ -49,6 +49,7 @@ public class DatabaseUtils {
   public final static int DAFFODILDB = 5;
   public final static int DB2 = 6;
   public final static int MYSQL = 7;
+  public final static int DERBY = 8;
   public final static String sqlReservedWords = ",language,password,level,type,position,second," +
       "minute,hour,month,dayofweek,year,length,message," +
       "active,role,number,module,section,value,size," +
@@ -82,6 +83,8 @@ public class DatabaseUtils {
         return "'Y'";
       case DatabaseUtils.MYSQL:
         return "1";
+      case DatabaseUtils.DERBY:
+        return "'1'";
       default:
         return "true";
     }
@@ -110,6 +113,8 @@ public class DatabaseUtils {
         return "'N'";
       case DatabaseUtils.MYSQL:
         return "0";
+      case DatabaseUtils.DERBY:
+        return "'0'";
       default:
         return "false";
     }
@@ -137,6 +142,8 @@ public class DatabaseUtils {
       case DatabaseUtils.FIREBIRD:
         return "CURRENT_TIMESTAMP";
       case DatabaseUtils.MYSQL:
+        return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.DERBY:
         return "CURRENT_TIMESTAMP";
       default:
         return "CURRENT_TIMESTAMP";
@@ -179,6 +186,8 @@ public class DatabaseUtils {
       return DB2;
     } else if (databaseName.indexOf("mysql") > -1) {
       return MYSQL;
+    } else if (databaseName.indexOf("derby") > -1) {
+      return DERBY;
     } else {
       System.out.println("DatabaseUtils-> Unkown Connection Class: " + databaseName);
       return -1;
@@ -208,6 +217,8 @@ public class DatabaseUtils {
         return "db2";
       case MYSQL:
         return "mysql";
+      case DERBY:
+        return "derby";
       default:
         return "unknown";
     }
@@ -240,6 +251,8 @@ public class DatabaseUtils {
         //case DatabaseUtils.ORACLE:
         //  return ("CAST(" + date + " AS DATE)");
       case DatabaseUtils.MYSQL:
+        return ("DATE(" + date + ")");
+      case DatabaseUtils.DERBY:
         return ("DATE(" + date + ")");
       default:
         return "";
@@ -345,6 +358,19 @@ public class DatabaseUtils {
           customUnits = "YEAR";
         }
         addTimestampIntervalString = " ADDDATE(" + timestampColumnName + ", INTERVAL " + termsColumnName + "+1 " + customUnits + ")";
+        break;
+      case DatabaseUtils.DERBY:
+        if (units == DAY) {
+          customUnits = "SQL_TSI_DAY";
+        } else if (units == WEEK) {
+          customUnits = "SQL_TSI_WEEK";
+        } else if (units == MONTH) {
+          customUnits = "SQL_TSI_MONTH";
+        } else if (units == YEAR) {
+          customUnits = "SQL_TSI_YEAR";
+        }
+        addTimestampIntervalString = " {fn TIMESTAMPADD(" + customUnits + ", CAST(" + termsColumnName + "+1 AS INTEGER), " + timestampColumnName + ")}";
+        break;
     }
     return addTimestampIntervalString;
   }
@@ -406,6 +432,13 @@ public class DatabaseUtils {
           customUnits = "WEEK";
         }
         addTimestampIntervalString = " ADDDATE(" + timestampColumnName + ", INTERVAL (" + termsColumnName + " + " + (defaultTerms + 1) + ") " + customUnits + ")";
+        break;
+      case DatabaseUtils.DERBY:
+        if (units == WEEK) {
+          customUnits = "SQL_TSI_WEEK";
+        }
+        addTimestampIntervalString = "fn{ TIMESTAMPADD(" + customUnits + ", CAST(" + termsColumnName + " + " + (defaultTerms + 1) + " AS INTEGER)," + timestampColumnName + ")}";
+        break;
     }
     return addTimestampIntervalString;
   }
@@ -422,7 +455,7 @@ public class DatabaseUtils {
    */
   public static int getNextSeq(Connection db, String sequenceName) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
-    if (typeId == POSTGRESQL || typeId == MSSQL || typeId == MYSQL) {
+    if (typeId == POSTGRESQL || typeId == MSSQL || typeId == MYSQL || typeId == DERBY) {
       return -1;
     }
     int id = -1;
@@ -481,7 +514,7 @@ public class DatabaseUtils {
    */
   public static int getCurrVal(Connection db, String sequenceName, int defaultValue) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
-    if (typeId != POSTGRESQL && typeId != MSSQL && typeId != MYSQL) {
+    if (typeId != POSTGRESQL && typeId != MSSQL && typeId != MYSQL && typeId != DERBY) {
       return defaultValue;
     }
     int id = -1;
@@ -497,9 +530,9 @@ public class DatabaseUtils {
       case DatabaseUtils.MYSQL:
         rs = st.executeQuery("SELECT LAST_INSERT_ID()");
         break;
-      //case DatabaseUtils.ORACLE:
-      //    rs = st.executeQuery("SELECT "+sequenceName + ".CURRVAL FROM DUAL");
-      //    break;
+      case DatabaseUtils.DERBY:
+        rs = st.executeQuery("VALUES IDENTITY_VAL_LOCAL()");
+        break;
       default:
         break;
     }
@@ -536,6 +569,8 @@ public class DatabaseUtils {
         return "YEAR(" + fieldname + ")";
       case DatabaseUtils.MYSQL:
         return "YEAR(" + fieldname + ")";
+      case DatabaseUtils.DERBY:
+        return "YEAR(" + fieldname + ")";
       default:
         return "";
     }
@@ -566,6 +601,8 @@ public class DatabaseUtils {
         return "MONTH(" + fieldname + ")";
       case DatabaseUtils.MYSQL:
         return "MONTH(" + fieldname + ")";
+      case DatabaseUtils.DERBY:
+        return "MONTH(" + fieldname + ")";
       default:
         return "";
     }
@@ -595,6 +632,8 @@ public class DatabaseUtils {
       case DatabaseUtils.DB2:
         return "DAY(" + fieldname + ")";
       case DatabaseUtils.MYSQL:
+        return "DAY(" + fieldname + ")";
+      case DatabaseUtils.DERBY:
         return "DAY(" + fieldname + ")";
       default:
         return "";
@@ -627,6 +666,8 @@ public class DatabaseUtils {
         return "HOUR(" + fieldname + ")";
       case DatabaseUtils.MYSQL:
         return "HOUR(" + fieldname + ")";
+      case DatabaseUtils.DERBY:
+        return "HOUR(" + fieldname + ")";
       default:
         return "";
     }
@@ -658,6 +699,8 @@ public class DatabaseUtils {
         return "MINUTE(" + fieldname + ")";
       case DatabaseUtils.MYSQL:
         return "MINUTE(" + fieldname + ")";
+      case DatabaseUtils.DERBY:
+        return "MINUTE(" + fieldname + ")";
       default:
         return "";
     }
@@ -686,6 +729,8 @@ public class DatabaseUtils {
         return "lower";
       case DatabaseUtils.MYSQL:
         return "lower";
+      case DatabaseUtils.DERBY:
+        return "lcase";
       default:
         return "lower";
     }
@@ -715,6 +760,8 @@ public class DatabaseUtils {
         return "lower(" + field + ")";
       case DatabaseUtils.MYSQL:
         return "lower(" + field + ")";
+      case DatabaseUtils.DERBY:
+        return "LCASE(" + field + ")";
       default:
         return "lower(" + field + ")";
     }
@@ -745,7 +792,9 @@ public class DatabaseUtils {
       case DatabaseUtils.DB2:
         return "substr(" + field + "," + (first + 1) + (size < 0 ? "" : "," + size) + ") ";
       case DatabaseUtils.MYSQL:
-        return "substr(" + field + "," + (first) + (size < 0 ? "" : "," + size) + ") ";
+        return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
+      case DatabaseUtils.DERBY:
+        return "substr(" + field + "," + (first +1 ) + (size < 0 ? "" : "," + size) + ") ";
       default:
         return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
     }
@@ -778,6 +827,8 @@ public class DatabaseUtils {
         // NOTE: If MYSQL has a problem then get a substring
         //return "SUBSTR(" + field + ", 2000, 1)";
         return field;
+      case DatabaseUtils.DERBY:
+        return "CAST(" + field + " AS VARCHAR(32000))";
       default:
         return field;
     }
@@ -1291,7 +1342,8 @@ public class DatabaseUtils {
     if (DatabaseUtils.getType(db) == FIREBIRD ||
         DatabaseUtils.getType(db) == ORACLE ||
         DatabaseUtils.getType(db) == DB2 || 
-        DatabaseUtils.getType(db) == MYSQL) {
+        DatabaseUtils.getType(db) == MYSQL ||
+        DatabaseUtils.getType(db) == DERBY) {
       if (reservedWord.indexOf(".") > -1) {
         // Table is being specified with field
         String part1 = reservedWord.substring(0, reservedWord.indexOf("."));

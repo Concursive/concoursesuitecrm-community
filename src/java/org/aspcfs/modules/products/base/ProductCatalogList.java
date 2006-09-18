@@ -1528,7 +1528,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
               " WHERE p.product_id > 0 ");
       if (buildActiveProductsOnly == Constants.TRUE) {
         sqlFilter.append(
-            " AND p.\"active\" = ? " +
+            " AND p." + DatabaseUtils.addQuotes(db, "active")+ " = ? " +
                 " AND price.enabled = ? " +
                 " AND (p.start_date < ? OR p.start_date IS NULL) " +
                 " AND (p.expiration_date IS NULL OR p.expiration_date > ?) " +
@@ -1537,7 +1537,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
                 " ) ");
       } else if (buildActiveProductsOnly == Constants.FALSE) {
         sqlFilter.append(
-            " AND (p.\"active\" = ? " +
+            " AND (p." + DatabaseUtils.addQuotes(db, "active")+ " = ? " +
                 " OR price.enabled = ? " +
                 " OR p.start_date > ? OR p.expiration_date < ? " +
                 " OR price.start_date > ? OR price.expiration_date < ?) " +
@@ -1569,15 +1569,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     }
 
     if (active != Constants.UNDEFINED) {
-      sqlFilter.append(" AND pctlg.\"active\" = ? ");
+      sqlFilter.append(" AND pctlg." + DatabaseUtils.addQuotes(db, "active")+ " = ? ");
     }
 
     if (selectedItems != null) {
       if (selectedItems.size() > 0) {
         sqlFilter.append(
-            "AND (pctlg.\"active\" = ? OR pctlg.product_id IN (" + getItemsAsList() + ")) ");
+            "AND (pctlg." + DatabaseUtils.addQuotes(db, "active")+ " = ? OR pctlg.product_id IN (" + getItemsAsList() + ")) ");
       } else {
-        sqlFilter.append("AND pctlg.\"active\" = ? ");
+        sqlFilter.append("AND pctlg." + DatabaseUtils.addQuotes(db, "active")+ " = ? ");
       }
     }
     if (includeOnlyTrashed) {

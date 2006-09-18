@@ -17,6 +17,7 @@ package org.aspcfs.modules.communications.base;
 
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
 
 import java.sql.Connection;
@@ -155,10 +156,10 @@ public class InstantCampaign extends Campaign {
         //Finalize the campaign activation
         pst = db.prepareStatement(
             "UPDATE campaign " +
-            "SET \"active\" = ?, " +
+            "SET " + DatabaseUtils.addQuotes(db, "active")+ " = ?, " +
             "reply_addr = ?, " +
             "subject = ?, " +
-            "\"message\" = ?, " +
+            DatabaseUtils.addQuotes(db, "message")+ " = ?, " +
             "modifiedby = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE campaign_id = ? ");
@@ -196,7 +197,7 @@ public class InstantCampaign extends Campaign {
   public int updateInstantCampaignMessage(Connection db, Message tmpMessage) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE campaign " +
-        "SET \"message\" = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "message")+ " = ? " +
         "WHERE campaign_id = ? ");
     int i = 0;
     pst.setString(++i, tmpMessage.getMessageText());

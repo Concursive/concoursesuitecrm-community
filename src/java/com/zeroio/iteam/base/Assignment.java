@@ -143,7 +143,7 @@ public class Assignment extends GenericBean {
   private void queryRecord(Connection db, int assignmentId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT a.*, s.description AS status, s.\"type\" AS status_type, s.graphic AS status_graphic, " +
+        "SELECT a.*, s.description AS status, s." + DatabaseUtils.addQuotes(db, "type")+ " AS status_type, s.graphic AS status_graphic, " +
             "loe_e.description AS loe_estimated_type, loe_a.description AS loe_actual_type, pr.description AS priority " +
             "FROM projects p, project_assignments a " +
             " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
@@ -1721,7 +1721,7 @@ public class Assignment extends GenericBean {
     sql.append(
         "INSERT INTO project_assignments " +
             "(project_id, requirement_id, assignedBy, user_assign_id, technology, " +
-            "\"role\", estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
+            DatabaseUtils.addQuotes(db, "role")+ ", estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
             "priority_id, assign_date, est_start_date, start_date, " +
             "due_date, due_date_timezone, status_id, status_date, percent_complete, complete_date, ");
     if (id > -1) {
@@ -1926,7 +1926,7 @@ public class Assignment extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments " +
             "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, technology = ?, " +
-            "\"role\" = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
+            DatabaseUtils.addQuotes(db, "role")+ " = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
             "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
             "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
             "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
@@ -2116,7 +2116,7 @@ public class Assignment extends GenericBean {
   public static int lookupStatusIdType(Connection db, int statusId) throws SQLException {
     int tmpStatusTypeId = -1;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT \"type\" " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "type")+ " " +
             "FROM lookup_project_status s " +
             "WHERE s.code = ? ");
     pst.setInt(1, statusId);

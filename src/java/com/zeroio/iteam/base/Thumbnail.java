@@ -294,7 +294,7 @@ public class Thumbnail extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO project_files_thumbnail " +
-        "(item_id, filename, \"version\", \"size\", " +
+        "(item_id, filename, " + DatabaseUtils.addQuotes(db, "version")+ ", " + DatabaseUtils.addQuotes(db, "size")+ ", " +
         (entered != null ? "entered, " : "") +
         (modified != null ? "modified, " : "") +
         "enteredBy, modifiedBy) " +
@@ -340,7 +340,7 @@ public class Thumbnail extends GenericBean {
     String sql =
         "DELETE FROM project_files_thumbnail " +
         "WHERE item_id = ? " +
-        "AND \"version\" = ? ";
+        "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, this.getId());
     pst.setDouble(2, this.getVersion());

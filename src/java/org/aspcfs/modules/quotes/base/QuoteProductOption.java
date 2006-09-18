@@ -746,9 +746,9 @@ public class QuoteProductOption extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT opt.*, " +
-        "bool.\"value\" AS boolean_value, " +
-        "float.\"value\" AS float_value, intr.\"value\" AS integer_value, " +
-        "tst.\"value\" AS timestamp_value, txt.\"value\" AS text_value, " +
+        "bool." + DatabaseUtils.addQuotes(db, "value")+ " AS boolean_value, " +
+        "float." + DatabaseUtils.addQuotes(db, "value")+ " AS float_value, intr." + DatabaseUtils.addQuotes(db, "value")+ " AS integer_value, " +
+        "tst." + DatabaseUtils.addQuotes(db, "value")+ " AS timestamp_value, txt." + DatabaseUtils.addQuotes(db, "value")+ " AS text_value, " +
         "pom.option_id, po.configurator_id, " +
         "prod.product_id " +
         "FROM quote_product_options opt " +

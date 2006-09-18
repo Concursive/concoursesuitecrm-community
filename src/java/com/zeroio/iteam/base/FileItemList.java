@@ -510,7 +510,7 @@ public class FileItemList extends ArrayList {
     sqlSelect.append(
         "f.*, t.filename AS thumbnail " +
         "FROM project_files f " +
-        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f.\"version\" = t.\"version\") " +
+        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f." + DatabaseUtils.addQuotes(db, "version")+ " = t." + DatabaseUtils.addQuotes(db, "version")+ ") " +
         "WHERE f.item_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -701,7 +701,7 @@ public class FileItemList extends ArrayList {
     long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(\"size\") AS recordsize " +
+        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size")+ ") AS recordsize " +
         "FROM project_files f " +
         "WHERE f.item_id > -1 ";
     createFilter(db, sqlFilter);

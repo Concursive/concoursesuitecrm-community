@@ -760,7 +760,7 @@ public class CFSNote extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "cfsinbox_message_id_seq");
       sql.append(
           "INSERT INTO cfsinbox_message " +
-          "(" + (id > -1 ? "id, " : "") + "enteredby, modifiedby, body, reply_id, \"type\", delete_flag) " +
+          "(" + (id > -1 ? "id, " : "") + "enteredby, modifiedby, body, reply_id, " + DatabaseUtils.addQuotes(db, "type")+ ", delete_flag) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());

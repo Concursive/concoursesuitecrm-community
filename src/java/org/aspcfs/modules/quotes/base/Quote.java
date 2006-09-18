@@ -1855,7 +1855,7 @@ public class Quote extends GenericBean {
     }
     StringBuffer sb = new StringBuffer(
         " SELECT qe.*, " +
-            " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName, opp.\"lock\" as opplock, " +
+            " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName, opp." + DatabaseUtils.addQuotes(db, "lock")+ " as opplock, " +
             " lsi.description AS sitename " +
             " FROM quote_entry qe " +
             " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
@@ -2036,7 +2036,7 @@ public class Quote extends GenericBean {
       sql.append(
           "quote_terms_id, quote_type_id, " +
               "issued, short_description, notes, ticketid, product_id, " +
-              "customer_product_id, opp_id, \"version\", group_id, delivery_id, " +
+              "customer_product_id, opp_id, " + DatabaseUtils.addQuotes(db, "version")+ ", group_id, delivery_id, " +
               "email_address, phone_number, address, fax_number, submit_action, ");
       if (entered != null) {
         sql.append("entered, ");
@@ -2307,7 +2307,7 @@ public class Quote extends GenericBean {
               "product_id = ?, " +
               "customer_product_id = ?, " +
               "opp_id = ?, " +
-              "\"version\" = ?, " +
+              DatabaseUtils.addQuotes(db, "version")+ " = ?, " +
               "group_id = ?, " +
               "delivery_id = ?, " +
               "email_address = ?, " +

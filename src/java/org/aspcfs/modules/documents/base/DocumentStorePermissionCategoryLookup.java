@@ -182,7 +182,7 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "lookup_document_store_permission_category_code_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO " + DatabaseUtils.getTableName(db, "lookup_document_store_permission_category") + " " +
-            "(" + (id > -1 ? "code, " : "") + "description, default_item, \"level\", enabled) " +
+            "(" + (id > -1 ? "code, " : "") + "description, default_item, " + DatabaseUtils.addQuotes(db, "level")+ ", enabled) " +
             "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?)"
     );
     int i = 0;

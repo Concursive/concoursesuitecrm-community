@@ -50,7 +50,7 @@ public class AssignmentIndexer implements Indexer {
   public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT assignment_id, project_id, \"role\", technology, requirement_id, modified " +
+        "SELECT assignment_id, project_id, " + DatabaseUtils.addQuotes(db, "role")+ ", technology, requirement_id, modified " +
         "FROM project_assignments " +
         "WHERE assignment_id > -1 ");
     ResultSet rs = pst.executeQuery();

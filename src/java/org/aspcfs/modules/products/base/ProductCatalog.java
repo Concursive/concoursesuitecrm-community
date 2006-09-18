@@ -2077,7 +2077,7 @@ public class ProductCatalog extends GenericBean {
 			}
 			sql.append(" modifiedBy, ");
 			sql.append(" modified, ");
-			sql.append("start_date, expiration_date, enabled, \"active\")");
+			sql.append("start_date, expiration_date, enabled, " + DatabaseUtils.addQuotes(db, "active")+ ")");
 			sql
 					.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
 			if (id > -1) {
@@ -2276,7 +2276,7 @@ public class ProductCatalog extends GenericBean {
 				+ "small_image_id = ?, " + "large_image_id = ?, "
 				+ "list_order = ?, " + "start_date = ?, "
 				+ "expiration_date = ?, " + "enabled = ?, "
-				+ "trashed_date = ?, " + "\"active\" = ?, "
+				+ "trashed_date = ?, " + DatabaseUtils.addQuotes(db, "active")+ " = ?, "
 				+ "modifiedby = ?, " + "modified = "
 				+ DatabaseUtils.getCurrentTimestamp(db) + " ");
 		sql.append("WHERE product_id = ? ");

@@ -16,6 +16,7 @@
 package org.aspcfs.modules.communications.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -226,7 +227,7 @@ public class ActiveSurveyQuestionList extends ArrayList {
       pagedListInfo.setDefaultSort("sq.position", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY sq.\"position\" ");
+      sqlOrder.append("ORDER BY sq." + DatabaseUtils.addQuotes(db, "position")+ " ");
     }
 
     //Need to build a base SQL statement for returning records

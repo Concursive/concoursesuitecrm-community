@@ -147,7 +147,7 @@ public class FileItem extends GenericBean {
     sql.append(
         "SELECT f.*, t.filename AS thumbnail " +
         "FROM project_files f " +
-        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f.\"version\" = t.\"version\") " +
+        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f." + DatabaseUtils.addQuotes(db, "version")+ " = t." + DatabaseUtils.addQuotes(db, "version")+ ") " +
         "WHERE f.item_id > 0 ");
     if (itemId > -1) {
       sql.append("AND f.item_id = ? ");
@@ -1170,7 +1170,7 @@ public class FileItem extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "project_files_item_id_seq");
       sql.append(
           "INSERT INTO project_files " +
-          "(folder_id, subject, client_filename, filename, \"version\", \"size\", ");
+          "(folder_id, subject, client_filename, filename, " + DatabaseUtils.addQuotes(db, "version")+ ", " + DatabaseUtils.addQuotes(db, "size")+ ", ");
       sql.append("enabled, downloads, ");
       if (id > -1) {
         sql.append("item_id, ");
@@ -1298,8 +1298,8 @@ public class FileItem extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_files " +
-          "SET subject = ?, client_filename = ?, filename = ?, \"version\" = ?, " +
-          "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP, allow_portal_access = ? " +
+          "SET subject = ?, client_filename = ?, filename = ?, " + DatabaseUtils.addQuotes(db, "version")+ " = ?, " +
+          "" + DatabaseUtils.addQuotes(db, "size")+ " = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP, allow_portal_access = ? " +
           "WHERE item_id = ? ");
       pst.setString(++i, subject);
       pst.setString(++i, clientFilename);
@@ -1344,7 +1344,7 @@ public class FileItem extends GenericBean {
     }
     String sql =
         "UPDATE project_files " +
-        "SET subject = ?, client_filename = ?, default_file = ?, \"size\" = ?, allow_portal_access = ? " +
+        "SET subject = ?, client_filename = ?, default_file = ?, " + DatabaseUtils.addQuotes(db, "size")+ " = ?, allow_portal_access = ? " +
         "WHERE item_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1400,8 +1400,8 @@ public class FileItem extends GenericBean {
     // Update the master record
     String sql =
         "UPDATE project_files " +
-        "SET subject = ?, client_filename = ?, filename = ?, \"version\" = ?, " +
-        "\"size\" = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP, allow_portal_access = ? " +
+        "SET subject = ?, client_filename = ?, filename = ?, " + DatabaseUtils.addQuotes(db, "version")+ " = ?, " +
+        "" + DatabaseUtils.addQuotes(db, "size")+ " = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP, allow_portal_access = ? " +
         "WHERE item_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1622,7 +1622,7 @@ public class FileItem extends GenericBean {
     int usageId = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO usage_log " +
-        "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, \"action\", record_id, record_size) " +
+        "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, " + DatabaseUtils.addQuotes(db, "action")+ ", record_id, record_size) " +
         "VALUES (" + (usageId > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
     if (usageId > -1) {

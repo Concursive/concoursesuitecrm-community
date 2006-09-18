@@ -84,7 +84,7 @@ public class RevenueDetail
         "FROM revenue_detail rd " +
         "LEFT JOIN contact ct_eb ON (rd.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (rd.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN lookup_revenuedetail_types rdt ON (rd.\"type\" = rdt.code) " +
+        "LEFT JOIN lookup_revenuedetail_types rdt ON (rd." + DatabaseUtils.addQuotes(db, "type")+ " = rdt.code) " +
         "WHERE rd.id > -1 ");
 
     if (revenueDetailId != null && !revenueDetailId.equals("")) {
@@ -424,7 +424,7 @@ public class RevenueDetail
     id = DatabaseUtils.getNextSeq(db, "revenue_detail_id_seq");
     sql.append(
         "INSERT INTO revenue_detail " +
-        "(" + (id > -1 ? "id, " : "") + "revenue_id, amount, \"type\", owner, description, enteredBy, modifiedBy) " +
+        "(" + (id > -1 ? "id, " : "") + "revenue_id, amount, " + DatabaseUtils.addQuotes(db, "type")+ ", owner, description, enteredBy, modifiedBy) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     try {
       db.setAutoCommit(false);
@@ -499,7 +499,7 @@ public class RevenueDetail
     sql.append(
         "UPDATE revenue " +
         "SET amount = ?, owner = ?, description = ?, " +
-        "\"type\" = ?, " +
+        "" + DatabaseUtils.addQuotes(db, "type")+ " = ?, " +
         "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
         "WHERE id = ? ");
     //if (!override) {

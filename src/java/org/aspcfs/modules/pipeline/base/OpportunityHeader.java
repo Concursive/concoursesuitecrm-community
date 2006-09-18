@@ -201,7 +201,7 @@ public class OpportunityHeader extends GenericBean {
         "oh.modifiedby AS header_modifiedby, " +
         "oh.trashed_date AS header_trashed_date, " +
         "oh.manager AS header_manager, oh.access_type AS header_access_type, " +
-        "oh.\"lock\" AS header_lock, " +
+        "oh." + DatabaseUtils.addQuotes(db, "lock")+ " AS header_lock, " +
         "oh.custom1_integer AS header_custom1_integer, oh.site_id AS header_site_id, " +
         "org.name as acct_name, org.enabled as accountenabled, " +
         "ct.namelast as last_name, ct.namefirst as first_name, " +

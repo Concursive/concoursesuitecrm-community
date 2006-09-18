@@ -394,7 +394,7 @@ public class SurveyQuestion {
       int i = 0;
       //calculate the next position for this question
       PreparedStatement pst = db.prepareStatement(
-          "SELECT max(\"position\") as maxPosition " +
+          "SELECT max(" + DatabaseUtils.addQuotes(db, "position")+ ") as maxPosition " +
               "FROM survey_questions " +
               "WHERE survey_id = ? ");
       pst.setInt(++i, surveyId);
@@ -408,7 +408,7 @@ public class SurveyQuestion {
       id = DatabaseUtils.getNextSeq(db, "survey_question_question_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO survey_questions " +
-              "(" + (id > -1 ? "question_id, " : "") + "survey_id, \"type\", description, required, \"position\" ) " +
+              "(" + (id > -1 ? "question_id, " : "") + "survey_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description, required, " + DatabaseUtils.addQuotes(db, "position")+ " ) " +
               "VALUES " +
               "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       i = 0;
@@ -480,7 +480,7 @@ public class SurveyQuestion {
       ItemList.delete(db, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_questions " +
-              "SET survey_id = ?, \"type\" = ?, description = ?, required = ?, \"position\" = ? " +
+              "SET survey_id = ?, " + DatabaseUtils.addQuotes(db, "type")+ " = ?, description = ?, required = ?, " + DatabaseUtils.addQuotes(db, "position")+ " = ? " +
               "WHERE question_id = ? ");
       int i = 0;
       pst.setInt(++i, thisSurveyId);

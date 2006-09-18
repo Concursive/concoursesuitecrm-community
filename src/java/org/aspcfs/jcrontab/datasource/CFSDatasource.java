@@ -250,8 +250,8 @@ public class CFSDatasource implements DataSource {
     java.sql.ResultSet rs = null;
     try {
       pst = conn.prepareStatement(
-          "SELECT \"second\", \"minute\", \"hour\", dayofmonth, " +
-              "\"month\", \"dayofweek\", \"year\", task, extrainfo, businessDays " +
+          "SELECT " + DatabaseUtils.addQuotes(conn, "second")+ ", " + DatabaseUtils.addQuotes(conn, "minute")+ ", " + DatabaseUtils.addQuotes(conn, "hour")+ ", dayofmonth, " +
+              "" + DatabaseUtils.addQuotes(conn, "month")+ ", " + DatabaseUtils.addQuotes(conn, "dayofweek")+ ", " + DatabaseUtils.addQuotes(conn, "year")+ ", task, extrainfo, businessDays " +
               "FROM " + table + " " +
               "WHERE enabled = ?");
       pst.setBoolean(1, true);

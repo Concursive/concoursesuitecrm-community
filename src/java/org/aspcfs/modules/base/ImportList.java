@@ -296,7 +296,7 @@ public class ImportList extends ArrayList {
         "SELECT COUNT(*) AS recordcount " +
         "FROM import m " +
         "WHERE m.import_id > -1 AND status_id != ? ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -337,7 +337,7 @@ public class ImportList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "m.import_id, m.\"type\", m.name, m.description, m.source_type, m.source, " +
+        "m.import_id, m." + DatabaseUtils.addQuotes(db, "type")+ ", m.name, m.description, m.source_type, m.source, " +
         "m.record_delimiter, m.column_delimiter, m.total_imported_records, m.total_failed_records, " +
         "m.status_id, m.file_type, m.entered, m.enteredby, m.modified, m.modifiedby, m.site_id, m.rating, m.comments " +
         "FROM import m " +
@@ -378,7 +378,7 @@ public class ImportList extends ArrayList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -392,7 +392,7 @@ public class ImportList extends ArrayList {
     }
 
     if (type != -1) {
-      sqlFilter.append("AND m.\"type\" = ? ");
+      sqlFilter.append("AND m." + DatabaseUtils.addQuotes(db, "type")+ " = ? ");
     }
 
     // includes only those imports with the specified site

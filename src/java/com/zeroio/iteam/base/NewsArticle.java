@@ -1018,7 +1018,7 @@ public class NewsArticle extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "project_news_news_id_seq");
     sql.append(
         "INSERT INTO project_news " +
-        "(project_id, category_id, subject, intro, \"message\", enabled, status, ");
+        "(project_id, category_id, subject, intro, " + DatabaseUtils.addQuotes(db, "message")+ ", enabled, status, ");
     if (id > -1) {
       sql.append("news_id, ");
     }
@@ -1238,7 +1238,7 @@ public class NewsArticle extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news " +
-        "SET \"message\" = ?, " +
+        "SET " + DatabaseUtils.addQuotes(db, "message")+ " = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE news_id = ? ");
     pst.setString(++i, message);
@@ -1265,7 +1265,7 @@ public class NewsArticle extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news " +
-        "SET \"message\" = null, " +
+        "SET " + DatabaseUtils.addQuotes(db, "message")+ " = null, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE news_id = ? ");
     pst.setInt(++i, this.getModifiedBy());

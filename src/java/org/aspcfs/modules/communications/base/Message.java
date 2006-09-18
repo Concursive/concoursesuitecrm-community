@@ -145,7 +145,7 @@ public class Message extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT m.* " +
-            "FROM \"message\" m " +
+            "FROM " + DatabaseUtils.addQuotes(db, "message")+ " m " +
             "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
             "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
             "WHERE m.id = ? ");
@@ -823,7 +823,7 @@ public class Message extends GenericBean {
       db.setAutoCommit(false);
       id = DatabaseUtils.getNextSeq(db, "message_id_seq");
       sql.append(
-          "INSERT INTO \"message\" " +
+          "INSERT INTO " + DatabaseUtils.addQuotes(db, "message")+ " " +
               "(name, access_type, ");
       if (id > -1) {
         sql.append("id, ");
@@ -943,7 +943,7 @@ public class Message extends GenericBean {
         db.setAutoCommit(false);
       }
       st.executeUpdate("DELETE FROM contact_message WHERE message_id = " + this.getId());
-      st.executeUpdate("DELETE FROM \"message\" WHERE id = " + this.getId());
+      st.executeUpdate("DELETE FROM " + DatabaseUtils.addQuotes(db, "message")+ " WHERE id = " + this.getId());
       st.close();
       if (commit) {
         db.commit();
@@ -1026,7 +1026,7 @@ public class Message extends GenericBean {
     StringBuffer sql = new StringBuffer();
 
     sql.append(
-        "UPDATE \"message\" " +
+        "UPDATE " + DatabaseUtils.addQuotes(db, "message")+ " " +
             "SET name=?, description = ?, template_id = ?, subject = ?, " +
             "body = ?, reply_addr = ?, url = ?, img = ?, access_type = ?, " +
             "enabled = ?, ");

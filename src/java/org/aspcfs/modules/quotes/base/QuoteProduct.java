@@ -718,7 +718,7 @@ public class QuoteProduct extends GenericBean {
         " INSERT INTO quote_product(" + (id > -1 ? "item_id, " : "") + "quote_id, product_id, " +
         " quantity, price_currency, price_amount, recurring_currency, " +
         " recurring_amount, recurring_type, extended_price, " +
-        " total_price, estimated_delivery_date, status_id, status_date, estimated_delivery, \"comment\")");
+        " total_price, estimated_delivery_date, status_id, status_date, estimated_delivery, " + DatabaseUtils.addQuotes(db, "comment")+ ")");
 
     sql.append(
         "VALUES(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
@@ -881,7 +881,7 @@ public class QuoteProduct extends GenericBean {
           "     status_id = ?, " +
           "     status_date = ?, " +
           "     estimated_delivery = ?, " +
-          "     \"comment\" = ? " +
+          "     " + DatabaseUtils.addQuotes(db, "comment")+ " = ? " +
           " WHERE item_id = ? ");
 
       int i = 0;

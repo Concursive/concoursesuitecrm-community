@@ -491,7 +491,7 @@ public final class ProcessMaresa extends CFSModule {
 
           pst = db.prepareStatement(
               "UPDATE opportunity_header " +
-              "SET \"lock\" = ? WHERE opp_id = ? ");
+              "SET " + DatabaseUtils.addQuotes(db, "lock")+ " = ? WHERE opp_id = ? ");
           pst.setBoolean(1, true);
           pst.setInt(2, oppHeader.getId());
           pst.execute();

@@ -379,7 +379,7 @@ public class SyncClient extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "sync_client_client_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO sync_client " +
-            "(" + (id > -1 ? "client_id, " : "") + "\"type\", version, enabled, code, enteredby, modifiedby) " +
+            "(" + (id > -1 ? "client_id, " : "") + "" + DatabaseUtils.addQuotes(db, "type")+ ", version, enabled, code, enteredby, modifiedby) " +
             "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
@@ -496,7 +496,7 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE sync_client " +
-            "SET \"type\" = ?, version = ?, code = ?, modifiedby = ?, " +
+            "SET " + DatabaseUtils.addQuotes(db, "type")+ " = ?, version = ?, code = ?, modifiedby = ?, " +
             "enabled = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE client_id = ? ");

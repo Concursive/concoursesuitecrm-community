@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.actionlist.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -142,7 +143,7 @@ public class ActionItemLogList extends ArrayList {
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "al.log_id, al.item_id, al.link_item_id, al.\"type\", " +
+        "al.log_id, al.item_id, al.link_item_id, al." + DatabaseUtils.addQuotes(db, "type")+ ", " +
         "al.enteredby, al.entered, al.modifiedby, al.modified " +
         "FROM action_item_log al " +
         "WHERE al.log_id > -1 ");
@@ -217,7 +218,7 @@ public class ActionItemLogList extends ArrayList {
     PreparedStatement pst = db.prepareStatement(
         "SELECT action_id " +
         "FROM action_item ai, action_item_log al " +
-        "WHERE al.link_item_id = ? AND al.\"type\" = ? AND ai.item_id = al.item_id ");
+        "WHERE al.link_item_id = ? AND al." + DatabaseUtils.addQuotes(db, "type")+ " = ? AND ai.item_id = al.item_id ");
     pst.setInt(1, linkItemId);
     pst.setInt(2, type);
     ResultSet rs = pst.executeQuery();
@@ -250,7 +251,7 @@ public class ActionItemLogList extends ArrayList {
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(action_id) as numberOfLinkedItems " +
         "FROM action_item ai, action_item_log al " +
-        "WHERE al.link_item_id = ? AND al.\"type\" = ? AND ai.item_id = al.item_id ");
+        "WHERE al.link_item_id = ? AND al." + DatabaseUtils.addQuotes(db, "type")+ " = ? AND ai.item_id = al.item_id ");
     pst.setInt(1, linkItemId);
     pst.setInt(2, type);
     ResultSet rs = pst.executeQuery();

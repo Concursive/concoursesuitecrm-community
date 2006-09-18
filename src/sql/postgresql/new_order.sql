@@ -305,8 +305,7 @@ CREATE TABLE order_payment_status (
 
 CREATE SEQUENCE creditcard_creditcard_id_seq;
 
-CREATE TABLE credit_card
-(
+CREATE TABLE credit_card (
   creditcard_id int NOT NULL DEFAULT nextval('creditcard_creditcard_id_seq'),
   card_type int4,
   card_number varchar(300),
@@ -334,8 +333,7 @@ CREATE TABLE credit_card
 -- Table LOOKUP_PAYMENT_GATEWAY
 CREATE SEQUENCE lookup_payment_gateway_seq;
 
-CREATE TABLE lookup_payment_gateway
-(
+CREATE TABLE lookup_payment_gateway (
   code int NOT NULL DEFAULT nextval('lookup_payment_gateway_seq'),
   description varchar(50) NOT NULL,
   default_item bool DEFAULT false,

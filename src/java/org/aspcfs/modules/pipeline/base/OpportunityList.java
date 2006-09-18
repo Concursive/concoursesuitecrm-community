@@ -1052,7 +1052,7 @@ public class OpportunityList extends ArrayList {
         "x.modifiedby AS header_modifiedby, " +
         "x.trashed_date AS header_trashed_date, " +
         "x.manager AS header_manager, x.access_type AS header_access_type, " +
-        "x.\"lock\" AS header_lock, " +
+        "x." + DatabaseUtils.addQuotes(db, "lock")+ " AS header_lock, " +
         "x.custom1_integer AS header_custom1_integer, x.site_id AS header_site_id, " +
         "org.name AS acct_name, org.enabled AS accountenabled, " +
         "ct.namelast AS last_name, ct.namefirst AS first_name, " +

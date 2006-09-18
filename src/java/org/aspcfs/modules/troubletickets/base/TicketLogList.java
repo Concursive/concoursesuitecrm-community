@@ -693,7 +693,7 @@ public class TicketLogList extends ArrayList {
         pst = db.prepareStatement(
             sqlCount.toString() +
             sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(t.\"comment\") < ? ");
+            "AND " + DatabaseUtils.toLowerCase(db) + "(t." + DatabaseUtils.addQuotes(db, "comment")+ ") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

@@ -610,7 +610,7 @@ public class FileFolder extends GenericBean {
       sql.append("modified, ");
     }
     sql.append(
-        "enteredBy, modifiedBy, \"display\") " +
+        "enteredBy, modifiedBy, " + DatabaseUtils.addQuotes(db, "display")+ ") " +
         "VALUES (?, ?, ?, ?, ?, ");
     if (id > -1) {
       sql.append("?,");
@@ -659,7 +659,7 @@ public class FileFolder extends GenericBean {
     int resultCount = 0;
     String sql =
         "UPDATE project_folders " +
-        "SET subject = ?, description = ?, \"display\" = ?, " +
+        "SET subject = ?, description = ?, " + DatabaseUtils.addQuotes(db, "display")+ " = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE folder_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
@@ -823,7 +823,7 @@ public class FileFolder extends GenericBean {
    */
   public static void buildHierarchy(Connection db, Map hierarchy, int currentId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT parent_id, subject, \"display\" " +
+        "SELECT parent_id, subject, " + DatabaseUtils.addQuotes(db, "display")+ " " +
         "FROM project_folders " +
         "WHERE folder_id = ? ");
     pst.setInt(1, currentId);

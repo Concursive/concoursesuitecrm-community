@@ -521,12 +521,12 @@
     unless="compile.donotdelete">
     <!-- Get rid of any classes in the source dir that shouldn't be there -->
     <delete>
-      <fileset dir="${src.classes.dir}" includes="**/*.class" />      
+      <fileset dir="${src.classes.dir}" includes="**/*.class" />
     </delete>
     <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
   </target>
-  
+
   <!-- Compile the Java source code -->
   <target name="compile"
     description="Compile all .java source files"
@@ -545,7 +545,7 @@
     <copy todir="${build.classes.dir}">
         <fileset dir="${src.classes.dir}">
             <include name="log4j.properties"/>
-        </fileset>    
+        </fileset>
     </copy>
   </target>
 
@@ -984,6 +984,15 @@
       </fileset>
     </copy>
     -->
+    <!-- Copy the database files (Derby) -->
+    <!--
+    <copy file="${src.sql.dir}/derby/distribution/derby.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/derby/distribution">
+        <include name="derby_*.sql"/>
+      </fileset>
+    </copy>
+    -->
     <!-- Copy the database upgrade files -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup">
       <fileset dir="${src.sql.dir}/upgrade">
@@ -1179,6 +1188,14 @@
         includes="*.sql,*.txt"
         prefix="${zip.dir}/src/sql/mysql/upgrade"/>
       <zipfileset
+        dir="src/sql/derby"
+        includes="new_*.sql"
+        prefix="${zip.dir}/src/sql/derby"/>
+      <zipfileset
+        dir="src/sql/derby/upgrade"
+        includes="*.sql,*.txt"
+        prefix="${zip.dir}/src/sql/derby/upgrade"/>
+      <zipfileset
         dir="src/sql/init"
         includes="*.sql, *.xml, *.bsh"
         prefix="${zip.dir}/src/sql/init"/>
@@ -1340,7 +1357,10 @@
 
   <target name="installgk.abortOnDB">
     <condition property="ABORT">
-      <equals arg1="${GATEKEEPER.DBTYPE}" arg2="daffodildb" casesensitive="false" trim="true"/>
+      <or>
+	   	  <equals arg1="${GATEKEEPER.DBTYPE}" arg2="daffodildb" casesensitive="false" trim="true"/>
+	   	  <equals arg1="${GATEKEEPER.DBTYPE}" arg2="derby" casesensitive="false" trim="true"/>
+      </or>
     </condition>
     <fail if="ABORT">Step of gatekeeper installation complete, now execute the next installgk# script.</fail>
   </target>
@@ -1387,7 +1407,10 @@
 
   <target name="install.abortOnDB">
     <condition property="ABORT">
-      <equals arg1="${SITE.DBTYPE}" arg2="daffodildb" casesensitive="false" trim="true"/>
+      <or>
+        <equals arg1="${SITE.DBTYPE}" arg2="daffodildb" casesensitive="false" trim="true"/>
+  	   	<equals arg1="${SITE.DBTYPE}" arg2="derby" casesensitive="false" trim="true"/>
+      </or>
     </condition>
     <fail if="ABORT">This database type requires additional ant installdb commands.
 

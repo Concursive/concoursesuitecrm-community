@@ -53,7 +53,7 @@ public class FileItemIndexer implements Indexer {
   public static void add(IndexWriter writer, Connection db, String path, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT item_id, folder_id, link_module_id, link_item_id, subject, client_filename, modified, \"size\", filename " +
+        "SELECT item_id, folder_id, link_module_id, link_item_id, subject, client_filename, modified, " + DatabaseUtils.addQuotes(db, "size")+ ", filename " +
         "FROM project_files " +
         "WHERE link_module_id = ? " +
         "OR link_module_id = ? ");

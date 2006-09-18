@@ -155,7 +155,7 @@ public class QuoteProductOptionList extends ArrayList {
         "SELECT COUNT(*) AS recordcount " +
         "FROM quote_product_options opt " +
         "LEFT JOIN quote_product_option_boolean bool ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
-        "LEFT JOIN quote_product_option_float \"float\" ON ( opt.quote_product_option_id = \"float\".quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_float " + DatabaseUtils.addQuotes(db, "float")+ " ON ( opt.quote_product_option_id = " + DatabaseUtils.addQuotes(db, "float")+ ".quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_timestamp tst ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_integer intr ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_text txt ON ( opt.quote_product_option_id = txt.quote_product_option_id ) " +
@@ -170,14 +170,14 @@ public class QuoteProductOptionList extends ArrayList {
     sqlSelect.append("SELECT ");
     sqlSelect.append(
         "opt.*, " +
-        "bool.\"value\" AS boolean_value, " +
-        "\"float\".\"value\" AS float_value, intr.\"value\" AS integer_value, " +
-        "tst.\"value\" AS timestamp_value, txt.\"value\" AS text_value, " +
+        "bool." + DatabaseUtils.addQuotes(db, "value")+ " AS boolean_value, " +
+        "" + DatabaseUtils.addQuotes(db, "float")+ "." + DatabaseUtils.addQuotes(db, "value")+ " AS float_value, intr." + DatabaseUtils.addQuotes(db, "value")+ " AS integer_value, " +
+        "tst." + DatabaseUtils.addQuotes(db, "value")+ " AS timestamp_value, txt." + DatabaseUtils.addQuotes(db, "value")+ " AS text_value, " +
         "pom.option_id, po.configurator_id, " +
         "prod.product_id " +
         "FROM quote_product_options opt " +
         "LEFT JOIN quote_product_option_boolean bool ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
-        "LEFT JOIN quote_product_option_float \"float\" ON ( opt.quote_product_option_id = \"float\".quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_float " + DatabaseUtils.addQuotes(db, "float")+ " ON ( opt.quote_product_option_id = " + DatabaseUtils.addQuotes(db, "float")+ ".quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_timestamp tst ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_integer intr ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
         "LEFT JOIN quote_product_option_text txt ON ( opt.quote_product_option_id = txt.quote_product_option_id ) " +

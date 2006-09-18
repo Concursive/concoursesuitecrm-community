@@ -159,7 +159,7 @@ public class Call extends GenericBean {
   public void queryRecord(Connection db, int callId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c.\"length\", " +
+        "SELECT c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length")+ ", " +
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
@@ -1486,7 +1486,7 @@ public class Call extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "call_log_call_id_seq");
       sql.append(
           "INSERT INTO call_log " +
-          "(org_id, contact_id, opp_id, call_type_id, \"length\", subject, notes, " +
+          "(org_id, contact_id, opp_id, call_type_id, " + DatabaseUtils.addQuotes(db, "length")+ ", subject, notes, " +
           "alertdate, alert, alert_call_type_id, result_id, parent_id, owner, followup_notes, status_id, " +
           "reminder_value, reminder_type_id, priority_id, followup_date, alertdate_timezone, followup_contact_id, ");
       if (id > -1) {
@@ -1719,7 +1719,7 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE call_log " +
-        "SET " + (updateOrganization?" org_id = ?,":"") + " call_type_id = ?, \"length\" = ?, subject = ?, notes = ?, " +
+        "SET " + (updateOrganization?" org_id = ?,":"") + " call_type_id = ?, " + DatabaseUtils.addQuotes(db, "length")+ " = ?, subject = ?, notes = ?, " +
         "modifiedby = ?, alertdate = ?, alert = ?, alert_call_type_id = ?, " +
         "followup_notes = ?, status_id = ?, result_id = ?, owner = ?, " +
         "reminder_value = ?, reminder_type_id = ?, priority_id = ?, " +

@@ -1556,6 +1556,7 @@ public class PagedListInfo implements Serializable {
     if (this.getItemsPerPage() > 0 &&
         (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ||
             DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ||
+            DatabaseUtils.getType(db) == DatabaseUtils.DERBY ||
             DatabaseUtils.getType(db) == DatabaseUtils.ORACLE)) {
       for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++)
       {

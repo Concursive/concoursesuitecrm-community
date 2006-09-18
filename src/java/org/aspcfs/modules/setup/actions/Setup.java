@@ -503,6 +503,14 @@ public class Setup extends CFSModule {
               SetupUtils.insertDefaultData(
                   db, dbFileLibraryPath, setupPath, locale);
               break;
+            case DatabaseUtils.DERBY:
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("Setup-> Installing Apache Derby Schema");
+              }
+              DatabaseUtils.executeSQL(db, setupPath + "derby.sql");
+              SetupUtils.insertDefaultData(
+                  db, dbFileLibraryPath, setupPath, locale);
+              break;
             default:
               if (System.getProperty("DEBUG") != null) {
                 System.out.println(

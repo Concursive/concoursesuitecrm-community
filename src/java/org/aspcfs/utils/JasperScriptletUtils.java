@@ -547,7 +547,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
     }
 
     pst = db.prepareStatement(
-        "SELECT \"number\" AS phonenum " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "number")+ " AS phonenum " +
         "FROM organization_phone " +
         "WHERE org_id = ? AND phone_type = 1 ");
     pst.setInt(1, orgId);
@@ -564,7 +564,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
     }
 
     pst = db.prepareStatement(
-        "SELECT \"number\" AS faxnum " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "number")+ " AS faxnum " +
         "FROM organization_phone " +
         "WHERE org_id = ? AND phone_type = 2 ");
     pst.setInt(1, orgId);

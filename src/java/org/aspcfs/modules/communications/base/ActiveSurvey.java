@@ -173,7 +173,7 @@ public class ActiveSurvey extends SurveyBase {
         "SELECT active_survey_id " +
         "FROM active_survey " +
         "WHERE campaign_id = ? " +
-        "AND \"type\" = ? ");
+        "AND " + DatabaseUtils.addQuotes(db, "type")+ " = ? ");
     pst.setInt(1, activeCampaignId);
     pst.setInt(2, surveyType);
     ResultSet rs = pst.executeQuery();
@@ -403,7 +403,7 @@ public class ActiveSurvey extends SurveyBase {
       id = DatabaseUtils.getNextSeq(db, "active_survey_active_survey_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey " +
-          "(" + (id > -1 ? "active_survey_id, " : "") + "campaign_id, name, description, intro, outro, itemLength, \"type\", " +
+          "(" + (id > -1 ? "active_survey_id, " : "") + "campaign_id, name, description, intro, outro, itemLength, " + DatabaseUtils.addQuotes(db, "type")+ ", " +
           "enteredBy, modifiedBy) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?,?,?, ?, ?, ?, ?, ?) ");
       if (id > -1) {
@@ -541,7 +541,7 @@ public class ActiveSurvey extends SurveyBase {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE active_survey " +
         "SET campaign_id = ?, name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
-        "\"type\" = ?, " +
+        "" + DatabaseUtils.addQuotes(db, "type")+ " = ?, " +
         "enabled = ?, " +
         "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
         "WHERE active_survey_id = ? ");

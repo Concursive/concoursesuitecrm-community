@@ -297,7 +297,7 @@ public class PermissionCategoryList extends Vector {
         "SELECT COUNT(*) AS recordcount " +
         "FROM permission_category pc " +
         "WHERE pc.category_id > 0 ");
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
@@ -368,12 +368,12 @@ public class PermissionCategoryList extends Vector {
    *
    * @param sqlFilter Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (enabledState != -1) {
       sqlFilter.append("AND enabled = ? ");
     }
     if (activeState != -1) {
-      sqlFilter.append("AND \"active\" = ? ");
+      sqlFilter.append("AND " + DatabaseUtils.addQuotes(db, "active")+ " = ? ");
     }
     if (customizableModulesOnly) {
       sqlFilter.append(

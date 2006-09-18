@@ -241,7 +241,7 @@ public class ScheduledEventList extends ArrayList {
         "SELECT event_id, " + DatabaseUtils.addQuotes(db, "second") +
         ", " + DatabaseUtils.addQuotes(db, "minute") +
         ", " + DatabaseUtils.addQuotes(db, "hour") +
-        ", " + "dayofmonth, \"month\", \"dayofweek\", \"year\", task, extrainfo, " +
+        ", " + "dayofmonth, " + DatabaseUtils.addQuotes(db, "month")+ ", " + DatabaseUtils.addQuotes(db, "dayofweek")+ ", " + DatabaseUtils.addQuotes(db, "year")+ ", task, extrainfo, " +
         "enabled, entered, process_id " +
         "FROM business_process_events " +
         "WHERE event_id > 0 ");

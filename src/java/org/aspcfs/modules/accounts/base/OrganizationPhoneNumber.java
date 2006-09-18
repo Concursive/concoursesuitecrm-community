@@ -157,7 +157,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     int id = DatabaseUtils.getNextSeq(db, "organization_phone_phone_id_seq");
     sql.append(
         "INSERT INTO organization_phone " +
-        "(org_id, phone_type, \"number\", extension, primary_number, ");
+        "(org_id, phone_type, " + DatabaseUtils.addQuotes(db, "number")+ ", extension, primary_number, ");
     if (id > -1) {
       sql.append("phone_id, ");
     }
@@ -226,7 +226,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization_phone " +
-        "SET phone_type = ?, \"number\" = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
+        "SET phone_type = ?, " + DatabaseUtils.addQuotes(db, "number")+ " = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE phone_id = ? ");
     int i = 0;

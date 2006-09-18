@@ -717,7 +717,7 @@ public class CallList extends ArrayList {
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT " + sqlDate + " AS \"date\" " +
+        "SELECT " + sqlDate + " AS " + DatabaseUtils.addQuotes(db, "date")+ " " +
         "FROM call_log c " +
         "WHERE call_id > -1 ");
     pst = db.prepareStatement(
@@ -756,7 +756,7 @@ public class CallList extends ArrayList {
     createFilter(sqlFilter);
     sqlSelect.append(
         "SELECT c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate, c.alert, " +
-        "c.owner, c.notes, c.\"length\", c.followup_notes, c.complete_date, c.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " +
+        "c.owner, c.notes, c." + DatabaseUtils.addQuotes(db, "length") + ", c.followup_notes, c.complete_date, c.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " +
         "ct.org_name as ctcompany, o.name as orgname, c.status_id, c.entered, p.description as priority, " +
         "c.followup_contact_id "+
         "FROM call_log c " +
@@ -870,7 +870,7 @@ public class CallList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c.\"length\", " +
+        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length")+ ", " +
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +

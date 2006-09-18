@@ -202,7 +202,7 @@ public class UsageList {
         "SELECT COUNT(*) AS recordcount, SUM(record_size) AS recordsize " +
         "FROM usage_log u " +
         "WHERE u.usage_id > -1 ";
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
@@ -221,12 +221,12 @@ public class UsageList {
    *
    * @param sqlFilter Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
     if (action > -1) {
-      sqlFilter.append("AND \"action\" = ? ");
+      sqlFilter.append("AND " + DatabaseUtils.addQuotes(db, "action")+ " = ? ");
     }
     if (enteredRangeStart != null) {
       sqlFilter.append("AND entered >= ? ");

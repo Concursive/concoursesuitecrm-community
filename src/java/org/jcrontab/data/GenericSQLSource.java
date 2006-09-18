@@ -54,7 +54,7 @@ public class GenericSQLSource implements DataSource {
    * This Query gets all the Crontab entries from the events table
    */
   public static String queryAll =
-      "SELECT \"second\", \"minute\', \"hour\', dayofmonth, " +
+      "SELECT \"second\", \"minute\", \"hour\", dayofmonth, " +
       "\"month\", \"dayofweek\", \"year\", task, extrainfo, businessDays " +
       "FROM events " +
       "WHERE enabled = ?";

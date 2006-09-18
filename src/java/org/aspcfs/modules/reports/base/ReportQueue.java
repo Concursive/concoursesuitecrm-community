@@ -504,7 +504,7 @@ public class ReportQueue extends GenericBean {
           db, "report_queue_criteria_criteria_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO report_queue_criteria " +
-          "(" + (rqcId > -1 ? "criteria_id, " : "") + "queue_id, \"parameter\", \"value\") " +
+          "(" + (rqcId > -1 ? "criteria_id, " : "") + "queue_id, " + DatabaseUtils.addQuotes(db, "parameter")+ ", " + DatabaseUtils.addQuotes(db, "value")+ ") " +
           "VALUES (" + (rqcId > -1 ? "?, " : "") + "?, ?, ?) ");
       Iterator params = criteria.getParameters().iterator();
       while (params.hasNext()) {
@@ -525,7 +525,7 @@ public class ReportQueue extends GenericBean {
       pst.close();
       //Get the total number of reports pending
       pst = db.prepareStatement(
-          "SELECT count(*) AS \"position\" " +
+          "SELECT count(*) AS " + DatabaseUtils.addQuotes(db, "position")+ " " +
           "FROM report_queue " +
           "WHERE processed IS NULL ");
       ResultSet rs = pst.executeQuery();

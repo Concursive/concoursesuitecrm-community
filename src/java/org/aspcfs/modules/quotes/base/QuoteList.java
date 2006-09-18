@@ -1205,7 +1205,7 @@ public class QuoteList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         " qe.*, " +
-            " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName, opp.\"lock\" AS opplock, " +
+            " org.name, ct.namelast, ct.namefirst, ct.namemiddle, lqs.description AS statusName, opp." + DatabaseUtils.addQuotes(db, "lock")+ " AS opplock, " +
             " lsi.description AS sitename " +
             " FROM quote_entry qe " +
             " LEFT JOIN quote_group qg ON (qe.group_id = qg.group_id) " +
@@ -1334,7 +1334,7 @@ public class QuoteList extends ArrayList implements SyncableList {
       sqlFilter.append(" AND opp.opp_id = ? ");
     }
     if (version != null) {
-      sqlFilter.append(" AND qe.\"version\" = ? ");
+      sqlFilter.append(" AND qe." + DatabaseUtils.addQuotes(db, "version")+ " = ? ");
     }
     if (groupId != -1) {
       sqlFilter.append(" AND qe.group_id = ? ");

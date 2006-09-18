@@ -572,7 +572,7 @@ public class TransactionRecord extends GenericBean {
     sql.append(
         "INSERT INTO billing_transaction " +
         "(tax_id, license_no, npi, provider_id, namelast, " +
-        "namefirst, payer_id, \"type\", ");
+        "namefirst, payer_id, " + DatabaseUtils.addQuotes(db, "type")+ ", ");
     if (performedDate != null) {
       sql.append("date_performed, ");
     }

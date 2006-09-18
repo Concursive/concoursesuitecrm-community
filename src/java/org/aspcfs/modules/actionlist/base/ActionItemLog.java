@@ -384,7 +384,7 @@ public class ActionItemLog extends GenericBean {
       throw new SQLException("Id not specified");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT al.log_id, al.item_id, al.link_item_id, al.\"type\", " +
+        "SELECT al.log_id, al.item_id, al.link_item_id, al." + DatabaseUtils.addQuotes(db, "type")+ ", " +
         "al.enteredby, al.entered, al.modifiedby, al.modified " +
         "FROM action_item_log al " +
         "WHERE log_id = ? ");
@@ -419,7 +419,7 @@ public class ActionItemLog extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "action_item_log_code_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO action_item_log " +
-          "(" + (id > -1 ? "log_id, " : "") + "item_id, link_item_id, \"type\", enteredby, modifiedby) " +
+          "(" + (id > -1 ? "log_id, " : "") + "item_id, link_item_id, " + DatabaseUtils.addQuotes(db, "type")+ ", enteredby, modifiedby) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ? ) ");
       if (id > -1) {
         pst.setInt(++i, id);
@@ -502,7 +502,7 @@ public class ActionItemLog extends GenericBean {
     int recordCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM action_item_log " +
-        "WHERE link_item_id = ? AND \"type\" = ? ");
+        "WHERE link_item_id = ? AND " + DatabaseUtils.addQuotes(db, "type")+ " = ? ");
     pst.setInt(1, linkId);
     pst.setInt(2, thisType);
     recordCount = pst.executeUpdate();

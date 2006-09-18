@@ -522,7 +522,7 @@ public class SearchCriteriaElement {
       }
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO saved_criteriaelement " +
-          "(id, field, operator, operatorid, \"value\", source, value_id, site_id) " +
+          "(id, field, operator, operatorid, " + DatabaseUtils.addQuotes(db, "value")+ ", source, value_id, site_id) " +
           "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
       int i = 0;
       pst.setInt(++i, listid);

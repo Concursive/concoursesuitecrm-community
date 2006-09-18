@@ -16,6 +16,9 @@
 package org.aspcfs.modules.communications.base;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -323,7 +326,7 @@ public class SurveyQuestionList extends ArrayList {
         "SELECT sq.* " +
             "FROM survey_questions sq " +
             "WHERE sq.survey_id = ? " +
-            "ORDER BY sq.\"position\" ";
+            "ORDER BY sq." + DatabaseUtils.addQuotes(db, "position")+ " ";
     pst = db.prepareStatement(sql);
     int i = 0;
     pst.setInt(++i, surveyId);

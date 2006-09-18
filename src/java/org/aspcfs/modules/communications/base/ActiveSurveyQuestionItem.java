@@ -71,7 +71,7 @@ public class ActiveSurveyQuestionItem {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        "SELECT si.item_id, si.question_id, si.\"type\", si.description " +
+        "SELECT si.item_id, si.question_id, si." + DatabaseUtils.addQuotes(db, "type")+ ", si.description " +
         "FROM active_survey_items si " +
         "WHERE item_id = ? ");
     int i = 0;
@@ -243,7 +243,7 @@ public class ActiveSurveyQuestionItem {
       id = DatabaseUtils.getNextSeq(db, "active_survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey_items " +
-          "(" + (id > -1 ? "item_id, " : "") + "question_id, \"type\", description ) " +
+          "(" + (id > -1 ? "item_id, " : "") + "question_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description ) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
       if (id > -1) {
         pst.setInt(++i, id);

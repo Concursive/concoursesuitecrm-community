@@ -175,7 +175,7 @@ public class ActionPhase extends GenericBean {
       if (entered != null) {
         sql.append("entered, ");
       }
-      sql.append(" enabled, random, \"global\")");
+      sql.append(" enabled, random, " + DatabaseUtils.addQuotes(db, "global")+ ")");
       sql.append(" VALUES (?, ?, ?, ");
       if (parentId > 0) {
         sql.append("?, ");
@@ -247,7 +247,7 @@ public class ActionPhase extends GenericBean {
         " description = ?, " +
         " enabled = ?, " +
         " random = ?, " +
-        " \"global\" = ? " +
+        " " + DatabaseUtils.addQuotes(db, "global")+ " = ? " +
         " WHERE phase_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

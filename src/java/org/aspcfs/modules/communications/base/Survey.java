@@ -248,7 +248,7 @@ public class Survey extends SurveyBase {
         "FROM campaign_survey_link csl, survey s " +
         "WHERE campaign_id = ? " +
         "AND csl.survey_id = s.survey_id " +
-        "AND s.\"type\" = ? ";
+        "AND s." + DatabaseUtils.addQuotes(db, "type")+ " = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, campaignId);
     pst.setInt(2, surveyType);
@@ -542,7 +542,7 @@ public class Survey extends SurveyBase {
       }
       id = DatabaseUtils.getNextSeq(db, "survey_survey_id_seq");
       String sql = "INSERT INTO survey " +
-          "(" + (id > -1 ? "survey_id, " : "") + "name, description, intro, outro, itemLength, \"type\", status, enteredBy, modifiedBy) " +
+          "(" + (id > -1 ? "survey_id, " : "") + "name, description, intro, outro, itemLength, " + DatabaseUtils.addQuotes(db, "type")+ ", status, enteredBy, modifiedBy) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -671,7 +671,7 @@ public class Survey extends SurveyBase {
       String sql =
           "UPDATE survey " +
           "SET name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
-          "\"type\" = ?, " +
+          DatabaseUtils.addQuotes(db, "type")+ " = ?, " +
           "enabled = ?, " +
           "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
           "WHERE survey_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
@@ -785,7 +785,7 @@ public class Survey extends SurveyBase {
     PreparedStatement pst = db.prepareStatement(
         "SELECT survey_id " +
         "FROM survey " +
-        "WHERE \"type\" = ? ");
+        "WHERE " + DatabaseUtils.addQuotes(db, "type")+ " = ? ");
     pst.setInt(1, Constants.SURVEY_ADDRESS_REQUEST);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {

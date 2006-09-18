@@ -124,7 +124,7 @@ public class Import extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        "SELECT m.import_id, m.\"type\", m.name, m.description, m.source_type, m.source, " +
+        "SELECT m.import_id, m." + DatabaseUtils.addQuotes(db, "type")+ ", m.name, m.description, m.source_type, m.source, " +
         "m.record_delimiter, m.column_delimiter, m.total_imported_records, m.total_failed_records, " +
         "m.status_id, m.file_type, m.entered, m.enteredby, m.modified, m.modifiedby, m.site_id, m.rating, m.comments " +
         "FROM import m " +
@@ -1035,7 +1035,7 @@ public class Import extends GenericBean {
       }
       id = DatabaseUtils.getNextSeq(db, "import_import_id_seq");
       sql = "INSERT INTO import " +
-          "(" + (id > -1 ? "import_id, " : "") + "\"type\", name, description, file_type, source_type, rating, comments, record_delimiter, column_delimiter, status_id, enteredby, modifiedby, site_id, modified) " +
+          "(" + (id > -1 ? "import_id, " : "") + "" + DatabaseUtils.addQuotes(db, "type")+ ", name, description, file_type, source_type, rating, comments, record_delimiter, column_delimiter, status_id, enteredby, modifiedby, site_id, modified) " +
           "VALUES (" + (id > -1 ? "?, " : "") + "?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
           ((this.getModified()!=null)?"?":DatabaseUtils.getCurrentTimestamp(db)) +
           ") ";

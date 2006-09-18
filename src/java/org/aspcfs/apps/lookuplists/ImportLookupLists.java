@@ -224,10 +224,14 @@ public class ImportLookupLists {
             ("default_item".equals(columnName)) ||
             ("level".equals(columnName) ||  DatabaseUtils.addQuotes(db, "level").equals(columnName))) {
           if ("level".equals(columnName) || DatabaseUtils.addQuotes(db, "level").equals(columnName) && (useLevelAsIs.booleanValue() == true)) {
-            if ((String) row.get("level") != null) {
-              level = Integer.parseInt((String) row.get("level"));
-            } else {
-              level = Integer.parseInt((String) row.get(DatabaseUtils.addQuotes(db, "level")));
+            try{
+              if ((String) row.get("level") != null) {
+                level = Integer.parseInt((String) row.get("level"));
+              } else {
+                level = Integer.parseInt((String) row.get(DatabaseUtils.addQuotes(db, "level")));
+              }
+            } catch(NumberFormatException e) {
+              // TODO: NumberFormatException exception until Derby installation...
             }
           }
           continue;

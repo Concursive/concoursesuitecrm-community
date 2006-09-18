@@ -249,8 +249,8 @@ public class Event {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO events (" +
         (id > -1 ? "event_id, " : "") +
-        "\"minute\", \"hour\", dayofmonth, " +
-        "\"month\", \"dayofweek\", \"year\", " +
+        "" + DatabaseUtils.addQuotes(db, "minute")+ ", " + DatabaseUtils.addQuotes(db, "hour")+ ", dayofmonth, " +
+        "" + DatabaseUtils.addQuotes(db, "month")+ ", " + DatabaseUtils.addQuotes(db, "dayofweek")+ ", " + DatabaseUtils.addQuotes(db, "year")+ ", " +
         "task, extrainfo, enabled) " +
         "VALUES(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;

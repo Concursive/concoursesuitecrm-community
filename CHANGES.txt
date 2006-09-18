@@ -21,6 +21,7 @@ New features:
   - Added Document Stores to portal role
   - Added Account Documents to portal role
 - MySQL 5 database support
+- Apache Derby database support
 
 Enhancements:
 - Usability and stability improvements as assigned (details online)
@@ -28,7 +29,7 @@ Enhancements:
 - Email user a password when a user is added, previously only when modified
 
 Developer changes:
-- JUnit added with tests
+- JUnit added with tests (minimal)
 - "ant deploy" now supports WEBSERVER.TYPE geronimo and jboss
 - "ant ws" installs the appropriate Web Services to Axis
 - Web Service additions
@@ -42,10 +43,12 @@ Unreleased features, target version to be determined:
     - Contact Us Form portlet
     - Image Gallery portlet
     - Product Catalog portlet
-      - Email a friend
+      - Email a friend with tiny URL
       - Product search
       - Receive a quote
     - Cart Portlet
+      - Email cart
+      - Cart checkout
   - Added a "hit" tracker for web pages, products, and emails
 - Product Importer (.csv w/images.zip)
 

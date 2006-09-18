@@ -704,7 +704,7 @@ public class FileItemVersion extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO project_files_version ");
     sql.append(
-        "(item_id, subject, client_filename, filename, \"version\", \"size\", ");
+        "(item_id, subject, client_filename, filename, " + DatabaseUtils.addQuotes(db, "version")+ ", " + DatabaseUtils.addQuotes(db, "size")+ ", ");
     sql.append("enabled, downloads, ");
     if (entered != null) {
       sql.append("entered, ");
@@ -756,9 +756,9 @@ public class FileItemVersion extends GenericBean {
   public boolean update(Connection db) throws SQLException {
     String sql =
         "UPDATE project_files_version " +
-        "SET subject = ?, client_filename = ?, \"size\" = ?, allow_portal_access = ?  " +
+        "SET subject = ?, client_filename = ?, " + DatabaseUtils.addQuotes(db, "size")+ " = ?, allow_portal_access = ?  " +
         "WHERE item_id = ? " +
-        "AND \"version\" = ? ";
+        "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, subject);
@@ -813,7 +813,7 @@ public class FileItemVersion extends GenericBean {
     String sql =
         "DELETE FROM project_files_version " +
         "WHERE item_id = ? " +
-        "AND \"version\" = ? ";
+        "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, this.getId());
     pst.setDouble(2, this.getVersion());
@@ -824,7 +824,7 @@ public class FileItemVersion extends GenericBean {
     pst = db.prepareStatement(
         "DELETE FROM project_files_thumbnail " +
         "WHERE item_id = ? " +
-        "AND \"version\" = ? ");
+        "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ");
     pst.setInt(1, this.getId());
     pst.setDouble(2, this.getVersion());
     pst.execute();
