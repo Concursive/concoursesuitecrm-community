@@ -193,7 +193,7 @@ CREATE TABLE call_log (
   reminder_value INT NULL,
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
   alertdate_timezone VARCHAR(255),
-  trashed_date TIMESTAMP(3).
+  trashed_date TIMESTAMP(3),
   followup_contact_id INT REFERENCES contact(contact_id)
 );
 
