@@ -321,6 +321,8 @@
     <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
     <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />
     <input type="hidden" name="conversionDate" value="<%=ContactDetails.getConversionDate()%>">
+    <input type="hidden" name="assignedDate" value="<%=ContactDetails.getAssignedDate()%>">
+    <input type="hidden" name="leadTrashedDate" value="<%=ContactDetails.getLeadTrashedDate()%>">
     <input type="hidden" name="primaryContact" value="<%=ContactDetails.getPrimaryContact()%>">
     <input type="hidden" name="orgName" value="<%= OrgDetails.getName() %>">
     <input type="hidden" name="siteId" value="<%= OrgDetails.getSiteId() %>">

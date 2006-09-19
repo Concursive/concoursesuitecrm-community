@@ -37,7 +37,7 @@
       <permission name="website-portfolio" attributes="vaed" description="Portfolio Editor" enabled="true"/>
       <permission name="site-editor" attributes="vaed" description="Site Editor" enabled="true"/>
     </category>
-    <category id="228051100" name="Leads" folders="false" lookups="true" reports="false">
+    <category id="228051100" name="Leads" folders="false" lookups="true" reports="true">
       <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="Contact Rating"/>
       <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description="Contact Source"/>
       <permission name="sales" attributes="v---" description="Access to the Leads Module"/>
@@ -46,6 +46,7 @@
       <permission name="sales-dashboard" attributes="v---" description="Leads Dashboard"/>
       <permission name="sales-reports" attributes="va-d" description="Export Leads Data"/>
       <report file="leads_user.xml" type="user" permission="sales-leads" title="User Leads" description="Who are the leads owned by a specific user?"/>
+      <report file="leads_to_accounts.xml" type="user" permission="sales-leads" title="Leads To Accounts Summary" description="How many leads have been converted into accounts?"/>
     </category>
     <category id="2" name="Contacts" folders="true" lookups="true" reports="true">
       <folder constantId="2" description="Contacts"/>

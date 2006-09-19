@@ -1460,6 +1460,15 @@ public final class Sales extends CFSModule {
       }
       if (leadStatus != null && !"".equals(leadStatus)) {
         thisContact.setLeadStatus(Integer.parseInt(leadStatus));
+        if (Integer.parseInt(leadStatus) == Contact.LEAD_ASSIGNED) {
+          thisContact.setAssignedDate(
+            DateUtils.roundUpToNextFive(
+              System.currentTimeMillis()));
+        } else if (Integer.parseInt(leadStatus) == Contact.LEAD_TRASHED) {
+          thisContact.setLeadTrashedDate(
+            DateUtils.roundUpToNextFive(
+              System.currentTimeMillis()));
+        }
       }
       if (comments != null && !"".equals(comments)) {
         thisContact.setComments(comments);

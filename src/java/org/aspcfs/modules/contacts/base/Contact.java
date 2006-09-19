@@ -130,6 +130,8 @@ public class Contact extends GenericBean {
   private int rating = -1;
   private String comments = null;
   private java.sql.Timestamp conversionDate = null;
+  private java.sql.Timestamp assignedDate = null;
+  private java.sql.Timestamp leadTrashedDate = null;
   private String secretWord = null;
   private double revenue = 0;
   private double potential = 0;
@@ -3172,7 +3174,67 @@ public class Contact extends GenericBean {
 
 
   /**
-   * Gets the siteName attribute of the Contact object
+   *  Gets the assignedDate attribute of the Contact object
+   *
+   * @return    The assignedDate value
+   */
+  public java.sql.Timestamp getAssignedDate() {
+    return assignedDate;
+  }
+
+
+  /**
+   *  Sets the assignedDate attribute of the Contact object
+   *
+   * @param  tmp  The new assignedDate value
+   */
+  public void setAssignedDate(java.sql.Timestamp tmp) {
+    this.assignedDate = tmp;
+  }
+
+
+  /**
+   *  Sets the assignedDate attribute of the Contact object
+   *
+   * @param  tmp  The new assignedDate value
+   */
+  public void setAssignedDate(String tmp) {
+    this.assignedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the leadTrashedDate attribute of the Contact object
+   *
+   * @return    The leadTrashedDate value
+   */
+  public java.sql.Timestamp getLeadTrashedDate() {
+    return leadTrashedDate;
+  }
+
+
+  /**
+   *  Sets the leadTrashedDate attribute of the Contact object
+   *
+   * @param  tmp  The new leadTrashedDate value
+   */
+  public void setLeadTrashedDate(java.sql.Timestamp tmp) {
+    this.leadTrashedDate = tmp;
+  }
+
+
+  /**
+   *  Sets the leadTrashedDate attribute of the Contact object
+   *
+   * @param  tmp  The new leadTrashedDate value
+   */
+  public void setLeadTrashedDate(String tmp) {
+    this.leadTrashedDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the siteName attribute of the Contact object
    *
    * @return The siteName value
    */
@@ -3293,7 +3355,7 @@ public class Contact extends GenericBean {
           "INSERT INTO contact " +
               "(user_id, namefirst, namelast, owner, primary_contact, org_name, account_number, ");
       sql.append(
-          "access_type, source, rating, comments, conversion_date, trashed_date, ");
+          "access_type, source, rating, comments, assigned_date, conversion_date, lead_trashed_date, trashed_date, ");
       if (id > -1) {
         sql.append("contact_id, ");
       }
@@ -3323,7 +3385,7 @@ public class Contact extends GenericBean {
         sql.append("secret_word, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
         sql.append("?, ");
       }
@@ -3367,7 +3429,9 @@ public class Contact extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, this.getSource());
       DatabaseUtils.setInt(pst, ++i, this.getRating());
       pst.setString(++i, this.getComments());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getAssignedDate());
       DatabaseUtils.setTimestamp(pst, ++i, this.getConversionDate());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getLeadTrashedDate());
       DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
       if (id > -1) {
         pst.setInt(++i, id);
@@ -4151,7 +4215,7 @@ public class Contact extends GenericBean {
             "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
             "org_id = ?, primary_contact = ?, org_name = ?, access_type = ?,");
     sql.append(
-        "source = ?, rating = ?, comments = ?, conversion_date = ?, lead = ?, lead_status = ?, industry_temp_code = ?, potential = ?, ");
+        "source = ?, rating = ?, comments = ?, assigned_date = ?, conversion_date = ?, lead_trashed_date = ?, lead = ?, lead_status = ?, industry_temp_code = ?, potential = ?, ");
     sql.append(
         "no_email = ?, " +
             "no_mail = ?, " +
@@ -4214,7 +4278,9 @@ public class Contact extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getSource());
     DatabaseUtils.setInt(pst, ++i, this.getRating());
     pst.setString(++i, this.getComments());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getAssignedDate());
     DatabaseUtils.setTimestamp(pst, ++i, this.getConversionDate());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getLeadTrashedDate());
     pst.setBoolean(++i, this.getIsLead());
     DatabaseUtils.setInt(pst, ++i, this.getLeadStatus());
     DatabaseUtils.setInt(pst, ++i, this.getIndustryTempCode());
@@ -4384,6 +4450,8 @@ public class Contact extends GenericBean {
     noInstantMessage = rs.getBoolean("no_im");
     noFax = rs.getBoolean("no_fax");
     siteId = DatabaseUtils.getInt(rs, "site_id");
+    assignedDate = rs.getTimestamp("assigned_date");
+    leadTrashedDate = rs.getTimestamp("lead_trashed_date");
 
     //organization table
     orgEnabled = rs.getBoolean("orgenabled");

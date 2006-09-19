@@ -427,7 +427,9 @@ public class ParameterList extends ArrayList {
     if (thisCategory != null) {
       switch (thisCategory.getConstant()) {
         case PermissionCategory.PERMISSION_CAT_ACCOUNTS:
+        case PermissionCategory.PERMISSION_CAT_SALES:
           this.addParam("actionplan_module_constant", String.valueOf(ActionPlan.ACCOUNTS));
+          this.addParam("actionplan_module_opp_constant", String.valueOf(ActionPlan.PIPELINE_COMPONENT));
           break;
         case PermissionCategory.PERMISSION_CAT_TICKETS:
           this.addParam("actionplan_module_constant", String.valueOf(ActionPlan.TICKETS));

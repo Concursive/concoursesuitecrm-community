@@ -442,11 +442,12 @@ function reopenContact(id) {
   <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
   <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
   <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />
-  <input type="hidden" name="primaryContact" value="<%=ContactDetails.getPrimaryContact()%>">
+  <input type="hidden" name="primaryContact" value="<%= ContactDetails.getPrimaryContact() %>">
   <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
   <input type="hidden" name="conversionDate" value="<%=ContactDetails.getConversionDate()%>">
+  <input type="hidden" name="assignedDate" value="<%=ContactDetails.getAssignedDate()%>">
+  <input type="hidden" name="leadTrashedDate" value="<%=ContactDetails.getLeadTrashedDate()%>">
   <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="primaryContact" value="<%= ContactDetails.getPrimaryContact() %>">
   <input type="hidden" name="trashedDate" value="<%= ContactDetails.getTrashedDate() %>">
   <% if (request.getParameter("return") != null) {%>
     <input type="hidden" name="return" value="<%= request.getParameter("return") %>">

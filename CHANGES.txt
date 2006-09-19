@@ -2,7 +2,7 @@
 Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-September 5, 2006
+September 19, 2006
 ----------------------------------------------------------------------------
 
 ** UNDER DEVELOPMENT **
@@ -22,6 +22,9 @@ New features:
   - Added Account Documents to portal role
 - MySQL 5 database support
 - Apache Derby database support
+- Added a lead conversion report and data elements for a converted lead
+  - When lead assigned
+  - When lead archived
 
 Enhancements:
 - Usability and stability improvements as assigned (details online)

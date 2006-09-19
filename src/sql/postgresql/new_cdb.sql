@@ -372,7 +372,9 @@ CREATE TABLE contact (
   no_textmessage BOOLEAN DEFAULT false,
   no_im BOOLEAN DEFAULT false,
   no_fax BOOLEAN DEFAULT false,
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  assigned_date TIMESTAMP(3),
+  lead_trashed_date TIMESTAMP(3)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");

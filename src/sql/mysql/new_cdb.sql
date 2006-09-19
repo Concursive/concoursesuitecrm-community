@@ -363,7 +363,9 @@ CREATE TABLE contact (
   no_textmessage BOOLEAN DEFAULT false,
   no_im BOOLEAN DEFAULT false,
   no_fax BOOLEAN DEFAULT false,
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  assigned_date TIMESTAMP NULL,
+  lead_trashed_date TIMESTAMP NULL
 );
 
 CREATE INDEX `contact_user_id_idx` USING BTREE ON `contact` (`user_id`);
@@ -424,13 +426,11 @@ CREATE TABLE permission_category (
   scheduled_events BOOLEAN NOT NULL DEFAULT false,
   object_events BOOLEAN NOT NULL DEFAULT false,
   reports BOOLEAN NOT NULL DEFAULT false,
-  products BOOLEAN NOT NULL DEFAULT false,
   webdav BOOLEAN NOT NULL DEFAULT false,
 	logos BOOLEAN NOT NULL DEFAULT false,
   constant INT NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
-  custom_list_views BOOLEAN NOT NULL DEFAULT false,
-  importer bool NOT NULL DEFAULT false
+  custom_list_views BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE permission (

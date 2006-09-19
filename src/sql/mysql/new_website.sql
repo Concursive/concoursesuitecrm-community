@@ -222,3 +222,9 @@ CREATE TABLE web_product_email_log (
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE url_map (
+  url_id INT AUTO_INCREMENT PRIMARY KEY,
+  time_in_millis NUMERIC(19) NOT NULL,
+  url TEXT
+);
+

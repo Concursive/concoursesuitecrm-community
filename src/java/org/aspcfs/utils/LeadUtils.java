@@ -16,31 +16,33 @@
 package org.aspcfs.utils;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
-
 import java.sql.*;
 
+import java.util.Calendar;
+
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author partha
- * @version $Id: LeadUtils.java,v 1.1.4.4 2005/03/17 18:12:57 mrajkowski Exp
- *          $
- * @created March 2, 2005
+ * @author     partha
+ * @version    $Id: LeadUtils.java,v 1.1.4.4 2005/03/17 18:12:57 mrajkowski Exp
+ *      $
+ * @created    March 2, 2005
  */
 public class LeadUtils {
 
   /**
-   * This method checks and sets the read status of the Lead. If the lead is
-   * being read by someone else, it returns false. If the lead is being read by
-   * the user or its not being read before, it returns true.
+   *  This method checks and sets the read status of the Lead. If the lead is
+   *  being read by someone else, it returns false. If the lead is being read by
+   *  the user or its not being read before, it returns true.
    *
-   * @param db        Description of the Parameter
-   * @param contactId Description of the Parameter
-   * @param userId    The new readStatus value
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  contactId      Description of the Parameter
+   * @param  userId         The new readStatus value
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static synchronized int setReadStatus(Connection db, int contactId, int userId) throws SQLException {
     if (contactId == -1) {
@@ -101,13 +103,13 @@ public class LeadUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param contactId Description of the Parameter
-   * @param userId    Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  contactId      Description of the Parameter
+   * @param  userId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static synchronized boolean skipLead(Connection db, int contactId, int userId) throws SQLException {
     PreparedStatement pst = null;
@@ -180,13 +182,13 @@ public class LeadUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param contactId Description of the Parameter
-   * @param userId    Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  contactId      Description of the Parameter
+   * @param  userId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static synchronized int cleanUpContact(Connection db, int contactId, int userId) throws SQLException {
     PreparedStatement pst = null;
@@ -209,13 +211,13 @@ public class LeadUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param contactId Description of the Parameter
-   * @param userId    Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  contactId      Description of the Parameter
+   * @param  userId         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static synchronized boolean tryToAssignLead(Connection db, int contactId, int userId) throws SQLException {
     boolean lead = true;
@@ -272,14 +274,14 @@ public class LeadUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param contactId Description of the Parameter
-   * @param userId    Description of the Parameter
-   * @param ownerId   Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  contactId      Description of the Parameter
+   * @param  userId         Description of the Parameter
+   * @param  ownerId        Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static synchronized boolean tryToAssignLead(Connection db, int contactId, int userId, int ownerId) throws SQLException {
     boolean lead = true;
@@ -338,13 +340,15 @@ public class LeadUtils {
 
 
   /**
-   * Gets the nextLead attribute of the LeadUtils class
+   *  Gets the nextLead attribute of the LeadUtils class
    *
-   * @param db        Description of the Parameter
-   * @param contactId Description of the Parameter
-   * @param criteria  Description of the Parameter
-   * @return The nextLead value
-   * @throws SQLException Description of the Exception
+   * @param  db                       Description of the Parameter
+   * @param  contactId                Description of the Parameter
+   * @param  criteria                 Description of the Parameter
+   * @param  siteId                   Description of the Parameter
+   * @param  includeContactsAllSites  Description of the Parameter
+   * @return                          The nextLead value
+   * @throws  SQLException            Description of the Exception
    */
   public static synchronized int getNextLead(Connection db, int contactId, ContactList criteria, int siteId, boolean includeContactsAllSites) throws SQLException {
     int nextContactId = -1;
@@ -405,12 +409,14 @@ public class LeadUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param sqlFilter Description of the Parameter
-   * @param criteria  Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                       Description of the Parameter
+   * @param  sqlFilter                Description of the Parameter
+   * @param  criteria                 Description of the Parameter
+   * @param  siteId                   Description of the Parameter
+   * @param  includeContactsAllSites  Description of the Parameter
+   * @throws  SQLException            Description of the Exception
    */
   private static void createFilter(Connection db, StringBuffer sqlFilter, ContactList criteria, int siteId, boolean includeContactsAllSites) throws SQLException {
     // NOTE: Unfortunately this must be kept up to date with the ContactList code and would best be merged
@@ -530,7 +536,7 @@ public class LeadUtils {
           "FROM contact_lead_read_map cr WHERE cr.user_id = ?)) ");
     }
 
-    if (siteId != -1){
+    if (siteId != -1) {
       sqlFilter.append("AND c.site_id = ? ");
     } else if (!includeContactsAllSites) {
       sqlFilter.append("AND c.site_id IS NULL ");
@@ -569,12 +575,14 @@ public class LeadUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param pst      Description of the Parameter
-   * @param criteria Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  pst                      Description of the Parameter
+   * @param  criteria                 Description of the Parameter
+   * @param  siteId                   Description of the Parameter
+   * @param  includeContactsAllSites  Description of the Parameter
+   * @return                          Description of the Return Value
+   * @throws  SQLException            Description of the Exception
    */
   private static int prepareFilter(PreparedStatement pst, ContactList criteria, int siteId, boolean includeContactsAllSites) throws SQLException {
     int i = 1;
@@ -663,7 +671,7 @@ public class LeadUtils {
       pst.setInt(++i, readBy);
     }
 
-    if (siteId != -1){
+    if (siteId != -1) {
       pst.setInt(++i, siteId);
     }
 
@@ -680,6 +688,352 @@ public class LeadUtils {
     }
 
     return i;
+  }
+
+
+
+  /**
+   *  Gets the leadsAssigned attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @return                   The leadsAssigned value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getLeadsAssigned(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+    int count = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM contact c " +
+        "WHERE c.lead = ? AND c.lead_status = ? " +
+        "AND c.assigned_date >= ? AND c.assigned_date <= ? ");
+    int i = 0;
+    pst.setBoolean(++i, true);
+    pst.setInt(++i, Contact.LEAD_ASSIGNED);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("resultcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+
+  /**
+   *  Gets the leadsActive attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @return                   The leadsActive value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getLeadsActive(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+    int count = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM contact c " +
+        "WHERE c.lead = ? AND c.lead_status = ? ");
+    pst.setBoolean(1, true);
+    pst.setInt(2, Contact.LEAD_ASSIGNED);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("resultcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+
+  /**
+   *  Gets the leadsUnassigned attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @return                   The leadsUnassigned value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getLeadsUnassigned(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+    int count = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM contact c " +
+        "WHERE c.lead = ? AND c.lead_status = ? ");
+    pst.setBoolean(1, true);
+    pst.setInt(2, Contact.LEAD_UNPROCESSED);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("resultcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+
+  /**
+   *  Gets the accountsWon attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @return                   The accountsWon value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getAccountsWon(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+    int count = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM contact c " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
+        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
+        "WHERE c.lead = ? AND c.lead_status = ? " +
+        "AND c.conversion_date IS NOT NULL " + 
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
+        "AND oc.stagedate >= ? " + 
+        "AND oc.stagedate <= ? " + 
+        "AND oc.stage = ? ");
+    int i = 0;
+    pst.setBoolean(++i, false);
+    pst.setInt(++i, Contact.LEAD_ASSIGNED);
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    pst.setInt(++i, 8); // opportunity component stage "Closed Won"
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("resultcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+
+  /**
+   *  Gets the accountsLost attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @return                   The accountsLost value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getAccountsLost(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+    int count = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM contact c " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
+        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
+        "WHERE c.lead = ? AND c.lead_status = ? " +
+        "AND c.conversion_date IS NOT NULL " + 
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
+        "AND oc.stagedate >= ? " + 
+        "AND oc.stagedate <= ? " + 
+        "AND oc.stage = ? ");
+    int i = 0;
+    pst.setBoolean(++i, false);
+    pst.setInt(++i, Contact.LEAD_ASSIGNED);
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    pst.setInt(++i, 9); // opportunity component stage "Closed Lost"
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("resultcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+
+  /**
+   *  Gets the leadsTrashed attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @return                   The leadsTrashed value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getLeadsTrashed(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+    int count = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM contact c " +
+        "WHERE c.lead = ? AND c.lead_status = ? " +
+        "AND c.lead_trashed_date >= ? " +
+        "AND c.lead_trashed_date <= ? ");
+    int i = 0;
+    pst.setBoolean(++i, true);
+    pst.setInt(++i, Contact.LEAD_TRASHED);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("resultcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+
+  /**
+   *  Gets number of leads converted into accounts in the last so many days
+   *
+   * @param  db                Description of the Parameter
+   * @param  days              Description of the Parameter
+   * @return                   The leadsUnassigned value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getAccountsWon(Connection db, int days) throws SQLException {
+    int count = 0;
+    Calendar cal = Calendar.getInstance();
+    Timestamp endDate = new Timestamp(cal.getTimeInMillis());
+
+    cal.add(cal.DATE, days);
+    Timestamp startDate = new Timestamp(cal.getTimeInMillis());
+
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM contact c " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
+        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
+        "WHERE c.lead = ? AND c.lead_status = ? " +
+        "AND c.conversion_date IS NOT NULL " + 
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
+        "AND oc.stagedate >= ? " + 
+        "AND oc.stagedate <= ? " + 
+        "AND oc.stage = ? ");
+    int i = 0;
+    pst.setBoolean(++i, false);
+    pst.setInt(++i, Contact.LEAD_ASSIGNED);
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    pst.setInt(++i, 8); // opportunity component stage "Closed Won"
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("resultcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+  /**
+   *  Gets the averageDays attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @param  result            Description of the Parameter
+   * @return                   The averageDays value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getAverageDays(Connection db, Timestamp startDate, Timestamp endDate, String result) throws SQLException {
+    int count = 0;
+    int days = 0;
+    Calendar assigned = Calendar.getInstance();
+    Calendar conversion = Calendar.getInstance();
+
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT c.assigned_date, oc.stagedate as conversion_date " +
+        "FROM contact c " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
+        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
+        "WHERE c.lead = ? AND c.lead_status = ? " +
+        "AND c.conversion_date IS NOT NULL " + 
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
+        "AND oc.stagedate >= ? " + 
+        "AND oc.stagedate <= ? " + 
+        "AND oc.stage = ? ");
+    int i = 0;
+    pst.setBoolean(++i, false);
+    pst.setInt(++i, Contact.LEAD_ASSIGNED);
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    if ("WIN".equals(result.toUpperCase())) {
+      pst.setInt(++i, 8); // opportunity component stage "Closed Won"
+    } else {
+      pst.setInt(++i, 9); // opportunity component stage "Closed Lost"
+    }
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      Timestamp assignedDate = rs.getTimestamp("assigned_date");
+      Timestamp conversionDate = rs.getTimestamp("conversion_date");
+      if (assignedDate != null && conversionDate != null) {
+        assigned.setTimeInMillis(assignedDate.getTime());
+        conversion.setTimeInMillis(conversionDate.getTime());
+        days += DateUtils.getDaysBetween(
+            assigned, conversion);
+        count++;
+      }
+    }
+    rs.close();
+    pst.close();
+    return (days > 0 ? days / count : 0);
+  }
+
+
+  /**
+   *  Gets the daysToWin attribute of the LeadUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  assignedDate      Description of the Parameter
+   * @param  conversionDate    Description of the Parameter
+   * @return                   The daysToWin value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getDaysToWin(Connection db, Timestamp assignedDate, Timestamp conversionDate) throws SQLException {
+    Calendar assigned = Calendar.getInstance();
+    Calendar conversion = Calendar.getInstance();
+
+    assigned.setTimeInMillis(assignedDate.getTime());
+    conversion.setTimeInMillis(conversionDate.getTime());
+
+    return DateUtils.getDaysBetween(assigned, conversion);
   }
 }
 

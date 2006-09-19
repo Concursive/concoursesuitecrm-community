@@ -329,6 +329,9 @@
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>';"/>
   <input type="hidden" name="id" value="<%= ContactDetails.getId() %>"/>
   <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />
+  <input type="hidden" name="conversionDate" value="<%=ContactDetails.getConversionDate()%>">
+  <input type="hidden" name="assignedDate" value="<%=ContactDetails.getAssignedDate()%>">
+  <input type="hidden" name="leadTrashedDate" value="<%=ContactDetails.getLeadTrashedDate()%>">
   <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>"/>
   <input type="hidden" name="enteredBy" value="<%= ContactDetails.getEnteredBy() %>"/>
   <input type="hidden" name="reset" value="true"/>

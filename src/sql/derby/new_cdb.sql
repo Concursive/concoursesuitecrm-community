@@ -364,6 +364,8 @@ CREATE TABLE contact (
   no_im CHAR(1) DEFAULT '0',
   no_fax CHAR(1) DEFAULT '0',
   site_id INTEGER REFERENCES lookup_site_id(code)
+  assigned_date TIMESTAMP,
+  lead_trashed_date TIMESTAMP
 );
 
 CREATE INDEX contact_user_id_idx ON contact (user_id);

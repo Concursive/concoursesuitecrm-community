@@ -188,7 +188,8 @@ CREATE TABLE call_log (
   reminder_value INT NULL,
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
   alertdate_timezone VARCHAR(255),
-  trashed_date TIMESTAMP NULL
+  trashed_date TIMESTAMP NULL,
+  followup_contact_id INT REFERENCES contact(contact_id)
 );
 
 CREATE INDEX `call_log_cidx` USING BTREE ON `call_log` (`alertdate`, `enteredby`);
