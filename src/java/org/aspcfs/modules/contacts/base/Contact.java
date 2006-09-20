@@ -4300,9 +4300,9 @@ public class Contact extends GenericBean {
     if (employeeId != null) {
       pst.setString(++i, this.getEmployeeId());
     } else {
-      // NOTE: changed for Derby... why?
-      //pst.setString(++i, null);
-      pst.setString(++i, "");
+      pst.setString(++i, null);
+      // NOTE: the following was submitted for Derby, and fails the others. why?
+      //pst.setString(++i, "");
     }
     DatabaseUtils.setInt(pst, ++i, this.getSiteId());
     if (locale > -1) {
