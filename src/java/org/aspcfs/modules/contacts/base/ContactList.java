@@ -3371,6 +3371,9 @@ public class ContactList extends Vector implements UserCentric {
       milies = System.currentTimeMillis();
       logger.debug(pst.toString());
     }
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;

@@ -170,8 +170,10 @@ public class ActionPlanCategoryList extends Vector {
         "WHERE apc.id > -1 ");
     pst = db.prepareStatement(new String(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString()));
     items = prepareFilter(pst);
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }

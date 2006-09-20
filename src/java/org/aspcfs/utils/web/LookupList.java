@@ -832,6 +832,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
+      pagedListInfo.doManualOffset(db, pst);
       rs = pst.executeQuery();
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
@@ -846,6 +847,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
             "AND description < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        if (pagedListInfo != null) {
+          pagedListInfo.doManualOffset(db, pst);
+        }
         rs = pst.executeQuery();
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
@@ -875,6 +879,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
         "WHERE code > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {

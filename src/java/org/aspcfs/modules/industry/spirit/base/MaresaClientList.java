@@ -264,6 +264,9 @@ public class MaresaClientList extends ArrayList {
         "WHERE code > -1 and lookup_site_id.code = maresa_client.site_id ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(db,pst);
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);

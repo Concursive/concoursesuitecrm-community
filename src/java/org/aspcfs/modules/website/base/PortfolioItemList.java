@@ -113,6 +113,9 @@ public class PortfolioItemList extends ArrayList {
 		if (System.getProperty("DEBUG") != null){
 //			System.out.println(pst);
 		}
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);

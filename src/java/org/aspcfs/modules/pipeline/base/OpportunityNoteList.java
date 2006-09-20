@@ -137,6 +137,9 @@ public class OpportunityNoteList extends NoteList {
         sqlFilter.toString() +
         sqlOrder.toString());
     items = prepareFilter(pst);
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);

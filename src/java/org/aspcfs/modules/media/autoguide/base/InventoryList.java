@@ -496,6 +496,9 @@ public class InventoryList extends ArrayList implements SyncableList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
+      if (pagedListInfo != null) {
+        pagedListInfo.doManualOffset(db, pst);
+      }
       rs = pst.executeQuery();
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
@@ -512,6 +515,9 @@ public class InventoryList extends ArrayList implements SyncableList {
             "AND o.name < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        if (pagedListInfo != null) {
+          pagedListInfo.doManualOffset(db, pst);
+        }
         rs = pst.executeQuery();
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
@@ -562,6 +568,9 @@ public class InventoryList extends ArrayList implements SyncableList {
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);

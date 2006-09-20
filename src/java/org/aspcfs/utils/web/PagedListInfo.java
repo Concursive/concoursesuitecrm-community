@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -1562,6 +1563,13 @@ public class PagedListInfo implements Serializable {
       {
         rs.next();
       }
+    }
+  }
+  
+  public void doManualOffset(Connection db, PreparedStatement pst) throws SQLException{
+    if (this.getItemsPerPage() > 0 &&
+        DatabaseUtils.getType(db) == DatabaseUtils.DERBY) {
+        pst.setMaxRows(this.getCurrentOffset() + this.getItemsPerPage());
     }
   }
 
