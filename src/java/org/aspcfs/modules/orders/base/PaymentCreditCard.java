@@ -34,20 +34,20 @@ public class PaymentCreditCard extends GenericBean {
   private int id = -1;
   private int orderId = -1;
   private int cardType = -1;
-  private String cardNumber = null;
-  private String cardSecurityCode = null;
+  private String cardNumber;
+  private String cardSecurityCode;
   private int expirationMonth = -1;
   private int expirationYear = -1;
-  private String nameOnCard = null;
-  private String companyNameOnCard = null;
+  private String nameOnCard ;
+  private String companyNameOnCard;
 
-  private Timestamp entered = null;
+  private Timestamp entered;
   private int enteredBy = -1;
-  private Timestamp modified = null;
+  private Timestamp modified ;
   private int modifiedBy = -1;
   // payment encryption
-  private Key publicKey = null;
-  private Key privateKey = null;
+  private Key publicKey;
+  private Key privateKey ;
 
 
   /**

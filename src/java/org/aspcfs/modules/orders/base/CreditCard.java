@@ -345,6 +345,17 @@ public class CreditCard extends GenericBean {
     return cardNumber;
   }
 
+  /**
+   * Gets the masked cardNumber attribute of the PaymentCreditCard object
+   *
+   * @return The cardNumber value
+   */
+  public String getMaskedCardNumber() {
+    return "#"+cardNumber.substring(cardNumber.length()-4);
+    
+  }
+  
+
 
   /**
    * Gets the encryptedCardNumber attribute of the PaymentCreditCard object

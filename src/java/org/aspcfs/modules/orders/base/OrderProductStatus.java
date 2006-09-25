@@ -429,6 +429,7 @@ public class OrderProductStatus extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
+    sql.append("?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getOrderId());

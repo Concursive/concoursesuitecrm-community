@@ -334,13 +334,12 @@ CREATE TABLE credit_card (
 CREATE SEQUENCE lookup_payment_gateway_seq;
 
 CREATE TABLE lookup_payment_gateway (
-  code int NOT NULL DEFAULT nextval('lookup_payment_gateway_seq'),
+  code SERIAL PRIMARY KEY,
   description varchar(50) NOT NULL,
   default_item bool DEFAULT false,
   "level" int DEFAULT 0,
   enabled bool DEFAULT true,
-  constant_id int,
-  CONSTRAINT lookup_payment_gateway_pkey PRIMARY KEY (code)
+  constant_id int
 );        
 -- Table MERCHANT_PAYMENT_GATEWAY
 CREATE SEQUENCE merchant_payment_gateway_seq;

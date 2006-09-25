@@ -49,19 +49,11 @@
       </td>
     </tr>
     <tr>
-      <td>
-        CVV Number
-      </td>
-      <td>
-        <input type="text" name="cardSecurityCode" size="25" value="<%= toHtmlValue(creditCard.getCardSecurityCode())%>"/>
-      </td>
-    </tr>
-    <tr>
       <td >
         Expiration Date
       </td>
       <td>
-         <input type="text" name="expirationMonth" size="10" value="<%= creditCard.getExpirationMonth()!=-1?toHtmlValue(creditCard.getExpirationMonth()):""%>"/>&nbsp;<input type="text" name="expirationYear" size="4" value="<%=creditCard.getExpirationYear()!=-1?toHtmlValue(creditCard.getExpirationYear()):""%>"/>
+         <input type="text" name="expirationMonth" size="2" maxlength="2" value="<%= creditCard.getExpirationMonth()!=-1?toHtmlValue(creditCard.getExpirationMonth()):"MM"%>"/>&nbsp;<input type="text" name="expirationYear" size="4" maxlength="4" value="<%=creditCard.getExpirationYear()!=-1?toHtmlValue(creditCard.getExpirationYear()):"YYYY"%>"/>
       </td>
     </tr>
   </table>

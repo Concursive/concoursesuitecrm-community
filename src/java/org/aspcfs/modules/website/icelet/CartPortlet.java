@@ -26,12 +26,13 @@ import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.converters.SqlTimestampConverter;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
@@ -42,6 +43,7 @@ import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactAddress;
+import org.aspcfs.modules.contacts.base.ContactAddressList;
 import org.aspcfs.modules.contacts.base.ContactEmailAddress;
 import org.aspcfs.modules.contacts.base.ContactEmailAddressList;
 import org.aspcfs.modules.login.beans.LoginBean;
@@ -49,7 +51,6 @@ import org.aspcfs.modules.orders.base.CreditCard;
 import org.aspcfs.modules.orders.base.CreditCardList;
 import org.aspcfs.modules.orders.base.Order;
 import org.aspcfs.modules.orders.base.OrderAddress;
-import org.aspcfs.modules.orders.base.OrderAddressList;
 import org.aspcfs.modules.orders.base.OrderProduct;
 import org.aspcfs.modules.orders.base.PaymentCreditCard;
 import org.aspcfs.modules.quotes.base.QuoteProductBean;
@@ -62,8 +63,6 @@ import org.aspcfs.utils.web.CountrySelect;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.StateSelect;
 
-import com.darkhorseventures.framework.actions.ActionContext;
-import com.darkhorseventures.framework.beans.BeanUtils;
 import com.zeroio.iteam.base.FileItem;
 
 /**
@@ -237,6 +236,15 @@ public class CartPortlet extends GenericPortlet {
             .getRequestDispatcher(VIEW_PAGE9);
         requestDispatcher.include(request, response);
       } else if ("confirmOrderStatus".equals(viewType)) {
+        if (request.getParameter("error") != null) {
+          request.setAttribute("ORDER_ERROR_MESSAGE", (String) request
+              .getPreferences().getValue(ORDER_ERROR_MESSAGE,
+                  "Your order can not be processed."));
+        } else {
+          request.setAttribute("ORDER_THANKYOU_MESSAGE", (String) request
+              .getPreferences().getValue(ORDER_THANKYOU_MESSAGE,
+                  "Your order has been processed successfully."));
+        }
         PortletRequestDispatcher requestDispatcher = getPortletContext()
             .getRequestDispatcher(VIEW_PAGE10);
         requestDispatcher.include(request, response);
@@ -346,6 +354,10 @@ public class CartPortlet extends GenericPortlet {
       requestQuote(request, response);
     } else if (request.getParameter("save") != null) {
       saveCart(request, response);
+      if (request.getParameter("returnStr") != null
+          && "confirmOrder".equals((request.getParameter("returnStr")))) {
+        response.setRenderParameter("viewType", "confirmOrder");
+      }
     } else if (request.getParameter("clear") != null) {
       clearCart(request, response);
     } else if (request.getParameter("email") != null) {
@@ -398,6 +410,9 @@ public class CartPortlet extends GenericPortlet {
       response.setRenderParameter("viewType", "cardList");
     } else if (request.getParameter("confirmOrderStatus") != null) {
       confirmOrder(request, response);
+      if (request.getParameter("error") != null) {
+        response.setRenderParameter("error", request.getParameter("error"));
+      }
       response.setRenderParameter("viewType", "confirmOrderStatus");
     } else if (request.getParameter("cancelOrder") != null) {
       cancelOrder(request, response);
@@ -492,7 +507,7 @@ public class CartPortlet extends GenericPortlet {
     try {
       if (request.getParameter("deleteAddress") != null) {
         String[] deleteIds = request.getParameterValues("deleteAddressId");
-        OrderAddress adr = new OrderAddress();
+        ContactAddress adr = new ContactAddress();
         if (deleteIds != null) {
           for (int i = 0; i < deleteIds.length; i++) {
             adr.setId(deleteIds[i]);
@@ -559,83 +574,84 @@ public class CartPortlet extends GenericPortlet {
     thisUser.setPassword1(request.getParameter("password"));
     thisUser.setPassword2(request.getParameter("confirmPassword"));
     if (!thisUser.isDuplicate(db)) {
-      // Add account
-      Organization account = new Organization();
-      account.setName(request.getParameter("orgName"));
-      account.setNameFirst(request.getParameter("nameFirst"));
-      account.setNameLast(request.getParameter("nameLast"));
+      
+      Contact thisContact = new Contact();
+      AccessTypeList accessTypes = PortletUtils.getSystemStatus(request)
+          .getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+      thisContact.setAccessType(accessTypes.getDefaultItem());
+      thisContact.setNameFirst(request.getParameter("nameFirst"));
+      thisContact.setNameLast(request.getParameter("nameLast"));
       String emailAddress = (String) request.getParameter("emailaddress");
       if (emailAddress != null && !"".equals(emailAddress)) {
         LookupList emailTypeList = new LookupList(db,
             "lookup_contactemail_types");
-        OrganizationEmailAddress email = new OrganizationEmailAddress();
+        ContactEmailAddress email = new ContactEmailAddress();
         email.setType(emailTypeList.getDefaultElementCode());
         email.setEmail(emailAddress);
-        account.setEmailAddressList(new OrganizationEmailAddressList());
-        account.getEmailAddressList().add(email);
+        thisContact.setEmailAddressList(new ContactEmailAddressList());
+        thisContact.getEmailAddressList().add(email);
       }
-      account.setEnteredBy(0);
-      account.setModifiedBy(0);
-      account.setInsertPrimaryContact(false);
-      inserted = account.insert(db);
+      thisContact.setEnteredBy(0);
+      thisContact.setModifiedBy(0);
+      thisContact.insert(db);
 
-      // Add contact
-      if (inserted) {
-        Contact thisContact = new Contact();
-        AccessTypeList accessTypes = PortletUtils.getSystemStatus(request)
-            .getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
-        thisContact.setAccessType(accessTypes.getDefaultItem());
-        thisContact.setNameFirst(request.getParameter("nameFirst"));
-        thisContact.setNameLast(request.getParameter("nameLast"));
-        thisContact.setOrgName(request.getParameter("orgName"));
-        thisContact.setOrgId(account.getId());
+      // Add user
+      ApplicationPrefs prefs = (ApplicationPrefs) PortletUtils
+          .getApplicationPrefs(request);
+      String roleId = (String) request.getPreferences().getValue(
+          WEB_CUSTOMER_ROLE, "1");
+      thisUser.setContactId(thisContact.getId());
+      thisUser.setRoleId(Integer.parseInt(roleId));
+      thisUser.setEnteredBy(0);
+      thisUser.setModifiedBy(0);
+      thisUser.setTimeZone(prefs.get("SYSTEM.TIMEZONE"));
+      thisUser.setCurrency(prefs.get("SYSTEM.CURRENCY"));
+      thisUser.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
+      boolean userInserted = thisUser.insert(db);
+      if (userInserted) {
+//      Add account
+        Organization account = new Organization();
+        account.setName(request.getParameter("orgName"));
+        account.setNameFirst(request.getParameter("nameFirst"));
+        account.setNameLast(request.getParameter("nameLast"));
         emailAddress = (String) request.getParameter("emailaddress");
         if (emailAddress != null && !"".equals(emailAddress)) {
           LookupList emailTypeList = new LookupList(db,
               "lookup_contactemail_types");
-          ContactEmailAddress email = new ContactEmailAddress();
+          OrganizationEmailAddress email = new OrganizationEmailAddress();
           email.setType(emailTypeList.getDefaultElementCode());
           email.setEmail(emailAddress);
-          thisContact.setEmailAddressList(new ContactEmailAddressList());
-          thisContact.getEmailAddressList().add(email);
+          account.setEmailAddressList(new OrganizationEmailAddressList());
+          account.getEmailAddressList().add(email);
         }
-        thisContact.setEnteredBy(0);
-        thisContact.setModifiedBy(0);
-        thisContact.insert(db);
-
-        // Add user
-        ApplicationPrefs prefs = (ApplicationPrefs) PortletUtils
-            .getApplicationPrefs(request);
-        String roleId = (String) request.getPreferences().getValue(
-            WEB_CUSTOMER_ROLE, "1");
-        thisUser.setContactId(thisContact.getId());
-        thisUser.setRoleId(Integer.parseInt(roleId));
-        thisUser.setEnteredBy(0);
-        thisUser.setModifiedBy(0);
-        thisUser.setTimeZone(prefs.get("SYSTEM.TIMEZONE"));
-        thisUser.setCurrency(prefs.get("SYSTEM.CURRENCY"));
-        thisUser.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
-        boolean userInserted = thisUser.insert(db);
-        if (userInserted) {
-          sendCreateAccountNotification(request, response, thisUser
-              .getUsername());
-          LoginBean login = new LoginBean();
-          login.setUsername(request.getParameter("emailaddress"));
-          login.setPassword(request.getParameter("password"));
-          try {
-            LoginUtils userUtil = new LoginUtils(db, login);
-            if (userUtil.isPortalUserValid(db)) {
-              User user = new User(db, userUtil.getUserId());
-              ((HttpServletRequest) request).getSession().setAttribute(
-                  "WebUser", user);
-            } else {
-              response.setRenderParameter("LoginFailedMessage", "".equals(login
-                  .getMessage()) ? "Login Failed" : login.getMessage());
-              response.setRenderParameter("viewType", "loginFailed");
-            }
-          } catch (Exception e) {
-            e.printStackTrace();
+        account.setEnteredBy(thisUser.getId());
+        account.setModifiedBy(thisUser.getId());
+        account.setOwner(thisUser.getId());
+        account.setInsertPrimaryContact(false);
+        inserted = account.insert(db);
+        if(inserted){
+          thisContact.setOrgId(account.getId());
+          thisContact.setOrgName(account.getName());
+          thisContact.setModifiedBy(thisUser.getId());
+          thisContact.update(db);
+        }
+        sendCreateAccountNotification(request, response, thisUser.getUsername());
+        LoginBean login = new LoginBean();
+        login.setUsername(request.getParameter("emailaddress"));
+        login.setPassword(request.getParameter("password"));
+        try {
+          LoginUtils userUtil = new LoginUtils(db, login);
+          if (userUtil.isPortalUserValid(db)) {
+            User user = new User(db, userUtil.getUserId());
+            ((HttpServletRequest) request).getSession().setAttribute("WebUser",
+                user);
+          } else {
+            response.setRenderParameter("LoginFailedMessage", "".equals(login
+                .getMessage()) ? "Login Failed" : login.getMessage());
+            response.setRenderParameter("viewType", "loginFailed");
           }
+        } catch (Exception e) {
+          e.printStackTrace();
         }
       }
     } else {
@@ -701,9 +717,9 @@ public class CartPortlet extends GenericPortlet {
           "lookup_contactaddress_types");
       request.setAttribute("typeList", addrTypeList);
 
-      OrderAddress thisAddress = new OrderAddress();
+      ContactAddress thisAddress = new ContactAddress();
       if (request.getParameter("addressId") != null) {
-        thisAddress = new OrderAddress(db, Integer.parseInt(request
+        thisAddress = new ContactAddress(db, Integer.parseInt(request
             .getParameter("addressId")));
       }
       request.setAttribute("addressItem", thisAddress);
@@ -716,7 +732,7 @@ public class CartPortlet extends GenericPortlet {
     Connection db = PortletUtils.getConnection(request);
     User user = (User) ((HttpServletRequest) request).getSession()
         .getAttribute("WebUser");
-    OrderAddress address = new OrderAddress();
+    ContactAddress address = new ContactAddress();
     try {
       address.setStreetAddressLine1(request.getParameter("address1"));
       address.setStreetAddressLine2(request.getParameter("address2"));
@@ -780,7 +796,6 @@ public class CartPortlet extends GenericPortlet {
       card.setCardType(request.getParameter("cardType"));
       card.setCardNumber(request.getParameter("cardNumber"));
       card.setNameOnCard(request.getParameter("nameOnCard"));
-      card.setCardSecurityCode(request.getParameter("cardSecurityCode"));
       card.setExpirationMonth(request.getParameter("expirationMonth"));
       card.setExpirationYear(request.getParameter("expirationYear"));
 
@@ -816,10 +831,11 @@ public class CartPortlet extends GenericPortlet {
     }
   }
 
-  private void saveCardPreference(ActionRequest request, ActionResponse response) {
-    // (saves the card chosen for the order. The card details are copied from
-    // the table creditcard to payment_creditcard)
-  }
+  // private void saveCardPreference(ActionRequest request, ActionResponse
+  // response) {
+  // // (saves the card chosen for the order. The card details are copied from
+  // // the table creditcard to payment_creditcard)
+  // }
 
   private void associateAddress(RenderRequest request, RenderResponse response) {
 
@@ -828,7 +844,7 @@ public class CartPortlet extends GenericPortlet {
     Connection db = PortletUtils.getConnection(request);
     try {
 
-      OrderAddressList thisList = new OrderAddressList();
+      ContactAddressList thisList = new ContactAddressList();
       thisList.setContactId(user.getContactId());
       thisList.buildList(db);
       request.setAttribute("addressList", thisList);
@@ -844,15 +860,15 @@ public class CartPortlet extends GenericPortlet {
     Connection db = PortletUtils.getConnection(request);
     String billing = request.getParameter("billing");
     String shipping = request.getParameter("shipping");
-    OrderAddress address = new OrderAddress();
+    ContactAddress address = new ContactAddress();
     try {
       if (billing != null && !"".equals(billing) && !"-1".equals(billing)) {
-        address = new OrderAddress(db, Integer.parseInt(billing));
+        address = new ContactAddress(db, Integer.parseInt(billing));
         ((HttpServletRequest) request).getSession().setAttribute(
             "billingAddress", address);
       }
       if (shipping != null && !"".equals(shipping) && !"-1".equals(shipping)) {
-        address = new OrderAddress(db, Integer.parseInt(shipping));
+        address = new ContactAddress(db, Integer.parseInt(shipping));
         ((HttpServletRequest) request).getSession().setAttribute(
             "shippingAddress", address);
       }
@@ -862,11 +878,11 @@ public class CartPortlet extends GenericPortlet {
     request.setAttribute("returnStr", request.getParameter("returnStr"));
   }
 
-  private void reviewOrder(ActionRequest request, ActionResponse response) {
-    // (Fetches all the information required for the order and sets them as
-    // request
-    // attributes)
-  }
+  // private void reviewOrder(ActionRequest request, ActionResponse response) {
+  // // (Fetches all the information required for the order and sets them as
+  // // request
+  // // attributes)
+  // }
 
   /**
    * i. Creates a record in order_entry. ii. Copies addresses from the tables
@@ -882,15 +898,18 @@ public class CartPortlet extends GenericPortlet {
         .getAttribute("WebUser");
     HashMap cartBean = (HashMap) ((HttpServletRequest) request).getSession()
         .getAttribute("CartBean");
-    OrderAddress billingAddress = (OrderAddress) ((HttpServletRequest) request)
+    ContactAddress billingAddress = (ContactAddress) ((HttpServletRequest) request)
         .getSession().getAttribute("billingAddress");
-    OrderAddress shippingAddress = (OrderAddress) ((HttpServletRequest) request)
+    OrderAddress orderBillingAddress = new OrderAddress();
+    ContactAddress shippingAddress = (ContactAddress) ((HttpServletRequest) request)
         .getSession().getAttribute("shippingAddress");
+    OrderAddress orderShippingAddress = new OrderAddress();
     CreditCard card = (CreditCard) ((HttpServletRequest) request).getSession()
         .getAttribute("creditCardInOrder");
     Order order = new Order();
     try {
       order.setBillingContactId(user.getId());
+      order.setOrgId(0);
       order.setOrderedBy(user.getId());
       order.setEnteredBy(user.getId());
       order.setModifiedBy(user.getId());
@@ -904,27 +923,52 @@ public class CartPortlet extends GenericPortlet {
             QuoteProductBean quoteProductBean = (QuoteProductBean) cartBean
                 .get(productId);
             OrderProduct orderProduct = new OrderProduct();
-            BeanUtils.populateObject(quoteProductBean, orderProduct);
+            orderProduct.setProductId(quoteProductBean.getProduct().getId());
+            orderProduct.setQuantity(quoteProductBean.getQuantity());
+            orderProduct.setModifiedBy(user.getId());
+            orderProduct.setEnteredBy(user.getId());
+            orderProduct.setStatusId(1);
             orderProduct.setOrderId(order.getId());
             orderProduct.insert(db);
           }
         }
         PaymentCreditCard pCard = new PaymentCreditCard();
-        BeanUtils.populateObject(card, pCard);
+        pCard.setCardNumber(card.getCardNumber());
+        pCard.setCardSecurityCode(card.getCardSecurityCode());
+        pCard.setCardType(card.getCardType());
+        pCard.setCompanyNameOnCard(card.getCompanyNameOnCard());
+        pCard.setExpirationMonth(card.getExpirationMonth());
+        pCard.setExpirationYear(card.getExpirationYear());
+        pCard.setNameOnCard(card.getNameOnCard());
         pCard.setOrderId(order.getId());
+        pCard.setModifiedBy(user.getId());
+        pCard.setEnteredBy(user.getId());
         pCard.insert(db);
 
-        billingAddress.setOrderId(order.getId());
-        billingAddress.insert(db);
+        BeanUtils.copyProperties(billingAddress, orderBillingAddress);
+        orderBillingAddress.setOrderId(order.getId());
+        orderBillingAddress.setModifiedBy(user.getId());
+        orderBillingAddress.setEnteredBy(user.getId());
+        orderBillingAddress.insert(db);
 
-        shippingAddress.setOrderId(order.getId());
-        shippingAddress.insert(db);
+        BeanUtils.copyProperties(orderShippingAddress, shippingAddress);
+        orderShippingAddress.setOrderId(order.getId());
+        orderShippingAddress.setModifiedBy(user.getId());
+        orderShippingAddress.setEnteredBy(user.getId());
+        orderShippingAddress.insert(db);
+        clearCart(request, response);
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       e.printStackTrace();
+      request.setAttribute("error", e.getMessage());
     }
 
   }
+
+  /**
+   * @param product
+   * @param orderProduct
+   */
 
   private void cancelOrder(ActionRequest request, ActionResponse response) {
     clearCart(request, response);
@@ -1105,6 +1149,7 @@ public class CartPortlet extends GenericPortlet {
     } else {
       ((HttpServletRequest) request).getSession().removeAttribute("CartBean");
     }
+    request.setAttribute("returnStr", request.getParameter("returnStr"));
   }
 
   public void states(RenderRequest request, RenderResponse response) {

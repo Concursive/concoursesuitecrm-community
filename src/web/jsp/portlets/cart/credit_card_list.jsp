@@ -72,7 +72,7 @@ if (creditCardList != null && !creditCardList.isEmpty()) {
 
 			<td>
 				<%=card.getCardTypeName()%>, 
-				<%=card.getCardNumber().substring(card.getCardNumber().length()-4)%>, <%=card.getNameOnCard()%>, Exp:
+				<%=card.getMaskedCardNumber()%>, <%=card.getNameOnCard()%>, Exp:
 				<%=card.getExpirationMonth()%>.<%=card.getExpirationYear()%>
 			</td>
 			<td>
@@ -99,8 +99,11 @@ if (creditCardList != null && !creditCardList.isEmpty()) {
 </form>
 <br />
 <%
-}
+}else{
 %>
+<br>
+You have no credit cards on file.
+<%} %>
 <form name="addCard" action="<portlet:actionURL />" method="post">
 	<strong>Add Credit Card</strong>
 	<%@ include file="credit_card_include.jsp"%>

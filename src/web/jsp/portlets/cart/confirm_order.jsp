@@ -31,9 +31,9 @@
 <jsp:useBean id="creditCardInOrder"
 	class="org.aspcfs.modules.orders.base.CreditCard" scope="session" />
 <jsp:useBean id="billingAddress"
-	class="org.aspcfs.modules.orders.base.OrderAddress" scope="session" />
+	class="org.aspcfs.modules.contacts.base.ContactAddress" scope="session" />
 <jsp:useBean id="shippingAddress"
-	class="org.aspcfs.modules.orders.base.OrderAddress" scope="session" />
+	class="org.aspcfs.modules.contacts.base.ContactAddress" scope="session" />
 <portlet:defineObjects />
 <script language="javascript">
   function formValidate(){
@@ -137,7 +137,8 @@
 		</tr>
 		<tr>
 			<td style="text-align:left;">
-				<input type="submit" name="save" value="Update Cart">
+			<input type="hidden" name="returnStr" value="confirmOrder"/> 
+				<input type="submit" name="save" value="Update Cart"/>
 			</td>
 		</tr>
 		<tr>
@@ -148,7 +149,7 @@
 				%>
 				<%=creditCardInOrder.getCardTypeName()%>
 				&nbsp;
-				<%=creditCardInOrder.getCardNumber()%>
+				<%=creditCardInOrder.getMaskedCardNumber()%>
 				<%
 				} else {
 				%>

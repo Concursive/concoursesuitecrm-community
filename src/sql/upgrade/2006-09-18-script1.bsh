@@ -1,0 +1,24 @@
+import java.sql.*;
+
+//Add new lines to lookup_payment_gateway table
+print("Add new lines to lookup_payment_gateway table...");
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_payment_gateway "+
+        "( description, level, enabled, constant_id) "+ 
+        " VALUES (?, ?, ?, ?)");
+pst.setString(1, 'Authorize.net');
+pst.setInt(2, 10);
+pst.setBoolean(3, true);
+pst.setInt(4, 8110621);
+pst.executeUpdate();
+
+pst.setString(1, 'PPIPaymover');
+pst.setInt(2, 10);
+pst.setBoolean(3, true);
+pst.setInt(4, 8110622);
+pst.executeUpdate();
+
+pst.close();
+
+print("Finished");

@@ -63,7 +63,7 @@ function update(countryObj,url) {
   </script>
 
 <jsp:useBean id="addressItem"
-	class="org.aspcfs.modules.orders.base.OrderAddress" scope="request" />
+	class="org.aspcfs.modules.contacts.base.ContactAddress" scope="request" />
 <jsp:useBean id="typeList" class="org.aspcfs.utils.web.LookupList"
 	scope="request" />
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect"

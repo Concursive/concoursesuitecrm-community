@@ -157,7 +157,7 @@ public class OrderAddress extends Address {
     this.setId(DatabaseUtils.getNextSeq(db, "order_address_address_id_seq"));
     int id = getId();
     sql.append(
-        " INSERT INTO order_address(contact_id, address_type, addrline1, addrline2, addrline3, addrline4, " +
+        " INSERT INTO order_address(contact_id, order_id, address_type, addrline1, addrline2, addrline3, addrline4, " +
         " 	city, state, postalcode, country, ");
     if (id > -1) {
       sql.append("address_id, ");
@@ -170,7 +170,7 @@ public class OrderAddress extends Address {
       sql.append("modified, ");
     }
     sql.append("modifiedby ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
       sql.append("?,");
     }
@@ -189,6 +189,7 @@ public class OrderAddress extends Address {
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
+    pst.setInt(++i, this.getOrderId());
     if (this.getType() > -1) {
       pst.setInt(++i, this.getType());
     } else {

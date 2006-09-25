@@ -21,17 +21,24 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio"%>
 <%@ taglib uri="/WEB-INF/portlet.tld" prefix="portlet"%>
 <%@ include file="../../initPage.jsp"%>
-<jsp:useBean id="ORDER_THANKYOU_MESSAGE" class="java.lang.String" scope="request"/>
-<jsp:useBean id="ORDER_ERROR_MESSAGE" class="java.lang.String" scope="request"/>
+<jsp:useBean id="ORDER_THANKYOU_MESSAGE" class="java.lang.String"
+	scope="request" />
+<jsp:useBean id="ORDER_ERROR_MESSAGE" class="java.lang.String"
+	scope="request" />
+	<jsp:useBean id="error" class="java.lang.String"
+	scope="request" />
 <portlet:defineObjects />
-<dhv:evaluate if="<%= ORDER_THANKYOU_MESSAGE!=null %>">
-<%= ORDER_THANKYOU_MESSAGE%>
+<dhv:evaluate if="<%=ORDER_THANKYOU_MESSAGE != null%>">
+	<%=ORDER_THANKYOU_MESSAGE%>
 </dhv:evaluate>
-<dhv:evaluate if="<%= ORDER_ERROR_MESSAGE!=null %>">
-<%= ORDER_ERROR_MESSAGE%>
-<portlet:renderURL var="url">
-       <portlet:param name="viewType" value="addCreditCard"/>
-</portlet:renderURL>
-<br>
-<a href="<%= pageContext.getAttribute("url") %>">Change billing information</a>
-</dhv:evaluate>
+<%if(ORDER_ERROR_MESSAGE != null && !"".equals(ORDER_ERROR_MESSAGE)){%>
+	<%=ORDER_ERROR_MESSAGE%>
+	<br>
+	<%=error %>
+	<portlet:renderURL var="url">
+		<portlet:param name="viewType" value="addCreditCard" />
+	</portlet:renderURL>
+	<br>
+	<a href="<%=pageContext.getAttribute("url")%>">Change billing
+		information</a>
+<%}%>

@@ -19,21 +19,22 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv"%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio"%>
 <%@ taglib uri="/WEB-INF/portlet.tld" prefix="portlet"%>
-<%@ page import="java.util.*, org.aspcfs.modules.orders.base.*" %>
+<%@ page import="java.util.*, org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="returnStr" class="java.lang.String" scope="request" />
-<jsp:useBean id="addressList" class="org.aspcfs.modules.orders.base.OrderAddressList" scope="request" />
-<jsp:useBean id="billingAddress" class="org.aspcfs.modules.orders.base.OrderAddress" scope="session" />
-<jsp:useBean id="shippingAddress" class="org.aspcfs.modules.orders.base.OrderAddress" scope="session" />
+<jsp:useBean id="addressList" class="org.aspcfs.modules.contacts.base.ContactAddressList" scope="request" />
+<jsp:useBean id="billingAddress" class="org.aspcfs.modules.contacts.base.ContactAddress" scope="session" />
+<jsp:useBean id="shippingAddress" class="org.aspcfs.modules.contacts.base.ContactAddress" scope="session" />
 
 <portlet:defineObjects />
 
 <form name="addressList" action="<portlet:actionURL />" method="post">
-  <strong>Address List</strong>
-  <br>
   <portlet:renderURL var="urlAdd">
      <portlet:param name="viewType" value="addAddress"/>
   </portlet:renderURL>
         <A href="<%= pageContext.getAttribute("urlAdd") %>">Add address</A>
+  <br>
+  <strong>Address List</strong>
+  <br>
   
 <% if(addressList!=null && !addressList.isEmpty()){ %>
   <table cellpadding="4" cellspacing="0" border="0">
@@ -51,7 +52,7 @@
        Modify
       </th>
       <th>
-       Detete
+       Delete
       </th>
     </tr>
     <% 
@@ -62,7 +63,7 @@
     while (j.hasNext()) {
       i++;
       rowid = (rowid != 1 ? 1 : 2);
-      OrderAddress adr = (OrderAddress) j.next();
+      ContactAddress adr = (ContactAddress) j.next();
 %>
     <tr>
       <td>
@@ -99,5 +100,8 @@
   <input type="submit" name="deleteAddress" value="Delete" onclick="javascript:if(!confirm('Do you wish to delete this address(es)?')){return false;}"/>
   <input type="submit" name="selectAddress" value="Continue" />
   <input type="reset" name="Clear" value="Clear" />
+  <%} else { %>
+  <br>
+  You have no addresses on file
   <%} %>
 </form>

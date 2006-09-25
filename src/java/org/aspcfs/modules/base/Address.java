@@ -15,15 +15,18 @@
  */
 package org.aspcfs.modules.base;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.StateSelect;
-
-import javax.servlet.http.HttpServletRequest;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * Represents a mailing address to be used as a base class.
@@ -54,8 +57,8 @@ public class Address {
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private boolean enabled = true;
-  private java.sql.Timestamp entered = null;
-  private java.sql.Timestamp modified = null;
+  private Date entered = null;
+  private Date modified = null;
   private boolean primaryAddress = false;
 
   /**
@@ -417,8 +420,8 @@ public class Address {
    * 
    * @return The entered value
    */
-  public java.sql.Timestamp getEntered() {
-    return entered;
+  public Timestamp getEntered() {
+    return (Timestamp) entered;
   }
 
   /**
@@ -426,8 +429,8 @@ public class Address {
    * 
    * @return The modified value
    */
-  public java.sql.Timestamp getModified() {
-    return modified;
+  public Timestamp getModified() {
+    return (Timestamp) modified;
   }
 
   /**
@@ -616,7 +619,7 @@ public class Address {
    * @param tmp
    *          The new entered value
    */
-  public void setEntered(java.sql.Timestamp tmp) {
+  public void setEntered(Date tmp) {
     this.entered = tmp;
   }
 
@@ -626,7 +629,7 @@ public class Address {
    * @param tmp
    *          The new modified value
    */
-  public void setModified(java.sql.Timestamp tmp) {
+  public void setModified(Date tmp) {
     this.modified = tmp;
   }
 
