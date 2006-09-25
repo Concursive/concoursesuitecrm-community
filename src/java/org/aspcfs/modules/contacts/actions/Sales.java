@@ -218,6 +218,8 @@ public final class Sales extends CFSModule {
       leads.setOldestFirst(Constants.FALSE);
       leads.setSiteId(thisRec.getSiteId());
       leads.setExclusiveToSite(true);
+      leads.setBuildDetails(false);
+      leads.setBuildTypes(false);
       if (thisRec.getSiteId() == -1) {
         leads.setIncludeAllSites(true);
       }
@@ -253,6 +255,8 @@ public final class Sales extends CFSModule {
         realFullLeadList.setHasConversionDate(Constants.TRUE);
         realFullLeadList.setSiteId(thisRec.getSiteId());
         realFullLeadList.setExclusiveToSite(true);
+        realFullLeadList.setBuildDetails(false);
+        realFullLeadList.setBuildTypes(false);
         if (thisRec.getSiteId() == -1) {
           realFullLeadList.setIncludeAllSites(true);
         }
@@ -378,7 +382,7 @@ public final class Sales extends CFSModule {
           thisRec.getLccr().setLastFileName(fileName);
         }
         context.getRequest().setAttribute("GraphFileName", fileName);
-      }
+        }
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -596,8 +600,14 @@ public final class Sales extends CFSModule {
         if (thisContact.getId() > 0) {
           oldContact = new Contact(db, thisContact.getId());
           resultCount = thisContact.update(db);
+          if (resultCount > 0) {
+            processUpdateHook(context, oldContact, thisContact);
+          }
         } else {
           recordInserted = thisContact.insert(db);
+          if (recordInserted) {
+            processInsertHook(context, thisContact);
+          }
         }
       }
       if (isValid && (recordInserted || resultCount != -1)) {
