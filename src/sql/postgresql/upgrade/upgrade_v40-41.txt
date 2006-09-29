@@ -10,7 +10,7 @@
 2006-05-18-script01-partha.bsh
 2006-05-19-script01-partha.bsh
 2006-05-25-script01-aliaksei.bsh
-2006-05-25-script02-aliaksei.bsh
+#2006-05-25-script02-aliaksei.bsh
 
 # Web access log
 2006-06-09-script01-kailash.sql
