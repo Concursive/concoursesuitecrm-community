@@ -1,7 +1,7 @@
 Centric CRM Tools; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
-Centric CRM Tools 4.0
+Centric CRM Tools 4.1
 
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |
@@ -13,7 +13,7 @@ the LICENSE file. If you did not receive a copy of the CPL, you may download
 it from http://www.centriccrm.com. Compiling or using this software
 signifies your acceptance of the  Centric Public License.
 
-Copyright(c) 2004-2005 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+Copyright(c) 2004-2006 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
 rights reserved. This material cannot be distributed without written
 permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
 this material for internal use is hereby granted, provided that the above
@@ -55,6 +55,11 @@ http://www.centriccrm.com/Portal.do?key=community
 ----------------------------------------------------------------------------
 | CHANGELOG                                                                |
 ----------------------------------------------------------------------------
+
+v4.1
+  September 28, 2006
+  Updated against Centric CRM 4.1
+  Adds MD5 password hash for user-based clients
 
 v4.0
   April 18, 2006

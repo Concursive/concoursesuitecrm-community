@@ -651,7 +651,7 @@ public class PermissionCategory extends GenericBean {
   public boolean getReports() {
     return reports;
   }
-  
+
   /**
    * Gets the scheduledEvents attribute of the PermissionCategory object
    *
@@ -837,7 +837,7 @@ public class PermissionCategory extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (" + (id > -1 ? "category_id, " : "") + "category, description, " +
         DatabaseUtils.addQuotes(db, "level") +
-        ", enabled, " + DatabaseUtils.addQuotes(db, "active") + 
+        ", enabled, " + DatabaseUtils.addQuotes(db, "active") +
         ", lookups, folders, viewpoints, categories, scheduled_events, " +
         "object_events, reports, webdav, logos, constant, action_plans, custom_list_views) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");

@@ -1289,6 +1289,7 @@
         <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java"/>
         <include name="src/java/org/aspcfs/utils/StringUtils.java"/>
         <include name="src/java/org/aspcfs/utils/ObjectUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/PasswordHash.java"/>
         <include name="src/java/org/aspcfs/apps/transfer/DataRecord.java"/>
         <include name="src/java/org/aspcfs/apps/transfer/DataField.java"/>
         <include name="src/java/org/aspcfs/apps/transfer/DataWriter.java"/>
