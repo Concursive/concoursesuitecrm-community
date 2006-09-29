@@ -932,7 +932,7 @@ public class CallList extends ArrayList {
       sqlFilter.append("AND (c.contact_id = ? ");
       sqlFilter.append("OR c.followup_contact_id = ? )");
     }
-  
+
     if (allContactsInAccount) {
       sqlFilter.append(
           "AND " );
@@ -949,7 +949,7 @@ public class CallList extends ArrayList {
             "OR cnt.trashed_date IS NOT NULL) ");
       }
       sqlFilter.append(") " );
-     
+
       sqlFilter.append("OR c.contact_id IS NULL) ");
     }
 
@@ -1000,7 +1000,7 @@ public class CallList extends ArrayList {
     if (onlyPending) {
       sqlFilter.append("AND c.status_id = ? AND c.alertdate is NOT NULL ");
     }
-   
+
     if (onlyCompleted) {
       sqlFilter.append("AND (c.status_id = ? OR c.status_id = ?) AND result_id IS NOT NULL ");
     }
@@ -1008,9 +1008,9 @@ public class CallList extends ArrayList {
     if (excludeCanceled) {
       sqlFilter.append("AND c.status_id != ? ");
     }
-    
+
     if (onlyCompletedOrCanceled) {
-      sqlFilter.append("AND (c.result_id = ? OR c.result_id = ?) ");
+      sqlFilter.append("AND (c.status_id = ?  OR  c.status_id = ?) AND result_id is not NULL ");
     }
 
     if (includeOnlyTrashed) {

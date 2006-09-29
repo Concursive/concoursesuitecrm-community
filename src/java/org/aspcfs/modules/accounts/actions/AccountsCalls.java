@@ -15,7 +15,12 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import com.darkhorseventures.framework.actions.ActionContext;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Set;
+
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
@@ -33,10 +38,7 @@ import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.RequestUtils;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.util.HashMap;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  * Actions for the Account Activities
@@ -611,7 +613,6 @@ public final class AccountsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
     return getReturn(context, "Log");
   }
 
@@ -648,6 +649,7 @@ public final class AccountsCalls extends CFSModule {
       nextCall.setCallTypeId(thisCall.getAlertCallTypeId());
       nextCall.setSubject(thisCall.getAlertText());
       nextCall.setNotes(thisCall.getFollowupNotes());
+      nextCall.setContactId(thisCall.getFollowupContactId());
       context.getRequest().setAttribute("CallDetails", nextCall);
       //add account and contact to the request
       Contact thisContact = addFormElements(context, db);
@@ -661,6 +663,10 @@ public final class AccountsCalls extends CFSModule {
       CallResultList resultList = new CallResultList();
       resultList.buildList(db);
       context.getRequest().setAttribute("callResultList", resultList);
+      ContactList cl = new ContactList();
+      cl.setOrgId(thisCall.getOrgId());
+      cl.buildList(db);
+      context.getRequest().setAttribute("contactList",cl);
       //Priority Lookup
       LookupList priorityList = systemStatus.getLookupList(
           db, "lookup_call_priority");

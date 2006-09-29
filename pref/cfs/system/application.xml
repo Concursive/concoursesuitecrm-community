@@ -459,7 +459,7 @@
 					</parameter>
 				</parameters>
 			</component>
-			<component id="5" parent="3" if="false" class="org.aspcfs.contacts.modules.components.QueryCallPending"/>
+			<component id="5" parent="3" if="false" class="org.aspcfs.modules.contacts.components.QueryCallPending"/>
 			<component id="6" parent="5" if="true" class="org.aspcfs.modules.components.SetContactHistory">
 				<parameters>
 					<!-- Component parameters override the global process parameters -->
@@ -531,7 +531,16 @@
         <component id="2" parent="1" if="true"  class="org.aspcfs.modules.contacts.components.QueryIsAContactCall" />
         <component id="3" parent="2" if="true" class="org.aspcfs.modules.contacts.components.QueryCallCompleted" />
         <component id="4" parent="3" if="true" class="org.aspcfs.modules.contacts.components.QueryJustConvertedToContactCallFromAccountCall"/>
-        <component id="5" parent="4" if="true" class="org.aspcfs.modules.components.DeleteAccountHistory"/>
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.components.DeleteAccountHistory">
+         <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+          </parameters>
+          </component>
         <component id="6" parent="4" class="org.aspcfs.modules.components.SetContactHistory">
            <parameters>
             <!-- Component parameters override the global process parameters -->
@@ -570,7 +579,16 @@
         </component>
         <component id="8" parent="3" if="false" class="org.aspcfs.modules.contacts.components.QueryCallPending"/>
         <component id="9" parent="8" if="true" class="org.aspcfs.modules.contacts.components.QueryJustConvertedToContactCallFromAccountCall"/>
-        <component id="10" parent="9" if="true" class="org.aspcfs.modules.components.DeleteAccountHistory"/>
+        <component id="10" parent="9" if="true" class="org.aspcfs.modules.components.DeleteAccountHistory">
+        <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+          </parameters>
+          </component>
         <component id="11" parent="10" class="org.aspcfs.modules.components.SetContactHistory">
            <parameters>
             <!-- Component parameters override the global process parameters -->
@@ -609,7 +627,16 @@
         </component>
         <component id="13" parent="8" if="false" class="org.aspcfs.modules.contacts.components.QueryCallCanceled"/>
         <component id="14" parent="13" if="true" class="org.aspcfs.modules.contacts.components.QueryJustConvertedToContactCallFromAccountCall"/>
-        <component id="15" parent="14" if="true" class="org.aspcfs.modules.components.DeleteAccountHistory"/>
+        <component id="15" parent="14" if="true" class="org.aspcfs.modules.components.DeleteAccountHistory">
+        <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Accounts"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.orgId" value="${this.orgId}"/>
+            <parameter name="history.previousOrgId" value="${previous.orgId}"/>
+          </parameters>
+          </component>
         <component id="16" parent="15" class="org.aspcfs.modules.components.SetContactHistory">
            <parameters>
             <!-- Component parameters override the global process parameters -->
@@ -658,7 +685,18 @@
         <component id="2" parent="1" if="true"  class="org.aspcfs.modules.contacts.components.QueryIsAnAccountCall" />
         <component id="3" parent="2" if="true" class="org.aspcfs.modules.contacts.components.QueryCallCompleted" />
         <component id="4" parent="3" if="true" class="org.aspcfs.modules.contacts.components.QueryJustConvertedToAccountCallFromContactCall"/>
-        <component id="5" parent="4" if="true" class="org.aspcfs.modules.components.DeleteContactHistory"/>
+        <component id="5" parent="4" if="true" class="org.aspcfs.modules.components.DeleteContactHistory">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.followupContactId" value="${this.followupContactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.previousFollowupContactId" value="${previous.followupContactId}"/>
+          </parameters>
+        </component>
         <component id="6" parent="4" class="org.aspcfs.modules.components.SetAccountHistory">
            <parameters>
             <!-- Component parameters override the global process parameters -->
@@ -697,7 +735,16 @@
         </component>
         <component id="8" parent="3" if="false" class="org.aspcfs.modules.contacts.components.QueryCallPending"/>
         <component id="9" parent="8" if="true" class="org.aspcfs.modules.contacts.components.QueryJustConvertedToAccountCallFromContactCall"/>
-        <component id="10" parent="9" if="true" class="org.aspcfs.modules.components.DeleteContactHistory"/>
+        <component id="10" parent="9" if="true" class="org.aspcfs.modules.components.DeleteContactHistory">
+        <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.followupContactId" value="${this.followupContactId}"/>
+            <parameter name="history.previousFollowupContactId" value="${previous.followupContactId}"/>
+          </parameters>
+         </component>
         <component id="11" parent="10" class="org.aspcfs.modules.components.SetAccountHistory">
            <parameters>
             <!-- Component parameters override the global process parameters -->
@@ -736,7 +783,18 @@
         </component>
         <component id="13" parent="8" if="false" class="org.aspcfs.modules.contacts.components.QueryCallCanceled"/>
         <component id="14" parent="13" if="true" class="org.aspcfs.modules.contacts.components.QueryJustConvertedToAccountCallFromContactCall"/>
-        <component id="15" parent="14" if="true" class="org.aspcfs.modules.components.DeleteContactHistory"/>
+        <component id="15" parent="14" if="true" class="org.aspcfs.modules.components.DeleteContactHistory">
+        <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="history.module" value="Contacts"/>
+            <parameter name="history.linkObjectId" value="3"/>
+            <parameter name="history.linkItemId" value="${this.id}"/>
+            <parameter name="history.contactId" value="${this.contactId}"/>
+            <parameter name="history.followupContactId" value="${this.followupContactId}"/>
+            <parameter name="history.previousContactId" value="${previous.contactId}"/>
+            <parameter name="history.previousFollowupContactId" value="${previous.followupContactId}"/>
+          </parameters>
+         </component>
         <component id="16" parent="15" class="org.aspcfs.modules.components.SetAccountHistory">
            <parameters>
             <!-- Component parameters override the global process parameters -->

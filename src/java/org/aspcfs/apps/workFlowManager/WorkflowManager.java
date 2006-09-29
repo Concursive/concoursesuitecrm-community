@@ -119,7 +119,7 @@ public class WorkflowManager {
   private boolean executeComponent(ComponentContext context, BusinessProcessComponent component) throws Exception {
     if (System.getProperty("DEBUG") != null) {
       System.out.print(
-          "WorkflowManager-> Executing: " + component.getClassName() + component.getDescription() + "? ");
+          "WorkflowManager-> Executing: " + component.getClassName() +" " + component.getDescription() + "? ");
     }
     //Retrieve the class from the cache, or instantiate a new one
     Object classRef = null;

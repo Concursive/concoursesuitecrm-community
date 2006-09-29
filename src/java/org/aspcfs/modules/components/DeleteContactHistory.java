@@ -18,49 +18,74 @@ package org.aspcfs.modules.components;
 import org.aspcfs.apps.workFlowManager.ComponentContext;
 import org.aspcfs.apps.workFlowManager.ComponentInterface;
 import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
+import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.modules.contacts.base.ContactHistory;
 
 import java.sql.Connection;
 
 /**
  * Description of the Class
- *
+ * 
  * @author partha
  * @version $Id$
  * @created May 27, 2005
  */
-public class DeleteContactHistory extends ObjectHookComponent implements ComponentInterface {
+public class DeleteContactHistory extends ObjectHookComponent implements
+    ComponentInterface {
   public final static String CONTACT_ID = "history.contactId";
+
+  public final static String FOLLOWUP_CONTACT_ID = "history.followupContactId";
+
   public final static String LINK_OBJECT_ID = "history.linkObjectId";
+
   public final static String LINK_ITEM_ID = "history.linkItemId";
+
   public final static String PREVIOUS_CONTACT_ID = "history.previousContactId";
 
+  public final static String PREVIOUS_FOLLOWUP_CONTACT_ID = "history.previousFollowupContactId";
 
   /**
    * Gets the description attribute of the DeleteContactHistory object
-   *
+   * 
    * @return The description value
    */
   public String getDescription() {
     return "Delete the contact's history entry";
   }
 
-
   /**
    * Description of the Method
-   *
-   * @param context Description of the Parameter
+   * 
+   * @param context
+   *          Description of the Parameter
    * @return Description of the Return Value
    */
   public boolean execute(ComponentContext context) {
     boolean result = false;
+
     ContactHistory history = new ContactHistory();
     Connection db = null;
     try {
       db = getConnection(context);
-      int currentContactId = context.getParameterAsInt(CONTACT_ID);
-      if (context.getParameter(PREVIOUS_CONTACT_ID) != null) {
-        int previousContactId = context.getParameterAsInt(PREVIOUS_CONTACT_ID);
+      int currentContactId = -1;
+      if (context.getParameter(CONTACT_ID) != null
+          && !"-1".equals(context.getParameter(CONTACT_ID))) {
+        currentContactId = context.getParameterAsInt(CONTACT_ID);
+      } else {
+        currentContactId = context.getParameterAsInt(FOLLOWUP_CONTACT_ID);
+      }
+      int previousContactId = -1;
+      if ((context.getParameter(PREVIOUS_CONTACT_ID) != null && !"-1"
+          .equals(context.getParameter(PREVIOUS_CONTACT_ID)))
+          || (context.getParameter(PREVIOUS_FOLLOWUP_CONTACT_ID) != null && !"-1"
+              .equals(context.getParameter(PREVIOUS_FOLLOWUP_CONTACT_ID)))) {
+        if (context.getParameter(PREVIOUS_CONTACT_ID) != null
+            && !"-1".equals(context.getParameter(PREVIOUS_CONTACT_ID))) {
+          previousContactId = context.getParameterAsInt(PREVIOUS_CONTACT_ID);
+        } else {
+          previousContactId = context
+              .getParameterAsInt(PREVIOUS_FOLLOWUP_CONTACT_ID);
+        }
         if (previousContactId != currentContactId) {
           history.setContactId(previousContactId);
         } else {
@@ -83,4 +108,3 @@ public class DeleteContactHistory extends ObjectHookComponent implements Compone
     return result;
   }
 }
-

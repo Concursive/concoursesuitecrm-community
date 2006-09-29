@@ -159,7 +159,7 @@
       </dhv:include>
     </td>
   </tr>
-<% if(!contactList.isEmpty() && "accountItem".equals(actionSource)){%>    
+<% if(!contactList.isEmpty()){%>    
   <tr class="containerBody">
   <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Contact">Contact</dhv:label>
@@ -171,7 +171,7 @@
       if ( j.hasNext() ) {
           while (j.hasNext()) {
              Contact thisContact = (Contact) j.next();%>
-         <%if (CallDetails!=null && thisContact.getId()==CallDetails.getContactId()){%>
+         <%if (CallDetails!=null && (thisContact.getId()==CallDetails.getContactId() || thisContact.getId()==CallDetails.getFollowupContactId())){%>
          <option value="<%= thisContact.getId()%>" selected="selected"><%= thisContact.getNameLast()%></option>
          <%}else{%>
          <option value="<%= thisContact.getId()%>"><%= thisContact.getNameLast()%></option>

@@ -100,7 +100,7 @@
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="top" nowrap>
-        <%= toHtml(thisCall.getContactName()) %>
+        <%= toHtml(thisCall.getFollowupContactName()) %>
       </td>
       <td valign="top" nowrap>
 <% if(!User.getTimeZone().equals(thisCall.getAlertDateTimeZone())){%>
