@@ -105,7 +105,7 @@
       <dhv:permission name="myhomepage-inbox-view">
       <tr id="sendToInbox" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="sendToInbox()">
         <th>
-          <img src="images/icons/stock_reply_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          <img src="images/icons/stock_archive-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
           <dhv:label name="">Send to Inbox</dhv:label>
