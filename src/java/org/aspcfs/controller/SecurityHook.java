@@ -28,8 +28,6 @@ import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
 import org.aspcfs.modules.website.base.SiteLog;
 import org.aspcfs.utils.SiteUtils;
-import org.quartz.Scheduler;
-
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -89,49 +87,53 @@ public class SecurityHook implements ControllerHook {
     if (action.toUpperCase().startsWith("PORTAL")) {
       Connection db = null;
       try {
-				Site thisSite = SecurityHook.retrieveSite(servlet.getServletConfig().getServletContext(), request);
-				if (userSession == null || ceSession == null) {
+        Site thisSite = SecurityHook.retrieveSite(servlet.getServletConfig().getServletContext(), request);
+        boolean isNewUser = false;
+        if (userSession == null || ceSession == null) {
+          isNewUser = true;
           if (System.getProperty("DEBUG") != null) {
             System.out.println("SecurityHook-> Creating a web site user session");
           }
           // Give them a connection element to snoop around the portal
-					ceSession = thisSite.getConnectionElement();
-					request.getSession().setAttribute("ConnectionElement", ceSession);
-					// Allow portal mode to create a default session with guest capabilities
-					userSession = new UserBean();
-					userSession.setUserId(-2);
-					userSession.setActualUserId(-2);
-					userSession.setIdRange("-2");
-					userSession.setConnectionElement(ceSession);
-					userSession.setClientType(request);
-					// TODO: Set a default time zone for user
-					// TODO: Set a default currency for user
-					// TODO: Set default locale: language, country
-					// Trigger the tracker now that a ConnectionElement is in place...
-					request.getSession().setAttribute("User", userSession);
-					db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
+          ceSession = thisSite.getConnectionElement();
+          request.getSession().setAttribute("ConnectionElement", ceSession);
+          // Allow portal mode to create a default session with guest capabilities
+          userSession = new UserBean();
+          userSession.setUserId(-2);
+          userSession.setActualUserId(-2);
+          userSession.setIdRange("-2");
+          userSession.setConnectionElement(ceSession);
+          userSession.setClientType(request);
+          // TODO: Set a default time zone for user
+          // TODO: Set a default currency for user
+          // TODO: Set default locale: language, country
+          // Trigger the tracker now that a ConnectionElement is in place...
+          request.getSession().setAttribute("User", userSession);
+        }
+        db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
             "ConnectionPool")).getConnection(ceSession);
+        if (isNewUser) {
           // Every new connection gets recorded
-					SiteLog siteLog = new SiteLog();
-					org.aspcfs.modules.website.base.SiteList websiteList = new org.aspcfs.modules.website.base.SiteList();
-					websiteList.setEnabled(Constants.TRUE);
-					websiteList.buildList(db);
-					if (websiteList.size() > 0) {
-						org.aspcfs.modules.website.base.Site webSite = (org.aspcfs.modules.website.base.Site) websiteList.get(0);
-						siteLog.setSiteId(webSite.getId());
-						siteLog.setIp(request.getRemoteAddr());
-						siteLog.setBrowser(request.getHeader("USER-AGENT"));
-						siteLog.setReferrer(request.getHeader("REFERER"));
-						siteLog.insert(db);
-						userSession.setSessionId(String.valueOf(siteLog.getId()));
+          SiteLog siteLog = new SiteLog();
+          org.aspcfs.modules.website.base.SiteList websiteList = new org.aspcfs.modules.website.base.SiteList();
+          websiteList.setEnabled(Constants.TRUE);
+          websiteList.buildList(db);
+          if (websiteList.size() > 0) {
+            org.aspcfs.modules.website.base.Site webSite = (org.aspcfs.modules.website.base.Site) websiteList.get(0);
+            siteLog.setSiteId(webSite.getId());
+            siteLog.setIp(request.getRemoteAddr());
+            siteLog.setBrowser(request.getHeader("USER-AGENT"));
+            siteLog.setReferrer(request.getHeader("REFERER"));
+            siteLog.insert(db);
+            userSession.setSessionId(String.valueOf(siteLog.getId()));
             // Force immediate logging
-						//Scheduler scheduler = (Scheduler) servlet.getServletConfig().getServletContext().getAttribute("Scheduler");
-						//scheduler.triggerJob("logger", Scheduler.DEFAULT_GROUP);
-					}
-				}
+            //Scheduler scheduler = (Scheduler) servlet.getServletConfig().getServletContext().getAttribute("Scheduler");
+            //scheduler.triggerJob("logger", Scheduler.DEFAULT_GROUP);
+          }
+        }
         SecurityHook.retrieveSystemStatus(servlet.getServletConfig().getServletContext(), db, ceSession, thisSite.getLanguage());
       } catch (Exception e) {
-				e.printStackTrace();
+        e.printStackTrace();
       } finally {
         ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
             "ConnectionPool")).free(db);
