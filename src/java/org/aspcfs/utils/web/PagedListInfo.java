@@ -1554,25 +1554,16 @@ public class PagedListInfo implements Serializable {
    * @throws SQLException Description of Exception
    */
   public void doManualOffset(Connection db, ResultSet rs) throws SQLException {
-    if (this.getItemsPerPage() > 0 &&
-        (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ||
-            DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ||
-            DatabaseUtils.getType(db) == DatabaseUtils.DERBY ||
-            DatabaseUtils.getType(db) == DatabaseUtils.ORACLE)) {
-      for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++)
-      {
-        rs.next();
-      }
-    }
-  }
-  
-  public void doManualOffset(Connection db, PreparedStatement pst) throws SQLException{
-    if (this.getItemsPerPage() > 0 &&
-        DatabaseUtils.getType(db) == DatabaseUtils.DERBY) {
-        pst.setMaxRows(this.getCurrentOffset() + this.getItemsPerPage());
+    if (this.getItemsPerPage() > 0){
+      DatabaseUtils.skipRowsManual(db, rs, this.getCurrentOffset());
     }
   }
 
+  public void doManualOffset(Connection db, PreparedStatement pst) throws SQLException{
+    if (this.getItemsPerPage() > 0){
+      DatabaseUtils.doManualLimit(db, pst, this.getCurrentOffset() + this.getItemsPerPage());
+    }
+  }
 
   /**
    * Description of the Method

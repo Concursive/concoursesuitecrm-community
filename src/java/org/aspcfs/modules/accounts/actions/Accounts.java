@@ -29,6 +29,7 @@ import org.aspcfs.modules.actionplans.base.ActionItemWork;
 import org.aspcfs.modules.actionplans.base.ActionPlan;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.SICCodeList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.assets.base.Asset;
@@ -41,7 +42,6 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
 import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.modules.pipeline.base.OpportunityReport;
-import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.troubletickets.base.TicketReport;
 import org.aspcfs.utils.web.*;
@@ -468,14 +468,23 @@ public final class Accounts extends CFSModule {
           context, "SearchOrgListInfo");
       orgListInfo.setCurrentLetter("");
       orgListInfo.setCurrentOffset(0);
-      if (orgListInfo.getSearchOptionValue("searchcodeContactCountry") != null) {
+      if (orgListInfo.getSearchOptionValue("searchcodeContactCountry") != null && !"-1".equals(orgListInfo.getSearchOptionValue("searchcodeContactCountry"))) {
         StateSelect stateSelect = new StateSelect(systemStatus,orgListInfo.getSearchOptionValue("searchcodeContactCountry"));
         if (orgListInfo.getSearchOptionValue("searchcodeContactOtherState") != null) {
           HashMap map = new HashMap();
           map.put((String)orgListInfo.getSearchOptionValue("searchcodeContactCountry"), (String)orgListInfo.getSearchOptionValue("searchcodeContactOtherState"));
           stateSelect.setPreviousStates(map);
         }
-        context.getRequest().setAttribute("StateSelect", stateSelect);
+        context.getRequest().setAttribute("ContactStateSelect", stateSelect);
+      }
+      if (orgListInfo.getSearchOptionValue("searchcodeAccountCountry") != null && !"-1".equals(orgListInfo.getSearchOptionValue("searchcodeAccountCountry"))) {
+        StateSelect stateSelect = new StateSelect(systemStatus,orgListInfo.getSearchOptionValue("searchcodeAccountCountry"));
+        if (orgListInfo.getSearchOptionValue("searchcodeAccountOtherState") != null) {
+          HashMap map = new HashMap();
+          map.put((String)orgListInfo.getSearchOptionValue("searchcodeAccountCountry"), (String)orgListInfo.getSearchOptionValue("searchcodeAccountOtherState"));
+          stateSelect.setPreviousStates(map);
+        }
+        context.getRequest().setAttribute("AccountStateSelect", stateSelect);
       }
       buildFormElements(context, db);
     } catch (Exception e) {
@@ -560,6 +569,10 @@ public final class Accounts extends CFSModule {
     LookupList industrySelect = new LookupList(db, "lookup_industry");
     industrySelect.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("IndustryList", industrySelect);
+
+    SICCodeList sicCodeList = new SICCodeList(db);
+    sicCodeList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SICCodeList", sicCodeList);
 
     LookupList sourceList = new LookupList(db, "lookup_contact_source");
     sourceList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
@@ -1414,6 +1427,10 @@ public final class Accounts extends CFSModule {
       industrySelect.addItem(
           0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("IndustryList", industrySelect);
+
+      SICCodeList sicCodeList = new SICCodeList(db);
+      sicCodeList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("SICCodeList", sicCodeList);
 
       LookupList sourceList = new LookupList(db, "lookup_contact_source");
       sourceList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
@@ -2407,6 +2424,24 @@ public final class Accounts extends CFSModule {
     ticketList.buildList(db);
     
     this.deleteRecentItems(context, ticketList.iterator());
+  }
+
+  public String executeCommandStates(ActionContext context) {
+    String country = context.getRequest().getParameter("country");
+    String form = context.getRequest().getParameter("form");
+    String obj = context.getRequest().getParameter("obj");
+    String stateObj = context.getRequest().getParameter("stateObj");
+    String defaultValue = context.getRequest().getParameter("selected");
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    StateSelect stateSelect = new StateSelect(systemStatus, country);
+    context.getRequest().setAttribute("stateSelect", stateSelect.getHtmlSelectObj(country));
+    context.getRequest().setAttribute("form", form);
+    context.getRequest().setAttribute("obj", obj);
+    context.getRequest().setAttribute("stateObj", stateObj);
+    if (defaultValue != null) {
+      context.getRequest().setAttribute("selected", defaultValue);
+    }
+    return "StatesOK";
   }
 }
 

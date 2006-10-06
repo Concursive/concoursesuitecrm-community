@@ -2522,6 +2522,8 @@ public final class ExternalContacts extends CFSModule {
         thisOrg.setRating(contact.getRating());
       }
 
+      copyPropertiesFromContactToOrganization(contact, thisOrg);
+      
       //Copy postal address from contact to organization
       ContactAddressList contactAddressList = new ContactAddressList();
       contactAddressList.setContactId(contact.getId());
@@ -2649,6 +2651,17 @@ public final class ExternalContacts extends CFSModule {
     return "WorkAccountOK";
   }
   
+  private static void copyPropertiesFromContactToOrganization(Contact from, Organization to){
+    to.setRevenue( from.getRevenue() );
+    to.setEmployees( from.getEmployees() );
+    to.setDunsType( from.getDunsType() );
+    to.setYearStarted( from.getYearStarted() );
+    to.setDunsNumber( from.getDunsNumber() );
+    to.setBusinessNameTwo( from.getBusinessNameTwo() );
+    to.setSicDescription( from.getSicDescription() );
+    to.setSicCode( from.getSicCode() );
+  }
+
   public String executeCommandStates(ActionContext context) {
     String country = context.getRequest().getParameter("country");
     String form = context.getRequest().getParameter("form");

@@ -52,6 +52,9 @@ public class Address {
   private String otherState = null;
   private String zip = null;
   private String country = null;
+  private String county = null;
+  private double latitude = 0;
+  private double longitude = 0;
   private int type = -1;
   private String typeName = null;
   private int enteredBy = -1;
@@ -63,7 +66,7 @@ public class Address {
 
   /**
    * Sets the Id attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new Id value
    * @since 1.1
@@ -74,7 +77,7 @@ public class Address {
 
   /**
    * Sets the enabled attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new enabled value
    */
@@ -84,7 +87,7 @@ public class Address {
 
   /**
    * Sets the Id attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new Id value
    * @since 1.8
@@ -95,7 +98,7 @@ public class Address {
 
   /**
    * Sets the OrgId attribute of the Address object
-   * 
+   *
    * @param orgId
    *          The new OrgId value
    * @since 1.6
@@ -106,7 +109,7 @@ public class Address {
 
   /**
    * Sets the orgId attribute of the Address object
-   * 
+   *
    * @param orgId
    *          The new orgId value
    */
@@ -116,7 +119,7 @@ public class Address {
 
   /**
    * Sets the ContactId attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new ContactId value
    * @since 1.8
@@ -127,7 +130,7 @@ public class Address {
 
   /**
    * Sets the contactId attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new contactId value
    */
@@ -137,7 +140,7 @@ public class Address {
 
   /**
    * Sets the streetAddressLine3 attribute of the Address object
-   * 
+   *
    * @param streetAddressLine3
    *          The new streetAddressLine3 value
    */
@@ -147,7 +150,7 @@ public class Address {
 
   /**
    * Sets the streetAddressLine4 attribute of the Address object
-   * 
+   *
    * @param streetAddressLine4
    *          The new streetAddressLine4 value
    */
@@ -157,7 +160,7 @@ public class Address {
 
   /**
    * Sets the otherState attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new otherState value
    */
@@ -173,7 +176,7 @@ public class Address {
 
   /**
    * Sets the primaryAddress attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new primaryAddress value
    */
@@ -183,7 +186,7 @@ public class Address {
 
   /**
    * Sets the primaryAddress attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new primaryAddress value
    */
@@ -193,7 +196,7 @@ public class Address {
 
   /**
    * Gets the primaryAddress attribute of the Address object
-   * 
+   *
    * @return The primaryAddress value
    */
   public boolean getPrimaryAddress() {
@@ -202,7 +205,7 @@ public class Address {
 
   /**
    * Gets the otherState attribute of the Address object
-   * 
+   *
    * @return The otherState value
    */
   public String getOtherState() {
@@ -211,7 +214,7 @@ public class Address {
 
   /**
    * Gets the streetAddressLine3 attribute of the Address object
-   * 
+   *
    * @return The streetAddressLine3 value
    */
   public String getStreetAddressLine3() {
@@ -220,7 +223,7 @@ public class Address {
 
   /**
    * Gets the streetAddressLine4 attribute of the Address object
-   * 
+   *
    * @return The streetAddressLine4 value
    */
   public String getStreetAddressLine4() {
@@ -229,7 +232,7 @@ public class Address {
 
   /**
    * Gets the contactId attribute of the Address object
-   * 
+   *
    * @return The contactId value
    */
   public int getContactId() {
@@ -237,8 +240,38 @@ public class Address {
   }
 
   /**
+   * Gets the county attribute of the Address object
+   *
+   * @return The county value
+   */
+  public String getCounty() {
+    return county;
+  }
+
+
+  /**
+   * Gets the latitude attribute of the Address object
+   *
+   * @return The latitude value
+   */
+  public double getLatitude() {
+    return latitude;
+  }
+
+
+  /**
+   * Gets the longitude attribute of the Address object
+   *
+   * @return The longitude value
+   */
+  public double getLongitude() {
+    return longitude;
+  }
+
+
+  /**
    * Sets the StreetAddressLine1 attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new StreetAddressLine1 value
    * @since 1.5
@@ -249,7 +282,7 @@ public class Address {
 
   /**
    * Sets the StreetAddressLine2 attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new StreetAddressLine2 value
    * @since 1.5
@@ -260,7 +293,7 @@ public class Address {
 
   /**
    * Sets the City attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new City value
    * @since 1.5
@@ -271,7 +304,7 @@ public class Address {
 
   /**
    * Sets the State attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new State value
    * @since 1.5
@@ -288,7 +321,7 @@ public class Address {
 
   /**
    * Sets the Zip attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new Zip value
    * @since 1.5
@@ -299,7 +332,7 @@ public class Address {
 
   /**
    * Sets the Country attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new Country value
    * @since 1.5
@@ -311,7 +344,7 @@ public class Address {
   /**
    * Sets the Type attribute of the Address object, for example: Home, Work,
    * Billing, etc.
-   * 
+   *
    * @param tmp
    *          The new Type value
    * @since 1.6
@@ -322,7 +355,7 @@ public class Address {
 
   /**
    * Sets the Type attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new Type value
    * @since 1.8
@@ -333,7 +366,7 @@ public class Address {
 
   /**
    * Sets the TypeName attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new TypeName value
    * @since 1.6
@@ -344,7 +377,7 @@ public class Address {
 
   /**
    * Sets the EnteredBy attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new EnteredBy value
    * @since 1.6
@@ -355,7 +388,7 @@ public class Address {
 
   /**
    * Sets the enteredBy attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new enteredBy value
    */
@@ -365,7 +398,7 @@ public class Address {
 
   /**
    * Sets the ModifiedBy attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new ModifiedBy value
    * @since 1.6
@@ -376,7 +409,7 @@ public class Address {
 
   /**
    * Sets the modifiedBy attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new modifiedBy value
    */
@@ -386,7 +419,7 @@ public class Address {
 
   /**
    * Sets the Enabled attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new Enabled value
    * @since 1.8
@@ -397,7 +430,7 @@ public class Address {
 
   /**
    * Gets the Id attribute of the Address object
-   * 
+   *
    * @return The Id value
    * @since 1.6
    */
@@ -407,7 +440,7 @@ public class Address {
 
   /**
    * Gets the OrgId attribute of the Address object
-   * 
+   *
    * @return The OrgId value
    * @since 1.6
    */
@@ -417,7 +450,7 @@ public class Address {
 
   /**
    * Gets the entered attribute of the Address object
-   * 
+   *
    * @return The entered value
    */
   public Timestamp getEntered() {
@@ -426,7 +459,7 @@ public class Address {
 
   /**
    * Gets the modified attribute of the Address object
-   * 
+   *
    * @return The modified value
    */
   public Timestamp getModified() {
@@ -435,7 +468,7 @@ public class Address {
 
   /**
    * Gets the StreetAddressLine1 attribute of the Address object
-   * 
+   *
    * @return The StreetAddressLine1 value
    * @since 1.5
    */
@@ -445,7 +478,7 @@ public class Address {
 
   /**
    * Gets the StreetAddressLine2 attribute of the Address object
-   * 
+   *
    * @return The StreetAddressLine2 value
    * @since 1.5
    */
@@ -455,7 +488,7 @@ public class Address {
 
   /**
    * Gets the City attribute of the Address object
-   * 
+   *
    * @return The City value
    * @since 1.5
    */
@@ -465,7 +498,7 @@ public class Address {
 
   /**
    * Gets the State attribute of the Address object
-   * 
+   *
    * @return The State value
    * @since 1.5
    */
@@ -483,7 +516,7 @@ public class Address {
 
   /**
    * Gets the CityState attribute of the Address object
-   * 
+   *
    * @return The CityState value
    * @since 1.5
    */
@@ -506,7 +539,7 @@ public class Address {
 
   /**
    * Gets the Zip attribute of the Address object
-   * 
+   *
    * @return The Zip value
    * @since 1.5
    */
@@ -516,7 +549,7 @@ public class Address {
 
   /**
    * Gets the Country attribute of the Address object
-   * 
+   *
    * @return The Country value
    * @since 1.5
    */
@@ -530,7 +563,7 @@ public class Address {
 
   /**
    * Gets the Type attribute of the Address object
-   * 
+   *
    * @return The Type value
    * @since 1.6
    */
@@ -540,7 +573,7 @@ public class Address {
 
   /**
    * Gets the TypeName attribute of the Address object
-   * 
+   *
    * @return The TypeName value
    * @since 1.6
    */
@@ -550,7 +583,7 @@ public class Address {
 
   /**
    * Sets the orderId attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new orderId value
    */
@@ -560,7 +593,7 @@ public class Address {
 
   /**
    * Sets the orderId attribute of the Address object
-   * 
+   *
    * @param tmp
    *          The new orderId value
    */
@@ -570,7 +603,7 @@ public class Address {
 
   /**
    * Gets the orderId attribute of the Address object
-   * 
+   *
    * @return The orderId value
    */
   public int getOrderId() {
@@ -580,7 +613,7 @@ public class Address {
   /**
    * If any of the information for an address is filled in, then the address is
    * valid
-   * 
+   *
    * @return The Valid value
    * @since 1.10
    */
@@ -591,13 +624,16 @@ public class Address {
     if (type == -1) {
       return false;
     }
-    if ((streetAddressLine1 == null || streetAddressLine1.trim().equals(""))
-        && (streetAddressLine2 == null || streetAddressLine2.trim().equals(""))
-        && (streetAddressLine3 == null || streetAddressLine3.trim().equals(""))
-        && (streetAddressLine4 == null || streetAddressLine4.trim().equals(""))
-        && (city == null || city.trim().equals(""))
-        && (state == null || state.trim().equals("") || "-1".equals(state))
-        && (zip == null || zip.trim().equals(""))) {
+    if ((streetAddressLine1 == null || streetAddressLine1.trim().equals("")) &&
+        (streetAddressLine2 == null || streetAddressLine2.trim().equals("")) &&
+        (streetAddressLine3 == null || streetAddressLine3.trim().equals("")) &&
+        (streetAddressLine4 == null || streetAddressLine4.trim().equals("")) &&
+        (city == null || city.trim().equals("")) &&
+        (state == null || state.trim().equals("") || "-1".equals(state)) &&
+        (zip == null || zip.trim().equals("")) &&
+        (county == null || county.trim().equals("")) &&
+        (latitude == 0) &&
+        (longitude == 0)){
       return false;
     }
     return true;
@@ -674,6 +710,64 @@ public class Address {
   }
 
   /**
+   * Sets the county attribute of the Address object
+   *
+   * @param county the county to set
+   */
+  public void setCounty(String county) {
+    this.county = county;
+  }
+
+
+  /**
+   * Sets the latitude attribute of the Address object
+   *
+   * @param latitude the latitude to set
+   */
+  public void setLatitude(double latitude) {
+    this.latitude = latitude;
+  }
+
+
+  /**
+   * Sets the longitude attribute of the Address object
+   *
+   * @param longitude the longitude to set
+   */
+  public void setLongitude(double longitude) {
+    this.longitude = longitude;
+  }
+
+
+  /**
+   * Sets the latitude attribute of the Address object
+   *
+   * @param latitude the latitude to set
+   */
+  public void setLatitude(String latitude) {
+    try {
+      this.latitude = Double.parseDouble(latitude);
+    } catch (Exception e) {
+      this.latitude = 0;
+    }
+  }
+
+
+  /**
+   * Sets the longitude attribute of the Address object
+   *
+   * @param longitude the longitude to set
+   */
+  public void setLongitude(String longitude) {
+    try {
+      this.longitude = Double.parseDouble(longitude);
+    } catch (Exception e) {
+      this.longitude = 0;
+    }
+  }
+
+
+  /**
    * Gets the Address attribute of the Address object
    * 
    * @return The Address value
@@ -706,6 +800,15 @@ public class Address {
     }
     if (this.getCountry() != null && !this.getCountry().trim().equals("")) {
       thisAddress.append(this.getCountry().trim() + "\r\n");
+    }
+    if (this.getCounty() != null && !this.getCounty().trim().equals("")) {
+      thisAddress.append("County: " + this.getCounty().trim() + "\r\n");
+    }
+    if (this.getLatitude() != 0) {
+      thisAddress.append("Latitude: " + this.getLatitude() + "\r\n");
+    }
+    if (this.getLongitude() != 0) {
+      thisAddress.append("Longitude: " + this.getLongitude() + "\r\n");
     }
     return thisAddress.toString();
   }
@@ -770,6 +873,9 @@ public class Address {
     this.setOtherState(state);
     this.setZip(rs.getString("postalcode"));
     this.setCountry(rs.getString("country"));
+    this.setCounty(rs.getString("county"));
+    this.setLatitude(rs.getDouble("latitude"));
+    this.setLongitude(rs.getDouble("longitude"));
     this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
     if (this.getEnteredBy() == -1) {
@@ -831,6 +937,18 @@ public class Address {
     buffer = request.getParameter("address" + parseItem + "zip");
     if (buffer != null && !"".equals(buffer.trim())) {
       this.setZip(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "county");
+    if (buffer != null && !"".equals(buffer.trim())) {
+      this.setCounty(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "latitude");
+    if (buffer != null && !"".equals(buffer.trim())) {
+      this.setLatitude(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "longitude");
+    if (buffer != null && !"".equals(buffer.trim())) {
+      this.setLongitude(buffer);
     }
     if (request.getParameter("address" + parseItem + "delete") != null) {
       String action = request.getParameter("address" + parseItem + "delete")

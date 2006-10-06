@@ -1155,7 +1155,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
    * @param  code  Description of the Parameter
    * @return       Description of the Return Value
    */
-  private boolean hasItem(int code) {
+  public boolean hasItem(int code) {
     if (selectedItems != null) {
       if (!selectedItems.containsKey(new Integer(code))) {
         return false;

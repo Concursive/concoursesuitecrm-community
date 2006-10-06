@@ -1394,4 +1394,38 @@ public class DatabaseUtils {
     }
     return connection;
   }
+
+  /**
+   * Description of the Method
+   *
+   * @param db DB Connection
+   * @param rs Description of Parameter
+   * @param skipRowsCount Rows to skip
+   * @throws SQLException Description of Exception
+   */
+  public static void skipRowsManual(Connection db, ResultSet rs, int skipRowsCount) throws SQLException {
+    if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ||
+            DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ||
+            DatabaseUtils.getType(db) == DatabaseUtils.DERBY ||
+            DatabaseUtils.getType(db) == DatabaseUtils.ORACLE) {
+      for (int skipCount = 0; skipCount < skipRowsCount; skipCount++)
+      {
+        rs.next();
+      }
+    }
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db DB Connection
+   * @param pst Description of Parameter
+   * @param maxRowsCount Count of rows to read
+   * @throws SQLException Description of Exception
+   */
+  public static void doManualLimit(Connection db, PreparedStatement pst, int maxRowsCount) throws SQLException{
+    if (DatabaseUtils.getType(db) == DatabaseUtils.DERBY) {
+        pst.setMaxRows(maxRowsCount);
+    }
+  }
 }

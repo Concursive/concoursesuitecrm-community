@@ -4,6 +4,15 @@
  *@version    $Id$
  */
 
+CREATE TABLE lookup_sic_codes(
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT FALSE,
+  level INTEGER,
+  enabled BOOLEAN DEFAULT FALSE,
+  constant_id INTEGER UNIQUE NOT NULL
+);
+
 CREATE TABLE lookup_site_id (
   code SERIAL PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
@@ -270,7 +279,6 @@ CREATE TABLE organization (
   revenue FLOAT,
   employees INT,
   notes TEXT,
-  sic_code VARCHAR(40),
   ticker_symbol VARCHAR(10),
   taxid CHAR(80),
   lead VARCHAR(40),
@@ -309,7 +317,13 @@ CREATE TABLE organization (
   sub_segment_id INT REFERENCES lookup_sub_segment(code),
   direct_bill BOOLEAN DEFAULT false,
   account_size INT REFERENCES lookup_account_size(code),
-  site_id INT REFERENCES lookup_site_id(code)
+  site_id INT REFERENCES lookup_site_id(code),
+  duns_type VARCHAR(300),
+  duns_number VARCHAR(30),
+  business_name_two VARCHAR(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description VARCHAR(300)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -374,7 +388,14 @@ CREATE TABLE contact (
   no_fax BOOLEAN DEFAULT false,
   site_id INTEGER REFERENCES lookup_site_id(code),
   assigned_date TIMESTAMP(3),
-  lead_trashed_date TIMESTAMP(3)
+  lead_trashed_date TIMESTAMP(3),
+  employees INTEGER,
+  duns_type VARCHAR(300),
+  duns_number VARCHAR(30),
+  business_name_two VARCHAR(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description VARCHAR(300)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");
@@ -525,7 +546,10 @@ CREATE TABLE organization_address (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_address BOOLEAN NOT NULL DEFAULT false,
-  addrline4 VARCHAR(80)
+  addrline4 VARCHAR(80),
+  county VARCHAR(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0
 );
 
 CREATE INDEX organization_address_postalcode_idx ON organization_address(postalcode);
@@ -574,7 +598,10 @@ CREATE TABLE contact_address (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   primary_address BOOLEAN NOT NULL DEFAULT false,
-  addrline4 VARCHAR(80)
+  addrline4 VARCHAR(80),
+  county VARCHAR(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0
 );
 
 CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);

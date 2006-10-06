@@ -19,7 +19,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.base.Constants,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
+<jsp:useBean id="AccountStateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
+<jsp:useBean id="ContactStateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="SegmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -35,6 +36,11 @@
       document.forms['searchAccount'].searchAccountNumber.value="";
     </dhv:include>
       document.forms['searchAccount'].searchAccountPostalCode.value="";
+      document.forms['searchAccount'].searchAccountCity.value="";
+      continueUpdateState('2','true');
+      document.forms['searchAccount'].searchcodeAccountState.options.selectedIndex = 0;
+      document.forms['searchAccount'].searchcodeAccountOtherState.value = '';
+      document.forms['searchAccount'].searchcodeAccountCountry.options.selectedIndex = 0;
       document.forms['searchAccount'].searchcodeAssetSerialNumber.value="";
     <dhv:include name="accounts-search-source" none="true">
       document.forms['searchAccount'].listView.options.selectedIndex = 0;
@@ -72,21 +78,44 @@
     document.forms['searchAccount'].searchAccountSegment.value = text;
   }
 
-  function update(countryObj, stateObj, selectedValue) {
+  function updateContacts(countryObj, stateObj, selectedValue) {
+
     var country = document.forms['searchAccount'].elements[countryObj].value;
     var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=searchAccount&stateObj=searchcodeContactState";
     window.frames['server_commands'].location.href=url;
   }
 
+  function updateAccounts(countryObj, stateObj, selectedValue) {
+    var country = document.forms['searchAccount'].elements[countryObj].value;
+    var url = "Accounts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=searchAccount&stateObj=searchcodeAccountState";
+    window.frames['server_commands'].location.href=url;
+  }
+
   function continueUpdateState(stateObj, showText) {
-    if(showText == 'true'){
-      hideSpan('state11');
-      showSpan('state21');
-      document.forms['searchAccount'].searchcodeContactState.options.selectedIndex = 0;
-    } else {
-      hideSpan('state21');
-      showSpan('state11');
-      document.forms['searchAccount'].searchcodeContactOtherState.value = '';
+	switch(stateObj){
+      case '2':
+        if(showText == 'true'){
+          hideSpan('state31');
+          showSpan('state41');
+          document.forms['searchAccount'].searchcodeAccountState.options.selectedIndex = 0;
+        } else {
+          hideSpan('state41');
+          showSpan('state31');
+          document.forms['searchAccount'].searchcodeAccountOtherState.value = '';
+        }
+        break;
+	  case '1':
+      default:
+        if(showText == 'true'){
+          hideSpan('state11');
+          showSpan('state21');
+          document.forms['searchAccount'].searchcodeContactState.options.selectedIndex = 0;
+        } else {
+          hideSpan('state21');
+          showSpan('state11');
+          document.forms['searchAccount'].searchcodeContactOtherState.value = '';
+        }
+        break;
     }
   }
 
@@ -187,6 +216,37 @@
           </td>
         </tr>
         <tr>
+          <td nowrap class="formLabel">
+            <dhv:label name="accounts.accounts_add.City">City</dhv:label>
+          </td>
+          <td>
+            <input type="text" size="23" name="searchAccountCity" value="<%= SearchOrgListInfo.getSearchOptionValue("searchAccountCity") %>">
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td nowrap class="formLabel">
+            <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
+          </td>
+          <td>
+            <span name="state31" ID="state31" style="<%= AccountStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry"))? "" : " display:none" %>">
+              <%= AccountStateSelect.getHtmlSelect("searchcodeAccountState", SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry"),SearchOrgListInfo.getSearchOptionValue("searchcodeAccountState")) %>
+            </span>
+            <%-- If selected country is not US/Canada use textfield --%>
+            <span name="state41" ID="state41" style="<%= !AccountStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")) ? "" : " display:none" %>">
+              <input type="text" size="23" name="searchcodeAccountOtherState"  value="<%= toHtmlValue(SearchOrgListInfo.getSearchOptionValue("searchcodeAccountOtherState")) %>">
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td nowrap class="formLabel">
+            <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
+          </td>
+          <td>
+            <% CountrySelect.setJsEvent("onChange=\"javascript:updateAccounts('searchcodeAccountCountry','2','"+ SearchOrgListInfo.getSearchOptionValue("searchcodeAccountOtherState") +"');\""); %>
+            <%= CountrySelect.getHtml("searchcodeAccountCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")) %>
+          </td>
+        </tr>
+        <tr>
           <td class="formLabel">
             <dhv:label name="accounts.assetSerial.number.symbol">Asset Serial #</dhv:label>
           </td>
@@ -194,7 +254,7 @@
             <input type="text" size="20" maxlength="30" name="searchcodeAssetSerialNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeAssetSerialNumber") %>">
           </td>
         </tr>
-      <dhv:evaluate if="<%= SiteList.size() > 2 %>">
+      <dhv:evaluate if="<%= SiteList.size() > 1 %>">
         <tr>
           <td nowrap class="formLabel">
             <dhv:label name="accounts.site">Site</dhv:label>
@@ -210,7 +270,7 @@
           </td>
         </tr>
       </dhv:evaluate> 
-      <dhv:evaluate if="<%= SiteList.size() <= 2 %>">
+      <dhv:evaluate if="<%= SiteList.size() <= 1 %>">
         <input type="hidden" name="searchcodeOrgSiteId" id="searchcodeOrgSiteId" value="-1" />
       </dhv:evaluate>
         <%--
@@ -272,11 +332,11 @@
             <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
           </td>
           <td>
-            <span name="state11" ID="state11" style="<%= StateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry"))? "" : " display:none" %>">
-              <%= StateSelect.getHtmlSelect("searchcodeContactState", SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry"),SearchOrgListInfo.getSearchOptionValue("searchcodeContactState")) %>
+            <span name="state11" ID="state11" style="<%= ContactStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry"))? "" : " display:none" %>">
+              <%= ContactStateSelect.getHtmlSelect("searchcodeContactState", SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry"),SearchOrgListInfo.getSearchOptionValue("searchcodeContactState")) %>
             </span>
             <%-- If selected country is not US/Canada use textfield --%>
-            <span name="state21" ID="state21" style="<%= !StateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) ? "" : " display:none" %>">
+            <span name="state21" ID="state21" style="<%= !ContactStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) ? "" : " display:none" %>">
               <input type="text" size="23" name="searchcodeContactOtherState"  value="<%= toHtmlValue(SearchOrgListInfo.getSearchOptionValue("searchcodeContactOtherState")) %>">
             </span>
           </td>
@@ -286,7 +346,7 @@
             <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
           </td>
           <td>
-            <% CountrySelect.setJsEvent("onChange=\"javascript:update('searchcodeContactCountry','1','"+ SearchOrgListInfo.getSearchOptionValue("searchcodeContactOtherState") +"');\""); %>
+            <% CountrySelect.setJsEvent("onChange=\"javascript:updateContacts('searchcodeContactCountry','1','"+ SearchOrgListInfo.getSearchOptionValue("searchcodeContactOtherState") +"');\""); %>
             <%= CountrySelect.getHtml("searchcodeContactCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) %>
           </td>
         </tr>
@@ -305,8 +365,7 @@
 <input type="hidden" name="source" value="searchForm">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <script type="text/javascript">
-  update('searchcodeContactCountry','1', document.forms['searchAccount'].elements['searchcodeContactOtherState'].value);
-</script>
+  </script>
 </form>
 </body>
 

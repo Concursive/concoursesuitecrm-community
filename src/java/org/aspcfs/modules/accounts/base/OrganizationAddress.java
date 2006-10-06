@@ -89,7 +89,7 @@ public class OrganizationAddress extends Address {
 
     sql.append(
         "SELECT c.address_id, c.org_id, c.address_type, c.addrline1, c.addrline1,  " +
-        "c.addrline2, c.addrline3, c.addrline4, c.city, c.state, c.country, c.postalcode, c.entered, c.enteredby, " +
+        "c.addrline2, c.addrline3, c.addrline4, c.city, c.state, c.country, c.postalcode, c.county, c.latitude, c.longitude, c.entered, c.enteredby, " +
         "c.modified, c.modifiedby, c.primary_address, l.description " +
         "FROM organization_address c, lookup_orgaddress_types l " +
         "WHERE c.address_type = l.code " +
@@ -158,7 +158,7 @@ public class OrganizationAddress extends Address {
     int id = getId();
     sql.append(
         "INSERT INTO organization_address " +
-        "(org_id, address_type, addrline1, addrline2, addrline3, addrline4, city, state, postalcode, country, primary_address, ");
+        "(org_id, address_type, addrline1, addrline2, addrline3, addrline4, city, state, postalcode, country, county, latitude, longitude, primary_address, ");
     if (id > -1) {
       sql.append("address_id, ");
     }
@@ -169,7 +169,7 @@ public class OrganizationAddress extends Address {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
     if (id > -1) {
       sql.append("?,");
     }
@@ -202,6 +202,9 @@ public class OrganizationAddress extends Address {
     pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
+    pst.setString(++i, this.getCounty());
+    pst.setDouble(++i, this.getLatitude());
+    pst.setDouble(++i, this.getLongitude());
     pst.setBoolean(++i, this.getPrimaryAddress());
     if (id > -1) {
       pst.setInt(++i, id);
@@ -232,7 +235,7 @@ public class OrganizationAddress extends Address {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization_address " +
-        "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, addrline4 = ?, city = ?, state = ?, postalcode = ?, country = ?, primary_address = ?, " +
+        "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, addrline4 = ?, city = ?, state = ?, postalcode = ?, country = ?, county = ?, latitude = ?, longitude =? , primary_address = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE address_id = ? ");
     int i = 0;
@@ -249,6 +252,9 @@ public class OrganizationAddress extends Address {
     pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
+    pst.setString(++i, this.getCounty());
+    pst.setDouble(++i, this.getLatitude());
+    pst.setDouble(++i, this.getLongitude());
     pst.setBoolean(++i, this.getPrimaryAddress());
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, this.getId());

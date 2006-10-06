@@ -20,6 +20,8 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ImportDetails" class="org.aspcfs.modules.base.Import" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -121,6 +123,113 @@
     </td>
   </tr>
   </dhv:evaluate>
+<dhv:include name="organization.industry" none="true">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getIndustryName()) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
+      </td>
+      <td>
+         <%= toHtml(ContactDetails.getIndustryName()) %>&nbsp;
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.dunsType" none="true">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getDunsType()) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.duns_type">DUNS Type</dhv:label>
+    </td><td>
+       <%= toHtml(ContactDetails.getDunsType()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.yearStarted" none="true">
+  <dhv:evaluate if="<%= (ContactDetails.getYearStarted() > -1) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
+    </td><td>
+       <%= ContactDetails.getYearStarted() %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.employees" none="true">
+  <dhv:evaluate if="<%= (ContactDetails.getEmployees() > 0) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="organization.employees">No. of Employees</dhv:label>
+      </td>
+      <td>
+         <%= ContactDetails.getEmployees() %>
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.potential" none="true">
+  <dhv:evaluate if="<%= (ContactDetails.getPotential() > 0) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.potential">Potential</dhv:label>
+    </td>
+    <td>
+       <zeroio:currency value="<%= ContactDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+    </td>
+  </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.revenue" none="true">
+  <dhv:evaluate if="<%= (ContactDetails.getRevenue() > 0) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
+      </td>
+      <td>
+         <zeroio:currency value="<%= ContactDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+    </tr>
+  </dhv:evaluate>
+  </dhv:include>
+<dhv:include name="organization.dunsNumber" none="true">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getDunsNumber()) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.duns_number">DUNS Number</dhv:label>
+    </td><td>
+       <%= toHtml(ContactDetails.getDunsNumber()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.businessNameTwo" none="true">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getBusinessNameTwo()) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.business_name_two">Business Name 2</dhv:label>
+    </td><td>
+       <%= toHtml(ContactDetails.getBusinessNameTwo()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+<%--
+<dhv:include name="organization.sicCode" none="true">
+  <dhv:evaluate if="<%= (ContactDetails.getSicCode() > -1) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.sic_code">SIC</dhv:label>
+    </td><td>
+       <%= SICCodeList.getDescriptionByCode(ContactDetails.getSicCode()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+--%>
+<dhv:include name="organization.sicDescription" none="true">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getSicDescription()) %>">
+    <tr class="containerBody">
+			<td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.sicDescription">SIC Description</dhv:label>
+			</td>
+			<td>
+         <%= toHtml(ContactDetails.getSicDescription()) %>&nbsp;
+			</td>
+		</tr>
+  </dhv:evaluate>
+</dhv:include>
 </table>
 <br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

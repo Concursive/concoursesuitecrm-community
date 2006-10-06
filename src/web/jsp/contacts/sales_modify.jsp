@@ -302,6 +302,48 @@
       <%= IndustryList.getHtmlSelect("industryTempCode", ContactDetails.getIndustryTempCode()) %>
     </td>
   </tr>
+  <dhv:include name="organization.dunsType" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.duns_type">DUNS Type</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="dunsType" maxlength="300" value="<%= toHtmlValue(ContactDetails.getDunsType()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.yearStarted" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="10" name="yearStarted" value="<%= ContactDetails.getYearStarted() > -1 ? ContactDetails.getYearStarted() : "" %>">
+        <%= showAttribute(request, "yearStartedWarning") %>
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.employees" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="organization.employees">No. of Employees</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="10" name="employees" value="<%= ContactDetails.getEmployees() == -1 ? "" : "" + ContactDetails.getEmployees() %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.revenue" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
+      </td>
+      <td>
+        <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+        <input type="text" name="revenue" size="15" value="<zeroio:number value="<%= ContactDetails.getRevenue() %>" locale="<%= User.getLocale() %>" />">
+      </td>
+    </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.Potential">Potential</dhv:label>
@@ -312,6 +354,36 @@
       <%= showAttribute(request, "potentialError") %>
     </td>
   </tr>
+  <dhv:include name="organization.dunsNumber" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.duns_number">DUNS Number</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="15" name="dunsNumber" maxlength="30" value="<%= toHtmlValue(ContactDetails.getDunsNumber()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.businessNameTwo" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.business_name_two">Business Name 2</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="businessNameTwo" maxlength="300" value="<%= toHtmlValue(ContactDetails.getBusinessNameTwo()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.sicDescription" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.sicDescription">SIC Description</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="sicDescription" maxlength="300" value="<%= toHtmlValue(ContactDetails.getSicDescription()) %>">
+      </td>
+    </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="campaign.comments">Comments</dhv:label>

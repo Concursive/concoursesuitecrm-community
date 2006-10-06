@@ -19,10 +19,11 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisContactId = -1;
+  var thisOrgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, deletePermission) {
-    thisContactId = contactId;
+  function displayMenu(loc, id, orgId, deletePermission) {
+    thisOrgId = orgId;
     updateMenu(deletePermission);
     if (!menu_init) {
       menu_init = true;
@@ -43,11 +44,11 @@
   }
   //Menu link functions
   function details() {
-    window.location.href = 'AccountContactsImports.do?command=ContactDetails&contactId=' + thisContactId;
+    window.location.href = 'AccountContactsImports.do?command=AccountDetails&orgId=' + thisOrgId;
   }
   
   function deleteContact() {
-    url = 'AccountContactsImports.do?command=DeleteContact&contactId=' + thisContactId + '&importId=<%= ImportDetails.getId() %>&return=list';
+    url = 'AccountContactsImports.do?command=DeleteOrganization&orgId=' + thisOrgId + '&importId=<%= ImportDetails.getId() %>&return=list';
     confirmDelete(url);
   }
   

@@ -176,7 +176,11 @@ public class ContactAddressList extends AddressList {
     StringBuffer sqlOrder = new StringBuffer();
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-        "SELECT * " +
+        "SELECT " +
+        "a.address_id, a.contact_id, a.address_type, a.addrline1, a.addrline2, a.addrline3, " +
+        "a.city, a.state, a.country, a.postalcode, a.entered, a.enteredby, a.modified, a.modifiedby, " +
+        "a.primary_address, a.addrline4, a.county, a.latitude, a.longitude, " +
+        "l.code, l.description, l.default_item, l." + DatabaseUtils.addQuotes(db, "level") + ", l.enabled " +
         "FROM contact_address a, lookup_contactaddress_types l " +
         "WHERE a.address_type = l.code ");
     //Need to build a base SQL statement for counting records

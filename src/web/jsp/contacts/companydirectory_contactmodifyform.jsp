@@ -449,6 +449,13 @@ function reopenContact(id) {
   <input type="hidden" name="leadTrashedDate" value="<%=ContactDetails.getLeadTrashedDate()%>">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="trashedDate" value="<%= ContactDetails.getTrashedDate() %>">
+  <input type="hidden" name="dunsType" value="<%= ContactDetails.getDunsType() %>">
+  <input type="hidden" name="dunsNumber" value="<%= ContactDetails.getDunsNumber() %>">
+  <input type="hidden" name="businessNameTwo" value="<%= ContactDetails.getBusinessNameTwo() %>">
+  <input type="hidden" name="sicDescription" value="<%= ContactDetails.getSicDescription() %>">
+  <input type="hidden" name="revenue" value="<%= ContactDetails.getRevenue() %>">
+  <input type="hidden" name="potential" value="<%= ContactDetails.getPotential() %>">
+  <input type="hidden" name="yearStarted" value="<%= ContactDetails.getYearStarted() %>">
   <% if (request.getParameter("return") != null) {%>
     <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
   <% } %>

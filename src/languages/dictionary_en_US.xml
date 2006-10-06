@@ -584,6 +584,9 @@
     <param name="accounts.accounts_contacts_add.ContactTypes">
       <value><![CDATA[Contact Type(s)]]></value>
     </param>
+       <param name="accounts.accounts_contacts_add.AccountDeatils">
+      <value><![CDATA[Account Details]]></value>
+    </param>
     <param name="accounts.accounts_asset_list.AddAnAsset">
       <value><![CDATA[Add an Asset]]></value>
     </param>
@@ -1976,7 +1979,7 @@
     <param name="search.results.searchString">
       <value><![CDATA[Your search for <b>${searchText}</b> returned:]]></value>
     </param>
-    <param name="accounts.accounts_contacts_calls_list.LogAnActivity">
+        <param name="accounts.accounts_contacts_calls_list.LogAnActivity">
       <value><![CDATA[Log an Activity]]></value>
     </param>
      <param name="accounts.accounts_contacts_calls_add.LogAnActivity">
@@ -1987,6 +1990,18 @@
     </param>
     <param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
       <value><![CDATA[Schedule an Activity]]></value>
+    </param>
+    <param name="accounts.accounts_contacts_calls_list.AddAnActivity">
+      <value><![CDATA[Add an Activity]]></value>
+    </param>
+        <param name="accounts.address.county">
+      <value><![CDATA[County]]></value>
+    </param>
+    <param name="accounts.address.latitude">
+      <value><![CDATA[Latitude]]></value>
+    </param>
+    <param name="accounts.address.longitude">
+      <value><![CDATA[Longitude]]></value>
     </param>
     <param name="accounts.accounts_dashboard.ContractEndDates">
       <value><![CDATA[Contract End Dates]]></value>
@@ -2104,6 +2119,24 @@
     </param>
     <param name="accounts.accounts_add.Phone1">
       <value><![CDATA[Phone 1]]></value>
+    </param>
+    <param name="accounts.accounts_add.duns_type">
+      <value><![CDATA[DUNS Type]]></value>
+    </param>
+    <param name="accounts.accounts_add.year_started">
+      <value><![CDATA[Year Started]]></value>
+    </param>
+    <param name="accounts.accounts_add.duns_number">
+      <value><![CDATA[DUNS Number]]></value>
+    </param>
+    <param name="accounts.accounts_add.business_name_two">
+      <value><![CDATA[Business Name 2]]></value>
+    </param>
+    <param name="accounts.accounts_add.sic_code">
+      <value><![CDATA[SIC]]></value>
+    </param>
+    <param name="accounts.accounts_add.sicDescription">
+      <value><![CDATA[SIC Description]]></value>
     </param>
     <!-- Documents module -->
     <param name="documents.enterprise.noDocumentStoresMessage">
@@ -3552,6 +3585,15 @@
     </param>
     <param name="contacts.address.streetLine3">
       <value><![CDATA[Street Address: Line 3]]></value>
+    </param>
+    <param name="contacts.address.county">
+      <value><![CDATA[County]]></value>
+    </param>
+    <param name="contacts.address.latitude">
+      <value><![CDATA[Latitude]]></value>
+    </param>
+    <param name="contacts.address.longitude">
+      <value><![CDATA[Longitude]]></value>
     </param>
     <param name="quotes.opportunityList">
       <value><![CDATA[Opportunity List]]></value>
@@ -9588,6 +9630,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.oneContactRequired">
       <value><![CDATA[At least one contact is required]]></value>
     </param>
+    <param name="object.validation.afterCurrentYear">
+      <value><![CDATA[Year is after current year]]></value>
+    </param>
     <param name="object.validation.beforeToday">
       <value><![CDATA[Date is today or before today]]></value>
     </param>
@@ -9992,18 +10037,23 @@ You do not have the permissions to perform this action.]]></value>
     <param name="quickactions.addContact">
       <value><![CDATA[Add a Contact]]></value>
     </param>
-    <param name="quickactions.logActivity">
+    <param name="quickactions.addActivity">
+      <value><![CDATA[Add an Activity]]></value>
+    </param>
+        <param name="quickactions.logActivity">
       <value><![CDATA[Log an Activity]]></value>
     </param>
      <param name="quickactions.scheduleActivity">
       <value><![CDATA[Schedule an Activity]]></value>
     </param>
-
     <param name="quickactions.addAccount">
       <value><![CDATA[Add an Account]]></value>
     </param>
     <param name="quickactions.addContact">
       <value><![CDATA[Add a Contact]]></value>
+    </param>
+    <param name="quickactions.addActivity">
+      <value><![CDATA[Add an Activity]]></value>
     </param>
 
     <param name="myitems.header">
@@ -12274,6 +12324,5 @@ You do not have the permissions to perform this action.]]></value>
     <param name="accountsQuotes.notes.long_html">
       <value>Notes</value>
     </param>
-
   </config>
 </aspcfs>

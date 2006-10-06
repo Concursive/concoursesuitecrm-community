@@ -20,21 +20,31 @@
         <property aliases="role" displayName="Role">role</property>
         <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Type" isForPrompting="false">typeId</property>
         <property aliases="site" displayName="Site" isForPrompting="false">site</property>
-        <property aliases="siteid,site_id" displayName="Site Id" isForPrompting="false">siteId</property>
+        <property aliases="siteid,site_id,site id" displayName="Site Id">siteId</property>
+        <property aliases="sitename,site name,site_Name" displayName="Site Name">siteName</property>
         <property aliases="notes" displayName="Notes">notes</property>
         <property aliases="locale" displayName="Locale" isForPrompting="false">locale</property>
         <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
         <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
         <property aliases="enabled" displayName="Enabled" isForPrompting="false">enabled</property>
-        <property aliases="owner,owned_by, assigned dsm" displayName="Owner">owner</property>
+        <property aliases="owner,owner_id,ownerid,ownerId,owner id,OwnerId,Owner Id,owned_by, assigned dsm" displayName="Owner Id">ownerId</property>
+        <property aliases="owner_name,ownername,owner name" displayName="Owner Name">ownerName</property>
         <property aliases="url" displayName="Url">url</property>
         <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered" isForPrompting="false">entered</property>
         <property aliases="modified,modified_date,date_modified" displayName="Modified" isForPrompting="false">modified</property>
         <property aliases="listsalutation,list_salutation" displayName="List Salutation" isForPrompting="false">listSalutation</property>
         <property aliases="contact_source,contactsource,nameContactSource" displayName="Contact Source" isForPrompting="false">nameContactSource</property>
         <property aliases="industry" displayName="Industry Code">industryTempCode</property>
+        <property aliases="duns type,duns_type,dunstype" displayName="DUNS Type">dunsType</property>
+        <property aliases="year started,year_started,yearstarted" displayName="Year Started">yearStarted</property>
         <property aliases="revenue" displayName="Revenue">revenue</property>
+				<property aliases="revenue_(000s),revenue (000s),revenue(000s),yearlysales_(000s),yearlysales (000s),yearlysales(000s),revenue_in_thousands,revenue in thousands,revenueinthousands" displayName="Revenue (000s)">revenueInThousands</property>
         <property aliases="potential,weekly potential" displayName="Potential">potential</property>
+        <property aliases="duns number,duns_number,dunsnumber" displayName="DUNS Number">dunsNumber</property>
+        <property aliases="business name 2,business_name_2,businessname2" displayName="Business Name 2">businessNameTwo</property>
+        <property aliases="sic,sic_code,sic code,siccode" displayName="SIC">sicCode</property>
+        <property aliases="sic description,sic_description,SIC description" displayName="SIC Description">sicDescription</property>
+        <property aliases="employees" displayName="Employees">employees</property>
      </properties>
      <dependencies>
       <dependency id="contactEmail">
@@ -47,7 +57,7 @@
         <displayName>Phone</displayName>
       </dependency>
       <dependency id="contactAddress">
-        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,streetAddressLine4,city,state,zip,country,type</properties>
+        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,streetAddressLine4,city,state,zip,country,county,latitude,longitude,type</properties>
         <enableGroups>true</enableGroups>
         <displayName>Address</displayName>
       </dependency>
@@ -64,7 +74,7 @@
         <property aliases="full name,full_name" displayName="Full Name (First Last)">nameFull</property>
         <property aliases="first name,first_name,firstname" displayName="First Name">nameFirst</property>
         <property aliases="middle name,middlename,middle_name" displayName="Middle Name">nameMiddle</property>
-        <property aliases="last name,lastname,last_name" displayName="Last Name" required="true" substitute="nameFull">nameLast</property>
+        <property aliases="last name,lastname,last_name" displayName="Last Name" substitute="nameFull">nameLast</property>
         <property aliases="suffix name,suffixname,suffix_name" displayName="Suffix">nameSuffix</property>
         <property aliases="additional names,additional_names" displayName="Additional Names">additionalNames</property>
         <property aliases="nickname,nick_name" displayName="Nickname">nickname</property>
@@ -72,21 +82,31 @@
         <property aliases="role" displayName="Role">role</property>
         <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Type" isForPrompting="false">typeId</property>
         <property aliases="site" displayName="Site" isForPrompting="false">site</property>
-        <property aliases="siteid,site_id" displayName="Site Id" isForPrompting="false">siteId</property>
+        <property aliases="siteid,site_id,site id" displayName="Site Id">siteId</property>
+        <property aliases="sitename,site name,site_Name" displayName="Site Name">siteName</property>
         <property aliases="notes" displayName="Notes">notes</property>
         <property aliases="locale" displayName="Locale" isForPrompting="false">locale</property>
         <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
         <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
         <property aliases="enabled" displayName="Enabled" isForPrompting="false">enabled</property>
-        <property aliases="owner,owned_by, assigned dsm" displayName="Owner">owner</property>
+        <property aliases="owner,owner_id,ownerid,ownerId,owner id,OwnerId,Owner Id,owned_by, assigned dsm" displayName="Owner Id">ownerId</property>
+        <property aliases="owner_name,ownername,owner name" displayName="Owner Name">ownerName</property>
         <property aliases="url" displayName="Url">url</property>
         <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered" isForPrompting="false">entered</property>
         <property aliases="modified,modified_date,date_modified" displayName="Modified" isForPrompting="false">modified</property>
         <property aliases="listsalutation,list_salutation" displayName="List Salutation" isForPrompting="false">listSalutation</property>
         <property aliases="contact_source,contactsource,nameContactSource" displayName="Contact Source" isForPrompting="false">nameContactSource</property>
         <property aliases="industry" displayName="Industry Code">industryTempCode</property>
+        <property aliases="duns type,duns_type,dunstype" displayName="DUNS Type">dunsType</property>
+        <property aliases="year started,year_started,yearstarted" displayName="Year Started">yearStarted</property>
         <property aliases="revenue" displayName="Revenue">revenue</property>
+		<property aliases="revenue_(000s),revenue (000s),revenue(000s),yearlysales_(000s),yearlysales (000s),yearlysales(000s),revenue_in_thousands,revenue in thousands,revenueinthousands" displayName="Revenue (000s)">revenueInThousands</property>
         <property aliases="potential,weekly potential" displayName="Potential">potential</property>
+        <property aliases="duns number,duns_number,dunsnumber" displayName="DUNS Number">dunsNumber</property>
+        <property aliases="business name 2,business_name_2,businessname2" displayName="Business Name 2">businessNameTwo</property>
+        <property aliases="sic,sic_code,sic code,siccode" displayName="SIC">sicCode</property>
+        <property aliases="sic description,sic_description,SIC description" displayName="SIC Description">sicDescription</property>
+        <property aliases="employees" displayName="Employees">employees</property>
      </properties>
      <dependencies>
       <dependency id="contactEmail">
@@ -99,7 +119,7 @@
         <displayName>Phone</displayName>
       </dependency>
       <dependency id="contactAddress">
-        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,streetAddressLine4,city,state,zip,country,type</properties>
+        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,streetAddressLine4,city,state,zip,country,county,latitude,longitude,type</properties>
         <enableGroups>true</enableGroups>
         <displayName>Address</displayName>
       </dependency>
@@ -138,6 +158,9 @@
         <property aliases="state" displayName="State">state</property>
         <property aliases="country" displayName="Country">country</property>
         <property aliases="zip" displayName="Zip">zip</property>
+        <property aliases="county" displayName="County">county</property>
+        <property aliases="latitude" displayName="Latitude">latitude</property>
+        <property aliases="longitude" displayName="Longitude">longitude</property>
         <property aliases="type,address_type,address_type,addresstype" displayName="Address Type">type</property>
         <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
         <property aliases="modifiedby,modified_by" displayName="Modified By">modifiedBy</property>

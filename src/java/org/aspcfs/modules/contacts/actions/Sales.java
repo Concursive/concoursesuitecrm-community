@@ -1241,6 +1241,7 @@ public final class Sales extends CFSModule {
              || thisOrg.getOrgId() == -1) {
           thisOrg.setRating(contact.getRating());
         }
+        copyPropertiesFromContactToOrganization(contact, thisOrg);
 
         //Copy postal address from contact to organization
         ContactAddressList contactAddressList = new ContactAddressList();
@@ -2274,5 +2275,15 @@ public final class Sales extends CFSModule {
       return ("DeleteReportERROR");
     }
   }
+  private static void copyPropertiesFromContactToOrganization(Contact from, Organization to){
+    to.setRevenue( from.getRevenue() );
+    to.setEmployees( from.getEmployees() );
+    to.setDunsType( from.getDunsType() );
+    to.setYearStarted( from.getYearStarted() );
+    to.setDunsNumber( from.getDunsNumber() );
+    to.setBusinessNameTwo( from.getBusinessNameTwo() );
+    to.setSicCode( from.getSicCode() );
+  }
+
 }
 

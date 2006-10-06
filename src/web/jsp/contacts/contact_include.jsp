@@ -428,6 +428,18 @@
     </td>
   </tr>
   <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.county">County</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>county" size="28" maxlenth="80" value="<%= toHtmlValue(thisAddress.getCounty()) %>"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.latitude">Latitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLatitude()) : "") %>"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.longitude">Longitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLongitude()) : "") %>"></td>
+  </tr>
+  <tr class="containerBody">
     <td colspan="2">
       &nbsp;
     </td>
@@ -521,6 +533,18 @@
       </script> --%>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.county">County</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>county" size="28" maxlenth="80"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.latitude">Latitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value=""></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.longitude">Longitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value=""></td>
   </tr>
   <dhv:evaluate if="<%= acount != atotal %>">
   <tr class="containerBody">
@@ -616,6 +640,18 @@
       </script> --%>
       <% CountrySelect = new CountrySelect(systemStatus); %>
     </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.county">County</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>county" size="28" maxlenth="80"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.latitude">Latitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value=""></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="contacts.address.longitude">Longitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value=""></td>
   </tr>
   <dhv:evaluate if="<%= acount != atotal %>">
   <tr class="containerBody">

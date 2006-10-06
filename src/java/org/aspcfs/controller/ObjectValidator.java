@@ -106,6 +106,9 @@ public class ObjectValidator {
         }
       }
       checkWarning(systemStatus, object, "alertDate", IS_BEFORE_TODAY);
+      if(organization.getYearStarted() > Calendar.getInstance().get(Calendar.YEAR)){
+        addWarning(systemStatus, object, "yearStarted", "object.validation.afterCurrentYear");
+      }
     }
 
     // Contact

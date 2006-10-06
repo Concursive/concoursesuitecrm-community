@@ -179,10 +179,13 @@ public class OrganizationAddressList extends AddressList {
 
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-        "SELECT * " +
+        "SELECT " +
+        "a.address_id, a.org_id, a.address_type, a.addrline1, a.addrline2, a.addrline3, " +
+        "a.city, a.state, a.country, a.postalcode, a.entered, a.enteredby, a.modified, a.modifiedby, " +
+        "a.primary_address, a.addrline4, a.county, a.latitude, a.longitude, " +
+        "l.code, l.description, l.default_item, l." + DatabaseUtils.addQuotes(db, "level") + ", l.enabled " +
         "FROM organization_address a, lookup_orgaddress_types l " +
         "WHERE a.address_type = l.code ");
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +

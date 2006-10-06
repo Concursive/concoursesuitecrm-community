@@ -152,6 +152,11 @@ public class HtmlSelect extends ArrayList {
    * @since       1.0
    */
   public void setDefaultValue(String tmp) {
+    if (tmp != null) {
+      if (!tmp.equals(defaultValue)) {
+        built = false;
+      }
+    }
     if (tmp == null) {
       this.defaultValue = "";
     } else {

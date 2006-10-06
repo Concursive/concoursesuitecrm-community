@@ -26,6 +26,7 @@ import org.aspcfs.apps.transfer.reader.mapreader.PropertyMap;
 import org.aspcfs.controller.ImportManager;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
@@ -790,6 +791,17 @@ public final class AccountContactsImports extends CFSModule {
       thisList.setBuildDetails(true);
       thisList.buildList(db);
       context.getRequest().setAttribute("ImportResults", thisList);
+      
+      pagedListInfo.setColumnToSortBy("");
+      pagedListInfo.setSortOrder("");
+      OrganizationList orgList = new OrganizationList();
+      orgList.setPagedListInfo(pagedListInfo);
+      pagedListInfo.setSearchCriteria(orgList, context);
+      orgList.setImportId(Integer.parseInt(importId));
+      orgList.setIncludeAllSites(true);
+      orgList.setExcludeUnapprovedAccounts(false);
+      orgList.buildList(db);
+      context.getRequest().setAttribute("AccountImportResults", orgList);
 
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -838,6 +850,40 @@ public final class AccountContactsImports extends CFSModule {
 
 
   /**
+   * View details of a contact
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandAccountDetails(ActionContext context) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
+      return ("PermissionError");
+    }
+
+    Connection db = null;
+    String orgId = context.getRequest().getParameter("orgId");
+
+    try {
+      db = this.getConnection(context);
+      Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
+      if (!isRecordAccessPermitted(context, thisOrg)){
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("OrgDetails", thisOrg);
+
+      Import thisImport = new Import(db, thisOrg.getImportId());
+      context.getRequest().setAttribute("ImportDetails", thisImport);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return getReturn(context, "OrgDetails");
+  }
+
+
+  /**
    * Delete a contact
    *
    * @param context Description of the Parameter
@@ -867,6 +913,48 @@ public final class AccountContactsImports extends CFSModule {
         }
         if (!recordDeleted) {
           context.getRequest().setAttribute("ContactDetails", thisContact);
+        }
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (recordDeleted) {
+      return getReturn(context, "DeleteContact");
+    }
+
+    if ("list".equals(context.getRequest().getParameter("return"))) {
+      return getReturn(context, "DeleteContactFailedList");
+    }
+    return getReturn(context, "DeleteContactFailedDetails");
+  }
+  /**
+   * Delete a contact
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandDeleteOrganization(ActionContext context) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-edit"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    boolean recordDeleted = false;
+    String orgId = context.getRequest().getParameter("orgId");
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    try {
+      db = this.getConnection(context);
+      Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
+      if (!isRecordAccessPermitted(context, thisOrg)){
+        return ("PermissionError");
+      }
+      if (thisOrg.getStatusId() != Import.PROCESSED_APPROVED) {
+        recordDeleted = thisOrg.delete(db, context, getDbNamePath(context));
+        processErrors(context, thisOrg.getErrors());
+        if (!recordDeleted) {
+          context.getRequest().setAttribute("OrgDetails", thisOrg);
         }
       }
     } catch (Exception e) {

@@ -39,6 +39,7 @@
 <jsp:useBean id="AccountSizeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SegmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SICCodeList" class="org.aspcfs.modules.admin.base.SICCodeList" scope="request"/>
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <jsp:useBean id="SalutationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
@@ -603,6 +604,27 @@
       </td>
     </tr>
   </dhv:include>
+  <dhv:include name="organization.dunsType" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.duns_type">DUNS Type</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="dunsType" maxlength="300" value="<%= toHtmlValue(OrgDetails.getDunsType()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.yearStarted" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="10" name="yearStarted" value="<%= OrgDetails.getYearStarted() > -1 ? OrgDetails.getYearStarted() : "" %>">
+        <%= showAttribute(request, "yearStartedWarning") %>
+      </td>
+    </tr>
+  </dhv:include>
   <dhv:include name="organization.employees" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -647,6 +669,48 @@
       </tr>
     </dhv:include>
   </dhv:evaluate>
+  <dhv:include name="organization.dunsNumber" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.duns_number">DUNS Number</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="15" name="dunsNumber" maxlength="30" value="<%= toHtmlValue(OrgDetails.getDunsNumber()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.businessNameTwo" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.business_name_two">Business Name 2</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="businessNameTwo" maxlength="300" value="<%= toHtmlValue(OrgDetails.getBusinessNameTwo()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+	<%--
+  <dhv:include name="organization.sicCode" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.sic_code">SIC</dhv:label>
+      </td>
+      <td>
+        <%= SICCodeList.getHtmlSelect("sicCode",OrgDetails.getSicCode()) %>
+      </td>
+    </tr>
+  </dhv:include>
+	--%>
+  <dhv:include name="organization.sicDescription" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.sicDescription">SIC Description</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="50" name="sicDescription" maxlength="300" value="<%= toHtmlValue(OrgDetails.getSicDescription()) %>">
+      </td>
+    </tr>
+  </dhv:include>
   <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() == null %>">
     <dhv:include name="accounts-size" none="true"> 
       <tr class="containerBody">
@@ -908,6 +972,18 @@
     </td>
   </tr>
   <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.county">County</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>county" size="28" maxlenth="80" value="<%= toHtmlValue(thisAddress.getCounty()) %>"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.latitude">Latitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLatitude()) : "") %>"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.longitude">Longitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLongitude()) : "") %>"></td>
+  </tr>
+  <tr class="containerBody">
     <td colspan="2">
       &nbsp;
     </td>
@@ -998,6 +1074,18 @@
         CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.county">County</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>county" size="28" maxlenth="80"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.latitude">Latitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value=""></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.longitude">Longitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value=""></td>
   </tr>
   </dhv:evaluate>
 <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() != null) %>">
@@ -1094,6 +1182,18 @@
     </td>
   </tr>
   <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.county">County</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>county" size="28" maxlenth="80" value="<%= toHtmlValue(thisAddress.getCounty()) %>"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.latitude">Latitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value="<%= thisAddress.getLatitude() %>"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.longitude">Longitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value="<%= thisAddress.getLongitude() %>"></td>
+  </tr>
+  <tr class="containerBody">
     <td colspan="2">
       &nbsp;
     </td>
@@ -1184,6 +1284,18 @@
         CountrySelect = new CountrySelect(systemStatus);
        %>
     </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.county">County</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>county" size="28" maxlenth="80"></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.latitude">Latitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value=""></td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap><dhv:label name="accounts.address.longitude">Longitude</dhv:label></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value=""></td>
   </tr>
   </dhv:evaluate>
 </table>

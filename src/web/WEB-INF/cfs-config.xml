@@ -2336,6 +2336,7 @@
              resource="/accounts/accounts_folders_closepopup.jsp"
              layout="style"/>
     <forward name="ClosePopup" resource="/closepopup.jsp"/>
+    <forward name="StatesOK" resource="/accounts/accounts_state_list.jsp" layout="style"/>
   </action>
   <action name="AccountsCalls"
           class="org.aspcfs.modules.accounts.actions.AccountsCalls">
@@ -2942,6 +2943,9 @@
              resource="/accounts/accounts_contacts_importresults.jsp"
              layout="nav"/>
     <forward name="ContactDetailsOK"
+             resource="/accounts/accounts_import_details.jsp"
+             layout="nav"/>
+    <forward name="OrgDetailsOK"
              resource="/accounts/accounts_importcontact_details.jsp"
              layout="nav"/>
     <forward name="DeleteContactOK"

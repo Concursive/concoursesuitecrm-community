@@ -80,8 +80,46 @@ public class LookupElement {
       throw new java.sql.SQLException("ID not found");
     }
   }
+ 
+  
+  /**
+   * Constructor for the LookupElement object
+   *
+   * @param db        Description of the Parameter
+   * @param Description   Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @throws java.sql.SQLException Description of the Exception
+   */
+  private LookupElement(Connection db, String description, String tableName) throws java.sql.SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println(
+          "LookupElement-> Retrieving Description: " + description + " from table: " + tableName);
+    }
+    String sql =
+        (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? "SELECT * FROM ( " : "") +
+        "SELECT " +
+        (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD ? "FIRST 1 " : "") +
+        "code, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled " +
+        "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
+        "WHERE description = ? " +
+        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL ? "LIMIT 1 " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.DB2 ? "FETCH FIRST 1 ROWS ONLY " : "") +
+        (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? ") WHERE ROWNUM <= 1 " : "");
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setString(1, description);
+    DatabaseUtils.doManualLimit(db, pst, 1);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      build(rs);
+    } else {
+      code = -1;
+    }
+  }
 
-
+  
   /**
    * Constructor for the LookupElement object
    *
@@ -434,7 +472,6 @@ public class LookupElement {
     return enabled;
   }
 
-
   /**
    * Gets the modified attribute of the LookupElement object
    *
@@ -683,5 +720,10 @@ public class LookupElement {
   public String toString() {
     return String.valueOf(code +"-"+description);
   }
-}
 
+  public static int getCodeByDescription( Connection db, String description, String tableName) throws java.sql.SQLException {
+    LookupElement lookupElement = new LookupElement(db,description,tableName);
+    return lookupElement.getCode(); 
+  }
+
+}

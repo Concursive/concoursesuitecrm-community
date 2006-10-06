@@ -75,6 +75,9 @@ public class OrganizationList extends Vector implements SyncableList {
   protected int orgSiteId = -1;
   protected boolean includeOrganizationWithoutSite = false;
   protected int projectId = -1;
+  private String city = null;
+  private String state = null;
+  private String country = null;
   protected String postalCode = null;
   protected String assetSerialNumber = null;
 
@@ -105,8 +108,29 @@ public class OrganizationList extends Vector implements SyncableList {
   private String contactPhoneNumber = null;
   private String contactCity = null;
   private String contactState = null;
-  private String contactOtherState = null;
+//  private String contactOtherState = null;
   private String contactCountry = null;
+
+  private boolean includeAllSites = false;
+  
+  /**
+   * Gets the includeAllSites attribute of the OrganizationList object
+   *
+   * @return includeAllSites The includeAllSites value
+   */
+  public boolean isIncludeAllSites() {
+    return this.includeAllSites;
+  }
+
+
+  /**
+   * Sets the includeAllSites attribute of the OrganizationList object
+   *
+   * @param includeAllSites The new includeAllSites value
+   */
+  public void setIncludeAllSites(boolean includeAllSites) {
+    this.includeAllSites = includeAllSites;
+  }
 
 
   /**
@@ -1139,6 +1163,113 @@ public class OrganizationList extends Vector implements SyncableList {
     this.postalCode = tmp;
   }
 
+  /**
+   *  Gets the accountCity attribute of the OrganizationList object
+   *
+   * @return    The accountCity value
+   */
+  public String getCity() {
+    return city;
+  }
+
+  /**
+   *  Sets the accountCity attribute of the OrganizationList object
+   *
+   * @param  tmp  The new accountCity value
+   */
+  public void setCity(String tmp) {
+    this.city = tmp;
+  }
+
+  /**
+   *  Gets the accountCity attribute of the OrganizationList object
+   *
+   * @return    The accountCity value
+   */
+  public String getAccountCity() {
+    return city;
+  }
+
+  /**
+   *  Sets the contactCity attribute of the OrganizationList object
+   *
+   * @param  tmp  The new accountCity value
+   */
+  public void setAccountCity(String tmp) {
+    this.city = tmp;
+  }
+
+  /**
+   *  Gets the accountState attribute of the OrganizationList object
+   *
+   * @return    The accountState value
+   */
+  public String getState() {
+    return state;
+  }
+
+  /**
+   *  Sets the accountState attribute of the OrganizationList object
+   *
+   * @param  tmp  The new accountState value
+   */
+  public void setState(String tmp) {
+    this.state = tmp;
+  }
+
+  /**
+   *  Gets the accountState attribute of the OrganizationList object
+   *
+   * @return    The accountState value
+   */
+  public String getAccountState() {
+    return state;
+  }
+
+  /**
+   *  Sets the contactState attribute of the OrganizationList object
+   *
+   * @param  tmp  The new accountState value
+   */
+  public void setAccountState(String tmp) {
+    this.state = tmp;
+  }
+
+  /**
+   *  Gets the accountCountry attribute of the OrganizationList object
+   *
+   * @return    The accountCountry value
+   */
+  public String getCountry() {
+    return country;
+  }
+
+  /**
+   *  Sets the accountCountry attribute of the OrganizationList object
+   *
+   * @param  tmp  The new accountCountry value
+   */
+  public void setCountry(String tmp) {
+    this.country = tmp;
+  }
+
+  /**
+   *  Gets the accountCountry attribute of the OrganizationList object
+   *
+   * @return    The accountCountry value
+   */
+  public String getAccountCountry() {
+    return country;
+  }
+
+  /**
+   *  Sets the accountCountry attribute of the OrganizationList object
+   *
+   * @param  tmp  The new accountCountry value
+   */
+  public void setAccountCountry(String tmp) {
+    this.country = tmp;
+  }
 
   /**
    *  Gets the assetSerialNumber attribute of the OrganizationList object
@@ -1724,12 +1855,48 @@ public class OrganizationList extends Vector implements SyncableList {
             "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " LIKE ? " +
             "AND postalcode IS NOT NULL) ");
       } else {
-        sqlFilter.append(
-            "AND o.org_id IN (SELECT org_id FROM organization_address " +
-            "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " = ? " +
-            "AND postalcode IS NOT NULL) ");
+          sqlFilter.append(
+              "AND o.org_id IN (SELECT org_id FROM organization_address " +
+              "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " = ? " +
+              "AND postalcode IS NOT NULL) ");
       }
     }
+
+    if (city != null && !"-1".equals(city)) {
+      if (city.indexOf("%") >= 0) {
+        sqlFilter.append(
+            "AND o.org_id IN (SELECT org_id FROM organization_address " +
+            "WHERE " + DatabaseUtils.toLowerCase(db, "city") + " LIKE ? " +
+            "AND city IS NOT NULL) ");
+      } else {
+        sqlFilter.append(
+            "AND o.org_id IN (SELECT org_id FROM organization_address " +
+            "WHERE " + DatabaseUtils.toLowerCase(db, "city") + " = ? " +
+            "AND city IS NOT NULL) ");
+      }
+    }
+
+    if (state != null && !"-1".equals(state)) {
+      if (state.indexOf("%") >= 0) {
+      sqlFilter.append(
+          "AND o.org_id IN (SELECT org_id FROM organization_address " +
+          "WHERE " + DatabaseUtils.toLowerCase(db, "state") + " LIKE ? " +
+          "AND state IS NOT NULL) ");
+      } else {
+        sqlFilter.append(
+            "AND o.org_id IN (SELECT org_id FROM organization_address " +
+            "WHERE " + DatabaseUtils.toLowerCase(db, "state") + " = ? " +
+            "AND state IS NOT NULL) ");
+      }
+    }
+
+    if (country != null && !"-1".equals(country)) {
+      sqlFilter.append(
+          "AND o.org_id IN (SELECT org_id FROM organization_address " +
+          "WHERE " + DatabaseUtils.toLowerCase(db, "country") + " = ? " +
+          "AND country IS NOT NULL) ");
+    }
+
     if (assetSerialNumber != null) {
       sqlFilter.append(
           "AND o.org_id IN (SELECT a.account_id FROM asset a " +
@@ -1944,6 +2111,15 @@ public class OrganizationList extends Vector implements SyncableList {
     }
     if (postalCode != null) {
       pst.setString(++i, postalCode.toLowerCase());
+    }
+    if (city != null && !"-1".equals(city)) {
+      pst.setString(++i, city.toLowerCase());
+    }
+    if (state != null && !"-1".equals(state)) {
+      pst.setString(++i, state.toLowerCase());
+    }
+    if (country != null && !"-1".equals(country)) {
+      pst.setString(++i, country.toLowerCase());
     }
     if (assetSerialNumber != null) {
       pst.setString(++i, assetSerialNumber);

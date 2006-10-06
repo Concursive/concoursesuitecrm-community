@@ -138,6 +138,12 @@ public class Organization extends GenericBean {
 
   private boolean forceDelete = false;
 
+  private String dunsType = null;
+  private String dunsNumber = null;
+  private String businessNameTwo = null;
+  private int sicCode = -1;
+  private int yearStarted = -1;
+  private String sicDescription = null;
 
   /**
    *  Constructor for the Organization object, creates an empty Organization
@@ -273,7 +279,14 @@ public class Organization extends GenericBean {
   public void setInsertPrimaryContact(String tmp) {
     this.insertPrimaryContact = DatabaseUtils.parseBoolean(tmp);
   }
-
+  /**
+   *  Gets the approved attribute of the Contact object
+   *
+   * @return    The approved value
+   */
+  public boolean isApproved() {
+    return (statusId == Import.PROCESSED_UNAPPROVED ? false : true);
+  }
 
   /**
    *  Sets the RevenueDelete attribute of the Organization object
@@ -2133,6 +2146,116 @@ public class Organization extends GenericBean {
 
 
   /**
+   * @return the businessNameTwo
+   */
+  public String getBusinessNameTwo() {
+    return businessNameTwo;
+  }
+
+
+  /**
+   * @return the dunsNumber
+   */
+  public String getDunsNumber() {
+    return dunsNumber;
+  }
+
+
+  /**
+   * @return the dunsType
+   */
+  public String getDunsType() {
+    return dunsType;
+  }
+
+
+  /**
+   * @return the sicCode
+   */
+  public int getSicCode() {
+    return sicCode;
+  }
+
+	public String getSicDescription() {
+		return sicDescription;
+	}
+
+  /**
+   * @return the yearStarted
+   */
+  public int getYearStarted() {
+    return yearStarted;
+  }
+
+
+  /**
+   * @param businessNameTwo the businessNameTwo to set
+   */
+  public void setBusinessNameTwo(String businessNameTwo) {
+    this.businessNameTwo = businessNameTwo;
+  }
+
+
+  /**
+   * @param dunsNumber the dunsNumber to set
+   */
+  public void setDunsNumber(String dunsNumber) {
+    this.dunsNumber = dunsNumber;
+  }
+
+
+  /**
+   * @param dunsType the dunsType to set
+   */
+  public void setDunsType(String dunsType) {
+    this.dunsType = dunsType;
+  }
+
+
+  /**
+   * @param employees the employees to set
+   */
+  public void setEmployees(int employees) {
+    this.employees = employees;
+  }
+
+
+  /**
+   * @param sicCode the sicCode to set
+   */
+  public void setSicCode(int sicCode) {
+    this.sicCode = sicCode;
+  }
+
+
+  /**
+   * @param sicCode the sicCode to set
+   */
+  public void setSicCode(String sicCode) {
+    this.sicCode = Integer.parseInt(sicCode);
+  }
+
+	public void setSicDescription(String tmp) {
+		this.sicDescription = tmp;
+	}
+
+  /**
+   * @param yearStarted the yearStarted to set
+   */
+  public void setYearStarted(int yearStarted) {
+    this.yearStarted = yearStarted;
+  }
+
+
+  /**
+   * @param yearStarted the yearStarted to set
+   */
+  public void setYearStarted(String yearStarted) {
+    this.yearStarted = Integer.parseInt(yearStarted);
+  }
+
+
+  /**
    *  Description of the Method
    *
    * @param  db             Description of Parameter
@@ -2655,7 +2778,8 @@ public class Organization extends GenericBean {
           "miner_only, owner, duplicate_id, notes, employees, revenue, " +
           "ticker_symbol, account_number, namesalutation, namefirst, namelast, " +
           "namemiddle, trashed_date, segment_id,  direct_bill, account_size,  " +
-          "sub_segment_id, site_id, source, rating, potential, ");
+          "sub_segment_id, site_id, source, rating, potential, " +
+          "duns_type, duns_number, business_name_two, year_started, sic_code, sic_description, ");
       if (orgId > -1) {
         sql.append("org_id, ");
       }
@@ -2673,6 +2797,7 @@ public class Organization extends GenericBean {
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,");
+      sql.append("?,?,?,?,?,?,");
       if (orgId > -1) {
         sql.append("?,");
       }
@@ -2715,6 +2840,12 @@ public class Organization extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, this.getSource());
       DatabaseUtils.setInt(pst, ++i, this.getRating());
       pst.setDouble(++i, this.getPotential());
+      pst.setString(++i, this.getDunsType());
+      pst.setString(++i, this.getDunsNumber());
+      pst.setString(++i, this.getBusinessNameTwo());
+      pst.setInt(++i, this.getYearStarted());
+      DatabaseUtils.setInt(pst, ++i, this.getSicCode());
+      pst.setString(++i, this.getSicDescription());
       if (orgId > -1) {
         pst.setInt(++i, orgId);
       }
@@ -2990,8 +3121,9 @@ public class Organization extends GenericBean {
         "alertdate = ?, alertdate_timezone=?, alert = ?, namesalutation = ?, namefirst = ?, " +
         "namemiddle = ?, namelast = ?, trashed_date = ?, segment_id = ?, " +
         "direct_bill = ?, account_size = ?, site_id = ?, sub_segment_id = ?, " +
-        "source = ?, rating = ?, potential = ? " +
-        "WHERE org_id = ? ");
+        "source = ?, rating = ?, potential = ?, " +
+        "duns_type = ?, duns_number = ?, business_name_two = ?, year_started = ?, sic_code = ?, sic_description = ? ");
+    sql.append("WHERE org_id = ? ");
     if (!override) {
       sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     }
@@ -3029,6 +3161,12 @@ public class Organization extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getSource());
     DatabaseUtils.setInt(pst, ++i, this.getRating());
     pst.setDouble(++i, this.getPotential());
+    pst.setString(++i, this.getDunsType());
+    pst.setString(++i, this.getDunsNumber());
+    pst.setString(++i, this.getBusinessNameTwo());
+    pst.setInt(++i, this.getYearStarted());
+    DatabaseUtils.setInt(pst, ++i, this.getSicCode());
+    pst.setString(++i, this.getSicDescription());
     pst.setInt(++i, orgId);
     if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
@@ -3623,7 +3761,6 @@ public class Organization extends GenericBean {
     revenue = rs.getDouble("revenue");
     employees = DatabaseUtils.getInt(rs, "employees");
     notes = rs.getString("notes");
-    //sicCode = rs.getString("sic_code");
     ticker = rs.getString("ticker_symbol");
     //taxId = rs.getString("taxid");
     minerOnly = rs.getBoolean("miner_only");
@@ -3659,6 +3796,12 @@ public class Organization extends GenericBean {
     accountSize = DatabaseUtils.getInt(rs, "account_size");
     subSegmentId = DatabaseUtils.getInt(rs, "sub_segment_id");
     siteId = DatabaseUtils.getInt(rs, "site_id");
+    dunsType = rs.getString("duns_type");
+    dunsNumber = rs.getString("duns_number");
+    businessNameTwo = rs.getString("business_name_two");
+    sicCode = DatabaseUtils.getInt(rs, "sic_code");
+    yearStarted = rs.getInt("year_started");
+    sicDescription = rs.getString("sic_description");
 
     //contact table
     ownerName = Contact.getNameLastFirst(

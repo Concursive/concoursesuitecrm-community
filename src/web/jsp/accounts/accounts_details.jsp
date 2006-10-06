@@ -23,6 +23,7 @@
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="SegmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SICCodeList" class="org.aspcfs.modules.admin.base.SICCodeList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
@@ -149,6 +150,27 @@
     </tr>
   </dhv:evaluate>
 </dhv:include>
+<dhv:include name="organization.dunsType" none="true">
+  <dhv:evaluate if="<%= hasText(OrgDetails.getDunsType()) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.duns_type">DUNS Type</dhv:label>
+    </td><td>
+       <%= toHtml(OrgDetails.getDunsType()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.yearStarted" none="true">
+  <dhv:evaluate if="<%= (OrgDetails.getYearStarted() > -1) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
+      </td>
+      <td>
+       <%= OrgDetails.getYearStarted() %>&nbsp;
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
 <dhv:include name="organization.employees" none="true">
   <dhv:evaluate if="<%= (OrgDetails.getEmployees() > 0) %>">
     <tr class="containerBody">
@@ -195,6 +217,47 @@
          <%= toHtml(OrgDetails.getTicker()) %>&nbsp;
       </td>
     </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.dunsNumber" none="true">
+  <dhv:evaluate if="<%= hasText(OrgDetails.getDunsNumber()) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.duns_number">DUNS Number</dhv:label>
+    </td><td>
+       <%= toHtml(OrgDetails.getDunsNumber()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.businessNameTwo" none="true">
+  <dhv:evaluate if="<%= hasText(OrgDetails.getBusinessNameTwo()) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.business_name_two">Business Name 2</dhv:label>
+    </td><td>
+       <%= toHtml(OrgDetails.getBusinessNameTwo()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+<%--
+<dhv:include name="organization.sicCode" none="true">
+  <dhv:evaluate if="<%= (OrgDetails.getSicCode() > -1) %>">
+    <tr class="containerBody"><td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.sic_code">SIC</dhv:label>
+    </td><td>
+       <%= SICCodeList.getDescriptionByCode(OrgDetails.getSicCode()) %>&nbsp;
+    </td></tr>
+  </dhv:evaluate>
+</dhv:include>
+--%>
+<dhv:include name="organization.sicDescription" none="true">
+  <dhv:evaluate if="<%= hasText(OrgDetails.getSicDescription()) %>">
+    <tr class="containerBody">
+			<td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.sicDescription">SIC Description</dhv:label>
+			</td>
+			<td>
+         <%= toHtml(OrgDetails.getSicDescription()) %>&nbsp;
+			</td>
+		</tr>
   </dhv:evaluate>
 </dhv:include>
 <dhv:include name="accounts-size" none="true">

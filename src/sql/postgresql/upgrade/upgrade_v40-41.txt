@@ -65,6 +65,9 @@
 ### because it will most likely work with PSQL and MSSQL only
 2006-09-18-script1.bsh
 
+# Import fields for D&B
+2006-09-14-script01-holub.sql
+2006-09-15-script01-holub.sql
 
 
 # Run each time after upgrading a system (NOTE: this is a temporary measure)

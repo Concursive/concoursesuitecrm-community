@@ -291,7 +291,7 @@
    String field = (String) f.next();
    Property mappedProperty = (Property) fieldMappings.get(field);
   %>
-  <script type="text/javascript">fields[fields.length] = '<%= field %>';</script>
+  <script type="text/javascript">fields[fields.length] = '<%= StringUtils.jsStringEscape(field) %>';</script>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
      <%= toString(field) %>
