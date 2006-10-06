@@ -72,9 +72,15 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
       UserBean thisUser = (UserBean) event.getValue();
       thisUser.setSessionId(event.getSession().getId());
       // Track website users
-      Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
-          "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
-      tracker.add(thisUser.getSessionId(), thisUser);
+      Hashtable systems = (Hashtable) context.getAttribute("SystemStatus");
+      if (systems != null) {
+        SystemStatus systemStatus = (SystemStatus) systems.get(thisUser.getConnectionElement().getUrl());
+        if (systemStatus != null) {      
+          Tracker tracker = ((SystemStatus) ((Hashtable) context.getAttribute(
+            "SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getTracker();
+          tracker.add(thisUser.getSessionId(), thisUser);
+        }
+      }
     }
   }
 
