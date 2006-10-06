@@ -93,8 +93,8 @@ public final class AccountContactsCalls extends CFSModule {
           context, pendingPagedListId, "c.alertdate", null);
       callListInfo.setLink(
           "AccountContactsCalls.do?command=View&contactId=" + contactId +
-          RequestUtils.addLinkParams(
-              context.getRequest(), "popup|popupType|actionId"));
+              RequestUtils.addLinkParams(
+                  context.getRequest(), "popup|popupType|actionId"));
       if (sectionId == null) {
         if (!callListInfo.getExpandedSelection()) {
           if (callListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -131,21 +131,23 @@ public final class AccountContactsCalls extends CFSModule {
             PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
         completedCallListInfo.setLink(
             "CalendarCalls.do?command=View&contactId=" + contactId +
-            RequestUtils.addLinkParams(
-                context.getRequest(), "popup|popupType|actionId|source"));
+                RequestUtils.addLinkParams(
+                    context.getRequest(), "popup|popupType|actionId|source"));
         completedCallListInfo.setExpandedSelection(true);
       } else {
         completedCallListInfo.setLink(
             "AccountContactsCalls.do?command=View&contactId=" + contactId +
-            RequestUtils.addLinkParams(
-                context.getRequest(), "popup|popupType|actionId"));
+                RequestUtils.addLinkParams(
+                    context.getRequest(), "popup|popupType|actionId"));
         if (sectionId == null) {
           if (!completedCallListInfo.getExpandedSelection()) {
-            if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+            if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE)
+            {
               completedCallListInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
             }
           } else {
-            if (completedCallListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+            if (completedCallListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE)
+            {
               completedCallListInfo.setItemsPerPage(
                   PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
             }
@@ -160,13 +162,12 @@ public final class AccountContactsCalls extends CFSModule {
     }
     try {
       db = this.getConnection(context);
-      if(contactId!=null && !"-1".equals(contactId)){
-      Contact tmpContact = new Contact(db, contactId);
-      context.getRequest().setAttribute("ContactDetails", tmpContact);
-      if (tmpContact.isTrashed()) {
-        callList.setIncludeOnlyTrashed(true);
-        completedCallList.setIncludeOnlyTrashed(true);
-      }
+      if (contactId != null && !"-1".equals(contactId)) {
+        Contact tmpContact = new Contact(db, contactId);
+        if (tmpContact.isTrashed()) {
+          callList.setIncludeOnlyTrashed(true);
+          completedCallList.setIncludeOnlyTrashed(true);
+        }
       }
       if (sectionId == null || pendingPagedListId.equals(sectionId)) {
         callList.buildList(db);
@@ -405,7 +406,8 @@ public final class AccountContactsCalls extends CFSModule {
       if (thisCall.getId() > 0) {
         previousCall = new Call(db, thisCall.getId());
         if (thisCall.getStatusId() == Call.COMPLETE) {
-          if (previousCall.getAlertDate() == null && thisCall.getAlertDate() != null) {
+          if (previousCall.getAlertDate() == null && thisCall.getAlertDate() != null)
+          {
             thisCall.setStatusId(Call.COMPLETE_FOLLOWUP_PENDING);
           }
         }
@@ -436,9 +438,10 @@ public final class AccountContactsCalls extends CFSModule {
           recordInserted = thisCall.insert(db, context);
         }
       }
-      if("schedule".equals(context.getRequest().getParameter("action")))
-      { context.getRequest().setAttribute("actionSource","accountItem");
-      context.getRequest().setAttribute("action","schedule");}
+      if ("schedule".equals(context.getRequest().getParameter("action"))) {
+        context.getRequest().setAttribute("actionSource", "accountItem");
+        context.getRequest().setAttribute("action", "schedule");
+      }
       //add account and contact to the request
       addFormElements(context, db);
 
@@ -457,7 +460,7 @@ public final class AccountContactsCalls extends CFSModule {
             SystemStatus systemStatus = this.getSystemStatus(context);
             errors.put(
                 "actionError", systemStatus.getLabel(
-                    "object.validation.recordUpdatedByAnotherUser"));
+                "object.validation.recordUpdatedByAnotherUser"));
             processErrors(context, errors);
             context.getRequest().setAttribute("CallDetails", tempCall);
           }
@@ -669,7 +672,7 @@ public final class AccountContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
-   return getReturn(context, "Log");
+    return getReturn(context, "Log");
   }
 
 
@@ -707,7 +710,7 @@ public final class AccountContactsCalls extends CFSModule {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
         htmlDialog.addButton(
             systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(
-                context.getRequest(), "popup|popupType|actionId") + "'");
+            context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
@@ -749,7 +752,7 @@ public final class AccountContactsCalls extends CFSModule {
       if (!recordDeleted) {
         thisCall.getErrors().put(
             "actionError", systemStatus.getLabel(
-                "obejct.validation.actionError.callDeletion"));
+            "obejct.validation.actionError.callDeletion"));
         processErrors(context, thisCall.getErrors());
       }
 
@@ -768,7 +771,7 @@ public final class AccountContactsCalls extends CFSModule {
       context.getRequest().setAttribute("contactId", contactId);
       context.getRequest().setAttribute(
           "refreshUrl", "AccountContactsCalls.do?command=View&contactId=" + contactId + RequestUtils.addLinkParams(
-              context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+          context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
       return getReturn(context, "Delete");
     } else {
       processErrors(context, thisCall.getErrors());
@@ -810,14 +813,14 @@ public final class AccountContactsCalls extends CFSModule {
       String modified = systemStatus.getLabel("mail.label.modified");
       newNote.setBody(
           contactName + StringUtils.toString(thisCall.getContactName()) + "\n" +
-          type + StringUtils.toString(thisCall.getCallType()) + "\n" +
-          length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-          subject + StringUtils.toString(thisCall.getSubject()) +
-                (((!StringUtils.toString(thisCall.getSubject()).equals(StringUtils.toString(thisCall.getAlertText()))) && (!"".equals(StringUtils.toString(thisCall.getAlertText()))))? "\\" + StringUtils.toString(thisCall.getAlertText()):"") + "\n" +
-          notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
-          entered + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(
+              type + StringUtils.toString(thisCall.getCallType()) + "\n" +
+              length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
+              subject + StringUtils.toString(thisCall.getSubject()) +
+              (((!StringUtils.toString(thisCall.getSubject()).equals(StringUtils.toString(thisCall.getAlertText()))) && (!"".equals(StringUtils.toString(thisCall.getAlertText())))) ? "\\" + StringUtils.toString(thisCall.getAlertText()) : "") + "\n" +
+              notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
+              entered + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(
               this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
-          modified + StringUtils.toString(thisCall.getModifiedName()) + " - " + DateUtils.getServerToUserDateTimeString(
+              modified + StringUtils.toString(thisCall.getModifiedName()) + " - " + DateUtils.getServerToUserDateTimeString(
               this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
       //load contact and account
       addFormElements(context, db);
@@ -880,18 +883,18 @@ public final class AccountContactsCalls extends CFSModule {
     Contact thisContact = (Contact) context.getRequest().getAttribute(
         "ContactDetails");
     Organization thisOrganization = null;
-    if (thisContact == null && contactId!=null && !"-1".equals(contactId)) {
+    if (thisContact == null && contactId != null && !"-1".equals(contactId)) {
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-    
-    if (thisContact.getOrgId() > -1) {
-      thisOrganization = new Organization(db, thisContact.getOrgId());
+
+      if (thisContact.getOrgId() > -1) {
+        thisOrganization = new Organization(db, thisContact.getOrgId());
+        context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      }
+    } else if (orgId != null && !"-1".equals(orgId)) {
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     }
-    }
-    else if(orgId!=null && !"-1".equals(orgId))
-    { thisOrganization = new Organization(db, Integer.parseInt(orgId));
-    context.getRequest().setAttribute("OrgDetails", thisOrganization);}
     return thisContact;
   }
 
@@ -928,9 +931,9 @@ public final class AccountContactsCalls extends CFSModule {
     if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute(
         "alertDateWarning") != null))) {
       //Result
-      if(thisCall.getResultId()!=-1){
-      CallResult thisResult = new CallResult(db, thisCall.getResultId());
-      context.getRequest().setAttribute("CallResult", thisResult);
+      if (thisCall.getResultId() != -1) {
+        CallResult thisResult = new CallResult(db, thisCall.getResultId());
+        context.getRequest().setAttribute("CallResult", thisResult);
       }
       //include the callResultList if it is a completed activity with no followup
       if (!"pending".equals(context.getRequest().getParameter("view"))) {
