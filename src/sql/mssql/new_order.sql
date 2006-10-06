@@ -236,8 +236,8 @@ CREATE TABLE customer_product (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  contact_id INTEGER,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  contact_id INTEGER
 );
 
 -- Some products get returned or are finished being used
@@ -252,8 +252,8 @@ CREATE TABLE customer_product_history (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  contact_id INTEGER,
-  order_item_id INTEGER NOT NULL REFERENCES order_product(item_id)
+  order_item_id INTEGER NOT NULL REFERENCES order_product(item_id),
+  contact_id INTEGER
 );
 
 -- Each order_payment has an associated status
@@ -298,64 +298,37 @@ CREATE TABLE order_payment_status (
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
--- Table CREDIT_CARD
-
-CREATE SEQUENCE creditcard_creditcard_id_seq;
-
-CREATE TABLE credit_card
-(
-  creditcard_id int NOT NULL DEFAULT nextval('creditcard_creditcard_id_seq'),
-  card_type int4,
+CREATE TABLE credit_card (
+  creditcard_id INT IDENTITY PRIMARY KEY,
+  card_type INT REFERENCES lookup_creditcard_types (code),
   card_number varchar(300),
   card_security_code varchar(300),
   expiration_month int,
   expiration_year int,
   name_on_card varchar(300),
   company_name_on_card varchar(300),
-  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby int NOT NULL,
-  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby int NOT NULL,
-  CONSTRAINT creditcard_pkey PRIMARY KEY (creditcard_id),
-  CONSTRAINT creditcard_card_type_fkey FOREIGN KEY (card_type)
-      REFERENCES lookup_creditcard_types (code) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT creditcard_enteredby_fkey FOREIGN KEY (enteredby)
-      REFERENCES "access" (user_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT creditcard_modifiedby_fkey FOREIGN KEY (modifiedby)
-      REFERENCES "access" (user_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
--- Table LOOKUP_PAYMENT_GATEWAY
-CREATE SEQUENCE lookup_payment_gateway_seq;
-
-CREATE TABLE lookup_payment_gateway
-(
-  code int NOT NULL DEFAULT nextval('lookup_payment_gateway_seq'),
+CREATE TABLE lookup_payment_gateway (
+  code INT IDENTITY PRIMARY KEY,
   description varchar(50) NOT NULL,
-  default_item bool DEFAULT false,
-  "level" int DEFAULT 0,
-  enabled bool DEFAULT true,
-  constant_id int,
-  CONSTRAINT lookup_payment_gateway_pkey PRIMARY KEY (code)
+  default_item BIT DEFAULT 0,
+  level int DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  constant_id int
 );
--- Table MERCHANT_PAYMENT_GATEWAY
-CREATE SEQUENCE merchant_payment_gateway_seq;
 
-CREATE TABLE merchant_payment_gateway
-(
-  merchant_payment_gateway_id int4 NOT NULL DEFAULT nextval('merchant_payment_gateway_seq'),
-  gateway_id int,
+CREATE TABLE merchant_payment_gateway (
+  merchant_payment_gateway_id INT IDENTITY PRIMARY KEY,
+  gateway_id int REFERENCES lookup_payment_gateway (code),
   merchant_id varchar(300),
   merchant_code varchar(1024),
-  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby int NOT NULL,
-  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby int NOT NULL,
-  CONSTRAINT merchant_payment_gateway_id_pkey PRIMARY KEY (merchant_payment_gateway_id),
-  CONSTRAINT merchant_payment_gateway_gateway_id_fkey FOREIGN KEY (gateway_id)
-      REFERENCES lookup_payment_gateway (code) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id)
 );
