@@ -2843,7 +2843,7 @@ public class Organization extends GenericBean {
       pst.setString(++i, this.getDunsType());
       pst.setString(++i, this.getDunsNumber());
       pst.setString(++i, this.getBusinessNameTwo());
-      pst.setInt(++i, this.getYearStarted());
+      DatabaseUtils.setInt(pst, ++i, this.getYearStarted());
       DatabaseUtils.setInt(pst, ++i, this.getSicCode());
       pst.setString(++i, this.getSicDescription());
       if (orgId > -1) {
@@ -3164,7 +3164,7 @@ public class Organization extends GenericBean {
     pst.setString(++i, this.getDunsType());
     pst.setString(++i, this.getDunsNumber());
     pst.setString(++i, this.getBusinessNameTwo());
-    pst.setInt(++i, this.getYearStarted());
+    DatabaseUtils.setInt(pst, ++i, this.getYearStarted());
     DatabaseUtils.setInt(pst, ++i, this.getSicCode());
     pst.setString(++i, this.getSicDescription());
     pst.setInt(++i, orgId);
@@ -3800,7 +3800,7 @@ public class Organization extends GenericBean {
     dunsNumber = rs.getString("duns_number");
     businessNameTwo = rs.getString("business_name_two");
     sicCode = DatabaseUtils.getInt(rs, "sic_code");
-    yearStarted = rs.getInt("year_started");
+    yearStarted = DatabaseUtils.getInt(rs, "year_started");
     sicDescription = rs.getString("sic_description");
 
     //contact table
