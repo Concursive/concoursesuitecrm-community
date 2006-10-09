@@ -14,24 +14,25 @@
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.reports.base;
-
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JasperReport;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actionplans.base.ActionPlan;
 import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.UserUtils;
 import org.aspcfs.utils.web.HtmlSelectProbabilityRange;
 import org.aspcfs.utils.web.PagedListInfo;
-
-import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  *  A collection of Parameter objects.
@@ -217,7 +218,7 @@ public class ParameterList extends ArrayList {
           }
           addParam(param.getName(), param.getValue());
         }
-	      //HtmlSelect date range. Proceed only if both start and end dates are null
+        //HtmlSelect date range. Proceed only if both start and end dates are null
         if (param.getName().equals("range_date")) {
           Parameter startParam = this.getParameter("date_start");
           Parameter endParam = this.getParameter("date_end");
@@ -421,7 +422,7 @@ public class ParameterList extends ArrayList {
     this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
     this.addParam("user_hierarchy", UserUtils.getUserIdRange(request));
     this.addParam("user_contact_name", UserUtils.getUserContactName(request));
-    
+
     //Determine the module and add the constants required
     PermissionCategory thisCategory = (PermissionCategory) request.getAttribute("category");
     if (thisCategory != null) {
@@ -436,9 +437,30 @@ public class ParameterList extends ArrayList {
           break;
       }
     }
-    
+
     //Add constants
     this.addParam("COMPLETE_FOLLOWUP_PENDING", String.valueOf(Call.COMPLETE_FOLLOWUP_PENDING));
+    
+    //User ID Ranges
+    try {
+      if (this.getParameter("user_id_ranges") != null) {
+        if (systemStatus != null) {
+          StringTokenizer st =
+              new StringTokenizer(UserUtils.getUserIdRange(request), ",");
+          while (st.hasMoreTokens()) {
+            String userId = st.nextToken().trim();
+            User userRecord = systemStatus.getUser(Integer.parseInt(userId));
+            if (userRecord != null) {
+              this.addParameter("user_id_range_" + userId, 
+                  userRecord.getIdRange(), Class.forName("java.lang.String"));
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+      
     if (hasErrors()) {
       return false;
     }
@@ -608,6 +630,24 @@ public class ParameterList extends ArrayList {
     pst.setInt(1, criteriaId);
     pst.execute();
     pst.close();
+  }
+
+
+  /**
+   *  Adds a feature to the Parameter attribute of the ParameterList object
+   *
+   * @param  param  The feature to be added to the Parameter attribute
+   * @param  value  The feature to be added to the Parameter attribute
+   */
+  private void addParameter(String param, String value, Class className) {
+    boolean added = addParam(param, value);
+    if (!added) {
+      Parameter parameter = new Parameter();
+      parameter.setName(param);
+      parameter.setValue(value);
+      parameter.setValueClass(className);
+      this.add(parameter);
+    }
   }
 
 

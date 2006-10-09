@@ -245,6 +245,8 @@ public class QueueCriteriaList extends ArrayList {
     //Get a list of the parameter definitions
     ParameterList params = new ParameterList();
     params.setParameters(jasperReport);
+    //Initialize the HashMap to store userId ranges
+    HashMap userIdRanges = new HashMap();
     //Add the parameters for jasper reports based on the definitions
     Map parameters = new HashMap();
     Iterator i = this.iterator();
@@ -252,7 +254,11 @@ public class QueueCriteriaList extends ArrayList {
       QueueCriteria thisCriteria = (QueueCriteria) i.next();
       //Add to map based on parameter type, converting from a string
       Class classValue = params.getValueClass(thisCriteria.getParameter());
-      if (classValue.getName().equals("java.sql.Timestamp") && thisCriteria.getParameter().startsWith(
+      if (thisCriteria.getParameter().startsWith("user_id_range_")) {
+        String param = thisCriteria.getParameter();
+        Integer userId = new Integer(param.substring(param.lastIndexOf("_") + 1));
+        userIdRanges.put(userId, thisCriteria.getValue());
+      } else if (classValue.getName().equals("java.sql.Timestamp") && thisCriteria.getParameter().startsWith(
           "date_")) {
         parameters.put(
             thisCriteria.getParameter(), DatabaseUtils.parseDateToTimestamp(
@@ -279,6 +285,9 @@ public class QueueCriteriaList extends ArrayList {
     }
     if (path != null) {
       parameters.put("path", path);
+    }
+    if (userIdRanges.size() > 0) {
+      parameters.put("user_id_ranges", userIdRanges);
     }
     return parameters;
   }

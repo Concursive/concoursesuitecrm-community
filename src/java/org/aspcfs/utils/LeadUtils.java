@@ -15,8 +15,10 @@
  */
 package org.aspcfs.utils;
 
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.modules.actionplans.base.ActionStep;
+
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import java.sql.*;
@@ -693,24 +695,33 @@ public class LeadUtils {
 
 
   /**
-   *  Gets the leadsAssigned attribute of the LeadUtils class
+   *  Determines the number of Account Action Plans that have been assigned to
+   *  users in a specific range and that have a contact assigned to a specific
+   *  step and the assignment was done in the date range specified.
    *
    * @param  db                Description of the Parameter
    * @param  startDate         Description of the Parameter
    * @param  endDate           Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
    * @return                   The leadsAssigned value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getLeadsAssigned(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+  public static int getLeadsAssigned(Connection db, String userIdRange, Timestamp startDate, Timestamp endDate) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
-        "FROM contact c " +
-        "WHERE c.lead = ? AND c.lead_status = ? " +
-        "AND c.assigned_date >= ? AND c.assigned_date <= ? ");
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+        "WHERE apw.plan_work_id > -1 " +
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND apw.assignedto IN (" + userIdRange + ") " +
+        "AND acs.action_id = ? " +
+        "AND aiw.end_date >= ? AND aiw.end_date <= ? ");
     int i = 0;
-    pst.setBoolean(++i, true);
-    pst.setInt(++i, Contact.LEAD_ASSIGNED);
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionStep.ATTACH_ACCOUNT_CONTACT);
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
@@ -725,22 +736,34 @@ public class LeadUtils {
 
 
   /**
-   *  Gets the leadsActive attribute of the LeadUtils class
+   *  Determines the number of Account Action Plans that have been assigned to
+   *  users in a specific range and have an opportunity assigned to the plan and
+   *  the opportunity has not been closed at the end of the counting window
+   *  period.
    *
    * @param  db                Description of the Parameter
-   * @param  startDate         Description of the Parameter
    * @param  endDate           Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
    * @return                   The leadsActive value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getLeadsActive(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+  public static int getLeadsActive(Connection db, String userIdRange, Timestamp endDate) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
-        "FROM contact c " +
-        "WHERE c.lead = ? AND c.lead_status = ? ");
-    pst.setBoolean(1, true);
-    pst.setInt(2, Contact.LEAD_ASSIGNED);
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "WHERE apw.plan_work_id > -1 " +
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND apw.assignedto IN (" + userIdRange + ") " +
+        "AND (oc.closed IS NULL OR oc.closed > ?) ");
+    int i = 0;
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       count = rs.getInt("resultcount");
@@ -753,68 +776,81 @@ public class LeadUtils {
 
 
   /**
-   *  Gets the leadsUnassigned attribute of the LeadUtils class
+   *  Determines the number of Account Action Plans that have been assigned to
+   *  users in a specific range and do not have a contact yet assigned for a
+   *  contact assignment step, at the end of the counting window period
+   *  regardless of the date assigned.
    *
    * @param  db                Description of the Parameter
-   * @param  startDate         Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
    * @param  endDate           Description of the Parameter
    * @return                   The leadsUnassigned value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getLeadsUnassigned(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+  public static int getLeadsUnassigned(Connection db, String userIdRange, Timestamp endDate) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
-        "FROM contact c " +
-        "WHERE c.lead = ? AND c.lead_status = ? ");
-    pst.setBoolean(1, true);
-    pst.setInt(2, Contact.LEAD_UNPROCESSED);
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+        "WHERE apw.plan_work_id > -1 " +
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND apw.assignedto IN (" + userIdRange + ") " +
+        "AND acs.action_id = ? " +
+        "AND (aiw.end_date IS NULL OR aiw.end_date > ?) ");
+    int i = 0;
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionStep.ATTACH_ACCOUNT_CONTACT);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       count = rs.getInt("resultcount");
     }
     rs.close();
     pst.close();
+
     return count;
   }
 
 
 
   /**
-   *  Gets the accountsWon attribute of the LeadUtils class
+   *  Determines the number of Account Action Plans that have been assigned to
+   *  users in a specific range and have a closed opportunity attached to a
+   *  specific step, set to "Closed Won". The Opportunity should have been
+   *  closed during the counting window period. <br/>
+   *  <br/>
    *
    * @param  db                Description of the Parameter
    * @param  startDate         Description of the Parameter
    * @param  endDate           Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
    * @return                   The accountsWon value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getAccountsWon(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+  public static int getAccountsWon(Connection db, String userIdRange, int stageWon,
+        Timestamp startDate, Timestamp endDate) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
-        "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
-        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
-        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
         "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
         "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
-        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
-        "WHERE c.lead = ? AND c.lead_status = ? " +
-        "AND c.conversion_date IS NOT NULL " + 
+        "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
-        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
-        "AND oc.stagedate >= ? " + 
-        "AND oc.stagedate <= ? " + 
-        "AND oc.stage = ? ");
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND apw.assignedto IN (" + userIdRange + ") " +
+        "AND oc.stage = ? " +
+        "AND oc.closed >= ? AND oc.closed <= ? ");
     int i = 0;
-    pst.setBoolean(++i, false);
-    pst.setInt(++i, Contact.LEAD_ASSIGNED);
     pst.setInt(++i, ActionPlan.ACCOUNTS);
     pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    pst.setInt(++i, stageWon);// opportunity component stage "Closed Won"
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
-    pst.setInt(++i, 8); // opportunity component stage "Closed Won"
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       count = rs.getInt("resultcount");
@@ -827,71 +863,38 @@ public class LeadUtils {
 
 
   /**
-   *  Gets the accountsLost attribute of the LeadUtils class
+   *  Determines the number of Account Action Plans that have been assigned to
+   *  users in a specific range and have a closed opportunity attached to a
+   *  specific step, set to "Closed Lost". The Opportunity should have been
+   *  closed during the counting window period. <br/>
+   *  <br/>
    *
    * @param  db                Description of the Parameter
    * @param  startDate         Description of the Parameter
    * @param  endDate           Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
    * @return                   The accountsLost value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getAccountsLost(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
+  public static int getAccountsLost(Connection db, String userIdRange, int stageLost,
+        Timestamp startDate, Timestamp endDate) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
-        "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
-        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
-        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
         "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
         "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
-        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
-        "WHERE c.lead = ? AND c.lead_status = ? " +
-        "AND c.conversion_date IS NOT NULL " + 
+        "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
-        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
-        "AND oc.stagedate >= ? " + 
-        "AND oc.stagedate <= ? " + 
-        "AND oc.stage = ? ");
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND apw.assignedto IN (" + userIdRange + ") " +
+        "AND oc.stage = ? " +
+        "AND oc.closed >= ? AND oc.closed <= ? ");
     int i = 0;
-    pst.setBoolean(++i, false);
-    pst.setInt(++i, Contact.LEAD_ASSIGNED);
     pst.setInt(++i, ActionPlan.ACCOUNTS);
     pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
-    DatabaseUtils.setTimestamp(pst, ++i, startDate);
-    DatabaseUtils.setTimestamp(pst, ++i, endDate);
-    pst.setInt(++i, 9); // opportunity component stage "Closed Lost"
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      count = rs.getInt("resultcount");
-    }
-    rs.close();
-    pst.close();
-    return count;
-  }
-
-
-
-  /**
-   *  Gets the leadsTrashed attribute of the LeadUtils class
-   *
-   * @param  db                Description of the Parameter
-   * @param  startDate         Description of the Parameter
-   * @param  endDate           Description of the Parameter
-   * @return                   The leadsTrashed value
-   * @exception  SQLException  Description of the Exception
-   */
-  public static int getLeadsTrashed(Connection db, Timestamp startDate, Timestamp endDate) throws SQLException {
-    int count = 0;
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT count(*) AS resultcount " +
-        "FROM contact c " +
-        "WHERE c.lead = ? AND c.lead_status = ? " +
-        "AND c.lead_trashed_date >= ? " +
-        "AND c.lead_trashed_date <= ? ");
-    int i = 0;
-    pst.setBoolean(++i, true);
-    pst.setInt(++i, Contact.LEAD_TRASHED);
+    pst.setInt(++i, stageLost);// opportunity component stage "Closed Lost"
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
@@ -906,113 +909,155 @@ public class LeadUtils {
 
 
   /**
-   *  Gets number of leads converted into accounts in the last so many days
+   *  Determines the number of Account Action Plans that have been assigned to
+   *  users in a specific range and have a closed opportunity attached to a
+   *  specific step, set to "Closed Won". Also the number of days taken to win
+   *  should be less than or equal to the days specified. The Opportunity should
+   *  have been closed during the counting window period. <br/>
+   *  <br/>
    *
    * @param  db                Description of the Parameter
    * @param  days              Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
    * @return                   The leadsUnassigned value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getAccountsWon(Connection db, int days) throws SQLException {
+  public static int getAccountsWon(Connection db, String userIdRange, int stageWon,
+      Timestamp startDate, Timestamp endDate, int days) throws SQLException {
+
     int count = 0;
-    Calendar cal = Calendar.getInstance();
-    Timestamp endDate = new Timestamp(cal.getTimeInMillis());
-
-    cal.add(cal.DATE, days);
-    Timestamp startDate = new Timestamp(cal.getTimeInMillis());
-
     PreparedStatement pst = db.prepareStatement(
-        "SELECT count(*) AS resultcount " +
-        "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
-        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
-        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
+        "SELECT apw.plan_work_id, oc.closed as date_won " +
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
         "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
         "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
-        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
-        "WHERE c.lead = ? AND c.lead_status = ? " +
-        "AND c.conversion_date IS NOT NULL " + 
+        "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
-        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
-        "AND oc.stagedate >= ? " + 
-        "AND oc.stagedate <= ? " + 
-        "AND oc.stage = ? ");
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND apw.assignedto IN (" + userIdRange + ") " +
+        "AND oc.stage = ? " +
+        "AND oc.closed >= ? AND oc.closed <= ? ");
     int i = 0;
-    pst.setBoolean(++i, false);
-    pst.setInt(++i, Contact.LEAD_ASSIGNED);
     pst.setInt(++i, ActionPlan.ACCOUNTS);
     pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    pst.setInt(++i, stageWon);// opportunity component stage "Closed Won"
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
-    pst.setInt(++i, 8); // opportunity component stage "Closed Won"
     ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      count = rs.getInt("resultcount");
-    }
-    rs.close();
-    pst.close();
-    return count;
-  }
+    while (rs.next()) {
+      int plan = rs.getInt("plan_work_id");
+      Timestamp dateWon = rs.getTimestamp("date_won");
+      Timestamp dateAssigned = getPlanAssignedDate(db, plan);
 
+      Calendar won = Calendar.getInstance();
+      Calendar assigned = Calendar.getInstance();
+      won.setTimeInMillis(dateWon.getTime());
+      assigned.setTimeInMillis(dateAssigned.getTime());
 
-  /**
-   *  Gets the averageDays attribute of the LeadUtils class
-   *
-   * @param  db                Description of the Parameter
-   * @param  startDate         Description of the Parameter
-   * @param  endDate           Description of the Parameter
-   * @param  result            Description of the Parameter
-   * @return                   The averageDays value
-   * @exception  SQLException  Description of the Exception
-   */
-  public static int getAverageDays(Connection db, Timestamp startDate, Timestamp endDate, String result) throws SQLException {
-    int count = 0;
-    int days = 0;
-    Calendar assigned = Calendar.getInstance();
-    Calendar conversion = Calendar.getInstance();
-
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT c.assigned_date, oc.stagedate as conversion_date " +
-        "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " + 
-        "LEFT JOIN action_plan_work apw ON (o.org_id = apw.link_item_id) " + 
-        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " + 
-        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
-        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
-        "LEFT JOIN lookup_stage ls ON (oc.stage = ls.code) " +
-        "WHERE c.lead = ? AND c.lead_status = ? " +
-        "AND c.conversion_date IS NOT NULL " + 
-        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
-        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " + 
-        "AND oc.stagedate >= ? " + 
-        "AND oc.stagedate <= ? " + 
-        "AND oc.stage = ? ");
-    int i = 0;
-    pst.setBoolean(++i, false);
-    pst.setInt(++i, Contact.LEAD_ASSIGNED);
-    pst.setInt(++i, ActionPlan.ACCOUNTS);
-    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
-    DatabaseUtils.setTimestamp(pst, ++i, startDate);
-    DatabaseUtils.setTimestamp(pst, ++i, endDate);
-    if ("WIN".equals(result.toUpperCase())) {
-      pst.setInt(++i, 8); // opportunity component stage "Closed Won"
-    } else {
-      pst.setInt(++i, 9); // opportunity component stage "Closed Lost"
-    }
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      Timestamp assignedDate = rs.getTimestamp("assigned_date");
-      Timestamp conversionDate = rs.getTimestamp("conversion_date");
-      if (assignedDate != null && conversionDate != null) {
-        assigned.setTimeInMillis(assignedDate.getTime());
-        conversion.setTimeInMillis(conversionDate.getTime());
-        days += DateUtils.getDaysBetween(
-            assigned, conversion);
+      if (DateUtils.getDaysBetween(won, assigned) <= days) {
         count++;
       }
     }
     rs.close();
     pst.close();
+    return count;
+  }
+
+
+  /**
+   *  Returns the date a plan was actually assigned. Assumes that the plan's
+   *  assigned date is the date the action step with a contact attachment was
+   *  completed
+   *
+   * @param  db                Description of the Parameter
+   * @param  planId            Description of the Parameter
+   * @return                   The planAssignedDate value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static Timestamp getPlanAssignedDate(Connection db, int planId) throws SQLException {
+    Timestamp dateAssigned = null;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT aiw.end_date " +
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+        "WHERE apw.plan_work_id > -1 " +
+        "AND acs.action_id = ? " +
+        "AND apw.plan_work_id = ? ");
+    int i = 0;
+    pst.setInt(++i, ActionStep.ATTACH_ACCOUNT_CONTACT);
+    pst.setInt(++i, planId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      dateAssigned = rs.getTimestamp("end_date");
+    }
+    rs.close();
+    pst.close();
+
+    return dateAssigned;
+  }
+
+
+  /**
+   *  Determines the average number of days taken to close Account Action Plans
+   *  that have been assigned to users in a specific range and have a closed
+   *  opportunity attached to a specific step, set to "Closed Won/Closed Lost".
+   *  The Opportunity should have been closed during the counting window period.
+   *  <br/>
+   *  <br/>
+   *
+   * @param  db                Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
+   * @param  status            Description of the Parameter
+   * @param  startDate         Description of the Parameter
+   * @param  endDate           Description of the Parameter
+   * @return                   The averageDays value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getAverageDays(Connection db, String userIdRange, int status,
+      Timestamp startDate, Timestamp endDate) throws SQLException {
+
+    int count = 0;
+    int days = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT apw.plan_work_id, oc.closed as date_closed " +
+        "FROM action_plan_work apw " +
+        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
+        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
+        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "WHERE apw.plan_work_id > -1 " +
+        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "AND apw.assignedto IN (" + userIdRange + ") " +
+        "AND oc.stage = ? " +
+        "AND oc.closed >= ? AND oc.closed <= ? ");
+    int i = 0;
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    pst.setInt(++i, status);// opportunity component stage "Closed Won/Lost"
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      int plan = rs.getInt("plan_work_id");
+      Timestamp dateClosed = rs.getTimestamp("date_closed");
+      Timestamp dateAssigned = getPlanAssignedDate(db, plan);
+
+      Calendar closed = Calendar.getInstance();
+      Calendar assigned = Calendar.getInstance();
+      closed.setTimeInMillis(dateClosed.getTime());
+      assigned.setTimeInMillis(dateAssigned.getTime());
+
+      days += DateUtils.getDaysBetween(assigned, closed);
+      count++;
+    }
+    rs.close();
+    pst.close();
+
     return (days > 0 ? days / count : 0);
   }
 

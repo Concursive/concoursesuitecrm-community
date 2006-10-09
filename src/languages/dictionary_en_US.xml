@@ -8376,6 +8376,45 @@ You do not have the permissions to perform this action.]]></value>
     <param name="reports.noReportsFound">
       <value><![CDATA[No reports found]]></value>
     </param>
+    <param name="reports.leads.assigned">
+      <value><![CDATA[Leads Assigned]]></value>
+    </param>
+    <param name="reports.leads.active">
+      <value><![CDATA[Leads Active]]></value>
+    </param>
+    <param name="reports.leads.unassigned">
+      <value><![CDATA[Leads Unassigned]]></value>
+    </param>
+    <param name="reports.leads.accountsWon">
+      <value><![CDATA[Accounts Won]]></value>
+    </param>
+    <param name="reports.leads.accountsLost">
+      <value><![CDATA[Accounts Lost]]></value>
+    </param>
+    <param name="reports.leads.accountsWonWeeks">
+      <value><![CDATA[Accounts Won in 13 Weeks]]></value>
+    </param>
+    <param name="reports.leads.avgdaystowin">
+      <value><![CDATA[Average Days to Win]]></value>
+    </param>
+    <param name="reports.leads.avgdaystolose">
+      <value><![CDATA[Average Days to Lose]]></value>
+    </param>
+    <param name="reports.leads.dateWon">
+      <value><![CDATA[Date Won]]></value>
+    </param>
+    <param name="reports.leads.dateAssigned">
+      <value><![CDATA[Date Assigned]]></value>
+    </param>
+    <param name="reports.leads.days">
+      <value><![CDATA[Days]]></value>
+    </param>
+    <param name="reports.leads.stageWon">
+      <value><![CDATA[Stage Won]]></value>
+    </param>
+    <param name="reports.leads.stageLost">
+      <value><![CDATA[Stage Lost]]></value>
+    </param>
     <param name="reports.parametersMustBeSpecified.text">
       <value><![CDATA[The following parameters must be specified for this report:]]></value>
     </param>
@@ -11330,6 +11369,12 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="reports.myhomepage.tasks.ownerName">
       <value><![CDATA[Owner Name]]></value>
+    </param>
+    <param name="reports.leads.closedWon">
+      <value><![CDATA[Lead Won Stage]]></value>
+    </param>
+    <param name="reports.leads.closedLost">
+      <value><![CDATA[Lead Lost Stage]]></value>
     </param>
     <!-- Pipeline Module -->
     <param name="reports.pipeline.stage">

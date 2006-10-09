@@ -464,6 +464,10 @@ public class Parameter
       LookupList select = roles.getLookupList();
       select.addItem(-1, "Any");
       request.setAttribute(name, select);
+    } else if (name.startsWith("lookup_stage") && !name.endsWith("_where")) {
+      LookupList select = new LookupList(db, "lookup_stage");
+      select.addItem(-1, "Any");
+      request.setAttribute(name, select);
     } else if (name.startsWith("lookup_") && !name.endsWith("_where")) {
       //Perform this one last, just in case other names start with lookup_
       LookupList select = new LookupList(db, name);
