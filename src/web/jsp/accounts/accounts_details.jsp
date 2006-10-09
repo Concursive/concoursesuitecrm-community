@@ -78,7 +78,12 @@
       <dhv:label name="organization.owner">Account Owner</dhv:label>
     </td>
     <td>
-      <dhv:username id="<%= OrgDetails.getOwner() %>" />
+      <dhv:permission name="contacts-internal_contacts-view" none="true">
+        <dhv:username id="<%= OrgDetails.getOwner() %>" />
+      </dhv:permission>
+      <dhv:permission name="contacts-internal_contacts-view">
+        <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= UserUtils.getUserContactId(request, OrgDetails.getOwner()) %>"><dhv:username id="<%= OrgDetails.getOwner() %>" /></a>
+      </dhv:permission>
       <dhv:evaluate if="<%= !(OrgDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
