@@ -99,7 +99,7 @@ public final class SpiritCruises extends CFSModule {
       String maresaLogin = "maresa_" + maresaSite;
 
       DriverManager.setLoginTimeout(1);
-      DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+      Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
       conn = DatabaseUtils.getConnection(s1, maresaLogin, maresaLogin);
 
       int maresaClient = getMaresaClient(conn);
