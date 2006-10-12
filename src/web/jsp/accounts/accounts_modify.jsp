@@ -620,7 +620,7 @@
         <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
       </td>
       <td>
-        <input type="text" size="10" name="yearStarted" value="<%= OrgDetails.getYearStarted() > -1 ? OrgDetails.getYearStarted() : "" %>">
+        <input type="text" size="10" name="yearStarted" value="<%= OrgDetails.getYearStarted() > -1 ? String.valueOf(OrgDetails.getYearStarted()) : "" %>">
         <%= showAttribute(request, "yearStartedWarning") %>
       </td>
     </tr>

@@ -297,7 +297,7 @@
         <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
       </td>
       <td>
-        <input type="text" size="10" name="yearStarted" value="<%= ContactDetails.getYearStarted() > -1 ? ContactDetails.getYearStarted() : "" %>">
+        <input type="text" size="10" name="yearStarted" value="<%= ContactDetails.getYearStarted() > -1 ? String.valueOf(ContactDetails.getYearStarted()) : "" %>">
         <%= showAttribute(request, "yearStartedWarning") %>
       </td>
     </tr>
