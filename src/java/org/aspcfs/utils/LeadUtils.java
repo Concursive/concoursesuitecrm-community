@@ -17,8 +17,8 @@ package org.aspcfs.utils;
 
 import org.aspcfs.modules.actionplans.base.ActionPlan;
 import org.aspcfs.modules.actionplans.base.ActionStep;
-
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.CustomField;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import java.sql.*;
@@ -696,8 +696,8 @@ public class LeadUtils {
 
   /**
    *  Determines the number of Account Action Plans that have been assigned to
-   *  users in a specific range and that have a contact assigned to a specific
-   *  step and the assignment was done in the date range specified.
+   *  users in a specific range and the assignment was done in the date range
+   *  specified.
    *
    * @param  db                Description of the Parameter
    * @param  startDate         Description of the Parameter
@@ -711,17 +711,12 @@ public class LeadUtils {
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
         "FROM action_plan_work apw " +
-        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
-        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
-        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
         "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND apw.assignedto IN (" + userIdRange + ") " +
-        "AND acs.action_id = ? " +
-        "AND aiw.end_date >= ? AND aiw.end_date <= ? ");
+        "AND apw.entered >= ? AND apw.entered <= ? ");
     int i = 0;
     pst.setInt(++i, ActionPlan.ACCOUNTS);
-    pst.setInt(++i, ActionStep.ATTACH_ACCOUNT_CONTACT);
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
@@ -738,7 +733,7 @@ public class LeadUtils {
   /**
    *  Determines the number of Account Action Plans that have been assigned to
    *  users in a specific range and have an opportunity assigned to the plan and
-   *  the opportunity has not been closed at the end of the counting window
+   *  the action plan has not been completed at the end of the counting window
    *  period.
    *
    * @param  db                Description of the Parameter
@@ -759,10 +754,17 @@ public class LeadUtils {
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND apw.assignedto IN (" + userIdRange + ") " +
-        "AND (oc.closed IS NULL OR oc.closed > ?) ");
+        "AND apw.plan_work_id IN (SELECT pw.plan_work_id " +
+        "                             FROM action_plan_work pw " +
+        "                             LEFT JOIN action_phase_work phw ON (pw.plan_work_id = phw.plan_work_id) " +
+        "                             LEFT JOIN action_item_work iw ON (phw.phase_work_id = iw.phase_work_id) " +
+        "                             WHERE pw.plan_work_id > -1 " +
+        "                             AND pw.entered < ? " +
+        "                             AND iw.end_date IS NULL OR iw.end_date > ? ) ");
     int i = 0;
     pst.setInt(++i, ActionPlan.ACCOUNTS);
     pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
+    DatabaseUtils.setTimestamp(pst, ++i, endDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -776,12 +778,12 @@ public class LeadUtils {
 
 
   /**
-   *  Determines the number of Account Action Plans that have been assigned to
-   *  users in a specific range and do not have a contact yet assigned for a
-   *  contact assignment step, at the end of the counting window period
+   *  Determines the number of Account Action Plans that do not have a
+   *  corresponding action plan at the end of the counting window period
    *  regardless of the date assigned.
    *
    * @param  db                Description of the Parameter
+   * @param  endDate           Description of the Parameter
    * @param  userIdRange       Description of the Parameter
    * @param  endDate           Description of the Parameter
    * @return                   The leadsUnassigned value
@@ -789,28 +791,46 @@ public class LeadUtils {
    */
   public static int getLeadsUnassigned(Connection db, String userIdRange, Timestamp endDate) throws SQLException {
     int count = 0;
-    PreparedStatement pst = db.prepareStatement(
+    //Determine a count of accounts created before the end date and without action plans
+    PreparedStatement pst1 = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
-        "FROM action_plan_work apw " +
-        "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
-        "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
-        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
-        "WHERE apw.plan_work_id > -1 " +
-        "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
-        "AND apw.assignedto IN (" + userIdRange + ") " +
-        "AND acs.action_id = ? " +
-        "AND (aiw.end_date IS NULL OR aiw.end_date > ?) ");
+        "FROM organization o " +
+        "WHERE o.owner IN (" + userIdRange + ") " +
+        "AND o.entered < ? " +
+        "AND o.org_id NOT IN (" +
+        "  SELECT pw.link_item_id " +
+        "  FROM action_plan_work pw " +
+        "  WHERE pw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?)) ");
     int i = 0;
-    pst.setInt(++i, ActionPlan.ACCOUNTS);
-    pst.setInt(++i, ActionStep.ATTACH_ACCOUNT_CONTACT);
-    DatabaseUtils.setTimestamp(pst, ++i, endDate);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      count = rs.getInt("resultcount");
+    DatabaseUtils.setTimestamp(pst1, ++i, endDate);
+    pst1.setInt(++i, ActionPlan.ACCOUNTS);
+    ResultSet rs1 = pst1.executeQuery();
+    if (rs1.next()) {
+      count = rs1.getInt("resultcount");
     }
-    rs.close();
-    pst.close();
 
+    //Determine a count of accounts created before the end date and with action plans that
+    //were created after the end date
+    PreparedStatement pst2 = db.prepareStatement(
+        "SELECT count(*) AS resultcount " +
+        "FROM organization o " +
+        "WHERE o.owner IN (" + userIdRange + ") " +
+        "AND o.entered < ? " +
+        "AND o.org_id IN (" +
+        "  SELECT pw.link_item_id " +
+        "  FROM action_plan_work pw " +
+        "  WHERE pw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+        "  AND pw.entered > ?) ");
+    i = 0;
+    DatabaseUtils.setTimestamp(pst2, ++i, endDate);
+    pst2.setInt(++i, ActionPlan.ACCOUNTS);
+    DatabaseUtils.setTimestamp(pst2, ++i, endDate);
+    ResultSet rs2 = pst2.executeQuery();
+    if (rs2.next()) {
+      count += rs2.getInt("resultcount");
+    }
+    pst1.close();
+    pst2.close();
     return count;
   }
 
@@ -818,10 +838,9 @@ public class LeadUtils {
 
   /**
    *  Determines the number of Account Action Plans that have been assigned to
-   *  users in a specific range and have a closed opportunity attached to a
-   *  specific step, set to "Closed Won". The Opportunity should have been
-   *  closed during the counting window period. <br/>
-   *  <br/>
+   *  users in a specific range and have a custom field (drop-down with won/lost
+   *  info) to be set to "Won". The record should have been updated in during
+   *  the counting window period.
    *
    * @param  db                Description of the Parameter
    * @param  startDate         Description of the Parameter
@@ -830,25 +849,34 @@ public class LeadUtils {
    * @return                   The accountsWon value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getAccountsWon(Connection db, String userIdRange, int stageWon,
-        Timestamp startDate, Timestamp endDate) throws SQLException {
+  public static int getAccountsWon(Connection db, String userIdRange,
+      Timestamp startDate, Timestamp endDate) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
         "FROM action_plan_work apw " +
         "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
         "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
-        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+        "LEFT JOIN custom_field_record cfr ON (aiw.link_item_id = cfr.record_id) " +
+        "LEFT JOIN custom_field_data cfd ON (cfr.record_id = cfd.record_id) " +
+        "LEFT JOIN custom_field_info cfi ON (cfd.field_id = cfi.field_id) " +
+        "LEFT JOIN custom_field_lookup cfl ON (cfd.selected_item_id = cfl.code) " +
         "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND apw.assignedto IN (" + userIdRange + ") " +
-        "AND oc.stage = ? " +
-        "AND oc.closed >= ? AND oc.closed <= ? ");
+        "AND acs.action_id = ? " +
+        "AND cfi.field_type = ? " +
+        "AND cfl.code = ? " +
+        "AND cfr.modified >= ? AND cfr.modified <= ? "
+        );
     int i = 0;
     pst.setInt(++i, ActionPlan.ACCOUNTS);
-    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
-    pst.setInt(++i, stageWon);// opportunity component stage "Closed Won"
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionStep.ATTACH_FOLDER);
+    pst.setInt(++i, CustomField.SELECT);
+    pst.setInt(++i, 20);//corresponds to "Win" in custom drop-down field
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
@@ -864,10 +892,9 @@ public class LeadUtils {
 
   /**
    *  Determines the number of Account Action Plans that have been assigned to
-   *  users in a specific range and have a closed opportunity attached to a
-   *  specific step, set to "Closed Lost". The Opportunity should have been
-   *  closed during the counting window period. <br/>
-   *  <br/>
+   *  users in a specific range and have a custom field (drop-down with won/lost
+   *  info) to be set to "Lost". The record should have been updated in during
+   *  the counting window period.
    *
    * @param  db                Description of the Parameter
    * @param  startDate         Description of the Parameter
@@ -876,25 +903,34 @@ public class LeadUtils {
    * @return                   The accountsLost value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getAccountsLost(Connection db, String userIdRange, int stageLost,
-        Timestamp startDate, Timestamp endDate) throws SQLException {
+  public static int getAccountsLost(Connection db, String userIdRange,
+      Timestamp startDate, Timestamp endDate) throws SQLException {
     int count = 0;
+    String lostIdRange = "23,24,25,26,27";//correspond to "Lost" in the custom drop-down field
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS resultcount " +
         "FROM action_plan_work apw " +
         "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
         "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
-        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+        "LEFT JOIN custom_field_record cfr ON (aiw.link_item_id = cfr.record_id) " +
+        "LEFT JOIN custom_field_data cfd ON (cfr.record_id = cfd.record_id) " +
+        "LEFT JOIN custom_field_info cfi ON (cfd.field_id = cfi.field_id) " +
+        "LEFT JOIN custom_field_lookup cfl ON (cfd.selected_item_id = cfl.code) " +
         "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND apw.assignedto IN (" + userIdRange + ") " +
-        "AND oc.stage = ? " +
-        "AND oc.closed >= ? AND oc.closed <= ? ");
+        "AND acs.action_id = ? " +
+        "AND cfi.field_type = ? " +
+        "AND cfl.code IN (" + lostIdRange + ") " +
+        "AND cfr.modified >= ? AND cfr.modified <= ? "
+        );
     int i = 0;
     pst.setInt(++i, ActionPlan.ACCOUNTS);
-    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
-    pst.setInt(++i, stageLost);// opportunity component stage "Closed Lost"
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionStep.ATTACH_FOLDER);
+    pst.setInt(++i, CustomField.SELECT);
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
@@ -910,47 +946,55 @@ public class LeadUtils {
 
   /**
    *  Determines the number of Account Action Plans that have been assigned to
-   *  users in a specific range and have a closed opportunity attached to a
-   *  specific step, set to "Closed Won". Also the number of days taken to win
-   *  should be less than or equal to the days specified. The Opportunity should
-   *  have been closed during the counting window period. <br/>
+   *  users in a specific range and have a custom field (drop-down with won/lost
+   *  info) to be set to "Won". Also the number of days taken to win should be
+   *  less than or equal to the days specified. The drop-down should have been
+   *  set during the counting window period. <br/>
    *  <br/>
    *
+   *
    * @param  db                Description of the Parameter
-   * @param  days              Description of the Parameter
    * @param  userIdRange       Description of the Parameter
    * @param  startDate         Description of the Parameter
    * @param  endDate           Description of the Parameter
    * @return                   The leadsUnassigned value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getAccountsWon(Connection db, String userIdRange, int stageWon,
+  public static int getAccountsWon(Connection db, String userIdRange,
       Timestamp startDate, Timestamp endDate, int days) throws SQLException {
 
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT apw.plan_work_id, oc.closed as date_won " +
+        "SELECT apw.entered as date_assigned, cfr.modified as date_won " +
         "FROM action_plan_work apw " +
         "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
         "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
-        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+        "LEFT JOIN custom_field_record cfr ON (aiw.link_item_id = cfr.record_id) " +
+        "LEFT JOIN custom_field_data cfd ON (cfr.record_id = cfd.record_id) " +
+        "LEFT JOIN custom_field_info cfi ON (cfd.field_id = cfi.field_id) " +
+        "LEFT JOIN custom_field_lookup cfl ON (cfd.selected_item_id = cfl.code) " +
         "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND apw.assignedto IN (" + userIdRange + ") " +
-        "AND oc.stage = ? " +
-        "AND oc.closed >= ? AND oc.closed <= ? ");
+        "AND acs.action_id = ? " +
+        "AND cfi.field_type = ? " +
+        "AND cfl.code = ? " +
+        "AND cfr.modified >= ? AND cfr.modified <= ? "
+        );
     int i = 0;
     pst.setInt(++i, ActionPlan.ACCOUNTS);
-    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
-    pst.setInt(++i, stageWon);// opportunity component stage "Closed Won"
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionStep.ATTACH_FOLDER);
+    pst.setInt(++i, CustomField.SELECT);
+    pst.setInt(++i, 20);//corresponds to "Win" in custom drop-down field
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
-      int plan = rs.getInt("plan_work_id");
       Timestamp dateWon = rs.getTimestamp("date_won");
-      Timestamp dateAssigned = getPlanAssignedDate(db, plan);
+      Timestamp dateAssigned = rs.getTimestamp("date_assigned");
 
       Calendar won = Calendar.getInstance();
       Calendar assigned = Calendar.getInstance();
@@ -989,7 +1033,7 @@ public class LeadUtils {
         "AND acs.action_id = ? " +
         "AND apw.plan_work_id = ? ");
     int i = 0;
-    pst.setInt(++i, ActionStep.ATTACH_ACCOUNT_CONTACT);
+    pst.setInt(++i, ActionStep.ATTACH_FOLDER);
     pst.setInt(++i, planId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1004,48 +1048,57 @@ public class LeadUtils {
 
   /**
    *  Determines the average number of days taken to close Account Action Plans
-   *  that have been assigned to users in a specific range and have a closed
-   *  opportunity attached to a specific step, set to "Closed Won/Closed Lost".
-   *  The Opportunity should have been closed during the counting window period.
-   *  <br/>
-   *  <br/>
+   *  that have been assigned to users in a specific range and have a drop-down
+   *  set to "Won/Lost". The drop-down status should have been set
+   *  during the counting window period.
    *
    * @param  db                Description of the Parameter
    * @param  userIdRange       Description of the Parameter
    * @param  status            Description of the Parameter
    * @param  startDate         Description of the Parameter
    * @param  endDate           Description of the Parameter
+   * @param  userIdRange       Description of the Parameter
+   * @param  status            Description of the Parameter
    * @return                   The averageDays value
    * @exception  SQLException  Description of the Exception
    */
-  public static int getAverageDays(Connection db, String userIdRange, int status,
+  public static int getAverageDays(Connection db, String userIdRange, String status,
       Timestamp startDate, Timestamp endDate) throws SQLException {
 
     int count = 0;
     int days = 0;
+    String lookupIds = ("WIN".equals(status) ? "20" : "23,24,25,26,27");
+
     PreparedStatement pst = db.prepareStatement(
-        "SELECT apw.plan_work_id, oc.closed as date_closed " +
+        "SELECT apw.entered as date_assigned, cfr.modified as date_closed " +
         "FROM action_plan_work apw " +
         "LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id) " +
         "LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id) " +
-        "LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id) " +
+        "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+        "LEFT JOIN custom_field_record cfr ON (aiw.link_item_id = cfr.record_id) " +
+        "LEFT JOIN custom_field_data cfd ON (cfr.record_id = cfd.record_id) " +
+        "LEFT JOIN custom_field_info cfi ON (cfd.field_id = cfi.field_id) " +
+        "LEFT JOIN custom_field_lookup cfl ON (cfd.selected_item_id = cfl.code) " +
         "WHERE apw.plan_work_id > -1 " +
         "AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
         "AND apw.assignedto IN (" + userIdRange + ") " +
-        "AND oc.stage = ? " +
-        "AND oc.closed >= ? AND oc.closed <= ? ");
+        "AND acs.action_id = ? " +
+        "AND cfi.field_type = ? " +
+        "AND cfl.code IN (" + lookupIds + ") " +
+        "AND cfr.modified >= ? AND cfr.modified <= ? "
+        );
     int i = 0;
     pst.setInt(++i, ActionPlan.ACCOUNTS);
-    pst.setInt(++i, ActionPlan.PIPELINE_COMPONENT);
-    pst.setInt(++i, status);// opportunity component stage "Closed Won/Lost"
+    pst.setInt(++i, ActionPlan.ACCOUNTS);
+    pst.setInt(++i, ActionStep.ATTACH_FOLDER);
+    pst.setInt(++i, CustomField.SELECT);
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
-      int plan = rs.getInt("plan_work_id");
       Timestamp dateClosed = rs.getTimestamp("date_closed");
-      Timestamp dateAssigned = getPlanAssignedDate(db, plan);
+      Timestamp dateAssigned = rs.getTimestamp("date_assigned");
 
       Calendar closed = Calendar.getInstance();
       Calendar assigned = Calendar.getInstance();

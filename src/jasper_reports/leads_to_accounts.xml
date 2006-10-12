@@ -30,13 +30,8 @@
 		<parameterDescription><![CDATA[reports.parameter.endDate]]></parameterDescription>
 		<defaultValueExpression ><![CDATA[java.sql.Timestamp.valueOf("2007-12-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="lookup_stage_won" isForPrompting="true" class="java.lang.Integer">
-		<parameterDescription><![CDATA[reports.leads.stageWon]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
-	</parameter>
-	<parameter name="lookup_stage_lost" isForPrompting="true" class="java.lang.Integer">
-		<parameterDescription><![CDATA[reports.leads.stageLost]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
+	<parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["/Users/Ananth/source/branch-41/src/jasper_reports/"]]></defaultValueExpression>
@@ -50,6 +45,9 @@
 	<parameter name="country" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="configure_hierarchy_list" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["true"]]></defaultValueExpression>
+	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
 	<parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
 	<parameter name="userid_range_source" isForPrompting="true" class="java.lang.String">
@@ -62,22 +60,26 @@
 	<parameter name="actionplan_module_constant" isForPrompting="false" class="java.lang.Integer">
 		<defaultValueExpression ><![CDATA[new Integer(42420034)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="actionplan_module_opp_constant" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression ><![CDATA[new Integer(1011200517)]]></defaultValueExpression>
+  <parameter name="temp_table_name" isForPrompting="false" class="java.lang.String">
+    <parameterDescription><![CDATA[search_order]]></parameterDescription>
+		<defaultValueExpression ><![CDATA["search_order"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="user_contact_name" isForPrompting="false" class="java.lang.String"/>
+  <parameter name="user_contact_name" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="user_id_ranges" isForPrompting="false" class="java.util.Map"/>
-	<queryString><![CDATA[SELECT u.user_id,
-c.namefirst, c.namelast
+	<queryString><![CDATA[SELECT u.user_id as userid,
+c.namefirst, c.namelast, so.user_id
 FROM access u
-LEFT JOIN contact c ON (u.user_id = c.user_id)
+LEFT JOIN contact c ON (u.user_id = c.user_id),
+$P!{temp_table_name} so
 WHERE u.user_id IN ($P!{userid_range})
-ORDER BY user_id]]></queryString>
-	<field name="user_id" class="java.lang.Integer"/>
+AND u.user_id = so.user_id
+AND u.enabled = $P{TRUE}
+ORDER BY so.id]]></queryString>
+	<field name="userid" class="java.lang.Integer"/>
 	<field name="namefirst" class="java.lang.String"/>
 	<field name="namelast" class="java.lang.String"/>
 		<group  name="users" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
-			<groupExpression><![CDATA[$F{user_id}]]></groupExpression>
+			<groupExpression><![CDATA[$F{userid}]]></groupExpression>
 			<groupHeader>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -187,23 +189,14 @@ ORDER BY user_id]]></queryString>
 					<subreportParameter  name="actionplan_module_constant">
 						<subreportParameterExpression><![CDATA[$P{actionplan_module_constant}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter  name="actionplan_module_opp_constant">
-						<subreportParameterExpression><![CDATA[$P{actionplan_module_opp_constant}]]></subreportParameterExpression>
-					</subreportParameter>
 					<subreportParameter  name="user_id">
-						<subreportParameterExpression><![CDATA[$F{user_id}]]></subreportParameterExpression>
+						<subreportParameterExpression><![CDATA[$F{userid}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter  name="user_id_range">
-						<subreportParameterExpression><![CDATA[(java.lang.String) $P{user_id_ranges}.get($F{user_id})]]></subreportParameterExpression>
+						<subreportParameterExpression><![CDATA[(java.lang.String) $P{user_id_ranges}.get($F{userid})]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter  name="level">
 						<subreportParameterExpression><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{namelast},$F{namefirst})]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter  name="stage_won">
-						<subreportParameterExpression><![CDATA[$P{lookup_stage_won}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter  name="stage_lost">
-						<subreportParameterExpression><![CDATA[$P{lookup_stage_lost}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "leads_to_accounts_subreport.jasper"]]></subreportExpression>

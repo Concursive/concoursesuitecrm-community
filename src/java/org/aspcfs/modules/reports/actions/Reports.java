@@ -391,6 +391,12 @@ public final class Reports extends CFSModule {
               "min_part", DatabaseUtils.getMinutePart(
                   db, thisParam.getDescription()));
         }
+        if (params.getParameter("temp_table_name") != null) {
+          Parameter thisParam = params.getParameter("temp_table_name");
+          params.addParam(
+              "temp_table_name", DatabaseUtils.getTempTableName(
+                  db, thisParam.getDescription()));
+        }
         //Populate a criteria record which will be used in the report
         thisCriteria = new Criteria();
         thisCriteria.setReportId(report.getId());

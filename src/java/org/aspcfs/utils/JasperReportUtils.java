@@ -155,9 +155,9 @@ public class JasperReportUtils {
           fontFile = StringUtils.replace(pdfFont, "$", "");
         } else {
           //Check to see if the external font file exists
-          System.out.println("Font file: " + fontFile);
           File file = new File(fontFile);
           if (!file.exists()) {
+            System.out.println("Missing Font file: " + fontFile);
             proceed = false;
           }
         }

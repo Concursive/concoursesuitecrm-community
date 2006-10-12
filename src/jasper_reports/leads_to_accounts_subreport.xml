@@ -41,8 +41,14 @@
 	<parameter name="actionplan_module_constant" isForPrompting="false" class="java.lang.Integer">
 		<defaultValueExpression ><![CDATA[new Integer(42420034)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="actionplan_module_opp_constant" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression ><![CDATA[new Integer(1011200517)]]></defaultValueExpression>
+	<parameter name="action_id" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(org.aspcfs.modules.actionplans.base.ActionStep.ATTACH_FOLDER)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="custom_field_type" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(org.aspcfs.modules.base.CustomField.SELECT)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="won" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(20)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="user_id" isForPrompting="false" class="java.lang.Integer">
 		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
@@ -50,31 +56,30 @@
 	<parameter name="user_id_range" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["1, 2, 3"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="stage_won" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
-	</parameter>
-	<parameter name="stage_lost" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
-	</parameter>
 	<parameter name="level" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT apw.entered as date_assigned, 
   o.name, 
   own.namefirst as owner_namefirst,
   own.namelast as owner_namelast,
-  oc.closed as conversion_date
+  cfr.modified as conversion_date
 FROM action_plan_work apw
 LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id)
 LEFT JOIN action_item_work aiw ON (aphw.phase_work_id = aiw.phase_work_id)
 LEFT JOIN organization o ON (apw.link_item_id = o.org_id)
 LEFT JOIN contact own ON (apw.assignedto = own.user_id)
-LEFT JOIN opportunity_component oc ON (aiw.link_item_id = oc.id)
+LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id)
+LEFT JOIN custom_field_record cfr ON (aiw.link_item_id = cfr.record_id)
+LEFT JOIN custom_field_data cfd ON (cfr.record_id = cfd.record_id)
+LEFT JOIN custom_field_info cfi ON (cfd.field_id = cfi.field_id)
+LEFT JOIN custom_field_lookup cfl ON (cfd.selected_item_id = cfl.code)
 WHERE apw.plan_work_id > -1
 AND apw.assignedto IN ($P!{user_id_range})
 AND apw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = $P{actionplan_module_constant})
-AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = $P{actionplan_module_opp_constant})
-AND oc.closed >= $P{date_start}
-AND oc.closed <= $P{date_end}
-AND oc.stage = $P{stage_won}
+AND aiw.link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = $P{actionplan_module_constant})
+AND acs.action_id = $P{action_id}
+AND cfi.field_type = $P{custom_field_type}
+AND cfl.code = $P{won}
+AND cfr.modified >= $P{date_start} AND cfr.modified <= $P{date_end}
 ORDER BY name]]></queryString>
 	<field name="date_assigned" class="java.sql.Timestamp"/>
 	<field name="conversion_date" class="java.sql.Timestamp"/>
@@ -171,7 +176,7 @@ ORDER BY name]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.leads.accountsWon", "Accounts Won") + ":"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.leads.accountswon", "Accounts Won") + ":"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -193,7 +198,7 @@ ORDER BY name]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.leads.accountsLost", "Accounts Lost") + ":"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.leads.accountslost", "Accounts Lost") + ":"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -215,7 +220,7 @@ ORDER BY name]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.leads.accountsWonWeeks", "Accounts Won in 13 Weeks") + ":"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.leads.accountswonin13weeks", "Accounts Won in 13 Weeks") + ":"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -259,7 +264,7 @@ ORDER BY name]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.leads.avgdaystolose", "Average Days to Lose") + ":"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "report.leads.avgdaystolose", "Average Days to Lose") + ":"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -355,7 +360,7 @@ ORDER BY name]]></queryString>
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[new Integer(org.aspcfs.utils.LeadUtils.getAccountsWon(
-  $P{REPORT_CONNECTION}, $P{user_id_range}, $P{stage_won},
+  $P{REPORT_CONNECTION}, $P{user_id_range}, 
   $P{date_start}, 
   $P{date_end}))]]></textFieldExpression>
 				</textField>
@@ -380,7 +385,7 @@ ORDER BY name]]></queryString>
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[new Integer(org.aspcfs.utils.LeadUtils.getAccountsLost(
-  $P{REPORT_CONNECTION}, $P{user_id_range}, $P{stage_lost},
+  $P{REPORT_CONNECTION}, $P{user_id_range}, 
   $P{date_start}, 
   $P{date_end}))]]></textFieldExpression>
 				</textField>
@@ -405,7 +410,7 @@ ORDER BY name]]></queryString>
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[new Integer(org.aspcfs.utils.LeadUtils.getAccountsWon(
-  $P{REPORT_CONNECTION}, $P{user_id_range}, $P{stage_won}, $P{date_start}, $P{date_end}, 
+  $P{REPORT_CONNECTION}, $P{user_id_range}, $P{date_start}, $P{date_end}, 
   91))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
@@ -430,7 +435,7 @@ ORDER BY name]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[new Integer(org.aspcfs.utils.LeadUtils.getAverageDays(
   $P{REPORT_CONNECTION},
-  $P{user_id_range}, $P{stage_won},
+  $P{user_id_range}, "WIN",
   $P{date_start}, 
   $P{date_end}))]]></textFieldExpression>
 				</textField>
@@ -455,7 +460,7 @@ ORDER BY name]]></queryString>
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[new Integer(org.aspcfs.utils.LeadUtils.getAverageDays(
-  $P{REPORT_CONNECTION}, $P{user_id_range}, $P{stage_lost},
+  $P{REPORT_CONNECTION}, $P{user_id_range}, "LOST",
   $P{date_start}, 
   $P{date_end}))]]></textFieldExpression>
 				</textField>

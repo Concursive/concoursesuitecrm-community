@@ -17,30 +17,30 @@ package org.aspcfs.utils;
 
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
-
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
+
 /**
- * Useful methods for working with multiple databases and database fields
+ *  Useful methods for working with multiple databases and database fields
  *
- * @author matt rajkowski
- * @version $Id: DatabaseUtils.java,v 1.13 2002/11/04 13:21:16 mrajkowski Exp
- *          $
- * @created March 18, 2002
+ * @author     matt rajkowski
+ * @version    $Id: DatabaseUtils.java,v 1.13 2002/11/04 13:21:16 mrajkowski Exp
+ *      $
+ * @created    March 18, 2002
  */
 public class DatabaseUtils {
 
   public final static String CRLF = System.getProperty("line.separator");
-  
+
   // Quote symbols
   public final static String qsDefault = "\"";
   public final static String qsMySQL = "`";
-  
+
   // Database types
   public final static int POSTGRESQL = 1;
   public final static int MSSQL = 2;
@@ -62,10 +62,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the true attribute of the DatabaseUtils class
+   *  Gets the true attribute of the DatabaseUtils class
    *
-   * @param db Description of Parameter
-   * @return The true value
+   * @param  db  Description of Parameter
+   * @return     The true value
    */
   public static String getTrue(Connection db) {
     switch (DatabaseUtils.getType(db)) {
@@ -92,10 +92,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the false attribute of the DatabaseUtils class
+   *  Gets the false attribute of the DatabaseUtils class
    *
-   * @param db Description of Parameter
-   * @return The false value
+   * @param  db  Description of Parameter
+   * @return     The false value
    */
   public static String getFalse(Connection db) {
     switch (DatabaseUtils.getType(db)) {
@@ -122,10 +122,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the currentTimestamp attribute of the DatabaseUtils class
+   *  Gets the currentTimestamp attribute of the DatabaseUtils class
    *
-   * @param db Description of Parameter
-   * @return The currentTimestamp value
+   * @param  db  Description of Parameter
+   * @return     The currentTimestamp value
    */
   public static String getCurrentTimestamp(Connection db) {
     switch (DatabaseUtils.getType(db)) {
@@ -152,10 +152,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the type attribute of the DatabaseUtils class
+   *  Gets the type attribute of the DatabaseUtils class
    *
-   * @param db Description of Parameter
-   * @return The type value
+   * @param  db  Description of Parameter
+   * @return     The type value
    */
   public static int getType(Connection db) {
     String databaseName = db.getClass().getName();
@@ -196,10 +196,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the typeName attribute of the DatabaseUtils class
+   *  Gets the typeName attribute of the DatabaseUtils class
    *
-   * @param db Description of the Parameter
-   * @return The typeName value
+   * @param  db  Description of the Parameter
+   * @return     The typeName value
    */
   public static String getTypeName(Connection db) {
     switch (getType(db)) {
@@ -226,11 +226,11 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db   Description of the Parameter
-   * @param date Description of the Parameter
-   * @return Description of the Return Value
+   * @param  db    Description of the Parameter
+   * @param  date  Description of the Parameter
+   * @return       Description of the Return Value
    */
   public static String castDateTimeToDate(Connection db, String date) {
     switch (DatabaseUtils.getType(db)) {
@@ -244,12 +244,12 @@ public class DatabaseUtils {
         return ("DATE(" + date + ")");
       case DatabaseUtils.ORACLE:
         return ("TO_DATE(" + date + ",'dd/mm/yyyy')");
-        //case DatabaseUtils.ORACLE:
-        //  return ("CAST(" + date + " AS DATE)");
+      //case DatabaseUtils.ORACLE:
+      //  return ("CAST(" + date + " AS DATE)");
       case DatabaseUtils.DB2:
         return ("CAST(" + date + " AS DATE)");
-        //case DatabaseUtils.ORACLE:
-        //  return ("CAST(" + date + " AS DATE)");
+      //case DatabaseUtils.ORACLE:
+      //  return ("CAST(" + date + " AS DATE)");
       case DatabaseUtils.MYSQL:
         return ("DATE(" + date + ")");
       case DatabaseUtils.DERBY:
@@ -261,18 +261,18 @@ public class DatabaseUtils {
 
 
   /**
-   * Database specific method of adding an interval in one field to a date field
-   * of the same record, using the specified units
+   *  Database specific method of adding an interval in one field to a date
+   *  field of the same record, using the specified units
    *
-   * @param db                  The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param units               The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param termsColumnName     The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param timestampColumnName The feature to be added to the
-   *                            TimestampInterval attribute
-   * @return Description of the Return Value
+   * @param  db                   The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  units                The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  termsColumnName      The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  timestampColumnName  The feature to be added to the
+   *      TimestampInterval attribute
+   * @return                      Description of the Return Value
    */
   public static String addTimestampInterval(Connection db, int units, String termsColumnName, String timestampColumnName) {
     // TODO: report why +1 is being used
@@ -338,15 +338,15 @@ public class DatabaseUtils {
         }
         break;
       case DatabaseUtils.ORACLE:
-    	  if (units == DAY) {
-              addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL("+ timestampColumnName+" ,'day')) ";
-            } else if (units == WEEK) {
-              addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL("+ timestampColumnName+" * 7 ,'day'))";
-            } else if (units == MONTH) {
-              addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL("+ timestampColumnName +", 'month')) ";
-            } else if (units == YEAR) {
-              addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL("+ timestampColumnName +", 'year')) ";
-            }
+        if (units == DAY) {
+          addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL(" + timestampColumnName + " ,'day')) ";
+        } else if (units == WEEK) {
+          addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL(" + timestampColumnName + " * 7 ,'day'))";
+        } else if (units == MONTH) {
+          addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL(" + timestampColumnName + ", 'month')) ";
+        } else if (units == YEAR) {
+          addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL(" + timestampColumnName + ", 'year')) ";
+        }
         break;
       case DatabaseUtils.MYSQL:
         if (units == DAY) {
@@ -377,22 +377,22 @@ public class DatabaseUtils {
 
 
   /**
-   * Database specific method of adding an interval in one field to a date field
-   * of the same record, using the specified units
+   *  Database specific method of adding an interval in one field to a date
+   *  field of the same record, using the specified units
    *
-   * @param db                  The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param units               The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param termsColumnName     The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param timestampColumnName The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param defaultUnits        The feature to be added to the
-   *                            TimestampInterval attribute
-   * @param defaultTerms        The feature to be added to the
-   *                            TimestampInterval attribute
-   * @return Description of the Return Value
+   * @param  db                   The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  units                The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  termsColumnName      The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  timestampColumnName  The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  defaultUnits         The feature to be added to the
+   *      TimestampInterval attribute
+   * @param  defaultTerms         The feature to be added to the
+   *      TimestampInterval attribute
+   * @return                      Description of the Return Value
    */
   public static String addTimestampInterval(Connection db, int units, String termsColumnName, String timestampColumnName, String defaultUnits, long defaultTerms) {
     String addTimestampIntervalString = "";
@@ -425,7 +425,7 @@ public class DatabaseUtils {
         }
         break;
       case DatabaseUtils.ORACLE:
-    	  addTimestampIntervalString = " (" + timestampColumnName + " + ((" + termsColumnName + " + " + defaultTerms + 1 + ") * 7)) ";
+        addTimestampIntervalString = " (" + timestampColumnName + " + ((" + termsColumnName + " + " + defaultTerms + 1 + ") * 7)) ";
         break;
       case DatabaseUtils.MYSQL:
         if (units == WEEK) {
@@ -445,13 +445,13 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the nextSeq attribute of the DatabaseUtils class, used before an
-   * insert statement has been executed
+   *  Gets the nextSeq attribute of the DatabaseUtils class, used before an
+   *  insert statement has been executed
    *
-   * @param db           Description of the Parameter
-   * @param sequenceName Description of the Parameter
-   * @return The nextSeq value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  sequenceName   Description of the Parameter
+   * @return                The nextSeq value
+   * @throws  SQLException  Description of the Exception
    */
   public static int getNextSeq(Connection db, String sequenceName) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
@@ -503,14 +503,14 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the currVal attribute of the DatabaseUtils class, used after an
-   * insert statement has been executed
+   *  Gets the currVal attribute of the DatabaseUtils class, used after an
+   *  insert statement has been executed
    *
-   * @param db           Description of the Parameter
-   * @param sequenceName Description of the Parameter
-   * @param defaultValue Description of the Parameter
-   * @return The currVal value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  sequenceName   Description of the Parameter
+   * @param  defaultValue   Description of the Parameter
+   * @return                The currVal value
+   * @throws  SQLException  Description of the Exception
    */
   public static int getCurrVal(Connection db, String sequenceName, int defaultValue) throws SQLException {
     int typeId = DatabaseUtils.getType(db);
@@ -546,12 +546,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Useful when generating a SQL order by clause to sort by year for the given
-   * timestamp field
+   *  Useful when generating a SQL order by clause to sort by year for the given
+   *  timestamp field
    *
-   * @param db        Description of the Parameter
-   * @param fieldname Description of the Parameter
-   * @return The yearPart value
+   * @param  db         Description of the Parameter
+   * @param  fieldname  Description of the Parameter
+   * @return            The yearPart value
    */
   public static String getYearPart(Connection db, String fieldname) {
     switch (DatabaseUtils.getType(db)) {
@@ -576,14 +576,45 @@ public class DatabaseUtils {
     }
   }
 
+  
+  /**
+   *  Useful when a temporary table name needs to be determined based on the 
+   *  database type
+   *
+   * @param  db         Description of the Parameter
+   * @param  tableName  Description of the Parameter
+   * @return            The yearPart value
+   */
+  public static String getTempTableName(Connection db, String tableName) {
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        return tableName;
+      case DatabaseUtils.MSSQL:
+        return "#" + tableName;
+      case DatabaseUtils.FIREBIRD:
+        return "";
+      case DatabaseUtils.DAFFODILDB:
+        return "";
+      case DatabaseUtils.ORACLE:
+        return "";
+      case DatabaseUtils.DB2:
+        return "SESSION." + tableName;
+      case DatabaseUtils.MYSQL:
+        return "";
+      case DatabaseUtils.DERBY:
+        return "";
+      default:
+        return "";
+    }
+  }
 
   /**
-   * Useful when generating a SQL order by clause to sort by month for the
-   * given timestamp field
+   *  Useful when generating a SQL order by clause to sort by month for the
+   *  given timestamp field
    *
-   * @param db        Description of the Parameter
-   * @param fieldname Description of the Parameter
-   * @return The orderByMonth value
+   * @param  db         Description of the Parameter
+   * @param  fieldname  Description of the Parameter
+   * @return            The orderByMonth value
    */
   public static String getMonthPart(Connection db, String fieldname) {
     switch (DatabaseUtils.getType(db)) {
@@ -610,12 +641,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Useful when generating a SQL order by clause to sort by day for the given
-   * timestamp field
+   *  Useful when generating a SQL order by clause to sort by day for the given
+   *  timestamp field
    *
-   * @param db        Description of the Parameter
-   * @param fieldname Description of the Parameter
-   * @return The orderByDay value
+   * @param  db         Description of the Parameter
+   * @param  fieldname  Description of the Parameter
+   * @return            The orderByDay value
    */
   public static String getDayPart(Connection db, String fieldname) {
     switch (DatabaseUtils.getType(db)) {
@@ -642,12 +673,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Useful when generating a SQL order by clause to sort by hour of day for the given
-   * timestamp field
+   *  Useful when generating a SQL order by clause to sort by hour of day for
+   *  the given timestamp field
    *
-   * @param db        Description of the Parameter
-   * @param fieldname Description of the Parameter
-   * @return The dayPart value
+   * @param  db         Description of the Parameter
+   * @param  fieldname  Description of the Parameter
+   * @return            The dayPart value
    */
   public static String getHourPart(Connection db, String fieldname) {
     //TODO: Verify if all databases work
@@ -659,7 +690,7 @@ public class DatabaseUtils {
       case DatabaseUtils.FIREBIRD:
         return "EXTRACT(HOUR FROM " + fieldname + ")";
       case DatabaseUtils.DAFFODILDB:
-        //return "DAYOFWEEK(" + fieldname + ")";
+      //return "DAYOFWEEK(" + fieldname + ")";
       case DatabaseUtils.ORACLE:
         return "EXTRACT(HOUR FROM " + fieldname + ")";
       case DatabaseUtils.DB2:
@@ -675,12 +706,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Useful when generating a SQL order by clause to sort by minutes for the given
-   * timestamp field
+   *  Useful when generating a SQL order by clause to sort by minutes for the
+   *  given timestamp field
    *
-   * @param db        Description of the Parameter
-   * @param fieldname Description of the Parameter
-   * @return The dayPart value
+   * @param  db         Description of the Parameter
+   * @param  fieldname  Description of the Parameter
+   * @return            The dayPart value
    */
   public static String getMinutePart(Connection db, String fieldname) {
     //TODO: Verify if all databases work
@@ -708,10 +739,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
+   * @param  db  Description of the Parameter
+   * @return     Description of the Return Value
    */
   public static String toLowerCase(Connection db) {
     switch (DatabaseUtils.getType(db)) {
@@ -738,11 +769,11 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db    Description of the Parameter
-   * @param field Description of the Parameter
-   * @return Description of the Return Value
+   * @param  db     Description of the Parameter
+   * @param  field  Description of the Parameter
+   * @return        Description of the Return Value
    */
   public static String toLowerCase(Connection db, String field) {
     switch (DatabaseUtils.getType(db)) {
@@ -769,13 +800,13 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the substring function for the given database
+   *  Gets the substring function for the given database
    *
-   * @param db    Description of the Parameter
-   * @param field Description of the Parameter
-   * @param first Description of the Parameter
-   * @param size  Description of the Parameter
-   * @return The subString value
+   * @param  db     Description of the Parameter
+   * @param  field  Description of the Parameter
+   * @param  first  Description of the Parameter
+   * @param  size   Description of the Parameter
+   * @return        The subString value
    */
   public static String getSubString(Connection db, String field, int first, int size) {
     switch (DatabaseUtils.getType(db)) {
@@ -802,11 +833,12 @@ public class DatabaseUtils {
 
 
   /**
-   * If a text column needs to be sorted, then in some databases it must be converted to something sortable
+   *  If a text column needs to be sorted, then in some databases it must be
+   *  converted to something sortable
    *
-   * @param db    Description of the Parameter
-   * @param field Description of the Parameter
-   * @return Description of the Return Value
+   * @param  db     Description of the Parameter
+   * @param  field  Description of the Parameter
+   * @return        Description of the Return Value
    */
   public static String convertToVarChar(Connection db, String field) {
     switch (DatabaseUtils.getType(db)) {
@@ -837,11 +869,11 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp          Description of the Parameter
-   * @param defaultValue Description of the Parameter
-   * @return Description of the Return Value
+   * @param  tmp           Description of the Parameter
+   * @param  defaultValue  Description of the Parameter
+   * @return               Description of the Return Value
    */
   public static int parseInt(String tmp, int defaultValue) {
     try {
@@ -853,10 +885,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp Description of the Parameter
-   * @return Description of the Return Value
+   * @param  tmp  Description of the Parameter
+   * @return      Description of the Return Value
    */
   public static boolean parseBoolean(String tmp) {
     return ("ON".equalsIgnoreCase(tmp) ||
@@ -868,10 +900,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp Description of the Parameter
-   * @return Description of the Return Value
+   * @param  tmp  Description of the Parameter
+   * @return      Description of the Return Value
    */
   public static java.sql.Date parseDate(String tmp) {
     java.sql.Date dateValue = null;
@@ -892,10 +924,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp Description of the Parameter
-   * @return Description of the Return Value
+   * @param  tmp  Description of the Parameter
+   * @return      Description of the Return Value
    */
   public static java.sql.Timestamp parseTimestamp(String tmp) {
     return parseTimestamp(tmp, Locale.getDefault());
@@ -903,11 +935,11 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp    Description of the Parameter
-   * @param locale Description of the Parameter
-   * @return Description of the Return Value
+   * @param  tmp     Description of the Parameter
+   * @param  locale  Description of the Parameter
+   * @return         Description of the Return Value
    */
   public static java.sql.Timestamp parseTimestamp(String tmp, Locale locale) {
     java.sql.Timestamp timestampValue = null;
@@ -927,6 +959,14 @@ public class DatabaseUtils {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  tmp        Description of the Parameter
+   * @param  locale     Description of the Parameter
+   * @param  beLenient  Description of the Parameter
+   * @return            Description of the Return Value
+   */
   public static java.sql.Timestamp parseTimestamp(String tmp, Locale locale, boolean beLenient) {
     java.sql.Timestamp timestampValue = null;
     try {
@@ -947,10 +987,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp Description of the Parameter
-   * @return Description of the Return Value
+   * @param  tmp  Description of the Parameter
+   * @return      Description of the Return Value
    */
   public static java.sql.Timestamp parseDateToTimestamp(String tmp) {
     return parseDateToTimestamp(tmp, Locale.getDefault());
@@ -958,11 +998,11 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp    Description of the Parameter
-   * @param locale Description of the Parameter
-   * @return Description of the Return Value
+   * @param  tmp     Description of the Parameter
+   * @param  locale  Description of the Parameter
+   * @return         Description of the Return Value
    */
   public static java.sql.Timestamp parseDateToTimestamp(String tmp, Locale locale) {
     java.sql.Timestamp timestampValue = DatabaseUtils.parseTimestamp(
@@ -985,13 +1025,13 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the int attribute of the DatabaseUtils class
+   *  Gets the int attribute of the DatabaseUtils class
    *
-   * @param rs           Description of the Parameter
-   * @param column       Description of the Parameter
-   * @param defaultValue Description of the Parameter
-   * @return The int value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @param  column         Description of the Parameter
+   * @param  defaultValue   Description of the Parameter
+   * @return                The int value
+   * @throws  SQLException  Description of the Exception
    */
   public static int getInt(ResultSet rs, String column, int defaultValue) throws SQLException {
     int fieldValue = rs.getInt(column);
@@ -1003,13 +1043,13 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the double attribute of the DatabaseUtils class
+   *  Gets the double attribute of the DatabaseUtils class
    *
-   * @param rs           Description of the Parameter
-   * @param column       Description of the Parameter
-   * @param defaultValue Description of the Parameter
-   * @return The double value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @param  column         Description of the Parameter
+   * @param  defaultValue   Description of the Parameter
+   * @return                The double value
+   * @throws  SQLException  Description of the Exception
    */
   public static double getDouble(ResultSet rs, String column, double defaultValue) throws SQLException {
     double fieldValue = rs.getDouble(column);
@@ -1021,12 +1061,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the int attribute of the DatabaseUtils class
+   *  Gets the int attribute of the DatabaseUtils class
    *
-   * @param rs     Description of the Parameter
-   * @param column Description of the Parameter
-   * @return The int value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @param  column         Description of the Parameter
+   * @return                The int value
+   * @throws  SQLException  Description of the Exception
    */
   public static int getInt(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getInt(rs, column, -1);
@@ -1034,12 +1074,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the double attribute of the DatabaseUtils class
+   *  Gets the double attribute of the DatabaseUtils class
    *
-   * @param rs     Description of the Parameter
-   * @param column Description of the Parameter
-   * @return The double value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @param  column         Description of the Parameter
+   * @return                The double value
+   * @throws  SQLException  Description of the Exception
    */
   public static double getDouble(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getDouble(rs, column, -1.0);
@@ -1047,12 +1087,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the long attribute of the DatabaseUtils class
+   *  Gets the long attribute of the DatabaseUtils class
    *
-   * @param rs     Description of the Parameter
-   * @param column Description of the Parameter
-   * @return The long value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @param  column         Description of the Parameter
+   * @return                The long value
+   * @throws  SQLException  Description of the Exception
    */
   public static long getLong(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getLong(rs, column, -1);
@@ -1060,13 +1100,13 @@ public class DatabaseUtils {
 
 
   /**
-   * Gets the long attribute of the DatabaseUtils class
+   *  Gets the long attribute of the DatabaseUtils class
    *
-   * @param rs           Description of the Parameter
-   * @param column       Description of the Parameter
-   * @param defaultValue Description of the Parameter
-   * @return The long value
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @param  column         Description of the Parameter
+   * @param  defaultValue   Description of the Parameter
+   * @return                The long value
+   * @throws  SQLException  Description of the Exception
    */
   public static long getLong(ResultSet rs, String column, long defaultValue) throws SQLException {
     long fieldValue = rs.getLong(column);
@@ -1078,12 +1118,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Sets the int attribute of the DatabaseUtils class
+   *  Sets the int attribute of the DatabaseUtils class
    *
-   * @param pst        The new int value
-   * @param paramCount The new int value
-   * @param value      The new int value
-   * @throws SQLException Description of the Exception
+   * @param  pst            The new int value
+   * @param  paramCount     The new int value
+   * @param  value          The new int value
+   * @throws  SQLException  Description of the Exception
    */
   public static void setInt(PreparedStatement pst, int paramCount, int value) throws SQLException {
     if (value == -1) {
@@ -1095,12 +1135,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Sets the double attribute of the DatabaseUtils class
+   *  Sets the double attribute of the DatabaseUtils class
    *
-   * @param pst        The new double value
-   * @param paramCount The new double value
-   * @param value      The new double value
-   * @throws SQLException Description of the Exception
+   * @param  pst            The new double value
+   * @param  paramCount     The new double value
+   * @param  value          The new double value
+   * @throws  SQLException  Description of the Exception
    */
   public static void setDouble(PreparedStatement pst, int paramCount, double value) throws SQLException {
     if (value == -1.0) {
@@ -1112,12 +1152,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Sets the long attribute of the DatabaseUtils class
+   *  Sets the long attribute of the DatabaseUtils class
    *
-   * @param pst        The new long value
-   * @param paramCount The new long value
-   * @param value      The new long value
-   * @throws SQLException Description of the Exception
+   * @param  pst            The new long value
+   * @param  paramCount     The new long value
+   * @param  value          The new long value
+   * @throws  SQLException  Description of the Exception
    */
   public static void setLong(PreparedStatement pst, int paramCount, long value) throws SQLException {
     if (value == -1) {
@@ -1129,12 +1169,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Sets the timestamp attribute of the DatabaseUtils class
+   *  Sets the timestamp attribute of the DatabaseUtils class
    *
-   * @param pst        The new timestamp value
-   * @param paramCount The new timestamp value
-   * @param value      The new timestamp value
-   * @throws SQLException Description of the Exception
+   * @param  pst            The new timestamp value
+   * @param  paramCount     The new timestamp value
+   * @param  value          The new timestamp value
+   * @throws  SQLException  Description of the Exception
    */
   public static void setTimestamp(PreparedStatement pst, int paramCount, java.sql.Timestamp value) throws SQLException {
     if (value == null) {
@@ -1146,12 +1186,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Sets the date attribute of the DatabaseUtils class
+   *  Sets the date attribute of the DatabaseUtils class
    *
-   * @param pst        The new date value
-   * @param paramCount The new date value
-   * @param value      The new date value
-   * @throws SQLException Description of the Exception
+   * @param  pst            The new date value
+   * @param  paramCount     The new date value
+   * @param  value          The new date value
+   * @throws  SQLException  Description of the Exception
    */
   public static void setDate(PreparedStatement pst, int paramCount, java.sql.Date value) throws SQLException {
     if (value == null) {
@@ -1163,13 +1203,13 @@ public class DatabaseUtils {
 
 
   /**
-   * Reads in a text file of SQL statements from the filesystem, and executes
-   * them
+   *  Reads in a text file of SQL statements from the filesystem, and executes
+   *  them
    *
-   * @param db       Description of the Parameter
-   * @param filename Description of the Parameter
-   * @throws SQLException Description of the Exception
-   * @throws IOException  Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  filename       Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   * @throws  IOException   Description of the Exception
    */
   public static void executeSQL(Connection db, String filename) throws SQLException, IOException {
     BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -1179,14 +1219,14 @@ public class DatabaseUtils {
 
 
   /**
-   * Reads in a text file of SQL statements from the servlet context, and
-   * executes them
+   *  Reads in a text file of SQL statements from the servlet context, and
+   *  executes them
    *
-   * @param db       Description of the Parameter
-   * @param context  Description of the Parameter
-   * @param filename Description of the Parameter
-   * @throws SQLException Description of the Exception
-   * @throws IOException  Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  context        Description of the Parameter
+   * @param  filename       Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   * @throws  IOException   Description of the Exception
    */
   public static void executeSQL(Connection db, ServletContext context, String filename) throws SQLException, IOException {
     InputStream source = context.getResourceAsStream(filename);
@@ -1197,12 +1237,12 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @param in Description of the Parameter
-   * @throws SQLException Description of the Exception
-   * @throws IOException  Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  in             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   * @throws  IOException   Description of the Exception
    */
   public static void executeSQL(Connection db, BufferedReader in) throws SQLException, IOException {
     // Read the file and execute each statement
@@ -1270,10 +1310,10 @@ public class DatabaseUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param context Description of the Parameter
-   * @param db      Description of the Parameter
+   * @param  context  Description of the Parameter
+   * @param  db       Description of the Parameter
    */
   public static void renewConnection(ActionContext context, Connection db) {
     //Connections are usually checked out and expire, this will renew the expiration
@@ -1287,6 +1327,14 @@ public class DatabaseUtils {
     }
   }
 
+
+  /**
+   *  Gets the tableName attribute of the DatabaseUtils class
+   *
+   * @param  db         Description of the Parameter
+   * @param  tableName  Description of the Parameter
+   * @return            The tableName value
+   */
   public static String getTableName(Connection db, String tableName) {
     if (DatabaseUtils.getType(db) != FIREBIRD &&
         DatabaseUtils.getType(db) != ORACLE &&
@@ -1338,10 +1386,18 @@ public class DatabaseUtils {
     return tableName;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db            Description of the Parameter
+   * @param  reservedWord  Description of the Parameter
+   * @return               Description of the Return Value
+   */
   public static String parseReservedWord(Connection db, String reservedWord) {
     if (DatabaseUtils.getType(db) == FIREBIRD ||
         DatabaseUtils.getType(db) == ORACLE ||
-        DatabaseUtils.getType(db) == DB2 || 
+        DatabaseUtils.getType(db) == DB2 ||
         DatabaseUtils.getType(db) == MYSQL ||
         DatabaseUtils.getType(db) == DERBY) {
       if (reservedWord.indexOf(".") > -1) {
@@ -1356,26 +1412,51 @@ public class DatabaseUtils {
     }
     return reservedWord;
   }
-  
-  public static String getQuote(Connection db){
+
+
+  /**
+   *  Gets the quote attribute of the DatabaseUtils class
+   *
+   * @param  db  Description of the Parameter
+   * @return     The quote value
+   */
+  public static String getQuote(Connection db) {
     String quoteSymbol = "";
-    switch(DatabaseUtils.getType(db)){
+    switch (DatabaseUtils.getType(db)) {
       case MYSQL:
         quoteSymbol = qsMySQL;
         break;
       default:
         quoteSymbol = qsDefault;
     }
-    
+
     return quoteSymbol;
   }
-  
-  public static String addQuotes(Connection db, String stringToQuote){
-    String quoteSymbol = DatabaseUtils.getQuote(db); 
+
+
+  /**
+   *  Adds a feature to the Quotes attribute of the DatabaseUtils class
+   *
+   * @param  db             The feature to be added to the Quotes attribute
+   * @param  stringToQuote  The feature to be added to the Quotes attribute
+   * @return                Description of the Return Value
+   */
+  public static String addQuotes(Connection db, String stringToQuote) {
+    String quoteSymbol = DatabaseUtils.getQuote(db);
     return quoteSymbol + stringToQuote + quoteSymbol;
   }
-  
-  public static Connection getConnection(String dbUrl, String dbUser, String dbPwd) throws SQLException{
+
+
+  /**
+   *  Gets the connection attribute of the DatabaseUtils class
+   *
+   * @param  dbUrl             Description of the Parameter
+   * @param  dbUser            Description of the Parameter
+   * @param  dbPwd             Description of the Parameter
+   * @return                   The connection value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static Connection getConnection(String dbUrl, String dbUser, String dbPwd) throws SQLException {
     Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
     if (DatabaseUtils.getType(connection) == DatabaseUtils.MYSQL) {
       PreparedStatement pst = connection.prepareStatement("SELECT @@session.sql_mode;");
@@ -1388,7 +1469,7 @@ public class DatabaseUtils {
       pst.close();
 
       pst = connection.prepareStatement(
-            "SET sql_mode = '" + currentMode + ((currentMode.length()>0)?",":"") + "ANSI_QUOTES,NO_AUTO_VALUE_ON_ZERO';");
+          "SET sql_mode = '" + currentMode + ((currentMode.length() > 0) ? "," : "") + "ANSI_QUOTES,NO_AUTO_VALUE_ON_ZERO';");
       pst.execute();
       pst.close();
     }
