@@ -43,6 +43,7 @@ public class HtmlSelectLanguage {
     select.addItem("sq_AL", "Alban\u00e9s");
     select.addItem("zh_CN", "\u7b80\u4f53\u4e2d\u6587");
     select.addItem("zh_TW", "Chinese Traditional");
+    select.addItem("no_NO", "Bokm\u221a\u2022l");
     select.addItem("cs_CZ", "\u0192\u00e7esky");
     // Croat (Croatian)
     select.addItem("hr_HR", "hrvatski (Hrvatska)");

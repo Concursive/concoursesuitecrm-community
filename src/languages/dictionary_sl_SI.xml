@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aspcfs>
 <config name="system.fields.label">
-<param name="contact.relationship">
-<value><![CDATA[Povezava]]></value>
+<param name="project.noAccountsToDisplay">
+<value><![CDATA[No accounts to display.]]></value>
 </param>
 <param name="project.noItemstoDisplay">
 <value><![CDATA[No items to display.]]></value>
@@ -24,395 +24,6 @@
 </param>
 <param name="accounts.accounts_contacts_add.Role">
 <value><![CDATA[Role]]></value>
-</param>
-<param name="filter.openOnly">
-<value><![CDATA[Open Only]]></value>
-</param>
-<param name="knowledgebase.dependencies">
-<value><![CDATA[Knowledge Base dependencies]]></value>
-</param>
-<param name="ldap.password">
-<value><![CDATA[LDAP Password:]]></value>
-</param>
-<param name="leads.results.text">
-<value><![CDATA[<strong>${LeadSize}</strong> result(s) in <strong>Leads</strong>.]]></value>
-</param>
-<param name="leads.size.text">
-<value><![CDATA[Showing <strong>${LeadSize}</strong> result(s) of ${totalEmployees} in <strong>Leads</strong>.]]></value>
-</param>
-<param name="netapp.ManageNetAppInfo">
-<value><![CDATA[Manage Network Application Information]]></value>
-</param>
-<param name="netapp.NetAppImport">
-<value><![CDATA[Network Application Import]]></value>
-</param>
-<param name="object.validation.actionObjectCanNotBeItsOwnParentError.text">
-<value><![CDATA[This Object can not be its own parent. Please select a different parent for this object.]]></value>
-</param>
-<param name="object.validation.checkCriteria.error">
-<value><![CDATA[Error. Please enter valid search criteria.]]></value>
-</param>
-<param name="object.validation.contact.siteIncompatibleWithAccount">
-<value><![CDATA[The selected site is incompatible with the account]]></value>
-</param>
-<param name="object.validation.exceedsLengthLimit">
-<value><![CDATA[Length limit exceeded]]></value>
-</param>
-<param name="object.validation.exceedsMaxLength.300.text">
-<value><![CDATA[Maximum length of data exceeds 300 characters. Please remove some data to continue]]></value>
-</param>
-<param name="object.validation.invalidDepartmentIdError.text">
-<value><![CDATA[Please select a valid department]]></value>
-</param>
-<param name="object.validation.invalidRoleIdError.text">
-<value><![CDATA[Please select a valid role]]></value>
-</param>
-<param name="object.validation.invalidUserGroupIdError.text">
-<value><![CDATA[Please select a valid user group.]]></value>
-</param>
-<param name="object.validation.noMultipleVersionQuoteForOpportunity">
-<value><![CDATA[A quote with multiple versions cannot be associated with this opportunity]]></value>
-</param>
-<param name="object.validation.noOtherUserWithAccessToAllSitesExist.text">
-<value><![CDATA[The system does not have any other user with access to all sites]]></value>
-</param>
-<param name="object.validation.opportunityComponent.lowCanNotBeZero">
-<value><![CDATA[This value can not be zero]]></value>
-</param>
-<param name="object.validation.opportunityComponent.lowNotGTGuess">
-<value><![CDATA[Low Estimate cannot be higher than the Best Guess Estimate]]></value>
-</param>
-<param name="object.validation.opportunityHasQuotes">
-<value><![CDATA[This opportunity has quotes associated with it]]></value>
-</param>
-<param name="object.validation.opportunity.permissionNotAllowedForThisSite">
-<value><![CDATA[You do not have permissions to add (or update) opportunities to this site]]></value>
-</param>
-<param name="object.validation.pipeline.invalidOwner.text">
-<value><![CDATA[Error. Please assign the component to a user in the manager's hierarchy of users]]></value>
-</param>
-<param name="object.validation.pipeline.noManagerSelected.text">
-<value><![CDATA[Please select a user to manage the opportunity]]></value>
-</param>
-<param name="object.validation.pipeline.noOwnerSelected.text">
-<value><![CDATA[Please select a user to assign the component]]></value>
-</param>
-<param name="object.validation.project.estimatedEndDateNotLTStartDate">
-<value><![CDATA[End date is earlier than Start date]]></value>
-</param>
-<param name="object.validation.siteChangeNotAllowed.text">
-<value><![CDATA[Site change is not allowed]]></value>
-</param>
-<param name="object.validation.theSelectedUserHasIncompatibleSite">
-<value><![CDATA[The selected user has an incompatible site]]></value>
-</param>
-<param name="object.validation.userHasAssociations.text">
-<value><![CDATA[This user is associated with several items. These items need to be assigned to another user before the site can be changed.]]></value>
-</param>
-<param name="pipeline.addAQuoteQuestion">
-<value><![CDATA[Add a quote?]]></value>
-</param>
-<param name="pipeline.alertDate">
-<value><![CDATA[Alert Date]]></value>
-</param>
-<param name="pipeline.alertDescription">
-<value><![CDATA[Alert Description]]></value>
-</param>
-<param name="pipeline.assignTo">
-<value><![CDATA[Assign To]]></value>
-</param>
-<param name="pipeline.associateWith">
-<value><![CDATA[Associate With]]></value>
-</param>
-<param name="pipeline.component">
-<value><![CDATA[Component]]></value>
-</param>
-<param name="pipeline.componentTypes.break">
-<value><![CDATA[Component]]></value>
-</param>
-<param name="pipeline.controlledHierarchyOpportunities">
-<value><![CDATA[Controlled-Hierarchy Opportunities]]></value>
-</param>
-<param name="pipeline.currentStage">
-<value><![CDATA[Current Stage]]></value>
-</param>
-<param name="pipeline.currentStageDate">
-<value><![CDATA[Current Stage Date]]></value>
-</param>
-<param name="pipeline.custom1Intege">
-<value><![CDATA[Custom1 Integer]]></value>
-</param>
-<param name="pipeline.estimatedCloseDate">
-<value><![CDATA[Est. Close Date]]></value>
-</param>
-<param name="pipeline.estimatedCommission">
-<value><![CDATA[Est. Commission]]></value>
-</param>
-<param name="pipeline.estimatedTerm">
-<value><![CDATA[Est. Term]]></value>
-</param>
-<param name="pipeline.highEstimate">
-<value><![CDATA[High Estimate]]></value>
-</param>
-<param name="pipeline.locked">
-<value><![CDATA[Locked]]></value>
-</param>
-<param name="pipeline.lowEstimate">
-<value><![CDATA[Low Estimate]]></value>
-</param>
-<param name="pipeline.probabilityOfClose">
-<value><![CDATA[Prob. of Close]]></value>
-</param>
-<param name="pipeline.source">
-<value><![CDATA[Source]]></value>
-</param>
-<param name="pipeline.units.weeks">
-<value><![CDATA[Weeks]]></value>
-</param>
-<param name="quotes.allOpenQuotes">
-<value><![CDATA[All Open Quotes]]></value>
-</param>
-<param name="relationships.orgFromDifferentSitesCanNotBeRelated">
-<value><![CDATA[Organizations from different sites cannot be related]]></value>
-</param>
-<param name="reports.actionplan.activity.title">
-<value><![CDATA[Action Plan Activity]]></value>
-</param>
-<param name="reports.actionplan.summary.title">
-<value><![CDATA[Action Plan Summary]]></value>
-</param>
-<param name="reports.dateRange">
-<value><![CDATA[Date Range]]></value>
-</param>
-<param name="reports.helpdesk.accounttotal">
-<value><![CDATA[Account Total]]></value>
-</param>
-<param name="reports.helpdesk.monthtotal">
-<value><![CDATA[Month Total]]></value>
-</param>
-<param name="reports.helpdesk.ticketSummary.departmentTotal">
-<value><![CDATA[Department Total]]></value>
-</param>
-<param name="reports.parameter.submittedFrom">
-<value><![CDATA[Submitted From]]></value>
-</param>
-<param name="reports.parameter.submittedTo">
-<value><![CDATA[Submitted To]]></value>
-</param>
-<param name="sales.actionPlan">
-<value><![CDATA[Action Plan]]></value>
-</param>
-<param name="sales.actionPlans">
-<value><![CDATA[Action Plans]]></value>
-</param>
-<param name="sales.actionPlans.stepsRandomExecution.text">
-<value><![CDATA[Steps can execute in random order]]></value>
-</param>
-<param name="sales.assignLead">
-<value><![CDATA[Assign]]></value>
-</param>
-<param name="sales.leads">
-<value><![CDATA[Leads]]></value>
-</param>
-<param name="sales.leadsDashboard">
-<value><![CDATA[Leads Dashboard]]></value>
-</param>
-<param name="setup.centricCRMLDAPTest">
-<value><![CDATA[Centric CRM LDAP Test]]></value>
-</param>
-<param name="setup.ldap">
-<value><![CDATA[LDAP Server]]></value>
-</param>
-<param name="setup.LDAPFailed.text">
-<value><![CDATA[LDAP failed.  The following error was returned:]]></value>
-</param>
-<param name="setup.ldapLoginSuccessful">
-<value><![CDATA[Logging in to LDAP was successful.]]></value>
-</param>
-<param name="setup.ldap.question">
-<value><![CDATA[For authenticating users, should an LDAP server be used?]]></value>
-</param>
-<param name="setup.ldapTest.text">
-<value><![CDATA[You should try to login to make certain the LDAP settings are configured correctly.]]></value>
-</param>
-<param name="setup.ldap.text">
-<value><![CDATA[<ul><li>A properly configured LDAP server is required</li>
-        <li>If searching for users by attribute, the LDAP administrator should create an LDAP user with permissions on the LDAP server to search for users by given attribute; access to other attributes is not necessary</li>
-      </ul>]]></value>
-</param>
-<param name="setup.loginToLDAP">
-<value><![CDATA[Login to LDAP...]]></value>
-</param>
-<param name="ticketDefect.dependencies">
-<value><![CDATA[Defect Dependencies]]></value>
-</param>
-<param name="ticketloglist.currentState">
-<value><![CDATA[Ticket state is ${ticketLogList.stateName}]]></value>
-</param>
-<param name="ticketloglist.stateChanged">
-<value><![CDATA[Ticket state changed from ${ticketLogList.previousStateName} to ${ticketLogList.currentStateName}]]></value>
-</param>
-<param name="tickets.addDefect">
-<value><![CDATA[Add a Defect]]></value>
-</param>
-<param name="tickets.addDocumentToKnowledgeBase.text">
-<value><![CDATA[Add new Document to the Knowledge Base]]></value>
-</param>
-<param name="tickets.automaticallyPopulateAssignment.text">
-<value><![CDATA[Automatically populate assignment based on categories]]></value>
-</param>
-<param name="tickets.cause">
-<value><![CDATA[Ticket Cause]]></value>
-</param>
-<param name="tickets.defects">
-<value><![CDATA[Tickets Defects]]></value>
-</param>
-<param name="tickets.defects.active">
-<value><![CDATA[Active]]></value>
-</param>
-<param name="tickets.defects.addDefect">
-<value><![CDATA[Add Defect]]></value>
-</param>
-<param name="tickets.defects.ageOf">
-<value><![CDATA[${days}d ${hours}h]]></value>
-</param>
-<param name="tickets.defects.defect">
-<value><![CDATA[Defect]]></value>
-</param>
-<param name="tickets.defects.defectDetails">
-<value><![CDATA[Defect Details]]></value>
-</param>
-<param name="tickets.defects.modifyDefect">
-<value><![CDATA[Modify Defect]]></value>
-</param>
-<param name="tickets.defects.noDefectsAvailable.text">
-<value><![CDATA[No defects available]]></value>
-</param>
-<param name="tickets.defects.viewDefects">
-<value><![CDATA[View Defects]]></value>
-</param>
-<param name="tickets.enteredDateBetween">
-<value><![CDATA[Entered Date between]]></value>
-</param>
-<param name="tickets.escalationLevel">
-<value><![CDATA[Escalation Level]]></value>
-</param>
-<param name="tickets.fileDetails">
-<value><![CDATA[File Details]]></value>
-</param>
-<param name="tickets.invalidCategorySelected.text">
-<value><![CDATA[Invalid site category selection]]></value>
-</param>
-<param name="tickets.knowledgeBase">
-<value><![CDATA[Knowledge Base]]></value>
-</param>
-<param name="tickets.knowledgebase.displayKBforSelectedCategories.text">
-<value><![CDATA[Display Knowledge Base for selected Categories]]></value>
-</param>
-<param name="tickets.modifyDocumentOrAppendNewFileVersion.text">
-<value><![CDATA[Modify Document or append a new File Version]]></value>
-</param>
-<param name="tickets.noKnowledgeBaseEntriesFound.text">
-<value><![CDATA[No knowledge base entries found.]]></value>
-</param>
-<param name="tickets.nonSite">
-<value><![CDATA[Non-Site]]></value>
-</param>
-<param name="tickets.parentAccounts.colon">
-<value><![CDATA[Parent Accounts:]]></value>
-</param>
-<param name="tickets.resolution">
-<value><![CDATA[Ticket Resolution]]></value>
-</param>
-<param name="tickets.ticketCategoryDraftAssignment.invalidAssignment.text">
-<value><![CDATA[Invalid data selection]]></value>
-</param>
-<param name="tickets.ticketCategoryDraftAssignment.invalidUserAssignment.text">
-<value><![CDATA[Invalid site user selection]]></value>
-</param>
-<param name="tickets.ticketCategoryDraftAssignment.invalidUserGroupAssignment.text">
-<value><![CDATA[Invalid site user group selection]]></value>
-</param>
-<param name="tickets.ticketCategoryLevel1">
-<value><![CDATA[Ticket Category Level 1]]></value>
-</param>
-<param name="tickets.ticketCategoryLevel2">
-<value><![CDATA[Ticket Category Level 2]]></value>
-</param>
-<param name="tickets.ticketCategoryLevel3">
-<value><![CDATA[Ticket Category Level 3]]></value>
-</param>
-<param name="tickets.ticketCategoryLevel4">
-<value><![CDATA[Ticket Category Level 4]]></value>
-</param>
-<param name="tickets.ticketCategoryMappedActionPlans.colon">
-<value><![CDATA[Mapped Action Plans for Category:]]></value>
-</param>
-<param name="tickets.ticketState">
-<value><![CDATA[Ticket State]]></value>
-</param>
-<param name="tickets.userGroupTickets">
-<value><![CDATA[Assigned to one of my Groups]]></value>
-</param>
-<param name="tickets.viewKnowledgeBase">
-<value><![CDATA[View Knowledge Base]]></value>
-</param>
-<param name="ticket.ticketTask.incomplete.bracket">
-<value><![CDATA[Ticket Tasks (Incomplete)]]></value>
-</param>
-<param name="trails.configureActionPlans">
-<value><![CDATA[Configure Action Plans]]></value>
-</param>
-<param name="usergroup.assignedGroup">
-<value><![CDATA[Assigned Group]]></value>
-</param>
-<param name="usergroup.dependencies">
-<value><![CDATA[The group you are requesting to delete has the following dependencies within Centric CRM:]]></value>
-</param>
-<param name="usergroups.addGroup">
-<value><![CDATA[Add Group]]></value>
-</param>
-<param name="usergroups.addUserGroup">
-<value><![CDATA[Add User Group]]></value>
-</param>
-<param name="usergroups.groupUserList">
-<value><![CDATA[Group User List]]></value>
-</param>
-<param name="usergroups.groupUsers">
-<value><![CDATA[Group Users]]></value>
-</param>
-<param name="usergroups.groupUsers.colon">
-<value><![CDATA[Group Users:]]></value>
-</param>
-<param name="usergroups.manageGroups">
-<value><![CDATA[Manage Groups]]></value>
-</param>
-<param name="usergroups.modifyUserGroup">
-<value><![CDATA[Modify User Group]]></value>
-</param>
-<param name="usergroups.notSet">
-<value><![CDATA[Not set]]></value>
-</param>
-<param name="usergroups.noUserGroupsFound.txt">
-<value><![CDATA[No user groups found.]]></value>
-</param>
-<param name="usergroups.specificGroup.colon">
-<value><![CDATA[Specific Group:]]></value>
-</param>
-<param name="usergroups.specificUserGroup">
-<value><![CDATA[Member of a specific group]]></value>
-</param>
-<param name="usergroups.specificUserGroup.colon">
-<value><![CDATA[Member of a specific group:]]></value>
-</param>
-<param name="usergroups.userGroup">
-<value><![CDATA[User Group]]></value>
-</param>
-<param name="usergroups.userGroup.colon">
-<value><![CDATA[User Group:]]></value>
-</param>
-<param name="usergroup.userGroupList">
-<value><![CDATA[User Group List]]></value>
 </param>
 <param name="calendar.activateWebFolderAccess">
 <value><![CDATA[Activate Web Folder Access]]></value>
@@ -8619,8 +8230,8 @@ medtem ko gostje imajo zelo omejene pravice.]]></value>
 <param name="contact.buildGroup">
 <value><![CDATA[ustvari skupino]]></value>
 </param>
-<param name="project.noAccountsToDisplay">
-<value><![CDATA[No accounts to display.]]></value>
+<param name="contact.relationship">
+<value><![CDATA[Povezava]]></value>
 </param>
 <param name="contact.object">
 <value><![CDATA[Objekt]]></value>
@@ -11090,8 +10701,421 @@ Nimate dovoljenja da nadaljujete s tem opravilom.]]></value>
 <param name="filter.closedOnly">
 <value><![CDATA[Closed Only]]></value>
 </param>
+<param name="filter.openOnly">
+<value><![CDATA[Open Only]]></value>
+</param>
+<param name="knowledgebase.dependencies">
+<value><![CDATA[Knowledge Base dependencies]]></value>
+</param>
+<param name="ldap.password">
+<value><![CDATA[LDAP Password:]]></value>
+</param>
+<param name="leads.results.text">
+<value><![CDATA[<strong>${LeadSize}</strong> result(s) in <strong>Leads</strong>.]]></value>
+</param>
+<param name="leads.size.text">
+<value><![CDATA[Showing <strong>${LeadSize}</strong> result(s) of ${totalEmployees} in <strong>Leads</strong>.]]></value>
+</param>
+<param name="netapp.ManageNetAppInfo">
+<value><![CDATA[Manage Network Application Information]]></value>
+</param>
+<param name="netapp.NetAppImport">
+<value><![CDATA[Network Application Import]]></value>
+</param>
+<param name="object.validation.actionObjectCanNotBeItsOwnParentError.text">
+<value><![CDATA[This Object can not be its own parent. Please select a different parent for this object.]]></value>
+</param>
+<param name="object.validation.checkCriteria.error">
+<value><![CDATA[Error. Please enter valid search criteria.]]></value>
+</param>
+<param name="object.validation.contact.siteIncompatibleWithAccount">
+<value><![CDATA[The selected site is incompatible with the account]]></value>
+</param>
+<param name="object.validation.exceedsLengthLimit">
+<value><![CDATA[Length limit exceeded]]></value>
+</param>
+<param name="object.validation.exceedsMaxLength.300.text">
+<value><![CDATA[Maximum length of data exceeds 300 characters. Please remove some data to continue]]></value>
+</param>
+<param name="object.validation.invalidDepartmentIdError.text">
+<value><![CDATA[Please select a valid department]]></value>
+</param>
+<param name="object.validation.invalidRoleIdError.text">
+<value><![CDATA[Please select a valid role]]></value>
+</param>
+<param name="object.validation.invalidUserGroupIdError.text">
+<value><![CDATA[Please select a valid user group.]]></value>
+</param>
+<param name="object.validation.noMultipleVersionQuoteForOpportunity">
+<value><![CDATA[A quote with multiple versions cannot be associated with this opportunity]]></value>
+</param>
+<param name="object.validation.noOtherUserWithAccessToAllSitesExist.text">
+<value><![CDATA[The system does not have any other user with access to all sites]]></value>
+</param>
+<param name="object.validation.opportunityComponent.lowCanNotBeZero">
+<value><![CDATA[This value can not be zero]]></value>
+</param>
+<param name="object.validation.opportunityComponent.lowNotGTGuess">
+<value><![CDATA[Low Estimate cannot be higher than the Best Guess Estimate]]></value>
+</param>
+<param name="object.validation.opportunityHasQuotes">
+<value><![CDATA[This opportunity has quotes associated with it]]></value>
+</param>
+<param name="object.validation.opportunity.permissionNotAllowedForThisSite">
+<value><![CDATA[You do not have permissions to add (or update) opportunities to this site]]></value>
+</param>
+<param name="object.validation.pipeline.invalidOwner.text">
+<value><![CDATA[Error. Please assign the component to a user in the manager's hierarchy of users]]></value>
+</param>
+<param name="object.validation.pipeline.noManagerSelected.text">
+<value><![CDATA[Please select a user to manage the opportunity]]></value>
+</param>
+<param name="object.validation.pipeline.noOwnerSelected.text">
+<value><![CDATA[Please select a user to assign the component]]></value>
+</param>
+<param name="object.validation.project.estimatedEndDateNotLTStartDate">
+<value><![CDATA[End date is earlier than Start date]]></value>
+</param>
+<param name="object.validation.siteChangeNotAllowed.text">
+<value><![CDATA[Site change is not allowed]]></value>
+</param>
+<param name="object.validation.theSelectedUserHasIncompatibleSite">
+<value><![CDATA[The selected user has an incompatible site]]></value>
+</param>
+<param name="object.validation.userHasAssociations.text">
+<value><![CDATA[This user is associated with several items. These items need to be assigned to another user before the site can be changed.]]></value>
+</param>
+<param name="pipeline.addAQuoteQuestion">
+<value><![CDATA[Add a quote?]]></value>
+</param>
+<param name="pipeline.alertDate">
+<value><![CDATA[Alert Date]]></value>
+</param>
+<param name="pipeline.alertDescription">
+<value><![CDATA[Alert Description]]></value>
+</param>
+<param name="pipeline.assignTo">
+<value><![CDATA[Assign To]]></value>
+</param>
+<param name="pipeline.associateWith">
+<value><![CDATA[Associate With]]></value>
+</param>
+<param name="pipeline.component">
+<value><![CDATA[Component]]></value>
+</param>
+<param name="pipeline.componentTypes.break">
+<value><![CDATA[Component]]></value>
+</param>
+<param name="pipeline.controlledHierarchyOpportunities">
+<value><![CDATA[Controlled-Hierarchy Opportunities]]></value>
+</param>
+<param name="pipeline.currentStage">
+<value><![CDATA[Current Stage]]></value>
+</param>
+<param name="pipeline.currentStageDate">
+<value><![CDATA[Current Stage Date]]></value>
+</param>
+<param name="pipeline.custom1Intege">
+<value><![CDATA[Custom1 Integer]]></value>
+</param>
+<param name="pipeline.estimatedCloseDate">
+<value><![CDATA[Est. Close Date]]></value>
+</param>
+<param name="pipeline.estimatedCommission">
+<value><![CDATA[Est. Commission]]></value>
+</param>
+<param name="pipeline.estimatedTerm">
+<value><![CDATA[Est. Term]]></value>
+</param>
+<param name="pipeline.highEstimate">
+<value><![CDATA[High Estimate]]></value>
+</param>
+<param name="pipeline.locked">
+<value><![CDATA[Locked]]></value>
+</param>
+<param name="pipeline.lowEstimate">
+<value><![CDATA[Low Estimate]]></value>
+</param>
+<param name="pipeline.probabilityOfClose">
+<value><![CDATA[Prob. of Close]]></value>
+</param>
+<param name="pipeline.source">
+<value><![CDATA[Source]]></value>
+</param>
+<param name="pipeline.units.weeks">
+<value><![CDATA[Weeks]]></value>
+</param>
+<param name="quotes.allOpenQuotes">
+<value><![CDATA[All Open Quotes]]></value>
+</param>
+<param name="relationships.orgFromDifferentSitesCanNotBeRelated">
+<value><![CDATA[Organizations from different sites cannot be related]]></value>
+</param>
+<param name="reports.actionplan.activity.title">
+<value><![CDATA[Action Plan Activity]]></value>
+</param>
+<param name="reports.actionplan.summary.title">
+<value><![CDATA[Action Plan Summary]]></value>
+</param>
+<param name="reports.dateRange">
+<value><![CDATA[Date Range]]></value>
+</param>
+<param name="reports.helpdesk.accounttotal">
+<value><![CDATA[Account Total]]></value>
+</param>
+<param name="reports.helpdesk.monthtotal">
+<value><![CDATA[Month Total]]></value>
+</param>
+<param name="reports.helpdesk.ticketSummary.departmentTotal">
+<value><![CDATA[Department Total]]></value>
+</param>
+<param name="reports.parameter.submittedFrom">
+<value><![CDATA[Submitted From]]></value>
+</param>
+<param name="reports.parameter.submittedTo">
+<value><![CDATA[Submitted To]]></value>
+</param>
+<param name="sales.actionPlan">
+<value><![CDATA[Action Plan]]></value>
+</param>
+<param name="sales.actionPlans">
+<value><![CDATA[Action Plans]]></value>
+</param>
+<param name="sales.actionPlans.stepsRandomExecution.text">
+<value><![CDATA[Steps can execute in random order]]></value>
+</param>
+<param name="sales.assignLead">
+<value><![CDATA[Assign]]></value>
+</param>
+<param name="sales.leads">
+<value><![CDATA[Leads]]></value>
+</param>
+<param name="sales.leadsDashboard">
+<value><![CDATA[Leads Dashboard]]></value>
+</param>
+<param name="setup.centricCRMLDAPTest">
+<value><![CDATA[Centric CRM LDAP Test]]></value>
+</param>
+<param name="setup.ldap">
+<value><![CDATA[LDAP Server]]></value>
+</param>
+<param name="setup.LDAPFailed.text">
+<value><![CDATA[LDAP failed.  The following error was returned:]]></value>
+</param>
+<param name="setup.ldapLoginSuccessful">
+<value><![CDATA[Logging in to LDAP was successful.]]></value>
+</param>
+<param name="setup.ldap.question">
+<value><![CDATA[For authenticating users, should an LDAP server be used?]]></value>
+</param>
+<param name="setup.ldapTest.text">
+<value><![CDATA[You should try to login to make certain the LDAP settings are configured correctly.]]></value>
+</param>
+<param name="setup.ldap.text">
+<value><![CDATA[<ul><li>A properly configured LDAP server is required</li>
+        <li>If searching for users by attribute, the LDAP administrator should create an LDAP user with permissions on the LDAP server to search for users by given attribute; access to other attributes is not necessary</li>
+      </ul>]]></value>
+</param>
+<param name="setup.loginToLDAP">
+<value><![CDATA[Login to LDAP...]]></value>
+</param>
+<param name="ticketDefect.dependencies">
+<value><![CDATA[Defect Dependencies]]></value>
+</param>
+<param name="ticketloglist.currentState">
+<value><![CDATA[Ticket state is ${ticketLogList.stateName}]]></value>
+</param>
+<param name="ticketloglist.stateChanged">
+<value><![CDATA[Ticket state changed from ${ticketLogList.previousStateName} to ${ticketLogList.currentStateName}]]></value>
+</param>
+<param name="tickets.addDefect">
+<value><![CDATA[Add a Defect]]></value>
+</param>
+<param name="tickets.addDocumentToKnowledgeBase.text">
+<value><![CDATA[Add new Document to the Knowledge Base]]></value>
+</param>
+<param name="tickets.automaticallyPopulateAssignment.text">
+<value><![CDATA[Automatically populate assignment based on categories]]></value>
+</param>
+<param name="tickets.cause">
+<value><![CDATA[Ticket Cause]]></value>
+</param>
+<param name="tickets.defects">
+<value><![CDATA[Tickets Defects]]></value>
+</param>
+<param name="tickets.defects.active">
+<value><![CDATA[Active]]></value>
+</param>
+<param name="tickets.defects.addDefect">
+<value><![CDATA[Add Defect]]></value>
+</param>
+<param name="tickets.defects.ageOf">
+<value><![CDATA[${days}d ${hours}h]]></value>
+</param>
+<param name="tickets.defects.defect">
+<value><![CDATA[Defect]]></value>
+</param>
+<param name="tickets.defects.defectDetails">
+<value><![CDATA[Defect Details]]></value>
+</param>
+<param name="tickets.defects.modifyDefect">
+<value><![CDATA[Modify Defect]]></value>
+</param>
+<param name="tickets.defects.noDefectsAvailable.text">
+<value><![CDATA[No defects available]]></value>
+</param>
+<param name="tickets.defects.viewDefects">
+<value><![CDATA[View Defects]]></value>
+</param>
+<param name="tickets.enteredDateBetween">
+<value><![CDATA[Entered Date between]]></value>
+</param>
+<param name="tickets.escalationLevel">
+<value><![CDATA[Escalation Level]]></value>
+</param>
+<param name="tickets.fileDetails">
+<value><![CDATA[File Details]]></value>
+</param>
+<param name="tickets.invalidCategorySelected.text">
+<value><![CDATA[Invalid site category selection]]></value>
+</param>
+<param name="tickets.knowledgeBase">
+<value><![CDATA[Knowledge Base]]></value>
+</param>
+<param name="tickets.knowledgebase.displayKBforSelectedCategories.text">
+<value><![CDATA[Display Knowledge Base for selected Categories]]></value>
+</param>
+<param name="tickets.modifyDocumentOrAppendNewFileVersion.text">
+<value><![CDATA[Modify Document or append a new File Version]]></value>
+</param>
+<param name="tickets.noKnowledgeBaseEntriesFound.text">
+<value><![CDATA[No knowledge base entries found.]]></value>
+</param>
+<param name="tickets.nonSite">
+<value><![CDATA[Non-Site]]></value>
+</param>
+<param name="tickets.parentAccounts.colon">
+<value><![CDATA[Parent Accounts:]]></value>
+</param>
+<param name="tickets.resolution">
+<value><![CDATA[Ticket Resolution]]></value>
+</param>
+<param name="tickets.ticketCategoryDraftAssignment.invalidAssignment.text">
+<value><![CDATA[Invalid data selection]]></value>
+</param>
+<param name="tickets.ticketCategoryDraftAssignment.invalidUserAssignment.text">
+<value><![CDATA[Invalid site user selection]]></value>
+</param>
+<param name="tickets.ticketCategoryDraftAssignment.invalidUserGroupAssignment.text">
+<value><![CDATA[Invalid site user group selection]]></value>
+</param>
+<param name="tickets.ticketCategoryLevel1">
+<value><![CDATA[Ticket Category Level 1]]></value>
+</param>
+<param name="tickets.ticketCategoryLevel2">
+<value><![CDATA[Ticket Category Level 2]]></value>
+</param>
+<param name="tickets.ticketCategoryLevel3">
+<value><![CDATA[Ticket Category Level 3]]></value>
+</param>
+<param name="tickets.ticketCategoryLevel4">
+<value><![CDATA[Ticket Category Level 4]]></value>
+</param>
+<param name="tickets.ticketCategoryMappedActionPlans.colon">
+<value><![CDATA[Mapped Action Plans for Category:]]></value>
+</param>
+<param name="tickets.ticketState">
+<value><![CDATA[Ticket State]]></value>
+</param>
+<param name="tickets.userGroupTickets">
+<value><![CDATA[Assigned to one of my Groups]]></value>
+</param>
+<param name="tickets.viewKnowledgeBase">
+<value><![CDATA[View Knowledge Base]]></value>
+</param>
+<param name="ticket.ticketTask.incomplete.bracket">
+<value><![CDATA[Ticket Tasks (Incomplete)]]></value>
+</param>
+<param name="trails.configureActionPlans">
+<value><![CDATA[Configure Action Plans]]></value>
+</param>
+<param name="usergroup.assignedGroup">
+<value><![CDATA[Assigned Group]]></value>
+</param>
+<param name="usergroup.dependencies">
+<value><![CDATA[The group you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+</param>
+<param name="usergroups.addGroup">
+<value><![CDATA[Add Group]]></value>
+</param>
+<param name="usergroups.addUserGroup">
+<value><![CDATA[Add User Group]]></value>
+</param>
+<param name="usergroups.groupUserList">
+<value><![CDATA[Group User List]]></value>
+</param>
+<param name="usergroups.groupUsers">
+<value><![CDATA[Group Users]]></value>
+</param>
+<param name="usergroups.groupUsers.colon">
+<value><![CDATA[Group Users:]]></value>
+</param>
+<param name="usergroups.manageGroups">
+<value><![CDATA[Manage Groups]]></value>
+</param>
+<param name="usergroups.modifyUserGroup">
+<value><![CDATA[Modify User Group]]></value>
+</param>
+<param name="usergroups.notSet">
+<value><![CDATA[Not set]]></value>
+</param>
+<param name="usergroups.noUserGroupsFound.txt">
+<value><![CDATA[No user groups found.]]></value>
+</param>
+<param name="usergroups.specificGroup.colon">
+<value><![CDATA[Specific Group:]]></value>
+</param>
+<param name="usergroups.specificUserGroup">
+<value><![CDATA[Member of a specific group]]></value>
+</param>
+<param name="usergroups.specificUserGroup.colon">
+<value><![CDATA[Member of a specific group:]]></value>
+</param>
+<param name="usergroups.userGroup">
+<value><![CDATA[User Group]]></value>
+</param>
+<param name="usergroups.userGroup.colon">
+<value><![CDATA[User Group:]]></value>
+</param>
+<param name="usergroup.userGroupList">
+<value><![CDATA[User Group List]]></value>
+</param>
 </config>
 <config name="system.modules.label">
+<param name="Accounts">
+<page_title><![CDATA[Racuni]]></page_title>
+<menu_title><![CDATA[Racuni]]></menu_title>
+</param>
+<param name="Quotes">
+<page_title><![CDATA[Navedki]]></page_title>
+<menu_title><![CDATA[Navedki]]></menu_title>
+</param>
+<param name="Orders">
+<page_title><![CDATA[Narocila]]></page_title>
+<menu_title><![CDATA[Narocila]]></menu_title>
+</param>
+<param name="Projects">
+<page_title><![CDATA[Projekti]]></page_title>
+<menu_title><![CDATA[Projekti]]></menu_title>
+</param>
+<param name="Communications">
+<page_title><![CDATA[Komunikacije]]></page_title>
+<menu_title><![CDATA[Komunikacije]]></menu_title>
+</param>
+<param name="Help Desk">
+<page_title><![CDATA[Pomoc]]></page_title>
+<menu_title><![CDATA[Pomoc]]></menu_title>
+</param>
 <param name="My Home Page">
 <page_title><![CDATA[Moja domaca stran]]></page_title>
 <menu_title><![CDATA[Moja domaca stran]]></menu_title>
@@ -11124,38 +11148,38 @@ Nimate dovoljenja da nadaljujete s tem opravilom.]]></value>
 <page_title><![CDATA[Administrator]]></page_title>
 <menu_title><![CDATA[Administrator]]></menu_title>
 </param>
-<param name="Orders">
-<page_title><![CDATA[Narocila]]></page_title>
-<menu_title><![CDATA[Narocila]]></menu_title>
-</param>
-<param name="Projects">
-<page_title><![CDATA[Projekti]]></page_title>
-<menu_title><![CDATA[Projekti]]></menu_title>
-</param>
-<param name="Help Desk">
-<page_title><![CDATA[Pomoc]]></page_title>
-<menu_title><![CDATA[Pomoc]]></menu_title>
-</param>
-<param name="Communications">
-<page_title><![CDATA[Komunikacije]]></page_title>
-<menu_title><![CDATA[Komunikacije]]></menu_title>
-</param>
-<param name="Accounts">
-<page_title><![CDATA[Racuni]]></page_title>
-<menu_title><![CDATA[Racuni]]></menu_title>
-</param>
-<param name="Quotes">
-<page_title><![CDATA[Navedki]]></page_title>
-<menu_title><![CDATA[Navedki]]></menu_title>
-</param>
 <param name="Website">
 <page_title><![CDATA[Website]]></page_title>
 <menu_title><![CDATA[Website]]></menu_title>
 </param>
 </config>
 <config name="system.submenu.label">
+<param name="List">
+<value><![CDATA[List]]></value>
+</param>
+<param name="Welcome">
+<value><![CDATA[Dobrodosli]]></value>
+</param>
+<param name="Mailbox">
+<value><![CDATA[Postni predal]]></value>
+</param>
+<param name="Tasks">
+<value><![CDATA[Naloge]]></value>
+</param>
+<param name="Action Lists">
+<value><![CDATA[Seznam dejavnosti]]></value>
+</param>
+<param name="Re-assignments">
+<value><![CDATA[Ponovno dodeljene]]></value>
+</param>
+<param name="Headlines">
+<value><![CDATA[Glavni naslovi]]></value>
+</param>
 <param name="Settings">
 <value><![CDATA[Nastavitve]]></value>
+</param>
+<param name="Add">
+<value><![CDATA[Dodaj]]></value>
 </param>
 <param name="Search">
 <value><![CDATA[iskanje]]></value>
@@ -11214,38 +11238,62 @@ Nimate dovoljenja da nadaljujete s tem opravilom.]]></value>
 <param name="Action Plans">
 <value><![CDATA[Action Plans]]></value>
 </param>
-<param name="List">
-<value><![CDATA[List]]></value>
+<param name="Defects">
+<value><![CDATA[Defects]]></value>
 </param>
 <param name="Knowledge Base">
 <value><![CDATA[Knowledge Base]]></value>
 </param>
-<param name="Defects">
-<value><![CDATA[Defects]]></value>
-</param>
-<param name="Welcome">
-<value><![CDATA[Dobrodosli]]></value>
-</param>
-<param name="Mailbox">
-<value><![CDATA[Postni predal]]></value>
-</param>
-<param name="Tasks">
-<value><![CDATA[Naloge]]></value>
-</param>
-<param name="Action Lists">
-<value><![CDATA[Seznam dejavnosti]]></value>
-</param>
-<param name="Re-assignments">
-<value><![CDATA[Ponovno dodeljene]]></value>
-</param>
-<param name="Headlines">
-<value><![CDATA[Glavni naslovi]]></value>
-</param>
-<param name="Add">
-<value><![CDATA[Dodaj]]></value>
-</param>
 </config>
 <config name="system.container.menu.label">
+<param name="accountscontacts.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
+<param name="accounts.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
+<param name="contacts.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
+<param name="documents.accounts.long_html">
+<value><![CDATA[Accounts]]></value>
+</param>
+<param name="opportunitiesQuotes.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="opportunitiesQuotes.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
+<param name="opportunitiesQuotes.notes.long_html">
+<value><![CDATA[Notes]]></value>
+</param>
+<param name="opportunities.folders.long_html">
+<value><![CDATA[Folders]]></value>
+</param>
+<param name="communications.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="communications.groups.long_html">
+<value><![CDATA[Groups]]></value>
+</param>
+<param name="communications.recipients.long_html">
+<value><![CDATA[Recipients]]></value>
+</param>
+<param name="communications.message.long_html">
+<value><![CDATA[Message]]></value>
+</param>
+<param name="communications.schedule.long_html">
+<value><![CDATA[Schedule]]></value>
+</param>
+<param name="communications.Results.long_html">
+<value><![CDATA[Results]]></value>
+</param>
+<param name="communications.response.long_html">
+<value><![CDATA[Response]]></value>
+</param>
+<param name="communications.documents.long_html">
+<value><![CDATA[Documents]]></value>
+</param>
 <param name="tickets.details.long_html">
 <value><![CDATA[Details]]></value>
 </param>
@@ -11324,8 +11372,8 @@ Nimate dovoljenja da nadaljujete s tem opravilom.]]></value>
 <param name="quotes.history.long_html">
 <value><![CDATA[History]]></value>
 </param>
-<param name="accountscontacts.history.long_html">
-<value><![CDATA[History]]></value>
+<param name="accountsQuotes.details.long_html">
+<value><![CDATA[Details]]></value>
 </param>
 <param name="accountsQuotes.notes.long_html">
 <value><![CDATA[Notes]]></value>
@@ -11363,26 +11411,14 @@ Nimate dovoljenja da nadaljujete s tem opravilom.]]></value>
 <param name="accounts.servicecontracts.long_html">
 <value><![CDATA[Service Contracts]]></value>
 </param>
-<param name="accountsQuotes.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="accounts.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
 <param name="accounts.assets.long_html">
 <value><![CDATA[Assets]]></value>
-</param>
-<param name="contacts.history.long_html">
-<value><![CDATA[History]]></value>
 </param>
 <param name="accounts.tickets.long_html">
 <value><![CDATA[Tickets]]></value>
 </param>
 <param name="accounts.documents.long_html">
 <value><![CDATA[Documents]]></value>
-</param>
-<param name="documents.accounts.long_html">
-<value><![CDATA[Accounts]]></value>
 </param>
 <param name="accounts.relationships.long_html">
 <value><![CDATA[Relationships]]></value>
@@ -11392,15 +11428,6 @@ Nimate dovoljenja da nadaljujete s tem opravilom.]]></value>
 </param>
 <param name="contacts.folders.long_html">
 <value><![CDATA[Folders]]></value>
-</param>
-<param name="opportunitiesQuotes.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="opportunitiesQuotes.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
-<param name="opportunitiesQuotes.notes.long_html">
-<value><![CDATA[Notes]]></value>
 </param>
 <param name="contacts.calls.long_html">
 <value><![CDATA[Activities]]></value>
@@ -11459,44 +11486,18 @@ Nimate dovoljenja da nadaljujete s tem opravilom.]]></value>
 <param name="communications.access.long_html">
 <value><![CDATA[Access]]></value>
 </param>
-<param name="accountcontactopportunities.quotes.long_html">
-<value><![CDATA[Quotes]]></value>
-</param>
-<param name="users.groups.long_html">
-<value><![CDATA[Groups]]></value>
-</param>
 <param name="accountcontactopportunities.details.long_html">
 <value><![CDATA[Details]]></value>
 </param>
 <param name="accountcontactopportunities.folders.long_html">
 <value><![CDATA[Folders]]></value>
 </param>
-<param name="opportunities.folders.long_html">
-<value><![CDATA[Folders]]></value>
+<param name="accountcontactopportunities.quotes.long_html">
+<value><![CDATA[Quotes]]></value>
 </param>
-<param name="communications.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="communications.groups.long_html">
+<param name="users.groups.long_html">
 <value><![CDATA[Groups]]></value>
-</param>
-<param name="communications.recipients.long_html">
-<value><![CDATA[Recipients]]></value>
-</param>
-<param name="communications.message.long_html">
-<value><![CDATA[Message]]></value>
-</param>
-<param name="communications.schedule.long_html">
-<value><![CDATA[Schedule]]></value>
-</param>
-<param name="communications.Results.long_html">
-<value><![CDATA[Results]]></value>
-</param>
-<param name="communications.response.long_html">
-<value><![CDATA[Response]]></value>
-</param>
-<param name="communications.documents.long_html">
-<value><![CDATA[Documents]]></value>
 </param>
 </config>
 </aspcfs>
+

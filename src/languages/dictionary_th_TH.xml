@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aspcfs>
 <config name="system.fields.label">
-<param name="actionPlan.restart">
-<value><![CDATA[เริ่มใหม่]]></value>
+<param name="accounts.accounts_contacts_calls_details_followup_include.None">
+<value><![CDATA[ไม่มี]]></value>
 </param>
 <param name="accounts.accounts_asset_list_include.NoAssetsFound">
 <value><![CDATA[ไมพบสินทรัพย์]]></value>
@@ -51,393 +51,6 @@
 </param>
 <param name="account.sc.billingNotes">
 <value><![CDATA[บิล]]></value>
-</param>
-<param name="admin.actionPlan.addStep">
-<value><![CDATA[Add Step]]></value>
-</param>
-<param name="admin.actionPlan.addStepAfterStep.text">
-<value><![CDATA[Add a Step after this Step]]></value>
-</param>
-<param name="admin.actionPlan.addStepBeforeStep.text">
-<value><![CDATA[Add a Step before this Step]]></value>
-</param>
-<param name="admin.actionPlan.attachAccountContact.text">
-<value><![CDATA[Require user to attach or create an account contact]]></value>
-</param>
-<param name="admin.actionPlan.attachActivity.text">
-<value><![CDATA[Require user to attach or create an activity]]></value>
-</param>
-<param name="admin.actionPlan.attachDocument.text">
-<value><![CDATA[Require user to attach or upload a document]]></value>
-</param>
-<param name="admin.actionPlan.attachFolder.text">
-<value><![CDATA[Require user to update a specific action plan folder]]></value>
-</param>
-<param name="admin.actionPlan.attachLookupListMultiple.text">
-<value><![CDATA[Require user to attach or create a lookup list]]></value>
-</param>
-<param name="admin.actionPlan.attachNoteMultiple.text">
-<value><![CDATA[Require user to attach or create multiple notes]]></value>
-</param>
-<param name="admin.actionPlan.attachNoteSingle.text">
-<value><![CDATA[Require user to attach or create a single note]]></value>
-</param>
-<param name="admin.actionPlan.attachOpportunity.text">
-<value><![CDATA[Require user to attach or create an opportunity]]></value>
-</param>
-<param name="admin.actionPlan.attachRelationship.text">
-<value><![CDATA[Require user to create account relationships]]></value>
-</param>
-<param name="admin.actionPlan.deletePhase">
-<value><![CDATA[Delete Phase]]></value>
-</param>
-<param name="admin.actionPlan.deleteStep">
-<value><![CDATA[Delete Step]]></value>
-</param>
-<param name="admin.actionPlan.modifyStep">
-<value><![CDATA[Modify Step]]></value>
-</param>
-<param name="admin.actionPlan.noAdditionalActionRequired.text">
-<value><![CDATA[-- No additional action required --]]></value>
-</param>
-<param name="admin.actionPlan.updateRating.text">
-<value><![CDATA[Require user to update the rating]]></value>
-</param>
-<param name="admin.actionPlan.viewAccount.text">
-<value><![CDATA[Allow user to view the account]]></value>
-</param>
-<param name="admin.configure.customListViews">
-<value><![CDATA[Configure Custom List Views]]></value>
-</param>
-<param name="admin.customListViews.addView">
-<value><![CDATA[Add View]]></value>
-</param>
-<param name="admin.customListViews.noViewsFound.text">
-<value><![CDATA[No views found]]></value>
-</param>
-<param name="admin.customListViews.totalColumns">
-<value><![CDATA[Total Columns]]></value>
-</param>
-<param name="admin.customListViews.viewName">
-<value><![CDATA[View Name]]></value>
-</param>
-<param name="admin.group.withoutADepartment">
-<value><![CDATA[Without a department]]></value>
-</param>
-<param name="admin.group.withoutAType">
-<value><![CDATA[Without a type]]></value>
-</param>
-<param name="admin.ldap.attribute">
-<value><![CDATA[Attribute:]]></value>
-</param>
-<param name="admin.ldap.authenticateUsers">
-<value><![CDATA[Authenticate users against LDAP server]]></value>
-</param>
-<param name="admin.ldap.compositePostfix">
-<value><![CDATA[Composite DN Postfix:]]></value>
-</param>
-<param name="admin.ldap.compositePrefix">
-<value><![CDATA[Composite DN Prefix:]]></value>
-</param>
-<param name="admin.ldap.container">
-<value><![CDATA[Container:]]></value>
-</param>
-<param name="admin.ldap.enabled">
-<value><![CDATA[LDAP Enabled:]]></value>
-</param>
-<param name="admin.ldap.factory">
-<value><![CDATA[LDAP Factory:]]></value>
-</param>
-<param name="admin.ldap.password">
-<value><![CDATA[Password:]]></value>
-</param>
-<param name="admin.ldap.searchByAttribute">
-<value><![CDATA[Search for user in LDAP by Attribute]]></value>
-</param>
-<param name="admin.ldap.type">
-<value><![CDATA[Type:]]></value>
-</param>
-<param name="admin.ldap.url">
-<value><![CDATA[LDAP Server URL:]]></value>
-</param>
-<param name="admin.ldap.useCentricLogin">
-<value><![CDATA[Use user's Centric CRM login]]></value>
-</param>
-<param name="admin.ldap.useComposite">
-<value><![CDATA[Use LDAP Composite DN]]></value>
-</param>
-<param name="admin.ldap.userMapping">
-<value><![CDATA[User Mapping:]]></value>
-</param>
-<param name="admin.ldap.username">
-<value><![CDATA[Username:]]></value>
-</param>
-<param name="actionPlan.actionPlan.colon">
-<value><![CDATA[Action Plan:]]></value>
-</param>
-<param name="actionPlan.actionPlanDetails">
-<value><![CDATA[Action Plan Details]]></value>
-</param>
-<param name="actionPlan.actionPlanDetailsPage.text">
-<value><![CDATA[Create, Modify or Delete Action Plans]]></value>
-</param>
-<param name="actionPlan.actionPlanEditors">
-<value><![CDATA[Action Plan Editors]]></value>
-</param>
-<param name="actionPlan.actionPlanName">
-<value><![CDATA[Action Plan Name]]></value>
-</param>
-<param name="actionPlan.activateThisPlan">
-<value><![CDATA[Activate this plan]]></value>
-</param>
-<param name="actionPlan.activationDate">
-<value><![CDATA[Activation Date]]></value>
-</param>
-<param name="actionPlan.addActionPhase">
-<value><![CDATA[Add Action Phase]]></value>
-</param>
-<param name="actionPlan.addAPhase">
-<value><![CDATA[Add a Phase]]></value>
-</param>
-<param name="actionPlan.addMappings">
-<value><![CDATA[Add Mappings]]></value>
-</param>
-<param name="actionPlan.allActionPlans">
-<value><![CDATA[All Action Plans]]></value>
-</param>
-<param name="actionPlan.anyStatusPlans">
-<value><![CDATA[Any Status Plans]]></value>
-</param>
-<param name="actionPlan.archivedDate">
-<value><![CDATA[Archived Date]]></value>
-</param>
-<param name="actionPlan.assignedUserAndPlanManager.text">
-<value><![CDATA[Assigned User and Manager of the plan]]></value>
-</param>
-<param name="actionPlan.assignedUserHierarchy.text">
-<value><![CDATA[Within the hierarchy of the assigned user]]></value>
-</param>
-<param name="actionPlan.attachAccountContact.text">
-<value><![CDATA[Attach Account Contact]]></value>
-</param>
-<param name="actionPlan.attachActivity.text">
-<value><![CDATA[Attach Activity]]></value>
-</param>
-<param name="actionPlan.attachContact">
-<value><![CDATA[Attach Contact]]></value>
-</param>
-<param name="actionPlan.attachDocument.text">
-<value><![CDATA[Attach Document]]></value>
-</param>
-<param name="actionPlan.attachFolder.text">
-<value><![CDATA[Attach Folder]]></value>
-</param>
-<param name="actionPlan.attachLookupListMultiple.text">
-<value><![CDATA[Attach a Lookup List]]></value>
-</param>
-<param name="actionPlan.attachmentMandatory">
-<value><![CDATA[Attachment Mandatory]]></value>
-</param>
-<param name="actionPlan.attachmentOptional">
-<value><![CDATA[Attachment Optional]]></value>
-</param>
-<param name="actionPlan.attachNoteMultiple.text">
-<value><![CDATA[Attach multiple Notes]]></value>
-</param>
-<param name="actionPlan.attachNoteSingle.text">
-<value><![CDATA[Attach a single Note]]></value>
-</param>
-<param name="actionPlan.attachOpportunity.text">
-<value><![CDATA[Attach Opportunity]]></value>
-</param>
-<param name="actionPlan.businessSegment">
-<value><![CDATA[Business Segment]]></value>
-</param>
-<param name="actionPlan.categories">
-<value><![CDATA[Action Plan Categories]]></value>
-</param>
-<param name="actionPlan.configureCategories">
-<value><![CDATA[Configure Categories]]></value>
-</param>
-<param name="actionPlan.configureMappings">
-<value><![CDATA[Configure Mappings]]></value>
-</param>
-<param name="actionPlan.currentPhase">
-<value><![CDATA[Current Phase]]></value>
-</param>
-<param name="actionPlan.dashboardView">
-<value><![CDATA[Dashboard View]]></value>
-</param>
-<param name="actionPlan.daysActive">
-<value><![CDATA[Days Active]]></value>
-</param>
-<param name="actionPlan.daysInPhase">
-<value><![CDATA[Days in Phase]]></value>
-</param>
-<param name="actionPlan.daysInStage">
-<value><![CDATA[Days in Stage]]></value>
-</param>
-<param name="actionPlan.departmentMember.text">
-<value><![CDATA[Member of a specific department]]></value>
-</param>
-<param name="actionplan.dependencies">
-<value><![CDATA[The action plan you are requesting to delete has the following dependencies within Centric CRM:]]></value>
-</param>
-<param name="actionPlan.estimatedStepDuration">
-<value><![CDATA[Estimated Step Duration]]></value>
-</param>
-<param name="actionPlan.folderField.text">
-<value><![CDATA[* Folder Field]]></value>
-</param>
-<param name="actionPlan.folderToUpdate.text">
-<value><![CDATA[* Folder to update]]></value>
-</param>
-<param name="actionPlan.inactivePlans">
-<value><![CDATA[Inactive Plans]]></value>
-</param>
-<param name="actionPlan.memberOfSpecificRole.text">
-<value><![CDATA[Member of a specific role]]></value>
-</param>
-<param name="actionPlan.memberOfTheDepartment.colon">
-<value><![CDATA[Member of the department:]]></value>
-</param>
-<param name="actionPlan.modifyActionPhase">
-<value><![CDATA[Modify Action Phase]]></value>
-</param>
-<param name="actionPlan.modifyPhase">
-<value><![CDATA[Modify Phase]]></value>
-</param>
-<param name="actionPlan.myHierarchyActionPlans">
-<value><![CDATA[Action Plans in My Hierarchy]]></value>
-</param>
-<param name="actionPlan.myManagedActionPlans">
-<value><![CDATA[Action Plans Managed By Me]]></value>
-</param>
-<param name="actionPlan.myWaitingActionPlans">
-<value><![CDATA[Action Plans Waiting on Me]]></value>
-</param>
-<param name="actionPlan.noActionPlansFound">
-<value><![CDATA[No Action Plans found in this view.]]></value>
-</param>
-<param name="actionPlan.noActionPlansFound.text">
-<value><![CDATA[No action plans found.]]></value>
-</param>
-<param name="actionPlan.noElementsAvailable.text">
-<value><![CDATA[No elements available for mapping]]></value>
-</param>
-<param name="actionPlan.noPhasesFound.text">
-<value><![CDATA[No Phases found.]]></value>
-</param>
-<param name="actionPlan.noStepsForPhase.text">
-<value><![CDATA[No Steps found for this Phase.]]></value>
-</param>
-<param name="actionPlan.notAvailable">
-<value><![CDATA[Not available]]></value>
-</param>
-<param name="actionPlan.numberOfDays.symbol">
-<value><![CDATA[# Days]]></value>
-</param>
-<param name="actionPlan.numberOfPlansPerPhase.text">
-<value><![CDATA[Number of plans in each phase]]></value>
-</param>
-<param name="actionPlan.numberPhasePlans">
-<value><![CDATA[Number of plans in each phase]]></value>
-</param>
-<param name="actionPlan.phase">
-<value><![CDATA[Phase]]></value>
-</param>
-<param name="actionPlan.phases">
-<value><![CDATA[Phases]]></value>
-</param>
-<param name="actionPlan.planManager">
-<value><![CDATA[Plan Manager]]></value>
-</param>
-<param name="actionPlan.planManager.text">
-<value><![CDATA[Manager of the plan]]></value>
-</param>
-<param name="actionPlan.prospect">
-<value><![CDATA[Prospect]]></value>
-</param>
-<param name="accounts.accounts_search.accountSegment">
-<value><![CDATA[Account Segment]]></value>
-</param>
-<param name="accounts.allSites">
-<value><![CDATA[All Sites]]></value>
-</param>
-<param name="accounts.assets.billOfMaterials">
-<value><![CDATA[Bill of Materials]]></value>
-</param>
-<param name="accounts.assets.materials">
-<value><![CDATA[Asset Materials]]></value>
-</param>
-<param name="accounts.assets.noMaterialsPresent.text">
-<value><![CDATA[No materials present for the asset]]></value>
-</param>
-<param name="accounts.contactInformationFilters">
-<value><![CDATA[Contact Information Filters]]></value>
-</param>
-<param name="accounts.contacts.opportunities.folders.Permission">
-<value><![CDATA[Contact Opportunity Folders]]></value>
-</param>
-<param name="accounts.contacts.opportunities.quotes.Permission">
-<value><![CDATA[Contact Opportunities Quotes]]></value>
-</param>
-<param name="accounts.search.includeContactsInSearchResults">
-<value><![CDATA[Include contacts in search results]]></value>
-</param>
-<param name="accounts.subAssets">
-<value><![CDATA[Sub-Assets]]></value>
-</param>
-<param name="actionItem.updateStep.alertNextOwner">
-<value><![CDATA[Alert the next step's owner by email]]></value>
-</param>
-<param name="actionItem.updateStep.comment">
-<value><![CDATA[Updating this step will]]></value>
-</param>
-<param name="actionItem.updateStep.ownerNext">
-<value><![CDATA[Owner of the next step]]></value>
-</param>
-<param name="actionphase.dependencies">
-<value><![CDATA[The action phase you are requesting to delete has the following dependencies within Centric CRM:]]></value>
-</param>
-<param name="actionPlan.accountTypes">
-<value><![CDATA[Account Types]]></value>
-</param>
-<param name="accounts.accounts_reports.NoExporteddataFound">
-<value><![CDATA[ไม่พบข้อมูลที่เคยนำออกไป]]></value>
-</param>
-<param name="accounts.accounts_revenue_dashboard.UpOneLevel">
-<value><![CDATA[ขึ้็นหนึ่งระดับ]]></value>
-</param>
-<param name="accounts.active.accounts">
-<value><![CDATA[บัญชีที่มีการเคลื่อนไหว]]></value>
-</param>
-<param name="accounts.emailAddresses.error">
-<value><![CDATA[ที่อยู่อีเมล์ไม่ถูกต้อง]]></value>
-</param>
-<param name="actionPlan.actionRequired">
-<value><![CDATA[ปฏิบัติการที่ต้องการ]]></value>
-</param>
-<param name="actionPlan.addNewGroup">
-<value><![CDATA[เพิ่มกลุ่มใหม่]]></value>
-</param>
-<param name="actionPlan.attachRelationship.text">
-<value><![CDATA[เพิ่มความสัมพันธ์]]></value>
-</param>
-<param name="actionPlan.dateActivated">
-<value><![CDATA[กระตุ้นแล้ว]]></value>
-</param>
-<param name="actionPlan.myActionPlans">
-<value><![CDATA[แผนปฏิบัติการของฉัน]]></value>
-</param>
-<param name="actionPlan.modifyActionStep">
-<value><![CDATA[เปลี่ยนแปลงขั้นตอนการปฏิบัติ]]></value>
-</param>
-<param name="actionPlan.modifyActionPlan">
-<value><![CDATA[เปลี่ยนแปลงแผนปฏิบัติการ]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.None">
-<value><![CDATA[ไม่มี]]></value>
 </param>
 <param name="accounts.search">
 <value><![CDATA[ค้นหาบัญชี]]></value>
@@ -11092,55 +10705,438 @@ while a Guest has very limited functionality.]]></value>
 <param name="admin.actionPlan.addPhaseBeforePhase.text">
 <value><![CDATA[Add a Phase before this Phase]]></value>
 </param>
+<param name="admin.actionPlan.addStep">
+<value><![CDATA[Add Step]]></value>
+</param>
+<param name="admin.actionPlan.addStepAfterStep.text">
+<value><![CDATA[Add a Step after this Step]]></value>
+</param>
+<param name="admin.actionPlan.addStepBeforeStep.text">
+<value><![CDATA[Add a Step before this Step]]></value>
+</param>
+<param name="admin.actionPlan.attachAccountContact.text">
+<value><![CDATA[Require user to attach or create an account contact]]></value>
+</param>
+<param name="admin.actionPlan.attachActivity.text">
+<value><![CDATA[Require user to attach or create an activity]]></value>
+</param>
+<param name="admin.actionPlan.attachDocument.text">
+<value><![CDATA[Require user to attach or upload a document]]></value>
+</param>
+<param name="admin.actionPlan.attachFolder.text">
+<value><![CDATA[Require user to update a specific action plan folder]]></value>
+</param>
+<param name="admin.actionPlan.attachLookupListMultiple.text">
+<value><![CDATA[Require user to attach or create a lookup list]]></value>
+</param>
+<param name="admin.actionPlan.attachNoteMultiple.text">
+<value><![CDATA[Require user to attach or create multiple notes]]></value>
+</param>
+<param name="admin.actionPlan.attachNoteSingle.text">
+<value><![CDATA[Require user to attach or create a single note]]></value>
+</param>
+<param name="admin.actionPlan.attachOpportunity.text">
+<value><![CDATA[Require user to attach or create an opportunity]]></value>
+</param>
+<param name="admin.actionPlan.attachRelationship.text">
+<value><![CDATA[Require user to create account relationships]]></value>
+</param>
+<param name="admin.actionPlan.deletePhase">
+<value><![CDATA[Delete Phase]]></value>
+</param>
+<param name="admin.actionPlan.deleteStep">
+<value><![CDATA[Delete Step]]></value>
+</param>
+<param name="admin.actionPlan.modifyStep">
+<value><![CDATA[Modify Step]]></value>
+</param>
+<param name="admin.actionPlan.noAdditionalActionRequired.text">
+<value><![CDATA[-- No additional action required --]]></value>
+</param>
+<param name="admin.actionPlan.updateRating.text">
+<value><![CDATA[Require user to update the rating]]></value>
+</param>
+<param name="admin.actionPlan.viewAccount.text">
+<value><![CDATA[Allow user to view the account]]></value>
+</param>
+<param name="admin.configure.customListViews">
+<value><![CDATA[Configure Custom List Views]]></value>
+</param>
+<param name="admin.customListViews.addView">
+<value><![CDATA[Add View]]></value>
+</param>
+<param name="admin.customListViews.noViewsFound.text">
+<value><![CDATA[No views found]]></value>
+</param>
+<param name="admin.customListViews.totalColumns">
+<value><![CDATA[Total Columns]]></value>
+</param>
+<param name="admin.customListViews.viewName">
+<value><![CDATA[View Name]]></value>
+</param>
+<param name="admin.group.withoutADepartment">
+<value><![CDATA[Without a department]]></value>
+</param>
+<param name="admin.group.withoutAType">
+<value><![CDATA[Without a type]]></value>
+</param>
+<param name="admin.ldap.attribute">
+<value><![CDATA[Attribute:]]></value>
+</param>
+<param name="admin.ldap.authenticateUsers">
+<value><![CDATA[Authenticate users against LDAP server]]></value>
+</param>
+<param name="admin.ldap.compositePostfix">
+<value><![CDATA[Composite DN Postfix:]]></value>
+</param>
+<param name="admin.ldap.compositePrefix">
+<value><![CDATA[Composite DN Prefix:]]></value>
+</param>
+<param name="admin.ldap.container">
+<value><![CDATA[Container:]]></value>
+</param>
+<param name="admin.ldap.enabled">
+<value><![CDATA[LDAP Enabled:]]></value>
+</param>
+<param name="admin.ldap.factory">
+<value><![CDATA[LDAP Factory:]]></value>
+</param>
+<param name="admin.ldap.password">
+<value><![CDATA[Password:]]></value>
+</param>
+<param name="admin.ldap.searchByAttribute">
+<value><![CDATA[Search for user in LDAP by Attribute]]></value>
+</param>
+<param name="admin.ldap.type">
+<value><![CDATA[Type:]]></value>
+</param>
+<param name="admin.ldap.url">
+<value><![CDATA[LDAP Server URL:]]></value>
+</param>
+<param name="admin.ldap.useCentricLogin">
+<value><![CDATA[Use user's Centric CRM login]]></value>
+</param>
+<param name="admin.ldap.useComposite">
+<value><![CDATA[Use LDAP Composite DN]]></value>
+</param>
+<param name="admin.ldap.userMapping">
+<value><![CDATA[User Mapping:]]></value>
+</param>
+<param name="admin.ldap.username">
+<value><![CDATA[Username:]]></value>
+</param>
+<param name="actionPlan.actionPlan.colon">
+<value><![CDATA[Action Plan:]]></value>
+</param>
+<param name="actionPlan.actionPlanDetails">
+<value><![CDATA[Action Plan Details]]></value>
+</param>
+<param name="actionPlan.actionPlanDetailsPage.text">
+<value><![CDATA[Create, Modify or Delete Action Plans]]></value>
+</param>
+<param name="actionPlan.actionPlanEditors">
+<value><![CDATA[Action Plan Editors]]></value>
+</param>
+<param name="actionPlan.actionPlanName">
+<value><![CDATA[Action Plan Name]]></value>
+</param>
+<param name="actionPlan.activateThisPlan">
+<value><![CDATA[Activate this plan]]></value>
+</param>
+<param name="actionPlan.activationDate">
+<value><![CDATA[Activation Date]]></value>
+</param>
+<param name="actionPlan.addActionPhase">
+<value><![CDATA[Add Action Phase]]></value>
+</param>
+<param name="actionPlan.addAPhase">
+<value><![CDATA[Add a Phase]]></value>
+</param>
+<param name="actionPlan.addMappings">
+<value><![CDATA[Add Mappings]]></value>
+</param>
+<param name="actionPlan.allActionPlans">
+<value><![CDATA[All Action Plans]]></value>
+</param>
+<param name="actionPlan.anyStatusPlans">
+<value><![CDATA[Any Status Plans]]></value>
+</param>
+<param name="actionPlan.archivedDate">
+<value><![CDATA[Archived Date]]></value>
+</param>
+<param name="actionPlan.assignedUserAndPlanManager.text">
+<value><![CDATA[Assigned User and Manager of the plan]]></value>
+</param>
+<param name="actionPlan.assignedUserHierarchy.text">
+<value><![CDATA[Within the hierarchy of the assigned user]]></value>
+</param>
+<param name="actionPlan.attachAccountContact.text">
+<value><![CDATA[Attach Account Contact]]></value>
+</param>
+<param name="actionPlan.attachActivity.text">
+<value><![CDATA[Attach Activity]]></value>
+</param>
+<param name="actionPlan.attachContact">
+<value><![CDATA[Attach Contact]]></value>
+</param>
+<param name="actionPlan.attachDocument.text">
+<value><![CDATA[Attach Document]]></value>
+</param>
+<param name="actionPlan.attachFolder.text">
+<value><![CDATA[Attach Folder]]></value>
+</param>
+<param name="actionPlan.attachLookupListMultiple.text">
+<value><![CDATA[Attach a Lookup List]]></value>
+</param>
+<param name="actionPlan.attachmentMandatory">
+<value><![CDATA[Attachment Mandatory]]></value>
+</param>
+<param name="actionPlan.attachmentOptional">
+<value><![CDATA[Attachment Optional]]></value>
+</param>
+<param name="actionPlan.attachNoteMultiple.text">
+<value><![CDATA[Attach multiple Notes]]></value>
+</param>
+<param name="actionPlan.attachNoteSingle.text">
+<value><![CDATA[Attach a single Note]]></value>
+</param>
+<param name="actionPlan.attachOpportunity.text">
+<value><![CDATA[Attach Opportunity]]></value>
+</param>
+<param name="actionPlan.businessSegment">
+<value><![CDATA[Business Segment]]></value>
+</param>
+<param name="actionPlan.categories">
+<value><![CDATA[Action Plan Categories]]></value>
+</param>
+<param name="actionPlan.configureCategories">
+<value><![CDATA[Configure Categories]]></value>
+</param>
+<param name="actionPlan.configureMappings">
+<value><![CDATA[Configure Mappings]]></value>
+</param>
+<param name="actionPlan.currentPhase">
+<value><![CDATA[Current Phase]]></value>
+</param>
+<param name="actionPlan.dashboardView">
+<value><![CDATA[Dashboard View]]></value>
+</param>
+<param name="actionPlan.daysActive">
+<value><![CDATA[Days Active]]></value>
+</param>
+<param name="actionPlan.daysInPhase">
+<value><![CDATA[Days in Phase]]></value>
+</param>
+<param name="actionPlan.daysInStage">
+<value><![CDATA[Days in Stage]]></value>
+</param>
+<param name="actionPlan.departmentMember.text">
+<value><![CDATA[Member of a specific department]]></value>
+</param>
+<param name="actionplan.dependencies">
+<value><![CDATA[The action plan you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+</param>
+<param name="actionPlan.estimatedStepDuration">
+<value><![CDATA[Estimated Step Duration]]></value>
+</param>
+<param name="actionPlan.folderField.text">
+<value><![CDATA[* Folder Field]]></value>
+</param>
+<param name="actionPlan.folderToUpdate.text">
+<value><![CDATA[* Folder to update]]></value>
+</param>
+<param name="actionPlan.inactivePlans">
+<value><![CDATA[Inactive Plans]]></value>
+</param>
+<param name="actionPlan.memberOfSpecificRole.text">
+<value><![CDATA[Member of a specific role]]></value>
+</param>
+<param name="actionPlan.memberOfTheDepartment.colon">
+<value><![CDATA[Member of the department:]]></value>
+</param>
+<param name="actionPlan.modifyActionPhase">
+<value><![CDATA[Modify Action Phase]]></value>
+</param>
+<param name="actionPlan.modifyPhase">
+<value><![CDATA[Modify Phase]]></value>
+</param>
+<param name="actionPlan.myHierarchyActionPlans">
+<value><![CDATA[Action Plans in My Hierarchy]]></value>
+</param>
+<param name="actionPlan.myManagedActionPlans">
+<value><![CDATA[Action Plans Managed By Me]]></value>
+</param>
+<param name="actionPlan.myWaitingActionPlans">
+<value><![CDATA[Action Plans Waiting on Me]]></value>
+</param>
+<param name="actionPlan.noActionPlansFound">
+<value><![CDATA[No Action Plans found in this view.]]></value>
+</param>
+<param name="actionPlan.noActionPlansFound.text">
+<value><![CDATA[No action plans found.]]></value>
+</param>
+<param name="actionPlan.noElementsAvailable.text">
+<value><![CDATA[No elements available for mapping]]></value>
+</param>
+<param name="actionPlan.noPhasesFound.text">
+<value><![CDATA[No Phases found.]]></value>
+</param>
+<param name="actionPlan.noStepsForPhase.text">
+<value><![CDATA[No Steps found for this Phase.]]></value>
+</param>
+<param name="actionPlan.notAvailable">
+<value><![CDATA[Not available]]></value>
+</param>
+<param name="actionPlan.numberOfDays.symbol">
+<value><![CDATA[# Days]]></value>
+</param>
+<param name="actionPlan.numberOfPlansPerPhase.text">
+<value><![CDATA[Number of plans in each phase]]></value>
+</param>
+<param name="actionPlan.numberPhasePlans">
+<value><![CDATA[Number of plans in each phase]]></value>
+</param>
+<param name="actionPlan.phase">
+<value><![CDATA[Phase]]></value>
+</param>
+<param name="actionPlan.phases">
+<value><![CDATA[Phases]]></value>
+</param>
+<param name="actionPlan.planManager">
+<value><![CDATA[Plan Manager]]></value>
+</param>
+<param name="actionPlan.planManager.text">
+<value><![CDATA[Manager of the plan]]></value>
+</param>
+<param name="actionPlan.prospect">
+<value><![CDATA[Prospect]]></value>
+</param>
+<param name="accounts.accounts_search.accountSegment">
+<value><![CDATA[Account Segment]]></value>
+</param>
+<param name="accounts.allSites">
+<value><![CDATA[All Sites]]></value>
+</param>
+<param name="accounts.assets.billOfMaterials">
+<value><![CDATA[Bill of Materials]]></value>
+</param>
+<param name="accounts.assets.materials">
+<value><![CDATA[Asset Materials]]></value>
+</param>
+<param name="accounts.assets.noMaterialsPresent.text">
+<value><![CDATA[No materials present for the asset]]></value>
+</param>
+<param name="accounts.contactInformationFilters">
+<value><![CDATA[Contact Information Filters]]></value>
+</param>
+<param name="accounts.contacts.opportunities.folders.Permission">
+<value><![CDATA[Contact Opportunity Folders]]></value>
+</param>
+<param name="accounts.contacts.opportunities.quotes.Permission">
+<value><![CDATA[Contact Opportunities Quotes]]></value>
+</param>
+<param name="accounts.search.includeContactsInSearchResults">
+<value><![CDATA[Include contacts in search results]]></value>
+</param>
+<param name="accounts.subAssets">
+<value><![CDATA[Sub-Assets]]></value>
+</param>
+<param name="actionItem.updateStep.alertNextOwner">
+<value><![CDATA[Alert the next step's owner by email]]></value>
+</param>
+<param name="actionItem.updateStep.comment">
+<value><![CDATA[Updating this step will]]></value>
+</param>
+<param name="actionItem.updateStep.ownerNext">
+<value><![CDATA[Owner of the next step]]></value>
+</param>
+<param name="actionphase.dependencies">
+<value><![CDATA[The action phase you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+</param>
+<param name="actionPlan.accountTypes">
+<value><![CDATA[Account Types]]></value>
+</param>
+<param name="accounts.accounts_reports.NoExporteddataFound">
+<value><![CDATA[ไม่พบข้อมูลที่เคยนำออกไป]]></value>
+</param>
+<param name="accounts.accounts_revenue_dashboard.UpOneLevel">
+<value><![CDATA[ขึ้็นหนึ่งระดับ]]></value>
+</param>
+<param name="accounts.active.accounts">
+<value><![CDATA[บัญชีที่มีการเคลื่อนไหว]]></value>
+</param>
+<param name="accounts.emailAddresses.error">
+<value><![CDATA[ที่อยู่อีเมล์ไม่ถูกต้อง]]></value>
+</param>
+<param name="actionPlan.actionRequired">
+<value><![CDATA[ปฏิบัติการที่ต้องการ]]></value>
+</param>
+<param name="actionPlan.addNewGroup">
+<value><![CDATA[เพิ่มกลุ่มใหม่]]></value>
+</param>
+<param name="actionPlan.attachRelationship.text">
+<value><![CDATA[เพิ่มความสัมพันธ์]]></value>
+</param>
+<param name="actionPlan.dateActivated">
+<value><![CDATA[กระตุ้นแล้ว]]></value>
+</param>
+<param name="actionPlan.myActionPlans">
+<value><![CDATA[แผนปฏิบัติการของฉัน]]></value>
+</param>
+<param name="actionPlan.modifyActionStep">
+<value><![CDATA[เปลี่ยนแปลงขั้นตอนการปฏิบัติ]]></value>
+</param>
+<param name="actionPlan.modifyActionPlan">
+<value><![CDATA[เปลี่ยนแปลงแผนปฏิบัติการ]]></value>
+</param>
+<param name="actionPlan.restart">
+<value><![CDATA[เริ่มใหม่]]></value>
+</param>
 </config>
 <config name="system.modules.label">
-<param name="Website">
-<page_title><![CDATA[Website]]></page_title>
-<menu_title><![CDATA[Website]]></menu_title>
-</param>
-<param name="Documents">
-<page_title><![CDATA[Documents]]></page_title>
-<menu_title><![CDATA[Documents]]></menu_title>
-</param>
-<param name="Orders">
-<page_title><![CDATA[Orders]]></page_title>
-<menu_title><![CDATA[Orders]]></menu_title>
-</param>
-<param name="My Home Page">
-<page_title><![CDATA[My Home Page]]></page_title>
-<menu_title><![CDATA[My Home Page]]></menu_title>
-</param>
 <param name="Leads">
 <page_title><![CDATA[Leads]]></page_title>
 <menu_title><![CDATA[Leads]]></menu_title>
 </param>
-<param name="Accounts">
-<page_title><![CDATA[บัญชี]]></page_title>
-<menu_title><![CDATA[บัญชี]]></menu_title>
-</param>
-<param name="Help Desk">
-<page_title><![CDATA[Help Desk]]></page_title>
-<menu_title><![CDATA[Help Desk]]></menu_title>
-</param>
-<param name="Contacts">
-<page_title><![CDATA[Contacts]]></page_title>
-<menu_title><![CDATA[Contacts]]></menu_title>
-</param>
-<param name="Projects">
-<page_title><![CDATA[Projects]]></page_title>
-<menu_title><![CDATA[Projects]]></menu_title>
+<param name="Website">
+<page_title><![CDATA[Website]]></page_title>
+<menu_title><![CDATA[Website]]></menu_title>
 </param>
 <param name="Communications">
 <page_title><![CDATA[Communications]]></page_title>
 <menu_title><![CDATA[Communications]]></menu_title>
 </param>
-<param name="Admin">
-<page_title><![CDATA[ผู้ดูแลระบบ]]></page_title>
-<menu_title><![CDATA[ผู้ดูแลระบบ]]></menu_title>
+<param name="Contacts">
+<page_title><![CDATA[Contacts]]></page_title>
+<menu_title><![CDATA[Contacts]]></menu_title>
+</param>
+<param name="Documents">
+<page_title><![CDATA[Documents]]></page_title>
+<menu_title><![CDATA[Documents]]></menu_title>
 </param>
 <param name="Employees">
 <page_title><![CDATA[Employees]]></page_title>
 <menu_title><![CDATA[Employees]]></menu_title>
+</param>
+<param name="Help Desk">
+<page_title><![CDATA[Help Desk]]></page_title>
+<menu_title><![CDATA[Help Desk]]></menu_title>
+</param>
+<param name="My Home Page">
+<page_title><![CDATA[My Home Page]]></page_title>
+<menu_title><![CDATA[My Home Page]]></menu_title>
+</param>
+<param name="Orders">
+<page_title><![CDATA[Orders]]></page_title>
+<menu_title><![CDATA[Orders]]></menu_title>
+</param>
+<param name="Pipeline">
+<page_title><![CDATA[Pipeline]]></page_title>
+<menu_title><![CDATA[Pipeline]]></menu_title>
+</param>
+<param name="Projects">
+<page_title><![CDATA[Projects]]></page_title>
+<menu_title><![CDATA[Projects]]></menu_title>
 </param>
 <param name="Quotes">
 <page_title><![CDATA[Quotes]]></page_title>
@@ -11150,119 +11146,111 @@ while a Guest has very limited functionality.]]></value>
 <page_title><![CDATA[Reports]]></page_title>
 <menu_title><![CDATA[Reports]]></menu_title>
 </param>
-<param name="Pipeline">
-<page_title><![CDATA[Pipeline]]></page_title>
-<menu_title><![CDATA[Pipeline]]></menu_title>
+<param name="Accounts">
+<page_title><![CDATA[บัญชี]]></page_title>
+<menu_title><![CDATA[บัญชี]]></menu_title>
+</param>
+<param name="Admin">
+<page_title><![CDATA[ผู้ดูแลระบบ]]></page_title>
+<menu_title><![CDATA[ผู้ดูแลระบบ]]></menu_title>
 </param>
 </config>
 <config name="system.container.menu.label">
-<param name="accountscontacts.history.long_html">
-<value><![CDATA[ประวัติ]]></value>
-</param>
-<param name="tickets.activitylog.long_html">
-<value><![CDATA[Activity Log]]></value>
+<param name="accountsQuotes.notes.long_html">
+<value><![CDATA[บันทึก]]></value>
 </param>
 <param name="accounts.relationships.long_html">
 <value><![CDATA[ความสัมพันธ์]]></value>
 </param>
-<param name="users.groups.long_html">
-<value><![CDATA[Groups]]></value>
+<param name="contacts.history.long_html">
+<value><![CDATA[History]]></value>
 </param>
-<param name="documents.team.long_html">
-<value><![CDATA[Team]]></value>
+<param name="documents.accounts.long_html">
+<value><![CDATA[Accounts]]></value>
 </param>
-<param name="communications.Results.long_html">
-<value><![CDATA[ผลลัพธ์]]></value>
+<param name="opportunitiesQuotes.details.long_html">
+<value><![CDATA[Details]]></value>
 </param>
-<param name="communications.response.long_html">
-<value><![CDATA[ตอบ]]></value>
+<param name="opportunitiesQuotes.history.long_html">
+<value><![CDATA[History]]></value>
+</param>
+<param name="opportunitiesQuotes.notes.long_html">
+<value><![CDATA[Notes]]></value>
 </param>
 <param name="accountstickets.activitylog.long_html">
 <value><![CDATA[บัณทึกกิจกรรมที่ได้ทำไปแล้ว]]></value>
 </param>
-<param name="communications.recipients.long_html">
-<value><![CDATA[ผู้รับ]]></value>
+<param name="accountscontacts.history.long_html">
+<value><![CDATA[ประวัติ]]></value>
 </param>
-<param name="communications.message.long_html">
-<value><![CDATA[ข้อความ]]></value>
+<param name="accounts.history.long_html">
+<value><![CDATA[ประวัติ]]></value>
 </param>
-<param name="communications.groups.long_html">
-<value><![CDATA[กลุ่ม]]></value>
-</param>
-<param name="communications.documents.long_html">
-<value><![CDATA[เอกสาร]]></value>
-</param>
-<param name="tickets.tasks.long_html">
-<value><![CDATA[Tasks]]></value>
-</param>
-<param name="communications.details.long_html">
-<value><![CDATA[รายละเอียด]]></value>
-</param>
-<param name="accounts.opportunities.long_html">
-<value><![CDATA[โอกาส]]></value>
-</param>
-<param name="documents.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="quotes.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
-<param name="users.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="communications.schedule.long_html">
-<value><![CDATA[Schedule]]></value>
-</param>
-<param name="users.history.long_html">
-<value><![CDATA[Login History]]></value>
-</param>
-<param name="tickets.maintenancenotes.long_html">
-<value><![CDATA[Maintenance Notes]]></value>
-</param>
-<param name="users.viewpoints.long_html">
-<value><![CDATA[Viewpoints]]></value>
-</param>
-<param name="accounts.products.long_html">
-<value><![CDATA[สินค้า]]></value>
-</param>
-<param name="contacts.opportunities.long_html">
-<value><![CDATA[Opportunities]]></value>
+<param name="accounts.tickets.long_html">
+<value><![CDATA[ตั๋ว]]></value>
 </param>
 <param name="opportunities.folders.long_html">
 <value><![CDATA[Folders]]></value>
 </param>
+<param name="accountcontactopportunities.quotes.long_html">
+<value><![CDATA[แจ้งราคา]]></value>
+</param>
 <param name="communications.access.long_html">
 <value><![CDATA[Access]]></value>
-</param>
-<param name="accounts.documents.long_html">
-<value><![CDATA[เอกสาร]]></value>
-</param>
-<param name="accounts.details.long_html">
-<value><![CDATA[รายละเอียด]]></value>
-</param>
-<param name="accounts.orders.long_html">
-<value><![CDATA[คำสั่ง]]></value>
-</param>
-<param name="accountstickets.folders.long_html">
-<value><![CDATA[โฟลเดอร์]]></value>
-</param>
-<param name="accounts.revenue.long_html">
-<value><![CDATA[รายได้]]></value>
-</param>
-<param name="accountstickets.documents.long_html">
-<value><![CDATA[เอกสาร]]></value>
-</param>
-<param name="documents.permissions.long_html">
-<value><![CDATA[Permissions]]></value>
 </param>
 <param name="accountcontactopportunities.folders.long_html">
 <value><![CDATA[แฟ้ม]]></value>
 </param>
-<param name="accountstickets.tasks.long_html">
-<value><![CDATA[งาน]]></value>
-</param>
 <param name="accountcontactopportunities.details.long_html">
 <value><![CDATA[รายละเอียด]]></value>
+</param>
+<param name="accountscontacts.portal.long_html">
+<value><![CDATA[Portal]]></value>
+</param>
+<param name="accounts.servicecontracts.long_html">
+<value><![CDATA[Service Contracts]]></value>
+</param>
+<param name="accountstickets.maintenancenotes.long_html">
+<value><![CDATA[Maintenance Notes]]></value>
+</param>
+<param name="categories.active categories.long_html">
+<value><![CDATA[Active Categories]]></value>
+</param>
+<param name="categories.draft categories.long_html">
+<value><![CDATA[Draft Categories]]></value>
+</param>
+<param name="communications.schedule.long_html">
+<value><![CDATA[Schedule]]></value>
+</param>
+<param name="contacts.calls.long_html">
+<value><![CDATA[Activities]]></value>
+</param>
+<param name="contacts.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="contacts.opportunities.long_html">
+<value><![CDATA[Opportunities]]></value>
+</param>
+<param name="documents.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="documents.documents.long_html">
+<value><![CDATA[Documents]]></value>
+</param>
+<param name="documents.permissions.long_html">
+<value><![CDATA[Permissions]]></value>
+</param>
+<param name="documents.team.long_html">
+<value><![CDATA[Team]]></value>
+</param>
+<param name="employees.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="employees.folders.long_html">
+<value><![CDATA[Folders]]></value>
+</param>
+<param name="employees.projects.long_html">
+<value><![CDATA[Projects]]></value>
 </param>
 <param name="opportunities.calls.long_html">
 <value><![CDATA[Activities]]></value>
@@ -11276,59 +11264,50 @@ while a Guest has very limited functionality.]]></value>
 <param name="opportunities.quotes.long_html">
 <value><![CDATA[Quotes]]></value>
 </param>
-<param name="accountcontactopportunities.quotes.long_html">
-<value><![CDATA[แจ้งราคา]]></value>
+<param name="quotes.details.long_html">
+<value><![CDATA[Details]]></value>
 </param>
-<param name="accountstickets.history.long_html">
-<value><![CDATA[ประวัติ]]></value>
-</param>
-<param name="accountstickets.details.long_html">
-<value><![CDATA[รายละเอียด]]></value>
+<param name="quotes.history.long_html">
+<value><![CDATA[History]]></value>
 </param>
 <param name="quotes.notes.long_html">
 <value><![CDATA[Notes]]></value>
 </param>
-<param name="accounts.folders.long_html">
-<value><![CDATA[โฟลเดอร์]]></value>
+<param name="tickets.activitylog.long_html">
+<value><![CDATA[Activity Log]]></value>
 </param>
-<param name="contacts.relationships.long_html">
-<value><![CDATA[ความสัมพันธ์]]></value>
+<param name="tickets.details.long_html">
+<value><![CDATA[Details]]></value>
 </param>
-<param name="accountsQuotes.notes.long_html">
-<value><![CDATA[บันทึก]]></value>
+<param name="tickets.documents.long_html">
+<value><![CDATA[Documents]]></value>
 </param>
-<param name="contacts.messages.long_html">
-<value><![CDATA[ข้อความ]]></value>
+<param name="tickets.folders.long_html">
+<value><![CDATA[Folders]]></value>
 </param>
-<param name="accounts.history.long_html">
-<value><![CDATA[ประวัติ]]></value>
+<param name="tickets.history.long_html">
+<value><![CDATA[History]]></value>
 </param>
-<param name="contacts.folders.long_html">
-<value><![CDATA[โฟลเดอร์]]></value>
+<param name="tickets.maintenancenotes.long_html">
+<value><![CDATA[Maintenance Notes]]></value>
+</param>
+<param name="tickets.tasks.long_html">
+<value><![CDATA[Tasks]]></value>
+</param>
+<param name="users.details.long_html">
+<value><![CDATA[Details]]></value>
+</param>
+<param name="users.history.long_html">
+<value><![CDATA[Login History]]></value>
+</param>
+<param name="users.viewpoints.long_html">
+<value><![CDATA[Viewpoints]]></value>
 </param>
 <param name="accounts.activities.long_html">
 <value><![CDATA[กิจกรรม]]></value>
 </param>
-<param name="accounts.tickets.long_html">
-<value><![CDATA[ตั๋ว]]></value>
-</param>
-<param name="quotes.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="accountscontacts.messages.long_html">
-<value><![CDATA[ข้อความ]]></value>
-</param>
 <param name="accounts.assets.long_html">
 <value><![CDATA[สินทรัพย์]]></value>
-</param>
-<param name="employees.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="categories.active categories.long_html">
-<value><![CDATA[Active Categories]]></value>
-</param>
-<param name="categories.draft categories.long_html">
-<value><![CDATA[Draft Categories]]></value>
 </param>
 <param name="accountsassets.history.long_html">
 <value><![CDATA[ประวัติ]]></value>
@@ -11336,68 +11315,38 @@ while a Guest has very limited functionality.]]></value>
 <param name="accountsassets.details.long_html">
 <value><![CDATA[รายละเอียด]]></value>
 </param>
-<param name="employees.folders.long_html">
-<value><![CDATA[Folders]]></value>
-</param>
-<param name="accounts.contacts.long_html">
-<value><![CDATA[ผู้ติดต่อ]]></value>
-</param>
-<param name="employees.projects.long_html">
-<value><![CDATA[Projects]]></value>
-</param>
-<param name="contacts.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
-<param name="accountscontacts.opportunities.long_html">
-<value><![CDATA[โอกาส]]></value>
-</param>
 <param name="accountscontacts.details.long_html">
 <value><![CDATA[รายละเอียด]]></value>
-</param>
-<param name="documents.accounts.long_html">
-<value><![CDATA[Accounts]]></value>
-</param>
-<param name="accountscontacts.portal.long_html">
-<value><![CDATA[Portal]]></value>
-</param>
-<param name="tickets.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="opportunitiesQuotes.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="opportunitiesQuotes.history.long_html">
-<value><![CDATA[History]]></value>
-</param>
-<param name="opportunitiesQuotes.notes.long_html">
-<value><![CDATA[Notes]]></value>
-</param>
-<param name="contacts.calls.long_html">
-<value><![CDATA[Activities]]></value>
-</param>
-<param name="tickets.documents.long_html">
-<value><![CDATA[Documents]]></value>
 </param>
 <param name="accountscontacts.calls.long_html">
 <value><![CDATA[กิจกรรม]]></value>
 </param>
+<param name="accounts.documents.long_html">
+<value><![CDATA[เอกสาร]]></value>
+</param>
+<param name="accounts.details.long_html">
+<value><![CDATA[รายละเอียด]]></value>
+</param>
+<param name="accounts.revenue.long_html">
+<value><![CDATA[รายได้]]></value>
+</param>
+<param name="accountstickets.tasks.long_html">
+<value><![CDATA[งาน]]></value>
+</param>
+<param name="accountstickets.history.long_html">
+<value><![CDATA[ประวัติ]]></value>
+</param>
+<param name="accountscontacts.messages.long_html">
+<value><![CDATA[ข้อความ]]></value>
+</param>
+<param name="accounts.contacts.long_html">
+<value><![CDATA[ผู้ติดต่อ]]></value>
+</param>
+<param name="accountscontacts.opportunities.long_html">
+<value><![CDATA[โอกาส]]></value>
+</param>
 <param name="accounts.quotes.long_html">
 <value><![CDATA[ใบเสนอราคา]]></value>
-</param>
-<param name="accounts.servicecontracts.long_html">
-<value><![CDATA[Service Contracts]]></value>
-</param>
-<param name="documents.documents.long_html">
-<value><![CDATA[Documents]]></value>
-</param>
-<param name="tickets.folders.long_html">
-<value><![CDATA[Folders]]></value>
-</param>
-<param name="contacts.details.long_html">
-<value><![CDATA[Details]]></value>
-</param>
-<param name="accountstickets.maintenancenotes.long_html">
-<value><![CDATA[Maintenance Notes]]></value>
 </param>
 <param name="accountsQuotes.details.long_html">
 <value><![CDATA[รายละเอียด]]></value>
@@ -11405,22 +11354,76 @@ while a Guest has very limited functionality.]]></value>
 <param name="accounts.projects.long_html">
 <value><![CDATA[โครงการ]]></value>
 </param>
-<param name="tickets.history.long_html">
-<value><![CDATA[History]]></value>
+<param name="accounts.products.long_html">
+<value><![CDATA[สินค้า]]></value>
+</param>
+<param name="accounts.orders.long_html">
+<value><![CDATA[คำสั่ง]]></value>
+</param>
+<param name="accountstickets.folders.long_html">
+<value><![CDATA[โฟลเดอร์]]></value>
+</param>
+<param name="accountstickets.documents.long_html">
+<value><![CDATA[เอกสาร]]></value>
+</param>
+<param name="accountstickets.details.long_html">
+<value><![CDATA[รายละเอียด]]></value>
+</param>
+<param name="communications.Results.long_html">
+<value><![CDATA[ผลลัพธ์]]></value>
+</param>
+<param name="communications.response.long_html">
+<value><![CDATA[ตอบ]]></value>
+</param>
+<param name="communications.recipients.long_html">
+<value><![CDATA[ผู้รับ]]></value>
+</param>
+<param name="communications.message.long_html">
+<value><![CDATA[ข้อความ]]></value>
+</param>
+<param name="communications.groups.long_html">
+<value><![CDATA[กลุ่ม]]></value>
+</param>
+<param name="communications.documents.long_html">
+<value><![CDATA[เอกสาร]]></value>
+</param>
+<param name="communications.details.long_html">
+<value><![CDATA[รายละเอียด]]></value>
+</param>
+<param name="contacts.messages.long_html">
+<value><![CDATA[ข้อความ]]></value>
+</param>
+<param name="contacts.folders.long_html">
+<value><![CDATA[โฟลเดอร์]]></value>
+</param>
+<param name="contacts.relationships.long_html">
+<value><![CDATA[ความสัมพันธ์]]></value>
+</param>
+<param name="accounts.folders.long_html">
+<value><![CDATA[โฟลเดอร์]]></value>
+</param>
+<param name="users.groups.long_html">
+<value><![CDATA[Groups]]></value>
+</param>
+<param name="accounts.opportunities.long_html">
+<value><![CDATA[โอกาส]]></value>
 </param>
 </config>
 <config name="system.submenu.label">
-<param name="Modules">
-<value><![CDATA[Modules]]></value>
+<param name="List">
+<value><![CDATA[List]]></value>
+</param>
+<param name="Action Lists">
+<value><![CDATA[รายการปฏิบัติ]]></value>
 </param>
 <param name="Defects">
 <value><![CDATA[Defects]]></value>
 </param>
-<param name="Invitations">
-<value><![CDATA[Invitations]]></value>
+<param name="Knowledge Base">
+<value><![CDATA[Knowledge Base]]></value>
 </param>
-<param name="Projects">
-<value><![CDATA[Projects]]></value>
+<param name="Action Plans">
+<value><![CDATA[Action Plans]]></value>
 </param>
 <param name="Attachments">
 <value><![CDATA[Attachments]]></value>
@@ -11428,77 +11431,75 @@ while a Guest has very limited functionality.]]></value>
 <param name="Attachments.colon">
 <value><![CDATA[Attachments:]]></value>
 </param>
-<param name="System">
-<value><![CDATA[System]]></value>
-</param>
-<param name="Add">
-<value><![CDATA[เพิ่ม]]></value>
-</param>
-<param name="Action Lists">
-<value><![CDATA[รายการปฏิบัติ]]></value>
-</param>
-<param name="Roles">
-<value><![CDATA[Roles]]></value>
-</param>
-<param name="Knowledge Base">
-<value><![CDATA[Knowledge Base]]></value>
-</param>
-<param name="Groups">
-<value><![CDATA[Groups]]></value>
-</param>
-<param name="Settings">
-<value><![CDATA[Settings]]></value>
-</param>
-<param name="View">
-<value><![CDATA[View]]></value>
-</param>
-<param name="Re-assignments">
-<value><![CDATA[Re-assignments]]></value>
-</param>
-<param name="Search">
-<value><![CDATA[Search]]></value>
-</param>
-<param name="Usage">
-<value><![CDATA[Usage]]></value>
-</param>
 <param name="Dashboard">
 <value><![CDATA[Dashboard]]></value>
-</param>
-<param name="Tasks">
-<value><![CDATA[Tasks]]></value>
-</param>
-<param name="Import">
-<value><![CDATA[Import]]></value>
-</param>
-<param name="Revenue">
-<value><![CDATA[Revenue]]></value>
-</param>
-<param name="Messages">
-<value><![CDATA[Messages]]></value>
-</param>
-<param name="Headlines">
-<value><![CDATA[Headlines]]></value>
 </param>
 <param name="Export">
 <value><![CDATA[Export]]></value>
 </param>
-<param name="Welcome">
-<value><![CDATA[ยินดีต้อนรับ]]></value>
+<param name="Groups">
+<value><![CDATA[Groups]]></value>
+</param>
+<param name="Headlines">
+<value><![CDATA[Headlines]]></value>
+</param>
+<param name="Import">
+<value><![CDATA[Import]]></value>
+</param>
+<param name="Invitations">
+<value><![CDATA[Invitations]]></value>
 </param>
 <param name="Mailbox">
 <value><![CDATA[Mailbox]]></value>
 </param>
+<param name="Messages">
+<value><![CDATA[Messages]]></value>
+</param>
+<param name="Modules">
+<value><![CDATA[Modules]]></value>
+</param>
+<param name="Projects">
+<value><![CDATA[Projects]]></value>
+</param>
+<param name="Re-assignments">
+<value><![CDATA[Re-assignments]]></value>
+</param>
+<param name="Revenue">
+<value><![CDATA[Revenue]]></value>
+</param>
+<param name="Roles">
+<value><![CDATA[Roles]]></value>
+</param>
+<param name="Search">
+<value><![CDATA[Search]]></value>
+</param>
+<param name="Settings">
+<value><![CDATA[Settings]]></value>
+</param>
+<param name="System">
+<value><![CDATA[System]]></value>
+</param>
+<param name="Tasks">
+<value><![CDATA[Tasks]]></value>
+</param>
+<param name="Usage">
+<value><![CDATA[Usage]]></value>
+</param>
 <param name="Users">
 <value><![CDATA[Users]]></value>
+</param>
+<param name="View">
+<value><![CDATA[View]]></value>
+</param>
+<param name="Welcome">
+<value><![CDATA[ยินดีต้อนรับ]]></value>
+</param>
+<param name="Add">
+<value><![CDATA[เพิ่ม]]></value>
 </param>
 <param name="Campaigns">
 <value><![CDATA[แคมเปญ]]></value>
 </param>
-<param name="List">
-<value><![CDATA[List]]></value>
-</param>
-<param name="Action Plans">
-<value><![CDATA[Action Plans]]></value>
-</param>
 </config>
 </aspcfs>
+
