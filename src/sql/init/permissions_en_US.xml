@@ -159,8 +159,8 @@
     </category>
     <category id="330041409" name="Product Catalog" folders="true" lookups="true" reports="false" categories="false">
       <folder constantId="200403192" description="Product Catalog Categories" enabled="false"/>
-      <permission name="product-catalog" attributes="vaed" description="Access to Product Catalog module" enabled="true"/>
-      <permission name="product-catalog-product" attributes="vaed" description="Products" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Access to Product Catalog module" enabled="true"/>
+      <permission name="product-catalog-product" attributes="vaed" description="Products" enabled="true"/>
       <permission name="product-catalog-product-imports" attributes="vaed" description="Product Catalog Import" enabled="true"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Product Types"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product Format Types"/>
@@ -386,6 +386,9 @@
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" />
       <permission name="accounts-accounts-documentstore" attributes="vaed" />
       <permission name="accounts-accounts-shareddocuments" attributes="vaed" />
+      <permission name="product-catalog" attributes="v---" />
+      <permission name="product-catalog-product" attributes="vaed" />
+      <permission name="product-catalog-product-imports" attributes="vaed" />
       <permission name="portal-user" attributes="vaed" />
       <permission name="quotes" attributes="v---" />
       <permission name="quotes-quotes" attributes="vaed" />
@@ -433,7 +436,6 @@
       <permission name="projects-projects" attributes="vaed" />
       <permission name="documents" attributes="v---" />
       <permission name="documents_documentstore" attributes="vaed" />
-      <permission name="product-catalog-product-imports" attributes="vaed" />
     </role>
     <role name="Operations Manager" description="Manages operations">
        <permission name="myhomepage" attributes="v---"/>

@@ -69,6 +69,8 @@
 2006-09-14-script01-holub.sql
 2006-09-15-script01-holub.sql
 
+# Cleanup
+2006-10-13-script01-mr.sql
 
 # Run each time after upgrading a system (NOTE: this is a temporary measure)
 2005-07-20-script01-mr.bsh
