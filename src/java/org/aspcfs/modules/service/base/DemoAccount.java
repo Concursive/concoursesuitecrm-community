@@ -36,6 +36,7 @@ public class DemoAccount {
   private String password = null;
   private Timestamp processed = null;
   private int failedCount = 0;
+  private int roleId = -1;
 
   /**
    *  Description of the Method
@@ -325,6 +326,15 @@ public class DemoAccount {
     this.failedCount += this.failedCount;
   }
 
+
+  public int getRoleId() {
+    return roleId;
+  }
+
+  public void setRoleId(int roleId) {
+    this.roleId = roleId;
+  }
+
   /**
    *  Logs the requested demo account in the database
    *
@@ -417,6 +427,9 @@ public class DemoAccount {
     return ("demo_" + id);
   }
 
+  public void setPassword(String tmp) {
+    password = tmp;
+  }
 
   /**
    *  Gets the generatedPassword attribute of the DemoAccount object

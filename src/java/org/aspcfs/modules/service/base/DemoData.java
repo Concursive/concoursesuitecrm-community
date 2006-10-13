@@ -235,6 +235,7 @@ public class DemoData {
     role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-folders"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-object-workflow"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-categories"), true, true, true, true);
+    role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-products"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-sysconfig-logos"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "admin-actionplans"), true, true, true, true);
     role.addPermission(db, Permission.lookupId(db, "help"), false, true, false, false);
@@ -373,7 +374,11 @@ public class DemoData {
       user.setUsername(demoAccount.getLoginName());
       user.setPassword1(demoAccount.getGeneratedPassword());
       user.setContactId(contact1Id);
-      user.setRoleId(role.getId());
+      if (demoAccount.getRoleId() > -1) {
+        user.setRoleId(demoAccount.getRoleId());
+      } else {
+        user.setRoleId(role.getId());
+      }
       user.setExpires(addCurrentTimestamp(+5));
       checkIfInserted(user.insert(db), user);
       user1Id = user.getId();
@@ -936,6 +941,7 @@ public class DemoData {
     activeSurvey.setEnteredBy(user1Id);
     activeSurvey.setModifiedBy(user1Id);
     checkIfInserted(activeSurvey.insert(db), activeSurvey);
+    ActiveSurveyQuestion activeQuestion = (ActiveSurveyQuestion) activeSurvey.getQuestions().get(0);
 
     // Lock in the campaign groups
     SearchCriteriaListList thisList = new SearchCriteriaListList();
@@ -1491,7 +1497,7 @@ public class DemoData {
         //answer, answer items, answer avg
         SurveyAnswer surveyAnswer = new SurveyAnswer();
         surveyAnswer.setResponseId(response.getId());
-        surveyAnswer.setQuestionId(question.getId());
+        surveyAnswer.setQuestionId(activeQuestion.getId());
         surveyAnswer.setComments("");
         checkIfInserted(surveyAnswer.insert(db, response.getId()), surveyAnswer);
         //SurveyAnswerItem answerItem = new SurveyAnswerItem();
@@ -1650,7 +1656,8 @@ public class DemoData {
             log.setSeverityCode(ticketSeverityList_IMPORTANT);
             checkIfInserted(log.insert(db), log);
           }
-          if (true) {
+          if (false) {
+            // NOTE: removed until this can be verified and fixed
             TicketTask task = new TicketTask();
             task.setEnteredBy(user3Id);
             task.setModifiedBy(user3Id);
@@ -1670,7 +1677,8 @@ public class DemoData {
             task.setContactId(contact.getId());
             checkIfInserted(task.insert(db), task);
           }
-          if (true) {
+          if (false) {
+            // NOTE: removed until this can be verified and fixed
             TicketTask task = new TicketTask();
             task.setEnteredBy(user1Id);
             task.setModifiedBy(user1Id);
@@ -1690,7 +1698,8 @@ public class DemoData {
             task.setContactId(contact.getId());
             checkIfInserted(task.insert(db), task);
           }
-          if (true) {
+          if (false) {
+            // NOTE: removed until this can be verified and fixed
             TicketTask task = new TicketTask();
             task.setEnteredBy(user1Id);
             task.setModifiedBy(user1Id);
@@ -1710,7 +1719,8 @@ public class DemoData {
             task.setContactId(contact.getId());
             checkIfInserted(task.insert(db), task);
           }
-          if (true) {
+          if (false) {
+            // NOTE: removed until this can be verified and fixed
             TicketTask task = new TicketTask();
             task.setEnteredBy(user1Id);
             task.setModifiedBy(user1Id);
@@ -1846,7 +1856,7 @@ public class DemoData {
         //answer, answer items, answer avg
         SurveyAnswer surveyAnswer = new SurveyAnswer();
         surveyAnswer.setResponseId(response.getId());
-        surveyAnswer.setQuestionId(question.getId());
+        surveyAnswer.setQuestionId(activeQuestion.getId());
         surveyAnswer.setComments("");
         checkIfInserted(surveyAnswer.insert(db, response.getId()), surveyAnswer);
         //SurveyAnswerItem answerItem = new SurveyAnswerItem();
@@ -2852,7 +2862,7 @@ public class DemoData {
       //ticket.setCatCode(ticketCategoryList.getIdFromValue("Technical"));
       ticket.setSeverityCode(ticketSeverityList_CRITICAL);
       ticket.setOrgId(0);
-      ticket.setContactId(user2Id);
+      ticket.setContactId(contact2Id);
       ticket.setPriorityCode(ticketPriorityList_URGENT);
       ticket.setDepartmentCode(departmentList_ENGINEERING);
       ticket.setAssignedTo(user3Id);
@@ -2871,7 +2881,7 @@ public class DemoData {
       //ticket.setCatCode(ticketCategoryList.getIdFromValue("Technical"));
       ticket.setSeverityCode(ticketSeverityList_NORMAL);
       ticket.setOrgId(0);
-      ticket.setContactId(user3Id);
+      ticket.setContactId(contact3Id);
       ticket.setPriorityCode(ticketPriorityList_AS_SCHEDULED);
       ticket.setDepartmentCode(departmentList_ENGINEERING);
       ticket.setAssignedTo(user2Id);

@@ -1,0 +1,126 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh-2.0b2.jar:lib/log4j-1.2.9.jar:build/lib/aspcfs.jar:lib/postgresql-8.1-405.jdbc3.jar:build/lib/darkhorseventures.jar:lib/mail.jar:lib/activation.jar:build/lib/zeroio-iteam.jar bsh.Interpreter "$0" "$@"
+
+/*
+ * This script is used to install demo data in an existing server.
+ *
+ *@author     matt rajkowski
+ *@created    June 8, 2005
+ *@version    $Id: database.bsh 14600 2006-03-28 15:06:27 -0500 (Tue, 28 Mar 2006) mrajkowski $
+ */
+import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.database.ConnectionElement;
+import java.sql.*;
+import java.io.File;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.service.base.DemoAccount;
+import org.aspcfs.modules.service.base.DemoData;
+
+System.setProperty("DEBUG", "2");
+
+// The following user will be added to the CRM and sample data will be mapped
+print("Configuring sample user...");
+DemoAccount demoAccount = new DemoAccount();
+demoAccount.setNameFirst("First");
+demoAccount.setNameLast("Last");
+demoAccount.setOrganization("Database Test");
+demoAccount.setPhone("800-555-1212");
+demoAccount.setEmail("test@test.com");
+demoAccount.setPassword("password");
+demoAccount.setIpAddress("127.0.0.1");
+demoAccount.setLanguage("en_US");
+demoAccount.setRoleId(1);
+demoAccount.setBrowser("Centric CRM Database Test");
+
+// Validate arguments
+if (bsh.args.length == 0 || bsh.args.length < 2) {
+  print("");
+  print("");
+  print("Usage:");
+  print("  demoDataInstaller [db type:postgresql] [local database name] [database user name] [database user password]");
+  print("");
+  print("Notes:");
+  print("  - Creates a new user in which new sample users report to");
+  print("  - Creates a new user in which new sample users report to");
+  print("");
+  System.exit(0);
+}
+
+// Database properties
+String dbType = bsh.args[0];
+String database = bsh.args[1];
+String user = null;
+String password = null;
+if (bsh.args.length > 2) {
+  user = bsh.args[2];
+}
+if (bsh.args.length > 3) {
+  password = bsh.args[3];
+}
+if (user == null) {
+  user = "postgres";
+}
+if (password == null) {
+  password = "";
+}
+String url = null;
+String driver = null;
+if ("postgresql".equals(dbType)) {
+  url = "jdbc:postgresql://127.0.0.1:5432/" + database;
+  driver = "org.postgresql.Driver";
+}
+if ("db2".equals(dbType)) {
+  url = "jdbc:db2://127.0.0.1:50000/" + database;
+  driver = "com.ibm.db2.jcc.DB2Driver";
+}
+if ("mysql".equals(dbType)) {
+  url = "jdbc:mysql://127.0.0.1:3306/" + database;
+  driver = "com.mysql.jdbc.Driver";
+}
+if ("mssql".equals(dbType)) {
+  url = "jdbc:jtds:sqlserver://127.0.0.1:1433/" + database;
+  driver = "net.sourceforge.jtds.jdbc.Driver";
+}
+if ("firebird".equals(dbType)) {
+  url = "jdbc:firebirdsql:127.0.0.1/3050:" + database;
+  driver = "org.firebirdsql.jdbc.FBDriver";
+}
+if ("daffodildb".equals(dbType)) {
+  url = "jdbc:daffodilDB_embedded:centric_crm;path=" + database;
+  driver = "in.co.daffodil.db.jdbc.DaffodilDBDriver";
+}
+if ("oracle".equals(dbType)) {
+  url = "jdbc:oracle:thin:@//127.0.0.1:1521/" + database;
+  driver = "oracle.jdbc.driver.OracleDriver";
+}
+if ("derby".equals(dbType)) {
+  url = "jdbc:derby:" + database;
+  driver = "org.apache.derby.jdbc.EmbeddedDriver";
+}
+
+// Setup the Connection Pool
+ConnectionPool sqlDriver = new ConnectionPool();
+sqlDriver.setDebug(false);
+sqlDriver.setTestConnections(false);
+sqlDriver.setAllowShrinking(true);
+sqlDriver.setMaxConnections(2);
+sqlDriver.setMaxIdleTime(60000);
+sqlDriver.setMaxDeadTime(300000);
+
+// Get a database connection
+print("Getting a database connection...");
+ConnectionElement ce = new ConnectionElement(url, user, password);
+ce.setDriver(driver);
+Connection db = sqlDriver.getConnection(ce);
+
+// Install on the given database
+print("Inserting sample CRM data...");
+DemoData.install(db, demoAccount);
+
+print("*************************************************************");
+print(" Username: " + demoAccount.getLoginName());
+print(" Password: " + demoAccount.getGeneratedPassword());
+print("*************************************************************");
+
+print("Data inserted.");
+System.exit(0);
