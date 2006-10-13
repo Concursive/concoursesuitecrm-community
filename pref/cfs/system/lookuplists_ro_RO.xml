@@ -193,6 +193,8 @@
       <record link_module_id="707031028" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>
       <record link_module_id="707031028" rule_id="626030334">Public</record>
       <record link_module_id="707031028" rule_id="626030333">Personal</record>
+      <record link_module_id="804051057" default_item="true" rule_id="626030334">Public</record>
+      <record link_module_id="804051057" rule_id="626030335">Controlled-Hierarchy</record>
     </lookup>
     <lookup table="lookup_account_types">
       <record><![CDATA[Mic]></record>
@@ -329,9 +331,9 @@
       <record><![CDATA[Email apoi Fax]]></record>
       <record><![CDATA[Email apoi Scrisoare]]></record>
       <record><![CDATA[Email, Fax, apoi Scrisoare]]></record>
-      <record><![CDATA[Transmite]]></record>
       <record enabled="false"><![CDATA[Mesaj instant]]></record>
       <record enabled="false"><![CDATA[Socket sigur]]></record>
+      <record><![CDATA[Transmite]]></record>
     </lookup>
     <lookup table="lookup_department">
       <record><![CDATA[Contabilitate]]></record>
@@ -353,6 +355,7 @@
       <record LUID="2251510"><![CDATA[Membrii Echipei]]></record>
       <record LUID="2251511"><![CDATA[Biblioteca Documentelor]]></record>
       <record LUID="2251512"><![CDATA[Setup]]></record>
+      <record LUID="2251513"><![CDATA[Accounts]]></record>
     </lookup>
     <lookup table="lookup_document_store_role">
       <attribute name="group_id" type="integer" />
@@ -382,6 +385,10 @@
       <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-files-rename"><![CDATA[Renumeste fisiere]]></record>
       <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-files-delete"><![CDATA[Vezi detaliile documentului de magazin]]></record>
       <record group_id="1" category_id="lookup_document_store_permission_category.2251512" default_role="lookup_document_store_role.2251509" permission="documentcenter-setup-permissions"><![CDATA[Configureaza permisiunile pentru documentul de magazin]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251513" permission="documentcenter-accounts-view"><![CDATA[View document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251512" permission="documentcenter-accounts-edit"><![CDATA[Modify document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251511" permission="documentcenter-accounts-add"><![CDATA[Add document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251510" permission="documentcenter-accounts-delete"><![CDATA[Delete document store accounts]]></record>
     </lookup>
     <lookup table="lookup_email_model">
       <record><![CDATA[Nu are suport email]]></record>
@@ -1056,4 +1063,52 @@
       <record><![CDATA[Cannot resolve]]></record>
       <record><![CDATA[Duplicate]]></record>
     </lookup>
+  <lookup table="web_layout" key="layout_id">
+    <attribute name="custom" type="boolean" />
+    <attribute name="layout_constant" type="integer" />
+    <record LUID="5190610" custom="false" layout_constant="2006051813">
+      <layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
+      <jsp><![CDATA[layout_2006051813_top_left.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051813_top_left.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190614" custom="false" layout_constant="2006051914">
+      <layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
+      <jsp><![CDATA[layout_2006051813_top_left_narrow.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051813_top_left_narrow.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190611" custom="false" layout_constant="2006051814">
+      <layout_name><![CDATA[Top Menu w/Left Aligned Pages]]></layout_name>
+      <jsp><![CDATA[layout_2006051814_top_right.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051814_top_right.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190612" custom="false" layout_constant="2006051815">
+      <layout_name><![CDATA[Top Menu w/Submenu]]></layout_name>
+      <jsp><![CDATA[layout_2006051815_top_top.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051815_top_top.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190613" custom="false" layout_constant="2006051909">
+      <layout_name><![CDATA[Top Menu w/Submenu Narrow]]></layout_name>
+      <jsp><![CDATA[layout_2006051815_top_top_narrow.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051815_top_top_narrow.jpg]]></thumbnail>
+    </record>
+  </lookup>
+  <lookup table="web_style" key="style_id">
+      <attribute name="custom" type="boolean" />
+      <attribute name="style_constant" type="integer" />
+      <record LUID="5190614" custom="false" style_constant="2006051811">
+        <style_name><![CDATA[blue]]></style_name>
+        <css><![CDATA[style_2006051811_blue.css]]></css>
+        <thumbnail><![CDATA[style_2006051811_blue.jpg]]></thumbnail>
+      </record>
+      <record LUID="5190615" custom="false" style_constant="2006051909">
+        <style_name><![CDATA[red black]]></style_name>
+        <css><![CDATA[style_2006051909_red_black.css]]></css>
+        <thumbnail><![CDATA[style_2006051909_red_black.jpg]]></thumbnail>
+      </record>
+  </lookup>
+  <lookup table="lookup_payment_gateway">
+    <attribute name="constant_id" type="integer"/>
+    <record constant_id="8110621" enabled="true" level="10"><![CDATA[Authorize.net]]></record>
+    <record constant_id="8110622" enabled="true" level="10"><![CDATA[PPIPaymover]]></record>
+  </lookup>
 </lookupLists>

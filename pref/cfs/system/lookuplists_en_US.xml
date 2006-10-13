@@ -1070,52 +1070,52 @@
       <record><![CDATA[Cannot resolve]]></record>
       <record><![CDATA[Duplicate]]></record>
     </lookup>
-	 <lookup table="web_layout" key="layout_id">
-		<attribute name="custom" type="boolean" />
-		<attribute name="layout_constant" type="integer" />
-		<record LUID="5190610" custom="false" layout_constant="2006051813">
-			<layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
-			<jsp><![CDATA[layout_2006051813_top_left.jsp]]></jsp>
-			<thumbnail><![CDATA[layout_2006051813_top_left.jpg]]></thumbnail>
-		</record>
-		<record LUID="5190614" custom="false" layout_constant="2006051914">
-			<layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
-			<jsp><![CDATA[layout_2006051813_top_left_narrow.jsp]]></jsp>
-			<thumbnail><![CDATA[layout_2006051813_top_left_narrow.jpg]]></thumbnail>
-		</record>
-		<record LUID="5190611" custom="false" layout_constant="2006051814">
-			<layout_name><![CDATA[Top Menu w/Left Aligned Pages]]></layout_name>
-			<jsp><![CDATA[layout_2006051814_top_right.jsp]]></jsp>
-			<thumbnail><![CDATA[layout_2006051814_top_right.jpg]]></thumbnail>
-		</record>
-		<record LUID="5190612" custom="false" layout_constant="2006051815">
-			<layout_name><![CDATA[Top Menu w/Submenu]]></layout_name>
-			<jsp><![CDATA[layout_2006051815_top_top.jsp]]></jsp>
-			<thumbnail><![CDATA[layout_2006051815_top_top.jpg]]></thumbnail>
-		</record>
-		<record LUID="5190613" custom="false" layout_constant="2006051909">
-			<layout_name><![CDATA[Top Menu w/Submenu Narrow]]></layout_name>
-			<jsp><![CDATA[layout_2006051815_top_top_narrow.jsp]]></jsp>
-			<thumbnail><![CDATA[layout_2006051815_top_top_narrow.jpg]]></thumbnail>
-		</record>
-	 </lookup>
+	  <lookup table="web_layout" key="layout_id">
+      <attribute name="custom" type="boolean" />
+      <attribute name="layout_constant" type="integer" />
+      <record LUID="5190610" custom="false" layout_constant="2006051813">
+        <layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
+        <jsp><![CDATA[layout_2006051813_top_left.jsp]]></jsp>
+        <thumbnail><![CDATA[layout_2006051813_top_left.jpg]]></thumbnail>
+      </record>
+      <record LUID="5190614" custom="false" layout_constant="2006051914">
+        <layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
+        <jsp><![CDATA[layout_2006051813_top_left_narrow.jsp]]></jsp>
+        <thumbnail><![CDATA[layout_2006051813_top_left_narrow.jpg]]></thumbnail>
+      </record>
+      <record LUID="5190611" custom="false" layout_constant="2006051814">
+        <layout_name><![CDATA[Top Menu w/Left Aligned Pages]]></layout_name>
+        <jsp><![CDATA[layout_2006051814_top_right.jsp]]></jsp>
+        <thumbnail><![CDATA[layout_2006051814_top_right.jpg]]></thumbnail>
+      </record>
+      <record LUID="5190612" custom="false" layout_constant="2006051815">
+        <layout_name><![CDATA[Top Menu w/Submenu]]></layout_name>
+        <jsp><![CDATA[layout_2006051815_top_top.jsp]]></jsp>
+        <thumbnail><![CDATA[layout_2006051815_top_top.jpg]]></thumbnail>
+      </record>
+      <record LUID="5190613" custom="false" layout_constant="2006051909">
+        <layout_name><![CDATA[Top Menu w/Submenu Narrow]]></layout_name>
+        <jsp><![CDATA[layout_2006051815_top_top_narrow.jsp]]></jsp>
+        <thumbnail><![CDATA[layout_2006051815_top_top_narrow.jpg]]></thumbnail>
+      </record>
+    </lookup>
     <lookup table="web_style" key="style_id">
-			<attribute name="custom" type="boolean" />
-			<attribute name="style_constant" type="integer" />
-			<record LUID="5190614" custom="false" style_constant="2006051811">
-				<style_name><![CDATA[blue]]></style_name>
-				<css><![CDATA[style_2006051811_blue.css]]></css>
-				<thumbnail><![CDATA[style_2006051811_blue.jpg]]></thumbnail>
-			</record>
-			<record LUID="5190615" custom="false" style_constant="2006051909">
-				<style_name><![CDATA[red black]]></style_name>
-				<css><![CDATA[style_2006051909_red_black.css]]></css>
-				<thumbnail><![CDATA[style_2006051909_red_black.jpg]]></thumbnail>
-			</record>
-		</lookup>
-	 <lookup table="lookup_payment_gateway">
-	 	<attribute name="constant_id" type="integer"/>
-	 	<record constant_id="8110621" enabled="true" level="10"><![CDATA[Authorize.net]]></record>
-	 	<record constant_id="8110622" enabled="true" level="10"><![CDATA[PPIPaymover]]></record>
-	 </lookup>	
+        <attribute name="custom" type="boolean" />
+        <attribute name="style_constant" type="integer" />
+        <record LUID="5190614" custom="false" style_constant="2006051811">
+          <style_name><![CDATA[blue]]></style_name>
+          <css><![CDATA[style_2006051811_blue.css]]></css>
+          <thumbnail><![CDATA[style_2006051811_blue.jpg]]></thumbnail>
+        </record>
+        <record LUID="5190615" custom="false" style_constant="2006051909">
+          <style_name><![CDATA[red black]]></style_name>
+          <css><![CDATA[style_2006051909_red_black.css]]></css>
+          <thumbnail><![CDATA[style_2006051909_red_black.jpg]]></thumbnail>
+        </record>
+    </lookup>
+    <lookup table="lookup_payment_gateway">
+      <attribute name="constant_id" type="integer"/>
+      <record constant_id="8110621" enabled="true" level="10"><![CDATA[Authorize.net]]></record>
+      <record constant_id="8110622" enabled="true" level="10"><![CDATA[PPIPaymover]]></record>
+    </lookup>
 </lookupLists>

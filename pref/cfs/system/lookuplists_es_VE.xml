@@ -116,19 +116,19 @@
         <display_text><![CDATA[no es]]></display_text>
       </record>
       <record data_typeid="0" data_type="string" enabled="false">
-        <operator><![CDATA[= | o field_name es nulo]]></operator>
+        <operator><![CDATA[= | or field_name is null]]></operator>
         <display_text><![CDATA[está vacìo]]></display_text>
       </record>
       <record data_typeid="0" data_type="string" enabled="false">
-        <operator><![CDATA[!= | y field_name no es nulo]]></operator>
+        <operator><![CDATA[!= | and field_name is not null]]></operator>
         <display_text><![CDATA[no está vacìo]]></display_text>
       </record>
       <record data_typeid="0" data_type="string" enabled="false">
-        <operator><![CDATA[como %search_value%]]></operator>
+        <operator><![CDATA[like %search_value%]]></operator>
         <display_text><![CDATA[contiene]]></display_text>
       </record>
       <record data_typeid="0" data_type="string" enabled="false">
-        <operator><![CDATA[no parecido a %search_value%]]></operator>
+        <operator><![CDATA[not like %search_value%]]></operator>
         <display_text><![CDATA[no contiene]]></display_text>
       </record>
 
@@ -141,7 +141,7 @@
         <display_text><![CDATA[despuès]]></display_text>
       </record>
       <record data_typeid="1" data_type="date" enabled="false">
-        <operator><![CDATA[entre]]></operator>
+        <operator><![CDATA[between]]></operator>
         <display_text><![CDATA[entre]]></display_text>
       </record>
       <record data_typeid="1" data_type="date">
@@ -174,11 +174,11 @@
         <display_text><![CDATA[menor o igual a]]></display_text>
       </record>
       <record data_typeid="2" data_type="number">
-        <operator><![CDATA[no es nulo]]></operator>
+        <operator><![CDATA[is not null]]></operator>
         <display_text><![CDATA[existe]]></display_text>
       </record>
       <record data_typeid="2" data_type="number">
-        <operator><![CDATA[es nulo]]></operator>
+        <operator><![CDATA[is null]]></operator>
         <display_text><![CDATA[no existe]]></display_text>
       </record>
     </lookup>
@@ -354,6 +354,7 @@
       <record LUID="2251510"><![CDATA[Miembros del Equipo]]></record>
       <record LUID="2251511"><![CDATA[Librerìa de Documentos]]></record>
       <record LUID="2251512"><![CDATA[Instalación]]></record>
+      <record LUID="2251513"><![CDATA[Accounts]]></record>
     </lookup>
     <lookup table="lookup_document_store_role">
       <attribute name="group_id" type="integer" />
@@ -383,6 +384,10 @@
       <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-files-rename"><![CDATA[Renombrar archivos]]></record>
       <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-files-delete"><![CDATA[Ver detalles de almacèn de documentos]]></record>
       <record group_id="1" category_id="lookup_document_store_permission_category.2251512" default_role="lookup_document_store_role.2251509" permission="documentcenter-setup-permissions"><![CDATA[Configurar permisos de almacèn de documentos]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251513" permission="documentcenter-accounts-view"><![CDATA[View document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251512" permission="documentcenter-accounts-edit"><![CDATA[Modify document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251511" permission="documentcenter-accounts-add"><![CDATA[Add document store accounts]]></record>
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251510" permission="documentcenter-accounts-delete"><![CDATA[Delete document store accounts]]></record>
     </lookup>
     <lookup table="lookup_email_model">
       <record><![CDATA[Sin soporte a Email]]></record>
@@ -1057,4 +1062,52 @@
       <record><![CDATA[No pudo ser resuelto]]></record>
       <record><![CDATA[Duplicar]]></record>
     </lookup>
+  <lookup table="web_layout" key="layout_id">
+    <attribute name="custom" type="boolean" />
+    <attribute name="layout_constant" type="integer" />
+    <record LUID="5190610" custom="false" layout_constant="2006051813">
+      <layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
+      <jsp><![CDATA[layout_2006051813_top_left.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051813_top_left.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190614" custom="false" layout_constant="2006051914">
+      <layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>
+      <jsp><![CDATA[layout_2006051813_top_left_narrow.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051813_top_left_narrow.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190611" custom="false" layout_constant="2006051814">
+      <layout_name><![CDATA[Top Menu w/Left Aligned Pages]]></layout_name>
+      <jsp><![CDATA[layout_2006051814_top_right.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051814_top_right.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190612" custom="false" layout_constant="2006051815">
+      <layout_name><![CDATA[Top Menu w/Submenu]]></layout_name>
+      <jsp><![CDATA[layout_2006051815_top_top.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051815_top_top.jpg]]></thumbnail>
+    </record>
+    <record LUID="5190613" custom="false" layout_constant="2006051909">
+      <layout_name><![CDATA[Top Menu w/Submenu Narrow]]></layout_name>
+      <jsp><![CDATA[layout_2006051815_top_top_narrow.jsp]]></jsp>
+      <thumbnail><![CDATA[layout_2006051815_top_top_narrow.jpg]]></thumbnail>
+    </record>
+  </lookup>
+  <lookup table="web_style" key="style_id">
+      <attribute name="custom" type="boolean" />
+      <attribute name="style_constant" type="integer" />
+      <record LUID="5190614" custom="false" style_constant="2006051811">
+        <style_name><![CDATA[blue]]></style_name>
+        <css><![CDATA[style_2006051811_blue.css]]></css>
+        <thumbnail><![CDATA[style_2006051811_blue.jpg]]></thumbnail>
+      </record>
+      <record LUID="5190615" custom="false" style_constant="2006051909">
+        <style_name><![CDATA[red black]]></style_name>
+        <css><![CDATA[style_2006051909_red_black.css]]></css>
+        <thumbnail><![CDATA[style_2006051909_red_black.jpg]]></thumbnail>
+      </record>
+  </lookup>
+  <lookup table="lookup_payment_gateway">
+    <attribute name="constant_id" type="integer"/>
+    <record constant_id="8110621" enabled="true" level="10"><![CDATA[Authorize.net]]></record>
+    <record constant_id="8110622" enabled="true" level="10"><![CDATA[PPIPaymover]]></record>
+  </lookup>
 </lookupLists>
