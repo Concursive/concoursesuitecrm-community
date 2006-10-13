@@ -5,7 +5,7 @@
  * This script is used to install demo data in an existing server.
  *
  *@author     matt rajkowski
- *@created    June 8, 2005
+ *@created    October 13, 2006
  *@version    $Id: database.bsh 14600 2006-03-28 15:06:27 -0500 (Tue, 28 Mar 2006) mrajkowski $
  */
 import com.darkhorseventures.database.ConnectionPool;
@@ -19,7 +19,6 @@ import org.aspcfs.modules.service.base.DemoData;
 System.setProperty("DEBUG", "2");
 
 // The following user will be added to the CRM and sample data will be mapped
-print("Configuring sample user...");
 DemoAccount demoAccount = new DemoAccount();
 demoAccount.setNameFirst("First");
 demoAccount.setNameLast("Last");
@@ -37,11 +36,13 @@ if (bsh.args.length == 0 || bsh.args.length < 2) {
   print("");
   print("");
   print("Usage:");
-  print("  demoDataInstaller [db type:postgresql] [local database name] [database user name] [database user password]");
+  print("  demoDataInstaller [db type:postgresql,db2,mssql,oracle,firebird,derby,daffodildb,mysql] [local database name] [database user name] [database user password]");
   print("");
   print("Notes:");
   print("  - Creates a new user in which new sample users report to");
   print("  - Creates a new user in which new sample users report to");
+  print("");
+  print("");
   print("");
   System.exit(0);
 }
