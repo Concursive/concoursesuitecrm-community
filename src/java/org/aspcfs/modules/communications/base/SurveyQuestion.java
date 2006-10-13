@@ -394,13 +394,13 @@ public class SurveyQuestion {
       int i = 0;
       //calculate the next position for this question
       PreparedStatement pst = db.prepareStatement(
-          "SELECT max(" + DatabaseUtils.addQuotes(db, "position")+ ") as maxPosition " +
+          "SELECT MAX(" + DatabaseUtils.addQuotes(db, "position")+ ") AS maxposition " +
               "FROM survey_questions " +
               "WHERE survey_id = ? ");
       pst.setInt(++i, surveyId);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
-        position = rs.getInt("maxPosition") + 1;
+        position = rs.getInt("maxposition") + 1;
       }
       rs.close();
       pst.close();
