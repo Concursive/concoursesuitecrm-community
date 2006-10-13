@@ -26,7 +26,7 @@ CREATE TABLE history (
   description TEXT,
   level INTEGER DEFAULT 10,
   enabled BOOLEAN DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)

@@ -13,7 +13,7 @@ CREATE TABLE module_field_categorylink (
   category_id INT UNIQUE NOT NULL,
   level INTEGER DEFAULT 0,
   description TEXT,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
  
 /* Each module can have multiple categories or folders of custom data */
@@ -26,7 +26,7 @@ CREATE TABLE custom_field_category (
   start_date TIMESTAMP NULL,
   end_date TIMESTAMP NULL,
   default_item BOOLEAN DEFAULT false,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true,
   multiple_records BOOLEAN DEFAULT false,
   read_only BOOLEAN DEFAULT false
@@ -62,7 +62,7 @@ CREATE TABLE custom_field_info (
   parameters TEXT,
   start_date TIMESTAMP NULL,
   end_date TIMESTAMP NULL,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true,
   additional_text VARCHAR(255)
 );
@@ -78,7 +78,7 @@ CREATE TABLE custom_field_lookup (
   level INTEGER DEFAULT 0,
   start_date TIMESTAMP NULL,
   end_date TIMESTAMP NULL,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE custom_field_record (
   link_item_id INTEGER NOT NULL,
   category_id INTEGER NOT NULL REFERENCES custom_field_category(category_id),
   record_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),

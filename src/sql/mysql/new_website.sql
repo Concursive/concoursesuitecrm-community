@@ -35,7 +35,7 @@ CREATE TABLE web_site (
   layout_id INT REFERENCES web_layout(layout_id),
   style_id INT REFERENCES web_style(style_id),
 	logo_image_id INT REFERENCES project_files(item_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -47,7 +47,7 @@ CREATE TABLE web_site_log (
   user_id INT references `access`(user_id),
   username VARCHAR(80) NOT NULL,
   ip VARCHAR(80),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   browser VARCHAR(255)
 );
 
@@ -58,7 +58,7 @@ CREATE TABLE web_tab (
   site_id INT references web_site(site_id),
   tab_position INT NOT NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -70,7 +70,7 @@ CREATE TABLE web_page_version (
   internal_description TEXT,
   notes TEXT,
   parent_page_version_id INT REFERENCES web_page_version(page_version_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -82,7 +82,7 @@ CREATE TABLE web_page_group (
   internal_description TEXT,
   group_position INT NOT NULL,
   tab_id INT REFERENCES web_tab(tab_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -92,7 +92,7 @@ CREATE TABLE web_tab_banner (
   tab_banner_id INT AUTO_INCREMENT PRIMARY KEY,
   tab_id INT REFERENCES web_tab(tab_id),
   image_id INT REFERENCES project_files(item_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -108,7 +108,7 @@ CREATE TABLE web_page (
   tab_banner_id INT REFERENCES web_tab_banner(tab_banner_id),
   notes TEXT,
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -121,7 +121,7 @@ CREATE TABLE web_page_row (
   row_position INT NOT NULL,
   page_version_id INT REFERENCES web_page_version(page_version_id),
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -143,7 +143,7 @@ CREATE TABLE web_row_column (
   page_row_id INT REFERENCES web_page_row(page_row_id),
   icelet_id INT REFERENCES web_icelet(icelet_id),
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -156,7 +156,7 @@ CREATE TABLE web_icelet_property (
   property_type_constant INT,
   property_value TEXT,
   row_column_id INT NOT NULL REFERENCES web_row_column(row_column_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -169,7 +169,7 @@ CREATE TABLE portfolio_category (
   category_position_id INT REFERENCES portfolio_category(category_id),
   parent_category_id INT REFERENCES portfolio_category(category_id),
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -184,7 +184,7 @@ CREATE TABLE portfolio_item (
   caption VARCHAR(300),
   portfolio_category_id INT REFERENCES portfolio_category(category_id),
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -196,7 +196,7 @@ CREATE TABLE web_site_access_log (
   site_id INT REFERENCES web_site(site_id),
   user_id INT REFERENCES `access`(user_id),
   ip VARCHAR(300),
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   browser VARCHAR(255),
   referrer VARCHAR(1024)
 );
@@ -204,13 +204,13 @@ CREATE TABLE web_site_access_log (
 CREATE TABLE web_page_access_log (
   page_id INT,
   site_log_id INT,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE web_product_access_log (
   product_id INT,
   site_log_id INT,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE web_product_email_log (
@@ -219,7 +219,7 @@ CREATE TABLE web_product_email_log (
 	from_name VARCHAR(300) NOT NULL,
 	comments VARCHAR(1024),
   site_log_id INT,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE url_map (

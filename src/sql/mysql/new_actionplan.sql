@@ -82,7 +82,7 @@ CREATE TABLE action_phase (
   phase_name VARCHAR(255) NOT NULL,
   description VARCHAR(2048),
   enabled boolean NOT NULL DEFAULT true,
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   random BOOLEAN DEFAULT false,
   global BOOLEAN DEFAULT false
 );
@@ -120,7 +120,7 @@ CREATE TABLE action_step (
   role_id INTEGER REFERENCES role(role_id),
   department_id INTEGER REFERENCES lookup_department(code),
   enabled boolean NOT NULL DEFAULT true,
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   allow_skip_to_here boolean NOT NULL DEFAULT FALSE,
   label VARCHAR(80),
   action_required boolean NOT NULL DEFAULT FALSE,
@@ -147,7 +147,7 @@ CREATE TABLE action_plan_work (
   link_module_id INTEGER NOT NULL REFERENCES action_plan_constants(map_id),
   link_item_id INTEGER NOT NULL,
   enabled boolean NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -159,7 +159,7 @@ CREATE TABLE action_plan_work_notes (
   note_id INT AUTO_INCREMENT PRIMARY KEY,
   plan_work_id INTEGER NOT NULL REFERENCES action_plan_work(plan_work_id),
   description VARCHAR(4096) NOT NULL,
-  submitted TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  submitted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   submittedby INTEGER NOT NULL REFERENCES `access`(user_id)
 );
 
@@ -172,7 +172,7 @@ CREATE TABLE action_phase_work (
   start_date TIMESTAMP NULL,
   end_date TIMESTAMP NULL,
   level INTEGER DEFAULT 0,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id)
@@ -190,7 +190,7 @@ CREATE TABLE action_item_work (
   link_module_id INTEGER REFERENCES action_plan_constants(map_id),
   link_item_id INTEGER,
   level INTEGER DEFAULT 0,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id)
@@ -201,7 +201,7 @@ CREATE TABLE action_item_work_notes (
   note_id INT AUTO_INCREMENT PRIMARY KEY,
   item_work_id INTEGER NOT NULL REFERENCES action_item_work(item_work_id),
   description VARCHAR(4096) NOT NULL,
-  submitted TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  submitted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   submittedby INTEGER NOT NULL REFERENCES `access`(user_id)
 );
 

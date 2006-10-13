@@ -40,7 +40,7 @@ CREATE TABLE lookup_ticket_task_category (
 
 CREATE TABLE task (
   task_id INT AUTO_INCREMENT PRIMARY KEY,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   priority INTEGER NOT NULL REFERENCES lookup_task_priority,
   description VARCHAR(255),

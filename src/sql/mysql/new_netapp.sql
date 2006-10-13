@@ -40,7 +40,7 @@ CREATE TABLE netapp_contractexpiration(
   comment TEXT,
   import_id INT,
   status_id INT,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INT NOT NULL REFERENCES `access`(user_id)
@@ -54,7 +54,7 @@ CREATE TABLE netapp_contractexpiration_log(
   quoteaccepteddate TIMESTAMP NULL,
   quoterejecteddate TIMESTAMP NULL,
   comment TEXT,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INT NOT NULL REFERENCES `access`(user_id)

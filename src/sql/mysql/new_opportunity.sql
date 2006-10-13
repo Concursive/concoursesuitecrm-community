@@ -127,7 +127,7 @@ CREATE TABLE opportunity_component (
   commission FLOAT,
   type CHAR(1),
   alertdate TIMESTAMP NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),  
@@ -154,7 +154,7 @@ CREATE TABLE opportunity_component_levels (
   opp_id INT NOT NULL REFERENCES opportunity_component(id),
   type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
   level INTEGER NOT NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
 
@@ -170,7 +170,7 @@ CREATE TABLE call_log (
   followup_date TIMESTAMP NULL,
   alertdate TIMESTAMP NULL,
   followup_notes TEXT,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
@@ -214,7 +214,7 @@ CREATE TABLE opportunity_component_log(
   highvalue FLOAT,
   stage INT REFERENCES lookup_stage(code),
   owner INT NOT NULL REFERENCES `access`(user_id),    
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   closedate_timezone VARCHAR(255),
   closed TIMESTAMP NULL 

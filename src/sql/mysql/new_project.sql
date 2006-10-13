@@ -95,7 +95,7 @@ CREATE TABLE projects (
   approvalDate TIMESTAMP NULL,
   closeDate TIMESTAMP NULL,
   owner INTEGER NULL,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -161,7 +161,7 @@ CREATE TABLE project_requirements (
   approvalDate TIMESTAMP NULL,
   closedBy INTEGER REFERENCES `access`(user_id),
   closeDate TIMESTAMP NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -177,7 +177,7 @@ CREATE TABLE project_assignments_folder (
   requirement_id INTEGER NOT NULL REFERENCES project_requirements(requirement_id),
   name VARCHAR(255) NOT NULL,
   description TEXT ,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id)
@@ -203,7 +203,7 @@ CREATE TABLE project_assignments (
   status_id INTEGER REFERENCES lookup_project_status,
   status_date TIMESTAMP NULL,
   complete_date TIMESTAMP NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -234,7 +234,7 @@ CREATE TABLE project_issues_categories (
   subject VARCHAR(255) NOT NULL,
   description TEXT NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -252,7 +252,7 @@ CREATE TABLE project_issues (
   message TEXT NOT NULL,
   importance INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -269,7 +269,7 @@ CREATE TABLE project_issue_replies (
   subject VARCHAR(255) NOT NULL ,
   message TEXT NOT NULL ,
   importance INTEGER NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id)
@@ -282,7 +282,7 @@ CREATE TABLE project_folders (
   subject VARCHAR(255) NOT NULL,
   description TEXT,
   parent_id INT NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -301,7 +301,7 @@ CREATE TABLE project_files (
   version FLOAT DEFAULT 0 , 
   enabled BOOLEAN DEFAULT true ,
   downloads INTEGER DEFAULT 0,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -320,7 +320,7 @@ CREATE TABLE project_files_version (
   version FLOAT DEFAULT 0 ,
   enabled BOOLEAN DEFAULT true ,
   downloads INTEGER DEFAULT 0,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -331,7 +331,7 @@ CREATE TABLE project_files_download (
   item_id INTEGER NOT NULL REFERENCES project_files(item_id),
   version FLOAT DEFAULT 0 ,
   user_download_id INTEGER NULL REFERENCES `access`(user_id),
-  download_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  download_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE project_files_thumbnail (
@@ -339,7 +339,7 @@ CREATE TABLE project_files_thumbnail (
   filename VARCHAR(255) NOT NULL,
   size INTEGER DEFAULT 0 ,
   version FLOAT DEFAULT 0 ,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id)
@@ -350,7 +350,7 @@ CREATE TABLE project_team (
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
   user_id INTEGER NOT NULL REFERENCES `access`(user_id),
   userlevel INTEGER NOT NULL REFERENCES lookup_project_role(code),
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -364,7 +364,7 @@ CREATE TABLE project_news_category (
   category_id INT AUTO_INCREMENT PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
   category_name VARCHAR(255),
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   level INTEGER NOT NULL DEFAULT 0,
   enabled BOOLEAN DEFAULT true
 );
@@ -376,7 +376,7 @@ CREATE TABLE project_news (
   subject VARCHAR(255) NOT NULL,
   intro TEXT NULL,
   message TEXT,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -441,7 +441,7 @@ CREATE TABLE project_accounts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
   org_id INTEGER NOT NULL REFERENCES organization(org_id),
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX proj_acct_project_idx ON project_accounts (project_id);

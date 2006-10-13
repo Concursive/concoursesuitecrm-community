@@ -8,7 +8,7 @@
  
 CREATE TABLE saved_criterialist (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -37,7 +37,7 @@ CREATE TABLE campaign (
   approval_date TIMESTAMP NULL,
   approvedby INT REFERENCES `access`(user_id),
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
@@ -52,7 +52,7 @@ CREATE TABLE campaign_run (
   id INT AUTO_INCREMENT PRIMARY KEY,
   campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
   status INTEGER NOT NULL DEFAULT 0,
-  run_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  run_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   total_contacts INTEGER DEFAULT 0,
   total_sent INTEGER DEFAULT 0,
   total_replied INTEGER DEFAULT 0,
@@ -110,7 +110,7 @@ CREATE TABLE survey (
   type INT DEFAULT -1,
   enabled BOOLEAN NOT NULL DEFAULT true,
   status INT NOT NULL DEFAULT -1,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -147,7 +147,7 @@ CREATE TABLE active_survey (
   itemLength INT DEFAULT -1,
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -183,7 +183,7 @@ CREATE TABLE active_survey_responses (
   contact_id INT NOT NULL DEFAULT -1,
   unique_code VARCHAR(255),
   ip_address VARCHAR(15) NOT NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   address_updated INT
 );
 
@@ -241,7 +241,7 @@ CREATE TABLE message (
   url VARCHAR(255),
   img VARCHAR(80),
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
@@ -256,7 +256,7 @@ CREATE TABLE message_template (
   num_imgs INT,
   num_urls INT,
   enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)

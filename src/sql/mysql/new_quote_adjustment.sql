@@ -73,7 +73,7 @@ CREATE TABLE quotelog (
   notes TEXT NULL,
   grand_total FLOAT,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   issued_date TIMESTAMP NULL,
@@ -106,7 +106,7 @@ CREATE TABLE quote_notes (
   quote_id INTEGER REFERENCES quote_entry(quote_id),
   notes TEXT,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL
 );

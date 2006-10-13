@@ -9,7 +9,7 @@
 CREATE TABLE autoguide_make (
   make_id INT AUTO_INCREMENT PRIMARY KEY,
   make_name VARCHAR(30),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL
@@ -19,7 +19,7 @@ CREATE TABLE autoguide_model (
   model_id INT AUTO_INCREMENT PRIMARY KEY,
   make_id INTEGER NOT NULL REFERENCES autoguide_make(make_id),
   model_name VARCHAR(50),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL
@@ -30,7 +30,7 @@ CREATE TABLE autoguide_vehicle (
   year VARCHAR(4) NOT NULL,
   make_id INTEGER NOT NULL REFERENCES autoguide_make(make_id),
   model_id INTEGER NOT NULL REFERENCES autoguide_model(model_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL
@@ -54,7 +54,7 @@ CREATE TABLE autoguide_inventory (
 	selling_price_text VARCHAR(100) NULL,
   sold BOOLEAN DEFAULT false,
   `status` VARCHAR(20) NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL
@@ -66,7 +66,7 @@ CREATE TABLE autoguide_options (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
 
@@ -83,9 +83,9 @@ CREATE TABLE autoguide_ad_run (
   run_date TIMESTAMP NULL,
   ad_type VARCHAR(20) NULL,
   include_photo BOOLEAN DEFAULT false,
-  complete_date TIMESTAMP(3) NULL,
+  complete_date TIMESTAMP NULL,
   completedby INT DEFAULT -1,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL
@@ -97,6 +97,6 @@ CREATE TABLE autoguide_ad_run_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT false,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );

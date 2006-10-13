@@ -112,7 +112,7 @@ CREATE TABLE ticket (
   org_id INT REFERENCES organization, 
   contact_id INT REFERENCES contact, 
   problem TEXT NOT NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
@@ -167,7 +167,7 @@ CREATE TABLE ticketlog (
   ,department_code INT REFERENCES lookup_department(code)
   ,cat_code INT
   ,scode INT REFERENCES ticket_severity(code)
-  ,entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,enteredby INT NOT NULL REFERENCES `access`(user_id)
   ,modified TIMESTAMP NULL
   ,modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -184,7 +184,7 @@ CREATE TABLE ticket_csstm_form(
   follow_up_required BOOLEAN DEFAULT false,
   follow_up_description VARCHAR(2048),
   alert_date TIMESTAMP NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
@@ -210,7 +210,7 @@ CREATE TABLE ticket_sun_form(
   form_id INT AUTO_INCREMENT PRIMARY KEY,
   link_ticket_id INT REFERENCES ticket(ticketid), 
   description_of_service TEXT,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),

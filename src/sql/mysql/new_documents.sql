@@ -52,7 +52,7 @@ CREATE TABLE document_store(
   approvalDate TIMESTAMP NULL,
   approvalBy INTEGER NULL REFERENCES `access`(user_id),
   closeDate TIMESTAMP NULL,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -74,7 +74,7 @@ CREATE TABLE document_store_user_member (
   userlevel INTEGER NOT NULL REFERENCES lookup_document_store_role(code),
   status INTEGER,
   last_accessed TIMESTAMP NULL,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -91,7 +91,7 @@ CREATE TABLE document_store_role_member (
   userlevel INTEGER NOT NULL REFERENCES lookup_document_store_role(code),
   status INTEGER,
   last_accessed TIMESTAMP NULL,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -106,7 +106,7 @@ CREATE TABLE document_store_department_member (
   userlevel INTEGER NOT NULL REFERENCES lookup_document_store_role(code),
   status INTEGER,
   last_accessed TIMESTAMP NULL,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
@@ -118,5 +118,5 @@ CREATE TABLE document_accounts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   document_store_id INTEGER NOT NULL REFERENCES document_store(document_store_id),
   org_id INTEGER NOT NULL REFERENCES organization(org_id),
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

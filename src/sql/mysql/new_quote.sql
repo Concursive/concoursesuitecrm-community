@@ -68,7 +68,7 @@ CREATE TABLE quote_entry (
   short_description TEXT,
   notes TEXT NULL,
   ticketid INTEGER REFERENCES ticket(ticketid),
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
 	modified TIMESTAMP NULL,
 	modifiedby INT NOT NULL REFERENCES `access`(user_id)

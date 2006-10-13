@@ -104,7 +104,7 @@ CREATE TABLE order_product_status (
   order_id INTEGER NOT NULL REFERENCES order_entry(order_id),
   item_id INTEGER NOT NULL REFERENCES order_product(item_id),
   status_id INTEGER REFERENCES lookup_order_status(code),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -171,7 +171,7 @@ CREATE TABLE order_address (
 	state VARCHAR(300),
 	country VARCHAR(300),
 	postalcode VARCHAR(40),
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),

@@ -102,7 +102,7 @@ CREATE TABLE service_contract (
   telephone_service_model INT REFERENCES lookup_phone_model(code),
   onsite_service_model INT REFERENCES lookup_onsite_model(code),
   email_service_model INT REFERENCES lookup_email_model(code),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
@@ -122,7 +122,7 @@ CREATE TABLE service_contract_hours (
   adjustment_hours FLOAT,
   adjustment_reason INT REFERENCES lookup_hours_reason(code),
   adjustment_notes TEXT,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
@@ -185,7 +185,7 @@ CREATE TABLE asset (
   telephone_service_model INT REFERENCES lookup_phone_model(code),
   onsite_service_model INT REFERENCES lookup_onsite_model(code),
   email_service_model INT REFERENCES lookup_email_model(code),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
@@ -213,6 +213,6 @@ CREATE TABLE asset_materials_map (
   asset_id INTEGER NOT NULL REFERENCES asset(asset_id),
   code INTEGER NOT NULL REFERENCES lookup_asset_materials(code),
   quantity FLOAT,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

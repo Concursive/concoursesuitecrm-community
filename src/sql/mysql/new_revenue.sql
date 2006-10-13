@@ -34,7 +34,7 @@ CREATE TABLE revenue (
   type INT REFERENCES lookup_revenue_types(code),
   owner INT REFERENCES `access`(user_id),
   description VARCHAR(255),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL references `access`(user_id)
@@ -47,7 +47,7 @@ CREATE TABLE revenue_detail (
   type INT REFERENCES lookup_revenue_types(code),
   owner INT REFERENCES `access`(user_id),
   description VARCHAR(255),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL references `access`(user_id)

@@ -20,7 +20,7 @@ CREATE TABLE timesheet (
   unavailable BOOLEAN NOT NULL DEFAULT false,
   vacation BOOLEAN NOT NULL DEFAULT false,
   vacation_approved BOOLEAN NOT NULL DEFAULT false,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES users(user_id),
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES users(user_id)

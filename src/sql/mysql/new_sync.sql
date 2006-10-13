@@ -10,7 +10,7 @@ CREATE TABLE sync_client (
   client_id INT AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(100),
   version VARCHAR(50),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE sync_table (
   system_id INT NOT NULL REFERENCES sync_system(system_id),
   element_name VARCHAR(255),
   mapped_class_name VARCHAR(255),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL,
   create_statement TEXT,
   order_id INT DEFAULT -1,
@@ -53,7 +53,7 @@ CREATE TABLE sync_conflict_log (
   client_id INT NOT NULL REFERENCES sync_client(client_id),
   table_id INT NOT NULL REFERENCES sync_table(table_id),
   record_id INT NOT NULL,
-  status_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  status_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE sync_log (
@@ -61,7 +61,7 @@ CREATE TABLE sync_log (
   system_id INT NOT NULL REFERENCES sync_system(system_id),
   client_id INT NOT NULL REFERENCES sync_client(client_id),
   ip VARCHAR(15),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE sync_transaction_log (
@@ -80,7 +80,7 @@ CREATE TABLE process_log (
   process_id INT AUTO_INCREMENT PRIMARY KEY,
   system_id INT NOT NULL REFERENCES sync_system(system_id),
   client_id INT NOT NULL REFERENCES sync_client(client_id),
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   process_name VARCHAR(255),
   process_version VARCHAR(20),
   status INT,
