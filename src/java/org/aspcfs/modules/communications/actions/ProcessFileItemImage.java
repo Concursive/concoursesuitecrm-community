@@ -145,7 +145,7 @@ public final class ProcessFileItemImage extends CFSModule {
     FileItem thisItem = null;
 
 		Connection db = null;
-		if (rowIdString == null){
+		if (!"website".equals(path)){
 			return ("-none-");
 		}
     try {

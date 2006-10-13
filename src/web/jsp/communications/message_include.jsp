@@ -18,6 +18,9 @@
   --%>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
+<script language="JavaScript">
+	var imageLibraryURL = "/../WebsiteMedia.do?command=View&forEmail=true&popup=true";
+</script>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">

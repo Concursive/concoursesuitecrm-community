@@ -335,7 +335,7 @@ public class CFSHttpXMLWriter implements DataWriter {
    * @return Description of the Return Value
    */
   public int retrieveNewClientId() {
-    ignoreClientId = false;
+    ignoreClientId = true;
     if (!isConfigured()) {
       return -1;
     }
@@ -344,6 +344,7 @@ public class CFSHttpXMLWriter implements DataWriter {
     clientRecord.setAction("insert");
     clientRecord.addField("id", "-1");
     clientRecord.addField("type", "Java Centric CRM Http XML Writer");
+    clientRecord.addField("code", code);
     clientRecord.addField("version", String.valueOf(this.getVersion()));
     this.save(clientRecord);
     try {

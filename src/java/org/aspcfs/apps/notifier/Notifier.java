@@ -573,7 +573,13 @@ public class Notifier extends ReportBuilder {
           template.addParseElement(
               "${department}", StringUtils.toHtml(
                   thisContact.getDepartmentName()));
-          thisNotification.setMessageToSend(template.getParsedText());
+					String baseURL = template.getValue("baseURL");
+          template.addParseElement("${baseURL="+baseURL+"}","");
+					String messageToSend = template.getParsedText();
+					if (baseURL != null && !"".equals(baseURL)) {
+						messageToSend = StringUtils.replace(messageToSend, "src=\"ProcessFileItemImage.do?command=StreamImage","src=\"http://" + baseURL +  "/ProcessFileItemImage.do?command=StreamImage");
+					}
+          thisNotification.setMessageToSend(messageToSend);
           thisNotification.setType(thisCampaign.getSendMethodId());
           thisNotification.notifyContact(db);
           if (thisNotification.getType() == Notification.EMAIL || thisNotification.getType() == Notification.BROADCAST) {

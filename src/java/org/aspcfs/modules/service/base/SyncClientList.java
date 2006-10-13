@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.service.base;
 
 import org.aspcfs.modules.base.Constants;
@@ -9,7 +24,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
+/**
+ *  Description of the Class
+ *
+ * @author     Ananth
+ * @version
+ * @created    October 13, 2006
+ */
 public class SyncClientList extends ArrayList {
 
   public final static String tableName = "sync_client";
@@ -21,16 +42,17 @@ public class SyncClientList extends ArrayList {
 
   private int enabledOnly = Constants.UNDEFINED;
 
-  /**
-   * Constructor for the SyncClientList object
-   */
-  public SyncClientList() {
-  }
 
   /**
-   * Sets the lastAnchor attribute of the SyncClientList object
+   *  Constructor for the SyncClientList object
+   */
+  public SyncClientList() { }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the SyncClientList object
    *
-   * @param tmp The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -38,9 +60,9 @@ public class SyncClientList extends ArrayList {
 
 
   /**
-   * Sets the lastAnchor attribute of the SyncClientList object
+   *  Sets the lastAnchor attribute of the SyncClientList object
    *
-   * @param tmp The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -48,9 +70,9 @@ public class SyncClientList extends ArrayList {
 
 
   /**
-   * Sets the nextAnchor attribute of the SyncClientList object
+   *  Sets the nextAnchor attribute of the SyncClientList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -58,9 +80,9 @@ public class SyncClientList extends ArrayList {
 
 
   /**
-   * Sets the nextAnchor attribute of the SyncClientList object
+   *  Sets the nextAnchor attribute of the SyncClientList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -68,30 +90,34 @@ public class SyncClientList extends ArrayList {
 
 
   /**
-   * Sets the syncType attribute of the SyncClientList object
+   *  Sets the syncType attribute of the SyncClientList object
    *
-   * @param tmp The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
   }
 
+
   /**
-   * Sets the PagedListInfo attribute of the SyncClientList object. <p>
-   * <p/>
-   * The query results will be constrained to the PagedListInfo parameters.
+   *  Sets the PagedListInfo attribute of the SyncClientList object. <p>
    *
-   * @param tmp The new PagedListInfo value
-   * @since 1.1
+   *  <p/>
+   *
+   *  The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param  tmp  The new PagedListInfo value
+   * @since       1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
 
+
   /**
-   * Gets the tableName attribute of the SyncClientList object
+   *  Gets the tableName attribute of the SyncClientList object
    *
-   * @return The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -99,38 +125,41 @@ public class SyncClientList extends ArrayList {
 
 
   /**
-   * Gets the uniqueField attribute of the SyncClientList object
+   *  Gets the uniqueField attribute of the SyncClientList object
    *
-   * @return The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
   }
 
+
   /**
-   * Gets the enabledOnly attribute of the SyncClientList object
+   *  Gets the enabledOnly attribute of the SyncClientList object
    *
-   * @return The enabledOnly value
+   * @return    The enabledOnly value
    */
   public int getEnabledOnly() {
     return enabledOnly;
   }
 
+
   /**
-   * Sets the enabledOnly attribute of the SyncClientList object
+   *  Sets the enabledOnly attribute of the SyncClientList object
    *
-   * @param tmp The new enabledOnly value
+   * @param  enabledOnly  The new enabledOnly value
    */
   public void setEnabledOnly(int enabledOnly) {
     this.enabledOnly = enabledOnly;
   }
 
+
   /**
-   * Queries the database, to construct list of action items.
+   *  Queries the database, to construct list of action items.
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -145,14 +174,15 @@ public class SyncClientList extends ArrayList {
     }
   }
 
+
   /**
-   * This method is required for synchronization, it allows for the resultset
-   * to be streamed with lower overhead
+   *  This method is required for synchronization, it allows for the resultset
+   *  to be streamed with lower overhead
    *
-   * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -166,8 +196,8 @@ public class SyncClientList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-            "FROM sync_client o " +
-            "WHERE o.client_id >= 0 ");
+        "FROM sync_client o " +
+        "WHERE o.client_id >= 0 ");
 
     createFilter(db, sqlFilter);
 
@@ -175,7 +205,7 @@ public class SyncClientList extends ArrayList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-              sqlFilter.toString());
+          sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -203,8 +233,8 @@ public class SyncClientList extends ArrayList {
     }
     sqlSelect.append(
         "o.* " +
-            "FROM sync_client o " +
-            "WHERE o.client_id >= 0 ");
+        "FROM sync_client o " +
+        "WHERE o.client_id >= 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -220,12 +250,12 @@ public class SyncClientList extends ArrayList {
 
 
   /**
-   * Builds a base SQL where statement for filtering records to be used by
-   * sqlSelect and sqlCount
+   *  Builds a base SQL where statement for filtering records to be used by
+   *  sqlSelect and sqlCount
    *
-   * @param sqlFilter Description of Parameter
-   * @param db        Description of the Parameter
-   * @since 1.2
+   * @param  sqlFilter  Description of Parameter
+   * @param  db         Description of the Parameter
+   * @since             1.2
    */
   protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -245,17 +275,17 @@ public class SyncClientList extends ArrayList {
       sqlFilter.append("AND o.entered < ? ");
       sqlFilter.append("AND o.modified < ? ");
     }
-
   }
 
+
   /**
-   * Sets the parameters for the preparedStatement - these items must
-   * correspond with the createFilter statement
+   *  Sets the parameters for the preparedStatement - these items must
+   *  correspond with the createFilter statement
    *
-   * @param pst Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
-   * @since 1.2
+   * @param  pst            Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
+   * @since                 1.2
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -277,5 +307,5 @@ public class SyncClientList extends ArrayList {
     return i;
   }
 
-
 }
+

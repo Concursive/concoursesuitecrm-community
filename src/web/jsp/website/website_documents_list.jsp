@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,com.zeroio.iteam.base.*,java.text.*,org.aspcfs.modules.base.Constants" %>
+<%@ page import="java.util.*,java.text.DateFormat,com.zeroio.iteam.base.*,java.text.*,org.aspcfs.modules.base.Constants, org.aspcfs.utils.web.RequestUtils" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="fileFolderList" class="com.zeroio.iteam.base.FileFolderList" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
@@ -37,6 +37,11 @@
 			var params = "<%=addLinkParams(request,"popup|siteId")%>";
 			var url = "Sites.do?command=UpdateLogo&logoImageId="+imageId + params;		
 	    window.opener.location.href=url;
+			top.close();
+		<%} else if (request.getParameter("forEmail") != null){%>
+			var baseURL = "<%=RequestUtils.getServerUrl(request)%>";
+			var imageURL = "ProcessFileItemImage.do?command=StreamImage&id="+imageId+"&path=website&baseURL=${baseURL=" + baseURL +"}";
+			window.opener.ImageLibrary.insertImage(imageURL);
 			top.close();
 		<%}%>
 	}
