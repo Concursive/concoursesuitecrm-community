@@ -56,12 +56,12 @@ CREATE TABLE order_entry (
   grand_total FLOAT,
   status_id INTEGER REFERENCES lookup_order_status(code),
   status_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  contract_date TIMESTAMP ,
-  expiration_date TIMESTAMP ,
+  contract_date TIMESTAMP,
+  expiration_date TIMESTAMP,
   order_terms_id INTEGER REFERENCES lookup_order_terms(code),
   order_type_id INTEGER REFERENCES lookup_order_type(code),
   description VARCHAR(2048),
-  notes CLOB ,
+  notes CLOB,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
   enteredby INT REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -301,7 +301,7 @@ CREATE TABLE order_payment (
 -- the previous status is stored here for reference and tracking
 CREATE SEQUENCE order_payment_status_payment_status_id_seq;
 CREATE TABLE order_payment_status (
-  payment_status_id INT  PRIMARY KEY,
+  payment_status_id INT PRIMARY KEY,
   payment_id INTEGER REFERENCES order_payment(payment_id) NOT NULL ,
   status_id INTEGER REFERENCES lookup_payment_status(code),
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
@@ -310,12 +310,9 @@ CREATE TABLE order_payment_status (
   modifiedby INT REFERENCES access(user_id) NOT NULL 
 );
 
--- Table CREDIT_CARD
-
 CREATE SEQUENCE creditcard_creditcard_id_seq;
-
 CREATE TABLE credit_card (
-  creditcard_id int PRIMARY KEY,
+  creditcard_id INT PRIMARY KEY,
   card_type INTEGER REFERENCES lookup_creditcard_types (code),
   card_number varchar(300),
   card_security_code varchar(300),
@@ -323,34 +320,30 @@ CREATE TABLE credit_card (
   expiration_year INTEGER,
   name_on_card varchar(300),
   company_name_on_card varchar(300),
-  entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  enteredby int REFERENCES "access" (user_id) NOT NULL,
-  modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modifiedby int REFERENCES "access" (user_id) NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby INT REFERENCES "access" (user_id) NOT NULL,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby INT REFERENCES "access" (user_id) NOT NULL
 );
 
--- Table LOOKUP_PAYMENT_GATEWAY
 CREATE SEQUENCE lookup_payment_gateway_seq;
-
 CREATE TABLE lookup_payment_gateway (
-  code int PRIMARY KEY,
+  code INT PRIMARY KEY,
   description varchar(50) NOT NULL,
-  default_item boolean DEFAULT false,
+  default_item BOOLEAN DEFAULT false,
   "level" int DEFAULT 0,
-  enabled boolean DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   constant_id int
 );
 
--- Table MERCHANT_PAYMENT_GATEWAY
 CREATE SEQUENCE merchant_payment_gateway_seq;
-
 CREATE TABLE merchant_payment_gateway (
   merchant_payment_gateway_id INT PRIMARY KEY,
   gateway_id int REFERENCES lookup_payment_gateway (code),
   merchant_id varchar(300),
   merchant_code varchar(1024),
-  entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  enteredby int NOT NULL,
-  modified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modifiedby int NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby INT REFERENCES "access" (user_id) NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby INT REFERENCES "access" (user_id) NOT NULL
 );

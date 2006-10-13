@@ -4,15 +4,6 @@
  *@version    $Id$
  */
 
-CREATE TABLE lookup_sic_codes(
-  code SERIAL PRIMARY KEY,
-  description VARCHAR(300) NOT NULL,
-  default_item BOOLEAN DEFAULT FALSE,
-  level INTEGER,
-  enabled BOOLEAN DEFAULT FALSE,
-  constant_id INTEGER UNIQUE NOT NULL
-);
-
 CREATE TABLE lookup_site_id (
   code SERIAL PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
@@ -51,6 +42,15 @@ CREATE TABLE access (
   site_id INT REFERENCES lookup_site_id(code),
   allow_webdav_access BOOLEAN DEFAULT true NOT NULL,
   allow_httpapi_access BOOLEAN DEFAULT true NOT NULL
+);
+
+CREATE TABLE lookup_sic_codes(
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER,
+  enabled BOOLEAN DEFAULT true,
+  constant_id INTEGER UNIQUE NOT NULL
 );
 
 CREATE TABLE lookup_industry (
@@ -335,13 +335,13 @@ CREATE TABLE contact (
   company VARCHAR(255),
   title VARCHAR(80),
   department INT references lookup_department(code),
-  super INT REFERENCES contact,
+  super INT REFERENCES contact(contact_id),
   namesalutation varchar(80),
   namelast VARCHAR(80) NOT NULL,
   namefirst VARCHAR(80) NOT NULL,
   namemiddle VARCHAR(80),
   namesuffix VARCHAR(80),
-  assistant INT REFERENCES contact,
+  assistant INT REFERENCES contact(contact_id),
   birthdate DATE,
   notes TEXT,
   site INT,
@@ -608,7 +608,6 @@ CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
 CREATE INDEX contact_address_postalcode_idx ON contact_address(postalcode);
 CREATE INDEX "contact_city_idx" on contact_address(city);
 CREATE INDEX contact_address_prim_idx ON contact_address(primary_address);
-create index caddress_primary_address on  contact_address (primary_address);
 
 CREATE SEQUENCE contact_email_emailaddress__seq;
 CREATE TABLE contact_emailaddress (

@@ -40,6 +40,16 @@ CREATE TABLE "access" (
   PRIMARY KEY (USER_ID)
 );
 
+CREATE SEQUENCE lookup_sic_codes_code_seq;
+CREATE TABLE lookup_sic_codes(
+  code INTEGER NOT NULL PRIMARY KEY,
+  description NVARCHAR2(300) NOT NULL,
+  default_item CHAR(1) DEFAULT 0,
+  "level" INTEGER,
+  enabled CHAR(1) DEFAULT 1,
+  constant_id INTEGER UNIQUE NOT NULL
+);
+
 CREATE SEQUENCE lookup_industry_code_seq;
 CREATE TABLE lookup_industry (
   code INTEGER NOT NULL,
@@ -57,7 +67,7 @@ CREATE TABLE access_log (
   user_id INTEGER NOT NULL REFERENCES "access"(user_id),
   username NVARCHAR2(80) NOT NULL,
   ip NVARCHAR2(15),
-  entered TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   browser NVARCHAR2(255),
   PRIMARY KEY (ID)
 );
@@ -255,6 +265,7 @@ CREATE TABLE lookup_access_types (
   rule_id INTEGER NOT NULL,
   PRIMARY KEY (CODE)
 );
+create index laccess_types_rule_id on lookup_access_types (rule_id);
 
 CREATE SEQUENCE lookup_account_size_code_seq;
 CREATE TABLE lookup_account_size (
@@ -303,7 +314,6 @@ CREATE TABLE organization (
   revenue FLOAT,
   employees INTEGER,
   notes CLOB,
-  sic_code NVARCHAR2(40),
   ticker_symbol NVARCHAR2(10) ,
   taxid CHAR(80),
   lead NVARCHAR2(40),
@@ -343,6 +353,12 @@ CREATE TABLE organization (
   direct_bill CHAR(1) DEFAULT 0,
   account_size INT REFERENCES lookup_account_size(code),
   site_id INT REFERENCES lookup_site_id(code),
+  duns_type NVARCHAR2(300),
+  duns_number NVARCHAR2(30),
+  business_name_two NVARCHAR2(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description NVARCHAR2(300),
   PRIMARY KEY (ORG_ID)
 );
 
@@ -408,6 +424,15 @@ CREATE TABLE contact (
   no_im CHAR(1) DEFAULT 0,
   no_fax CHAR(1) DEFAULT 0,
   site_id INTEGER REFERENCES lookup_site_id(code),
+  assigned_date TIMESTAMP,
+  lead_trashed_date TIMESTAMP,
+  employees INTEGER,
+  duns_type NVARCHAR2(300),
+  duns_number NVARCHAR2(30),
+  business_name_two NVARCHAR2(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description NVARCHAR2(300),
   PRIMARY KEY (CONTACT_ID)
 );
 
@@ -416,9 +441,23 @@ CREATE INDEX contactlist_namecompany ON contact ( namelast, namefirst );
 -- CREATE INDEX contactlist_namecompany ON contact ( namelast, namefirst, company );
 -- CREATE INDEX contactlist_company ON contact ( company, namelast, namefirst );
 CREATE INDEX contact_import_id_idx ON contact ( import_id );
-CREATE INDEX contact_org_id_idx ON contact(org_id);
+-- CREATE INDEX contact_org_id_idx ON contact(org_id);
 CREATE INDEX contact_islead_idx ON contact(lead);
-
+create index contact_access_type on contact  (access_type);
+create index contact_assistant on contact  (assistant);
+create index contact_department on contact  (department);
+create index contact_enteredby on contact  (enteredby);
+create index contact_industry_temp_code on contact  (industry_temp_code);
+create index contact_modifiedby on contact  (modifiedby);
+create index contact_org_id on contact  (org_id);
+create index contact_owner on contact  ("owner");
+create index contact_rating on contact  (rating);
+create index contact_site_id on contact  (site_id);
+create index contact_source on contact  (source);
+create index contact_super on contact  (super);
+create index contact_user_id on contact  (user_id);
+create index contact_employee_id on contact (employee_id);
+create index contact_entered on contact (entered);
 
 -- Old Name: contact_lead_skipped_map_map_id_seq;
 CREATE SEQUENCE contact_lead__d_map_map_id_seq;
@@ -567,6 +606,9 @@ CREATE TABLE organization_address (
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   primary_address CHAR(1) DEFAULT 0 NOT NULL,
   addrline4 NVARCHAR2(80),
+  county NVARCHAR2(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0,
   PRIMARY KEY (ADDRESS_ID)
 );
 
@@ -621,6 +663,9 @@ CREATE TABLE contact_address (
   modifiedby INTEGER  NOT NULL REFERENCES "access"(user_id),
   primary_address CHAR(1) DEFAULT 0 NOT NULL,
   addrline4 NVARCHAR2(80),
+  county NVARCHAR2(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0,
   PRIMARY KEY (ADDRESS_ID)
 );
 
@@ -753,6 +798,7 @@ CREATE TABLE contact_type_levels (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
+create index tcontactlevels_level on contact_type_levels ("level");
 
 CREATE SEQUENCE lookup_lists_lookup_id_seq;
 CREATE TABLE lookup_lists_lookup(
@@ -1053,41 +1099,3 @@ CREATE TABLE custom_list_view_field (
   name NVARCHAR2(80) NOT NULL
 );
 
--- Create Indexes
-
-create index contact_access_type on contact  (access_type);
-
-create index contact_assistant on contact  (assistant);
-
-create index contact_department on contact  (department);
-
-create index contact_enteredby on contact  (enteredby);
-
-create index contact_industry_temp_code on contact  (industry_temp_code);
-
-create index contact_modifiedby on contact  (modifiedby);
-
-create index contact_org_id on contact  (org_id);
-
-create index contact_owner on contact  ("owner");
-
-create index contact_rating on contact  (rating);
-
-create index contact_site_id on contact  (site_id);
-
-create index contact_source on contact  (source);
-
-create index contact_super on contact  (super);
-
-create index contact_user_id on contact  (user_id);
-
-create index contact_employee_id on contact (employee_id);
-
-create index tcontactlevels_level on contact_type_levels ("level");
-
-create index caddress_primary_address on  contact_address (primary_address);
-
-create index contact_entered on contact (entered);
-
-create index laccess_types_rule_id on lookup_access_types (rule_id);
-

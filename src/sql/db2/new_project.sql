@@ -13,8 +13,6 @@ CREATE TABLE lookup_project_activity(
 );
 
 CREATE SEQUENCE lookup_projec_priorit_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_project_priority(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -27,10 +25,7 @@ CREATE TABLE lookup_project_priority(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_project_status_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_project_status(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -43,10 +38,7 @@ CREATE TABLE lookup_project_status(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_project_loe_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_project_loe(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -58,10 +50,7 @@ CREATE TABLE lookup_project_loe(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_project_role_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_project_role(
     code INTEGER NOT NULL,
     description VARGRAPHIC(50) NOT NULL,
@@ -72,10 +61,7 @@ CREATE TABLE lookup_project_role(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_project_cat_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_project_category(
     code INTEGER NOT NULL,
     description VARGRAPHIC(80) NOT NULL,
@@ -86,10 +72,7 @@ CREATE TABLE lookup_project_category(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_news_template_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_news_template(
     code INTEGER NOT NULL,
     description VARGRAPHIC(255) NOT NULL,
@@ -106,10 +89,7 @@ CREATE TABLE lookup_news_template(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE projects_project_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE projects(
     project_id INTEGER NOT NULL,
     group_id INTEGER,
@@ -170,13 +150,9 @@ CREATE TABLE projects(
     PRIMARY KEY(project_id)
 );
 
-CREATE INDEX projects_idx
-    ON projects(group_id,project_id);
-
+CREATE INDEX projects_idx ON projects(group_id,project_id);
 
 CREATE SEQUENCE project_requi_equirement_i_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_requirements(
     requirement_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),
@@ -205,11 +181,7 @@ CREATE TABLE project_requirements(
     PRIMARY KEY(requirement_id)
 );
 
-
-
 CREATE SEQUENCE project_assig_en_folder_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_assignments_folder(
     folder_id INTEGER NOT NULL,
     parent_id INTEGER REFERENCES project_assignments_folder(folder_id),
@@ -223,11 +195,7 @@ CREATE TABLE project_assignments_folder(
     PRIMARY KEY(folder_id)
 );
 
-
-
 CREATE SEQUENCE project_assig_ssignment_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_assignments(
     assignment_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),
@@ -304,11 +272,7 @@ CREATE TABLE project_issues_categories(
     PRIMARY KEY(category_id)
 );
 
-
-
 CREATE SEQUENCE project_issues_issue_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_issues(
     issue_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),
@@ -412,16 +376,12 @@ CREATE TABLE project_files_version(
     allow_portal_access CHAR(1) DEFAULT '0'
 );
 
-
-
 CREATE TABLE project_files_download(
     item_id INTEGER NOT NULL  REFERENCES project_files(item_id),
     "version" FLOAT DEFAULT 0,
     user_download_id INTEGER REFERENCES "access"(user_id),
     download_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-
-
 
 CREATE TABLE project_files_thumbnail(
     item_id INTEGER REFERENCES project_files(item_id),
@@ -433,7 +393,6 @@ CREATE TABLE project_files_thumbnail(
     modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modifiedBy INTEGER NOT NULL  REFERENCES "access"(user_id)
 );
-
 
 
 CREATE TABLE project_team(
@@ -448,16 +407,10 @@ CREATE TABLE project_team(
     last_accessed TIMESTAMP,
     role_type int
 );
-
-
-
 CREATE INDEX project_team_uni_1
     ON project_team(project_id,user_id);
 
-
 CREATE SEQUENCE project_news___category_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_news_category(
     category_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),
@@ -468,11 +421,7 @@ CREATE TABLE project_news_category(
     PRIMARY KEY(category_id)
 );
 
-
-
 CREATE SEQUENCE project_news_news_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_news(
     news_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),
@@ -502,10 +451,7 @@ CREATE TABLE project_news(
     PRIMARY KEY(news_id)
 );
 
-
 CREATE SEQUENCE project_requi_s_map_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_requirements_map(
     map_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),
@@ -517,14 +463,10 @@ CREATE TABLE project_requirements_map(
     PRIMARY KEY(map_id)
 );
 
-
 CREATE INDEX proj_req_map_pr_r1
     ON project_requirements_map(project_id,requirement_id,"position");
 
-
 CREATE SEQUENCE lookup_projec_ategory_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_project_perm_category(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -535,10 +477,7 @@ CREATE TABLE lookup_project_perm_category(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_projec_mission_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_project_permission(
     code INTEGER NOT NULL,
     category_id INTEGER REFERENCES lookup_project_perm_category(code),
@@ -552,9 +491,7 @@ CREATE TABLE lookup_project_permission(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE project_permissions_id_seq AS DECIMAL(27,0);
-
 CREATE TABLE project_permissions(
     id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),
@@ -563,10 +500,7 @@ CREATE TABLE project_permissions(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE project_accounts_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE project_accounts(
     id INTEGER NOT NULL,
     project_id INTEGER NOT NULL  REFERENCES projects(project_id),

@@ -162,16 +162,17 @@ CREATE TABLE order_address (
 	addrline1 VARCHAR(300),
 	addrline2 VARCHAR(300),
 	addrline3 VARCHAR(300),
-    addrline4 VARCHAR(300),
-	city VARCHAR(300),
+  city VARCHAR(300),
 	state VARCHAR(300),
 	country VARCHAR(300),
 	postalcode VARCHAR(40),
 	entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  addrline4 VARCHAR(300)
 );
+CREATE INDEX order_city_idx ON order_address(city);
 
 -- The method in which a payment is made
 -- Example: Credit Card, EFT, Cash, Check, Money Order

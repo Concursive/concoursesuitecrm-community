@@ -47,6 +47,16 @@ CREATE TABLE "access" (
   PRIMARY KEY (USER_ID)
 );
 
+CREATE GENERATOR lookup_sic_codes_code_seq;
+CREATE TABLE lookup_sic_codes(
+  code INTEGER NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item CHAR(1) DEFAULT 'N',
+  "level" INTEGER,
+  enabled CHAR(1) DEFAULT 'Y',
+  constant_id INTEGER UNIQUE NOT NULL
+);
+
 CREATE GENERATOR lookup_industry_code_seq;
 CREATE TABLE lookup_industry (
   code INTEGER NOT NULL,
@@ -263,6 +273,7 @@ CREATE TABLE lookup_access_types (
   rule_id INTEGER NOT NULL,
   PRIMARY KEY (CODE)
 );
+create index laccess_types_rule_id on lookup_access_types (rule_id);
 
 CREATE GENERATOR lookup_account_size_code_seq;
 CREATE TABLE lookup_account_size (
@@ -312,7 +323,6 @@ CREATE TABLE organization (
   revenue FLOAT,
   employees INTEGER,
   notes BLOB SUB_TYPE 1 SEGMENT SIZE 100,
-  sic_code VARCHAR(40),
   ticker_symbol VARCHAR(10) ,
   taxid CHAR(80),
   lead VARCHAR(40),
@@ -352,6 +362,12 @@ CREATE TABLE organization (
   direct_bill CHAR(1) DEFAULT 'N',
   account_size INT REFERENCES lookup_account_size(code),
   site_id INT REFERENCES lookup_site_id(code),
+  duns_type VARCHAR(300),
+  duns_number VARCHAR(30),
+  business_name_two VARCHAR(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description VARCHAR(300),
   PRIMARY KEY (ORG_ID)
 );
 
@@ -417,6 +433,15 @@ CREATE TABLE contact (
   no_im CHAR(1) DEFAULT 'N',
   no_fax CHAR(1) DEFAULT 'N',
   site_id INTEGER REFERENCES lookup_site_id(code),
+  assigned_date TIMESTAMP,
+  lead_trashed_date TIMESTAMP,
+  employees INTEGER,
+  duns_type VARCHAR(300),
+  duns_number VARCHAR(30),
+  business_name_two VARCHAR(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description VARCHAR(300),
   PRIMARY KEY (CONTACT_ID)
 );
 
@@ -503,7 +528,6 @@ CREATE TABLE permission_category (
   constant INTEGER NOT NULL,
   action_plans CHAR(1) DEFAULT 'N' NOT NULL,
   custom_list_views CHAR(1) DEFAULT 'N' NOT NULL,
-  importer CHAR(1) DEFAULT 'N' NOT NULL,
   PRIMARY KEY (CATEGORY_ID)
 );
 
@@ -592,6 +616,9 @@ CREATE TABLE organization_address (
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
   primary_address CHAR(1) DEFAULT 'N' NOT NULL,
   addrline4 VARCHAR(80),
+  county VARCHAR(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0,
   PRIMARY KEY (ADDRESS_ID)
 );
 
@@ -647,6 +674,9 @@ CREATE TABLE contact_address (
   modifiedby INTEGER  NOT NULL REFERENCES "access"(user_id),
   primary_address CHAR(1) DEFAULT 'N' NOT NULL,
   addrline4 VARCHAR(80),
+  county VARCHAR(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0,
   PRIMARY KEY (ADDRESS_ID)
 );
 
@@ -1088,42 +1118,4 @@ CREATE TABLE custom_list_view_field (
   view_id INT NOT NULL REFERENCES custom_list_view(view_id),
   name VARCHAR(80) NOT NULL
 );
-
--- Create Indexes
-
-create index contact_access_type on contact  (access_type);
-
-create index contact_assistant on contact  (assistant);
-
-create index contact_department on contact  (department);
-
-create index contact_enteredby on contact  (enteredby);
-
-create index contact_industry_temp_code on contact  (industry_temp_code);
-
-create index contact_modifiedby on contact  (modifiedby);
-
-create index contact_org_id on contact  (org_id);
-
-create index contact_owner on contact  ("owner");
-
-create index contact_rating on contact  (rating);
-
-create index contact_site_id on contact  (site_id);
-
-create index contact_source on contact  (source);
-
-create index contact_super on contact  (super);
-
-create index contact_user_id on contact  (user_id);
-
-create index contact_employee_id on contact (employee_id);
-
-create index tcontactlevels_level on contact_type_levels ("level");
-
-create index caddress_primary_address on  contact_address (primary_address);
-
-create index contact_entered on contact (entered);
-
-create index laccess_types_rule_id on lookup_access_types (rule_id);
 

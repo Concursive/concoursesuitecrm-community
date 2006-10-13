@@ -266,7 +266,6 @@ CREATE TABLE product_option (
   allow_customer_configure BIT NOT NULL DEFAULT 0,
   allow_user_configure BIT NOT NULL DEFAULT 0,
   required BIT NOT NULL DEFAULT 0,
-  -- record information
   start_date DATETIME DEFAULT NULL,
   end_date DATETIME DEFAULT NULL,
   enabled BIT DEFAULT 0,

@@ -1,6 +1,4 @@
 CREATE SEQUENCE lookup_currency_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_currency(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -11,8 +9,6 @@ CREATE TABLE lookup_currency(
 );
 
 CREATE SEQUENCE lookup_produc_categor_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_category_type(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -22,10 +18,7 @@ CREATE TABLE lookup_product_category_type(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE product_categ__category_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_category(
     category_id INTEGER NOT NULL,
     parent_id INTEGER REFERENCES product_category(category_id),
@@ -50,10 +43,7 @@ CREATE TABLE product_category(
     PRIMARY KEY(category_id)
 );
 
-
 CREATE SEQUENCE product_category_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_category_map(
     id INTEGER NOT NULL,
     category1_id INTEGER NOT NULL  REFERENCES product_category(category_id),
@@ -61,10 +51,7 @@ CREATE TABLE product_category_map(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE lookup_product_type_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_type(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -74,10 +61,7 @@ CREATE TABLE lookup_product_type(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_produc_manufac_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_manufacturer(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -87,10 +71,7 @@ CREATE TABLE lookup_product_manufacturer(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_product_format_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_format(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -100,10 +81,7 @@ CREATE TABLE lookup_product_format(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_produc_shippin_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_shipping(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -113,10 +91,7 @@ CREATE TABLE lookup_product_shipping(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_produc_ship_ti_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_ship_time(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -126,10 +101,7 @@ CREATE TABLE lookup_product_ship_time(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_product_tax_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_tax(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -139,10 +111,7 @@ CREATE TABLE lookup_product_tax(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE lookup_recurring_type_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_recurring_type(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -152,10 +121,7 @@ CREATE TABLE lookup_recurring_type(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE product_catalog_product_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_catalog(
     product_id INTEGER NOT NULL,
     parent_id INTEGER REFERENCES product_catalog(product_id),
@@ -190,10 +156,7 @@ CREATE TABLE product_catalog(
     PRIMARY KEY(product_id)
 );
 
-
 CREATE SEQUENCE product_catal_ing_price_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_catalog_pricing(
     price_id INTEGER NOT NULL,
     product_id INTEGER REFERENCES product_catalog(product_id),
@@ -217,11 +180,7 @@ CREATE TABLE product_catalog_pricing(
     PRIMARY KEY(price_id)
 );
 
-
-
 CREATE SEQUENCE package_package_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE package(
     package_id INTEGER NOT NULL,
     category_id INTEGER REFERENCES product_category(category_id),
@@ -243,11 +202,7 @@ CREATE TABLE package(
     PRIMARY KEY(package_id)
 );
 
-
-
 CREATE SEQUENCE package_products_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE package_products_map(
     id INTEGER NOT NULL,
     package_id INTEGER NOT NULL  REFERENCES package(package_id),
@@ -266,10 +221,7 @@ CREATE TABLE package_products_map(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE product_catal_egory_map_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_catalog_category_map(
     id INTEGER NOT NULL,
     product_id INTEGER NOT NULL  REFERENCES product_catalog(product_id),
@@ -277,9 +229,7 @@ CREATE TABLE product_catalog_category_map(
     PRIMARY KEY(id)
 );
 
-
 CREATE SEQUENCE lookup_produc_conf_re_code_seq AS DECIMAL(27,0);
-
 CREATE TABLE lookup_product_conf_result(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -289,10 +239,7 @@ CREATE TABLE lookup_product_conf_result(
     PRIMARY KEY(code)
 );
 
-
 CREATE SEQUENCE product_optio_figurator_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_option_configurator(
     configurator_id INTEGER NOT NULL,
     short_description CLOB(2G) NOT LOGGED,
@@ -303,10 +250,7 @@ CREATE TABLE product_option_configurator(
     PRIMARY KEY(configurator_id)
 );
 
-
 CREATE SEQUENCE product_option_option_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_option(
     option_id INTEGER NOT NULL,
     configurator_id INTEGER NOT NULL  REFERENCES product_option_configurator(configurator_id),
@@ -325,10 +269,7 @@ CREATE TABLE product_option(
     PRIMARY KEY(option_id)
 );
 
-
 CREATE SEQUENCE product_optio_ues_value_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_option_values(
     value_id INTEGER NOT NULL,
     option_id INTEGER NOT NULL  REFERENCES product_option(option_id),
@@ -350,15 +291,10 @@ CREATE TABLE product_option_values(
     cost_amount FLOAT DEFAULT 0 NOT NULL,
     PRIMARY KEY(value_id)
 );
-
-
 CREATE INDEX idx_pr_opt_val
     ON product_option_values(option_id,result_id);
 
-
 CREATE SEQUENCE product_optio_ct_option_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE product_option_map(
     product_option_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL  REFERENCES product_catalog(product_id),
@@ -366,13 +302,11 @@ CREATE TABLE product_option_map(
     PRIMARY KEY(product_option_id)
 );
 
-
 CREATE TABLE product_option_boolean(
     product_option_id INTEGER NOT NULL  REFERENCES product_option(option_id),
     "value" CHAR(1) NOT NULL,
     id INTEGER
 );
-
 
 CREATE TABLE product_option_float(
     product_option_id INTEGER NOT NULL  REFERENCES product_option(option_id),
@@ -380,13 +314,11 @@ CREATE TABLE product_option_float(
     id INTEGER
 );
 
-
 CREATE TABLE product_option_timestamp(
     product_option_id INTEGER NOT NULL  REFERENCES product_option(option_id),
     "value" TIMESTAMP NOT NULL,
     id INTEGER
 );
-
 
 CREATE TABLE product_option_integer(
     product_option_id INTEGER NOT NULL  REFERENCES product_option(option_id),
@@ -394,17 +326,13 @@ CREATE TABLE product_option_integer(
     id INTEGER
 );
 
-
 CREATE TABLE product_option_text(
     product_option_id INTEGER NOT NULL  REFERENCES product_option(option_id),
     "value" CLOB(2G) NOT LOGGED NOT NULL,
     id INTEGER
 );
 
-
 CREATE SEQUENCE lookup_produc_keyword_code_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE lookup_product_keyword(
     code INTEGER NOT NULL,
     description VARGRAPHIC(300) NOT NULL,
@@ -413,7 +341,6 @@ CREATE TABLE lookup_product_keyword(
     enabled CHAR(1) DEFAULT '1',
     PRIMARY KEY(code)
 );
-
 
 CREATE TABLE product_keyword_map(
     product_id INTEGER NOT NULL  REFERENCES product_catalog(product_id),

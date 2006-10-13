@@ -220,6 +220,6 @@ CREATE TABLE web_product_email_log (
 
 CREATE TABLE url_map (
   url_id INT IDENTITY PRIMARY KEY,
-  time_in_millis INT NOT NULL,
+  time_in_millis DECIMAL NOT NULL,
   url TEXT
 );

@@ -6,15 +6,6 @@
  *@version    $Id$
  */
 
-CREATE TABLE lookup_sic_codes(
-  code INT IDENTITY PRIMARY KEY,
-  description VARCHAR(300) NOT NULL,
-  default_item BIT DEFAULT 0,
-  level INTEGER,
-  enabled BIT DEFAULT 0,
-  constant_id INTEGER NOT NULL
-);
-
 CREATE TABLE lookup_site_id (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
@@ -52,6 +43,15 @@ CREATE TABLE access (
   site_id INT REFERENCES lookup_site_id(code),
   allow_webdav_access BIT DEFAULT 1 NOT NULL,
   allow_httpapi_access BIT DEFAULT 1 NOT NULL
+);
+
+CREATE TABLE lookup_sic_codes(
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER,
+  enabled BIT DEFAULT 0,
+  constant_id INTEGER NOT NULL
 );
 
 CREATE TABLE lookup_industry (
@@ -403,13 +403,13 @@ create index contact_department on contact  (department);
 create index contact_enteredby on contact  (enteredby);
 create index contact_industry_temp_code on contact  (industry_temp_code);
 create index contact_modifiedby on contact  (modifiedby);
-create index contact_org_id on contact  (org_id);
+-- create index contact_org_id on contact  (org_id);
 create index contact_owner on contact  ("owner");
 create index contact_rating on contact  (rating);
 create index contact_site_id on contact  (site_id);
 create index contact_source on contact  (source);
 create index contact_super on contact  (super);
-create index contact_user_id on contact  (user_id);
+-- create index contact_user_id on contact  (user_id);
 create index contact_employee_id on contact (employee_id);
 create index contact_entered on contact (entered);
 
@@ -595,7 +595,6 @@ CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
 CREATE INDEX contact_address_postalcode_idx ON contact_address(postalcode);
 CREATE INDEX "contact_city_idx" on contact_address(city);
 CREATE INDEX contact_address_prim_idx ON contact_address(primary_address);
-create index caddress_primary_address on  contact_address (primary_address);
 
 CREATE TABLE contact_emailaddress (
   emailaddress_id INT IDENTITY PRIMARY KEY,

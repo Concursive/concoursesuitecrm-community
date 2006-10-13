@@ -273,12 +273,12 @@ CREATE TABLE product_option (
   parent_id INTEGER REFERENCES product_option(option_id),
   short_description VARCHAR(4192),
   long_description CLOB,
-  allow_customer_configure boolean DEFAULT false NOT NULL ,
-  allow_user_configure boolean DEFAULT false NOT NULL ,
-  required boolean DEFAULT false NOT NULL ,
+  allow_customer_configure BOOLEAN DEFAULT false NOT NULL,
+  allow_user_configure BOOLEAN DEFAULT false NOT NULL,
+  required BOOLEAN DEFAULT false NOT NULL ,
   start_date TIMESTAMP DEFAULT NULL,
   end_date TIMESTAMP DEFAULT NULL,
-  enabled boolean DEFAULT false,
+  enabled BOOLEAN DEFAULT false,
   option_name VARCHAR(300) NOT NULL,
   has_range boolean DEFAULT false,
   has_multiplier boolean DEFAULT false
@@ -320,7 +320,7 @@ CREATE TABLE product_option_map (
 -- which determine the option's structure
 CREATE TABLE product_option_boolean (
   product_option_id INTEGER REFERENCES product_option(option_id) NOT NULL ,
-  value boolean NOT NULL,
+  value BOOLEAN NOT NULL,
   id INTEGER
 );
 
@@ -368,7 +368,8 @@ CREATE INDEX idx_pr_key_map ON product_keyword_map (product_id, keyword_id);
 -- Each product_category can have "custom folders"
 -- TABLES ALREADY EXIST, MUST CREATE A CONSTANT ID
 
--- Create indexes
+
+-- Create Indexes
 
 create index pcatalog_pid on product_catalog (parent_id);
 

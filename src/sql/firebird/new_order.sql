@@ -186,21 +186,21 @@ CREATE TABLE lookup_orderaddress_types (
 
 CREATE GENERATOR order_address_address_id_seq;
 CREATE TABLE order_address (
-   address_id INTEGER  NOT NULL,
-   order_id INTEGER NOT NULL REFERENCES order_entry(order_id),
-   address_type INTEGER REFERENCES lookup_orderaddress_types(code),
-   addrline1 VARCHAR(300),
-   addrline2 VARCHAR(300),
-   addrline3 VARCHAR(300),
-   addrline4 VARCHAR(300),   
-   city VARCHAR(300),
-   state VARCHAR(300),
-   country VARCHAR(300),
-   postalcode VARCHAR(40),
-   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
+  address_id INTEGER  NOT NULL,
+  order_id INTEGER NOT NULL REFERENCES order_entry(order_id),
+  address_type INTEGER REFERENCES lookup_orderaddress_types(code),
+  addrline1 VARCHAR(300),
+  addrline2 VARCHAR(300),
+  addrline3 VARCHAR(300),
+  city VARCHAR(300),
+  state VARCHAR(300),
+  country VARCHAR(300),
+  postalcode VARCHAR(40),
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
+  addrline4 VARCHAR(300),
   PRIMARY KEY (ADDRESS_ID)
 );
 
@@ -340,7 +340,7 @@ CREATE TABLE order_payment (
 -- Old Name: order_payment_status_payment_status_id_seq;
 CREATE GENERATOR order_payment_ent_status_id_seq;
 CREATE TABLE order_payment_status (
-  payment_status_id INTEGER  NOT NULL,
+  payment_status_id INTEGER NOT NULL,
   payment_id INTEGER NOT NULL REFERENCES order_payment(payment_id),
   status_id INTEGER REFERENCES lookup_payment_status(code),
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,
@@ -350,64 +350,40 @@ CREATE TABLE order_payment_status (
   PRIMARY KEY (PAYMENT_STATUS_ID)
 );
 
--- Table CREDIT_CARD
-
-CREATE SEQUENCE creditcard_creditcard_id_seq;
-
-CREATE TABLE credit_card
-(
-  creditcard_id int NOT NULL DEFAULT nextval('creditcard_creditcard_id_seq'),
-  card_type int4,
+CREATE GENERATOR creditcard_creditcard_id_seq;
+CREATE TABLE credit_card (
+  creditcard_id INTEGER NOT NULL PRIMARY KEY,
+  card_type INT REFERENCES lookup_creditcard_types (code),
   card_number varchar(300),
   card_security_code varchar(300),
   expiration_month int,
   expiration_year int,
   name_on_card varchar(300),
   company_name_on_card varchar(300),
-  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby int NOT NULL,
-  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby int NOT NULL,
-  CONSTRAINT creditcard_pkey PRIMARY KEY (creditcard_id),
-  CONSTRAINT creditcard_card_type_fkey FOREIGN KEY (card_type)
-      REFERENCES lookup_creditcard_types (code) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT creditcard_enteredby_fkey FOREIGN KEY (enteredby)
-      REFERENCES "access" (user_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT creditcard_modifiedby_fkey FOREIGN KEY (modifiedby)
-      REFERENCES "access" (user_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby INT NOT NULL REFERENCES "access"(user_id),
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby INT NOT NULL REFERENCES "access"(user_id)
 );
 
--- Table LOOKUP_PAYMENT_GATEWAY
-CREATE SEQUENCE lookup_payment_gateway_seq;
-
-CREATE TABLE lookup_payment_gateway
-(
-  code int NOT NULL DEFAULT nextval('lookup_payment_gateway_seq'),
+CREATE GENERATOR lookup_payment_gateway_seq;
+CREATE TABLE lookup_payment_gateway (
+  code INTEGER NOT NULL PRIMARY KEY,
   description varchar(50) NOT NULL,
-  default_item bool DEFAULT false,
+  default_item CHAR(1) DEFAULT 'N',
   "level" int DEFAULT 0,
-  enabled bool DEFAULT true,
-  constant_id int,
-  CONSTRAINT lookup_payment_gateway_pkey PRIMARY KEY (code)
+  enabled CHAR(1) DEFAULT 'Y',
+  constant_id int
 );
--- Table MERCHANT_PAYMENT_GATEWAY
-CREATE SEQUENCE merchant_payment_gateway_seq;
 
-CREATE TABLE merchant_payment_gateway
-(
-  merchant_payment_gateway_id int4 NOT NULL DEFAULT nextval('merchant_payment_gateway_seq'),
-  gateway_id int,
+CREATE GENERATOR merchant_payment_gateway_seq;
+CREATE TABLE merchant_payment_gateway (
+  merchant_payment_gateway_id INTEGER NOT NULL PRIMARY KEY,
+  gateway_id int REFERENCES lookup_payment_gateway(code),
   merchant_id varchar(300),
   merchant_code varchar(1024),
-  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby int NOT NULL,
-  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby int NOT NULL,
-  CONSTRAINT merchant_payment_gateway_id_pkey PRIMARY KEY (merchant_payment_gateway_id),
-  CONSTRAINT merchant_payment_gateway_gateway_id_fkey FOREIGN KEY (gateway_id)
-      REFERENCES lookup_payment_gateway (code) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  enteredby INT NOT NULL REFERENCES "access"(user_id),
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modifiedby INT NOT NULL REFERENCES "access"(user_id)
 );

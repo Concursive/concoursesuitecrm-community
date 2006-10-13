@@ -58,8 +58,8 @@ CREATE TABLE order_entry (
   grand_total FLOAT,
   status_id INTEGER REFERENCES lookup_order_status(code),
   status_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-  contract_date TIMESTAMP(3) DEFAULT NULL,
-  expiration_date TIMESTAMP(3) DEFAULT NULL,
+  contract_date TIMESTAMP(3),
+  expiration_date TIMESTAMP(3),
   order_terms_id INTEGER REFERENCES lookup_order_terms(code),
   order_type_id INTEGER REFERENCES lookup_order_type(code),
   description VARCHAR(2048),
@@ -172,8 +172,7 @@ CREATE TABLE order_address (
   modifiedby INT NOT NULL REFERENCES access(user_id),
   addrline4 VARCHAR(300)
 );
-CREATE INDEX order_city_idx
-  ON order_address(city);
+CREATE INDEX order_city_idx ON order_address(city);
 
 -- The method in which a payment is made
 -- Example: Credit Card, EFT, Cash, Check, Money Order, Purchase Order
@@ -319,19 +318,19 @@ CREATE TABLE credit_card (
 CREATE TABLE lookup_payment_gateway (
   code SERIAL PRIMARY KEY,
   description varchar(50) NOT NULL,
-  default_item bool DEFAULT false,
+  default_item BOOLEAN DEFAULT false,
   "level" int DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   constant_id int
-);        
+);
 
 CREATE TABLE merchant_payment_gateway (
   merchant_payment_gateway_id SERIAL PRIMARY KEY,
-  gateway_id int REFERENCES lookup_payment_gateway (code),
+  gateway_id int REFERENCES lookup_payment_gateway(code),
   merchant_id varchar(300),
   merchant_code varchar(1024),
-  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
-  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );

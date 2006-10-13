@@ -45,6 +45,16 @@ CREATE TABLE "access"(
     PRIMARY KEY(user_id)
 );
 
+CREATE SEQUENCE lookup_sic_codes_code_seq AS DECIMAL(27,0);
+CREATE TABLE lookup_sic_codes(
+  code INTEGER NOT NULL,
+  description VARGRAPHIC(300) NOT NULL,
+  default_item CHAR(1) DEFAULT '0',
+  level INTEGER,
+  enabled CHAR(1) DEFAULT '1',
+  constant_id INTEGER UNIQUE NOT NULL,
+  PRIMARY KEY(code)
+);
 
 CREATE SEQUENCE lookup_industry_code_seq AS DECIMAL(27,0);
 CREATE TABLE lookup_industry(
@@ -323,7 +333,6 @@ CREATE TABLE organization(
     revenue FLOAT,
     employees INTEGER,
     notes CLOB(2G) NOT LOGGED,
-    sic_code VARGRAPHIC(40),
     ticker_symbol VARGRAPHIC(10),
     taxid CHAR(80),
     lead VARGRAPHIC(40),
@@ -363,18 +372,18 @@ CREATE TABLE organization(
     direct_bill CHAR(1) DEFAULT '0',
     account_size INTEGER REFERENCES lookup_account_size(code),
     site_id INTEGER REFERENCES lookup_site_id(code),
+    duns_type VARGRAPHIC(300),
+    duns_number VARGRAPHIC(30),
+    business_name_two VARGRAPHIC(300),
+    sic_code INTEGER REFERENCES lookup_sic_codes(code),
+    year_started INTEGER,
+    sic_description VARGRAPHIC(300),
     PRIMARY KEY(org_id)
 );
 
-
-
-CREATE INDEX orglist_name
-    ON organization(name);
-
+CREATE INDEX orglist_name ON organization(name);
 
 CREATE SEQUENCE contact_contact_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE contact(
     contact_id INTEGER NOT NULL,
     user_id INTEGER REFERENCES "access"(user_id),
@@ -434,19 +443,23 @@ CREATE TABLE contact(
     no_im CHAR(1) DEFAULT '0',
     no_fax CHAR(1) DEFAULT '0',
     site_id INTEGER REFERENCES lookup_site_id(code),
+    assigned_date TIMESTAMP,
+    lead_trashed_date TIMESTAMP,
+    employees INTEGER,
+    duns_type VARGRAPHIC(300),
+    duns_number VARGRAPHIC(30),
+    business_name_two VARGRAPHIC(300),
+    sic_code INTEGER REFERENCES lookup_sic_codes(code),
+    year_started INTEGER,
+    sic_description VARGRAPHIC(300),
     PRIMARY KEY(contact_id)
 );
 
-CREATE INDEX contact_user_id_i1
-    ON contact(user_id);
-CREATE INDEX contactlist_namec1
-    ON contact(namelast,namefirst);
-CREATE INDEX contact_import_id1
-    ON contact(import_id);
-CREATE INDEX contact_org_id_idx
-    ON contact(org_id);
-CREATE INDEX contact_islead_idx
-    ON contact(lead);
+CREATE INDEX contact_user_id_i1 ON contact(user_id);
+CREATE INDEX contactlist_namec1 ON contact(namelast,namefirst);
+CREATE INDEX contact_import_id1 ON contact(import_id);
+CREATE INDEX contact_org_id_idx ON contact(org_id);
+CREATE INDEX contact_islead_idx ON contact(lead);
 
 CREATE SEQUENCE contact_lead__d_map_map_id_seq AS DECIMAL(27,0);
 CREATE TABLE contact_lead_skipped_map(
@@ -456,8 +469,7 @@ CREATE TABLE contact_lead_skipped_map(
     PRIMARY KEY(map_id)
 );
 
-CREATE INDEX contact_lead_skip1
-    ON contact_lead_skipped_map(user_id);
+CREATE INDEX contact_lead_skip1 ON contact_lead_skipped_map(user_id);
 
 
 CREATE TABLE contact_lead_read_map(
@@ -467,10 +479,8 @@ CREATE TABLE contact_lead_read_map(
     PRIMARY KEY(map_id)
 );
 
-CREATE INDEX contact_lead_read1
-    ON contact_lead_read_map(user_id);
-CREATE INDEX contact_lead_read2
-    ON contact_lead_read_map(contact_id);
+CREATE INDEX contact_lead_read1 ON contact_lead_read_map(user_id);
+CREATE INDEX contact_lead_read2 ON contact_lead_read_map(contact_id);
 
 
 CREATE SEQUENCE role_role_id_seq AS DECIMAL(27,0);
@@ -489,8 +499,6 @@ CREATE TABLE "role"(
 
 
 CREATE SEQUENCE permission_ca__category_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE permission_category(
     category_id INTEGER NOT NULL,
     category VARGRAPHIC(80),
@@ -513,10 +521,7 @@ CREATE TABLE permission_category(
     PRIMARY KEY(category_id)
 );
 
-
 CREATE SEQUENCE permission_permission_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE permission(
     permission_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL  REFERENCES permission_category,
@@ -602,6 +607,9 @@ CREATE TABLE organization_address(
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     primary_address CHAR(1) DEFAULT '0' NOT NULL,
     addrline4 VARGRAPHIC(80),
+    county VARGRAPHIC(80),
+    latitude FLOAT DEFAULT 0,
+    longitude FLOAT DEFAULT 0,
     PRIMARY KEY(address_id)
 );
 
@@ -655,17 +663,16 @@ CREATE TABLE contact_address(
     modifiedby INTEGER NOT NULL  REFERENCES "access"(user_id),
     primary_address CHAR(1) DEFAULT '0' NOT NULL,
     addrline4 VARGRAPHIC(80),
+    county VARGRAPHIC(80),
+    latitude FLOAT DEFAULT 0,
+    longitude FLOAT DEFAULT 0,
     PRIMARY KEY(address_id)
 );
 
-CREATE INDEX contact_address_c1
-    ON contact_address(contact_id);
-CREATE INDEX contact_address_p1
-    ON contact_address(postalcode);
-CREATE INDEX contact_city_idx
-    ON contact_address(city);
-CREATE INDEX contact_address_p2
-    ON contact_address(primary_address);
+CREATE INDEX contact_address_c1 ON contact_address(contact_id);
+CREATE INDEX contact_address_p1 ON contact_address(postalcode);
+CREATE INDEX contact_city_idx ON contact_address(city);
+CREATE INDEX contact_address_p2 ON contact_address(primary_address);
 
 
 CREATE SEQUENCE contact_email_mailaddress__seq AS DECIMAL(27,0);
@@ -682,10 +689,8 @@ CREATE TABLE contact_emailaddress(
     PRIMARY KEY(emailaddress_id)
 );
 
-CREATE INDEX contact_email_con1
-    ON contact_emailaddress(contact_id);
-CREATE INDEX contact_email_pri1
-    ON contact_emailaddress(primary_email);
+CREATE INDEX contact_email_con1 ON contact_emailaddress(contact_id);
+CREATE INDEX contact_email_pri1 ON contact_emailaddress(primary_email);
 
 
 CREATE SEQUENCE contact_phone_phone_id_seq AS DECIMAL(27,0);
@@ -967,10 +972,7 @@ CREATE TABLE action_item_log(
 );
 
 
-
 CREATE SEQUENCE import_import_id_seq AS DECIMAL(27,0);
-
-
 CREATE TABLE import(
     import_id INTEGER NOT NULL,
     "type" INTEGER NOT NULL,
@@ -994,11 +996,8 @@ CREATE TABLE import(
     PRIMARY KEY(import_id)
 );
 
-CREATE INDEX import_entered_idx
-    ON import(entered);
-CREATE INDEX import_name_idx
-    ON import(name);
-
+CREATE INDEX import_entered_idx ON import(entered);
+CREATE INDEX import_name_idx ON import(name);
 
 CREATE SEQUENCE database_vers_n_version_id_seq AS DECIMAL(27,0);
 CREATE TABLE database_version(
@@ -1022,7 +1021,6 @@ CREATE TABLE lookup_relationship_types(
     PRIMARY KEY(type_id)
 );
 
-
 CREATE SEQUENCE relationship__ationship_id_seq AS DECIMAL(27,0);
 CREATE TABLE relationship(
     relationship_id INTEGER NOT NULL,
@@ -1038,8 +1036,6 @@ CREATE TABLE relationship(
     trashed_date TIMESTAMP,
     PRIMARY KEY(relationship_id)
 );
-
-
 
 CREATE SEQUENCE user_group_group_id_seq AS DECIMAL(27,0);
 CREATE TABLE user_group(
@@ -1090,41 +1086,4 @@ CREATE TABLE custom_list_view_field(
     view_id INTEGER NOT NULL  REFERENCES custom_list_view(view_id),
     name VARGRAPHIC(80) NOT NULL
 );
-
--- Create Indexes
-
-create index contact_access_type on contact  (access_type);
-
-create index contact_assistant on contact  (assistant);
-
-create index contact_department on contact  (department);
-
-create index contact_enteredby on contact  (enteredby);
-
-create index contact_industry_temp_code on contact  (industry_temp_code);
-
-create index contact_modifiedby on contact  (modifiedby);
-
-create index contact_org_id on contact  (org_id);
-
-create index contact_owner on contact  ("owner");
-
-create index contact_rating on contact  (rating);
-
-create index contact_site_id on contact  (site_id);
-
-create index contact_source on contact  (source);
-
-create index contact_super on contact  (super);
-
-create index contact_user_id on contact  (user_id);
-
-create index contact_employee_id on contact (employee_id);
-create index tcontactlevels_level on contact_type_levels ("level");
-
-create index caddress_primary_address on  contact_address (primary_address);
-
-create index contact_entered on contact (entered);
-
-create index laccess_types_rule_id on lookup_access_types (rule_id);
 

@@ -40,6 +40,15 @@ CREATE TABLE access (
   allow_httpapi_access BOOLEAN DEFAULT true NOT NULL
 );
 
+CREATE TABLE lookup_sic_codes(
+  code INT PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INTEGER,
+  enabled BOOLEAN DEFAULT true,
+  constant_id INTEGER UNIQUE NOT NULL
+);
+
 CREATE SEQUENCE lookup_industry_code_seq;
 CREATE TABLE lookup_industry (
   code INT PRIMARY KEY,
@@ -280,7 +289,6 @@ CREATE TABLE organization (
   revenue FLOAT,
   employees INT,
   notes CLOB,
-  sic_code VARCHAR(40),
   ticker_symbol VARCHAR(10) ,
   taxid CHAR(80),
   lead VARCHAR(40),
@@ -319,7 +327,13 @@ CREATE TABLE organization (
   sub_segment_id INT references lookup_sub_segment(code),
   direct_bill BOOLEAN DEFAULT false,
   account_size INT references lookup_account_size(code),
-  site_id INT references lookup_site_id(code)
+  site_id INT references lookup_site_id(code),
+  duns_type VARCHAR(300),
+  duns_number VARCHAR(30),
+  business_name_two VARCHAR(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description VARCHAR(300)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -367,7 +381,7 @@ CREATE TABLE contact (
   source INT REFERENCES lookup_contact_source(code),
   rating INT REFERENCES lookup_contact_rating(code),
   comments VARCHAR(255),
-  conversion_date TIMESTAMP(3),
+  conversion_date TIMESTAMP,
   additional_names VARCHAR(255),
   nickname VARCHAR(80),
   "role" VARCHAR(255),
@@ -383,7 +397,16 @@ CREATE TABLE contact (
   no_textmessage boolean DEFAULT false,
   no_im boolean DEFAULT false,
   no_fax boolean DEFAULT false,
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  assigned_date TIMESTAMP,
+  lead_trashed_date TIMESTAMP,
+  employees INTEGER,
+  duns_type VARCHAR(300),
+  duns_number VARCHAR(30),
+  business_name_two VARCHAR(300),
+  sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  year_started INTEGER,
+  sic_description VARCHAR(300)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
@@ -528,7 +551,10 @@ CREATE TABLE organization_address (
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INT references access(user_id) NOT NULL,
   primary_address boolean DEFAULT false NOT NULL,
-  addrline4 VARCHAR(80)
+  addrline4 VARCHAR(80),
+  county VARCHAR(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0
 );
 
 CREATE INDEX organization_address_postalcode_idx ON organization_address(postalcode);
@@ -577,7 +603,10 @@ CREATE TABLE contact_address (
   modified TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INT  references access(user_id) NOT NULL,
   primary_address boolean DEFAULT false NOT NULL,
-  addrline4 VARCHAR(80)
+  addrline4 VARCHAR(80),
+  county VARCHAR(80),
+  latitude FLOAT DEFAULT 0,
+  longitude FLOAT DEFAULT 0
 );
 
 CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
@@ -978,42 +1007,4 @@ CREATE TABLE custom_list_view_field (
   view_id INT NOT NULL REFERENCES custom_list_view(view_id),
   name VARCHAR(80) NOT NULL
 );
-
--- Create indexes
-
-create index contact_access_type on contact  (access_type);
-
-create index contact_assistant on contact  (assistant);
-
-create index contact_department on contact  (department);
-
-create index contact_enteredby on contact  (enteredby);
-
-create index contact_industry_temp_code on contact  (industry_temp_code);
-
-create index contact_modifiedby on contact  (modifiedby);
-
-create index contact_org_id on contact  (org_id);
-
-create index contact_owner on contact  ("owner");
-
-create index contact_rating on contact  (rating);
-
-create index contact_site_id on contact  (site_id);
-
-create index contact_source on contact  (source);
-
-create index contact_super on contact  (super);
-
-create index contact_user_id on contact  (user_id);
-
-create index contact_employee_id on contact (employee_id);
-
-create index tcontactlevels_level on contact_type_levels ("level");
-
-create index caddress_primary_address on  contact_address (primary_address);
-
-create index contact_entered on contact (entered);
-
-create index laccess_types_rule_id on lookup_access_types (rule_id);
 
