@@ -90,6 +90,68 @@ ________________________________________________________________________________
 Centric CRM<br />
 </body>
 ]]></map>
+    <!-- Opportunity Alerts -->
+    <map id="notifier.opportunity.subject" displayName="Opportunity Notification"><![CDATA[CRM Opportunity: ${opportunity.relationshipName}]]></map>
+    <map id="notifier.opportunity.body" displayName="Opportunity Notification"><![CDATA[
+<body>
+* THIS IS AN AUTOMATED MESSAGE, PLEASE DO NOT REPLY<br />
+<br />
+<br />
+The following opportunity component in Centric CRM has an alert set:<br />
+<br />
+<table border="0">
+  <tr>
+    <td align="right" nowrap>
+      ${opportunity.relationshipType}:
+    </td>
+    <td>
+      ${opportunity.relationshipName}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Opportunity Name:
+    </td>
+    <td>
+      ${opportunity.description}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Component Description:
+    </td>
+    <td>
+      ${component.description}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Alert Text:
+    </td>
+    <td>
+      ${component.alertText}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Notes:
+    </td>
+    <td>
+      ${component.notes}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <a href="${link}">View this opportunity online</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
 
 <!-- Assigned Leads Email -->
 <map id="leads.assigned.email.subject" displayName="Assigned Leads Email"><![CDATA[${leads.assigned.email.subject}]]></map>
@@ -298,8 +360,8 @@ Password: ${user.password} <br />
 It is recomended that you change your password the next time you login to Centric CRM.<br />
 <br />
 <br />
-Click <a href="${url}">here${endUrl} to visit the site.
-<br />
+Click <a href="${url}">here</a> to visit the site.<br />
+${url}<br />
 <br />
 _____________________________________________________________________________________________<br />
 Centric CRM<br />

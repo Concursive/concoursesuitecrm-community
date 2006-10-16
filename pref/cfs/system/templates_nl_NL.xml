@@ -332,5 +332,29 @@ Centric CRM<br />
 </body>
 ]]>
 </map>
+<!-- New User Email Alert -->
+<map id="newuser.alert.email.subject" displayName="User Account Alert Email"><![CDATA[Centric CRM Account Information]]></map>
+<map id="newuser.alert.email.body" displayName="User Account Alert Email"><![CDATA[
+<body>
+This message details information about your Centric CRM account.<br />
+<br />
+Your Centric CRM user account password has been reset by ${modUserName}.<br />
+<br />
+Please login with the following information:<br />
+<br />
+User Name: ${user.username}<br />
+Password: ${user.password} <br />
+<br />
+It is recomended that you change your password the next time you login to Centric CRM.<br />
+<br />
+<br />
+Click <a href="${url}">here</a> to visit the site.<br />
+${url}<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
   </mappings>
 </templates>

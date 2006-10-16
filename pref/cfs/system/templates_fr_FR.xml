@@ -78,6 +78,68 @@ ________________________________________________________________________________
 Centric CRM<br />
 </body>
 ]]></map>
+    <!-- Opportunity Alerts -->
+    <map id="notifier.opportunity.subject" displayName="Opportunity Notification"><![CDATA[CRM Opportunity: ${opportunity.relationshipName}]]></map>
+    <map id="notifier.opportunity.body" displayName="Opportunity Notification"><![CDATA[
+<body>
+* THIS IS AN AUTOMATED MESSAGE, PLEASE DO NOT REPLY<br />
+<br />
+<br />
+The following opportunity component in Centric CRM has an alert set:<br />
+<br />
+<table border="0">
+  <tr>
+    <td align="right" nowrap>
+      ${opportunity.relationshipType}:
+    </td>
+    <td>
+      ${opportunity.relationshipName}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Opportunity Name:
+    </td>
+    <td>
+      ${opportunity.description}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Component Description:
+    </td>
+    <td>
+      ${component.description}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Alert Text:
+    </td>
+    <td>
+      ${component.alertText}
+    </td>
+  </tr>
+  <tr>
+    <td align="right" nowrap>
+      Notes:
+    </td>
+    <td>
+      ${component.notes}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <a href="${link}">View this opportunity online</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
 
 <!-- Assigned Leads Email -->
 <map id="leads.assigned.email.subject" displayName="Assigned Leads Email"><![CDATA[${leads.assigned.email.subject}]]></map>
@@ -264,6 +326,30 @@ Centric CRM<br />
 <br />
 Click <a href="${link}">here</a> to view the Action Plan
 <br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- New User Email Alert -->
+<map id="newuser.alert.email.subject" displayName="User Account Alert Email"><![CDATA[Centric CRM Account Information]]></map>
+<map id="newuser.alert.email.body" displayName="User Account Alert Email"><![CDATA[
+<body>
+This message details information about your Centric CRM account.<br />
+<br />
+Your Centric CRM user account password has been reset by ${modUserName}.<br />
+<br />
+Please login with the following information:<br />
+<br />
+User Name: ${user.username}<br />
+Password: ${user.password} <br />
+<br />
+It is recomended that you change your password the next time you login to Centric CRM.<br />
+<br />
+<br />
+Click <a href="${url}">here</a> to visit the site.<br />
+${url}<br />
 <br />
 _____________________________________________________________________________________________<br />
 Centric CRM<br />
