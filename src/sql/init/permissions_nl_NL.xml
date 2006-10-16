@@ -32,6 +32,11 @@
     <category id="420041014" name="Producten en diensten" folders="false" lookups="false" reports="false" enabled="false">
       <permission name="products" attributes="v---" description="Toegang tot producten- en dienstenmodule"/>
     </category>
+    <category id="223061200" name="Website" folders="false" lookups="true" reports="false" categories="false" products="false" enabled="false">
+      <permission name="website" attributes="v---" description="Access to Website module" enabled="true"/>
+      <permission name="website-portfolio" attributes="vaed" description="Portfolio Editor" enabled="true"/>
+      <permission name="site-editor" attributes="vaed" description="Site Editor" enabled="true"/>
+    </category>
     <category id="228051100" name="Prospects" folders="false" lookups="true" reports="false">
       <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="Classificatie contactpersonen"/>
       <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description="Bron contactpersonen"/>
@@ -41,6 +46,9 @@
       <permission name="sales-dashboard" attributes="v---" description="Leads Dashboard"/>
       <permission name="sales-reports" attributes="va-d" description="Export Leads Data"/>
       <report file="leads_user.xml" type="user" permission="sales-leads" title="User Leads" description="Who are the leads owned by a specific user?"/>
+      <!--
+      <report file="leads_to_accounts.xml" type="user" permission="sales-leads" title="Leads To Accounts Summary" description="How many leads have been converted into accounts?"/>
+      -->
     </category>
     <category id="2" name="Contactpersonen" folders="true" lookups="true" reports="true">
       <folder constantId="2" description="Contactpersonen"/>
@@ -139,6 +147,8 @@
       <permission name="accounts-directbill" attributes="vaed" description="Direct Bill" enabled="false"/>
       <permission name="accounts-accounts-contacts-folders" attributes="vaed" description="Contact Folders"/>
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" description="Contact Opportunity Folders"/>
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" description="Share Accounts Documents"/>
+      <permission name="accounts-accounts-documentstore" attributes="vaed" description="Account Document Store"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Klanten op typevolgorde" description="Wat zijn mijn klanten op typevolgorde?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Klanten op ingevoerde datumvolgorde" description="Wat zijn mijn recente klanten?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Klanten op einddatum contractvolgorde" description="Welke contracten lopen af?"/>
@@ -148,6 +158,21 @@
       <report file="action_plan_summary.xml" type="user" permission="accounts-action-plans" title="Action Plan Summary" description="What is the action plan summary for each account?"/>
       <report file="action_plan_activity.xml" type="user" permission="accounts-action-plans" title="Action Plan Activity" description="What are the action plan activities by date for each account?"/>
       <actionPlanEditor constantId="42420034" description="Action Plans related to Accounts"/>
+    </category>
+    <category id="330041409" name="Productcatalogus" folders="false" lookups="true" reports="false" categories="false" >
+      <folder constantId="200403192" description="CategoriГ«n productcatalogus" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Toegang tot de Productcatalogus module" enabled="true"/>
+      <permission name="product-catalog-product" attributes="vaed" description="Producten" enabled="true"/>
+      <permission name="product-catalog-product-imports" attributes="vaed" description="Product Catalog Import" enabled="true"/>
+      <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Producttypes"/>
+      <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product formaattypes"/>
+      <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Product verzendtypes"/>
+      <lookup constantId="1017040904" class="lookupList" table="lookup_product_ship_time" description="Product verzendtijden"/>
+      <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="Product categorietypes"/>
+      <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="Product BTW-types"/>
+      <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="Munteenheid types"/>
+      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Terugkerende prijstypes"/>
+      <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Product fabrikantentypes"/>
     </category>
     <category id="3" name="Autogids" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Toegang tot de Autogidsmodule"/>
@@ -263,20 +288,6 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Projecten"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Medewerkers" description="Wie zijn de medewerkers in mijn organisatie?"/>
     </category>
-    <category id="330041409" name="Productcatalogus" folders="true" lookups="true" reports="false" categories="false" >
-      <folder constantId="200403192" description="CategoriГ«n productcatalogus" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Toegang tot de Productcatalogus module" enabled="true"/>
-      <permission name="product-catalog-product" attributes="vaed" description="Producten" enabled="false"/>
-      <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Producttypes"/>
-      <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product formaattypes"/>
-      <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Product verzendtypes"/>
-      <lookup constantId="1017040904" class="lookupList" table="lookup_product_ship_time" description="Product verzendtijden"/>
-      <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="Product categorietypes"/>
-      <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="Product BTW-types"/>
-      <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="Munteenheid types"/>
-      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Terugkerende prijstypes"/>
-      <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Product fabrikantentypes"/>
-    </category>
     <category id="16" name="Rapporten" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Toegang tot de Rapporten module"/>
     </category>
@@ -284,6 +295,7 @@
       <permission name="admin" attributes="v---" description="Toegang tot de Admin module"/>
       <permission name="admin-users" attributes="vaed" description="Gebruikers"/>
       <permission name="admin-roles" attributes="vaed" description="Rollen"/>
+      <permission name="admin-portalroleeditor" attributes="vaed" description="Portal Roles"/>
       <permission name="admin-usage" attributes="v---" description="Systeemgebruik"/>
       <permission name="admin-sysconfig" attributes="v-e-" description="Systeeminstellingen"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configureer opzoeklijsten"/>
@@ -374,6 +386,11 @@
       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" />
       <permission name="accounts-accounts-contacts-folders" attributes="vaed" />
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" />
+      <permission name="accounts-accounts-documentstore" attributes="vaed" />
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" />
+      <permission name="product-catalog" attributes="v---" />
+      <permission name="product-catalog-product" attributes="vaed" />
+      <permission name="product-catalog-product-imports" attributes="vaed" />
       <permission name="portal-user" attributes="vaed" />
       <permission name="quotes" attributes="v---" />
       <permission name="quotes-quotes" attributes="vaed" />
@@ -402,6 +419,7 @@
       <permission name="admin" attributes="v---"/>
       <permission name="admin-users" attributes="vaed"/>
       <permission name="admin-roles" attributes="vaed"/>
+      <permission name="admin-portalroleeditor" attributes="vaed"/>
       <permission name="admin-sysconfig" attributes="v-e-"/>
       <permission name="admin-usage" attributes="v---"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-"/>
@@ -480,6 +498,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -575,6 +594,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -672,6 +692,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -746,6 +767,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -812,6 +834,7 @@
        <permission name="portal-user" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -898,6 +921,7 @@
        <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -980,6 +1004,7 @@
        <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -1027,6 +1052,7 @@
        <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>

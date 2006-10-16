@@ -139,6 +139,8 @@
       <permission name="accounts-directbill" attributes="vaed" description="Direct Bill" enabled="false"/>
       <permission name="accounts-accounts-contacts-folders" attributes="vaed" description="Contact Folders"/>
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" description="Contact Opportunity Folders"/>
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" description="Share Accounts Documents"/>
+      <permission name="accounts-accounts-documentstore" attributes="vaed" description="Account Document Store"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Conturi dupa Tip" description="Care sunt conturile mele dupa tip?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Conturi dupa data adaugarii" description="Care sunt conturile mele recente?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Conturi dupa data terminarii contractului" description="Care conturi expira?"/>
@@ -148,6 +150,21 @@
       <report file="action_plan_summary.xml" type="user" permission="accounts-action-plans" title="Action Plan Summary" description="What is the action plan summary for each account?"/>
       <report file="action_plan_activity.xml" type="user" permission="accounts-action-plans" title="Action Plan Activity" description="What are the action plan activities by date for each account?"/>
       <actionPlanEditor constantId="42420034" description="Action Plans related to Accounts"/>
+    </category>
+    <category id="330041409" name="Catalog Produse" folders="false" lookups="true" reports="false" categories="false">
+      <folder constantId="200403192" description="Categorii Catalog Produse" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Acces la modulul Catalog Produse" enabled="true"/>
+      <permission name="product-catalog-product" attributes="vaed" description="Produse" enabled="true"/>
+      <permission name="product-catalog-product-imports" attributes="vaed" description="Product Catalog Import" enabled="true"/>
+      <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Tipuri Produse"/>
+      <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Tipuri Format Produs"/>
+      <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Tipuri Livrare Produs"/>
+      <lookup constantId="1017040904" class="lookupList" table="lookup_product_ship_time" description="Timpi Livrare Produs"/>
+      <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="Tipuri Categorie Produs"/>
+      <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="Tipuri Taxa Produs"/>
+      <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="Tipuri Monezi"/>
+      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Tipuri Preturi Recurente"/>
+      <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Tipuri Producator Produs"/>
     </category>
     <category id="3" name="Auto Ghid" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Acces la modulul Auto Ghid"/>
@@ -263,20 +280,6 @@
       <permission name="contacts-internal_contacts-projects" attributes="v---" description="Proiect"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Angajati" description="Care sunt angajatii in organizatia mea?"/>
     </category>
-    <category id="330041409" name="Catalog Produse" folders="true" lookups="true" reports="false" categories="false">
-      <folder constantId="200403192" description="Categorii Catalog Produse" enabled="false"/>
-      <permission name="product-catalog" attributes="v---" description="Acces la modulul Catalog Produse" enabled="true"/>
-      <permission name="product-catalog-product" attributes="vaed" description="Produse" enabled="false"/>
-      <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Tipuri Produse"/>
-      <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Tipuri Format Produs"/>
-      <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Tipuri Livrare Produs"/>
-      <lookup constantId="1017040904" class="lookupList" table="lookup_product_ship_time" description="Timpi Livrare Produs"/>
-      <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="Tipuri Categorie Produs"/>
-      <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="Tipuri Taxa Produs"/>
-      <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="Tipuri Monezi"/>
-      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="Tipuri Preturi Recurente"/>
-      <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Tipuri Producator Produs"/>
-    </category>
     <category id="16" name="Rapoarte" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Acces la modulul Rapoarte"/>
     </category>
@@ -284,6 +287,7 @@
       <permission name="admin" attributes="v---" description="Acces la modulul Admin"/>
       <permission name="admin-users" attributes="vaed" description="Usere"/>
       <permission name="admin-roles" attributes="vaed" description="Roluri"/>
+      <permission name="admin-portalroleeditor" attributes="vaed" description="Portal Roles"/>
       <permission name="admin-usage" attributes="v---" description="Uzura Sitemului"/>
       <permission name="admin-sysconfig" attributes="v-e-" description="Configurarea Sistemului"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configureaza Liste de Cautare"/>
@@ -374,6 +378,11 @@
       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" />
       <permission name="accounts-accounts-contacts-folders" attributes="vaed" />
       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" />
+      <permission name="accounts-accounts-documentstore" attributes="vaed" />
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" />
+      <permission name="product-catalog" attributes="v---" />
+      <permission name="product-catalog-product" attributes="vaed" />
+      <permission name="product-catalog-product-imports" attributes="vaed" />
       <permission name="portal-user" attributes="vaed" />
       <permission name="quotes" attributes="v---" />
       <permission name="quotes-quotes" attributes="vaed" />
@@ -402,6 +411,7 @@
       <permission name="admin" attributes="v---"/>
       <permission name="admin-users" attributes="vaed"/>
       <permission name="admin-roles" attributes="vaed"/>
+      <permission name="admin-portalroleeditor" attributes="vaed"/>
       <permission name="admin-sysconfig" attributes="v-e-"/>
       <permission name="admin-usage" attributes="v---"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-"/>
@@ -480,6 +490,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -575,6 +586,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -672,6 +684,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -746,6 +759,7 @@
        <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -812,6 +826,7 @@
        <permission name="portal-user" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -898,6 +913,7 @@
        <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -980,6 +996,7 @@
        <permission name="accounts-action-plans" attributes="vae-" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -1027,6 +1044,7 @@
        <permission name="myhomepage-action-plans" attributes="vaed"/>
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
