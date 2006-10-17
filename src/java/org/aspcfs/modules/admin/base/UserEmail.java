@@ -16,19 +16,17 @@
 package org.aspcfs.modules.admin.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.XMLUtils;
-import org.aspcfs.utils.web.RequestUtils;
 import org.w3c.dom.Element;
 
 import java.io.File;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    June 12, 2006
+ * @author partha
+ * @created June 12, 2006
  */
 public class UserEmail {
   private String subject = null;
@@ -36,9 +34,9 @@ public class UserEmail {
 
 
   /**
-   *  Gets the subject attribute of the UserEmail object
+   * Gets the subject attribute of the UserEmail object
    *
-   * @return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -46,9 +44,9 @@ public class UserEmail {
 
 
   /**
-   *  Sets the subject attribute of the UserEmail object
+   * Sets the subject attribute of the UserEmail object
    *
-   * @param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -56,9 +54,9 @@ public class UserEmail {
 
 
   /**
-   *  Gets the body attribute of the UserEmail object
+   * Gets the body attribute of the UserEmail object
    *
-   * @return    The body value
+   * @return The body value
    */
   public String getBody() {
     return body;
@@ -66,9 +64,9 @@ public class UserEmail {
 
 
   /**
-   *  Sets the body attribute of the UserEmail object
+   * Sets the body attribute of the UserEmail object
    *
-   * @param  tmp  The new body value
+   * @param tmp The new body value
    */
   public void setBody(String tmp) {
     this.body = tmp;
@@ -76,14 +74,14 @@ public class UserEmail {
 
 
   /**
-   *  Constructor for the UserEmail object
+   * Constructor for the UserEmail object
    *
-   * @param  context        Description of the Parameter
-   * @param  thisUser       Description of the Parameter
-   * @param  templateFile   Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   * @param context      Description of the Parameter
+   * @param thisUser     Description of the Parameter
+   * @param templateFile Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public UserEmail(ActionContext context, User thisUser,String name, String password, String url, String templateFile) throws Exception {
+  public UserEmail(ActionContext context, User thisUser, String name, String password, String url, String templateFile) throws Exception {
     // Load the templates
     File configFile = new File(templateFile);
     XMLUtils xml = new XMLUtils(configFile);
@@ -92,7 +90,7 @@ public class UserEmail {
     Template messageSubject = new Template();
     messageSubject.setText(
         XMLUtils.getNodeText(
-        XMLUtils.getElement(mappings, "map", "id", "newuser.alert.email.subject")));
+            XMLUtils.getElement(mappings, "map", "id", "newuser.alert.email.subject")));
     messageSubject.addParseElement("\r\n", "");
     messageSubject.addParseElement("\r", "");
     messageSubject.addParseElement("\n", "");
@@ -101,11 +99,15 @@ public class UserEmail {
     Template messageBody = new Template();
     messageBody.setText(
         XMLUtils.getNodeText(
-        XMLUtils.getElement(
-        mappings, "map", "id", "newuser.alert.email.body")));
+            XMLUtils.getElement(
+                mappings, "map", "id", "newuser.alert.email.body")));
     messageBody.addParseElement("${user.username}", thisUser.getUsername());
     messageBody.addParseElement("${user.password}", password);
-    messageBody.addParseElement("${modUserName}",name);
+    if (name != null) {
+      messageBody.addParseElement("${modUserName}", name);
+    } else {
+      messageBody.addParseElement("${modUserName}", "the administrator");
+    }
     messageBody.addParseElement("${url}", url);
     messageBody.addParseElement("${endUrl}", "</a>");
     body = messageBody.getParsedText();
