@@ -65,7 +65,7 @@
   <tr class="subtab">
     <td>
 <%
-String documentFolderList = "WebsiteMedia.do?command=View" + addLinkParams(request,"popup|row|siteId");
+String documentFolderList = "WebsiteMedia.do?command=View" + addLinkParams(request,"popup|row|siteId|forEmail");
 String documentModule = "Website";
 %>
       <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
@@ -74,7 +74,7 @@ String documentModule = "Website";
 </table>
 <br>
   <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='WebsiteMedia.do?command=View';" /><br />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='WebsiteMedia.do?command=View<%=addLinkParams(request, "popup|row|siteId|forEmail")%>';" /><br />
   <dhv:formMessage />
   <br />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -104,8 +104,8 @@ String documentModule = "Website";
   <input type="hidden" name="parentId" value="<%= fileFolder.getParentId() %>">
   <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   <input type="hidden" name="dosubmit" value="true">
-	<%=addHiddenParams(request, "popup|row|siteId")%>
+	<%=addHiddenParams(request, "popup|row|siteId|forEmail")%>
 	<input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='WebsiteMedia.do?command=View<%=addLinkParams(request, "popup|row|siteId")%>';" /><br />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='WebsiteMedia.do?command=View<%=addLinkParams(request, "popup|row|siteId|forEmail")%>';" /><br />
 </form>
 </body>

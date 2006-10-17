@@ -53,7 +53,7 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
-<form method="post" name="inputForm" action="WebsiteMedia.do?command=Upload<%=addLinkParams(request, "popup|row|siteId")%>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<form method="post" name="inputForm" action="WebsiteMedia.do?command=Upload<%=addLinkParams(request, "popup|row|siteId|forEmail")%>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <input type="hidden" name="dosubmit" value="true" />
 <input type="hidden" name="id" value="<%= Constants.DOCUMENTS_WEBSITE %>" />
 <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>" />
@@ -73,7 +73,7 @@
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
-      <% String documentLink = "WebsiteMedia.do?command=View" + addLinkParams(request,"popup|row|siteId"); %>
+      <% String documentLink = "WebsiteMedia.do?command=View" + addLinkParams(request,"popup|row|siteId|forEmail"); %>
       <zeroio:folderHierarchy module="Website" link="<%= documentLink %>" />
     </td>
   </tr>
@@ -108,5 +108,6 @@
     <dhv:label name="accounts.accounts_documents_upload.WaitForUpload">Wait for file completion message when upload is complete.</dhv:label>
   </p>
   <input type="submit" value="<dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='WebsiteMedia.do?command=View&folderId=<%= (String)request.getAttribute("folderId") %><%=addLinkParams(request, "popup|row|siteId")%>';" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='WebsiteMedia.do?command=View&folderId=<%= (String)request.getAttribute("folderId") %><%=addLinkParams(request, "popup|row|siteId|forEmail")%>';" />
 </form>
+</body>

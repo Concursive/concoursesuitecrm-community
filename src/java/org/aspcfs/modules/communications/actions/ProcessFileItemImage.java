@@ -16,6 +16,7 @@
 package org.aspcfs.modules.communications.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.database.ConnectionElement;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemVersion;
 import com.zeroio.webutils.FileDownload;
@@ -145,15 +146,19 @@ public final class ProcessFileItemImage extends CFSModule {
     FileItem thisItem = null;
 
 		Connection db = null;
+		ConnectionElement ce = null;
 		if (!"website".equals(path)){
 			return ("-none-");
 		}
     try {
 			AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
+
+			//TODO:this method gets called twice.. need to create a getter for ConnectionElement in AuthenticationItem
+			ce = auth.getConnectionElement(context);
       // TODO: Something is causing FileItemImage to fail... testing this now
       if (1==1) {
-        streamImage(context, db, id, path, version, thumbnail);
+        streamImage(context, ce, db, id, path, version, thumbnail);
         return ("-none-");
       }
 
@@ -163,7 +168,7 @@ public final class ProcessFileItemImage extends CFSModule {
           PROCESS_FILE_ITEM_NAME);
 			if (allowedImages != null && allowedImages.contains(
 				id + (version != null ? "-" + version : "") + (thumbnail != null ? "TH" : ""))) {
-				streamImage(context, db, id, path, version, thumbnail);
+				streamImage(context, ce, db, id, path, version, thumbnail);
 				return ("-none-");
 			}
 			int mode = Site.PORTAL_MODE;
@@ -175,7 +180,7 @@ public final class ProcessFileItemImage extends CFSModule {
 					return ("PermissionError");
 				}
 				addImageToAllowedImages(context,id, version, thumbnail);
-				streamImage(context, db, id, path, version, thumbnail);
+				streamImage(context, ce, db, id, path, version, thumbnail);
 			} else {
 				//Only portal access hence only enabled icelets should be checked
 				PageRow pageRow =  new PageRow(db, Integer.parseInt(rowIdString));
@@ -213,7 +218,7 @@ public final class ProcessFileItemImage extends CFSModule {
 						
 						//add image to allowed image and stream if all tests pass
 						addImageToAllowedImages(context,id, version, thumbnail);
-						streamImage(context, db, id, path, version, thumbnail);
+						streamImage(context, ce, db, id, path, version, thumbnail);
 						break;
 				 }
 				}
@@ -245,7 +250,7 @@ public final class ProcessFileItemImage extends CFSModule {
 		}
 	}
 	
-	private void streamImage(ActionContext context, Connection db, String imageId, String path, String version, String thumbnail) throws Exception {
+	private void streamImage(ActionContext context, ConnectionElement ce, Connection db, String imageId, String path, String version, String thumbnail) throws Exception {
 		// Load the fileItem
 		FileItem fileItem = new FileItem(db, Integer.parseInt(imageId));
 		String filePath = null;
@@ -254,11 +259,11 @@ public final class ProcessFileItemImage extends CFSModule {
 			fileItem.buildVersionList(db);
 			FileItemVersion thisVersion = fileItem.getVersion(
 					Double.parseDouble(version));
-			filePath = this.getPath(context, path) + getDatePath(
+			filePath = this.getPath(context, ce, path) + getDatePath(
 					thisVersion.getModified()) + thisVersion.getFilename();
       lastModified = thisVersion.getModificationDate();
     } else {
-			filePath = this.getPath(context, path) + getDatePath(
+			filePath = this.getPath(context, ce, path) + getDatePath(
 					fileItem.getModified()) + fileItem.getFilename();
       lastModified = fileItem.getModificationDate();
     }
