@@ -78,6 +78,9 @@ public class UserEmail {
    *
    * @param context      Description of the Parameter
    * @param thisUser     Description of the Parameter
+   * @param name         Description of the Parameter
+   * @param password     Description of the Parameter
+   * @param url          Description of the Parameter
    * @param templateFile Description of the Parameter
    * @throws Exception Description of the Exception
    */
