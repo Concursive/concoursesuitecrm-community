@@ -29,8 +29,10 @@ import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.BufferedReader;
 import java.sql.Connection;
 
 /**
@@ -60,7 +62,21 @@ public final class ProcessTransaction extends CFSModule {
     try {
       //This is a custom DTD that won't be used by any other processes, so
       //populate the object here
-      xml = new XMLUtils(context.getRequest());
+      HttpServletRequest request = context.getRequest();
+      StringBuffer data = new StringBuffer();
+      BufferedReader br = request.getReader();
+      String line = null;
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("XMLUtils->Reading XML from request");
+      }
+      while ((line = br.readLine()) != null) {
+        data.append(line.trim() + System.getProperty("line.separator"));
+      }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("  XML: " + data.toString());
+      }
+      xml = new XMLUtils(data.toString());
+
       TransactionRecord thisRecord = new TransactionRecord();
       XMLUtils.populateObject(thisRecord, xml.getDocumentElement());
       //get a database connection using the vhost context info

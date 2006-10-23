@@ -1,26 +1,26 @@
 package org.aspcfs.utils;
 
 import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
-import org.aspcfs.modules.login.beans.LoginBean;
-import org.aspcfs.utils.XMLUtils;
-import org.w3c.dom.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Transfers data to/from a Centric CRM server
+ * Transfers data to/from a Centric CRM server
  *
- * @author     mrajkowski
- * @version    $Id: CRMConnection.java 11311 2005-04-18 09:13:29 -0400 (Mon, 18
- *      Apr 2005) mrajkowski $
- * @created    Apr 11, 2005
+ * @author mrajkowski
+ * @version $Id: CRMConnection.java 11311 2005-04-18 09:13:29 -0400 (Mon, 18
+ *          Apr 2005) mrajkowski $
+ * @created Apr 11, 2005
  */
 
 public class CRMConnection extends CFSHttpXMLWriter {
 
   /**
-   *  Constructor for the CRMConnection object
+   * Constructor for the CRMConnection object
    */
   public CRMConnection() {
     this.setId("CRMConnection");
@@ -29,9 +29,9 @@ public class CRMConnection extends CFSHttpXMLWriter {
 
 
   /**
-   *  Gets the recordCount attribute of the CRMConnection object
+   * Gets the recordCount attribute of the CRMConnection object
    *
-   * @return    The recordCount value
+   * @return The recordCount value
    */
   public int getRecordCount() {
     try {
@@ -48,9 +48,9 @@ public class CRMConnection extends CFSHttpXMLWriter {
 
 
   /**
-   *  Gets the status attribute of the CRMConnection object
+   * Gets the status attribute of the CRMConnection object
    *
-   * @return    The status value
+   * @return The status value
    */
   public int getStatus() {
     try {
@@ -67,10 +67,10 @@ public class CRMConnection extends CFSHttpXMLWriter {
 
 
   /**
-   *  Gets the responseValue attribute of the CRMConnection object
+   * Gets the responseValue attribute of the CRMConnection object
    *
-   * @param  fieldName  Description of the Parameter
-   * @return            The responseValue value
+   * @param fieldName Description of the Parameter
+   * @return The responseValue value
    */
   public String getResponseValue(String fieldName) {
     try {
@@ -99,10 +99,10 @@ public class CRMConnection extends CFSHttpXMLWriter {
 
 
   /**
-   *  Gets the records attribute of the CRMConnection object
+   * Gets the records attribute of the CRMConnection object
    *
-   * @param  className  Description of the Parameter
-   * @return            The records value
+   * @param className Description of the Parameter
+   * @return The records value
    */
   public ArrayList getRecords(String className) {
     int count = getRecordCount();

@@ -44,6 +44,19 @@ import java.sql.Timestamp;
 public class AccountServices {
   private CRMConnection crm = new CRMConnection();
 
+  /**
+   *  Sets the authenticationInfo attribute of the CentricServices object
+   *
+   * @param  auth  The new authenticationInfo value
+   */
+  public void setAuthenticationInfo(AuthenticationItem auth) {
+    crm.setUrl(auth.getUrl());
+    crm.setId(auth.getId());
+    crm.setSystemId(auth.getSystemId());
+    crm.setClientId(auth.getClientId());
+    crm.setUsername(auth.getUsername());
+    crm.setCode(auth.getCode());
+  }
 
   /**
    *  Method returns a list of accounts owned by a specific user
@@ -88,7 +101,7 @@ public class AccountServices {
     try {
       
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -333,7 +346,7 @@ public class AccountServices {
   public boolean addAccountPhoneNumber(AuthenticationItem in0, OrganizationPhoneNumber in1) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -422,7 +435,7 @@ public class AccountServices {
   private OrganizationHistory[] getHistoryNotes(AuthenticationItem in0, int in1) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -476,7 +489,7 @@ public class AccountServices {
   private ActionPlanWorkNote[] getActionPlanNotes(AuthenticationItem in0, int in1) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -521,7 +534,7 @@ public class AccountServices {
   private ActionItemWorkNote[] getActionItemNotes(AuthenticationItem in0, int in1) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -623,7 +636,7 @@ public class AccountServices {
   private Call[] getActivities(AuthenticationItem in0, int in1, int in2) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -677,7 +690,7 @@ public class AccountServices {
   private WSTicketBean[] getTickets(AuthenticationItem in0, int in1) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -737,7 +750,7 @@ public class AccountServices {
       int accountId = in1;
 
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -792,7 +805,7 @@ public class AccountServices {
       int accountId = in1;
 
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);

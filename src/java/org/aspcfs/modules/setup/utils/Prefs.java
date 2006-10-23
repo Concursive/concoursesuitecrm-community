@@ -16,7 +16,7 @@
 package org.aspcfs.modules.setup.utils;
 
 import org.aspcfs.controller.ApplicationPrefs;
-import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.ServletContextUtils;
 
 import javax.servlet.ServletContext;
 import java.util.prefs.Preferences;
@@ -36,12 +36,12 @@ public class Prefs {
     try {
       // Some containers return null so use the specified instance
       if (dir == null) {
-        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
+        dir = ServletContextUtils.loadText(context, "WEB-INF/instance.property");
       }
       // Apache Geronimo uses a temporary store for a webapp, which
       // would prevent a redeployed/upgraded Centric from finding itself
       if (dir != null && dir.indexOf("config-store") > -1) {
-        dir = StringUtils.loadText(context, "WEB-INF/instance.property");
+        dir = ServletContextUtils.loadText(context, "WEB-INF/instance.property");
       }
       System.out.println("Prefs-> Instance name: " + dir);
     } catch (Exception e) {

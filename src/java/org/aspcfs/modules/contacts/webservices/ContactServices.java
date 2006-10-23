@@ -38,6 +38,20 @@ public class ContactServices {
   private CRMConnection crm = new CRMConnection();
   
   /**
+   *  Sets the authenticationInfo attribute of the CentricServices object
+   *
+   * @param  auth  The new authenticationInfo value
+   */
+  public void setAuthenticationInfo(AuthenticationItem auth) {
+    crm.setUrl(auth.getUrl());
+    crm.setId(auth.getId());
+    crm.setSystemId(auth.getSystemId());
+    crm.setClientId(auth.getClientId());
+    crm.setUsername(auth.getUsername());
+    crm.setCode(auth.getCode());
+  }
+  
+  /**
    *  Adds a feature to the Contact attribute of the CentricServices object
    *
    * @param  in0  The feature to be added to the Contact attribute
@@ -56,7 +70,7 @@ public class ContactServices {
       ContactAddress address = in4;
       
       //Authentication Info
-      crm.setAuthenticationInfo(auth);
+      this.setAuthenticationInfo(auth);
 
       // Start a new transaction
       crm.setAutoCommit(false);

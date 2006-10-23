@@ -1296,8 +1296,12 @@
         <include name="src/java/org/aspcfs/apps/transfer/DataReader.java"/>
       </fileset>
     </copy>
+    <mkdir dir="${dist.dir}/files/classes"/>
+    <javac srcdir="${dist.dir}/files/src/java" destdir="${dist.dir}/files/classes" verbose="off" deprecation="off"
+      fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
+    </javac>
     <jar jarfile="${dist.dir}/${zip.dir}-${tools.version}.jar"
-          basedir="${dist.dir}/files/src/java"/>
+          basedir="${dist.dir}/files/classes"/>
     <!-- Create the distributable .zip file -->
     <zip destfile="${dist.dir}/${zip.dir}.zip">
       <!-- main directory -->

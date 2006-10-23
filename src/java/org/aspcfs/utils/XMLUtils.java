@@ -21,14 +21,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,51 +96,11 @@ public class XMLUtils {
   /**
    * Constructor for the XMLUtils object
    *
-   * @param request Description of Parameter
-   * @throws Exception Description of Exception
-   */
-  public XMLUtils(HttpServletRequest request) throws Exception {
-    StringBuffer data = new StringBuffer();
-    BufferedReader br = request.getReader();
-    String line = null;
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("XMLUtils->Reading XML from request");
-    }
-    while ((line = br.readLine()) != null) {
-      data.append(line.trim() + System.getProperty("line.separator"));
-      if (cacheXML) {
-        if (XMLString == null) {
-          XMLString = new StringBuffer();
-        }
-        XMLString.append(line);
-      }
-    }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("  XML: " + data.toString());
-    }
-    this.parseXML(data.toString());
-  }
-
-
-  /**
-   * Constructor for the XMLUtils object
-   *
    * @param xmlFile Description of Parameter
    * @throws Exception Description of Exception
    */
   public XMLUtils(File xmlFile) throws Exception {
     this.parseXML(xmlFile);
-  }
-
-  public XMLUtils(ServletContext context, String filename) throws Exception {
-    InputStream in = context.getResourceAsStream(filename);
-    StringBuffer text = new StringBuffer();
-    byte b[] = new byte[1];
-    while (in.read(b) != -1) {
-      text.append(new String(b));
-    }
-    in.close();
-    this.parseXML(text.toString());
   }
 
   /**

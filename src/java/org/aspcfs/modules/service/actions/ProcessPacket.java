@@ -34,11 +34,13 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.io.BufferedReader;
 
 /**
  * An HTTP connector for incoming XML packet requests. Requests must include
@@ -78,7 +80,20 @@ public final class ProcessPacket extends CFSModule {
       }
 
       //Put the request into an XML document
-      XMLUtils xml = new XMLUtils(context.getRequest());
+      HttpServletRequest request = context.getRequest();
+      StringBuffer data = new StringBuffer();
+      BufferedReader br = request.getReader();
+      String line = null;
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("XMLUtils->Reading XML from request");
+      }
+      while ((line = br.readLine()) != null) {
+        data.append(line.trim() + System.getProperty("line.separator"));
+      }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("  XML: " + data.toString());
+      }
+      XMLUtils xml = new XMLUtils(data.toString());
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProcessPacket-> Parsing data");
       }
@@ -270,7 +285,6 @@ public final class ProcessPacket extends CFSModule {
    * @param db               Description of the Parameter
    * @param auth             Description of the Parameter
    * @param applicationPrefs Description of the Parameter
-   * @param thisUser         Description of the Parameter
    * @return The userValid value
    */
   private UserBean isUserValid(ActionContext context, Connection db,

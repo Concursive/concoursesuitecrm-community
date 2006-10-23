@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.troubletickets.webservices;
 
+import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.utils.CRMConnection;
 
 /**
@@ -27,5 +28,18 @@ import org.aspcfs.utils.CRMConnection;
 public class TroubleTicketServices {
   private CRMConnection crm = new CRMConnection();
 
+  /**
+   *  Sets the authenticationInfo attribute of the CentricServices object
+   *
+   * @param  auth  The new authenticationInfo value
+   */
+  public void setAuthenticationInfo(AuthenticationItem auth) {
+    crm.setUrl(auth.getUrl());
+    crm.setId(auth.getId());
+    crm.setSystemId(auth.getSystemId());
+    crm.setClientId(auth.getClientId());
+    crm.setUsername(auth.getUsername());
+    crm.setCode(auth.getCode());
+  }
 }
 

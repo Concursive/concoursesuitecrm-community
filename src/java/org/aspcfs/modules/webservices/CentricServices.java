@@ -15,9 +15,6 @@
  */
 package org.aspcfs.modules.webservices;
 
-import org.aspcfs.modules.webservices.beans.WSUserBean;
-import org.aspcfs.modules.webservices.beans.WSCustomFolder;
-
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationAddress;
@@ -28,6 +25,9 @@ import org.aspcfs.modules.base.CustomFieldCategory;
 import org.aspcfs.modules.base.CustomFieldData;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.webservices.beans.WSCustomFolder;
+
+import org.aspcfs.modules.webservices.beans.WSUserBean;
 import org.aspcfs.utils.CRMConnection;
 import org.aspcfs.utils.PasswordHash;
 import org.aspcfs.utils.XMLUtils;
@@ -59,6 +59,21 @@ public class CentricServices {
 
 
   /**
+   *  Sets the authenticationInfo attribute of the CentricServices object
+   *
+   * @param  auth  The new authenticationInfo value
+   */
+  public void setAuthenticationInfo(AuthenticationItem auth) {
+    crm.setUrl(auth.getUrl());
+    crm.setId(auth.getId());
+    crm.setSystemId(auth.getSystemId());
+    crm.setClientId(auth.getClientId());
+    crm.setUsername(auth.getUsername());
+    crm.setCode(auth.getCode());
+  }
+
+
+  /**
    * @param  in0  Authentication Token
    * @param  in1  Username
    * @param  in2  Password
@@ -70,7 +85,7 @@ public class CentricServices {
       String password = in2;
 
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -109,7 +124,7 @@ public class CentricServices {
   public WSUserBean[] retrievePhoneUsers(AuthenticationItem in0) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -153,16 +168,16 @@ public class CentricServices {
   /**
    *  Gets the contact attribute of the CentricServices object
    *
-   * @param  in0     Description of the Parameter
-   * @param  in1     Description of the Parameter
-   * @return         The contact value
+   * @param  in0  Description of the Parameter
+   * @param  in1  Description of the Parameter
+   * @return      The contact value
    */
   private Contact getContact(AuthenticationItem in0, int in1) {
     try {
       int userId = in1;
 
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -194,28 +209,24 @@ public class CentricServices {
   }
 
 
-  
 
 
-  
 
-
-  
 
 
   /**
    *  Description of the Method
    *
-   * @param  in0        Description of the Parameter
-   * @param  in1        Description of the Parameter
-   * @return            Description of the Return Value
+   * @param  in0  Description of the Parameter
+   * @param  in1  Description of the Parameter
+   * @return      Description of the Return Value
    */
   public WSCustomFolder[] retrieveAccountFolders(AuthenticationItem in0, int in1) {
     try {
       int accountId = in1;
 
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -257,16 +268,16 @@ public class CentricServices {
   /**
    *  Description of the Method
    *
-   * @param  in0       Description of the Parameter
-   * @param  in1       Description of the Parameter
-   * @return           Description of the Return Value
+   * @param  in0  Description of the Parameter
+   * @param  in1  Description of the Parameter
+   * @return      Description of the Return Value
    */
   public CustomField[] retrieveCustomFields(AuthenticationItem in0, int in1) {
     try {
       int folderId = in1;
 
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -313,7 +324,7 @@ public class CentricServices {
   public CustomFieldData[] retrieveCustomData(AuthenticationItem in0, int in1, int in2, int in3) {
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);
@@ -370,7 +381,7 @@ public class CentricServices {
     //insert custom field data
     try {
       //Authentication Info
-      crm.setAuthenticationInfo(in0);
+      this.setAuthenticationInfo(in0);
 
       // Start a new transaction
       crm.setAutoCommit(false);

@@ -83,19 +83,19 @@ public class ContactUtils {
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer(
         "SELECT COUNT(*) AS record_count " +
-        "FROM contact " +
-        "WHERE lead = ? " +
-        "AND employee = ? " +
-        "AND (status_id IS NULL OR status_id = ?) " +
-        "AND (" + DatabaseUtils.toLowerCase(db) + "(namelast) = ? AND namelast IS NOT NULL) " +
-        "AND trashed_date IS NULL " +
-        "AND enabled = ? ");
+            "FROM contact " +
+            "WHERE lead = ? " +
+            "AND employee = ? " +
+            "AND (status_id IS NULL OR status_id = ?) " +
+            "AND (" + DatabaseUtils.toLowerCase(db) + "(namelast) = ? AND namelast IS NOT NULL) " +
+            "AND trashed_date IS NULL " +
+            "AND enabled = ? ");
     if (!hasAcPermission || !hasGcPermission) {
       sql.append("AND ( ");
     }
     if (!hasAcPermission) {
       sql.append("(org_id IS NULL " +
-        "AND owner IN (" + userIdRange + ")) ");
+          "AND owner IN (" + userIdRange + ")) ");
     }
     if (!hasAcPermission && !hasGcPermission) {
       sql.append("OR ");
@@ -169,15 +169,15 @@ public class ContactUtils {
     if (hasGcPermission) {
       pst = db.prepareStatement(
           "SELECT COUNT(*) AS record_count " +
-          "FROM contact " +
-          "WHERE lead = ? " +
-          "AND employee = ? " +
-          "AND (status_id IS NULL OR status_id = ?) " +
-          "AND enabled = ? " +
-          "AND org_id IS NULL " +
-          "AND (" + DatabaseUtils.toLowerCase(db) + "(company) = ? AND company IS NOT NULL) " +
-          "AND trashed_date IS NULL " +
-          "AND owner IN (" + userIdRange + ") ");
+              "FROM contact " +
+              "WHERE lead = ? " +
+              "AND employee = ? " +
+              "AND (status_id IS NULL OR status_id = ?) " +
+              "AND enabled = ? " +
+              "AND org_id IS NULL " +
+              "AND (" + DatabaseUtils.toLowerCase(db) + "(company) = ? AND company IS NOT NULL) " +
+              "AND trashed_date IS NULL " +
+              "AND owner IN (" + userIdRange + ") ");
       pst.setBoolean(++i, false);
       pst.setBoolean(++i, false);
       pst.setInt(++i, Import.PROCESSED_APPROVED);
@@ -196,9 +196,9 @@ public class ContactUtils {
       i = 0;
       pst = db.prepareStatement(
           "SELECT COUNT(*) AS record_count FROM organization " +
-          "WHERE " + DatabaseUtils.toLowerCase(db) + "(name) = ? " +
-          "AND trashed_date IS NULL " +
-          "AND enabled = ? ");
+              "WHERE " + DatabaseUtils.toLowerCase(db) + "(name) = ? " +
+              "AND trashed_date IS NULL " +
+              "AND enabled = ? ");
       pst.setString(++i, company.toLowerCase());
       pst.setBoolean(++i, true);
       rs = pst.executeQuery();
@@ -265,16 +265,16 @@ public class ContactUtils {
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer(
         "SELECT ce.email AS email, COUNT(c.contact_id) AS record_count " +
-        "FROM contact_emailaddress ce " +
-        "LEFT JOIN contact c ON (ce.contact_id = c.contact_id ) " +
-        "AND c.lead = ? " +
-        "AND c.employee = ? " +
-        "AND (c.status_id IS NULL OR c.status_id = ?) " +
-        "AND c.trashed_date IS NULL " +
-        "AND c.enabled = ? " +
-        "AND ce.email IN (" + StringUtils.parseToDbString(emailAddresses) + ") " +
-        "AND c.owner IN (" + userIdRange + ") " +
-        "GROUP BY ce.email ");
+            "FROM contact_emailaddress ce " +
+            "LEFT JOIN contact c ON (ce.contact_id = c.contact_id ) " +
+            "AND c.lead = ? " +
+            "AND c.employee = ? " +
+            "AND (c.status_id IS NULL OR c.status_id = ?) " +
+            "AND c.trashed_date IS NULL " +
+            "AND c.enabled = ? " +
+            "AND ce.email IN (" + StringUtils.parseToDbString(emailAddresses) + ") " +
+            "AND c.owner IN (" + userIdRange + ") " +
+            "GROUP BY ce.email ");
     if (!hasAcPermission) {
       sql.append("AND c.org_id IS NULL ");
     }
@@ -330,5 +330,16 @@ public class ContactUtils {
     }
     return map;
   }
+
+  public static boolean checkNameMatch(String nameLastFirst, String lastName, String firstName) {
+    boolean result = false;
+    String givenName = Contact.getNameLastFirst(lastName, firstName);
+    if (givenName.equals(nameLastFirst)) {
+      result = true;
+    }
+    return result;
+  }
+
+
 }
 

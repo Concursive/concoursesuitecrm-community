@@ -10,6 +10,7 @@ import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
 
 import javax.servlet.ServletContext;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -25,7 +26,8 @@ public class IceletRegistryService implements PortletRegistryService, PortletReg
   private PortletApplicationConfig app = null;
   private ServletContext servletContext = null;
 
-  public IceletRegistryService() {}
+  public IceletRegistryService() {
+  }
 
   public void init(ServletContext context) throws DriverConfigurationException {
     servletContext = context;
@@ -41,7 +43,15 @@ public class IceletRegistryService implements PortletRegistryService, PortletReg
       }
       try {
         // Read the list of portlets from portlet.xml and add a single config for each one
-        XMLUtils xml = new XMLUtils(context, "WEB-INF/portlet.xml");
+        InputStream in = context.getResourceAsStream("WEB-INF/portlet.xml");
+        StringBuffer text = new StringBuffer();
+        byte b[] = new byte[1];
+        while (in.read(b) != -1) {
+          text.append(new String(b));
+        }
+        in.close();
+        XMLUtils xml = new XMLUtils(text.toString());
+
         ArrayList portlets = new ArrayList();
         XMLUtils.getAllChildren(xml.getDocumentElement(), "portlet", portlets);
         Iterator i = portlets.iterator();
