@@ -195,7 +195,7 @@ public class ApplicationPrefs {
    */
   public Map getLocalizationPrefs(String language) {
     if (dictionaries == null) {
-      return new HashMap();
+      return new Hashtable();
     }
     if (dictionaries.containsKey(language)) {
       return ((Dictionary) dictionaries.get(language)).getLocalizationPrefs();
