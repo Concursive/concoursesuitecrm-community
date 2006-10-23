@@ -193,6 +193,9 @@
        1. Create a file called "home.properties" in this directory with the CENTRIC_FILELIBRARY property:
 
          CENTRIC_FILELIBRARY=/var/lib/centric_crm/fileLibrary
+         CENTRIC_FILELIBRARY=/opt/centric_crm/fileLibrary
+         CENTRIC_FILELIBRARY=/Library/Application\ Support/CentricCRM/fileLibrary"
+         CENTRIC_FILELIBRARY=c:\CentricCRM\fileLibrary"
 
        2. Create the directory and make sure file permissions are correct.
 

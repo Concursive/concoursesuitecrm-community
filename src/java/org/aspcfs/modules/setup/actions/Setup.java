@@ -157,8 +157,14 @@ public class Setup extends CFSModule {
         //Mac OSX
         path = "/Library/Application Support/CentricCRM/fileLibrary/" + instanceName + "/";
       } else {
-        //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
-        path = "/var/lib/centric_crm/fileLibrary/" + instanceName + "/";
+        File testDirectory = new File("/opt");
+        if (testDirectory.exists()) {
+          //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
+          path = "/opt/centric_crm/fileLibrary/" + instanceName + "/";
+        } else {
+          //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
+          path = "/var/lib/centric_crm/fileLibrary/" + instanceName + "/";
+        }
       }
     }
     context.getRequest().setAttribute("fileLibrary", path);
