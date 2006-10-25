@@ -621,7 +621,6 @@ public class ApplicationPrefs {
    * @param context Description of the Parameter
    */
   public void loadApplicationDictionary(ServletContext context) {
-    dictionaries.clear();
     String language = this.get("SYSTEM.LANGUAGE");
     if (language == null) {
       language = "en_US";
