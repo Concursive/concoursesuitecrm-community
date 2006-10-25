@@ -195,7 +195,7 @@ public class ApplicationPrefs {
    */
   public Map getLocalizationPrefs(String language) {
     if (dictionaries == null) {
-      return new Hashtable();
+      return new HashMap();
     }
     if (dictionaries.containsKey(language)) {
       return ((Dictionary) dictionaries.get(language)).getLocalizationPrefs();
@@ -639,25 +639,26 @@ public class ApplicationPrefs {
   public synchronized void addDictionary(ServletContext context, String language) {
     if (language == null) {
       System.out.println("ApplicationPrefs-> addDictionary: language cannot be null");
-    }
-    if (!dictionaries.containsKey(language)) {
-      String languagePath = context.getRealPath("/") + "WEB-INF" + fs + "languages" + fs;
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println(
-            "ApplicationPrefs-> Loading dictionary: " + language);
-      }
-      try {
-        //Create a dictionary with the default language
-        Dictionary dictionary = new Dictionary(languagePath, "en_US");
-        if (!"en_US".equals(language)) {
-          // Override the text with a selected language
-          dictionary.load(languagePath, language);
+    } else {
+      if (!dictionaries.containsKey(language)) {
+        String languagePath = context.getRealPath("/") + "WEB-INF" + fs + "languages" + fs;
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println(
+              "ApplicationPrefs-> Loading dictionary: " + language);
         }
-        dictionaries.put(language, dictionary);
-      } catch (Exception e) {
-        e.printStackTrace(System.out);
-        System.out.println(
-            "ApplicationPrefs-> Language Error: " + e.getMessage());
+        try {
+          //Create a dictionary with the default language
+          Dictionary dictionary = new Dictionary(languagePath, "en_US");
+          if (!"en_US".equals(language)) {
+            // Override the text with a selected language
+            dictionary.load(languagePath, language);
+          }
+          dictionaries.put(language, dictionary);
+        } catch (Exception e) {
+          e.printStackTrace(System.out);
+          System.out.println(
+              "ApplicationPrefs-> Language Error: " + e.getMessage());
+        }
       }
     }
   }
