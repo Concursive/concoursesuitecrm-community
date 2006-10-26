@@ -339,9 +339,9 @@ CREATE SEQUENCE lookup_payment_gateway_seq;
 CREATE TABLE lookup_payment_gateway (
   code INT NOT NULL,
   description VARGRAPHIC(50) NOT NULL,
-  default_item CHAR(1) DEFAULT 0,
+  default_item CHAR(1) DEFAULT '0',
   "level" int DEFAULT 0,
-  enabled CHAR(1) DEFAULT 1,
+  enabled CHAR(1) DEFAULT '1',
   constant_id int,
   PRIMARY KEY (code)
 );
