@@ -70,8 +70,6 @@ import java.util.StringTokenizer;
  * @see com.isavvix.tools.FileInfo
  */
 public class HttpMultiPartParser {
-  private final String lineSeparator = System.getProperty(
-      "line.separator", "\n");
   private final String fs = System.getProperty("file.separator");
   private final int ONE_MB = 1024 * 1024 * 1;
   private boolean useUniqueName = false;
@@ -219,12 +217,11 @@ public class HttpMultiPartParser {
   /**
    * Convenience method to read HTTP header lines
    *
-   * @param sis                    Description of Parameter
-   * @param stripNextLineCharacter Description of the Parameter
+   * @param sis Description of Parameter
    * @return The Line value
    * @throws IOException Description of Exception
    */
-  private synchronized String getLine(ServletInputStream sis, boolean stripNextLineCharacter)
+  private synchronized String getLine(ServletInputStream sis)
       throws IOException {
     byte b[] = new byte[1024];
     int read = sis.readLine(b, 0, b.length);
@@ -232,28 +229,12 @@ public class HttpMultiPartParser {
     String line = null;
     if (read != -1) {
       line = new String(b, 0, read);
-
-      if (stripNextLineCharacter) {
-        if ((index = line.indexOf('\n')) >= 0) {
-          line = line.substring(0, index - 1);
-        }
+      if ((index = line.indexOf('\n')) >= 0) {
+        line = line.substring(0, index - 1);
       }
     }
     b = null;
     return line;
-  }
-
-
-  /**
-   * Gets the line attribute of the HttpMultiPartParser object
-   *
-   * @param sis Description of the Parameter
-   * @return The line value
-   * @throws IOException Description of the Exception
-   */
-  private synchronized String getLine(ServletInputStream sis)
-      throws IOException {
-    return getLine(sis, true);
   }
 
 
@@ -329,6 +310,11 @@ public class HttpMultiPartParser {
   private HashMap processData(HttpServletRequest request, String saveInDir)
       throws IllegalArgumentException, IOException {
     String contentType = request.getHeader("Content-type");
+    //TODO: use the contentLength for a progress bar
+    int contentLength = request.getContentLength();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("HttpMultiPartParser-> Length: " + contentLength);
+    }
     if ((contentType == null) || (!contentType.startsWith("multipart/"))) {
       throw new IllegalArgumentException("Not a multipart message");
     }
@@ -364,8 +350,8 @@ public class HttpMultiPartParser {
     if (line == null || !line.startsWith(boundary)) {
       throw new IOException(
           "Boundary not found;"
-          + " boundary = " + boundary
-          + ", line = " + line);
+              + " boundary = " + boundary
+              + ", line = " + line);
     }
     //Continue with the rest of the lines
     while (line != null) {
@@ -479,18 +465,25 @@ public class HttpMultiPartParser {
         if (line == null) {
           return dataTable;
         }
-        String paramValue = line;
-        while ((line = getLine(is, false)) != null && !line.startsWith(
-            boundary)) {
-          paramValue += line;
+        StringBuffer sb = new StringBuffer();
+        sb.append(line);
+        while (line != null && !line.startsWith(boundary)) {
+          line = getLine(is);
+          if (line != null && !line.startsWith(boundary)) {
+            sb.append(System.getProperty("line.separator"));
+            sb.append(line);
+          }
         }
-        dataTable.put(paramName, paramValue);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("HttpMultiPartParser-> Adding param: " + paramName);
+        }
+        dataTable.put(paramName, sb.toString());
         continue;
       }
       // Either save contents in memory or to a local file
+      OutputStream os = null;
+      String path = null;
       try {
-        OutputStream os = null;
-        String path = null;
         String tmpPath = null;
         String filenameToUse = null;
         if (saveFiles) {
@@ -511,8 +504,7 @@ public class HttpMultiPartParser {
           f.mkdirs();
           //If specified, store files using a unique name, based on date
           if (useUniqueName) {
-            SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyyMMddHHmmssSSS");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
             filenameToUse = formatter.format(new java.util.Date());
             if (fileCount > 1) {
               filenameToUse += String.valueOf(fileCount);
@@ -526,7 +518,7 @@ public class HttpMultiPartParser {
           //multiple uploads from overwriting each other
           filenameToUse +=
               (version == -1 ? "" : "^" + version) +
-              (extensionId == -1 ? "" : "-" + extensionId);
+                  (extensionId == -1 ? "" : "-" + extensionId);
           //Create the file to a file
           os = new FileOutputStream(
               path = getFileName(tmpPath, filenameToUse));
@@ -554,6 +546,9 @@ public class HttpMultiPartParser {
           }
           //check if current line is a boundary
           if (compareBoundary(boundary, currentLine)) {
+            if (read - 2 > 0) {
+              validFile = true;
+            }
             os.write(previousLine, 0, read - 2);
             os.flush();
             line = new String(currentLine, 0, read3);
@@ -592,7 +587,17 @@ public class HttpMultiPartParser {
           dataTable.put(paramName, fileInfo);
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        System.out.println("HttpMultiPartParser-> error: " + e.getMessage());
+        if (os != null) {
+          os.close();
+        }
+        if (saveFiles && path != null) {
+          File thisFile = new File(path);
+          if (thisFile.exists()) {
+            thisFile.delete();
+            System.out.println("HttpMultiPartParser-> Temporary file deleted");
+          }
+        }
       }
     }
     return dataTable;
@@ -607,7 +612,6 @@ public class HttpMultiPartParser {
    * @return Description of the Returned Value
    */
   private boolean compareBoundary(String boundary, byte ba[]) {
-    byte b;
     if (boundary == null || ba == null) {
       return false;
     }
