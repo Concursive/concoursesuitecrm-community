@@ -15,13 +15,14 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
  * Provides a list of items that have editable categories for the specified
@@ -32,6 +33,11 @@ import org.aspcfs.utils.DatabaseUtils;
  * @created February 3, 2004
  */
 public class CategoryEditorList extends ArrayList {
+  public final static String tableName = "category_editor_lookup";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   protected int moduleId = -1;
 
 
@@ -41,6 +47,73 @@ public class CategoryEditorList extends ArrayList {
   public CategoryEditorList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the moduleId attribute of the CategoryEditorList object
@@ -83,10 +156,12 @@ public class CategoryEditorList extends ArrayList {
     ResultSet rs = null;
     pst = db.prepareStatement(
         "SELECT * " +
-        "FROM category_editor_lookup " +
-        "WHERE module_id = ? " +
-        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + " ");
-    pst.setInt(1, moduleId);
+            "FROM category_editor_lookup " +
+            ((moduleId > -1) ? "WHERE module_id = ? " : "") +
+            "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + " ");
+    if (moduleId > -1) {
+      pst.setInt(1, moduleId);
+    }
     rs = pst.executeQuery();
     while (rs.next()) {
       CategoryEditor thisEditor = new CategoryEditor(rs);

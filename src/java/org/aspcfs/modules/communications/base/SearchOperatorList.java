@@ -15,6 +15,9 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,11 +33,97 @@ import java.util.ArrayList;
  * @created November 1, 2001
  */
 public class SearchOperatorList extends ArrayList {
+  public final static String tableName = "field_types";
+  public final static String uniqueField = "id ";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
 
   /**
    * Constructor for the SearchOperatorList object
    */
   public SearchOperatorList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the SearchOperatorList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the SearchOperatorList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SearchOperatorList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SearchOperatorList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the SearchOperatorList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the SearchOperatorList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the SearchOperatorList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the SearchOperatorList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -51,7 +140,7 @@ public class SearchOperatorList extends ArrayList {
     StringBuffer sqlSelect = new StringBuffer();
     sqlSelect.append(
         "SELECT id, data_typeid, data_type, operator, display_text " +
-        "FROM field_types WHERE enabled = ? ");
+            "FROM field_types WHERE enabled = ? ");
     pst = db.prepareStatement(sqlSelect.toString());
     pst.setBoolean(1, true);
     rs = pst.executeQuery();
@@ -79,8 +168,8 @@ public class SearchOperatorList extends ArrayList {
 
     sqlSelect.append(
         "SELECT id, data_typeid, data_type, operator, display_text " +
-        "FROM field_types " +
-        "WHERE data_typeid = ? and enabled = ? ");
+            "FROM field_types " +
+            "WHERE data_typeid = ? and enabled = ? ");
     pst = db.prepareStatement(sqlSelect.toString());
     pst.setInt(1, typeID);
     pst.setBoolean(2, true);

@@ -27,6 +27,12 @@ import java.util.Iterator;
  * @created June 23, 2003
  */
 public class NewsArticleCategoryList extends ArrayList {
+  public final static String tableName = "project_news_category";
+  public final static String uniqueField = "category_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private int projectId = -1;
   private int enabled = Constants.UNDEFINED;
   private int includeId = -1;
@@ -38,6 +44,73 @@ public class NewsArticleCategoryList extends ArrayList {
   public NewsArticleCategoryList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Gets the projectId attribute of the NewsArticleCategoryList object
@@ -149,8 +222,8 @@ public class NewsArticleCategoryList extends ArrayList {
     sqlSelect.append("SELECT ");
     sqlSelect.append(
         "c.* " +
-        "FROM project_news_category c " +
-        "WHERE c.category_id > -1 ");
+            "FROM project_news_category c " +
+            "WHERE c.category_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -180,6 +253,17 @@ public class NewsArticleCategoryList extends ArrayList {
         sqlFilter.append("AND (c.enabled = ? OR EXISTS (SELECT news_id FROM project_news pn WHERE pn.category_id = ?)) ");
       }
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -202,6 +286,17 @@ public class NewsArticleCategoryList extends ArrayList {
         pst.setBoolean(++i, enabled == Constants.TRUE);
         pst.setInt(++i, includeId);
       }
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }
@@ -238,10 +333,10 @@ public class NewsArticleCategoryList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       NewsArticleCategory thisCategory = (NewsArticleCategory) i.next();
-    if (thisCategory.getEnabled() || (!thisCategory.getEnabled() && thisCategory.getId() == selectedId)) {
+      if (thisCategory.getEnabled() || (!thisCategory.getEnabled() && thisCategory.getId() == selectedId)) {
         thisSelect.addItem(
             thisCategory.getId(),
-            thisCategory.getName()+(!thisCategory.getEnabled() && thisCategory.getId() == selectedId?" (X)":""));
+            thisCategory.getName() + (!thisCategory.getEnabled() && thisCategory.getId() == selectedId ? " (X)" : ""));
       }
     }
     return thisSelect.getHtml(selectName, selectedId);
@@ -308,7 +403,6 @@ public class NewsArticleCategoryList extends ArrayList {
         // TODO: Check to see if a previously disabled entry has the same name,
         // and enable it
 
-
         // New item, add it at the correct position
         NewsArticleCategory thisCategory = new NewsArticleCategory();
         thisCategory.setProjectId(projectId);
@@ -338,8 +432,8 @@ public class NewsArticleCategoryList extends ArrayList {
   public void updateLevel(Connection db, int id, int level) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news_category " +
-        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
-        "WHERE category_id = ? ");
+            "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
+            "WHERE category_id = ? ");
     int i = 0;
     pst.setInt(++i, level);
     pst.setInt(++i, id);
@@ -359,8 +453,8 @@ public class NewsArticleCategoryList extends ArrayList {
   public void updateName(Connection db, int id, String name) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news_category " +
-        "SET category_name = ? " +
-        "WHERE category_id = ? ");
+            "SET category_name = ? " +
+            "WHERE category_id = ? ");
     int i = 0;
     pst.setString(++i, name);
     pst.setInt(++i, id);
@@ -379,7 +473,7 @@ public class NewsArticleCategoryList extends ArrayList {
   public static void delete(Connection db, int projectId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM project_news_category " +
-        "WHERE project_id = ? ");
+            "WHERE project_id = ? ");
     pst.setInt(1, projectId);
     pst.execute();
     pst.close();

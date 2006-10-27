@@ -88,6 +88,69 @@ public class Assignment extends GenericBean {
   private int noteCount = 0;
   private AssignmentNote assignmentNote = null;
 
+  private boolean recordMapItem = true;
+  private boolean recordNote = true;
+
+
+  /**
+   * Gets the recordMapItem attribute of the Assignment object
+   *
+   * @return The recordMapItem value
+   */
+  public boolean getRecordMapItem() {
+    return recordMapItem;
+  }
+
+
+  /**
+   * Sets the recordMapItem attribute of the Assignment object
+   *
+   * @param tmp The new recordMapItem value
+   */
+  public void setRecordMapItem(boolean tmp) {
+    this.recordMapItem = tmp;
+  }
+
+
+  /**
+   * Sets the recordMapItem attribute of the Assignment object
+   *
+   * @param tmp The new recordMapItem value
+   */
+  public void setRecordMapItem(String tmp) {
+    this.recordMapItem = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the recordNote attribute of the Assignment object
+   *
+   * @return The recordNote value
+   */
+  public boolean getRecordNote() {
+    return recordNote;
+  }
+
+
+  /**
+   * Sets the recordNote attribute of the Assignment object
+   *
+   * @param tmp The new recordNote value
+   */
+  public void setRecordNote(boolean tmp) {
+    this.recordNote = tmp;
+  }
+
+
+  /**
+   * Sets the recordNote attribute of the Assignment object
+   *
+   * @param tmp The new recordNote value
+   */
+  public void setRecordNote(String tmp) {
+    this.recordNote = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    * Constructor for the Assignment object
@@ -100,6 +163,7 @@ public class Assignment extends GenericBean {
    * Constructor for the Assignment object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public Assignment(ResultSet rs) throws SQLException {
@@ -114,6 +178,7 @@ public class Assignment extends GenericBean {
    * @param assignmentId Description of the Parameter
    * @param projectId    Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public Assignment(Connection db, int assignmentId, int projectId) throws SQLException {
     this.setProjectId(projectId);
@@ -126,6 +191,7 @@ public class Assignment extends GenericBean {
    *
    * @param db           Description of the Parameter
    * @param assignmentId Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public Assignment(Connection db, int assignmentId) throws SQLException {
@@ -143,7 +209,7 @@ public class Assignment extends GenericBean {
   private void queryRecord(Connection db, int assignmentId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT a.*, s.description AS status, s." + DatabaseUtils.addQuotes(db, "type")+ " AS status_type, s.graphic AS status_graphic, " +
+        "SELECT a.*, s.description AS status, s." + DatabaseUtils.addQuotes(db, "type") + " AS status_type, s.graphic AS status_graphic, " +
             "loe_e.description AS loe_estimated_type, loe_a.description AS loe_actual_type, pr.description AS priority " +
             "FROM projects p, project_assignments a " +
             " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
@@ -584,6 +650,12 @@ public class Assignment extends GenericBean {
     this.estStartDate = tmp;
   }
 
+
+  /**
+   * Sets the estStartDate attribute of the Assignment object
+   *
+   * @param tmp The new estStartDate value
+   */
   public void setEstStartDate(java.util.Date tmp) {
     if (tmp != null) {
       this.estStartDate = new java.sql.Timestamp(tmp.getTime());
@@ -632,6 +704,12 @@ public class Assignment extends GenericBean {
     this.dueDate = tmp;
   }
 
+
+  /**
+   * Sets the dueDate attribute of the Assignment object
+   *
+   * @param tmp The new dueDate value
+   */
   public void setDueDate(java.util.Date tmp) {
     if (tmp != null) {
       this.dueDate = new java.sql.Timestamp(tmp.getTime());
@@ -1721,7 +1799,7 @@ public class Assignment extends GenericBean {
     sql.append(
         "INSERT INTO project_assignments " +
             "(project_id, requirement_id, assignedBy, user_assign_id, technology, " +
-            DatabaseUtils.addQuotes(db, "role")+ ", estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
+            DatabaseUtils.addQuotes(db, "role") + ", estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
             "priority_id, assign_date, est_start_date, start_date, " +
             "due_date, due_date_timezone, status_id, status_date, percent_complete, complete_date, ");
     if (id > -1) {
@@ -1773,8 +1851,7 @@ public class Assignment extends GenericBean {
     }
     DatabaseUtils.setTimestamp(pst, ++i, assignDate);
     DatabaseUtils.setTimestamp(pst, ++i, estStartDate);
-    if (statusTypeId != NOTSTARTED && statusTypeId != ONHOLD && startDate == null)
-    {
+    if (statusTypeId != NOTSTARTED && statusTypeId != ONHOLD && startDate == null) {
       java.util.Date tmpDate = new java.util.Date();
       startDate = new java.sql.Timestamp(tmpDate.getTime());
       startDate.setNanos(0);
@@ -1792,8 +1869,7 @@ public class Assignment extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, statusDate);
     DatabaseUtils.setInt(pst, ++i, percentComplete);
     //Handle assignment complete date
-    if ((statusTypeId == COMPLETE || statusTypeId == CLOSED) && completeDate == null)
-    {
+    if ((statusTypeId == COMPLETE || statusTypeId == CLOSED) && completeDate == null) {
       java.util.Date tmpDate = new java.util.Date();
       completeDate = new java.sql.Timestamp(tmpDate.getTime());
       completeDate.setNanos(0);
@@ -1814,22 +1890,26 @@ public class Assignment extends GenericBean {
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "project_assig_assignment_id_seq", id);
-    //Record the position of this entry
-    RequirementMapItem mapItem = new RequirementMapItem();
-    mapItem.setProjectId(projectId);
-    mapItem.setRequirementId(requirementId);
-    mapItem.setAssignmentId(id);
-    mapItem.setIndent(indent);
-    mapItem.setPrevIndent(prevIndent);
-    mapItem.setPrevMapId(prevMapId);
-    mapItem.append(db);
-    indent = mapItem.getIndent();
-    prevIndent = mapItem.getIndent();
-    prevMapId = mapItem.getId();
-    // Insert any notes as well
-    assignmentNote = new AssignmentNote(this);
-    if (assignmentNote.isValid()) {
-      assignmentNote.insert(db);
+    if (recordMapItem) {
+      //Record the position of this entry
+      RequirementMapItem mapItem = new RequirementMapItem();
+      mapItem.setProjectId(projectId);
+      mapItem.setRequirementId(requirementId);
+      mapItem.setAssignmentId(id);
+      mapItem.setIndent(indent);
+      mapItem.setPrevIndent(prevIndent);
+      mapItem.setPrevMapId(prevMapId);
+      mapItem.append(db);
+      indent = mapItem.getIndent();
+      prevIndent = mapItem.getIndent();
+      prevMapId = mapItem.getId();
+    }
+    if (recordNote) {
+      // Insert any notes as well
+      assignmentNote = new AssignmentNote(this);
+      if (assignmentNote.isValid()) {
+        assignmentNote.insert(db);
+      }
     }
     return true;
   }
@@ -1926,12 +2006,12 @@ public class Assignment extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments " +
             "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, technology = ?, " +
-            DatabaseUtils.addQuotes(db, "role")+ " = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
+            DatabaseUtils.addQuotes(db, "role") + " = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
             "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
             "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
             "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
             "WHERE assignment_id = ? " +
-            "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+            "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, requirementId);
     if (userAssignedId > -1) {
@@ -1967,8 +2047,7 @@ public class Assignment extends GenericBean {
     if (statusTypeId == NOTSTARTED || statusTypeId == ONHOLD) {
       startDate = null;
     }
-    if (previousState.getStartDate() == null && statusTypeId != NOTSTARTED && statusTypeId != ONHOLD)
-    {
+    if (previousState.getStartDate() == null && statusTypeId != NOTSTARTED && statusTypeId != ONHOLD) {
       java.util.Date tmpDate = new java.util.Date();
       startDate = new java.sql.Timestamp(tmpDate.getTime());
       startDate.setNanos(0);
@@ -2007,8 +2086,7 @@ public class Assignment extends GenericBean {
           "Assignment-> Assignment status type id = " + statusTypeId);
     }
     if (statusTypeId == COMPLETE || statusTypeId == CLOSED) {
-      if (previousState.getStatusTypeId() != COMPLETE && previousState.getStatusTypeId() != CLOSED)
-      {
+      if (previousState.getStatusTypeId() != COMPLETE && previousState.getStatusTypeId() != CLOSED) {
         java.util.Date tmpDate = new java.util.Date();
         completeDate = new java.sql.Timestamp(tmpDate.getTime());
         completeDate.setNanos(0);
@@ -2031,7 +2109,7 @@ public class Assignment extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     DatabaseUtils.setInt(pst, ++i, folderId);
     pst.setInt(++i, this.getId());
-    if(this.getModified() != null){
+    if (this.getModified() != null) {
       pst.setTimestamp(++i, modified);
     }
     resultCount = pst.executeUpdate();
@@ -2054,8 +2132,7 @@ public class Assignment extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public int updateDueDate(Connection db, ActionContext context) throws SQLException {
-    if (this.getId() == -1 || this.projectId == -1 || this.getModifiedBy() == -1)
-    {
+    if (this.getId() == -1 || this.projectId == -1 || this.getModifiedBy() == -1) {
       throw new SQLException("ID was not specified");
     }
     String sql =
@@ -2116,7 +2193,7 @@ public class Assignment extends GenericBean {
   public static int lookupStatusIdType(Connection db, int statusId) throws SQLException {
     int tmpStatusTypeId = -1;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT " + DatabaseUtils.addQuotes(db, "type")+ " " +
+        "SELECT " + DatabaseUtils.addQuotes(db, "type") + " " +
             "FROM lookup_project_status s " +
             "WHERE s.code = ? ");
     pst.setInt(1, statusId);

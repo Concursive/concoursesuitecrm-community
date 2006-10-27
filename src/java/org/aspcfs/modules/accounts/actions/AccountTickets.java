@@ -16,15 +16,16 @@
 package org.aspcfs.modules.accounts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.actionplans.base.*;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.modules.actionplans.base.ActionPlanList;
+import org.aspcfs.modules.actionplans.base.ActionPlanWorkList;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.CategoryEditor;
 import org.aspcfs.modules.admin.base.PermissionCategory;
-import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
@@ -138,7 +139,7 @@ public final class AccountTickets extends CFSModule {
       newTic = (Ticket) context.getFormBean();
       if (context.getRequest().getParameter("refresh") != null ||
           (context.getRequest().getParameter("contact") != null &&
-          context.getRequest().getParameter("contact").equals("on"))) {
+              context.getRequest().getParameter("contact").equals("on"))) {
       } else {
         newTic.setOrgId(tempid);
       }
@@ -233,7 +234,7 @@ public final class AccountTickets extends CFSModule {
           newTic.setContactId(nc.getId());
         }
         if (contactRecordInserted) {
-          if (newTic.getOrgId() > 0){
+          if (newTic.getOrgId() > 0) {
             newTic.setSiteId(Organization.getOrganizationSiteId(db, newTic.getOrgId()));
           }
           isValid = this.validateObject(context, db, newTic);
@@ -242,7 +243,7 @@ public final class AccountTickets extends CFSModule {
           }
         }
       } else {
-        if (newTic.getOrgId() > 0){
+        if (newTic.getOrgId() > 0) {
           newTic.setSiteId(Organization.getOrganizationSiteId(db, newTic.getOrgId()));
         }
         isValid = this.validateObject(context, db, newTic) && isValid;
@@ -341,7 +342,7 @@ public final class AccountTickets extends CFSModule {
       }
 
       LookupList causeList = new LookupList(db, "lookup_ticket_cause");
-      causeList.addItem(-1,"");
+      causeList.addItem(-1, "");
       context.getRequest().setAttribute("causeList", causeList);
 
       //Load the ticket state
@@ -350,7 +351,7 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("ticketStateList", ticketStateList);
 
       LookupList resolutionList = new LookupList(db, "lookup_ticket_resolution");
-      resolutionList.addItem(-1,"");
+      resolutionList.addItem(-1, "");
       context.getRequest().setAttribute("resolutionList", resolutionList);
 
       // check wether or not the customer product id exists
@@ -361,7 +362,7 @@ public final class AccountTickets extends CFSModule {
         context.getRequest().setAttribute("customerProduct", customerProduct);
       }
 
-      if (newTic.getDefectId() !=-1) {
+      if (newTic.getDefectId() != -1) {
         TicketDefect defect = new TicketDefect(db, newTic.getDefectId());
         context.getRequest().setAttribute("defect", defect);
       }
@@ -428,7 +429,7 @@ public final class AccountTickets extends CFSModule {
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
       htmlDialog.addButton(
           systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + "&forceDelete=true" + RequestUtils.addLinkParams(
-              context.getRequest(), "popup|popupType|actionId") + "'");
+          context.getRequest(), "popup|popupType|actionId") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       context.getSession().setAttribute("Dialog", htmlDialog);
@@ -472,8 +473,8 @@ public final class AccountTickets extends CFSModule {
         String inline = context.getRequest().getParameter("popupType");
         context.getRequest().setAttribute("OrgDetails", newOrg);
         context.getRequest().setAttribute(
-            "refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId + 
-            (inline != null && "inline".equals(inline.trim()) ? "&popup=true":""));
+            "refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId +
+            (inline != null && "inline".equals(inline.trim()) ? "&popup=true" : ""));
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -520,7 +521,7 @@ public final class AccountTickets extends CFSModule {
         String inline = context.getRequest().getParameter("popupType");
         context.getRequest().setAttribute(
             "refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId +
-            (inline != null && "inline".equals(inline) ? "&popup=true":""));
+            (inline != null && "inline".equals(inline) ? "&popup=true" : ""));
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -625,8 +626,8 @@ public final class AccountTickets extends CFSModule {
       resolvedByDeptList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       resolvedByDeptList.setJsEvent(
           "onChange=\"javascript:updateResolvedByUserList();\"");
-      context.getRequest().setAttribute("resolvedByDeptList", resolvedByDeptList);    
-      
+      context.getRequest().setAttribute("resolvedByDeptList", resolvedByDeptList);
+
       //Load the severity list
       LookupList severityList = new LookupList(db, "ticket_severity");
       context.getRequest().setAttribute("SeverityList", severityList);
@@ -647,7 +648,7 @@ public final class AccountTickets extends CFSModule {
       list.setSiteId(newTic.getOrgSiteId());
       list.buildList(db);
       HtmlSelect defectSelect = list.getHtmlSelectObj(newTic.getDefectId());
-      defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes","None"), 0);
+      defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "None"), 0);
       context.getRequest().setAttribute("defectSelect", defectSelect);
       //Load the ticket escalation list
       LookupList escalationList = new LookupList(db, "lookup_ticket_escalation");
@@ -728,7 +729,8 @@ public final class AccountTickets extends CFSModule {
         newTic.setSubCat1(0);
         newTic.setSubCat2(0);
         newTic.setSubCat3(0);
-      } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+      } else
+      if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
           context.getRequest().getParameter("refresh")) == -1) {
         subList2.setParentCode(newTic.getSubCat1());
         subList2.getCatListSelect().setDefaultKey(newTic.getSubCat2());
@@ -746,11 +748,12 @@ public final class AccountTickets extends CFSModule {
       subList3.setExclusiveToSite(true);
       if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
           context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-              context.getRequest().getParameter("refresh")) == 2)) {
+          context.getRequest().getParameter("refresh")) == 2)) {
         subList3.setParentCode(0);
         newTic.setSubCat2(0);
         newTic.setSubCat3(0);
-      } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+      } else
+      if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
           context.getRequest().getParameter("refresh")) == -1) {
         subList3.setParentCode(newTic.getSubCat2());
         subList3.getCatListSelect().setDefaultKey(newTic.getSubCat3());
@@ -763,7 +766,7 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("SubList3", subList3);
       if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
           context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-              context.getRequest().getParameter("refresh")) == 3)) {
+          context.getRequest().getParameter("refresh")) == 3)) {
         newTic.setSubCat3(0);
       }
 
@@ -782,7 +785,7 @@ public final class AccountTickets extends CFSModule {
         actionPlans.setLinkSubCat3(newTic.getSubCat3());
       }
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_TICKET);
-      actionPlans.setTableName(thisEditor.getTableName());
+      actionPlans.setNameTable(thisEditor.getTableName());
       actionPlans.setSiteId(thisOrganization.getSiteId());
       actionPlans.setJsEvent("id=\"actionPlanId\"");
       actionPlans.setEnabled(Constants.TRUE);
@@ -862,8 +865,8 @@ public final class AccountTickets extends CFSModule {
       for (catCount = 0; catCount < 4; catCount++) {
         if ((context.getRequest().getParameter("newCat" + catCount + "chk") != null && context.getRequest().getParameter(
             "newCat" + catCount + "chk").equals("on") && context.getRequest().getParameter(
-                "newCat" + catCount) != null && !(context.getRequest().getParameter(
-                    "newCat" + catCount).equals("")))) {
+            "newCat" + catCount) != null && !(context.getRequest().getParameter(
+            "newCat" + catCount).equals("")))) {
           thisCat = new TicketCategory();
           thisCat.setSiteId(orgDetails.getSiteId());
           if (catCount == 0) {
@@ -954,8 +957,8 @@ public final class AccountTickets extends CFSModule {
     resolvedByDeptList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     resolvedByDeptList.setJsEvent(
         "onChange=\"javascript:updateResolvedByUserList();\"");
-    context.getRequest().setAttribute("resolvedByDeptList", resolvedByDeptList);    
-    
+    context.getRequest().setAttribute("resolvedByDeptList", resolvedByDeptList);
+
     LookupList severityList = new LookupList(db, "ticket_severity");
     context.getRequest().setAttribute("SeverityList", severityList);
 
@@ -1020,7 +1023,7 @@ public final class AccountTickets extends CFSModule {
     resolvedUserList.setIncludeUsersWithAccessToAllSites(true);
     resolvedUserList.buildList(db);
     context.getRequest().setAttribute("resolvedUserList", resolvedUserList);
-      
+
     ContactList contactList = new ContactList();
     contactList.setBuildDetails(false);
     contactList.setBuildTypes(false);
@@ -1034,7 +1037,7 @@ public final class AccountTickets extends CFSModule {
     list.setSiteId(newOrg.getSiteId());
     list.buildList(db);
     HtmlSelect defectSelect = list.getHtmlSelectObj(newTic.getDefectId());
-    defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes","None"), 0);
+    defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "None"), 0);
     context.getRequest().setAttribute("defectSelect", defectSelect);
 
     TicketCategoryList subList1 = new TicketCategoryList();
@@ -1057,7 +1060,8 @@ public final class AccountTickets extends CFSModule {
       newTic.setSubCat1(0);
       newTic.setSubCat2(0);
       newTic.setSubCat3(0);
-    } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+    } else
+    if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
         context.getRequest().getParameter("refresh")) == -1) {
       subList2.setParentCode(newTic.getSubCat1());
       subList2.getCatListSelect().setDefaultKey(newTic.getSubCat2());
@@ -1075,11 +1079,12 @@ public final class AccountTickets extends CFSModule {
     subList3.setExclusiveToSite(true);
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
         context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-            context.getRequest().getParameter("refresh")) == 2)) {
+        context.getRequest().getParameter("refresh")) == 2)) {
       subList3.setParentCode(0);
       newTic.setSubCat2(0);
       newTic.setSubCat3(0);
-    } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+    } else
+    if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
         context.getRequest().getParameter("refresh")) == -1) {
       subList3.setParentCode(newTic.getSubCat2());
       subList3.getCatListSelect().setDefaultKey(newTic.getSubCat3());
@@ -1109,7 +1114,7 @@ public final class AccountTickets extends CFSModule {
       actionPlans.setDisplayNone(true);
     }
     CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_TICKET);
-    actionPlans.setTableName(thisEditor.getTableName());
+    actionPlans.setNameTable(thisEditor.getTableName());
     actionPlans.setJsEvent("id=\"actionPlanId\"");
     actionPlans.setEnabled(Constants.TRUE);
     actionPlans.setSiteId(newOrg.getSiteId());
@@ -1123,7 +1128,7 @@ public final class AccountTickets extends CFSModule {
 
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
         context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-            context.getRequest().getParameter("refresh")) == 3)) {
+        context.getRequest().getParameter("refresh")) == 3)) {
       newTic.setSubCat3(0);
     }
     context.getRequest().setAttribute("TicketDetails", newTic);
@@ -1200,7 +1205,7 @@ public final class AccountTickets extends CFSModule {
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_TICKET);
-      plans.setTableName(thisEditor.getTableName());
+      plans.setNameTable(thisEditor.getTableName());
       plans.setJsEvent("id=\"actionPlanId\"");
       plans.setEnabled(Constants.TRUE);
       plans.setSiteId(orgDetails.getSiteId());

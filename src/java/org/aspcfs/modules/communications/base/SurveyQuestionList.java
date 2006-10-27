@@ -15,10 +15,10 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +36,12 @@ import java.util.Iterator;
  */
 public class SurveyQuestionList extends ArrayList {
 
+  public final static String tableName = "survey_questions";
+  public final static String uniqueField = "question_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private int id = -1;
   private int surveyId = -1;
   private int questionId = -1;
@@ -45,6 +51,74 @@ public class SurveyQuestionList extends ArrayList {
    * Constructor for the SurveyQuestionList object
    */
   public SurveyQuestionList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the SurveyQuestionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the SurveyQuestionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SurveyQuestionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SurveyQuestionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the SurveyQuestionList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the SurveyQuestionList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the SurveyQuestionList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -325,11 +399,13 @@ public class SurveyQuestionList extends ArrayList {
     String sql =
         "SELECT sq.* " +
             "FROM survey_questions sq " +
-            "WHERE sq.survey_id = ? " +
-            "ORDER BY sq." + DatabaseUtils.addQuotes(db, "position")+ " ";
+            (surveyId > -1 ? "WHERE sq.survey_id = ? " : "") +
+            "ORDER BY sq." + DatabaseUtils.addQuotes(db, "position") + " ";
     pst = db.prepareStatement(sql);
     int i = 0;
-    pst.setInt(++i, surveyId);
+    if (surveyId > -1) {
+      pst.setInt(++i, surveyId);
+    }
     return pst.executeQuery();
   }
 }

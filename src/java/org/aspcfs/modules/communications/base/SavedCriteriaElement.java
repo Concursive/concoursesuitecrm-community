@@ -217,12 +217,12 @@ public class SavedCriteriaElement {
         db, "saved_criteriaelement_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO saved_criteriaelement " +
-        "( " +
-        (savedCriteriaListId > 0 ? "id, " : " ") +
-        "field, operator, operatorid, value, source, value_id) VALUES " +
-        "(" +
-        (savedCriteriaListId > 0 ? "?, " : "") +
-        "?, ?, ?, ?, ?, ?) ");
+            "( " +
+            (savedCriteriaListId > 0 ? "id, " : " ") +
+            "field, operator, operatorid, value, source, value_id) VALUES " +
+            "(" +
+            (savedCriteriaListId > 0 ? "?, " : "") +
+            "?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (savedCriteriaListId > 0) {
       pst.setInt(++i, savedCriteriaListId);

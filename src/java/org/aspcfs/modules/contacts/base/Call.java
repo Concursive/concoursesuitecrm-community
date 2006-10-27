@@ -36,12 +36,12 @@ import java.util.Iterator;
 import java.util.TimeZone;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    January 8, 2002
- *@version    $Id: Call.java 13737 2006-01-05 21:56:14 -0500 (Thu, 05 Jan 2006)
- *      mrajkowski $
+ * @author chris
+ * @version $Id: Call.java 13737 2006-01-05 21:56:14 -0500 (Thu, 05 Jan 2006)
+ *          mrajkowski $
+ * @created January 8, 2002
  */
 public class Call extends GenericBean {
 
@@ -105,18 +105,19 @@ public class Call extends GenericBean {
   Contact contact = new Contact();
 
 
-   /**
-   *  Constructor for the Call object
+  /**
+   * Constructor for the Call object
    */
-  public Call() { }
+  public Call() {
+  }
 
 
   /**
-   *  Constructor for the Call object
+   * Constructor for the Call object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public Call(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -124,12 +125,12 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Constructor for the Call object
+   * Constructor for the Call object
    *
-   *@param  db                Description of Parameter
-   *@param  callId            Description of Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of Exception
+   * @param db     Description of Parameter
+   * @param callId Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public Call(Connection db, String callId) throws SQLException {
     queryRecord(db, Integer.parseInt(callId));
@@ -137,12 +138,12 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Constructor for the Call object
+   * Constructor for the Call object
    *
-   *@param  db                Description of the Parameter
-   *@param  callId            Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of the Exception
+   * @param db     Description of the Parameter
+   * @param callId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public Call(Connection db, int callId) throws SQLException {
     queryRecord(db, callId);
@@ -150,29 +151,29 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@param  callId         Description of the Parameter
-   *@throws  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param callId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int callId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length")+ ", " +
-        "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
-        "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
-        "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, c.followup_contact_Id, t.*, talert.description AS alertType, " +
-        "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name AS orgname, p.description AS priority " +
-        "FROM call_log c " +
-        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
-        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
-        "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
-        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "WHERE call_id > -1 ");
+        "SELECT c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length") + ", " +
+            "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
+            "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
+            "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
+            "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, c.followup_contact_Id, t.*, talert.description AS alertType, " +
+            "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name AS orgname, p.description AS priority " +
+            "FROM call_log c " +
+            "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+            "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
+            "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
+            "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
+            "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
+            "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+            "WHERE call_id > -1 ");
     if (callId > -1) {
       sql.append("AND call_id = " + callId + " ");
     } else {
@@ -192,9 +193,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the oppHeaderId attribute of the Call object
+   * Sets the oppHeaderId attribute of the Call object
    *
-   *@param  oppHeaderId  The new oppHeaderId value
+   * @param oppHeaderId The new oppHeaderId value
    */
   public void setOppHeaderId(int oppHeaderId) {
     this.oppHeaderId = oppHeaderId;
@@ -202,9 +203,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the oppHeaderId attribute of the Call object
+   * Sets the oppHeaderId attribute of the Call object
    *
-   *@param  oppHeaderId  The new oppHeaderId value
+   * @param oppHeaderId The new oppHeaderId value
    */
   public void setOppHeaderId(String oppHeaderId) {
     this.oppHeaderId = Integer.parseInt(oppHeaderId);
@@ -212,9 +213,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the contactName attribute of the Call object
+   * Sets the contactName attribute of the Call object
    *
-   *@param  contactName  The new contactName value
+   * @param contactName The new contactName value
    */
   public void setContactName(String contactName) {
     this.contactName = contactName;
@@ -222,9 +223,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Call object
+   * Sets the Id attribute of the Call object
    *
-   *@param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -232,9 +233,39 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the Call object
+   * Sets the assignDate attribute of the Call object
    *
-   *@param  alertDate  The new alertDate value
+   * @param tmp The new assignDate value
+   */
+  public void setAssignDate(String tmp) {
+    this.assignDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the completeDate attribute of the Call object
+   *
+   * @param tmp The new completeDate value
+   */
+  public void setCompleteDate(String tmp) {
+    this.completeDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the completedBy attribute of the Call object
+   *
+   * @param tmp The new completedBy value
+   */
+  public void setCompletedBy(String tmp) {
+    this.completedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the alertDate attribute of the Call object
+   *
+   * @param alertDate The new alertDate value
    */
   public void setAlertDate(java.sql.Timestamp alertDate) {
     this.alertDate = alertDate;
@@ -242,9 +273,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the Call object
+   * Sets the alertDate attribute of the Call object
    *
-   *@param  tmp  The new alertDate value
+   * @param tmp The new alertDate value
    */
   public void setAlertDate(String tmp) {
     this.alertDate = DatabaseUtils.parseTimestamp(tmp);
@@ -252,9 +283,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Call object
+   * Sets the Id attribute of the Call object
    *
-   *@param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     try {
@@ -265,9 +296,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Call object
+   * Sets the entered attribute of the Call object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -275,9 +306,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Call object
+   * Sets the modified attribute of the Call object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -285,9 +316,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Call object
+   * Sets the entered attribute of the Call object
    *
-   *@param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -295,9 +326,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Call object
+   * Sets the modified attribute of the Call object
    *
-   *@param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -305,9 +336,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Call object
+   * Sets the OrgId attribute of the Call object
    *
-   *@param  tmp  The new OrgId value
+   * @param tmp The new OrgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -315,9 +346,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the actionId attribute of the Call object
+   * Sets the actionId attribute of the Call object
    *
-   *@param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(int actionId) {
     this.actionId = actionId;
@@ -325,9 +356,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the actionId attribute of the Call object
+   * Sets the actionId attribute of the Call object
    *
-   *@param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(String actionId) {
     this.actionId = Integer.parseInt(actionId);
@@ -351,19 +382,20 @@ public class Call extends GenericBean {
   public void setFollowupContactId(int followupContactId) {
     this.followupContactId = followupContactId;
   }
+
   /**
-   *  Sets the actionId attribute of the Call object
+   * Sets the actionId attribute of the Call object
    *
-   *@param  followupContactId  The new FollowupContactId value
+   * @param followupContactId The new FollowupContactId value
    */
   public void setFollowupContactId(String followupContactId) {
     this.followupContactId = Integer.parseInt(followupContactId);
   }
 
   /**
-   *  Sets the parentId attribute of the Call object
+   * Sets the parentId attribute of the Call object
    *
-   *@param  parentId  The new parentId value
+   * @param parentId The new parentId value
    */
   public void setParentId(int parentId) {
     this.parentId = parentId;
@@ -371,9 +403,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the parentId attribute of the Call object
+   * Sets the parentId attribute of the Call object
    *
-   *@param  parentId  The new parentId value
+   * @param parentId The new parentId value
    */
   public void setParentId(String parentId) {
     this.parentId = Integer.parseInt(parentId);
@@ -381,9 +413,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Call object
+   * Sets the owner attribute of the Call object
    *
-   *@param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -391,9 +423,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the hasFollowup attribute of the Call object
+   * Sets the hasFollowup attribute of the Call object
    *
-   *@param  hasFollowup  The new hasFollowup value
+   * @param hasFollowup The new hasFollowup value
    */
   public void setHasFollowup(boolean hasFollowup) {
     this.hasFollowup = hasFollowup;
@@ -401,9 +433,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the hasFollowup attribute of the Call object
+   * Sets the hasFollowup attribute of the Call object
    *
-   *@param  hasFollowup  The new hasFollowup value
+   * @param hasFollowup The new hasFollowup value
    */
   public void setHasFollowup(String hasFollowup) {
     this.hasFollowup = DatabaseUtils.parseBoolean(hasFollowup);
@@ -411,9 +443,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the hasFollowup attribute of the Call object
+   * Gets the hasFollowup attribute of the Call object
    *
-   *@return    The hasFollowup value
+   * @return The hasFollowup value
    */
   public boolean getHasFollowup() {
     return hasFollowup;
@@ -421,9 +453,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Call object
+   * Sets the trashedDate attribute of the Call object
    *
-   *@param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -431,9 +463,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Call object
+   * Sets the trashedDate attribute of the Call object
    *
-   *@param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -441,9 +473,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the trashedDate attribute of the Call object
+   * Gets the trashedDate attribute of the Call object
    *
-   *@return    The trashedDate value
+   * @return The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -451,9 +483,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the owner attribute of the Call object
+   * Sets the owner attribute of the Call object
    *
-   *@param  owner  The new owner value
+   * @param owner The new owner value
    */
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
@@ -461,9 +493,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the assignedBy attribute of the Call object
+   * Sets the assignedBy attribute of the Call object
    *
-   *@param  assignedBy  The new assignedBy value
+   * @param assignedBy The new assignedBy value
    */
   public void setAssignedBy(int assignedBy) {
     this.assignedBy = assignedBy;
@@ -471,9 +503,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the completedBy attribute of the Call object
+   * Sets the completedBy attribute of the Call object
    *
-   *@param  completedBy  The new completedBy value
+   * @param completedBy The new completedBy value
    */
   public void setCompletedBy(int completedBy) {
     this.completedBy = completedBy;
@@ -481,9 +513,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the priorityId attribute of the Call object
+   * Sets the priorityId attribute of the Call object
    *
-   *@param  priorityId  The new priorityId value
+   * @param priorityId The new priorityId value
    */
   public void setPriorityId(int priorityId) {
     this.priorityId = priorityId;
@@ -491,9 +523,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the priorityId attribute of the Call object
+   * Sets the priorityId attribute of the Call object
    *
-   *@param  priorityId  The new priorityId value
+   * @param priorityId The new priorityId value
    */
   public void setPriorityId(String priorityId) {
     if (Integer.parseInt(priorityId) > 0) {
@@ -503,9 +535,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Call object
+   * Sets the statusId attribute of the Call object
    *
-   *@param  statusId  The new statusId value
+   * @param statusId The new statusId value
    */
   public void setStatusId(int statusId) {
     this.statusId = statusId;
@@ -513,9 +545,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Call object
+   * Sets the statusId attribute of the Call object
    *
-   *@param  statusId  The new statusId value
+   * @param statusId The new statusId value
    */
   public void setStatusId(String statusId) {
     this.statusId = Integer.parseInt(statusId);
@@ -523,9 +555,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the reminderTypeId attribute of the Call object
+   * Sets the reminderTypeId attribute of the Call object
    *
-   *@param  reminderTypeId  The new reminderTypeId value
+   * @param reminderTypeId The new reminderTypeId value
    */
   public void setReminderTypeId(int reminderTypeId) {
     this.reminderTypeId = reminderTypeId;
@@ -533,9 +565,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the reminderTypeId attribute of the Call object
+   * Sets the reminderTypeId attribute of the Call object
    *
-   *@param  reminderTypeId  The new reminderTypeId value
+   * @param reminderTypeId The new reminderTypeId value
    */
   public void setReminderTypeId(String reminderTypeId) {
     if (Integer.parseInt(reminderTypeId) > 0) {
@@ -545,9 +577,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the reminderId attribute of the Call object
+   * Sets the reminderId attribute of the Call object
    *
-   *@param  reminderId  The new reminderId value
+   * @param reminderId The new reminderId value
    */
   public void setReminderId(int reminderId) {
     this.reminderId = reminderId;
@@ -555,9 +587,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the reminderId attribute of the Call object
+   * Sets the reminderId attribute of the Call object
    *
-   *@param  reminderId  The new reminderId value
+   * @param reminderId The new reminderId value
    */
   public void setReminderId(String reminderId) {
     this.reminderId = Integer.parseInt(reminderId);
@@ -565,9 +597,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the followupDate attribute of the Call object
+   * Sets the followupDate attribute of the Call object
    *
-   *@param  followupDate  The new followupDate value
+   * @param followupDate The new followupDate value
    */
   public void setFollowupDate(java.sql.Timestamp followupDate) {
     this.followupDate = followupDate;
@@ -575,9 +607,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the followupDate attribute of the Call object
+   * Sets the followupDate attribute of the Call object
    *
-   *@param  tmp  The new followupDate value
+   * @param tmp The new followupDate value
    */
   public void setFollowupDate(String tmp) {
     this.followupDate = DateUtils.parseTimestampString(tmp);
@@ -585,9 +617,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the assignDate attribute of the Call object
+   * Sets the assignDate attribute of the Call object
    *
-   *@param  assignDate  The new assignDate value
+   * @param assignDate The new assignDate value
    */
   public void setAssignDate(java.sql.Timestamp assignDate) {
     this.assignDate = assignDate;
@@ -595,9 +627,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the completeDate attribute of the Call object
+   * Sets the completeDate attribute of the Call object
    *
-   *@param  completeDate  The new completeDate value
+   * @param completeDate The new completeDate value
    */
   public void setCompleteDate(java.sql.Timestamp completeDate) {
     this.completeDate = completeDate;
@@ -605,9 +637,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the alertCallType attribute of the Call object
+   * Sets the alertCallType attribute of the Call object
    *
-   *@param  alertCallType  The new alertCallType value
+   * @param alertCallType The new alertCallType value
    */
   public void setAlertCallType(String alertCallType) {
     this.alertCallType = alertCallType;
@@ -615,9 +647,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the followupNotes attribute of the Call object
+   * Sets the followupNotes attribute of the Call object
    *
-   *@param  followupNotes  The new followupNotes value
+   * @param followupNotes The new followupNotes value
    */
   public void setFollowupNotes(String followupNotes) {
     this.followupNotes = followupNotes;
@@ -625,9 +657,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the priorityString attribute of the Call object
+   * Sets the priorityString attribute of the Call object
    *
-   *@param  priorityString  The new priorityString value
+   * @param priorityString The new priorityString value
    */
   public void setPriorityString(String priorityString) {
     this.priorityString = priorityString;
@@ -635,9 +667,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the checkAlertDate attribute of the Call object
+   * Sets the checkAlertDate attribute of the Call object
    *
-   *@param  tmp  The new checkAlertDate value
+   * @param tmp The new checkAlertDate value
    */
   public void setCheckAlertDate(boolean tmp) {
     this.checkAlertDate = tmp;
@@ -645,9 +677,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the checkAlertDate attribute of the Call object
+   * Sets the checkAlertDate attribute of the Call object
    *
-   *@param  tmp  The new checkAlertDate value
+   * @param tmp The new checkAlertDate value
    */
   public void setCheckAlertDate(String tmp) {
     this.checkAlertDate = DatabaseUtils.parseBoolean(tmp);
@@ -655,9 +687,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the contactOrgId attribute of the Call object
+   * Sets the contactOrgId attribute of the Call object
    *
-   *@param  contactOrgId  The new contactOrgId value
+   * @param contactOrgId The new contactOrgId value
    */
   public void setContactOrgId(int contactOrgId) {
     this.contactOrgId = contactOrgId;
@@ -665,9 +697,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the orgName attribute of the Call object
+   * Sets the orgName attribute of the Call object
    *
-   *@param  orgName  The new orgName value
+   * @param orgName The new orgName value
    */
   public void setOrgName(String orgName) {
     this.orgName = orgName;
@@ -675,9 +707,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the contact attribute of the Call object
+   * Sets the contact attribute of the Call object
    *
-   *@param  contact  The new contact value
+   * @param contact The new contact value
    */
   public void setContact(Contact contact) {
     this.contact = contact;
@@ -685,9 +717,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the alertDateTimeZone attribute of the Call object
+   * Sets the alertDateTimeZone attribute of the Call object
    *
-   *@param  tmp  The new alertDateTimeZone value
+   * @param tmp The new alertDateTimeZone value
    */
   public void setAlertDateTimeZone(String tmp) {
     this.alertDateTimeZone = tmp;
@@ -695,9 +727,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the alertDateTimeZone attribute of the Call object
+   * Gets the alertDateTimeZone attribute of the Call object
    *
-   *@return    The alertDateTimeZone value
+   * @return The alertDateTimeZone value
    */
   public String getAlertDateTimeZone() {
     return alertDateTimeZone;
@@ -705,9 +737,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the contact attribute of the Call object
+   * Gets the contact attribute of the Call object
    *
-   *@return    The contact value
+   * @return The contact value
    */
   public Contact getContact() {
     return contact;
@@ -715,9 +747,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the EnteredName attribute of the Call object
+   * Gets the EnteredName attribute of the Call object
    *
-   *@return    The EnteredName value
+   * @return The EnteredName value
    */
   public String getEnteredName() {
     return enteredName;
@@ -725,9 +757,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedName attribute of the Call object
+   * Gets the ModifiedName attribute of the Call object
    *
-   *@return    The ModifiedName value
+   * @return The ModifiedName value
    */
   public String getModifiedName() {
     return modifiedName;
@@ -735,9 +767,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the orgName attribute of the Call object
+   * Gets the orgName attribute of the Call object
    *
-   *@return    The orgName value
+   * @return The orgName value
    */
   public String getOrgName() {
     return orgName;
@@ -745,9 +777,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the contactOrgId attribute of the Call object
+   * Gets the contactOrgId attribute of the Call object
    *
-   *@return    The contactOrgId value
+   * @return The contactOrgId value
    */
   public int getContactOrgId() {
     return contactOrgId;
@@ -755,9 +787,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the priorityString attribute of the Call object
+   * Gets the priorityString attribute of the Call object
    *
-   *@return    The priorityString value
+   * @return The priorityString value
    */
   public String getPriorityString() {
     return priorityString;
@@ -765,9 +797,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the followupNotes attribute of the Call object
+   * Gets the followupNotes attribute of the Call object
    *
-   *@return    The followupNotes value
+   * @return The followupNotes value
    */
   public String getFollowupNotes() {
     return followupNotes;
@@ -775,9 +807,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the alertCallType attribute of the Call object
+   * Gets the alertCallType attribute of the Call object
    *
-   *@return    The alertCallType value
+   * @return The alertCallType value
    */
   public String getAlertCallType() {
     return alertCallType;
@@ -785,9 +817,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the parentId attribute of the Call object
+   * Gets the parentId attribute of the Call object
    *
-   *@return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -795,9 +827,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the parentId attribute of the Call object
+   * Gets the parentId attribute of the Call object
    *
-   *@return    The priority value
+   * @return The priority value
    */
   public int getPriorityId() {
     return priorityId;
@@ -805,9 +837,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the owner attribute of the Call object
+   * Gets the owner attribute of the Call object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -815,9 +847,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the assignedBy attribute of the Call object
+   * Gets the assignedBy attribute of the Call object
    *
-   *@return    The assignedBy value
+   * @return The assignedBy value
    */
   public int getAssignedBy() {
     return assignedBy;
@@ -825,9 +857,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the completedBy attribute of the Call object
+   * Gets the completedBy attribute of the Call object
    *
-   *@return    The completedBy value
+   * @return The completedBy value
    */
   public int getCompletedBy() {
     return completedBy;
@@ -835,9 +867,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Call object
+   * Gets the statusId attribute of the Call object
    *
-   *@return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -845,9 +877,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the statusString attribute of the Call object
+   * Gets the statusString attribute of the Call object
    *
-   *@return    The statusString value
+   * @return The statusString value
    */
   public String getStatusString() {
     String tmp = "";
@@ -861,9 +893,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the reminderTypeId attribute of the Call object
+   * Gets the reminderTypeId attribute of the Call object
    *
-   *@return    The reminderTypeId value
+   * @return The reminderTypeId value
    */
   public int getReminderTypeId() {
     return reminderTypeId;
@@ -871,9 +903,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the reminderId attribute of the Call object
+   * Gets the reminderId attribute of the Call object
    *
-   *@return    The reminderId value
+   * @return The reminderId value
    */
   public int getReminderId() {
     return reminderId;
@@ -881,9 +913,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the alertCallTypeId attribute of the Call object
+   * Gets the alertCallTypeId attribute of the Call object
    *
-   *@return    The alertCallTypeId value
+   * @return The alertCallTypeId value
    */
   public int getAlertCallTypeId() {
     return alertCallTypeId;
@@ -891,9 +923,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the followupDate attribute of the Call object
+   * Gets the followupDate attribute of the Call object
    *
-   *@return    The followupDate value
+   * @return The followupDate value
    */
   public java.sql.Timestamp getFollowupDate() {
     return followupDate;
@@ -901,9 +933,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the assignDate attribute of the Call object
+   * Gets the assignDate attribute of the Call object
    *
-   *@return    The assignDate value
+   * @return The assignDate value
    */
   public java.sql.Timestamp getAssignDate() {
     return assignDate;
@@ -911,9 +943,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the completeDate attribute of the Call object
+   * Gets the completeDate attribute of the Call object
    *
-   *@return    The completeDate value
+   * @return The completeDate value
    */
   public java.sql.Timestamp getCompleteDate() {
     return completeDate;
@@ -921,9 +953,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the actionId attribute of the Call object
+   * Gets the actionId attribute of the Call object
    *
-   *@return    The actionId value
+   * @return The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -931,9 +963,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the alertText attribute of the Call object
+   * Gets the alertText attribute of the Call object
    *
-   *@return    The alertText value
+   * @return The alertText value
    */
   public String getAlertText() {
     return alertText;
@@ -941,9 +973,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the alertText attribute of the Call object
+   * Sets the alertText attribute of the Call object
    *
-   *@param  alertText  The new alertText value
+   * @param alertText The new alertText value
    */
   public void setAlertText(String alertText) {
     this.alertText = alertText;
@@ -951,9 +983,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Call object
+   * Sets the OrgId attribute of the Call object
    *
-   *@param  tmp  The new OrgId value
+   * @param tmp The new OrgId value
    */
   public void setOrgId(String tmp) {
     try {
@@ -964,9 +996,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the ContactId attribute of the Call object
+   * Sets the ContactId attribute of the Call object
    *
-   *@param  tmp  The new ContactId value
+   * @param tmp The new ContactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -974,9 +1006,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the ContactId attribute of the Call object
+   * Sets the ContactId attribute of the Call object
    *
-   *@param  tmp  The new ContactId value
+   * @param tmp The new ContactId value
    */
   public void setContactId(String tmp) {
     try {
@@ -987,9 +1019,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the CallTypeId attribute of the Call object
+   * Sets the CallTypeId attribute of the Call object
    *
-   *@param  tmp  The new CallTypeId value
+   * @param tmp The new CallTypeId value
    */
   public void setCallTypeId(int tmp) {
     this.callTypeId = tmp;
@@ -997,9 +1029,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the CallTypeId attribute of the Call object
+   * Sets the CallTypeId attribute of the Call object
    *
-   *@param  tmp  The new CallTypeId value
+   * @param tmp The new CallTypeId value
    */
   public void setCallTypeId(String tmp) {
     try {
@@ -1010,9 +1042,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the Length attribute of the Call object
+   * Sets the Length attribute of the Call object
    *
-   *@param  tmp  The new Length value
+   * @param tmp The new Length value
    */
   public void setLength(int tmp) {
     this.length = tmp;
@@ -1020,9 +1052,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the Length attribute of the Call object
+   * Sets the Length attribute of the Call object
    *
-   *@param  tmp  The new Length value
+   * @param tmp The new Length value
    */
   public void setLength(String tmp) {
     try {
@@ -1033,9 +1065,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the Subject attribute of the Call object
+   * Sets the Subject attribute of the Call object
    *
-   *@param  tmp  The new Subject value
+   * @param tmp The new Subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -1043,9 +1075,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the Notes attribute of the Call object
+   * Sets the Notes attribute of the Call object
    *
-   *@param  tmp  The new Notes value
+   * @param tmp The new Notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -1053,9 +1085,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Call object
+   * Sets the EnteredBy attribute of the Call object
    *
-   *@param  tmp  The new EnteredBy value
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -1063,9 +1095,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Call object
+   * Sets the enteredBy attribute of the Call object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -1073,9 +1105,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Call object
+   * Sets the ModifiedBy attribute of the Call object
    *
-   *@param  tmp  The new ModifiedBy value
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -1083,9 +1115,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Call object
+   * Sets the modifiedBy attribute of the Call object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -1093,9 +1125,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the checkAlertDate attribute of the Call object
+   * Gets the checkAlertDate attribute of the Call object
    *
-   *@return    The checkAlertDate value
+   * @return The checkAlertDate value
    */
   public boolean getCheckAlertDate() {
     return checkAlertDate;
@@ -1103,9 +1135,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the oppHeaderId attribute of the Call object
+   * Gets the oppHeaderId attribute of the Call object
    *
-   *@return    The oppHeaderId value
+   * @return The oppHeaderId value
    */
   public int getOppHeaderId() {
     return oppHeaderId;
@@ -1113,9 +1145,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the contactName attribute of the Call object
+   * Gets the contactName attribute of the Call object
    *
-   *@return    The contactName value
+   * @return The contactName value
    */
   public String getContactName() {
     return contactName;
@@ -1123,9 +1155,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the alertDate attribute of the Call object
+   * Gets the alertDate attribute of the Call object
    *
-   *@return    The alertDate value
+   * @return The alertDate value
    */
   public java.sql.Timestamp getAlertDate() {
     return alertDate;
@@ -1133,9 +1165,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Call object
+   * Gets the entered attribute of the Call object
    *
-   *@return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1143,9 +1175,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Call object
+   * Gets the modified attribute of the Call object
    *
-   *@return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1153,9 +1185,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the Call object
+   * Gets the modifiedString attribute of the Call object
    *
-   *@return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
@@ -1169,9 +1201,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Call object
+   * Gets the enteredString attribute of the Call object
    *
-   *@return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -1185,9 +1217,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the Call object
+   * Gets the Id attribute of the Call object
    *
-   *@return    The Id value
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -1195,9 +1227,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the idString attribute of the Call object
+   * Gets the idString attribute of the Call object
    *
-   *@return    The idString value
+   * @return The idString value
    */
   public String getIdString() {
     return String.valueOf(id);
@@ -1205,9 +1237,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the OrgId attribute of the Call object
+   * Gets the OrgId attribute of the Call object
    *
-   *@return    The OrgId value
+   * @return The OrgId value
    */
   public int getOrgId() {
     return orgId;
@@ -1215,9 +1247,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the ContactId attribute of the Call object
+   * Gets the ContactId attribute of the Call object
    *
-   *@return    The ContactId value
+   * @return The ContactId value
    */
   public int getContactId() {
     return contactId;
@@ -1225,9 +1257,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the CallTypeId attribute of the Call object
+   * Gets the CallTypeId attribute of the Call object
    *
-   *@return    The CallTypeId value
+   * @return The CallTypeId value
    */
   public int getCallTypeId() {
     return callTypeId;
@@ -1235,9 +1267,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the CallType attribute of the Call object
+   * Gets the CallType attribute of the Call object
    *
-   *@return    The CallType value
+   * @return The CallType value
    */
   public String getCallType() {
     return callType;
@@ -1245,9 +1277,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the callType attribute of the Call object
+   * Sets the callType attribute of the Call object
    *
-   *@param  tmp  The new callType value
+   * @param tmp The new callType value
    */
   public void setCallType(String tmp) {
     this.callType = tmp;
@@ -1255,9 +1287,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the Length attribute of the Call object
+   * Gets the Length attribute of the Call object
    *
-   *@return    The Length value
+   * @return The Length value
    */
   public int getLength() {
     return length;
@@ -1265,9 +1297,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the LengthString attribute of the Call object
+   * Gets the LengthString attribute of the Call object
    *
-   *@return    The LengthString value
+   * @return The LengthString value
    */
   public String getLengthString() {
     return (String.valueOf(length));
@@ -1275,9 +1307,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the LengthText attribute of the Call object
+   * Gets the LengthText attribute of the Call object
    *
-   *@return    The LengthText value
+   * @return The LengthText value
    */
   public String getLengthText() {
     if (length > 0) {
@@ -1289,9 +1321,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasLength() {
     return (length > 0);
@@ -1299,9 +1331,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the Subject attribute of the Call object
+   * Gets the Subject attribute of the Call object
    *
-   *@return    The Subject value
+   * @return The Subject value
    */
   public String getSubject() {
     return subject;
@@ -1309,9 +1341,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the Notes attribute of the Call object
+   * Gets the Notes attribute of the Call object
    *
-   *@return    The Notes value
+   * @return The Notes value
    */
   public String getNotes() {
     return notes;
@@ -1319,9 +1351,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Call object
+   * Gets the EnteredBy attribute of the Call object
    *
-   *@return    The EnteredBy value
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1329,9 +1361,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Call object
+   * Gets the ModifiedBy attribute of the Call object
    *
-   *@return    The ModifiedBy value
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1339,9 +1371,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the resultId attribute of the Call object
+   * Sets the resultId attribute of the Call object
    *
-   *@param  tmp  The new resultId value
+   * @param tmp The new resultId value
    */
   public void setResultId(int tmp) {
     this.resultId = tmp;
@@ -1349,9 +1381,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the resultId attribute of the Call object
+   * Sets the resultId attribute of the Call object
    *
-   *@param  tmp  The new resultId value
+   * @param tmp The new resultId value
    */
   public void setResultId(String tmp) {
     this.resultId = Integer.parseInt(tmp);
@@ -1359,9 +1391,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the resultId attribute of the Call object
+   * Gets the resultId attribute of the Call object
    *
-   *@return    The resultId value
+   * @return The resultId value
    */
   public int getResultId() {
     return resultId;
@@ -1369,9 +1401,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the alertCallTypeId attribute of the Call object
+   * Sets the alertCallTypeId attribute of the Call object
    *
-   *@param  tmp  The new alertCallTypeId value
+   * @param tmp The new alertCallTypeId value
    */
   public void setAlertCallTypeId(int tmp) {
     this.alertCallTypeId = tmp;
@@ -1379,9 +1411,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the trashed attribute of the Call object
+   * Gets the trashed attribute of the Call object
    *
-   *@return    The trashed value
+   * @return The trashed value
    */
   public boolean isTrashed() {
     return (trashedDate != null);
@@ -1389,9 +1421,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the alertCallTypeId attribute of the Call object
+   * Sets the alertCallTypeId attribute of the Call object
    *
-   *@param  tmp  The new alertCallTypeId value
+   * @param tmp The new alertCallTypeId value
    */
   public void setAlertCallTypeId(String tmp) {
     if (Integer.parseInt(tmp) > 0) {
@@ -1401,9 +1433,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the updateOrganization attribute of the Call object
+   * Sets the updateOrganization attribute of the Call object
    *
-   *@param  tmp  The new updateOrganization value
+   * @param tmp The new updateOrganization value
    */
   public void setUpdateOrganization(boolean tmp) {
     this.updateOrganization = tmp;
@@ -1411,9 +1443,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Sets the updateOrganization attribute of the Call object
+   * Sets the updateOrganization attribute of the Call object
    *
-   *@param  tmp  The new updateOrganization value
+   * @param tmp The new updateOrganization value
    */
   public void setUpdateOrganization(String tmp) {
     this.updateOrganization = DatabaseUtils.parseBoolean(tmp);
@@ -1421,9 +1453,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the updateOrganization attribute of the Call object
+   * Gets the updateOrganization attribute of the Call object
    *
-   *@return    The updateOrganization value
+   * @return The updateOrganization value
    */
   public boolean getUpdateOrganization() {
     return updateOrganization;
@@ -1431,11 +1463,11 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int lookupReminderSeconds(Connection db) throws SQLException {
     if (this.getReminderTypeId() == -1) {
@@ -1445,7 +1477,7 @@ public class Call extends GenericBean {
     int scds = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT base_value FROM lookup_call_reminder " +
-        "WHERE code = ? ");
+            "WHERE code = ? ");
     pst.setInt(1, reminderTypeId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1457,12 +1489,12 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of Parameter
-   *@param  context        Description of Parameter
-   *@return                Description of the Returned Value
-   *@throws  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     return (insert(db));
@@ -1470,25 +1502,29 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
-      Contact thisContact =new Contact();
-      if(this.getContactId()>0){
-        thisContact = new Contact(db, this.getContactId());}
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      Contact thisContact = new Contact();
+      if (this.getContactId() > 0) {
+        thisContact = new Contact(db, this.getContactId());
+      }
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "call_log_call_id_seq");
       sql.append(
           "INSERT INTO call_log " +
-          "(org_id, contact_id, opp_id, call_type_id, " + DatabaseUtils.addQuotes(db, "length")+ ", subject, notes, " +
-          "alertdate, alert, alert_call_type_id, result_id, parent_id, owner, followup_notes, status_id, " +
-          "reminder_value, reminder_type_id, priority_id, followup_date, alertdate_timezone, followup_contact_id, ");
+              "(org_id, contact_id, opp_id, call_type_id, " + DatabaseUtils.addQuotes(db, "length") + ", subject, notes, " +
+              "alertdate, alert, alert_call_type_id, result_id, parent_id, owner, followup_notes, status_id, " +
+              "reminder_value, reminder_type_id, priority_id, followup_date, alertdate_timezone, followup_contact_id, ");
       if (id > -1) {
         sql.append("call_id, ");
       }
@@ -1584,22 +1620,28 @@ public class Call extends GenericBean {
       if (actionId > 0) {
         updateLog(db);
       }
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateLog(Connection db) throws SQLException {
     boolean commit = true;
@@ -1632,11 +1674,11 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -1654,11 +1696,11 @@ public class Call extends GenericBean {
     if (this.getStatusId() == Call.COMPLETE || this.getStatusId() == Call.COMPLETE_FOLLOWUP_PENDING) {
       thisDependency.setCount(
           ContactHistory.retrieveRecordCount(
-          db, OrganizationHistory.COMPLETE_ACTIVITY, this.getId()));
+              db, OrganizationHistory.COMPLETE_ACTIVITY, this.getId()));
     } else {
       thisDependency.setCount(
           ContactHistory.retrieveRecordCount(
-          db, OrganizationHistory.CANCELED_ACTIVITY, this.getId()));
+              db, OrganizationHistory.CANCELED_ACTIVITY, this.getId()));
     }
     thisDependency.setCanDelete(true);
     if (thisDependency.getCount() > 0) {
@@ -1669,11 +1711,11 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of Parameter
-   *@return                Description of the Returned Value
-   *@throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1691,7 +1733,7 @@ public class Call extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM call_log " +
-        "WHERE call_id = ? ");
+            "WHERE call_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
@@ -1703,12 +1745,12 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of Parameter
-   *@param  context        Description of Parameter
-   *@return                Description of the Returned Value
-   *@throws  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     if (this.getId() == -1) {
@@ -1719,14 +1761,14 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE call_log " +
-        "SET " + (updateOrganization?" org_id = ?,":"") + " call_type_id = ?, " + DatabaseUtils.addQuotes(db, "length")+ " = ?, subject = ?, notes = ?, " +
-        "modifiedby = ?, alertdate = ?, alert = ?, alert_call_type_id = ?, " +
-        "followup_notes = ?, status_id = ?, result_id = ?, owner = ?, " +
-        "reminder_value = ?, reminder_type_id = ?, priority_id = ?, " +
-        "followup_date = ?, alertdate_timezone = ?, trashed_date = ?, opp_id = ?, followup_contact_id=?, contact_id=?, " +
-        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
-        "WHERE call_id = ? " +
-        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+            "SET " + (updateOrganization ? " org_id = ?," : "") + " call_type_id = ?, " + DatabaseUtils.addQuotes(db, "length") + " = ?, subject = ?, notes = ?, " +
+            "modifiedby = ?, alertdate = ?, alert = ?, alert_call_type_id = ?, " +
+            "followup_notes = ?, status_id = ?, result_id = ?, owner = ?, " +
+            "reminder_value = ?, reminder_type_id = ?, priority_id = ?, " +
+            "followup_date = ?, alertdate_timezone = ?, trashed_date = ?, opp_id = ?, followup_contact_id=?, contact_id=?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "WHERE call_id = ? " +
+            "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     if (updateOrganization) {
@@ -1762,7 +1804,7 @@ public class Call extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getFollowupContactId());
     DatabaseUtils.setInt(pst, ++i, this.getContactId());
     pst.setInt(++i, this.getId());
-    if(this.getModified() != null){
+    if (this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();
@@ -1772,13 +1814,13 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@param  toTrash        Description of the Parameter
-   *@param  tmpUserId      Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
     int resultCount = 0;
@@ -1793,10 +1835,10 @@ public class Call extends GenericBean {
       }
       sql.append(
           "UPDATE call_log " +
-          "SET trashed_date = ? , " +
-          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
-          "modifiedby = ? " +
-          "WHERE call_id = ? ");
+              "SET trashed_date = ? , " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+              "modifiedby = ? " +
+              "WHERE call_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       if (toTrash) {
@@ -1836,12 +1878,12 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Updates the current record and marks it complete in the database
+   * Updates the current record and marks it complete in the database
    *
-   *@param  db             Description of the Parameter
-   *@param  userId         Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int markComplete(Connection db, int userId) throws SQLException {
     if (this.getId() == -1) {
@@ -1852,9 +1894,9 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE call_log " +
-        "SET completedby = ?, complete_date = " + DatabaseUtils.getCurrentTimestamp(
-        db) + ", status_id = ? " +
-        "WHERE call_id = ? ");
+            "SET completedby = ?, complete_date = " + DatabaseUtils.getCurrentTimestamp(
+            db) + ", status_id = ? " +
+            "WHERE call_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, userId);
@@ -1871,12 +1913,12 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@param  userId         Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param userId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int markCanceled(Connection db, int userId) throws SQLException {
     if (this.getId() == -1) {
@@ -1887,8 +1929,8 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE call_log " +
-        "SET completedby = ?, complete_date = CURRENT_TIMESTAMP, status_id = ? " +
-        "WHERE call_id = ? ");
+            "SET completedby = ?, complete_date = CURRENT_TIMESTAMP, status_id = ? " +
+            "WHERE call_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, userId);
@@ -1901,10 +1943,10 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs             Description of Parameter
-   *@throws  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //call_log table
@@ -1938,7 +1980,7 @@ public class Call extends GenericBean {
     followupNotes = rs.getString("followup_notes");
     alertDateTimeZone = rs.getString("alertdate_timezone");
     trashedDate = rs.getTimestamp("trashed_date");
-    followupContactId  = DatabaseUtils.getInt(rs, "followup_contact_id");
+    followupContactId = DatabaseUtils.getInt(rs, "followup_contact_id");
     //lookup_call_types table
     callTypeId = DatabaseUtils.getInt(rs, "code");
     callType = rs.getString("description");
@@ -1960,9 +2002,9 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive for a Call
+   * Gets the properties that are TimeZone sensitive for a Call
    *
-   *@return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -1972,13 +2014,13 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@param  context        Description of the Parameter
-   *@param  newOwner       Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, ActionContext context, int newOwner) throws SQLException {
     int result = -1;
@@ -1992,13 +2034,13 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@param  context        Description of the Parameter
-   *@param  newOrgId       Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param newOrgId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassignAccount(Connection db, ActionContext context, int newOrgId) throws SQLException {
     int result = -1;
@@ -2013,12 +2055,12 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  tz       Description of the Parameter
-   *@param  created  Description of the Parameter
-   *@param  type     Description of the Parameter
-   *@return          Description of the Return Value
+   * @param tz      Description of the Parameter
+   * @param created Description of the Parameter
+   * @param type    Description of the Parameter
+   * @return Description of the Return Value
    */
   public String generateWebcalEvent(TimeZone tz, Timestamp created, int type) {
     StringBuffer webcal = new StringBuffer();
@@ -2080,13 +2122,13 @@ public class Call extends GenericBean {
       if (alertDate != null) {
         webcal.append(
             "DTSTART;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(
-            tz, alertDate) + CRLF);
+                tz, alertDate) + CRLF);
       }
     } else if (type == COMPLETE) {
       if (completeDate != null) {
         webcal.append(
             "DTSTART;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(
-            tz, completeDate) + CRLF);
+                tz, completeDate) + CRLF);
       }
     }
 
@@ -2108,7 +2150,7 @@ public class Call extends GenericBean {
     if (description != null) {
       webcal.append(
           ICalendar.foldLine(
-          "DESCRIPTION:" + ICalendar.parseNewLine(description)) + CRLF);
+              "DESCRIPTION:" + ICalendar.parseNewLine(description)) + CRLF);
     }
 
     if (priorityString != null) {

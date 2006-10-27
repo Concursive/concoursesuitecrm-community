@@ -20,7 +20,9 @@ import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Description of the Class
@@ -47,6 +49,17 @@ public class Thumbnail extends GenericBean {
    * Constructor for the Thumbnail object
    */
   public Thumbnail() {
+  }
+
+
+  /**
+   * Constructor for the Thumbnail object
+   *
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public Thumbnail(ResultSet rs) throws SQLException {
+    buildRecord(rs);
   }
 
 
@@ -109,6 +122,9 @@ public class Thumbnail extends GenericBean {
     this.version = tmp;
   }
 
+  public void setVersion(String tmp) {
+    this.version = Double.parseDouble(tmp);
+  }
 
   /**
    * Sets the entered attribute of the Thumbnail object
@@ -294,14 +310,14 @@ public class Thumbnail extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO project_files_thumbnail " +
-        "(item_id, filename, " + DatabaseUtils.addQuotes(db, "version")+ ", " + DatabaseUtils.addQuotes(db, "size")+ ", " +
-        (entered != null ? "entered, " : "") +
-        (modified != null ? "modified, " : "") +
-        "enteredBy, modifiedBy) " +
-        "VALUES (?, ?, ?, ?, " +
-        (entered != null ? "?, " : "") +
-        (modified != null ? "?, " : "") +
-        "?, ?) ");
+            "(item_id, filename, " + DatabaseUtils.addQuotes(db, "version") + ", " + DatabaseUtils.addQuotes(db, "size") + ", " +
+            (entered != null ? "entered, " : "") +
+            (modified != null ? "modified, " : "") +
+            "enteredBy, modifiedBy) " +
+            "VALUES (?, ?, ?, ?, " +
+            (entered != null ? "?, " : "") +
+            (modified != null ? "?, " : "") +
+            "?, ?) ");
     int i = 0;
     pst.setInt(++i, id);
     pst.setString(++i, filename);
@@ -339,8 +355,8 @@ public class Thumbnail extends GenericBean {
     //Delete database record
     String sql =
         "DELETE FROM project_files_thumbnail " +
-        "WHERE item_id = ? " +
-        "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ";
+            "WHERE item_id = ? " +
+            "AND " + DatabaseUtils.addQuotes(db, "version") + " = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, this.getId());
     pst.setDouble(2, this.getVersion());
@@ -349,5 +365,44 @@ public class Thumbnail extends GenericBean {
     return true;
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param rs Description of the Parameter
+   */
+  protected void buildRecord(ResultSet rs) throws SQLException {
+    id = rs.getInt("item_id");
+    filename = rs.getString("filename");
+    size = rs.getInt("size");
+    version = rs.getDouble("version");
+    entered = rs.getTimestamp("entered");
+    enteredBy = rs.getInt("enteredby");
+    modified = rs.getTimestamp("modified");
+    modifiedBy = rs.getInt("modifiedby");
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public static ArrayList recordList(Connection db) throws SQLException {
+    ArrayList records = new ArrayList();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * FROM project_files_thumbnail " +
+            "WHERE item_id > -1 ");
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      Thumbnail thumbnail = new Thumbnail(rs);
+      records.add(thumbnail);
+    }
+    rs.close();
+    pst.close();
+    return records;
+  }
 }
 

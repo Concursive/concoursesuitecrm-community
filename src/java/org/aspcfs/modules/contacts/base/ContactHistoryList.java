@@ -38,8 +38,8 @@ import java.util.Iterator;
  */
 public class ContactHistoryList extends ArrayList implements SyncableList {
   //sync api
-  public final static String tableName = "ticket";
-  public final static String uniqueField = "ticketid";
+  public final static String tableName = "history";
+  public final static String uniqueField = "history_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
@@ -652,9 +652,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM history " +
-        "WHERE history_id > 0 " +
-        "AND org_id IS NULL ");
+            "FROM history " +
+            "WHERE history_id > 0 " +
+            "AND org_id IS NULL ");
 
     createFilter(db, sqlFilter);
 
@@ -662,7 +662,7 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -701,9 +701,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         "ch.* " +
-        "FROM history ch " +
-        "WHERE history_id > 0 " +
-        "AND org_id IS NULL ");
+            "FROM history ch " +
+            "WHERE history_id > 0 " +
+            "AND org_id IS NULL ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

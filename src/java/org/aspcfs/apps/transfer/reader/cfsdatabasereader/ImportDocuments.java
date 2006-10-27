@@ -54,7 +54,7 @@ public class ImportDocuments implements CFSDatabaseReaderImportModule {
     boolean processOK = true;
     writer.setAutoCommit(true);
 
-    logger.info("ImportBaseData-> Inserting FileItemList");
+    logger.info("ImportDocuments-> Inserting FileItemList");
     FileItemList fileItemList = new FileItemList();
     fileItemList.buildList(db);
 
@@ -84,12 +84,12 @@ public class ImportDocuments implements CFSDatabaseReaderImportModule {
       processOK = writer.save(thisRecord);
     }
 
-    logger.info("ImportBaseData-> Inserting FileItemVersionList");
+    logger.info("ImportDocuments-> Inserting FileItemVersionList");
     FileItemVersionList fileItemVersionList = new FileItemVersionList();
     fileItemVersionList.buildList(db);
     mappings.saveList(writer, fileItemVersionList, "insert");
 
-    logger.info("ImportBaseData-> Inserting FileDownloadLogList");
+    logger.info("ImportDocuments-> Inserting FileDownloadLogList");
     FileDownloadLogList downloadLog = new FileDownloadLogList();
     downloadLog.buildList(db);
     mappings.saveList(writer, downloadLog, "insert");

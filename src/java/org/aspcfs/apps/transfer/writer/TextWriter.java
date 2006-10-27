@@ -215,6 +215,46 @@ public class TextWriter implements DataWriter {
 
   /**
    * Description of the Method
+   */
+  public void initialize() {
+    this.showColumnNames = true;
+    this.recordCount = 0;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param input Description of the Parameter
+   * @return Description of the Return Value
+   */
+  private String escape(String input) {
+    if (input == null) {
+      return "";
+    }
+
+    if (",".equals(fieldSeparator)) {
+      //CSV
+      //handle quotes
+      StringBuffer result = new StringBuffer();
+      for (int i = 0; i < input.length(); ++i) {
+        if (input.charAt(i) == '"') {
+          result.append("\"\"");
+        }
+        result.append(input.charAt(i));
+      }
+      input = result.toString().trim();
+      //handle commas
+      if (input.indexOf(",") > -1) {
+        input = "\"" + input + "\"";
+      }
+    }
+    return input;
+  }
+
+
+  /**
+   * Description of the Method
    *
    * @param record Description of the Parameter
    * @return Description of the Return Value
@@ -237,7 +277,7 @@ public class TextWriter implements DataWriter {
         Iterator fieldItems = record.iterator();
         while (fieldItems.hasNext()) {
           DataField thisField = (DataField) fieldItems.next();
-          out.print(thisField.getValue());
+          out.print(escape(thisField.getValue()));
           if (fieldItems.hasNext() && fieldSeparator != null) {
             out.print(fieldSeparator);
           }
@@ -259,7 +299,7 @@ public class TextWriter implements DataWriter {
    * @return Description of the Return Value
    */
   public boolean commit() {
-    return false;
+    return true;
   }
 
 

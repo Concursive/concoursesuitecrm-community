@@ -29,11 +29,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  A logged message sent to a person using 1 of several transports: SMTP, Fax,
- *  Letter, IM
+ * A logged message sent to a person using 1 of several transports: SMTP, Fax,
+ * Letter, IM
  *
  * @author mrajkowski
  * @version $Id$
@@ -104,7 +105,19 @@ public class Notification extends Thread {
   /**
    * Constructor for the Notification object
    */
-  public Notification() { }
+  public Notification() {
+  }
+
+
+  /**
+   * Constructor for the Notification object
+   *
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public Notification(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
 
 
   /**
@@ -136,6 +149,46 @@ public class Notification extends Thread {
    */
   public void setUserToNotify(int tmp) {
     this.userToNotify = tmp;
+  }
+
+
+  /**
+   * Sets the userToNotify attribute of the Notification object
+   *
+   * @param tmp The new userToNotify value
+   */
+  public void setUserToNotify(String tmp) {
+    this.userToNotify = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the itemId attribute of the Notification object
+   *
+   * @param tmp The new itemId value
+   */
+  public void setItemId(String tmp) {
+    this.itemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the attempt attribute of the Notification object
+   *
+   * @param tmp The new attempt value
+   */
+  public void setAttempt(String tmp) {
+    this.attempt = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the result attribute of the Notification object
+   *
+   * @param tmp The new result value
+   */
+  public void setResult(String tmp) {
+    this.result = Integer.parseInt(tmp);
   }
 
 
@@ -438,9 +491,79 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the bcc attribute of the Notification object
+   * Gets the userToNotify attribute of the Notification object
    *
-   *@return    The bcc value
+   * @return The userToNotify value
+   */
+  public int getUserToNotify() {
+    return userToNotify;
+  }
+
+
+  /**
+   * Gets the module attribute of the Notification object
+   *
+   * @return The module value
+   */
+  public String getModule() {
+    return module;
+  }
+
+
+  /**
+   * Gets the itemId attribute of the Notification object
+   *
+   * @return The itemId value
+   */
+  public int getItemId() {
+    return itemId;
+  }
+
+
+  /**
+   * Gets the itemModified attribute of the Notification object
+   *
+   * @return The itemModified value
+   */
+  public java.sql.Timestamp getItemModified() {
+    return itemModified;
+  }
+
+
+  /**
+   * Gets the typeText attribute of the Notification object
+   *
+   * @return The typeText value
+   */
+  public String getTypeText() {
+    return typeText;
+  }
+
+
+  /**
+   * Gets the subject attribute of the Notification object
+   *
+   * @return The subject value
+   */
+  public String getSubject() {
+    return subject;
+  }
+
+
+  /**
+   * Gets the messageToSend attribute of the Notification object
+   *
+   * @return The messageToSend value
+   */
+  public String getMessageToSend() {
+    return messageToSend;
+  }
+
+
+  /**
+   * Gets the bcc attribute of the Notification object
+   *
+   * @return The bcc value
    */
   public String getBcc() {
     return bcc;
@@ -448,9 +571,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the bcc attribute of the Notification object
+   * Sets the bcc attribute of the Notification object
    *
-   *@param  tmp  The new bcc value
+   * @param tmp The new bcc value
    */
   public void setBcc(String tmp) {
     this.bcc = tmp;
@@ -458,9 +581,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the cc attribute of the Notification object
+   * Gets the cc attribute of the Notification object
    *
-   *@return    The cc value
+   * @return The cc value
    */
   public String getCc() {
     return cc;
@@ -468,9 +591,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the cc attribute of the Notification object
+   * Sets the cc attribute of the Notification object
    *
-   *@param  tmp  The new cc value
+   * @param tmp The new cc value
    */
   public void setCc(String tmp) {
     this.cc = tmp;
@@ -478,9 +601,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the campaignType attribute of the Notification object
+   * Sets the campaignType attribute of the Notification object
    *
-   *@param  tmp  The new campaignType value
+   * @param tmp The new campaignType value
    */
   public void setCampaignType(int tmp) {
     this.campaignType = tmp;
@@ -488,9 +611,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Sets the campaignType attribute of the Notification object
+   * Sets the campaignType attribute of the Notification object
    *
-   *@param  tmp  The new campaignType value
+   * @param tmp The new campaignType value
    */
   public void setCampaignType(String tmp) {
     this.campaignType = Integer.parseInt(tmp);
@@ -498,9 +621,9 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the campaignType attribute of the Notification object
+   * Gets the campaignType attribute of the Notification object
    *
-   *@return    The campaignType value
+   * @return The campaignType value
    */
   public int getCampaignType() {
     return campaignType;
@@ -508,10 +631,10 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the New attribute of the Notification object
+   * Gets the New attribute of the Notification object
    *
-   *@param  db  Description of Parameter
-   *@return     The New value
+   * @param db Description of Parameter
+   * @return The New value
    */
   public boolean isNew(Connection db) {
     int resultCheck = -1;
@@ -519,11 +642,11 @@ public class Notification extends Thread {
 
       String sql =
           "SELECT * " +
-          "FROM notification " +
-          "WHERE notify_user = " + ((userToNotify > -1) ? userToNotify : contactToNotify) + " " +
-          "AND " + DatabaseUtils.addQuotes(db, "module") + " = ? " +
-          "AND item_id = " + itemId + " " +
-          "AND item_modified = ? ";
+              "FROM notification " +
+              "WHERE notify_user = " + ((userToNotify > -1) ? userToNotify : contactToNotify) + " " +
+              "AND " + DatabaseUtils.addQuotes(db, "module") + " = ? " +
+              "AND item_id = " + itemId + " " +
+              "AND item_modified = ? ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -572,11 +695,11 @@ public class Notification extends Thread {
       id = DatabaseUtils.getNextSeq(db, "notification_notification_i_seq");
       String sql =
           "INSERT INTO notification " +
-          "(" + (id > -1 ? "notification_id, " : "") + "notify_user, " + DatabaseUtils.addQuotes(db, "module") +
-          ", item_id, item_modified, notify_type, subject, " + DatabaseUtils.addQuotes(db, "message") +
-          ", result, errorMessage) " +
-          "VALUES " +
-          "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+              "(" + (id > -1 ? "notification_id, " : "") + "notify_user, " + DatabaseUtils.addQuotes(db, "module") +
+              ", item_id, item_modified, notify_type, subject, " + DatabaseUtils.addQuotes(db, "message") +
+              ", result, errorMessage) " +
+              "VALUES " +
+              "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       if (id > -1) {
@@ -750,9 +873,9 @@ public class Notification extends Thread {
         }
         //Send it...
         if (type == EMAIL) {
-          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoEmail())){
+          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoEmail())) {
             status = "Email opt out";
-          } else{
+          } else {
             System.out.println(
                 "Notification-> notifyContact: " + thisContact.getPrimaryEmailAddress());
             SMTPMessage mail = new SMTPMessage();
@@ -789,9 +912,9 @@ public class Notification extends Thread {
             }
           }
         } else if (type == IM) {
-          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoInstantMessage())){
+          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoInstantMessage())) {
             status = "IM opt out";
-          } else{
+          } else {
             status = "IM Sent";
           }
         } else if (type == BROADCAST) {
@@ -804,7 +927,7 @@ public class Notification extends Thread {
           mail.setType("text/html");
           boolean canEmail = false;
           //sending to all email addresses
-          if (!((campaignType == Campaign.GENERAL) && (thisContact.getNoEmail()))){
+          if (!((campaignType == Campaign.GENERAL) && (thisContact.getNoEmail()))) {
             canEmail = true;
             Iterator itr = thisContact.getEmailAddressList().iterator();
             if (itr.hasNext()) {
@@ -835,16 +958,16 @@ public class Notification extends Thread {
                 "ReportBuilder Error: Report could not be sent");
             System.err.println(mail.getErrorMsg());
           } else {
-            if (canEmail && canPage){
+            if (canEmail && canPage) {
               status = "Broadcast Sent";
             } else {
-              if (!canEmail){
+              if (!canEmail) {
                 status = "Email Opt Out";
-              } 
-              if (!canPage){
+              }
+              if (!canPage) {
                 status = "Text Message Opt Out";
               }
-              if ((!canEmail) && (!canPage)){
+              if ((!canEmail) && (!canPage)) {
                 status = "Email and Text Message Opt Out";
               }
             }
@@ -856,7 +979,7 @@ public class Notification extends Thread {
         } else if (type == FAX) {
           String phoneNumber = thisContact.getPhoneNumber("Business Fax");
           System.out.println("Notification-> To: " + phoneNumber);
-          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoFax())){
+          if ((campaignType == Campaign.GENERAL) && (thisContact.getNoFax())) {
             status = "Fax opt out";
           } else if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
             phoneNumber = PhoneNumber.convertToNumber(phoneNumber);
@@ -875,7 +998,7 @@ public class Notification extends Thread {
           }
         } else if (type == LETTER) {
           contact = thisContact;
-          if (!((campaignType == Campaign.GENERAL) && (thisContact.getNoMail()))){
+          if (!((campaignType == Campaign.GENERAL) && (thisContact.getNoMail()))) {
             status = "Added to Report";
           } else {
             status = "Mail opt out";
@@ -985,6 +1108,27 @@ public class Notification extends Thread {
   /**
    * Description of the Method
    *
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  protected void buildRecord(ResultSet rs) throws SQLException {
+    id = rs.getInt("notification_id");
+    userToNotify = rs.getInt("notify_user");
+    module = rs.getString("module");
+    itemId = rs.getInt("item_id");
+    itemModified = rs.getTimestamp("item_modified");
+    attempt = rs.getTimestamp("attempt");
+    typeText = rs.getString("notify_type");
+    subject = rs.getString("subject");
+    messageToSend = rs.getString("message");
+    result = rs.getInt("result");
+    errorMessage = rs.getString("errorMessage");
+  }
+
+
+  /**
+   * Description of the Method
+   *
    * @return Description of the Return Value
    */
   public String toString() {
@@ -1001,6 +1145,29 @@ public class Notification extends Thread {
     text.append("Type: ").append(type).append(lf);
     text.append("==============================================");
     return text.toString();
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public static ArrayList recordList(Connection db) throws SQLException {
+    ArrayList records = new ArrayList();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * FROM notification " +
+            "WHERE notification_id > -1 ");
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      Notification notification = new Notification(rs);
+      records.add(notification);
+    }
+    rs.close();
+    pst.close();
+    return records;
   }
 }
 

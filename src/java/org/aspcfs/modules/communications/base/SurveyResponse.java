@@ -51,6 +51,46 @@ public class SurveyResponse {
 
 
   /**
+   * Sets the id attribute of the SurveyResponse object
+   *
+   * @param tmp The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the activeSurveyId attribute of the SurveyResponse object
+   *
+   * @param tmp The new activeSurveyId value
+   */
+  public void setActiveSurveyId(String tmp) {
+    this.activeSurveyId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the contactId attribute of the SurveyResponse object
+   *
+   * @param tmp The new contactId value
+   */
+  public void setContactId(String tmp) {
+    this.contactId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the entered attribute of the SurveyResponse object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
    * Constructor for the SurveyResponse object
    */
   public SurveyResponse() {
@@ -61,6 +101,7 @@ public class SurveyResponse {
    * Constructor for the SurveyResponse object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public SurveyResponse(ResultSet rs) throws SQLException {
@@ -362,7 +403,7 @@ public class SurveyResponse {
   public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM active_survey_responses " +
-        "WHERE response_id = ?");
+            "WHERE response_id = ?");
     pst.setInt(1, id);
     pst.executeUpdate();
     pst.close();

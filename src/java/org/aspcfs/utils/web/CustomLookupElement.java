@@ -16,6 +16,8 @@
 package org.aspcfs.utils.web;
 
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.StringUtils;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -25,7 +27,8 @@ import java.util.Iterator;
  * Description of the Class
  *
  * @author matt rajkowski
- * @version $Id$
+ * @version $Id: CustomLookupElement.java 12404 2005-08-05 17:37:07Z
+ *          mrajkowski $
  * @created September 16, 2004
  */
 public class CustomLookupElement extends HashMap {
@@ -35,6 +38,7 @@ public class CustomLookupElement extends HashMap {
   protected String uniqueField = null;
   protected String currentField = null;
   protected String currentValue = null;
+  protected String currentType = null;
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
 
@@ -51,6 +55,7 @@ public class CustomLookupElement extends HashMap {
    *
    * @param rs Description of the Parameter
    * @throws java.sql.SQLException Description of the Exception
+   * @throws java.sql.SQLException Description of the Exception
    */
   public CustomLookupElement(ResultSet rs) throws java.sql.SQLException {
     build(rs);
@@ -65,6 +70,7 @@ public class CustomLookupElement extends HashMap {
    * @param tableName   Description of the Parameter
    * @param uniqueField Description of the Parameter
    * @throws java.sql.SQLException Description of the Exception
+   * @throws java.sql.SQLException Description of the Exception
    */
   public CustomLookupElement(Connection db, int code, String tableName, String uniqueField) throws java.sql.SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -73,8 +79,8 @@ public class CustomLookupElement extends HashMap {
     }
     String sql =
         "SELECT " + uniqueField + " " +
-        "FROM " + tableName + " " +
-        "WHERE " + uniqueField + " = ? ";
+            "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
+            "WHERE " + uniqueField + " = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, code);
     ResultSet rs = pst.executeQuery();
@@ -99,10 +105,21 @@ public class CustomLookupElement extends HashMap {
     } else {
       for (int i = 1; i < meta.getColumnCount() + 1; i++) {
         String columnName = meta.getColumnName(i);
-        Object data = rs.getObject(i);
-        if (data != null) {
-          this.put(columnName, String.valueOf(data));
+        int columnType = meta.getColumnType(i);
+        String data = null;
+        if (columnType == Types.CLOB || columnType == Types.BLOB) {
+          data = rs.getString(i);
+          columnType = Types.VARCHAR;
+        } else {
+          Object obj = rs.getObject(i);
+          data = String.valueOf(obj);
+          //if (Class.forName("net.sourceforge.jtds.jdbc.ClobImpl").isInstance(obj)) {
+          //data = rs.getString(i);
+          //columnType = java.sql.Types.VARCHAR;//Treat a clob as a string
         }
+        CustomLookupColumn thisColumn =
+            new CustomLookupColumn(columnName, data, columnType);
+        this.put(columnName, thisColumn);
       }
     }
   }
@@ -113,9 +130,12 @@ public class CustomLookupElement extends HashMap {
    *
    * @param fieldName The feature to be added to the Field attribute
    * @param value     The feature to be added to the Field attribute
+   * @param type      The feature to be added to the Field attribute
    */
-  public void addField(String fieldName, String value) {
-    this.put(fieldName, value);
+  public void addField(String fieldName, String value, int type) {
+    CustomLookupColumn thisColumn =
+        new CustomLookupColumn(fieldName, value, type);
+    this.put(fieldName, thisColumn);
   }
 
 
@@ -176,6 +196,26 @@ public class CustomLookupElement extends HashMap {
    */
   public void setData(String tmp) {
     currentValue = tmp;
+  }
+
+
+  /**
+   * Gets the currentType attribute of the CustomLookupElement object
+   *
+   * @return The currentType value
+   */
+  public String getCurrentType() {
+    return currentType;
+  }
+
+
+  /**
+   * Sets the currentType attribute of the CustomLookupElement object
+   *
+   * @param tmp The new currentType value
+   */
+  public void setType(String tmp) {
+    this.currentType = tmp;
     addProperty();
   }
 
@@ -185,12 +225,31 @@ public class CustomLookupElement extends HashMap {
    */
   private void addProperty() {
     if (!"code".equals(currentField) && !"guid".equals(currentField)) {
-      if (currentField != null && currentValue != null) {
-        this.put(new String(currentField), new String(currentValue));
+      if (currentField != null && currentValue != null && currentType != null) {
+        CustomLookupColumn thisColumn =
+            new CustomLookupColumn(currentField, currentValue,
+                Integer.parseInt(currentType));
+        this.put(new String(currentField), thisColumn);
       }
     }
     currentField = null;
     currentValue = null;
+    currentType = null;
+  }
+
+
+  /**
+   * Sets the serverMapId attribute of the CustomLookupElement object
+   *
+   * @param value The new serverMapId value
+   */
+  public void setServerMapId(String value) {
+    String field = value.substring(0, value.indexOf("="));
+    String recordId = value.substring(value.indexOf("=") + 1);
+    CustomLookupColumn thisColumn = (CustomLookupColumn) this.get(field);
+    if (thisColumn != null) {
+      thisColumn.setValue(recordId);
+    }
   }
 
 
@@ -231,7 +290,26 @@ public class CustomLookupElement extends HashMap {
    * @return The value value
    */
   public String getValue(String tmp) {
-    return (String) this.get(tmp);
+    CustomLookupColumn thisColumn = (CustomLookupColumn) this.get(tmp);
+    if (thisColumn != null) {
+      return thisColumn.getValue();
+    }
+    return null;
+  }
+
+
+  /**
+   * Gets the type attribute of the CustomLookupElement object
+   *
+   * @param tmp Description of the Parameter
+   * @return The type value
+   */
+  public int getType(String tmp) {
+    CustomLookupColumn thisColumn = (CustomLookupColumn) this.get(tmp);
+    if (thisColumn != null) {
+      return thisColumn.getType();
+    }
+    return -1;
   }
 
 
@@ -249,16 +327,14 @@ public class CustomLookupElement extends HashMap {
     if (this.size() == 0) {
       throw new SQLException("Fields not specified");
     }
+
     String seqName = null;
-    if (tableName.length() > 22) {
-      seqName = tableName.substring(0, 22);
-    } else {
-      seqName = tableName;
-    }
     if (this.getUniqueField() != null) {
-      id = DatabaseUtils.getNextSeq(
-          db, seqName + "_" + getUniqueField() + "_seq");
+      seqName = getSequenceName(tableName, getUniqueField());
+      id = DatabaseUtils.getNextSeq(db, seqName);
     }
+    tableName = DatabaseUtils.getTableName(db, tableName);
+
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO " + tableName + " ");
     sql.append("(");
@@ -267,7 +343,7 @@ public class CustomLookupElement extends HashMap {
     }
     Iterator fields = this.keySet().iterator();
     while (fields.hasNext()) {
-      sql.append((String) fields.next());
+      sql.append(DatabaseUtils.parseReservedWord(db, (String) fields.next()));
       if (fields.hasNext()) {
         sql.append(", ");
       }
@@ -283,7 +359,6 @@ public class CustomLookupElement extends HashMap {
       }
     }
     sql.append(")");
-
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int paramCount = 0;
     if (this.getUniqueField() != null && id > -1) {
@@ -292,16 +367,80 @@ public class CustomLookupElement extends HashMap {
     Iterator paramters = this.keySet().iterator();
     while (paramters.hasNext()) {
       String paramName = ((String) paramters.next());
-      String value = (String) this.get(paramName);
-      pst.setString(++paramCount, value);
+
+      CustomLookupColumn thisColumn =
+          (CustomLookupColumn) this.get(paramName);
+
+      //This code needs to be maintained. If support for new column types are
+      //required, then the corresponding "else if" needs to be added.
+      if (thisColumn.getType() == java.sql.Types.CHAR ||
+          thisColumn.getType() == java.sql.Types.VARCHAR) {
+        pst.setString(++paramCount, thisColumn.getValue());
+      } else if (thisColumn.getType() == java.sql.Types.INTEGER) {
+        if ("saved_criteriaelement".equals(getTableName()) &&
+            "source".equals(paramName)) {
+          //TODO: source defaults to -1 and has constraint NOT NULL
+          pst.setInt(++paramCount,
+              StringUtils.hasText(thisColumn.getValue()) ?
+                  Integer.parseInt(thisColumn.getValue()) : -1);
+        } else {
+          DatabaseUtils.setInt(pst, ++paramCount,
+              StringUtils.hasText(thisColumn.getValue()) ?
+                  Integer.parseInt(thisColumn.getValue()) : -1);
+        }
+      } else if (thisColumn.getType() == java.sql.Types.DOUBLE) {
+        DatabaseUtils.setDouble(pst, ++paramCount,
+            StringUtils.hasText(thisColumn.getValue()) ?
+                Double.parseDouble(thisColumn.getValue()) : -1.0);
+      } else if (thisColumn.getType() == java.sql.Types.BOOLEAN ||
+          thisColumn.getType() == java.sql.Types.BIT) {
+        pst.setBoolean(++paramCount,
+            StringUtils.hasText(thisColumn.getValue()) ?
+                DatabaseUtils.parseBoolean(thisColumn.getValue()) : false);
+      } else if (thisColumn.getType() == java.sql.Types.TIMESTAMP) {
+        DatabaseUtils.setTimestamp(pst, ++paramCount,
+            StringUtils.hasText(thisColumn.getValue()) ?
+                DateUtils.parseTimestampString(thisColumn.getValue()) : null);
+      }
     }
     pst.execute();
     pst.close();
     if (this.getUniqueField() != null) {
-      id = DatabaseUtils.getCurrVal(
-          db, seqName + "_" + getUniqueField() + "_seq", id);
+      id = DatabaseUtils.getCurrVal(db, seqName, id);
     }
     return true;
+  }
+
+
+  /**
+   * Gets the sequenceName attribute of the CustomLookupElement object
+   *
+   * @param tableName   Description of the Parameter
+   * @param uniqueField Description of the Parameter
+   * @return The sequenceName value
+   */
+  private String getSequenceName(String tableName, String uniqueField) {
+    String seqName = null;
+    if ("module_field_categorylink".equals(tableName)) {
+      seqName = "module_field_categorylin" + "_" + uniqueField + "_seq";
+    } else if ("lookup_document_store_permission_category".equals(tableName)) {
+      seqName = "lookup_document_store_permission_category" + "_" + uniqueField + "_seq";
+    } else if ("lookup_document_store_role".equals(tableName)) {
+      seqName = "lookup_document_store_role" + "_" + uniqueField + "_seq";
+    } else if ("lookup_document_store_permission".equals(tableName)) {
+      seqName = "lookup_document_store_permission" + "_" + uniqueField + "_seq";
+    } else if ("document_store_permissions".equals(tableName)) {
+      seqName = "document_store_permissions" + "_" + uniqueField + "_seq";
+    } else if ("active_survey".equals(tableName)) {
+      seqName = "active_survey_ctive_survey" + "_seq";
+    } else if ("active_survey_answer_avg".equals(tableName)) {
+      seqName = "active_survey_nswer_avg_id" + "_seq";
+    } else if (tableName.length() > 22) {
+      seqName = tableName.substring(0, 22) + "_" + uniqueField + "_seq";
+    } else {
+      seqName = tableName + "_" + uniqueField + "_seq";
+    }
+    return seqName;
   }
 }
 

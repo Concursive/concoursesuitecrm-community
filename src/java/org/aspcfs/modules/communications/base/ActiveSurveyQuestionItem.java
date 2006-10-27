@@ -37,6 +37,38 @@ public class ActiveSurveyQuestionItem {
   private int type = -1;
   private int totalResponse = 0;
 
+  private boolean populateAvg = true;
+
+
+  /**
+   * Gets the populateAvg attribute of the ActiveSurveyQuestionItem object
+   *
+   * @return The populateAvg value
+   */
+  public boolean getPopulateAvg() {
+    return populateAvg;
+  }
+
+
+  /**
+   * Sets the populateAvg attribute of the ActiveSurveyQuestionItem object
+   *
+   * @param tmp The new populateAvg value
+   */
+  public void setPopulateAvg(boolean tmp) {
+    this.populateAvg = tmp;
+  }
+
+
+  /**
+   * Sets the populateAvg attribute of the ActiveSurveyQuestionItem object
+   *
+   * @param tmp The new populateAvg value
+   */
+  public void setPopulateAvg(String tmp) {
+    this.populateAvg = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    * Constructor for the ActiveSurveyQuestionItem object
@@ -64,6 +96,7 @@ public class ActiveSurveyQuestionItem {
    * @param db     Description of the Parameter
    * @param itemId Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestionItem(Connection db, int itemId) throws SQLException {
     if (itemId == -1) {
@@ -71,9 +104,9 @@ public class ActiveSurveyQuestionItem {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        "SELECT si.item_id, si.question_id, si." + DatabaseUtils.addQuotes(db, "type")+ ", si.description " +
-        "FROM active_survey_items si " +
-        "WHERE item_id = ? ");
+        "SELECT si.item_id, si.question_id, si." + DatabaseUtils.addQuotes(db, "type") + ", si.description " +
+            "FROM active_survey_items si " +
+            "WHERE item_id = ? ");
     int i = 0;
     pst.setInt(++i, itemId);
     ResultSet rs = pst.executeQuery();
@@ -89,6 +122,7 @@ public class ActiveSurveyQuestionItem {
    * Constructor for the ActiveSurveyQuestionItem object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestionItem(ResultSet rs) throws SQLException {
@@ -227,6 +261,17 @@ public class ActiveSurveyQuestionItem {
 
 
   /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void insert(Connection db) throws SQLException {
+    this.insert(db, this.questionId);
+  }
+
+
+  /**
    * Insert an item
    *
    * @param db  Description of the Parameter
@@ -243,8 +288,8 @@ public class ActiveSurveyQuestionItem {
       id = DatabaseUtils.getNextSeq(db, "active_survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey_items " +
-          "(" + (id > -1 ? "item_id, " : "") + "question_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description ) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
+              "(" + (id > -1 ? "item_id, " : "") + "question_id, " + DatabaseUtils.addQuotes(db, "type") + ", description ) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -255,22 +300,25 @@ public class ActiveSurveyQuestionItem {
       pst.close();
       this.setId(
           DatabaseUtils.getCurrVal(db, "active_survey_items_item_id_seq", id));
-      //populate the active_survey_answer_avg table with 0 count for items
-      i = 0;
-      int seqId = DatabaseUtils.getNextSeq(
-          db, "active_survey_answer_avg_id_seq");
-      pst = db.prepareStatement(
-          "INSERT INTO active_survey_answer_avg " +
-          "(" + (seqId > -1 ? "id, " : "") + "question_id, item_id, total ) " +
-          "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
-      if (seqId > -1) {
-        pst.setInt(++i, seqId);
+
+      if (populateAvg) {
+        //populate the active_survey_answer_avg table with 0 count for items
+        i = 0;
+        int seqId = DatabaseUtils.getNextSeq(
+            db, "active_survey_answer_avg_id_seq");
+        pst = db.prepareStatement(
+            "INSERT INTO active_survey_answer_avg " +
+                "(" + (seqId > -1 ? "id, " : "") + "question_id, item_id, total ) " +
+                "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
+        if (seqId > -1) {
+          pst.setInt(++i, seqId);
+        }
+        pst.setInt(++i, qid);
+        pst.setInt(++i, this.getId());
+        pst.setInt(++i, 0);
+        pst.execute();
+        pst.close();
       }
-      pst.setInt(++i, qid);
-      pst.setInt(++i, this.getId());
-      pst.setInt(++i, 0);
-      pst.execute();
-      pst.close();
       if (commit) {
         db.commit();
       }
@@ -299,8 +347,8 @@ public class ActiveSurveyQuestionItem {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE active_survey_items " +
-        "SET description = ? " +
-        "WHERE question_id = ? ");
+            "SET description = ? " +
+            "WHERE question_id = ? ");
     int i = 0;
     pst.setString(++i, description);
     pst.setInt(++i, qId);

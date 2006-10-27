@@ -50,11 +50,44 @@ public class SurveyQuestion {
   public HashMap errors = new HashMap();
   public HashMap warnings = new HashMap();
 
+  private boolean recordSurveyItems = true;
+
+
+  /**
+   * Gets the recordSurveyItems attribute of the SurveyQuestion object
+   *
+   * @return The recordSurveyItems value
+   */
+  public boolean getRecordSurveyItems() {
+    return recordSurveyItems;
+  }
+
+
+  /**
+   * Sets the recordSurveyItems attribute of the SurveyQuestion object
+   *
+   * @param tmp The new recordSurveyItems value
+   */
+  public void setRecordSurveyItems(boolean tmp) {
+    this.recordSurveyItems = tmp;
+  }
+
+
+  /**
+   * Sets the recordSurveyItems attribute of the SurveyQuestion object
+   *
+   * @param tmp The new recordSurveyItems value
+   */
+  public void setRecordSurveyItems(String tmp) {
+    this.recordSurveyItems = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    * Constructor for the SurveyQuestion object
    */
-  public SurveyQuestion() { }
+  public SurveyQuestion() {
+  }
 
 
   /**
@@ -77,6 +110,7 @@ public class SurveyQuestion {
    * Constructor for the SurveyQuestion object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
@@ -202,6 +236,16 @@ public class SurveyQuestion {
    */
   public void setPosition(int position) {
     this.position = position;
+  }
+
+
+  /**
+   * Sets the position attribute of the SurveyQuestion object
+   *
+   * @param tmp The new position value
+   */
+  public void setPosition(String tmp) {
+    this.position = Integer.parseInt(tmp);
   }
 
 
@@ -380,12 +424,27 @@ public class SurveyQuestion {
   /**
    * Description of the Method
    *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
+    return this.insert(db, this.surveyId);
+  }
+
+
+  /**
+   * Description of the Method
+   *
    * @param db       Description of the Parameter
    * @param surveyId Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, int surveyId) throws SQLException {
+    if (surveyId == -1) {
+      throw new SQLException("Survey ID not specified");
+    }
     boolean doCommit = db.getAutoCommit();
     try {
       if (doCommit) {
@@ -394,7 +453,7 @@ public class SurveyQuestion {
       int i = 0;
       //calculate the next position for this question
       PreparedStatement pst = db.prepareStatement(
-          "SELECT MAX(" + DatabaseUtils.addQuotes(db, "position")+ ") AS maxposition " +
+          "SELECT MAX(" + DatabaseUtils.addQuotes(db, "position") + ") AS maxposition " +
               "FROM survey_questions " +
               "WHERE survey_id = ? ");
       pst.setInt(++i, surveyId);
@@ -408,7 +467,7 @@ public class SurveyQuestion {
       id = DatabaseUtils.getNextSeq(db, "survey_question_question_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO survey_questions " +
-              "(" + (id > -1 ? "question_id, " : "") + "survey_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description, required, " + DatabaseUtils.addQuotes(db, "position")+ " ) " +
+              "(" + (id > -1 ? "question_id, " : "") + "survey_id, " + DatabaseUtils.addQuotes(db, "type") + ", description, required, " + DatabaseUtils.addQuotes(db, "position") + " ) " +
               "VALUES " +
               "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
       i = 0;
@@ -424,11 +483,13 @@ public class SurveyQuestion {
       pst.close();
       this.setId(
           DatabaseUtils.getCurrVal(db, "survey_question_question_id_seq", id));
-      if (this.getType() == ITEMLIST) {
-        Iterator y = this.getItemList().iterator();
-        while (y.hasNext()) {
-          Item thisItem = (Item) y.next();
-          thisItem.insert(db, this.getId());
+      if (recordSurveyItems) {
+        if (this.getType() == ITEMLIST) {
+          Iterator y = this.getItemList().iterator();
+          while (y.hasNext()) {
+            Item thisItem = (Item) y.next();
+            thisItem.insert(db, this.getId());
+          }
         }
       }
       if (doCommit) {
@@ -480,7 +541,7 @@ public class SurveyQuestion {
       ItemList.delete(db, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_questions " +
-              "SET survey_id = ?, " + DatabaseUtils.addQuotes(db, "type")+ " = ?, description = ?, required = ?, " + DatabaseUtils.addQuotes(db, "position")+ " = ? " +
+              "SET survey_id = ?, " + DatabaseUtils.addQuotes(db, "type") + " = ?, description = ?, required = ?, " + DatabaseUtils.addQuotes(db, "position") + " = ? " +
               "WHERE question_id = ? ");
       int i = 0;
       pst.setInt(++i, thisSurveyId);

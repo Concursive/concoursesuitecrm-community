@@ -68,8 +68,8 @@ public class ViewpointPermission extends GenericBean {
   public ViewpointPermission(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM viewpoint_permission vp " +
-        "WHERE vp.id = ? ");
+            "FROM viewpoint_permission vp " +
+            "WHERE vp.vp_permission_id = ? ");
     pst.setInt(1, thisId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -322,9 +322,9 @@ public class ViewpointPermission extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "viewpoint_per_vp_permission_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO viewpoint_permission (" +
-        (id > -1 ? "vp_permission_id, " : "") + "viewpoint_id, permission_id, viewpoint_view, " +
-        "viewpoint_add, viewpoint_edit, viewpoint_delete) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
+            (id > -1 ? "vp_permission_id, " : "") + "viewpoint_id, permission_id, viewpoint_view, " +
+            "viewpoint_add, viewpoint_edit, viewpoint_delete) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);

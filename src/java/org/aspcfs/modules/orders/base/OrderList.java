@@ -34,6 +34,12 @@ import java.util.Iterator;
  * @created March 18, 2004
  */
 public class OrderList extends ArrayList {
+  public final static String tableName = "order_entry";
+  public final static String uniqueField = "order_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int sourceId = -1;
@@ -43,6 +49,75 @@ public class OrderList extends ArrayList {
   private boolean buildResources = false;
   private int closedOnly = Constants.UNDEFINED;
   private boolean typeExists = false;
+
+  /**
+   * Sets the lastAnchor attribute of the OrderList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the OrderList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the OrderList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the OrderList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the OrderList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the OrderList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the OrderList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -329,11 +404,11 @@ public class OrderList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM order_entry oe " +
-        " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
-        " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
-        " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
-        " WHERE oe.order_id > -1 ");
+            " FROM order_entry oe " +
+            " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
+            " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
+            " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
+            " WHERE oe.order_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -373,14 +448,14 @@ public class OrderList extends ArrayList {
     }
     sqlSelect.append(
         "   oe.order_id, oe.parent_id, oe.org_id, oe.quote_id, oe.sales_id, oe.orderedby, oe.billing_contact_id, oe.source_id, " +
-        "   oe.grand_total, oe.status_id, oe.contract_date, oe.status_date, oe.expiration_date, oe.order_terms_id, oe.order_type_id, " +
-        "   oe.description, oe.notes, oe.entered, oe.enteredby, oe.modified, oe.modifiedby, oe.submitted, " +
-        "   org.name, ct_billing.namelast, ct_billing.namefirst, ct_billing.namemiddle " +
-        " FROM order_entry oe " +
-        " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
-        " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
-        " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
-        " WHERE oe.order_id > -1 ");
+            "   oe.grand_total, oe.status_id, oe.contract_date, oe.status_date, oe.expiration_date, oe.order_terms_id, oe.order_type_id, " +
+            "   oe.description, oe.notes, oe.entered, oe.enteredby, oe.modified, oe.modifiedby, oe.submitted, " +
+            "   org.name, ct_billing.namelast, ct_billing.namefirst, ct_billing.namemiddle " +
+            " FROM order_entry oe " +
+            " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
+            " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
+            " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
+            " WHERE oe.order_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -439,13 +514,24 @@ public class OrderList extends ArrayList {
     if (categoryId > -1) {
       sqlFilter.append(
           " AND oe.order_id IN (SELECT order_id " +
-          " FROM order_product " +
-          " WHERE product_id IN (SELECT product_id " +
-          " FROM product_catalog_category_map pccm " +
-          " WHERE pccm.category_id = ? )) ");
+              " FROM order_product " +
+              " WHERE product_id IN (SELECT product_id " +
+              " FROM product_catalog_category_map pccm " +
+              " WHERE pccm.category_id = ? )) ");
     }
     if (typeExists) {
       sqlFilter.append("AND oe.order_type_id IS NOT NULL ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -473,6 +559,17 @@ public class OrderList extends ArrayList {
     }
     if (categoryId > -1) {
       pst.setInt(++i, categoryId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

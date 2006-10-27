@@ -16,24 +16,23 @@
 package org.aspcfs.modules.assets.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.StringTokenizer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    October 19, 2005
- * @version    $Id$
+ * @author partha
+ * @version $Id$
+ * @created October 19, 2005
  */
 public class AssetMaterialList extends ArrayList {
 
@@ -45,18 +44,94 @@ public class AssetMaterialList extends ArrayList {
   private int qtyGT = Constants.UNDEFINED;
   private int qtyEquals = Constants.UNDEFINED;
 
+  public final static String tableName = "lookup_asset_materials";
+  public final static String uniqueField = "code";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
 
   /**
-   *  Constructor for the AssetMaterialList object
+   * Constructor for the AssetMaterialList object
    */
-  public AssetMaterialList() { }
+  public AssetMaterialList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the AssetMaterialList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Constructor for the AssetMaterialList object
+   * Sets the lastAnchor attribute of the AssetMaterialList object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the AssetMaterialList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the AssetMaterialList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the AssetMaterialList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the AssetMaterialList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the AssetMaterialList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Constructor for the AssetMaterialList object
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public AssetMaterialList(Connection db) throws SQLException {
     buildList(db);
@@ -64,10 +139,10 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -82,9 +157,9 @@ public class AssetMaterialList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM asset_materials_map amm " +
-        "LEFT JOIN lookup_asset_materials lam ON (amm.code = lam.code) " +
-        "WHERE map_id > -1 ");
+            "FROM asset_materials_map amm " +
+            "LEFT JOIN lookup_asset_materials lam ON (amm.code = lam.code) " +
+            "WHERE map_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -111,9 +186,9 @@ public class AssetMaterialList extends ArrayList {
     }
     sqlSelect.append(
         "amm.* " +
-        "FROM asset_materials_map amm " +
-        "LEFT JOIN lookup_asset_materials lam ON (amm.code = lam.code) " +
-        "WHERE map_id > -1 ");
+            "FROM asset_materials_map amm " +
+            "LEFT JOIN lookup_asset_materials lam ON (amm.code = lam.code) " +
+            "WHERE map_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -134,11 +209,11 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter         Description of the Parameter
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) throws SQLException {
     if (id > -1) {
@@ -160,15 +235,26 @@ public class AssetMaterialList extends ArrayList {
     } else if (qtyEquals == Constants.FALSE) {
       sqlFilter.append("AND amm.quantity <> ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -187,15 +273,26 @@ public class AssetMaterialList extends ArrayList {
     if (qtyEquals != Constants.UNDEFINED) {
       pst.setDouble(++i, quantity);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Gets the quantityMap attribute of the AssetMaterialList class
+   * Gets the quantityMap attribute of the AssetMaterialList class
    *
-   * @param  materials  Description of the Parameter
-   * @return            The quantityMap value
+   * @param materials Description of the Parameter
+   * @return The quantityMap value
    */
   public static HashMap getQuantityMap(String materials) {
     HashMap map = new HashMap();
@@ -213,9 +310,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the elements attribute of the AssetMaterialList object
+   * Sets the elements attribute of the AssetMaterialList object
    *
-   * @param  materials  The new elements value
+   * @param materials The new elements value
    */
   public void setElements(String materials) {
     StringTokenizer str = new StringTokenizer(materials, "|");
@@ -232,11 +329,11 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     Iterator iter = (Iterator) this.iterator();
@@ -250,9 +347,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the elementsDeletable attribute of the AssetMaterialList object
+   * Sets the elementsDeletable attribute of the AssetMaterialList object
    *
-   * @param  canDelete  The new elementsDeletable value
+   * @param canDelete The new elementsDeletable value
    */
   public void setElementsDeletable(boolean canDelete) {
     Iterator iter = (Iterator) this.iterator();
@@ -264,9 +361,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public HashMap createMapOfElements() {
     HashMap map = new HashMap();
@@ -280,10 +377,10 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void parseElements(Connection db) throws SQLException {
     Iterator iter = (Iterator) this.iterator();
@@ -301,9 +398,9 @@ public class AssetMaterialList extends ArrayList {
    *  Get and Set methods
    */
   /**
-   *  Gets the pagedListInfo attribute of the AssetMaterialList object
+   * Gets the pagedListInfo attribute of the AssetMaterialList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -311,9 +408,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the AssetMaterialList object
+   * Sets the pagedListInfo attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -321,9 +418,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the AssetMaterialList object
+   * Gets the id attribute of the AssetMaterialList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -331,9 +428,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the AssetMaterialList object
+   * Sets the id attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -341,9 +438,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the AssetMaterialList object
+   * Sets the id attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -351,9 +448,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Gets the assetId attribute of the AssetMaterialList object
+   * Gets the assetId attribute of the AssetMaterialList object
    *
-   * @return    The assetId value
+   * @return The assetId value
    */
   public int getAssetId() {
     return assetId;
@@ -361,9 +458,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the assetId attribute of the AssetMaterialList object
+   * Sets the assetId attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new assetId value
+   * @param tmp The new assetId value
    */
   public void setAssetId(int tmp) {
     this.assetId = tmp;
@@ -371,9 +468,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the assetId attribute of the AssetMaterialList object
+   * Sets the assetId attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new assetId value
+   * @param tmp The new assetId value
    */
   public void setAssetId(String tmp) {
     this.assetId = Integer.parseInt(tmp);
@@ -381,9 +478,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Gets the code attribute of the AssetMaterialList object
+   * Gets the code attribute of the AssetMaterialList object
    *
-   * @return    The code value
+   * @return The code value
    */
   public int getCode() {
     return code;
@@ -391,9 +488,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the code attribute of the AssetMaterialList object
+   * Sets the code attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new code value
+   * @param tmp The new code value
    */
   public void setCode(int tmp) {
     this.code = tmp;
@@ -401,9 +498,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the code attribute of the AssetMaterialList object
+   * Sets the code attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new code value
+   * @param tmp The new code value
    */
   public void setCode(String tmp) {
     this.code = Integer.parseInt(tmp);
@@ -411,9 +508,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Gets the quantity attribute of the AssetMaterialList object
+   * Gets the quantity attribute of the AssetMaterialList object
    *
-   * @return    The quantity value
+   * @return The quantity value
    */
   public double getQuantity() {
     return quantity;
@@ -421,9 +518,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the quantity attribute of the AssetMaterialList object
+   * Sets the quantity attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new quantity value
+   * @param tmp The new quantity value
    */
   public void setQuantity(double tmp) {
     this.quantity = tmp;
@@ -431,9 +528,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the quantity attribute of the AssetMaterialList object
+   * Sets the quantity attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new quantity value
+   * @param tmp The new quantity value
    */
   public void setQuantity(String tmp) {
     this.quantity = Double.parseDouble(tmp);
@@ -441,9 +538,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Gets the qtyGT attribute of the AssetMaterialList object
+   * Gets the qtyGT attribute of the AssetMaterialList object
    *
-   * @return    The qtyGT value
+   * @return The qtyGT value
    */
   public int getQtyGT() {
     return qtyGT;
@@ -451,9 +548,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the qtyGT attribute of the AssetMaterialList object
+   * Sets the qtyGT attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new qtyGT value
+   * @param tmp The new qtyGT value
    */
   public void setQtyGT(int tmp) {
     this.qtyGT = tmp;
@@ -461,9 +558,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the qtyGT attribute of the AssetMaterialList object
+   * Sets the qtyGT attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new qtyGT value
+   * @param tmp The new qtyGT value
    */
   public void setQtyGT(String tmp) {
     this.qtyGT = Integer.parseInt(tmp);
@@ -471,9 +568,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Gets the qtyEquals attribute of the AssetMaterialList object
+   * Gets the qtyEquals attribute of the AssetMaterialList object
    *
-   * @return    The qtyEquals value
+   * @return The qtyEquals value
    */
   public int getQtyEquals() {
     return qtyEquals;
@@ -481,9 +578,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the qtyEquals attribute of the AssetMaterialList object
+   * Sets the qtyEquals attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new qtyEquals value
+   * @param tmp The new qtyEquals value
    */
   public void setQtyEquals(int tmp) {
     this.qtyEquals = tmp;
@@ -491,9 +588,9 @@ public class AssetMaterialList extends ArrayList {
 
 
   /**
-   *  Sets the qtyEquals attribute of the AssetMaterialList object
+   * Sets the qtyEquals attribute of the AssetMaterialList object
    *
-   * @param  tmp  The new qtyEquals value
+   * @param tmp The new qtyEquals value
    */
   public void setQtyEquals(String tmp) {
     this.qtyEquals = Integer.parseInt(tmp);

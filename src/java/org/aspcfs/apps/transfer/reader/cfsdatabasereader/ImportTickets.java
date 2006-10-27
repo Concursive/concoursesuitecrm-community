@@ -17,9 +17,7 @@ package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryList;
-import org.aspcfs.modules.troubletickets.base.TicketList;
-import org.aspcfs.modules.troubletickets.base.TicketLogList;
+import org.aspcfs.modules.troubletickets.base.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -53,6 +51,19 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     this.mappings = mappings;
     boolean processOK = true;
 
+    logger.info("ImportTickets-> Inserting Ticket Lookups");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "ticketSeverity");
+    if (!processOK) {
+      return false;
+    }
+
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "ticketPriority");
+    if (!processOK) {
+      return false;
+    }
+
     TicketCategoryList categoryList = new TicketCategoryList();
     categoryList.setEnabledState(-1);
     categoryList.buildList(db);
@@ -72,15 +83,55 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
       return false;
     }
 
-    logger.info("ImportTickets-> Inserting Tickets");
+    logger.info("ImportTickets-> Inserting Tickets category drafts");
     writer.setAutoCommit(false);
-    TicketList ticList = new TicketList();
-    ticList.buildList(db);
-    mappings.saveList(writer, ticList, "insert");
+    TicketCategoryDraftList ticketCategoryDraftList = new TicketCategoryDraftList();
+    ticketCategoryDraftList.buildList(db, "ticket_category");
+    mappings.saveList(writer, ticketCategoryDraftList, "insert");
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
+
+    logger.info("ImportTickets-> Inserting Tickets category draft assignments");
+    writer.setAutoCommit(false);
+    TicketCategoryDraftAssignmentList ticketCategoryDraftAssgList = new TicketCategoryDraftAssignmentList();
+    ticketCategoryDraftAssgList.buildList(db);
+    mappings.saveList(writer, ticketCategoryDraftAssgList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportTickets-> Inserting Tickets category draft assignments");
+    writer.setAutoCommit(false);
+    TicketCategoryAssignmentList ticketCategoryAssignmentList = new TicketCategoryAssignmentList();
+    ticketCategoryAssignmentList.buildList(db);
+    mappings.saveList(writer, ticketCategoryAssignmentList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportTickets-> Inserting Tickets");
+    writer.setAutoCommit(false);
+    TicketList ticList = new TicketList();
+    ticList.buildList(db);
+    this.saveTicketList(db, ticList);
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    /*
+    * When a ticket is added, the count is automatically determined and added. So no
+    * need to process here
+    
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "projectTicketCount");
+    if (!processOK) {
+      return false;
+    }*/
 
     logger.info("ImportTickets-> Inserting Ticket Log");
     TicketLogList ticketLogList = new TicketLogList();
@@ -92,9 +143,97 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
       return false;
     }
 
+    logger.info("ImportTickets-> Inserting Ticket activity log");
+    TicketActivityLogList ticketActivityLogList = new TicketActivityLogList();
+    ticketActivityLogList.buildList(db);
+    mappings.saveList(writer, ticketActivityLogList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportTickets-> Inserting Ticket activity item");
+    TicketPerDayDescriptionList ticketPerDayDescriptionList = new TicketPerDayDescriptionList();
+    ticketPerDayDescriptionList.buildList(db);
+    mappings.saveList(writer, ticketPerDayDescriptionList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportTickets-> Inserting Ticket maintenance list");
+    TicketMaintenanceNoteList ticketMaintenanceNoteList = new TicketMaintenanceNoteList();
+    ticketMaintenanceNoteList.buildList(db);
+    mappings.saveList(writer, ticketMaintenanceNoteList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportTickets-> Inserting Ticket replacement part list");
+    TicketReplacementPartList ticketReplacementPartList = new TicketReplacementPartList();
+    ticketReplacementPartList.queryList(db, -1);
+    mappings.saveList(writer, ticketReplacementPartList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "ticketLinkProject");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportTickets-> Inserting Ticket defect list");
+    TicketDefectList ticketDefectList = new TicketDefectList();
+    ticketDefectList.buildList(db);
+    mappings.saveList(writer, ticketDefectList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
     writer.setAutoCommit(true);
     return true;
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db      Description of the Parameter
+   * @param ticList Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  private void saveTicketList(Connection db, TicketList ticList) throws SQLException {
+    Iterator tickets = ticList.iterator();
+    while (tickets.hasNext()) {
+      Ticket ticket = (Ticket) tickets.next();
+
+      DataRecord thisRecord = mappings.createDataRecord(ticket, "insert");
+      if (ticket.getCatCode() == 0) {
+        thisRecord.removeField("catCode");
+        thisRecord.addField("catCode", -1);
+      }
+
+      if (ticket.getSubCat1() == 0) {
+        thisRecord.removeField("subCat1");
+        thisRecord.addField("subCat1", -1);
+      }
+
+      if (ticket.getSubCat2() == 0) {
+        thisRecord.removeField("subCat2");
+        thisRecord.addField("subCat2", -1);
+      }
+
+      if (ticket.getSubCat3() == 0) {
+        thisRecord.removeField("subCat3");
+        thisRecord.addField("subCat3", -1);
+      }
+
+      writer.save(thisRecord);
+    }
+  }
 }
 

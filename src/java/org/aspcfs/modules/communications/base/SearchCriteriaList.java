@@ -24,7 +24,10 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.LookupList;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,6 +37,8 @@ import java.util.StringTokenizer;
 /**
  * SearchCriteriaList contains the definitions for querying a ContactList. For
  * example, "Contacts with a 23456 zip code" <p>
+ * <p/>
+ * <p/>
  * <p/>
  * Contains a group of criteria groups, that each contain criteria elements. A
  * group is a unique field that can have multiple criteria.
@@ -55,6 +60,7 @@ public class SearchCriteriaList extends HashMap {
   private int modifiedBy = -1;
   private int enteredBy = -1;
   private int owner = -1;
+  private boolean enabled = true;
   private String ownerIdRange = null;
   private String saveCriteria = "";
   private String htmlSelectIdName = null;
@@ -81,6 +87,7 @@ public class SearchCriteriaList extends HashMap {
    * Constructor for the SearchCriteriaList object
    *
    * @param rs data resultset from query
+   * @throws SQLException Description of the Exception
    * @throws SQLException SQL Exception
    */
   public SearchCriteriaList(ResultSet rs) throws SQLException {
@@ -93,6 +100,7 @@ public class SearchCriteriaList extends HashMap {
    *
    * @param db db connection
    * @param id unique id of this SCL
+   * @throws SQLException Description of the Exception
    * @throws SQLException SQL Exception
    */
   public SearchCriteriaList(Connection db, String id) throws SQLException {
@@ -105,6 +113,7 @@ public class SearchCriteriaList extends HashMap {
    *
    * @param db db connection
    * @param id unique id of this SCL
+   * @throws SQLException Description of the Exception
    * @throws SQLException SQL Exception
    */
   public SearchCriteriaList(Connection db, int id) throws SQLException {
@@ -222,6 +231,36 @@ public class SearchCriteriaList extends HashMap {
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
+  }
+
+
+  /**
+   * Gets the enabled attribute of the SearchCriteriaList object
+   *
+   * @return The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the SearchCriteriaList object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the SearchCriteriaList object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -390,9 +429,9 @@ public class SearchCriteriaList extends HashMap {
    *
    * @param tmp The new siteList value
    */
-   public void setSiteList(LookupList tmp) {
+  public void setSiteList(LookupList tmp) {
     this.siteList = tmp;
-   }
+  }
 
 
   /**
@@ -400,9 +439,9 @@ public class SearchCriteriaList extends HashMap {
    *
    * @return The siteList value
    */
-   public LookupList getSiteList() {
+  public LookupList getSiteList() {
     return siteList;
-   }
+  }
 
 
   /**
@@ -673,7 +712,7 @@ public class SearchCriteriaList extends HashMap {
             "Contact ID") && thisElt.getContactNameLast() != null) {
           valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameFirstLastOrCompany(
               thisElt.getContactNameLast(), thisElt.getContactNameFirst(), thisElt.getContactCompany());
-        } else if (thisGroup.getGroupField().getDescription().equals("Site")){
+        } else if (thisGroup.getGroupField().getDescription().equals("Site")) {
           String siteAsFieldValue = siteList.getValueFromId(Integer.parseInt(thisElt.getText()));
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + siteAsFieldValue + " [" + fromString + "]";
         } else {
@@ -700,9 +739,9 @@ public class SearchCriteriaList extends HashMap {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT scl.* " +
-        "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 " +
-        "AND scl.id = ?");
+            "FROM saved_criterialist scl " +
+            "WHERE scl.id > -1 " +
+            "AND scl.id = ?");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -723,12 +762,12 @@ public class SearchCriteriaList extends HashMap {
   public void buildResources(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT s.*, t.description as ctype, t2.description as atype, " +
-        "c.namefirst as cnamefirst, c.namelast as cnamelast, c.company as ccompany " +
-        "FROM saved_criteriaelement s " +
-        "LEFT JOIN lookup_contact_types t ON (s.value_id = t.code) " +
-        "LEFT JOIN lookup_account_types t2 ON (s.value_id = t2.code) " +
-        "LEFT JOIN contact c ON (s.value_id = c.contact_id) " +
-        "WHERE s.id = ? ");
+            "c.namefirst as cnamefirst, c.namelast as cnamelast, c.company as ccompany " +
+            "FROM saved_criteriaelement s " +
+            "LEFT JOIN lookup_contact_types t ON (s.value_id = t.code) " +
+            "LEFT JOIN lookup_account_types t2 ON (s.value_id = t2.code) " +
+            "LEFT JOIN contact c ON (s.value_id = c.contact_id) " +
+            "WHERE s.id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -891,8 +930,8 @@ public class SearchCriteriaList extends HashMap {
    * Update this object's record in the database
    *
    * @param db       db connection
-   * @param override true to update no matter what the last modified
-   *                 date is, false to check whether or not someone has updated this record
+   * @param override true to update no matter what the last modified date
+   *                 is, false to check whether or not someone has updated this record
    *                 first
    * @return int, how many records were successfully updated
    * @throws SQLException SQL Exception
@@ -906,12 +945,12 @@ public class SearchCriteriaList extends HashMap {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append("UPDATE saved_criterialist SET ");
-    if (override == false) {
+    if (!override) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append(
         "name = ?, contact_source = ?, owner = ? " +
-        "WHERE id = ? ");
+            "WHERE id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getGroupName());
@@ -956,9 +995,9 @@ public class SearchCriteriaList extends HashMap {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS group_count " +
-        "FROM campaign " +
-        "WHERE status_id <> " + Campaign.FINISHED + " " +
-        "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?)");
+            "FROM campaign " +
+            "WHERE status_id <> " + Campaign.FINISHED + " " +
+            "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?)");
     pst.setInt(++i, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -998,9 +1037,9 @@ public class SearchCriteriaList extends HashMap {
       inactiveCount = 0;
       pst = db.prepareStatement(
           "SELECT COUNT(*) AS group_count " +
-          "FROM campaign " +
-          "WHERE status_id <> ? " +
-          "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?) ");
+              "FROM campaign " +
+              "WHERE status_id <> ? " +
+              "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?) ");
       pst.setInt(1, Campaign.FINISHED);
       pst.setInt(2, this.getId());
       rs = pst.executeQuery();
@@ -1018,9 +1057,9 @@ public class SearchCriteriaList extends HashMap {
       int activeCount = 0;
       pst = db.prepareStatement(
           "SELECT COUNT(*) AS group_count " +
-          "FROM campaign " +
-          "WHERE " + DatabaseUtils.addQuotes(db, "active")+ " = ? " +
-          "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?) ");
+              "FROM campaign " +
+              "WHERE " + DatabaseUtils.addQuotes(db, "active") + " = ? " +
+              "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?) ");
       pst.setBoolean(1, true);
       pst.setInt(2, this.getId());
       rs = pst.executeQuery();
@@ -1034,9 +1073,9 @@ public class SearchCriteriaList extends HashMap {
       if (activeCount > 0) {
         pst = db.prepareStatement(
             "UPDATE saved_criterialist " +
-            "SET enabled = ? " +
-            "WHERE id = ? " +
-            "AND enabled = ? ");
+                "SET enabled = ? " +
+                "WHERE id = ? " +
+                "AND enabled = ? ");
         pst.setBoolean(1, false);
         pst.setInt(2, this.getId());
         pst.setBoolean(3, true);
@@ -1109,7 +1148,7 @@ public class SearchCriteriaList extends HashMap {
   protected boolean deleteGroups(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM saved_criteriaelement " +
-        "WHERE id = ?");
+            "WHERE id = ?");
     pst.setInt(1, id);
     pst.execute();
     pst.close();

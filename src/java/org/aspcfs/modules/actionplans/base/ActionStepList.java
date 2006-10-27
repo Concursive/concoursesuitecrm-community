@@ -16,25 +16,32 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    August 17, 2005
- * @version    $Id: ActionStepList.java,v 1.1.2.2 2005/08/19 03:32:06 ananth Exp
- *      $
+ * @author partha
+ * @version $Id: ActionStepList.java,v 1.1.2.2 2005/08/19 03:32:06 ananth Exp
+ *          $
+ * @created August 17, 2005
  */
 public class ActionStepList extends ArrayList {
-  //filters
+  public final static String tableName = "action_step";
+  public final static String uniqueField = "step_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
   private int parentId = -1;
@@ -48,16 +55,85 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Constructor for the ActionStepList object
+   * Constructor for the ActionStepList object
    */
-  public ActionStepList() { }
+  public ActionStepList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Description of the Method
+   * Sets the lastAnchor attribute of the ActionItemList object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -70,13 +146,13 @@ public class ActionStepList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM action_step astp " +
-        " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
-        " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
-        " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
-        " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role")+ " r ON (astp.role_id = r.role_id) " +
-        " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
-        " WHERE astp.step_id > -1 ");
+            " FROM action_step astp " +
+            " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
+            " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
+            " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
+            " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (astp.role_id = r.role_id) " +
+            " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
+            " WHERE astp.step_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -106,15 +182,15 @@ public class ActionStepList extends ArrayList {
     }
     sqlSelect.append(
         " astp.*, " +
-        " ldt.description AS duration, ug.group_name as groupname " +
-        " FROM action_step astp " +
-        " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
-        " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
-        " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
-        " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role")+ " r ON (astp.role_id = r.role_id) " +
-        " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
-        " LEFT JOIN user_group ug ON (astp.group_id = ug.group_id) " +
-        " WHERE astp.step_id > -1 ");
+            " ldt.description AS duration, ug.group_name as groupname " +
+            " FROM action_step astp " +
+            " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
+            " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
+            " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
+            " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (astp.role_id = r.role_id) " +
+            " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
+            " LEFT JOIN user_group ug ON (astp.group_id = ug.group_id) " +
+            " WHERE astp.step_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -136,10 +212,10 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -162,15 +238,26 @@ public class ActionStepList extends ArrayList {
     if (campaignId > -1) {
       sqlFilter.append("AND astp.campaign_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -189,16 +276,27 @@ public class ActionStepList extends ArrayList {
     if (campaignId > -1) {
       pst.setInt(++i, campaignId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean result = false;
@@ -212,9 +310,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the lastStepId attribute of the ActionStepList object
+   * Gets the lastStepId attribute of the ActionStepList object
    *
-   * @return    The lastStepId value
+   * @return The lastStepId value
    */
   public int getLastStepId() {
     int result = -1;
@@ -230,9 +328,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasUserGroupStep() {
     Iterator iterator = (Iterator) this.iterator();
@@ -247,10 +345,10 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void resetFolderInformation(Connection db) throws SQLException {
     Iterator iterator = (Iterator) this.iterator();
@@ -268,10 +366,10 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void resetCampaignInformation(Connection db) throws SQLException {
     Iterator iterator = (Iterator) this.iterator();
@@ -291,9 +389,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public ActionStepList reorder() {
     HashMap positionMap = this.getStepIdsAsHashMap();
@@ -313,10 +411,10 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  list  Description of the Parameter
-   * @return       Description of the Return Value
+   * @param list Description of the Parameter
+   * @return Description of the Return Value
    */
   public String printArray(ArrayList list) {
     StringBuffer str = new StringBuffer();
@@ -328,9 +426,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the stepIdsAsHashMap attribute of the ActionStepList object
+   * Gets the stepIdsAsHashMap attribute of the ActionStepList object
    *
-   * @return    The stepIdsAsHashMap value
+   * @return The stepIdsAsHashMap value
    */
   public HashMap getStepIdsAsHashMap() {
     HashMap map = new HashMap();
@@ -344,9 +442,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the stepsByParentAsHashMap attribute of the ActionStepList object
+   * Gets the stepsByParentAsHashMap attribute of the ActionStepList object
    *
-   * @return    The stepsByParentAsHashMap value
+   * @return The stepsByParentAsHashMap value
    */
   public HashMap getStepsByParentAsHashMap() {
     HashMap map = new HashMap();
@@ -360,9 +458,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the stepsAsHashMap attribute of the ActionStepList object
+   * Gets the stepsAsHashMap attribute of the ActionStepList object
    *
-   * @return    The stepsAsHashMap value
+   * @return The stepsAsHashMap value
    */
   public HashMap getStepsAsHashMap() {
     HashMap map = new HashMap();
@@ -376,9 +474,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the stepParentsAsHashMap attribute of the ActionStepList object
+   * Gets the stepParentsAsHashMap attribute of the ActionStepList object
    *
-   * @return    The stepParentsAsHashMap value
+   * @return The stepParentsAsHashMap value
    */
   public HashMap getStepParentsAsHashMap() {
     HashMap map = new HashMap();
@@ -392,10 +490,10 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the stepById attribute of the ActionStepList object
+   * Gets the stepById attribute of the ActionStepList object
    *
-   * @param  id  Description of the Parameter
-   * @return     The stepById value
+   * @param id Description of the Parameter
+   * @return The stepById value
    */
   public ActionStep getStepById(int id) {
     ActionStep result = null;
@@ -415,9 +513,9 @@ public class ActionStepList extends ArrayList {
    *  Get and Set methods
    */
   /**
-   *  Gets the pagedListInfo attribute of the ActionStepList object
+   * Gets the pagedListInfo attribute of the ActionStepList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -425,9 +523,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionStepList object
+   * Sets the pagedListInfo attribute of the ActionStepList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -435,9 +533,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the ActionStepList object
+   * Gets the id attribute of the ActionStepList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -445,9 +543,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActionStepList object
+   * Sets the id attribute of the ActionStepList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -455,9 +553,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActionStepList object
+   * Sets the id attribute of the ActionStepList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -465,9 +563,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the parentId attribute of the ActionStepList object
+   * Gets the parentId attribute of the ActionStepList object
    *
-   * @return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -475,9 +573,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the parentId attribute of the ActionStepList object
+   * Sets the parentId attribute of the ActionStepList object
    *
-   * @param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -485,9 +583,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the parentId attribute of the ActionStepList object
+   * Sets the parentId attribute of the ActionStepList object
    *
-   * @param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -495,9 +593,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the phaseId attribute of the ActionStepList object
+   * Gets the phaseId attribute of the ActionStepList object
    *
-   * @return    The phaseId value
+   * @return The phaseId value
    */
   public int getPhaseId() {
     return phaseId;
@@ -505,9 +603,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the phaseId attribute of the ActionStepList object
+   * Sets the phaseId attribute of the ActionStepList object
    *
-   * @param  tmp  The new phaseId value
+   * @param tmp The new phaseId value
    */
   public void setPhaseId(int tmp) {
     this.phaseId = tmp;
@@ -515,9 +613,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the phaseId attribute of the ActionStepList object
+   * Sets the phaseId attribute of the ActionStepList object
    *
-   * @param  tmp  The new phaseId value
+   * @param tmp The new phaseId value
    */
   public void setPhaseId(String tmp) {
     this.phaseId = Integer.parseInt(tmp);
@@ -525,9 +623,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the ActionStepList object
+   * Gets the enteredBy attribute of the ActionStepList object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -535,9 +633,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionStepList object
+   * Sets the enteredBy attribute of the ActionStepList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -545,9 +643,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionStepList object
+   * Sets the enteredBy attribute of the ActionStepList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -555,9 +653,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ActionStepList object
+   * Gets the modifiedBy attribute of the ActionStepList object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -565,9 +663,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionStepList object
+   * Sets the modifiedBy attribute of the ActionStepList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -575,9 +673,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionStepList object
+   * Sets the modifiedBy attribute of the ActionStepList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -585,9 +683,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the buildCompleteStepList attribute of the ActionStepList object
+   * Gets the buildCompleteStepList attribute of the ActionStepList object
    *
-   * @return    The buildCompleteStepList value
+   * @return The buildCompleteStepList value
    */
   public boolean getBuildCompleteStepList() {
     return buildCompleteStepList;
@@ -595,9 +693,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the buildCompleteStepList attribute of the ActionStepList object
+   * Sets the buildCompleteStepList attribute of the ActionStepList object
    *
-   * @param  tmp  The new buildCompleteStepList value
+   * @param tmp The new buildCompleteStepList value
    */
   public void setBuildCompleteStepList(boolean tmp) {
     this.buildCompleteStepList = tmp;
@@ -605,9 +703,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the buildCompleteStepList attribute of the ActionStepList object
+   * Sets the buildCompleteStepList attribute of the ActionStepList object
    *
-   * @param  tmp  The new buildCompleteStepList value
+   * @param tmp The new buildCompleteStepList value
    */
   public void setBuildCompleteStepList(String tmp) {
     this.buildCompleteStepList = DatabaseUtils.parseBoolean(tmp);
@@ -615,9 +713,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the categoryId attribute of the ActionStepList object
+   * Gets the categoryId attribute of the ActionStepList object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -625,9 +723,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the ActionStepList object
+   * Sets the categoryId attribute of the ActionStepList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -635,9 +733,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the ActionStepList object
+   * Sets the categoryId attribute of the ActionStepList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -645,9 +743,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Gets the campaignId attribute of the ActionStepList object
+   * Gets the campaignId attribute of the ActionStepList object
    *
-   * @return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -655,9 +753,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the campaignId attribute of the ActionStepList object
+   * Sets the campaignId attribute of the ActionStepList object
    *
-   * @param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -665,9 +763,9 @@ public class ActionStepList extends ArrayList {
 
 
   /**
-   *  Sets the campaignId attribute of the ActionStepList object
+   * Sets the campaignId attribute of the ActionStepList object
    *
-   * @param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);

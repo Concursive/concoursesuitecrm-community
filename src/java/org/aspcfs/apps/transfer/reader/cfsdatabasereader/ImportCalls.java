@@ -48,13 +48,35 @@ public class ImportCalls implements CFSDatabaseReaderImportModule {
     this.mappings = mappings;
     boolean processOK = true;
 
+    writer.setAutoCommit(true);
+    logger.info("ImportBaseData-> Inserting lookup_call_priority");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupCallPriority");
+    if (!processOK) {
+      return false;
+    }
+
+    writer.setAutoCommit(true);
+    logger.info("ImportBaseData-> Inserting lookup_call_reminder");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupCallReminder");
+    if (!processOK) {
+      return false;
+    }
+
+    writer.setAutoCommit(true);
+    logger.info("ImportBaseData-> Inserting lookup_call_result");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupCallResult");
+    if (!processOK) {
+      return false;
+    }
+
     logger.info("ImportCalls-> Inserting Calls");
     CallList callList = new CallList();
     callList.buildList(db);
-
     writer.setAutoCommit(false);
     mappings.saveList(writer, callList, "insert");
-
     processOK = writer.commit();
     if (!processOK) {
       return false;

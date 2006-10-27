@@ -1,0 +1,15 @@
+<data-import-config>
+  <description>
+    Copies records from CFS into an Excel generated CSV file
+  </description>
+  <reader class="org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReader">
+    <driver>@DRIVER@</driver>  
+    <url>@URL@</url>
+    <user>@USER@</user>
+    <password>@PASSWORD@</password>
+    <processConfigFile>@CONFIG.FILE@</processConfigFile>
+  </reader>
+  <writer class="org.aspcfs.apps.transfer.writer.CFSXMLWriter">
+    <filename>@FILENAME@</filename>
+  </writer>
+</data-import-config>

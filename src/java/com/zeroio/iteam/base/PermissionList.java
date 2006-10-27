@@ -36,6 +36,11 @@ import java.util.Iterator;
  */
 public class PermissionList extends HashMap {
 
+  public final static String tableName = "project_permissions";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   private int projectId = -1;
 
 
@@ -45,6 +50,73 @@ public class PermissionList extends HashMap {
   public PermissionList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the projectId attribute of the PermissionList object
@@ -66,8 +138,8 @@ public class PermissionList extends HashMap {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT lp.permission, p.userlevel " +
-        "FROM project_permissions p, lookup_project_permission lp " +
-        "WHERE p.permission_id = lp.code ");
+            "FROM project_permissions p, lookup_project_permission lp " +
+            "WHERE p.permission_id = lp.code ");
     createFilter(sql);
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
@@ -93,6 +165,17 @@ public class PermissionList extends HashMap {
     if (projectId > -1) {
       sqlFilter.append("AND project_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -107,6 +190,17 @@ public class PermissionList extends HashMap {
     int i = 0;
     if (projectId > -1) {
       pst.setInt(++i, projectId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }
@@ -157,7 +251,7 @@ public class PermissionList extends HashMap {
       //Delete the previous settings
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM project_permissions " +
-          "WHERE project_id = ? ");
+              "WHERE project_id = ? ");
       pst.setInt(1, projectId);
       pst.execute();
       pst.close();
@@ -169,8 +263,8 @@ public class PermissionList extends HashMap {
         int seqId = DatabaseUtils.getNextSeq(db, "project_permissions_id_seq");
         pst = db.prepareStatement(
             "INSERT INTO project_permissions (" +
-            (seqId > -1 ? "id, " : "") + "project_id, permission_id, userlevel) " +
-            "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?)");
+                (seqId > -1 ? "id, " : "") + "project_id, permission_id, userlevel) " +
+                "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?)");
         if (seqId > -1) {
           pst.setInt(++i, seqId);
         }
@@ -178,7 +272,7 @@ public class PermissionList extends HashMap {
         pst.setInt(++i, Integer.parseInt(permissionId));
         pst.setInt(
             ++i, Integer.parseInt(
-                request.getParameter("perm" + count + "level")));
+            request.getParameter("perm" + count + "level")));
         pst.execute();
       }
       pst.close();
@@ -201,7 +295,7 @@ public class PermissionList extends HashMap {
   public static void delete(Connection db, int projectId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM project_permissions " +
-        "WHERE project_id = ? ");
+            "WHERE project_id = ? ");
     pst.setInt(1, projectId);
     pst.execute();
     pst.close();
@@ -219,8 +313,8 @@ public class PermissionList extends HashMap {
     //Make sure no permissions exist, then insert
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS perm_count " +
-        "FROM project_permissions " +
-        "WHERE project_id = ? ");
+            "FROM project_permissions " +
+            "WHERE project_id = ? ");
     pst.setInt(1, projectId);
     ResultSet rs = pst.executeQuery();
     rs.next();
@@ -239,8 +333,8 @@ public class PermissionList extends HashMap {
         int seqId = DatabaseUtils.getNextSeq(db, "project_permissions_id_seq");
         pst = db.prepareStatement(
             "INSERT INTO project_permissions " +
-            "(" + (seqId > -1 ? "id, " : "") + "project_id, permission_id, userlevel) " +
-            "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
+                "(" + (seqId > -1 ? "id, " : "") + "project_id, permission_id, userlevel) " +
+                "VALUES (" + (seqId > -1 ? "?, " : "") + "?, ?, ?) ");
         if (seqId > -1) {
           pst.setInt(++i, seqId);
         }

@@ -17,9 +17,9 @@ package org.aspcfs.controller;
 
 import com.zeroio.iteam.scheduler.IndexerJob;
 import org.aspcfs.modules.admin.jobs.DeleteTrashJob;
+import org.aspcfs.modules.admin.jobs.LoggerJob;
 import org.aspcfs.modules.admin.jobs.NotifierJob;
 import org.aspcfs.modules.admin.jobs.UserCleanupJob;
-import org.aspcfs.modules.admin.jobs.LoggerJob;
 import org.aspcfs.modules.pipeline.jobs.ResetGraphDataJob;
 import org.aspcfs.modules.reports.jobs.ReportCleanupJob;
 import org.aspcfs.modules.reports.jobs.ReportRunnerJob;
@@ -165,6 +165,18 @@ public class ScheduledJobs {
           1L * 30L * 1000L);
       scheduler.scheduleJob(job, trigger);
     }
-		
+
+    // TODO: Allow admin to schedule this
+    /*
+    if (1 == 1) {
+      JobDetail job = new JobDetail(
+        "backupCentric", Scheduler.DEFAULT_GROUP, BackupCentricJob.class);
+      CronTrigger trigger = new CronTrigger(
+          "backupCentric",
+          Scheduler.DEFAULT_GROUP,
+          "0 0 22 * * ?");
+      scheduler.scheduleJob(job, trigger);
+    }
+    */
   }
 }

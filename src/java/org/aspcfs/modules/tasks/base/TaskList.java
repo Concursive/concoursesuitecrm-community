@@ -40,6 +40,11 @@ import java.util.TimeZone;
  * @created August 15, 2002
  */
 public class TaskList extends ArrayList implements UserCentric {
+  public final static String tableName = "task";
+  public final static String uniqueField = "task_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   protected int enteredBy = -1;
   protected PagedListInfo pagedListInfo = null;
   protected int owner = -1;
@@ -62,6 +67,75 @@ public class TaskList extends ArrayList implements UserCentric {
    * Constructor for the TaskList object
    */
   public TaskList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the TaskList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the TaskList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the TaskList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the TaskList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the TaskList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the TaskList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the TaskList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -539,7 +613,7 @@ public class TaskList extends ArrayList implements UserCentric {
     sqlSelect.append(
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
             "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
-            "t.estimatedloetype, t." + DatabaseUtils.addQuotes(db, "type")+ ", t.owner, t.completedate, t.modified, " +
+            "t.estimatedloetype, t." + DatabaseUtils.addQuotes(db, "type") + ", t.owner, t.completedate, t.modified, " +
             "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date, t.ticket_task_category_id " +
             "FROM task t " +
             "WHERE t.task_id > -1 ");
@@ -699,6 +773,17 @@ public class TaskList extends ArrayList implements UserCentric {
     } else {
       sqlFilter.append("AND t.trashed_date IS NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -756,6 +841,17 @@ public class TaskList extends ArrayList implements UserCentric {
     } else {
       // do nothing
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -773,7 +869,7 @@ public class TaskList extends ArrayList implements UserCentric {
     String sql =
         "SELECT count(*) as taskcount " +
             "FROM task " +
-            "WHERE owner = ? AND complete = ? AND trashed_date IS NULL " + 
+            "WHERE owner = ? AND complete = ? AND trashed_date IS NULL " +
             "AND task_id NOT IN (SELECT task_id FROM tasklink_project) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);

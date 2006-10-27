@@ -16,7 +16,6 @@
 package org.aspcfs.modules.pipeline.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
-
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 
@@ -26,11 +25,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Srini
- *@version
- *@created    February 1, 2006
+ * @author Srini
+ * @created February 1, 2006
  */
 public class OpportunityComponentLog extends GenericBean {
   protected int id = -1;
@@ -54,9 +52,469 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the OpportunityComponentLog object
+   * Gets the id attribute of the OpportunityComponentLog object
    *
-   *@return    The closed value
+   * @return The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   * Sets the id attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   * Sets the id attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the componentId attribute of the OpportunityComponentLog object
+   *
+   * @return The componentId value
+   */
+  public int getComponentId() {
+    return componentId;
+  }
+
+
+  /**
+   * Sets the componentId attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new componentId value
+   */
+  public void setComponentId(int tmp) {
+    this.componentId = tmp;
+  }
+
+
+  /**
+   * Sets the componentId attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new componentId value
+   */
+  public void setComponentId(String tmp) {
+    this.componentId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the headerId attribute of the OpportunityComponentLog object
+   *
+   * @return The headerId value
+   */
+  public int getHeaderId() {
+    return headerId;
+  }
+
+
+  /**
+   * Sets the headerId attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new headerId value
+   */
+  public void setHeaderId(int tmp) {
+    this.headerId = tmp;
+  }
+
+
+  /**
+   * Sets the headerId attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new headerId value
+   */
+  public void setHeaderId(String tmp) {
+    this.headerId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the description attribute of the OpportunityComponentLog object
+   *
+   * @return The description value
+   */
+  public String getDescription() {
+    return description;
+  }
+
+
+  /**
+   * Sets the description attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new description value
+   */
+  public void setDescription(String tmp) {
+    this.description = tmp;
+  }
+
+
+  /**
+   * Gets the closeProb attribute of the OpportunityComponentLog object
+   *
+   * @return The closeProb value
+   */
+  public double getCloseProb() {
+    return closeProb;
+  }
+
+
+  /**
+   * Sets the closeProb attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new closeProb value
+   */
+  public void setCloseProb(double tmp) {
+    this.closeProb = tmp;
+  }
+
+
+  /**
+   * Sets the closeProb attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new closeProb value
+   */
+  public void setCloseProb(String tmp) {
+    this.closeProb = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   * Gets the closeDate attribute of the OpportunityComponentLog object
+   *
+   * @return The closeDate value
+   */
+  public java.sql.Timestamp getCloseDate() {
+    return closeDate;
+  }
+
+
+  /**
+   * Sets the closeDate attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new closeDate value
+   */
+  public void setCloseDate(java.sql.Timestamp tmp) {
+    this.closeDate = tmp;
+  }
+
+
+  /**
+   * Sets the closeDate attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new closeDate value
+   */
+  public void setCloseDate(String tmp) {
+    this.closeDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the terms attribute of the OpportunityComponentLog object
+   *
+   * @return The terms value
+   */
+  public double getTerms() {
+    return terms;
+  }
+
+
+  /**
+   * Sets the terms attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new terms value
+   */
+  public void setTerms(double tmp) {
+    this.terms = tmp;
+  }
+
+
+  /**
+   * Sets the terms attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new terms value
+   */
+  public void setTerms(String tmp) {
+    this.terms = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   * Gets the units attribute of the OpportunityComponentLog object
+   *
+   * @return The units value
+   */
+  public String getUnits() {
+    return units;
+  }
+
+
+  /**
+   * Sets the units attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new units value
+   */
+  public void setUnits(String tmp) {
+    this.units = tmp;
+  }
+
+
+  /**
+   * Gets the low attribute of the OpportunityComponentLog object
+   *
+   * @return The low value
+   */
+  public double getLow() {
+    return low;
+  }
+
+
+  /**
+   * Sets the low attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new low value
+   */
+  public void setLow(double tmp) {
+    this.low = tmp;
+  }
+
+
+  /**
+   * Sets the low attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new low value
+   */
+  public void setLow(String tmp) {
+    this.low = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   * Gets the guess attribute of the OpportunityComponentLog object
+   *
+   * @return The guess value
+   */
+  public double getGuess() {
+    return guess;
+  }
+
+
+  /**
+   * Sets the guess attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new guess value
+   */
+  public void setGuess(double tmp) {
+    this.guess = tmp;
+  }
+
+
+  /**
+   * Sets the guess attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new guess value
+   */
+  public void setGuess(String tmp) {
+    this.guess = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   * Gets the high attribute of the OpportunityComponentLog object
+   *
+   * @return The high value
+   */
+  public double getHigh() {
+    return high;
+  }
+
+
+  /**
+   * Sets the high attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new high value
+   */
+  public void setHigh(double tmp) {
+    this.high = tmp;
+  }
+
+
+  /**
+   * Sets the high attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new high value
+   */
+  public void setHigh(String tmp) {
+    this.high = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   * Gets the stage attribute of the OpportunityComponentLog object
+   *
+   * @return The stage value
+   */
+  public int getStage() {
+    return stage;
+  }
+
+
+  /**
+   * Sets the stage attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new stage value
+   */
+  public void setStage(int tmp) {
+    this.stage = tmp;
+  }
+
+
+  /**
+   * Sets the stage attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new stage value
+   */
+  public void setStage(String tmp) {
+    this.stage = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the stageName attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new stageName value
+   */
+  public void setStageName(String tmp) {
+    this.stageName = tmp;
+  }
+
+
+  /**
+   * Gets the owner attribute of the OpportunityComponentLog object
+   *
+   * @return The owner value
+   */
+  public int getOwner() {
+    return owner;
+  }
+
+
+  /**
+   * Sets the owner attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new owner value
+   */
+  public void setOwner(int tmp) {
+    this.owner = tmp;
+  }
+
+
+  /**
+   * Sets the owner attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new owner value
+   */
+  public void setOwner(String tmp) {
+    this.owner = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the entered attribute of the OpportunityComponentLog object
+   *
+   * @return The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   * Sets the entered attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   * Sets the entered attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Gets the enteredBy attribute of the OpportunityComponentLog object
+   *
+   * @return The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   * Sets the enteredBy attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   * Sets the enteredBy attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the closeDateTimeZone attribute of the OpportunityComponentLog object
+   *
+   * @return The closeDateTimeZone value
+   */
+  public String getCloseDateTimeZone() {
+    return closeDateTimeZone;
+  }
+
+
+  /**
+   * Sets the closeDateTimeZone attribute of the OpportunityComponentLog object
+   *
+   * @param tmp The new closeDateTimeZone value
+   */
+  public void setCloseDateTimeZone(String tmp) {
+    this.closeDateTimeZone = tmp;
+  }
+
+
+  /**
+   * Gets the closed attribute of the OpportunityComponentLog object
+   *
+   * @return The closed value
    */
   public java.sql.Timestamp getClosed() {
     return closed;
@@ -64,9 +522,9 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the OpportunityComponentLog object
+   * Sets the closed attribute of the OpportunityComponentLog object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(java.sql.Timestamp tmp) {
     this.closed = tmp;
@@ -74,30 +532,29 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the OpportunityComponentLog object
+   * Sets the closed attribute of the OpportunityComponentLog object
    *
-   *@param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(String tmp) {
     this.closed = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
-
-
   /**
-   *  Constructor for the OpportunityComponentLog object
+   * Constructor for the OpportunityComponentLog object
    */
-  public OpportunityComponentLog() { }
+  public OpportunityComponentLog() {
+  }
 
 
   /**
-   *  Constructor for the OpportunityComponent object
+   * Constructor for the OpportunityComponent object
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of the Exception
-   *@throws  SQLException     Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public OpportunityComponentLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -105,13 +562,13 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Constructor for the OpportunityComponentLog object
+   * Constructor for the OpportunityComponentLog object
    *
-   *@param  db                Description of Parameter
-   *@param  id                Description of Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of the Exception
-   *@throws  SQLException     Description of Exception
+   * @param db Description of Parameter
+   * @param id Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public OpportunityComponentLog(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -119,13 +576,13 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Constructor for the OpportunityComponentLog object
+   * Constructor for the OpportunityComponentLog object
    *
-   *@param  db                Description of Parameter
-   *@param  id                Description of Parameter
-   *@exception  SQLException  Description of the Exception
-   *@throws  SQLException     Description of the Exception
-   *@throws  SQLException     Description of Exception
+   * @param db Description of Parameter
+   * @param id Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public OpportunityComponentLog(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -133,9 +590,9 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *@param  oppComp
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param oppComp
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public OpportunityComponentLog(Connection db, OpportunityComponent oppComp) throws SQLException {
     //Reload the opportunity to gets its current values
@@ -162,233 +619,9 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *@return    Returns the closeDate.
-   */
-  public java.sql.Timestamp getCloseDate() {
-    return closeDate;
-  }
-
-
-  /**
-   *@param  closeDate  The closeDate to set.
-   */
-  public void setCloseDate(java.sql.Timestamp closeDate) {
-    this.closeDate = closeDate;
-  }
-
-
-  /**
-   *@return    Returns the closeDateTimeZone.
-   */
-  public String getCloseDateTimeZone() {
-    return closeDateTimeZone;
-  }
-
-
-  /**
-   *@param  closeDateTimeZone  The closeDateTimeZone to set.
-   */
-  public void setCloseDateTimeZone(String closeDateTimeZone) {
-    this.closeDateTimeZone = closeDateTimeZone;
-  }
-
-
-  /**
-   *@return    Returns the closeProb.
-   */
-  public double getCloseProb() {
-    return closeProb;
-  }
-
-
-  /**
-   *@param  closeProb  The closeProb to set.
-   */
-  public void setCloseProb(double closeProb) {
-    this.closeProb = closeProb;
-  }
-
-
-  /**
-   *@return    Returns the componentId.
-   */
-  public int getComponentId() {
-    return componentId;
-  }
-
-
-  /**
-   *@param  componentId  The componentId to set.
-   */
-  public void setComponentId(int componentId) {
-    this.componentId = componentId;
-  }
-
-
-  /**
-   *@return    Returns the description.
-   */
-  public String getDescription() {
-    return description;
-  }
-
-
-  /**
-   *@param  description  The description to set.
-   */
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-
-  /**
-   *@return    Returns the entered.
-   */
-  public java.sql.Timestamp getEntered() {
-    return entered;
-  }
-
-
-  /**
-   *@param  entered  The entered to set.
-   */
-  public void setEntered(java.sql.Timestamp entered) {
-    this.entered = entered;
-  }
-
-
-  /**
-   *@return    Returns the enteredBy.
-   */
-  public int getEnteredBy() {
-    return enteredBy;
-  }
-
-
-  /**
-   *@param  enteredBy  The enteredBy to set.
-   */
-  public void setEnteredBy(int enteredBy) {
-    this.enteredBy = enteredBy;
-  }
-
-
-  /**
-   *@return    Returns the guess.
-   */
-  public double getGuess() {
-    return guess;
-  }
-
-
-  /**
-   *@param  guess  The guess to set.
-   */
-  public void setGuess(double guess) {
-    this.guess = guess;
-  }
-
-
-  /**
-   *@return    Returns the headerId.
-   */
-  public int getHeaderId() {
-    return headerId;
-  }
-
-
-  /**
-   *@param  headerId  The headerId to set.
-   */
-  public void setHeaderId(int headerId) {
-    this.headerId = headerId;
-  }
-
-
-  /**
-   *@return    Returns the high.
-   */
-  public double getHigh() {
-    return high;
-  }
-
-
-  /**
-   *@param  high  The high to set.
-   */
-  public void setHigh(double high) {
-    this.high = high;
-  }
-
-
-  /**
-   *@return    Returns the id.
-   */
-  public int getId() {
-    return id;
-  }
-
-
-  /**
-   *@param  id  The id to set.
-   */
-  public void setId(int id) {
-    this.id = id;
-  }
-
-
-  /**
-   *@return    Returns the low.
-   */
-  public double getLow() {
-    return low;
-  }
-
-
-  /**
-   *@param  low  The low to set.
-   */
-  public void setLow(double low) {
-    this.low = low;
-  }
-
-
-  /**
-   *@return    Returns the owner.
-   */
-  public int getOwner() {
-    return owner;
-  }
-
-
-  /**
-   *@param  owner  The owner to set.
-   */
-  public void setOwner(int owner) {
-    this.owner = owner;
-  }
-
-
-  /**
-   *@return    Returns the stage.
-   */
-  public int getStage() {
-    return stage;
-  }
-
-
-  /**
-   *@param  stage  The stage to set.
-   */
-  public void setStage(int stage) {
-    this.stage = stage;
-  }
-
-
-  /**
-   *  Gets the stageName attribute of the OpportunityComponentLog object
+   * Gets the stageName attribute of the OpportunityComponentLog object
    *
-   *@return    The stageName value
+   * @return The stageName value
    */
   public String getStageName() {
     if (this.getClosed() != null) {
@@ -400,53 +633,9 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Sets the stageName attribute of the OpportunityComponentLog object
+   * Gets the closeProbValue attribute of the Opportunity object
    *
-   *@param  stageName  The new stageName value
-   */
-  public void setStageName(String stageName) {
-    this.stageName = stageName;
-  }
-
-
-  /**
-   *@return    Returns the terms.
-   */
-  public double getTerms() {
-    return terms;
-  }
-
-
-  /**
-   *@param  terms  The terms to set.
-   */
-  public void setTerms(double terms) {
-    this.terms = terms;
-  }
-
-
-  /**
-   *  Gets the units attribute of the OpportunityComponentLog object
-   *
-   *@return    The units value
-   */
-  public String getUnits() {
-    return units;
-  }
-
-
-  /**
-   *  Sets the units attribute of the OpportunityComponentLog object
-   */
-  public void setUnits() {
-    this.units = units;
-  }
-
-
-  /**
-   *  Gets the closeProbValue attribute of the Opportunity object
-   *
-   *@return    The closeProbValue value
+   * @return The closeProbValue value
    */
   public String getCloseProbValue() {
     double value_2dp = (double) Math.round(closeProb * 100.0 * 100.0) / 100.0;
@@ -459,13 +648,12 @@ public class OpportunityComponentLog extends GenericBean {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -473,10 +661,10 @@ public class OpportunityComponentLog extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT ocl.*, " +
-        "y.description as stagename " +
-        "FROM opportunity_component_log ocl " +
-        "LEFT JOIN lookup_stage y ON (ocl.stage = y.code ) " +
-        "WHERE id = ? ");
+            "y.description as stagename " +
+            "FROM opportunity_component_log ocl " +
+            "LEFT JOIN lookup_stage y ON (ocl.stage = y.code ) " +
+            "WHERE id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -491,11 +679,11 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Inserts this object into the database, and populates this Id.
+   * Inserts this object into the database, and populates this Id.
    *
-   *@param  db             Description of Parameter
-   *@return                Description of the Returned Value
-   *@throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (this.getHeaderId() == -1) {
@@ -504,16 +692,16 @@ public class OpportunityComponentLog extends GenericBean {
     }
     boolean doCommit = false;
     try {
-      if ((doCommit = db.getAutoCommit()) == true) {
+      if (doCommit = db.getAutoCommit()) {
         db.setAutoCommit(false);
       }
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "opportunity_component_log_id_seq");
 
       sql.append("INSERT INTO opportunity_component_log "
-           + "(component_id, header_id, description, closeprob, closedate, "
-           + " terms, units, lowvalue, guessvalue, highvalue, stage, owner, "
-           + " closedate_timezone, ");
+          + "(component_id, header_id, description, closeprob, closedate, "
+          + " terms, units, lowvalue, guessvalue, highvalue, stage, owner, "
+          + " closedate_timezone, ");
       if (id > -1) {
         sql.append("id, ");
       }
@@ -586,10 +774,10 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // opportunity component log table

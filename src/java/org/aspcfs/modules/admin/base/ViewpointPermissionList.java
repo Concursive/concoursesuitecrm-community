@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -112,9 +113,9 @@ public class ViewpointPermissionList extends HashMap {
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT p.*, c.category, viewpoint_add, viewpoint_view, viewpoint_edit, viewpoint_delete " +
-        "FROM permission p, permission_category c, viewpoint_permission v " +
-        "WHERE p.category_id = c.category_id " +
-        "AND p.permission_id = v.permission_id ");
+            "FROM permission p, permission_category c, viewpoint_permission v " +
+            "WHERE p.category_id = c.category_id " +
+            "AND p.permission_id = v.permission_id ");
     sqlOrder.append("ORDER BY v.viewpoint_id, c." + DatabaseUtils.addQuotes(db, "level") + ", p." + DatabaseUtils.addQuotes(db, "level") + " ");
     createFilter(sqlFilter);
     pst = db.prepareStatement(
@@ -203,6 +204,30 @@ public class ViewpointPermissionList extends HashMap {
       }
     }
     return false;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public static ArrayList recordList(Connection db) throws SQLException {
+    ArrayList records = new ArrayList();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+            "FROM viewpoint_permission vp " +
+            "WHERE vp.vp_permission_id > -1 ");
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      ViewpointPermission thisPermission = new ViewpointPermission(rs);
+      records.add(thisPermission);
+    }
+    rs.close();
+    pst.close();
+    return records;
   }
 }
 

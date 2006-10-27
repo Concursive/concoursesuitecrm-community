@@ -35,6 +35,12 @@ import java.util.Iterator;
  */
 public class IssueCategoryList extends ArrayList {
 
+  public final static String tableName = "project_issues_categories";
+  public final static String uniqueField = "category_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private Project project = null;
   private int projectId = -1;
@@ -47,6 +53,73 @@ public class IssueCategoryList extends ArrayList {
   public IssueCategoryList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the pagedListInfo attribute of the IssueCategoryList object
@@ -115,14 +188,14 @@ public class IssueCategoryList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
-        "FROM project_issues_categories c " +
-        "WHERE c.category_id > 0 ");
+            "FROM project_issues_categories c " +
+            "WHERE c.category_id > 0 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -145,8 +218,8 @@ public class IssueCategoryList extends ArrayList {
     }
     sqlSelect.append(
         "c.* " +
-        "FROM project_issues_categories c " +
-        "WHERE c.category_id > 0 ");
+            "FROM project_issues_categories c " +
+            "WHERE c.category_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -160,7 +233,9 @@ public class IssueCategoryList extends ArrayList {
     while (rs.next()) {
       IssueCategory thisCategory = new IssueCategory(rs);
       thisCategory.setProject(project);
-      thisCategory.setProjectId(projectId);
+      if (projectId > -1) {
+        thisCategory.setProjectId(projectId);
+      }
       this.add(thisCategory);
     }
     rs.close();
@@ -196,6 +271,17 @@ public class IssueCategoryList extends ArrayList {
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append("AND c.enabled = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND c.entered > ? ");
+      }
+      sqlFilter.append("AND c.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND c.modified > ? ");
+      sqlFilter.append("AND c.entered < ? ");
+      sqlFilter.append("AND c.modified < ? ");
+    }
   }
 
 
@@ -213,6 +299,17 @@ public class IssueCategoryList extends ArrayList {
     }
     if (enabled != Constants.UNDEFINED) {
       pst.setBoolean(++i, enabled == Constants.TRUE);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

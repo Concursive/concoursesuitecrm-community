@@ -51,6 +51,36 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
+   * Gets the enabled attribute of the SearchCriteriaListList object
+   *
+   * @return The enabled value
+   */
+  public int getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the SearchCriteriaListList object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(int tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the SearchCriteriaListList object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Constructor for the SearchCriteriaListList object
    */
   public SearchCriteriaListList() {
@@ -256,14 +286,14 @@ public class SearchCriteriaListList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 ");
+            "FROM saved_criterialist scl " +
+            "WHERE scl.id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -276,8 +306,8 @@ public class SearchCriteriaListList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(name) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -302,8 +332,8 @@ public class SearchCriteriaListList extends ArrayList {
     }
     sqlSelect.append(
         "scl.* " +
-        "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 ");
+            "FROM saved_criterialist scl " +
+            "WHERE scl.id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -354,6 +384,17 @@ public class SearchCriteriaListList extends ArrayList {
       sqlFilter.append(
           "AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = ?) ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -377,6 +418,18 @@ public class SearchCriteriaListList extends ArrayList {
     if (campaignId != -1) {
       pst.setInt(++i, campaignId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
+
     return i;
   }
 

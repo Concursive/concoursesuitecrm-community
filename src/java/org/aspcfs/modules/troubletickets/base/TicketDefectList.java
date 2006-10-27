@@ -16,23 +16,23 @@
 package org.aspcfs.modules.troubletickets.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    October 4, 2005
- * @version    $Id: TicketDefectList.java,v 1.1.4.1 2005/10/14 21:12:41
- *      mrajkowski Exp $
+ * @author partha
+ * @version $Id: TicketDefectList.java,v 1.1.4.1 2005/10/14 21:12:41
+ *          mrajkowski Exp $
+ * @created October 4, 2005
  */
 public class TicketDefectList extends ArrayList {
   //fields
@@ -50,18 +50,93 @@ public class TicketDefectList extends ArrayList {
   protected int enabledOnly = Constants.UNDEFINED;
   protected int includeIfUsed = -1;
 
+  public final static String tableName = "ticket_defect";
+  public final static String uniqueField = "defect_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
 
   /**
-   *  Constructor for the TicketDefectList object
+   * Constructor for the TicketDefectList object
    */
-  public TicketDefectList() { }
+  public TicketDefectList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the TicketDefectList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Description of the Method
+   * Sets the lastAnchor attribute of the TicketDefectList object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the TicketDefectList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the TicketDefectList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the TicketDefectList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the TicketDefectList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the TicketDefectList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -74,8 +149,8 @@ public class TicketDefectList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM ticket_defect td " +
-        " WHERE td.defect_id > -1 ");
+            " FROM ticket_defect td " +
+            " WHERE td.defect_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -93,8 +168,8 @@ public class TicketDefectList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(td.title) < ?  ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(td.title) < ?  ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -119,9 +194,9 @@ public class TicketDefectList extends ArrayList {
     }
     sqlSelect.append(
         " td.* , ls.description AS sitename " +
-        " FROM ticket_defect td " +
-        " LEFT JOIN lookup_site_id ls ON (td.site_id = ls.code) " +
-        " WHERE td.defect_id > -1 ");
+            " FROM ticket_defect td " +
+            " LEFT JOIN lookup_site_id ls ON (td.site_id = ls.code) " +
+            " WHERE td.defect_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -153,10 +228,10 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -202,16 +277,26 @@ public class TicketDefectList extends ArrayList {
         sqlFilter.append("AND site_id IS NULL ");
       }
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -235,14 +320,25 @@ public class TicketDefectList extends ArrayList {
     if (!includeAllSites && siteId != -1) {
       pst.setInt(++i, siteId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Gets the hashMap attribute of the TicketDefectList object
+   * Gets the hashMap attribute of the TicketDefectList object
    *
-   * @return    The hashMap value
+   * @return The hashMap value
    */
   public HashMap getHashMap() {
     HashMap map = new HashMap();
@@ -256,10 +352,10 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelectObj attribute of the TicketDefectList object
+   * Gets the htmlSelectObj attribute of the TicketDefectList object
    *
-   * @param  selectedKey  Description of the Parameter
-   * @return              The htmlSelectObj value
+   * @param selectedKey Description of the Parameter
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj(int selectedKey) {
     HtmlSelect defectListSelect = new HtmlSelect();
@@ -278,11 +374,11 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     Iterator iter = this.iterator();
@@ -299,9 +395,9 @@ public class TicketDefectList extends ArrayList {
    *  Get and Set methods
    */
   /**
-   *  Gets the pagedListInfo attribute of the TicketDefectList object
+   * Gets the pagedListInfo attribute of the TicketDefectList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -309,9 +405,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TicketDefectList object
+   * Sets the pagedListInfo attribute of the TicketDefectList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -319,9 +415,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the TicketDefectList object
+   * Gets the id attribute of the TicketDefectList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -329,9 +425,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketDefectList object
+   * Sets the id attribute of the TicketDefectList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -339,9 +435,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketDefectList object
+   * Sets the id attribute of the TicketDefectList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -349,9 +445,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the title attribute of the TicketDefectList object
+   * Gets the title attribute of the TicketDefectList object
    *
-   * @return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -359,9 +455,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the title attribute of the TicketDefectList object
+   * Sets the title attribute of the TicketDefectList object
    *
-   * @param  tmp  The new title value
+   * @param tmp The new title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -369,9 +465,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the description attribute of the TicketDefectList object
+   * Gets the description attribute of the TicketDefectList object
    *
-   * @return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -379,9 +475,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the description attribute of the TicketDefectList object
+   * Sets the description attribute of the TicketDefectList object
    *
-   * @param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -389,9 +485,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the trashedDate attribute of the TicketDefectList object
+   * Gets the trashedDate attribute of the TicketDefectList object
    *
-   * @return    The trashedDate value
+   * @return The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -399,9 +495,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the trashedDate attribute of the TicketDefectList object
+   * Sets the trashedDate attribute of the TicketDefectList object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -409,9 +505,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the trashedDate attribute of the TicketDefectList object
+   * Sets the trashedDate attribute of the TicketDefectList object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -419,9 +515,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the includeOnlyTrashed attribute of the TicketDefectList object
+   * Gets the includeOnlyTrashed attribute of the TicketDefectList object
    *
-   * @return    The includeOnlyTrashed value
+   * @return The includeOnlyTrashed value
    */
   public int getIncludeOnlyTrashed() {
     return includeOnlyTrashed;
@@ -429,9 +525,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the includeOnlyTrashed attribute of the TicketDefectList object
+   * Sets the includeOnlyTrashed attribute of the TicketDefectList object
    *
-   * @param  tmp  The new includeOnlyTrashed value
+   * @param tmp The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(int tmp) {
     this.includeOnlyTrashed = tmp;
@@ -439,9 +535,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the includeOnlyTrashed attribute of the TicketDefectList object
+   * Sets the includeOnlyTrashed attribute of the TicketDefectList object
    *
-   * @param  tmp  The new includeOnlyTrashed value
+   * @param tmp The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(String tmp) {
     this.includeOnlyTrashed = Integer.parseInt(tmp);
@@ -449,9 +545,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the TicketDefectList object
+   * Sets the siteId attribute of the TicketDefectList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -459,9 +555,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the TicketDefectList object
+   * Sets the siteId attribute of the TicketDefectList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -469,9 +565,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the TicketDefectList object
+   * Gets the siteId attribute of the TicketDefectList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -479,9 +575,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the buildTickets attribute of the TicketDefectList object
+   * Gets the buildTickets attribute of the TicketDefectList object
    *
-   * @return    The buildTickets value
+   * @return The buildTickets value
    */
   public boolean getBuildTickets() {
     return buildTickets;
@@ -489,9 +585,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the buildTickets attribute of the TicketDefectList object
+   * Sets the buildTickets attribute of the TicketDefectList object
    *
-   * @param  tmp  The new buildTickets value
+   * @param tmp The new buildTickets value
    */
   public void setBuildTickets(boolean tmp) {
     this.buildTickets = tmp;
@@ -499,9 +595,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the buildTickets attribute of the TicketDefectList object
+   * Sets the buildTickets attribute of the TicketDefectList object
    *
-   * @param  tmp  The new buildTickets value
+   * @param tmp The new buildTickets value
    */
   public void setBuildTickets(String tmp) {
     this.buildTickets = DatabaseUtils.parseBoolean(tmp);
@@ -509,9 +605,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the enabledOnly attribute of the TicketDefectList object
+   * Gets the enabledOnly attribute of the TicketDefectList object
    *
-   * @return    The enabledOnly value
+   * @return The enabledOnly value
    */
   public int getEnabledOnly() {
     return enabledOnly;
@@ -519,9 +615,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the enabledOnly attribute of the TicketDefectList object
+   * Sets the enabledOnly attribute of the TicketDefectList object
    *
-   * @param  tmp  The new enabledOnly value
+   * @param tmp The new enabledOnly value
    */
   public void setEnabledOnly(int tmp) {
     this.enabledOnly = tmp;
@@ -529,9 +625,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the enabledOnly attribute of the TicketDefectList object
+   * Sets the enabledOnly attribute of the TicketDefectList object
    *
-   * @param  tmp  The new enabledOnly value
+   * @param tmp The new enabledOnly value
    */
   public void setEnabledOnly(String tmp) {
     this.enabledOnly = Integer.parseInt(tmp);
@@ -539,9 +635,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the includeIfUsed attribute of the TicketDefectList object
+   * Gets the includeIfUsed attribute of the TicketDefectList object
    *
-   * @return    The includeIfUsed value
+   * @return The includeIfUsed value
    */
   public int getIncludeIfUsed() {
     return includeIfUsed;
@@ -549,9 +645,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the includeIfUsed attribute of the TicketDefectList object
+   * Sets the includeIfUsed attribute of the TicketDefectList object
    *
-   * @param  tmp  The new includeIfUsed value
+   * @param tmp The new includeIfUsed value
    */
   public void setIncludeIfUsed(int tmp) {
     this.includeIfUsed = tmp;
@@ -559,9 +655,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the includeIfUsed attribute of the TicketDefectList object
+   * Sets the includeIfUsed attribute of the TicketDefectList object
    *
-   * @param  tmp  The new includeIfUsed value
+   * @param tmp The new includeIfUsed value
    */
   public void setIncludeIfUsed(String tmp) {
     this.includeIfUsed = Integer.parseInt(tmp);
@@ -569,9 +665,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the includeAllSites attribute of the TicketDefectList object
+   * Gets the includeAllSites attribute of the TicketDefectList object
    *
-   * @return    The includeAllSites value
+   * @return The includeAllSites value
    */
   public boolean getIncludeAllSites() {
     return includeAllSites;
@@ -579,9 +675,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the TicketDefectList object
+   * Sets the includeAllSites attribute of the TicketDefectList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(boolean tmp) {
     this.includeAllSites = tmp;
@@ -589,9 +685,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the TicketDefectList object
+   * Sets the includeAllSites attribute of the TicketDefectList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(String tmp) {
     this.includeAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -599,9 +695,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the TicketDefectList object
+   * Gets the exclusiveToSite attribute of the TicketDefectList object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -609,9 +705,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the TicketDefectList object
+   * Sets the exclusiveToSite attribute of the TicketDefectList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -619,9 +715,9 @@ public class TicketDefectList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the TicketDefectList object
+   * Sets the exclusiveToSite attribute of the TicketDefectList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);

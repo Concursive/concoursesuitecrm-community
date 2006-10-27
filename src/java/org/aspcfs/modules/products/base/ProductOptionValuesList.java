@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.products.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -34,11 +35,86 @@ import java.util.Iterator;
  */
 public class ProductOptionValuesList extends ArrayList {
   //filters
+  public final static String tableName = "product_option_values";
+  public final static String uniqueField = "value_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
   private int optionId = -1;
   private int resultId = -1;
   private int productId = -1;
+
+  /**
+   * Sets the lastAnchor attribute of the ProductOptionValuesList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ProductOptionValuesList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ProductOptionValuesList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ProductOptionValuesList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ProductOptionValuesList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ProductOptionValuesList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ProductOptionValuesList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -207,8 +283,8 @@ public class ProductOptionValuesList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_option_values poptvalues " +
-        "WHERE poptvalues.value_id > 0 ");
+            "FROM product_option_values poptvalues " +
+            "WHERE poptvalues.value_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -232,8 +308,8 @@ public class ProductOptionValuesList extends ArrayList {
     }
     sqlSelect.append(
         "poptvalues.* " +
-        "FROM product_option_values poptvalues " +
-        "WHERE poptvalues.value_id > 0 ");
+            "FROM product_option_values poptvalues " +
+            "WHERE poptvalues.value_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -285,6 +361,17 @@ public class ProductOptionValuesList extends ArrayList {
     if (resultId > -1) {
       sqlFilter.append("AND poptvalues.result_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -305,6 +392,17 @@ public class ProductOptionValuesList extends ArrayList {
     }
     if (resultId > -1) {
       pst.setInt(++i, resultId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

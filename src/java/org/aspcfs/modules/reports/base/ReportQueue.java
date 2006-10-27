@@ -66,6 +66,7 @@ public class ReportQueue extends GenericBean {
    *
    * @param rs Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public ReportQueue(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -77,6 +78,7 @@ public class ReportQueue extends GenericBean {
    *
    * @param db      Description of the Parameter
    * @param queueId Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ReportQueue(Connection db, int queueId) throws SQLException {
@@ -90,6 +92,7 @@ public class ReportQueue extends GenericBean {
    * @param db             Description of the Parameter
    * @param queueId        Description of the Parameter
    * @param throwException Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ReportQueue(Connection db, int queueId, boolean throwException) throws SQLException {
@@ -108,8 +111,8 @@ public class ReportQueue extends GenericBean {
   public void queryRecord(Connection db, int queueId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT q.* " +
-        "FROM report_queue q " +
-        "WHERE queue_id = ? ");
+            "FROM report_queue q " +
+            "WHERE queue_id = ? ");
     pst.setInt(1, queueId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -473,6 +476,36 @@ public class ReportQueue extends GenericBean {
 
 
   /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void insert(Connection db) throws SQLException {
+    id = DatabaseUtils.getNextSeq(db, "report_queue_queue_id_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO report_queue " +
+            "(" + (id > -1 ? "queue_id, " : "") + "report_id, entered, enteredby, processed, status, filename, filesize, enabled) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?) ");
+    int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setInt(++i, reportId);
+    pst.setTimestamp(++i, entered);
+    pst.setInt(++i, enteredBy);
+    pst.setTimestamp(++i, processed);
+    DatabaseUtils.setInt(pst, ++i, status);
+    pst.setString(++i, filename);
+    DatabaseUtils.setLong(pst, ++i, size);
+    pst.setBoolean(++i, enabled);
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "report_queue_queue_id_seq", id);
+  }
+
+
+  /**
    * Based on Criteria that has been set, this methods makes a copy and stores
    * the settings for running the specified report
    *
@@ -488,8 +521,8 @@ public class ReportQueue extends GenericBean {
       int id = DatabaseUtils.getNextSeq(db, "report_queue_queue_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO report_queue " +
-          "(" + (id > -1 ? "queue_id, " : "") + "report_id, enteredby) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
+              "(" + (id > -1 ? "queue_id, " : "") + "report_id, enteredby) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
       int i = 0;
       if (id > -1) {
         pst.setInt(++i, id);
@@ -504,8 +537,8 @@ public class ReportQueue extends GenericBean {
           db, "report_queue_criteria_criteria_id_seq");
       pst = db.prepareStatement(
           "INSERT INTO report_queue_criteria " +
-          "(" + (rqcId > -1 ? "criteria_id, " : "") + "queue_id, " + DatabaseUtils.addQuotes(db, "parameter")+ ", " + DatabaseUtils.addQuotes(db, "value")+ ") " +
-          "VALUES (" + (rqcId > -1 ? "?, " : "") + "?, ?, ?) ");
+              "(" + (rqcId > -1 ? "criteria_id, " : "") + "queue_id, " + DatabaseUtils.addQuotes(db, "parameter") + ", " + DatabaseUtils.addQuotes(db, "value") + ") " +
+              "VALUES (" + (rqcId > -1 ? "?, " : "") + "?, ?, ?) ");
       Iterator params = criteria.getParameters().iterator();
       while (params.hasNext()) {
         Parameter param = (Parameter) params.next();
@@ -525,9 +558,9 @@ public class ReportQueue extends GenericBean {
       pst.close();
       //Get the total number of reports pending
       pst = db.prepareStatement(
-          "SELECT count(*) AS " + DatabaseUtils.addQuotes(db, "position")+ " " +
-          "FROM report_queue " +
-          "WHERE processed IS NULL ");
+          "SELECT count(*) AS " + DatabaseUtils.addQuotes(db, "position") + " " +
+              "FROM report_queue " +
+              "WHERE processed IS NULL ");
       ResultSet rs = pst.executeQuery();
       rs.next();
       int position = rs.getInt("position");
@@ -566,11 +599,11 @@ public class ReportQueue extends GenericBean {
   public boolean updateStatus(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE report_queue " +
-        "SET status = ?, " +
-        (filename != null ? "filename = ?, " : "") +
-        "filesize = ?, " +
-        "processed = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
-        "WHERE queue_id = ? ");
+            "SET status = ?, " +
+            (filename != null ? "filename = ?, " : "") +
+            "filesize = ?, " +
+            "processed = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "WHERE queue_id = ? ");
     int i = 0;
     pst.setInt(++i, status);
     if (filename != null) {
@@ -613,14 +646,14 @@ public class ReportQueue extends GenericBean {
       //Delete the criteria
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM report_queue_criteria " +
-          "WHERE queue_id = ? ");
+              "WHERE queue_id = ? ");
       pst.setInt(1, id);
       pst.execute();
       pst.close();
       //Delete the queue info
       pst = db.prepareStatement(
           "DELETE FROM report_queue " +
-          "WHERE queue_id = ? ");
+              "WHERE queue_id = ? ");
       pst.setInt(1, id);
       pst.execute();
       pst.close();

@@ -90,7 +90,8 @@ public class Task extends GenericBean {
   /**
    * Description of the Method
    */
-  public Task() { }
+  public Task() {
+  }
 
 
   /**
@@ -98,6 +99,7 @@ public class Task extends GenericBean {
    *
    * @param db     Description of the Parameter
    * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
@@ -134,9 +136,40 @@ public class Task extends GenericBean {
    * @param rs Description of the Parameter
    * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public Task(ResultSet rs) throws SQLException {
     buildRecord(rs);
+  }
+
+
+  /**
+   * Sets the completeDate attribute of the Task object
+   *
+   * @param tmp The new completeDate value
+   */
+  public void setCompleteDate(String tmp) {
+    this.completeDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the reminderId attribute of the Task object
+   *
+   * @param tmp The new reminderId value
+   */
+  public void setReminderId(int tmp) {
+    this.reminderId = tmp;
+  }
+
+
+  /**
+   * Sets the reminderId attribute of the Task object
+   *
+   * @param tmp The new reminderId value
+   */
+  public void setReminderId(String tmp) {
+    this.reminderId = Integer.parseInt(tmp);
   }
 
 
@@ -1256,7 +1289,7 @@ public class Task extends GenericBean {
           (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, " +
           "category_id = ?, trashed_date = ?, ticket_task_category_id = ? " +
-          "WHERE task_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
+          "WHERE task_id = ? AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? ");
       int i = 0;
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getModifiedBy());
@@ -1283,7 +1316,7 @@ public class Task extends GenericBean {
       DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
       DatabaseUtils.setInt(pst, ++i, this.getTicketTaskCategoryId());
       pst.setInt(++i, id);
-      if(this.getModified() != null){
+      if (this.getModified() != null) {
         pst.setTimestamp(++i, this.getModified());
       }
       count = pst.executeUpdate();
@@ -1380,7 +1413,7 @@ public class Task extends GenericBean {
         thisDependency.setCanDelete(true);
         dependencyList.add(thisDependency);
       }
-    */
+     */
     return dependencyList;
   }
 

@@ -16,23 +16,25 @@
 package org.aspcfs.modules.troubletickets.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.*;
-import java.text.DateFormat;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    October 6, 2005
- * @version    $Id: KnowledgeBaseList.java,v 1.1.4.1 2005/10/14 21:12:41
- *      mrajkowski Exp $
+ * @author partha
+ * @version $Id: KnowledgeBaseList.java,v 1.1.4.1 2005/10/14 21:12:41
+ *          mrajkowski Exp $
+ * @created October 6, 2005
  */
 public class KnowledgeBaseList extends ArrayList {
   //fields
@@ -45,6 +47,13 @@ public class KnowledgeBaseList extends ArrayList {
   protected int siteId = -1;
   protected boolean exclusiveToSite = false;
 
+  public final static String tableName = "knowledge_base";
+  public final static String uniqueField = "kb_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
+
   //related records
   protected boolean buildResources = false;
 
@@ -56,16 +65,86 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Constructor for the KnowledgeBaseList object
+   * Constructor for the KnowledgeBaseList object
    */
-  public KnowledgeBaseList() { }
+  public KnowledgeBaseList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the KnowledgeBaseList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Description of the Method
+   * Sets the lastAnchor attribute of the KnowledgeBaseList object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the KnowledgeBaseList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the KnowledgeBaseList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the KnowledgeBaseList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the KnowledgeBaseList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the KnowledgeBaseList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -78,9 +157,9 @@ public class KnowledgeBaseList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM knowledge_base kb " +
-        " LEFT JOIN ticket_category tc ON (kb.category_id = tc.id) " +
-        " WHERE kb.kb_id > -1 ");
+            " FROM knowledge_base kb " +
+            " LEFT JOIN ticket_category tc ON (kb.category_id = tc.id) " +
+            " WHERE kb.kb_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -98,8 +177,8 @@ public class KnowledgeBaseList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(kb.title) < ?  ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(kb.title) < ?  ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -124,9 +203,9 @@ public class KnowledgeBaseList extends ArrayList {
     }
     sqlSelect.append(
         " kb.* " +
-        " FROM knowledge_base kb " +
-        " LEFT JOIN ticket_category tc ON (kb.category_id = tc.id) " +
-        " WHERE kb.kb_id > -1 ");
+            " FROM knowledge_base kb " +
+            " LEFT JOIN ticket_category tc ON (kb.category_id = tc.id) " +
+            " WHERE kb.kb_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -157,10 +236,10 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -199,15 +278,27 @@ public class KnowledgeBaseList extends ArrayList {
     } else {
       sqlFilter.append("AND tc.site_id IS NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
+
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -229,14 +320,26 @@ public class KnowledgeBaseList extends ArrayList {
     if (siteId > -1) {
       pst.setInt(++i, siteId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
+
     return i;
   }
 
 
   /**
-   *  Gets the hashMap attribute of the KnowledgeBaseList object
+   * Gets the hashMap attribute of the KnowledgeBaseList object
    *
-   * @return    The hashMap value
+   * @return The hashMap value
    */
   public HashMap getHashMap() {
     HashMap map = new HashMap();
@@ -250,10 +353,10 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelectObj attribute of the KnowledgeBaseList object
+   * Gets the htmlSelectObj attribute of the KnowledgeBaseList object
    *
-   * @param  selectedKey  Description of the Parameter
-   * @return              The htmlSelectObj value
+   * @param selectedKey Description of the Parameter
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj(int selectedKey) {
     HtmlSelect kbListSelect = new HtmlSelect();
@@ -267,12 +370,12 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  baseFilePath      Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param baseFilePath Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
     Iterator iter = this.iterator();
@@ -286,9 +389,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the KnowledgeBaseList object
+   * Gets the pagedListInfo attribute of the KnowledgeBaseList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -296,9 +399,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the KnowledgeBaseList object
+   * Sets the pagedListInfo attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -306,9 +409,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the KnowledgeBaseList object
+   * Gets the id attribute of the KnowledgeBaseList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -316,9 +419,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the KnowledgeBaseList object
+   * Sets the id attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -326,9 +429,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the KnowledgeBaseList object
+   * Sets the id attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -336,9 +439,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the categoryId attribute of the KnowledgeBaseList object
+   * Gets the categoryId attribute of the KnowledgeBaseList object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -346,9 +449,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the KnowledgeBaseList object
+   * Sets the categoryId attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -356,9 +459,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the KnowledgeBaseList object
+   * Sets the categoryId attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -366,9 +469,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the title attribute of the KnowledgeBaseList object
+   * Gets the title attribute of the KnowledgeBaseList object
    *
-   * @return    The title value
+   * @return The title value
    */
   public String getTitle() {
     return title;
@@ -376,9 +479,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the title attribute of the KnowledgeBaseList object
+   * Sets the title attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new title value
+   * @param tmp The new title value
    */
   public void setTitle(String tmp) {
     this.title = tmp;
@@ -386,9 +489,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the description attribute of the KnowledgeBaseList object
+   * Gets the description attribute of the KnowledgeBaseList object
    *
-   * @return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -396,9 +499,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the description attribute of the KnowledgeBaseList object
+   * Sets the description attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -406,9 +509,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the itemId attribute of the KnowledgeBaseList object
+   * Gets the itemId attribute of the KnowledgeBaseList object
    *
-   * @return    The itemId value
+   * @return The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -416,9 +519,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the itemId attribute of the KnowledgeBaseList object
+   * Sets the itemId attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -426,9 +529,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the itemId attribute of the KnowledgeBaseList object
+   * Sets the itemId attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new itemId value
+   * @param tmp The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -436,9 +539,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the buildResources attribute of the KnowledgeBaseList object
+   * Gets the buildResources attribute of the KnowledgeBaseList object
    *
-   * @return    The buildResources value
+   * @return The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -446,9 +549,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the KnowledgeBaseList object
+   * Sets the buildResources attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -456,9 +559,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the KnowledgeBaseList object
+   * Sets the buildResources attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -466,9 +569,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the catCode attribute of the KnowledgeBaseList object
+   * Gets the catCode attribute of the KnowledgeBaseList object
    *
-   * @return    The catCode value
+   * @return The catCode value
    */
   public int getCatCode() {
     return catCode;
@@ -476,9 +579,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the catCode attribute of the KnowledgeBaseList object
+   * Sets the catCode attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new catCode value
+   * @param tmp The new catCode value
    */
   public void setCatCode(int tmp) {
     this.catCode = tmp;
@@ -486,9 +589,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the catCode attribute of the KnowledgeBaseList object
+   * Sets the catCode attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new catCode value
+   * @param tmp The new catCode value
    */
   public void setCatCode(String tmp) {
     this.catCode = Integer.parseInt(tmp);
@@ -496,9 +599,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the subCat1 attribute of the KnowledgeBaseList object
+   * Gets the subCat1 attribute of the KnowledgeBaseList object
    *
-   * @return    The subCat1 value
+   * @return The subCat1 value
    */
   public int getSubCat1() {
     return subCat1;
@@ -506,9 +609,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the subCat1 attribute of the KnowledgeBaseList object
+   * Sets the subCat1 attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new subCat1 value
+   * @param tmp The new subCat1 value
    */
   public void setSubCat1(int tmp) {
     this.subCat1 = tmp;
@@ -516,9 +619,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the subCat1 attribute of the KnowledgeBaseList object
+   * Sets the subCat1 attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new subCat1 value
+   * @param tmp The new subCat1 value
    */
   public void setSubCat1(String tmp) {
     this.subCat1 = Integer.parseInt(tmp);
@@ -526,9 +629,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the subCat2 attribute of the KnowledgeBaseList object
+   * Gets the subCat2 attribute of the KnowledgeBaseList object
    *
-   * @return    The subCat2 value
+   * @return The subCat2 value
    */
   public int getSubCat2() {
     return subCat2;
@@ -536,9 +639,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the subCat2 attribute of the KnowledgeBaseList object
+   * Sets the subCat2 attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new subCat2 value
+   * @param tmp The new subCat2 value
    */
   public void setSubCat2(int tmp) {
     this.subCat2 = tmp;
@@ -546,9 +649,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the subCat2 attribute of the KnowledgeBaseList object
+   * Sets the subCat2 attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new subCat2 value
+   * @param tmp The new subCat2 value
    */
   public void setSubCat2(String tmp) {
     this.subCat2 = Integer.parseInt(tmp);
@@ -556,9 +659,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the subCat3 attribute of the KnowledgeBaseList object
+   * Gets the subCat3 attribute of the KnowledgeBaseList object
    *
-   * @return    The subCat3 value
+   * @return The subCat3 value
    */
   public int getSubCat3() {
     return subCat3;
@@ -566,9 +669,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the subCat3 attribute of the KnowledgeBaseList object
+   * Sets the subCat3 attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new subCat3 value
+   * @param tmp The new subCat3 value
    */
   public void setSubCat3(int tmp) {
     this.subCat3 = tmp;
@@ -576,9 +679,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the subCat3 attribute of the KnowledgeBaseList object
+   * Sets the subCat3 attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new subCat3 value
+   * @param tmp The new subCat3 value
    */
   public void setSubCat3(String tmp) {
     this.subCat3 = Integer.parseInt(tmp);
@@ -586,9 +689,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the KnowledgeBaseList object
+   * Gets the siteId attribute of the KnowledgeBaseList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -596,9 +699,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the KnowledgeBaseList object
+   * Sets the siteId attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -606,9 +709,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the KnowledgeBaseList object
+   * Sets the siteId attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -616,9 +719,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the KnowledgeBaseList object
+   * Gets the exclusiveToSite attribute of the KnowledgeBaseList object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -626,9 +729,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the KnowledgeBaseList object
+   * Sets the exclusiveToSite attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -636,9 +739,9 @@ public class KnowledgeBaseList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the KnowledgeBaseList object
+   * Sets the exclusiveToSite attribute of the KnowledgeBaseList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);

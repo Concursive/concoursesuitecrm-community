@@ -46,6 +46,16 @@ public class SurveyAnswer {
 
 
   /**
+   * Sets the responseId attribute of the SurveyAnswer object
+   *
+   * @param tmp The new responseId value
+   */
+  public void setResponseId(String tmp) {
+    this.responseId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    * Constructor for the SurveyAnswer object
    */
   public SurveyAnswer() {
@@ -56,6 +66,7 @@ public class SurveyAnswer {
    * Constructor for the SurveyAnswer object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public SurveyAnswer(ResultSet rs) throws SQLException {
@@ -69,6 +80,7 @@ public class SurveyAnswer {
    * @param db       Description of the Parameter
    * @param passedId Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public SurveyAnswer(Connection db, int passedId) throws SQLException {
     if (passedId < 1) {
@@ -79,8 +91,8 @@ public class SurveyAnswer {
     ResultSet rs = null;
     String sql =
         "SELECT * " +
-        "FROM active_survey_answers s " +
-        "WHERE answer_id = ? ";
+            "FROM active_survey_answers s " +
+            "WHERE answer_id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, passedId);
     rs = pst.executeQuery();
@@ -378,8 +390,8 @@ public class SurveyAnswer {
     try {
       PreparedStatement pst = db.prepareStatement(
           "SELECT * " +
-          "FROM active_survey_answer_items t " +
-          "WHERE t.answer_id = ? ");
+              "FROM active_survey_answer_items t " +
+              "WHERE t.answer_id = ? ");
       pst.setInt(1, thisAnswerId);
       ResultSet rs = pst.executeQuery();
       while (rs.next()) {
@@ -416,8 +428,8 @@ public class SurveyAnswer {
     try {
       PreparedStatement pst = db.prepareStatement(
           "SELECT sr.contact_id as contactid " +
-          "FROM active_survey_answers sa, active_survey_responses sr " +
-          "WHERE sa.answer_id = ? AND (sa.response_id = sr.response_id) ");
+              "FROM active_survey_answers sa, active_survey_responses sr " +
+              "WHERE sa.answer_id = ? AND (sa.response_id = sr.response_id) ");
       pst.setInt(1, this.getId());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -434,17 +446,30 @@ public class SurveyAnswer {
   /**
    * Description of the Method
    *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
+    return insert(db, this.responseId);
+  }
+
+
+  /**
+   * Description of the Method
+   *
    * @param db         Description of the Parameter
    * @param responseId Description of the Parameter
+   * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db, int responseId) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "active_survey_ans_answer_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO active_survey_answers " +
-        "(" + (id > -1 ? "answer_id, " : "") + "response_id, question_id, comments, quant_ans, text_ans) " +
-        "VALUES " +
-        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+            "(" + (id > -1 ? "answer_id, " : "") + "response_id, question_id, comments, quant_ans, text_ans) " +
+            "VALUES " +
+            "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -504,8 +529,8 @@ public class SurveyAnswer {
     ResultSet rs = null;
     String sql =
         "SELECT avg(quant_ans) as av " +
-        "FROM active_survey_answers s " +
-        "WHERE question_id = ? AND quant_ans > 0";
+            "FROM active_survey_answers s " +
+            "WHERE question_id = ? AND quant_ans > 0";
     pst = db.prepareStatement(sql);
     pst.setInt(1, this.getQuestionId());
     rs = pst.executeQuery();
@@ -516,8 +541,8 @@ public class SurveyAnswer {
 
     pst = db.prepareStatement(
         "UPDATE active_survey_questions " +
-        "SET average = ? " +
-        "WHERE question_id = ? ");
+            "SET average = ? " +
+            "WHERE question_id = ? ");
     int i = 0;
     pst.setDouble(++i, thisAverage);
     pst.setInt(++i, this.getQuestionId());
@@ -539,8 +564,8 @@ public class SurveyAnswer {
     PreparedStatement pst = null;
     String sql =
         "UPDATE active_survey_questions " +
-        "SET total" + this.getQuantAns() + " = total" + this.getQuantAns() + " + 1 " +
-        "WHERE question_id = ? ";
+            "SET total" + this.getQuantAns() + " = total" + this.getQuantAns() + " + 1 " +
+            "WHERE question_id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, this.getQuestionId());
     pst.execute();
@@ -570,14 +595,14 @@ public class SurveyAnswer {
       //delete any item dependency first
       pst = db.prepareStatement(
           "DELETE FROM active_survey_answer_items " +
-          "WHERE answer_id = ? ");
+              "WHERE answer_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
 
       //delete the answer
       pst = db.prepareStatement(
           "DELETE FROM active_survey_answers " +
-          "WHERE answer_id = ? ");
+              "WHERE answer_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();

@@ -49,18 +49,23 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
    *             method needs to be updated
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
-    logger.info("ImportBaseData-> Inserting folders");
+    logger.info("ImportFolders-> Inserting folders");
     boolean processOK = true;
 
     writer.setAutoCommit(true);
+
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "moduleFieldCategoryLink");
+    if (!processOK) {
+      return false;
+    }
+
     //For each linkModuleId... get the categories and definitions to insert
-    // NOTE: this table no longer exists so this code needs to be updated to work
-    LookupList moduleList = new LookupList(db, "system_modules");
+    ArrayList moduleList = CustomFieldCategory.getModules(db);
     Iterator modules = moduleList.iterator();
     while (modules.hasNext()) {
-      LookupElement thisModule = (LookupElement) modules.next();
-      int moduleId = thisModule.getCode();
-
+      String thisModule = (String) modules.next();
+      int moduleId = Integer.parseInt(thisModule);
       //Insert the category
       CustomFieldCategoryList categoryList = new CustomFieldCategoryList();
       categoryList.setLinkModuleId(moduleId);
@@ -108,17 +113,25 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
                 thisRecord.setName("customFieldLookup");
                 thisRecord.setAction("insert");
                 thisRecord.addField("tableName", "custom_field_lookup");
-                thisRecord.addField(
-                    "fieldId", String.valueOf(thisField.getId()), "customField", null);
-                thisRecord.addField(
-                    "guid", String.valueOf(thisElement.getCode()));
-                thisRecord.addField(
-                    "description", thisElement.getDescription());
-                thisRecord.addField(
-                    "defaultItem", String.valueOf(
-                        thisElement.getDefaultItem()));
-                thisRecord.addField(
-                    "level", String.valueOf(thisElement.getLevel()));
+                thisRecord.addField("uniqueField", "code");
+                thisRecord.addField("guid", String.valueOf(thisElement.getCode()));
+
+                thisRecord.addField("field", "field_id");
+                thisRecord.addField("data", "field_id=" + String.valueOf(thisField.getId()), "customField", null);
+                thisRecord.addField("type", java.sql.Types.INTEGER);
+
+                thisRecord.addField("field", "description");
+                thisRecord.addField("data", thisElement.getDescription());
+                thisRecord.addField("type", java.sql.Types.VARCHAR);
+
+                thisRecord.addField("field", "default_item");
+                thisRecord.addField("data", String.valueOf(thisElement.getDefaultItem()));
+                thisRecord.addField("type", java.sql.Types.BOOLEAN);
+
+                thisRecord.addField("field", "level");
+                thisRecord.addField("level", String.valueOf(thisElement.getLevel()));
+                thisRecord.addField("type", java.sql.Types.INTEGER);
+
                 processOK = writer.save(thisRecord);
                 if (!processOK) {
                   return false;
@@ -144,7 +157,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           thisRecord.setName("customFieldRecord");
           thisRecord.setAction("insert");
           thisRecord.addField(
-              "linkModuleId", String.valueOf(thisCFRecord.getLinkModuleId()), "systemModules", null);
+              "linkModuleId", String.valueOf(thisCFRecord.getLinkModuleId()), "moduleFieldCategoryLink", null);
           switch (thisCFRecord.getLinkModuleId()) {
             case 1:
               thisRecord.addField(
@@ -192,11 +205,11 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             if (fieldLookup.contains(new Integer(thisData.getFieldId()))) {
               thisFieldRecord.addField(
                   "selectedItemId", String.valueOf(
-                      thisData.getSelectedItemId()), "customFieldLookup", null);
+                  thisData.getSelectedItemId()), "customFieldLookup", null);
             } else {
               thisFieldRecord.addField(
                   "selectedItemId", String.valueOf(
-                      thisData.getSelectedItemId()));
+                  thisData.getSelectedItemId()));
             }
             thisFieldRecord.addField(
                 "enteredValue", String.valueOf(thisData.getEnteredValue()));

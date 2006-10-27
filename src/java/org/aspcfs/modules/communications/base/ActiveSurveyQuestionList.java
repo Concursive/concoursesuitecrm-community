@@ -35,6 +35,11 @@ import java.util.Iterator;
  * @created November 1, 2002
  */
 public class ActiveSurveyQuestionList extends ArrayList {
+  public final static String tableName = "action_item";
+  public final static String uniqueField = "item_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private int id = -1;
   private int activeSurveyId = -1;
@@ -46,6 +51,74 @@ public class ActiveSurveyQuestionList extends ArrayList {
    * Constructor for the ActiveSurveyQuestionList object
    */
   public ActiveSurveyQuestionList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the ActiveSurveyQuestionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActiveSurveyQuestionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActiveSurveyQuestionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActiveSurveyQuestionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActiveSurveyQuestionList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActiveSurveyQuestionList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActiveSurveyQuestionList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -190,8 +263,8 @@ public class ActiveSurveyQuestionList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM active_survey_questions sq " +
-        "WHERE sq.active_survey_id > -1 ");
+            "FROM active_survey_questions sq " +
+            "WHERE sq.active_survey_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -211,7 +284,7 @@ public class ActiveSurveyQuestionList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString());
+                sqlFilter.toString());
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -227,7 +300,7 @@ public class ActiveSurveyQuestionList extends ArrayList {
       pagedListInfo.setDefaultSort("sq.position", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY sq." + DatabaseUtils.addQuotes(db, "position")+ " ");
+      sqlOrder.append("ORDER BY sq." + DatabaseUtils.addQuotes(db, "position") + " ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -238,8 +311,8 @@ public class ActiveSurveyQuestionList extends ArrayList {
     }
     sqlSelect.append(
         "sq.* " +
-        "FROM active_survey_questions sq " +
-        "WHERE sq.active_survey_id > -1 ");
+            "FROM active_survey_questions sq " +
+            "WHERE sq.active_survey_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -273,7 +346,8 @@ public class ActiveSurveyQuestionList extends ArrayList {
         itemList.setQuestionId(thisQuestion.getId());
         itemList.buildList(db);
         thisQuestion.setItemList(itemList);
-      } else if (buildResults && (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED)) {
+      } else
+      if (buildResults && (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED)) {
         SurveyAnswerList answerList = new SurveyAnswerList();
         answerList.setQuestionId(thisQuestion.getId());
         answerList.setHasComments(Constants.TRUE);
@@ -299,6 +373,17 @@ public class ActiveSurveyQuestionList extends ArrayList {
     if (activeSurveyId != -1) {
       sqlFilter.append("AND sq.active_survey_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -314,6 +399,17 @@ public class ActiveSurveyQuestionList extends ArrayList {
 
     if (activeSurveyId != -1) {
       pst.setInt(++i, activeSurveyId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

@@ -22,12 +22,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Description of the Class
  *
  * @author Mathur
- * @version $Id$
+ * @version $Id: AccountTypeLevel.java 12404 2005-08-05 17:37:07Z mrajkowski
+ *          $
  * @created January 13, 2003
  */
 public class AccountTypeLevel {
@@ -52,6 +54,7 @@ public class AccountTypeLevel {
    * @param db Description of the Parameter
    * @param id Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public AccountTypeLevel(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -64,9 +67,21 @@ public class AccountTypeLevel {
    * @param db Description of the Parameter
    * @param id Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public AccountTypeLevel(Connection db, int id) throws SQLException {
     queryRecord(db, id);
+  }
+
+
+  /**
+   * Constructor for the AccountTypeLevel object
+   *
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public AccountTypeLevel(ResultSet rs) throws SQLException {
+    buildRecord(rs);
   }
 
 
@@ -234,8 +249,8 @@ public class AccountTypeLevel {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT a.* " +
-        "FROM account_type_levels a " +
-        "WHERE a.org_id = ? and a.type_id = ? ");
+            "FROM account_type_levels a " +
+            "WHERE a.org_id = ? and a.type_id = ? ");
     pst.setInt(1, orgId);
     pst.setInt(2, typeId);
     ResultSet rs = pst.executeQuery();
@@ -258,8 +273,11 @@ public class AccountTypeLevel {
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       sql.append("INSERT INTO account_type_levels (org_id, type_id, ");
       if (entered != null) {
         sql.append("entered, ");
@@ -297,12 +315,18 @@ public class AccountTypeLevel {
       pst.setInt(++i, this.getLevel());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -328,5 +352,26 @@ public class AccountTypeLevel {
     modified = rs.getTimestamp("modified");
   }
 
+
+  /**
+   * Returns all the AccountTypeLevel records from the database
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public static ArrayList recordList(Connection db) throws SQLException {
+    ArrayList records = new ArrayList();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * FROM account_type_levels ");
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      AccountTypeLevel atl = new AccountTypeLevel(rs);
+      records.add(atl);
+    }
+    rs.close();
+    pst.close();
+    return records;
+  }
 }
 

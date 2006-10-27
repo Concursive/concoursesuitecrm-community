@@ -14,31 +14,39 @@
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.actionplans.base;
-import org.aspcfs.utils.DatabaseUtils;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @version
- * @created    September 22, 2005
+ * @author Ananth
+ * @created September 22, 2005
  */
 public class ActionPlanWorkNoteList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int planWorkId = -1;
   private int orgId = -1;
 
+  public final static String tableName = "action_plan_work_notes";
+  public final static String uniqueField = "note_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   /**
-   *  Gets the orgId attribute of the ActionPlanWorkNoteList object
+   * Gets the orgId attribute of the ActionPlanWorkNoteList object
    *
-   * @return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -46,9 +54,9 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the ActionPlanWorkNoteList object
+   * Sets the orgId attribute of the ActionPlanWorkNoteList object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -56,9 +64,9 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Sets the orgId attribute of the ActionPlanWorkNoteList object
+   * Sets the orgId attribute of the ActionPlanWorkNoteList object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -66,9 +74,79 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ActionPlanWorkNoteList object
+   * Sets the lastAnchor attribute of the ActionPlanWorkNoteList object
    *
-   * @return    The pagedListInfo value
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionPlanWorkNoteList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanWorkNoteList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanWorkNoteList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionPlanWorkNoteList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActionPlanWorkNoteList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionPlanWorkNoteList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Gets the pagedListInfo attribute of the ActionPlanWorkNoteList object
+   *
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -76,9 +154,9 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionPlanWorkNoteList object
+   * Sets the pagedListInfo attribute of the ActionPlanWorkNoteList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -86,9 +164,9 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Gets the planWorkId attribute of the ActionPlanWorkNoteList object
+   * Gets the planWorkId attribute of the ActionPlanWorkNoteList object
    *
-   * @return    The planWorkId value
+   * @return The planWorkId value
    */
   public int getPlanWorkId() {
     return planWorkId;
@@ -96,9 +174,9 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Sets the planWorkId attribute of the ActionPlanWorkNoteList object
+   * Sets the planWorkId attribute of the ActionPlanWorkNoteList object
    *
-   * @param  tmp  The new planWorkId value
+   * @param tmp The new planWorkId value
    */
   public void setPlanWorkId(int tmp) {
     this.planWorkId = tmp;
@@ -106,9 +184,9 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Sets the planWorkId attribute of the ActionPlanWorkNoteList object
+   * Sets the planWorkId attribute of the ActionPlanWorkNoteList object
    *
-   * @param  tmp  The new planWorkId value
+   * @param tmp The new planWorkId value
    */
   public void setPlanWorkId(String tmp) {
     this.planWorkId = Integer.parseInt(tmp);
@@ -116,10 +194,10 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -134,8 +212,8 @@ public class ActionPlanWorkNoteList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM action_plan_work_notes apwn " +
-        "WHERE apwn.note_id > 0 ");
+            "FROM action_plan_work_notes apwn " +
+            "WHERE apwn.note_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -155,8 +233,8 @@ public class ActionPlanWorkNoteList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(apwn.description) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(apwn.description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -182,8 +260,8 @@ public class ActionPlanWorkNoteList extends ArrayList {
     }
     sqlSelect.append(
         "apwn.* " +
-        "FROM action_plan_work_notes apwn " +
-        "WHERE apwn.note_id > 0 ");
+            "FROM action_plan_work_notes apwn " +
+            "WHERE apwn.note_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -204,10 +282,10 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -216,30 +294,49 @@ public class ActionPlanWorkNoteList extends ArrayList {
     if (planWorkId > -1) {
       sqlFilter.append("AND apwn.plan_work_id = ? ");
     }
-    
-    //filters notes for a specific account
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
     if (orgId > -1) {
       sqlFilter.append("AND apwn.plan_work_id IN " +
-                       "   (SELECT plan_work_id FROM action_plan_work " +
-                       "    WHERE link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
-                       "    AND link_item_id = ? ) ");
+          "   (SELECT plan_work_id FROM action_plan_work " +
+          "    WHERE link_module_id IN (SELECT map_id FROM action_plan_constants WHERE constant_id = ?) " +
+          "    AND link_item_id = ? ) ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (planWorkId != -1) {
       pst.setInt(++i, planWorkId);
     }
-    
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     if (orgId != -1) {
       pst.setInt(++i, ActionPlan.ACCOUNTS);
       pst.setInt(++i, orgId);
@@ -249,10 +346,10 @@ public class ActionPlanWorkNoteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -261,13 +358,13 @@ public class ActionPlanWorkNoteList extends ArrayList {
       thisNote.delete(db);
     }
   }
-  
-  
+
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);

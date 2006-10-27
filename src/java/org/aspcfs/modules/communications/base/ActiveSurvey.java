@@ -34,14 +34,74 @@ public class ActiveSurvey extends SurveyBase {
 
   protected int id = -1;
   private int campaignId = -1;
-  private ActiveSurveyQuestionList questions = new ActiveSurveyQuestionList();
-  private SurveyAnswerList answers = new SurveyAnswerList();
-
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
   private boolean enabled = true;
+
+  private ActiveSurveyQuestionList questions = new ActiveSurveyQuestionList();
+  private SurveyAnswerList answers = new SurveyAnswerList();
+
+
+  /**
+   * Sets the campaignId attribute of the ActiveSurvey object
+   *
+   * @param tmp The new campaignId value
+   */
+  public void setCampaignId(String tmp) {
+    this.campaignId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the enteredBy attribute of the ActiveSurvey object
+   *
+   * @param tmp The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the modifiedBy attribute of the ActiveSurvey object
+   *
+   * @param tmp The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the modified attribute of the ActiveSurvey object
+   *
+   * @param tmp The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the entered attribute of the ActiveSurvey object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the enabled attribute of the ActiveSurvey object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
 
 
   /**
@@ -73,6 +133,7 @@ public class ActiveSurvey extends SurveyBase {
    *
    * @param rs Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurvey(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -85,6 +146,7 @@ public class ActiveSurvey extends SurveyBase {
    * @param db       Description of the Parameter
    * @param surveyId Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public ActiveSurvey(Connection db, int surveyId) throws SQLException {
     if (surveyId < 1) {
@@ -92,8 +154,8 @@ public class ActiveSurvey extends SurveyBase {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT s.* " +
-        "FROM active_survey s " +
-        "WHERE s.active_survey_id = ? ");
+            "FROM active_survey s " +
+            "WHERE s.active_survey_id = ? ");
     pst.setInt(1, surveyId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -164,6 +226,7 @@ public class ActiveSurvey extends SurveyBase {
    *
    * @param db               Description of the Parameter
    * @param activeCampaignId Description of the Parameter
+   * @param surveyType       Description of the Parameter
    * @return The id value
    * @throws SQLException Description of the Exception
    */
@@ -171,9 +234,9 @@ public class ActiveSurvey extends SurveyBase {
     int surveyId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT active_survey_id " +
-        "FROM active_survey " +
-        "WHERE campaign_id = ? " +
-        "AND " + DatabaseUtils.addQuotes(db, "type")+ " = ? ");
+            "FROM active_survey " +
+            "WHERE campaign_id = ? " +
+            "AND " + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     pst.setInt(1, activeCampaignId);
     pst.setInt(2, surveyType);
     ResultSet rs = pst.executeQuery();
@@ -403,9 +466,9 @@ public class ActiveSurvey extends SurveyBase {
       id = DatabaseUtils.getNextSeq(db, "active_survey_active_survey_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO active_survey " +
-          "(" + (id > -1 ? "active_survey_id, " : "") + "campaign_id, name, description, intro, outro, itemLength, " + DatabaseUtils.addQuotes(db, "type")+ ", " +
-          "enteredBy, modifiedBy) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?,?,?, ?, ?, ?, ?, ?) ");
+              "(" + (id > -1 ? "active_survey_id, " : "") + "campaign_id, name, description, intro, outro, itemLength, " + DatabaseUtils.addQuotes(db, "type") + ", " +
+              "enteredBy, modifiedBy) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?,?,?, ?, ?, ?, ?, ?) ");
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -540,11 +603,11 @@ public class ActiveSurvey extends SurveyBase {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE active_survey " +
-        "SET campaign_id = ?, name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
-        "" + DatabaseUtils.addQuotes(db, "type")+ " = ?, " +
-        "enabled = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE active_survey_id = ? ");
+            "SET campaign_id = ?, name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
+            "" + DatabaseUtils.addQuotes(db, "type") + " = ?, " +
+            "enabled = ?, " +
+            "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+            "WHERE active_survey_id = ? ");
     pst.setInt(++i, campaignId);
     pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());

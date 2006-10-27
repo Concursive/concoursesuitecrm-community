@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.help.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -31,11 +32,85 @@ import java.util.ArrayList;
  * @created July 9, 2003
  */
 public class HelpBusinessRuleList extends ArrayList {
+  public final static String tableName = "help_business_rules";
+  public final static String uniqueField = "rule_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int linkHelpId = -1;
   private boolean completeOnly = false;
   private int enteredBy = -1;
+
+  /**
+   * Sets the lastAnchor attribute of the HelpBusinessRuleList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the HelpBusinessRuleList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the HelpBusinessRuleList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the HelpBusinessRuleList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the HelpBusinessRuleList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the HelpBusinessRuleList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the HelpBusinessRuleList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -137,8 +212,8 @@ public class HelpBusinessRuleList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM help_business_rules hf " +
-        "WHERE hf.rule_id > -1 ");
+            "FROM help_business_rules hf " +
+            "WHERE hf.rule_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -160,8 +235,8 @@ public class HelpBusinessRuleList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString() +
-          "AND hf.description < ? ");
+              sqlFilter.toString() +
+              "AND hf.description < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -181,8 +256,8 @@ public class HelpBusinessRuleList extends ArrayList {
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
         "hf.* " +
-        "FROM help_business_rules hf " +
-        "WHERE hf.rule_id > -1 ");
+            "FROM help_business_rules hf " +
+            "WHERE hf.rule_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -224,6 +299,17 @@ public class HelpBusinessRuleList extends ArrayList {
     if (completeOnly) {
       sqlFilter.append("AND t.complete = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -245,6 +331,17 @@ public class HelpBusinessRuleList extends ArrayList {
     }
     if (completeOnly) {
       pst.setBoolean(++i, true);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

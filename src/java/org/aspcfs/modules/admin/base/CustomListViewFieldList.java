@@ -15,31 +15,116 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @created    November 14, 2005
+ * @author Ananth
+ * @created November 14, 2005
  */
 public class CustomListViewFieldList extends ArrayList {
   private int viewId = -1;
 
+  public final static String tableName = "custom_list_view_field";
+  public final static String uniqueField = "field_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
 
   /**
-   *  Gets the viewId attribute of the CustomListViewFieldList object
+   * Sets the lastAnchor attribute of the CustomListViewFieldList object
    *
-   * @return    The viewId value
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the CustomListViewFieldList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the CustomListViewFieldList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the CustomListViewFieldList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the CustomListViewFieldList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the CustomListViewFieldList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the CustomListViewFieldList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the CustomListViewFieldList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Gets the viewId attribute of the CustomListViewFieldList object
+   *
+   * @return The viewId value
    */
   public int getViewId() {
     return viewId;
@@ -47,9 +132,9 @@ public class CustomListViewFieldList extends ArrayList {
 
 
   /**
-   *  Sets the viewId attribute of the CustomListViewFieldList object
+   * Sets the viewId attribute of the CustomListViewFieldList object
    *
-   * @param  tmp  The new viewId value
+   * @param tmp The new viewId value
    */
   public void setViewId(int tmp) {
     this.viewId = tmp;
@@ -57,27 +142,27 @@ public class CustomListViewFieldList extends ArrayList {
 
 
   /**
-   *  Sets the viewId attribute of the CustomListViewFieldList object
+   * Sets the viewId attribute of the CustomListViewFieldList object
    *
-   * @param  tmp  The new viewId value
+   * @param tmp The new viewId value
    */
   public void setViewId(String tmp) {
     this.viewId = Integer.parseInt(tmp);
   }
 
 
-
   /**
-   *  Constructor for the CustomListViewFieldList object
+   * Constructor for the CustomListViewFieldList object
    */
-  public CustomListViewFieldList() { }
+  public CustomListViewFieldList() {
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -92,15 +177,15 @@ public class CustomListViewFieldList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM custom_list_view_field clvf " +
-        " WHERE clvf.field_id > 0 ");
+            " FROM custom_list_view_field clvf " +
+            " WHERE clvf.field_id > 0 ");
     createFilter(sqlFilter, db);
     sqlOrder.append("ORDER BY name ");
 
     sqlSelect.append("SELECT ");
     sqlSelect.append(
         "clvf.* FROM custom_list_view_field clvf " +
-        "WHERE clvf.field_id > -1 ");
+            "WHERE clvf.field_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -116,29 +201,51 @@ public class CustomListViewFieldList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (viewId > -1) {
       sqlFilter.append("AND clvf.view_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (viewId > -1) {
       pst.setInt(++i, viewId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

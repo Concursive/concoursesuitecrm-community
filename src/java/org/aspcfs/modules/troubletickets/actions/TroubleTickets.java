@@ -19,22 +19,16 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.webutils.FileDownload;
-
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
-
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.accounts.base.OrganizationList;                                                            
+import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.actionplans.base.ActionPlan;
 import org.aspcfs.modules.actionplans.base.ActionPlanList;
 import org.aspcfs.modules.actionplans.base.ActionPlanWorkList;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.admin.base.CategoryEditor;
-import org.aspcfs.modules.admin.base.PermissionCategory;
-import org.aspcfs.modules.admin.base.UserGroup;
-import org.aspcfs.modules.admin.base.UserList;
-import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.communications.base.CampaignList;
@@ -46,8 +40,8 @@ import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.modules.quotes.base.QuoteList;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.utils.JasperReportUtils;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.UserUtils;
+import org.aspcfs.utils.web.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -94,7 +88,7 @@ public final class TroubleTickets extends CFSModule {
       db = this.getConnection(context);
       if (context.getRequest().getParameter("refresh") != null || (context.getRequest().getParameter(
           "contact") != null && context.getRequest().getParameter("contact").equals(
-              "on"))) {
+          "on"))) {
         newTic = (Ticket) context.getFormBean();
         newTic.getHistory().setTicketId(newTic.getId());
         newTic.getHistory().buildList(db);
@@ -161,7 +155,7 @@ public final class TroubleTickets extends CFSModule {
       categoryList.buildList(db);
       categoryList.getCatListSelect().addItem(0, "Undetermined");
       context.getRequest().setAttribute("CategoryList", categoryList);
-      
+
       String catCode = exportListInfo.getSearchOptionValue("searchcodeCatCode");
       TicketCategoryList subList1 = new TicketCategoryList();
       subList1.setCatLevel(1);
@@ -174,7 +168,7 @@ public final class TroubleTickets extends CFSModule {
       }
       subList1.getCatListSelect().addItem(0, "Undetermined");
       context.getRequest().setAttribute("SubList1", subList1);
-  
+
       String subList1String = exportListInfo.getSearchOptionValue("searchcodeSubList1");
       TicketCategoryList subList2 = new TicketCategoryList();
       subList2.setCatLevel(2);
@@ -260,7 +254,7 @@ public final class TroubleTickets extends CFSModule {
     exportListInfo.setSearchCriteria(ticketReport, context);
     ticketReport.setExclusiveToSite(true);
     ticketReport.setIncludeAllSites(false);
-    
+
     if (ownerCriteria.equals("assignedToMe")) {
       ticketReport.setAssignedTo(this.getUserId(context));
       ticketReport.setIncludeAllSites(true);
@@ -280,16 +274,16 @@ public final class TroubleTickets extends CFSModule {
       if (isValid) {
         if (ticketReport.getSubCat3() == 0) {
           ticketReport.setSubCat3(-1);
-        } 
+        }
         if (ticketReport.getSubCat2() == 0) {
 //          ticketReport.setSubCat3(-1);
           ticketReport.setSubCat2(-1);
-        } 
+        }
         if (ticketReport.getSubCat1() == 0) {
 //          ticketReport.setSubCat3(-1);
 //          ticketReport.setSubCat2(-1);
           ticketReport.setSubCat1(-1);
-        } 
+        }
         if (ticketReport.getCatCode() == 0) {
 //          ticketReport.setSubCat3(-1);
 //          ticketReport.setSubCat2(-1);
@@ -571,7 +565,7 @@ public final class TroubleTickets extends CFSModule {
       list.setSiteId(newTic.getOrgSiteId());
       list.buildList(db);
       HtmlSelect defectSelect = list.getHtmlSelectObj(newTic.getDefectId());
-      defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes","None"), 0);
+      defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "None"), 0);
       context.getRequest().setAttribute("defectSelect", defectSelect);
       //Load the ticket escalation list
       LookupList escalationList = new LookupList(db, "lookup_ticket_escalation");
@@ -659,7 +653,8 @@ public final class TroubleTickets extends CFSModule {
         newTic.setSubCat1(0);
         newTic.setSubCat2(0);
         newTic.setSubCat3(0);
-      } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+      } else
+      if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
           context.getRequest().getParameter("refresh")) == -1) {
         subList2.setParentCode(newTic.getSubCat1());
         subList2.getCatListSelect().setDefaultKey(newTic.getSubCat2());
@@ -677,11 +672,12 @@ public final class TroubleTickets extends CFSModule {
       subList3.setCatLevel(3);
       if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
           context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-              context.getRequest().getParameter("refresh")) == 2)) {
+          context.getRequest().getParameter("refresh")) == 2)) {
         subList3.setParentCode(0);
         newTic.setSubCat2(0);
         newTic.setSubCat3(0);
-      } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+      } else
+      if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
           context.getRequest().getParameter("refresh")) == -1) {
         subList3.setParentCode(newTic.getSubCat2());
         subList3.getCatListSelect().setDefaultKey(newTic.getSubCat3());
@@ -696,7 +692,7 @@ public final class TroubleTickets extends CFSModule {
       context.getRequest().setAttribute("SubList3", subList3);
       if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
           context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-              context.getRequest().getParameter("refresh")) == 3)) {
+          context.getRequest().getParameter("refresh")) == 3)) {
         newTic.setSubCat3(0);
       }
 
@@ -715,7 +711,7 @@ public final class TroubleTickets extends CFSModule {
         actionPlans.setLinkSubCat3(newTic.getSubCat3());
       }
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_TICKET);
-      actionPlans.setTableName(thisEditor.getTableName());
+      actionPlans.setNameTable(thisEditor.getTableName());
       actionPlans.setJsEvent("id=\"actionPlanId\"");
       actionPlans.setEnabled(Constants.TRUE);
       actionPlans.setIncludeOnlyApproved(Constants.TRUE);
@@ -821,7 +817,7 @@ public final class TroubleTickets extends CFSModule {
         customerProduct.buildFileList(db);
         context.getRequest().setAttribute("customerProduct", customerProduct);
       }
-      if (newTic.getDefectId() !=-1) {
+      if (newTic.getDefectId() != -1) {
         TicketDefect defect = new TicketDefect(db, newTic.getDefectId());
         context.getRequest().setAttribute("defect", defect);
         if (fromDefectDetails != null && !"".equals(fromDefectDetails) && !fromDefectDetails.equals(String.valueOf(defect.getId()))) {
@@ -834,7 +830,7 @@ public final class TroubleTickets extends CFSModule {
         newTic.checkEnabledOwnerAccount(db);
       }
       LookupList causeList = new LookupList(db, "lookup_ticket_cause");
-      causeList.addItem(-1,"");
+      causeList.addItem(-1, "");
       context.getRequest().setAttribute("causeList", causeList);
       //Load the ticket state
       LookupList ticketStateList = new LookupList(db, "lookup_ticket_state");
@@ -842,7 +838,7 @@ public final class TroubleTickets extends CFSModule {
       context.getRequest().setAttribute("ticketStateList", ticketStateList);
 
       LookupList resolutionList = new LookupList(db, "lookup_ticket_resolution");
-      resolutionList.addItem(-1,"");
+      resolutionList.addItem(-1, "");
       context.getRequest().setAttribute("resolutionList", resolutionList);
       if (fromDefectDetails != null && !"".equals(fromDefectDetails.trim())) {
         context.getRequest().setAttribute("defectCheck", fromDefectDetails);
@@ -1285,7 +1281,7 @@ public final class TroubleTickets extends CFSModule {
             newTic.setContactId(nc.getId());
           }
           if (contactRecordInserted) {
-            if (newTic.getOrgId() > 0){
+            if (newTic.getOrgId() > 0) {
               newTic.setSiteId(Organization.getOrganizationSiteId(db, newTic.getOrgId()));
             }
             isValid = this.validateObject(context, db, newTic) && isValid;
@@ -1300,7 +1296,7 @@ public final class TroubleTickets extends CFSModule {
           }
         }
       } else {
-        if (newTic.getOrgId() > 0){
+        if (newTic.getOrgId() > 0) {
           newTic.setSiteId(Organization.getOrganizationSiteId(db, newTic.getOrgId()));
         }
         isValid = this.validateObject(context, db, newTic) && isValid;
@@ -1320,7 +1316,7 @@ public final class TroubleTickets extends CFSModule {
         ticketCategoryList.buildList(db);
         context.getRequest().setAttribute("ticketCategoryList", ticketCategoryList);
 
-        if (newTicket.getDefectId() !=-1) {
+        if (newTicket.getDefectId() != -1) {
           TicketDefect defect = new TicketDefect(db, newTicket.getDefectId());
           context.getRequest().setAttribute("defect", defect);
         }
@@ -1464,8 +1460,8 @@ public final class TroubleTickets extends CFSModule {
       for (catCount = 0; catCount < 4; catCount++) {
         if ((context.getRequest().getParameter("newCat" + catCount + "chk") != null && context.getRequest().getParameter(
             "newCat" + catCount + "chk").equals("on") && context.getRequest().getParameter(
-                "newCat" + catCount) != null && !(context.getRequest().getParameter(
-                    "newCat" + catCount).equals("")))) {
+            "newCat" + catCount) != null && !(context.getRequest().getParameter(
+            "newCat" + catCount).equals("")))) {
           thisCat = new TicketCategory();
           if (catCount == 0) {
             thisCat.setParentCode(0);
@@ -1571,12 +1567,12 @@ public final class TroubleTickets extends CFSModule {
       if ("searchResults".equals(returnType)) {
         htmlDialog.addButton(
             systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='TroubleTickets.do?command=Trash&id=" + id + "&return=searchResults" + RequestUtils.addLinkParams(
-                context.getRequest(), "popup|popupType|actionId") + "'");
+            context.getRequest(), "popup|popupType|actionId") + "'");
 
       } else {
         htmlDialog.addButton(
             systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='TroubleTickets.do?command=Trash&id=" + id + RequestUtils.addLinkParams(
-                context.getRequest(), "popup|popupType|actionId") + "'");
+            context.getRequest(), "popup|popupType|actionId") + "'");
       }
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
@@ -1623,11 +1619,11 @@ public final class TroubleTickets extends CFSModule {
         if ("searchResults".equals(returnType)) {
           context.getRequest().setAttribute(
               "refreshUrl", "TroubleTickets.do?command=SearchTickets" + RequestUtils.addLinkParams(
-                  context.getRequest(), "popup|popupType|actionId"));
+              context.getRequest(), "popup|popupType|actionId"));
         } else {
           context.getRequest().setAttribute(
               "refreshUrl", "TroubleTickets.do?command=Home" + RequestUtils.addLinkParams(
-                  context.getRequest(), "popup|popupType|actionId"));
+              context.getRequest(), "popup|popupType|actionId"));
         }
         return ("DeleteOK");
       }
@@ -1673,11 +1669,11 @@ public final class TroubleTickets extends CFSModule {
         if ("searchResults".equals(returnType)) {
           context.getRequest().setAttribute(
               "refreshUrl", "TroubleTickets.do?command=SearchTickets" + RequestUtils.addLinkParams(
-                  context.getRequest(), "popup|popupType|actionId"));
+              context.getRequest(), "popup|popupType|actionId"));
         } else {
           context.getRequest().setAttribute(
               "refreshUrl", "TroubleTickets.do?command=Home" + RequestUtils.addLinkParams(
-                  context.getRequest(), "popup|popupType|actionId"));
+              context.getRequest(), "popup|popupType|actionId"));
         }
         return ("DeleteOK");
       }
@@ -1842,7 +1838,7 @@ public final class TroubleTickets extends CFSModule {
     list.setSiteId(this.getUserSiteId(context));
     list.buildList(db);
     HtmlSelect defectSelect = list.getHtmlSelectObj(newTic.getDefectId());
-    defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes","None"), 0);
+    defectSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "None"), 0);
     context.getRequest().setAttribute("defectSelect", defectSelect);
 
     TicketCategoryList subList1 = new TicketCategoryList();
@@ -1863,7 +1859,8 @@ public final class TroubleTickets extends CFSModule {
       newTic.setSubCat1(0);
       newTic.setSubCat2(0);
       newTic.setSubCat3(0);
-    } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+    } else
+    if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
         context.getRequest().getParameter("refresh")) == -1) {
       subList2.setParentCode(newTic.getSubCat1());
       subList2.getCatListSelect().setDefaultKey(newTic.getSubCat2());
@@ -1881,11 +1878,12 @@ public final class TroubleTickets extends CFSModule {
     subList3.setCatLevel(3);
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
         context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-            context.getRequest().getParameter("refresh")) == 2)) {
+        context.getRequest().getParameter("refresh")) == 2)) {
       subList3.setParentCode(0);
       newTic.setSubCat2(0);
       newTic.setSubCat3(0);
-    } else if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
+    } else
+    if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(
         context.getRequest().getParameter("refresh")) == -1) {
       subList3.setParentCode(newTic.getSubCat2());
       subList3.getCatListSelect().setDefaultKey(newTic.getSubCat3());
@@ -1917,7 +1915,7 @@ public final class TroubleTickets extends CFSModule {
       actionPlans.setDisplayNone(true);
     }
     CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_TICKET);
-    actionPlans.setTableName(thisEditor.getTableName());
+    actionPlans.setNameTable(thisEditor.getTableName());
     actionPlans.setJsEvent("id=\"actionPlanId\"");
     actionPlans.setEnabled(Constants.TRUE);
     actionPlans.setIncludeOnlyApproved(Constants.TRUE);
@@ -1931,7 +1929,7 @@ public final class TroubleTickets extends CFSModule {
 
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(
         context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(
-            context.getRequest().getParameter("refresh")) == 3)) {
+        context.getRequest().getParameter("refresh")) == 3)) {
       newTic.setSubCat3(0);
     }
     context.getRequest().setAttribute("TicketDetails", newTic);
@@ -2018,7 +2016,7 @@ public final class TroubleTickets extends CFSModule {
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, PermissionCategory.MULTIPLE_CATEGORY_TICKET);
-      plans.setTableName(thisEditor.getTableName());
+      plans.setNameTable(thisEditor.getTableName());
       plans.setJsEvent("id=\"actionPlanId\"");
       plans.setEnabled(Constants.TRUE);
       plans.setSiteId(orgDetails.getSiteId());
@@ -2052,13 +2050,13 @@ public final class TroubleTickets extends CFSModule {
         siteIdString = (String) context.getRequest().getAttribute("orgSiteId");
       }
       int siteId = UserUtils.getUserSiteId(context.getRequest());
-      if (siteIdString != null && !"".equals(siteIdString)){
+      if (siteIdString != null && !"".equals(siteIdString)) {
         siteId = Integer.parseInt(siteIdString);
       }
       String populateResourceAssigned = context.getRequest().getParameter("populateResourceAssigned");
       String populateResolvedBy = context.getRequest().getParameter("populateResolvedBy");
 
-      if ("true".equals(populateResourceAssigned)){
+      if ("true".equals(populateResourceAssigned)) {
         String resourceAssignedDepartmentCode = context.getRequest().getParameter(
             "resourceAssignedDepartmentCode");
         UserList resourceAssignedList = new UserList();
@@ -2084,7 +2082,7 @@ public final class TroubleTickets extends CFSModule {
         context.getRequest().setAttribute("resourceAssignedSelect", resourceAssignedSelect);
       }
 
-      if ("true".equals(populateResolvedBy)){
+      if ("true".equals(populateResolvedBy)) {
         String resolvedByDepartmentCode = context.getRequest().getParameter(
             "resolvedByDepartmentCode");
         UserList resolvedByList = new UserList();
@@ -2098,8 +2096,8 @@ public final class TroubleTickets extends CFSModule {
         resolvedByList.setExcludeDisabledIfUnselected(true);
         resolvedByList.setExcludeExpiredIfUnselected(true);
         if (resolvedByDepartmentCode != null &&
-          !"".equals(resolvedByDepartmentCode) &&
-          !"-1".equals(resolvedByDepartmentCode)) {
+            !"".equals(resolvedByDepartmentCode) &&
+            !"-1".equals(resolvedByDepartmentCode)) {
           resolvedByList.setDepartment(Integer.parseInt(resolvedByDepartmentCode));
         }
         resolvedByList.setRoleType(Constants.ROLETYPE_REGULAR);
@@ -2146,7 +2144,7 @@ public final class TroubleTickets extends CFSModule {
       }
       context.getRequest().setAttribute("orgSiteId", String.valueOf(orgDetails.getSiteId()));
       String populateDefects = context.getRequest().getParameter("populateDefects");
-      if ("true".equals(populateDefects)){
+      if ("true".equals(populateDefects)) {
         TicketDefectList defectList = new TicketDefectList();
         defectList.setSiteId(orgDetails.getSiteId());
         defectList.buildList(db);
@@ -2183,23 +2181,23 @@ public final class TroubleTickets extends CFSModule {
       map.put(
           "CENTRIC_DICTIONARY", this.getSystemStatus(context).getLocalizationPrefs());
       String filename = "ticket.xml";
-      
+
       //provide a seperate database connection for the subreports
       Connection scriptdb = this.getConnection(context);
       map.put("SCRIPT_DB_CONNECTION", scriptdb);
-      
+
       //Replace the font based on the system language to support i18n chars
       String fontPath = getWebInfPath(context, "fonts");
       String reportDir = getWebInfPath(context, "reports");
-      JasperReport jasperReport = JasperReportUtils.getReport(reportDir + filename); 
+      JasperReport jasperReport = JasperReportUtils.getReport(reportDir + filename);
       String language = getPref(context, "SYSTEM.LANGUAGE");
-      
+
       JasperReportUtils.modifyFontProperties(
           jasperReport, reportDir, fontPath, language);
-      
+
       byte[] bytes = JasperRunManager.runReportToPdf(
-        jasperReport, map, db);
-        
+          jasperReport, map, db);
+
       if (bytes != null) {
         FileDownload fileDownload = new FileDownload();
         fileDownload.setDisplayName("Ticket_Details_" + id + ".pdf");

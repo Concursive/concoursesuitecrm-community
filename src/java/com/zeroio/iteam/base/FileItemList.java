@@ -38,6 +38,12 @@ import java.util.Iterator;
  * @created February 8, 2002
  */
 public class FileItemList extends ArrayList {
+  public final static String tableName = "project_files";
+  public final static String uniqueField = "item_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   //filters
   private PagedListInfo pagedListInfo = null;
   private int linkModuleId = -1;
@@ -59,6 +65,73 @@ public class FileItemList extends ArrayList {
   private String htmlJsEvent = "";
   private int buildPortalRecords = Constants.UNDEFINED;
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Gets the enabled attribute of the FileItemList object
@@ -402,7 +475,7 @@ public class FileItemList extends ArrayList {
   }
 
 
-	/**
+  /**
    * Gets the alertRangeStart attribute of the FileItemList object
    *
    * @return The alertRangeStart value
@@ -433,22 +506,22 @@ public class FileItemList extends ArrayList {
 
 
   /**
-	 * @return Returns the buildPortalRecords.
-	 */
-	public int getBuildPortalRecords() {
-		return buildPortalRecords;
-	}
+   * @return Returns the buildPortalRecords.
+   */
+  public int getBuildPortalRecords() {
+    return buildPortalRecords;
+  }
 
 
-	/**
-	 * @param buildPortalRecords The buildPortalRecords to set.
-	 */
-	public void setBuildPortalRecords(int buildPortalRecords) {
-		this.buildPortalRecords = buildPortalRecords;
-	}
+  /**
+   * @param buildPortalRecords The buildPortalRecords to set.
+   */
+  public void setBuildPortalRecords(int buildPortalRecords) {
+    this.buildPortalRecords = buildPortalRecords;
+  }
 
 
-	/**
+  /**
    * Generates a list of matching FileItems
    *
    * @param db Description of Parameter
@@ -465,8 +538,8 @@ public class FileItemList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_files f " +
-        "WHERE f.item_id > -1 ");
+            "FROM project_files f " +
+            "WHERE f.item_id > -1 ");
     createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -483,8 +556,8 @@ public class FileItemList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(f.subject) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(f.subject) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -509,9 +582,9 @@ public class FileItemList extends ArrayList {
     }
     sqlSelect.append(
         "f.*, t.filename AS thumbnail " +
-        "FROM project_files f " +
-        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f." + DatabaseUtils.addQuotes(db, "version")+ " = t." + DatabaseUtils.addQuotes(db, "version")+ ") " +
-        "WHERE f.item_id > -1 ");
+            "FROM project_files f " +
+            "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f." + DatabaseUtils.addQuotes(db, "version") + " = t." + DatabaseUtils.addQuotes(db, "version") + ") " +
+            "WHERE f.item_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -582,7 +655,7 @@ public class FileItemList extends ArrayList {
       sqlFilter.append(
           "AND (" + DatabaseUtils.toLowerCase(db) + "(f.client_filename) LIKE '%.gif' OR " + DatabaseUtils.toLowerCase(
               db) + "(f.client_filename) LIKE '%.jpg' OR " + DatabaseUtils.toLowerCase(
-                  db) + "(f.client_filename) LIKE '%.png') ");
+              db) + "(f.client_filename) LIKE '%.png') ");
     }
     if (alertRangeStart != null) {
       sqlFilter.append("AND f.modified >= ? ");
@@ -593,13 +666,24 @@ public class FileItemList extends ArrayList {
     if (forProjectUser > -1) {
       sqlFilter.append(
           "AND (f.link_item_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          "AND status IS NULL) OR f.link_item_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
+              "AND status IS NULL) OR f.link_item_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
     }
     if (defaultFile != Constants.UNDEFINED) {
       sqlFilter.append("AND f.default_file = ? ");
     }
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append("AND f.enabled = ? ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -644,6 +728,17 @@ public class FileItemList extends ArrayList {
     if (enabled != Constants.UNDEFINED) {
       pst.setBoolean(++i, enabled == Constants.TRUE);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -661,8 +756,8 @@ public class FileItemList extends ArrayList {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) as filecount " +
-        "FROM project_files pf " +
-        "WHERE pf.link_module_id = ? and pf.link_item_id = ? ");
+            "FROM project_files pf " +
+            "WHERE pf.link_module_id = ? and pf.link_item_id = ? ");
     pst.setInt(1, linkModuleId);
     pst.setInt(2, linkItemId);
     ResultSet rs = pst.executeQuery();
@@ -704,9 +799,9 @@ public class FileItemList extends ArrayList {
     long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size")+ ") AS recordsize " +
-        "FROM project_files f " +
-        "WHERE f.item_id > -1 ";
+        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size") + ") AS recordsize " +
+            "FROM project_files f " +
+            "WHERE f.item_id > -1 ";
     createFilter(db, sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());

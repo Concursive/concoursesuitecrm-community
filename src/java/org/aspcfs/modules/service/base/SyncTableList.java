@@ -15,6 +15,9 @@
  */
 package org.aspcfs.modules.service.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,11 +34,97 @@ import java.util.Iterator;
  * @created June, 2002
  */
 public class SyncTableList extends ArrayList {
+  public final static String tableName = "sync_table";
+  public final static String uniqueField = "table_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
 
   private int systemId = -1;
   private boolean buildTextFields = true;
   private boolean buildSyncElementsOnly = false;
   private boolean buildCreateStatementsOnly = false;
+
+  /**
+   * Sets the lastAnchor attribute of the SyncTableList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the SyncTableList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SyncTableList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SyncTableList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the SyncTableList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the SyncTableList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the SyncTableList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the SyncTableList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -93,7 +182,7 @@ public class SyncTableList extends ArrayList {
   public void setBuildSyncElementsOnly(String tmp) {
     this.buildSyncElementsOnly =
         (tmp.equalsIgnoreCase("true") ||
-        tmp.equalsIgnoreCase("on"));
+            tmp.equalsIgnoreCase("on"));
   }
 
 
@@ -115,7 +204,7 @@ public class SyncTableList extends ArrayList {
   public void setBuildCreateStatementsOnly(String tmp) {
     this.buildCreateStatementsOnly =
         (tmp.equalsIgnoreCase("true") ||
-        tmp.equalsIgnoreCase("on"));
+            tmp.equalsIgnoreCase("on"));
   }
 
 
@@ -227,6 +316,17 @@ public class SyncTableList extends ArrayList {
     if (buildCreateStatementsOnly) {
       sqlFilter.append("AND create_statement IS NOT NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -244,6 +344,17 @@ public class SyncTableList extends ArrayList {
     }
     if (buildSyncElementsOnly) {
       pst.setBoolean(++i, true);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

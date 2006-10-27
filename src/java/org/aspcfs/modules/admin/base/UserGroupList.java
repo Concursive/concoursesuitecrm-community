@@ -28,13 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    September 23, 2005
- * @version    $Id: UserGroupList.java,v 1.1.2.3 2005/09/29 21:09:01 partha Exp
- *      $
+ * @author partha
+ * @version $Id: UserGroupList.java,v 1.1.2.3 2005/09/29 21:09:01 partha Exp
+ *          $
+ * @created September 23, 2005
  */
 public class UserGroupList extends ArrayList {
   PagedListInfo pagedListInfo = null;
@@ -51,18 +52,95 @@ public class UserGroupList extends ArrayList {
   private boolean exclusiveToSite = false;
   private boolean buildUserCount = false;
 
+  public final static String tableName = "user_group";
+  public final static String uniqueField = "group_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
 
   /**
-   *  Constructor for the UserGroupList object
+   * Constructor for the UserGroupList object
    */
-  public UserGroupList() { }
+  public UserGroupList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the UserGroupList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
+   * Sets the lastAnchor attribute of the UserGroupList object
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the UserGroupList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the UserGroupList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the UserGroupList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the UserGroupList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the UserGroupList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -75,9 +153,9 @@ public class UserGroupList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM user_group ug " +
-        "LEFT JOIN lookup_site_id ls ON (ug.site_id = ls.code) " +
-        "WHERE ug.group_id > -1 ");
+            "FROM user_group ug " +
+            "LEFT JOIN lookup_site_id ls ON (ug.site_id = ls.code) " +
+            "WHERE ug.group_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -95,8 +173,8 @@ public class UserGroupList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(ug.group_name) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(ug.group_name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -121,9 +199,9 @@ public class UserGroupList extends ArrayList {
     }
     sqlSelect.append(
         " ug.*, ls.description AS site_name " +
-        "FROM user_group ug " +
-        "LEFT JOIN lookup_site_id ls ON (ug.site_id = ls.code) " +
-        "WHERE ug.group_id > -1 ");
+            "FROM user_group ug " +
+            "LEFT JOIN lookup_site_id ls ON (ug.site_id = ls.code) " +
+            "WHERE ug.group_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -155,10 +233,10 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -187,27 +265,40 @@ public class UserGroupList extends ArrayList {
       if (userId > -1) {
         sqlFilter.append("AND ug.group_id IN (SELECT group_id FROM user_group_map WHERE user_id = ?) ");
       }
+    } else {
+      sqlFilter.append(" AND (ug.group_id IN (SELECT group_id FROM user_group_map WHERE user_id = ? ) OR ug.enabled = ?) ");
     }
     if (!includeAllSites) {
       if (siteId > -1) {
-        sqlFilter.append("AND (site_id = ? ");
-        if (!exclusiveToSite) {
-          sqlFilter.append(" OR site_id IS NULL ");
+        if (exclusiveToSite) {
+          sqlFilter.append(" AND site_id = ? ");
+        } else {
+          sqlFilter.append(" AND (site_id = ? OR site_id IS NULL) ");
         }
-        sqlFilter.append(") ");
       } else {
-        sqlFilter.append("AND site_id IS NULL ");
+        sqlFilter.append(" AND site_id IS NULL ");
       }
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst            Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -244,14 +335,25 @@ public class UserGroupList extends ArrayList {
     if (siteId > -1 && !includeAllSites) {
       pst.setInt(++i, this.getSiteId());
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Gets the hashMap attribute of the UserGroupList object
+   * Gets the hashMap attribute of the UserGroupList object
    *
-   * @return    The hashMap value
+   * @return The hashMap value
    */
   public HashMap getHashMap() {
     HashMap map = new HashMap();
@@ -265,16 +367,16 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the UsersForGroups attribute of the UserGroupList object
+   * Adds a feature to the UsersForGroups attribute of the UserGroupList object
    *
-   * @param  db             The feature to be added to the UsersForGroups
-   *      attribute
-   * @param  map            The feature to be added to the UsersForGroups
-   *      attribute
-   * @param  userId         The feature to be added to the UsersForGroups
-   *      attribute
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db     The feature to be added to the UsersForGroups
+   *               attribute
+   * @param map    The feature to be added to the UsersForGroups
+   *               attribute
+   * @param userId The feature to be added to the UsersForGroups
+   *               attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean addUsersForGroups(Connection db, HashMap map, int userId) throws SQLException {
     Iterator iter = (Iterator) this.iterator();
@@ -299,10 +401,10 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the getEnabledForUser attribute of the UserGroupList object
+   * Sets the getEnabledForUser attribute of the UserGroupList object
    *
-   * @param  enabledOK  The new getEnabledForUser value
-   * @param  uId        The new getEnabledForUser value
+   * @param enabledOK The new getEnabledForUser value
+   * @param uId       The new getEnabledForUser value
    */
   public void setGetEnabledForUser(int enabledOK, int uId) {
     enabled = enabledOK;
@@ -312,10 +414,10 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the getEnabledForCampaign attribute of the UserGroupList object
+   * Sets the getEnabledForCampaign attribute of the UserGroupList object
    *
-   * @param  enabledOK  The new getEnabledForCampaign value
-   * @param  cId        The new getEnabledForCampaign value
+   * @param enabledOK The new getEnabledForCampaign value
+   * @param cId       The new getEnabledForCampaign value
    */
   public void setGetEnabledForCampaign(int enabledOK, int cId) {
     enabled = enabledOK;
@@ -325,10 +427,10 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelectObj attribute of the UserGroupList object
+   * Gets the htmlSelectObj attribute of the UserGroupList object
    *
-   * @param  selectedKey  Description of the Parameter
-   * @return              The htmlSelectObj value
+   * @param selectedKey Description of the Parameter
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj(int selectedKey) {
     HtmlSelect groupListSelect = new HtmlSelect();
@@ -352,9 +454,9 @@ public class UserGroupList extends ArrayList {
    *  Get and Set methods
    */
   /**
-   *  Gets the pagedListInfo attribute of the UserGroupList object
+   * Gets the pagedListInfo attribute of the UserGroupList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -362,9 +464,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the UserGroupList object
+   * Sets the pagedListInfo attribute of the UserGroupList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -372,9 +474,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the groupId attribute of the UserGroupList object
+   * Gets the groupId attribute of the UserGroupList object
    *
-   * @return    The groupId value
+   * @return The groupId value
    */
   public int getGroupId() {
     return groupId;
@@ -382,9 +484,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the groupId attribute of the UserGroupList object
+   * Sets the groupId attribute of the UserGroupList object
    *
-   * @param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -392,9 +494,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the groupId attribute of the UserGroupList object
+   * Sets the groupId attribute of the UserGroupList object
    *
-   * @param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -402,9 +504,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the userId attribute of the UserGroupList object
+   * Gets the userId attribute of the UserGroupList object
    *
-   * @return    The userId value
+   * @return The userId value
    */
   public int getUserId() {
     return userId;
@@ -412,9 +514,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the userId attribute of the UserGroupList object
+   * Sets the userId attribute of the UserGroupList object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -422,9 +524,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the userId attribute of the UserGroupList object
+   * Sets the userId attribute of the UserGroupList object
    *
-   * @param  tmp  The new userId value
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -432,9 +534,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the UserGroupList object
+   * Gets the enabled attribute of the UserGroupList object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -442,9 +544,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the UserGroupList object
+   * Sets the enabled attribute of the UserGroupList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -452,9 +554,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the UserGroupList object
+   * Sets the enabled attribute of the UserGroupList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -462,9 +564,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the buildResources attribute of the UserGroupList object
+   * Gets the buildResources attribute of the UserGroupList object
    *
-   * @return    The buildResources value
+   * @return The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -472,9 +574,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the UserGroupList object
+   * Sets the buildResources attribute of the UserGroupList object
    *
-   * @param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -482,9 +584,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the buildResources attribute of the UserGroupList object
+   * Sets the buildResources attribute of the UserGroupList object
    *
-   * @param  tmp  The new buildResources value
+   * @param tmp The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -492,9 +594,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the getEnabledForUser attribute of the UserGroupList object
+   * Gets the getEnabledForUser attribute of the UserGroupList object
    *
-   * @return    The getEnabledForUser value
+   * @return The getEnabledForUser value
    */
   public boolean getGetEnabledForUser() {
     return getEnabledForUser;
@@ -502,9 +604,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the getEnabledForUser attribute of the UserGroupList object
+   * Sets the getEnabledForUser attribute of the UserGroupList object
    *
-   * @param  tmp  The new getEnabledForUser value
+   * @param tmp The new getEnabledForUser value
    */
   public void setGetEnabledForUser(boolean tmp) {
     this.getEnabledForUser = tmp;
@@ -512,9 +614,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the getEnabledForUser attribute of the UserGroupList object
+   * Sets the getEnabledForUser attribute of the UserGroupList object
    *
-   * @param  tmp  The new getEnabledForUser value
+   * @param tmp The new getEnabledForUser value
    */
   public void setGetEnabledForUser(String tmp) {
     this.getEnabledForUser = DatabaseUtils.parseBoolean(tmp);
@@ -522,9 +624,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the labelNoneSelected attribute of the UserGroupList object
+   * Gets the labelNoneSelected attribute of the UserGroupList object
    *
-   * @return    The labelNoneSelected value
+   * @return The labelNoneSelected value
    */
   public String getLabelNoneSelected() {
     return labelNoneSelected;
@@ -532,9 +634,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the labelNoneSelected attribute of the UserGroupList object
+   * Sets the labelNoneSelected attribute of the UserGroupList object
    *
-   * @param  tmp  The new labelNoneSelected value
+   * @param tmp The new labelNoneSelected value
    */
   public void setLabelNoneSelected(String tmp) {
     this.labelNoneSelected = tmp;
@@ -542,9 +644,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the UserGroupList object
+   * Gets the siteId attribute of the UserGroupList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -552,9 +654,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the UserGroupList object
+   * Sets the siteId attribute of the UserGroupList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -562,9 +664,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the UserGroupList object
+   * Sets the siteId attribute of the UserGroupList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -572,9 +674,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the includeAllSites attribute of the UserGroupList object
+   * Gets the includeAllSites attribute of the UserGroupList object
    *
-   * @return    The includeAllSites value
+   * @return The includeAllSites value
    */
   public boolean getIncludeAllSites() {
     return includeAllSites;
@@ -582,9 +684,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the UserGroupList object
+   * Sets the includeAllSites attribute of the UserGroupList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(boolean tmp) {
     this.includeAllSites = tmp;
@@ -592,9 +694,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the UserGroupList object
+   * Sets the includeAllSites attribute of the UserGroupList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(String tmp) {
     this.includeAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -602,9 +704,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the UserGroupList object
+   * Gets the exclusiveToSite attribute of the UserGroupList object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -612,9 +714,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the UserGroupList object
+   * Sets the exclusiveToSite attribute of the UserGroupList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -622,9 +724,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the UserGroupList object
+   * Sets the exclusiveToSite attribute of the UserGroupList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
@@ -632,9 +734,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the campaignId attribute of the UserGroupList object
+   * Gets the campaignId attribute of the UserGroupList object
    *
-   * @return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -642,9 +744,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the campaignId attribute of the UserGroupList object
+   * Sets the campaignId attribute of the UserGroupList object
    *
-   * @param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -652,9 +754,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the campaignId attribute of the UserGroupList object
+   * Sets the campaignId attribute of the UserGroupList object
    *
-   * @param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
@@ -662,9 +764,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the getEnabledForCampaign attribute of the UserGroupList object
+   * Gets the getEnabledForCampaign attribute of the UserGroupList object
    *
-   * @return    The getEnabledForCampaign value
+   * @return The getEnabledForCampaign value
    */
   public boolean getGetEnabledForCampaign() {
     return getEnabledForCampaign;
@@ -672,9 +774,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the getEnabledForCampaign attribute of the UserGroupList object
+   * Sets the getEnabledForCampaign attribute of the UserGroupList object
    *
-   * @param  tmp  The new getEnabledForCampaign value
+   * @param tmp The new getEnabledForCampaign value
    */
   public void setGetEnabledForCampaign(boolean tmp) {
     this.getEnabledForCampaign = tmp;
@@ -682,9 +784,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the getEnabledForCampaign attribute of the UserGroupList object
+   * Sets the getEnabledForCampaign attribute of the UserGroupList object
    *
-   * @param  tmp  The new getEnabledForCampaign value
+   * @param tmp The new getEnabledForCampaign value
    */
   public void setGetEnabledForCampaign(String tmp) {
     this.getEnabledForCampaign = DatabaseUtils.parseBoolean(tmp);
@@ -692,9 +794,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Gets the buildUserCount attribute of the UserGroupList object
+   * Gets the buildUserCount attribute of the UserGroupList object
    *
-   * @return    The buildUserCount value
+   * @return The buildUserCount value
    */
   public boolean getBuildUserCount() {
     return buildUserCount;
@@ -702,9 +804,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the buildUserCount attribute of the UserGroupList object
+   * Sets the buildUserCount attribute of the UserGroupList object
    *
-   * @param  tmp  The new buildUserCount value
+   * @param tmp The new buildUserCount value
    */
   public void setBuildUserCount(boolean tmp) {
     this.buildUserCount = tmp;
@@ -712,9 +814,9 @@ public class UserGroupList extends ArrayList {
 
 
   /**
-   *  Sets the buildUserCount attribute of the UserGroupList object
+   * Sets the buildUserCount attribute of the UserGroupList object
    *
-   * @param  tmp  The new buildUserCount value
+   * @param tmp The new buildUserCount value
    */
   public void setBuildUserCount(String tmp) {
     this.buildUserCount = DatabaseUtils.parseBoolean(tmp);

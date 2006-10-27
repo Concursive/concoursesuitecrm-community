@@ -16,6 +16,7 @@
 package org.aspcfs.modules.quotes.base;
 
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -38,11 +39,86 @@ import java.util.Iterator;
  * @created October 28, 2004
  */
 public class QuoteLogList extends ArrayList {
+  public final static String tableName = "quotelog";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int quoteId = -1;
   private boolean doSystemMessages = true;
   private SystemStatus systemStatus = null;
+
+  /**
+   * Sets the lastAnchor attribute of the QuoteLogList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the QuoteLogList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the QuoteLogList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the QuoteLogList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the QuoteLogList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the QuoteLogList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the QuoteLogList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
 
   /**
    * Gets the pagedListInfo attribute of the QuoteLogList object
@@ -279,6 +355,17 @@ public class QuoteLogList extends ArrayList {
     if (quoteId > -1) {
       sqlFilter.append("AND q.quote_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -293,6 +380,17 @@ public class QuoteLogList extends ArrayList {
     int i = 0;
     if (quoteId > -1) {
       pst.setInt(++i, quoteId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

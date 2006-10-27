@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -33,12 +34,86 @@ import java.util.Iterator;
  * @created February 4, 2003
  */
 public class ActiveSurveyAnswerItemList extends ArrayList {
+  public final static String tableName = "active_survey_answer_items";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private int itemId = -1;
   private int contactId = -1;
   private int answerId = -1;
   protected PagedListInfo pagedListInfo = null;
   private ActiveSurveyQuestionItem item = null;
+
+  /**
+   * Sets the lastAnchor attribute of the ActiveSurveyAnswerItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActiveSurveyAnswerItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActiveSurveyAnswerItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActiveSurveyAnswerItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActiveSurveyAnswerItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActiveSurveyAnswerItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActiveSurveyAnswerItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -149,7 +224,9 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     if (pst != null) {
       pst.close();
     }
-    item = new ActiveSurveyQuestionItem(db, itemId);
+    if (itemId != -1) {
+      item = new ActiveSurveyQuestionItem(db, itemId);
+    }
     //build items & comments
     Iterator thisList = this.iterator();
     while (thisList.hasNext()) {
@@ -177,8 +254,8 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM active_survey_responses asr, active_survey_answers asa, active_survey_answer_items asi " +
-        "WHERE asr.response_id = asa.response_id AND asa.answer_id = asi.answer_id ");
+            "FROM active_survey_responses asr, active_survey_answers asa, active_survey_answer_items asi " +
+            "WHERE asr.response_id = asa.response_id AND asa.answer_id = asi.answer_id ");
 
     createFilter(sqlFilter);
 
@@ -200,7 +277,7 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString());
+                sqlFilter.toString());
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         if (pagedListInfo != null) {
@@ -229,8 +306,8 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     }
     sqlSelect.append(
         "asi.item_id, asi.answer_id, asi.comments, asr.contact_id, asr.entered  " +
-        "FROM active_survey_responses asr, active_survey_answers asa, active_survey_answer_items asi " +
-        "WHERE asr.response_id = asa.response_id AND asa.answer_id = asi.answer_id ");
+            "FROM active_survey_responses asr, active_survey_answers asa, active_survey_answer_items asi " +
+            "WHERE asr.response_id = asa.response_id AND asa.answer_id = asi.answer_id ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -260,6 +337,17 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     if (answerId != -1) {
       sqlFilter.append("AND asa.answer_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -284,7 +372,17 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     if (answerId != -1) {
       pst.setInt(++i, answerId);
     }
-
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -301,8 +399,8 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     int recordCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS thecount " +
-        "FROM active_survey_answer_items " +
-        "WHERE item_id = ? ");
+            "FROM active_survey_answer_items " +
+            "WHERE item_id = ? ");
     pst.setInt(1, itemId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

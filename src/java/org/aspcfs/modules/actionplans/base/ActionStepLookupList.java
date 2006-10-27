@@ -15,6 +15,10 @@
  */
 package org.aspcfs.modules.actionplans.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,22 +26,107 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.aspcfs.utils.DatabaseUtils;
-
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @created    August 31, 2005
+ * @author Ananth
+ * @created August 31, 2005
  */
 public class ActionStepLookupList extends ArrayList {
   private int stepId = -1;
 
+  public final static String tableName = "action_step_lookup";
+  public final static String uniqueField = "code";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
 
   /**
-   *  Gets the stepId attribute of the ActionStepLookupList object
+   * Sets the lastAnchor attribute of the ActionStepLookupList object
    *
-   * @return    The stepId value
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionStepLookupList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionStepLookupList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionStepLookupList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionStepLookupList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the ActionStepLookupList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionStepLookupList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionStepLookupList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Gets the stepId attribute of the ActionStepLookupList object
+   *
+   * @return The stepId value
    */
   public int getStepId() {
     return stepId;
@@ -45,9 +134,9 @@ public class ActionStepLookupList extends ArrayList {
 
 
   /**
-   *  Sets the stepId attribute of the ActionStepLookupList object
+   * Sets the stepId attribute of the ActionStepLookupList object
    *
-   * @param  tmp  The new stepId value
+   * @param tmp The new stepId value
    */
   public void setStepId(int tmp) {
     this.stepId = tmp;
@@ -55,9 +144,9 @@ public class ActionStepLookupList extends ArrayList {
 
 
   /**
-   *  Sets the stepId attribute of the ActionStepLookupList object
+   * Sets the stepId attribute of the ActionStepLookupList object
    *
-   * @param  tmp  The new stepId value
+   * @param tmp The new stepId value
    */
   public void setStepId(String tmp) {
     this.stepId = Integer.parseInt(tmp);
@@ -65,10 +154,10 @@ public class ActionStepLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -83,8 +172,8 @@ public class ActionStepLookupList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM action_step_lookup asl " +
-        "WHERE asl.code > 0 ");
+            "FROM action_step_lookup asl " +
+            "WHERE asl.code > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -93,8 +182,8 @@ public class ActionStepLookupList extends ArrayList {
     sqlSelect.append(" SELECT ");
     sqlSelect.append(
         "asl.* " +
-        "FROM action_step_lookup asl " +
-        "WHERE asl.code > 0 ");
+            "FROM action_step_lookup asl " +
+            "WHERE asl.code > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -109,10 +198,10 @@ public class ActionStepLookupList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -121,30 +210,52 @@ public class ActionStepLookupList extends ArrayList {
     if (stepId > -1) {
       sqlFilter.append("AND asl.step_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst            Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (stepId != -1) {
       pst.setInt(++i, stepId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     boolean doCommit = false;

@@ -16,23 +16,25 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    August 17, 2005
- * @version    $Id: ActionPhaseList.java,v 1.1.2.1 2005/08/17 15:29:07 partha
- *      Exp $
+ * @author partha
+ * @version $Id: ActionPhaseList.java,v 1.1.2.1 2005/08/17 15:29:07 partha
+ *          Exp $
+ * @created August 17, 2005
  */
 public class ActionPhaseList extends ArrayList {
   //filters
@@ -44,19 +46,94 @@ public class ActionPhaseList extends ArrayList {
   private int modifiedBy = -1;
   private boolean buildSteps = false;
   protected boolean buildCompletePhaseList = false;
+  public final static String tableName = "action_phase";
+  public final static String uniqueField = "phase_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
 
   /**
-   *  Constructor for the ActionPhaseList object
+   * Constructor for the ActionPhaseList object
    */
-  public ActionPhaseList() { }
+  public ActionPhaseList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the ActionPhaseList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Description of the Method
+   * Sets the lastAnchor attribute of the ActionPhaseList object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPhaseList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPhaseList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionPhaseList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActionPhaseList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionPhaseList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -69,8 +146,8 @@ public class ActionPhaseList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM action_phase aph " +
-        " WHERE aph.phase_id > -1 ");
+            " FROM action_phase aph " +
+            " WHERE aph.phase_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -100,8 +177,8 @@ public class ActionPhaseList extends ArrayList {
     }
     sqlSelect.append(
         " aph.* " +
-        " FROM action_phase aph " +
-        " WHERE aph.phase_id > -1 ");
+            " FROM action_phase aph " +
+            " WHERE aph.phase_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -126,10 +203,10 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -146,15 +223,26 @@ public class ActionPhaseList extends ArrayList {
     if (planId > -1) {
       sqlFilter.append("AND aph.plan_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -167,16 +255,28 @@ public class ActionPhaseList extends ArrayList {
     if (planId > -1) {
       pst.setInt(++i, planId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
+
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean result = false;
@@ -190,10 +290,10 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildSteps(Connection db) throws SQLException {
     Iterator iterator = (Iterator) this.iterator();
@@ -205,9 +305,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the stepSize attribute of the ActionPhaseList object
+   * Gets the stepSize attribute of the ActionPhaseList object
    *
-   * @return    The stepSize value
+   * @return The stepSize value
    */
   public int getStepsSize() {
     int result = 0;
@@ -221,9 +321,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelectObject attribute of the ActionPhaseList object
+   * Gets the htmlSelectObject attribute of the ActionPhaseList object
    *
-   * @return    The htmlSelectObject value
+   * @return The htmlSelectObject value
    */
   public HtmlSelect getHtmlSelectObject() {
     HtmlSelect actionPhaseListSelect = new HtmlSelect();
@@ -237,10 +337,10 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ActionPhaseList object
+   * Gets the htmlSelect attribute of the ActionPhaseList object
    *
-   * @param  selectName  Description of the Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -248,11 +348,11 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ActionPlanList object
+   * Gets the htmlSelect attribute of the ActionPlanList object
    *
-   * @param  selectName  Description of the Parameter
-   * @param  defaultKey  Description of the Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect actionPhaseListSelect = new HtmlSelect();
@@ -266,9 +366,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the lastPhaseId attribute of the ActionPhaseList object
+   * Gets the lastPhaseId attribute of the ActionPhaseList object
    *
-   * @return    The lastPhaseId value
+   * @return The lastPhaseId value
    */
   public int getLastPhaseId() {
     int result = -1;
@@ -284,9 +384,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasUserGroupStep() {
     Iterator iter = (Iterator) this.iterator();
@@ -301,9 +401,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public ActionPhaseList reorder() {
     HashMap positionMap = this.getPhaseIdsAsHashMap();
@@ -323,10 +423,10 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  list  Description of the Parameter
-   * @return       Description of the Return Value
+   * @param list Description of the Parameter
+   * @return Description of the Return Value
    */
   public String printArray(ArrayList list) {
     StringBuffer str = new StringBuffer();
@@ -338,9 +438,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the phaseIdsAsHashMap attribute of the ActionPhaseList object
+   * Gets the phaseIdsAsHashMap attribute of the ActionPhaseList object
    *
-   * @return    The phaseIdsAsHashMap value
+   * @return The phaseIdsAsHashMap value
    */
   public HashMap getPhaseIdsAsHashMap() {
     HashMap map = new HashMap();
@@ -354,9 +454,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the phasesByParentAsHashMap attribute of the ActionPhaseList object
+   * Gets the phasesByParentAsHashMap attribute of the ActionPhaseList object
    *
-   * @return    The phasesByParentAsHashMap value
+   * @return The phasesByParentAsHashMap value
    */
   public HashMap getPhasesByParentAsHashMap() {
     HashMap map = new HashMap();
@@ -370,9 +470,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the phasesAsHashMap attribute of the ActionPhaseList object
+   * Gets the phasesAsHashMap attribute of the ActionPhaseList object
    *
-   * @return    The phasesAsHashMap value
+   * @return The phasesAsHashMap value
    */
   public HashMap getPhasesAsHashMap() {
     HashMap map = new HashMap();
@@ -386,9 +486,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the phaseParentsAsHashMap attribute of the ActionPhaseList object
+   * Gets the phaseParentsAsHashMap attribute of the ActionPhaseList object
    *
-   * @return    The phaseParentsAsHashMap value
+   * @return The phaseParentsAsHashMap value
    */
   public HashMap getPhaseParentsAsHashMap() {
     HashMap map = new HashMap();
@@ -402,10 +502,10 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the phaseById attribute of the ActionPhaseList object
+   * Gets the phaseById attribute of the ActionPhaseList object
    *
-   * @param  id  Description of the Parameter
-   * @return     The phaseById value
+   * @param id Description of the Parameter
+   * @return The phaseById value
    */
   public ActionPhase getPhaseById(int id) {
     ActionPhase result = null;
@@ -421,11 +521,11 @@ public class ActionPhaseList extends ArrayList {
   }
 
 
-///////Get & Set methods
+  ///////Get & Set methods
   /**
-   *  Gets the pagedListInfo attribute of the ActionPhaseList object
+   * Gets the pagedListInfo attribute of the ActionPhaseList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -433,9 +533,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionPhaseList object
+   * Sets the pagedListInfo attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -443,9 +543,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the ActionPhaseList object
+   * Gets the id attribute of the ActionPhaseList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -453,9 +553,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActionPhaseList object
+   * Sets the id attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -463,9 +563,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActionPhaseList object
+   * Sets the id attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -473,9 +573,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the parentId attribute of the ActionPhaseList object
+   * Gets the parentId attribute of the ActionPhaseList object
    *
-   * @return    The parentId value
+   * @return The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -483,9 +583,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the parentId attribute of the ActionPhaseList object
+   * Sets the parentId attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -493,9 +593,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the parentId attribute of the ActionPhaseList object
+   * Sets the parentId attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new parentId value
+   * @param tmp The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -503,9 +603,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the planId attribute of the ActionPhaseList object
+   * Gets the planId attribute of the ActionPhaseList object
    *
-   * @return    The planId value
+   * @return The planId value
    */
   public int getPlanId() {
     return planId;
@@ -513,9 +613,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the planId attribute of the ActionPhaseList object
+   * Sets the planId attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new planId value
+   * @param tmp The new planId value
    */
   public void setPlanId(int tmp) {
     this.planId = tmp;
@@ -523,9 +623,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the planId attribute of the ActionPhaseList object
+   * Sets the planId attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new planId value
+   * @param tmp The new planId value
    */
   public void setPlanId(String tmp) {
     this.planId = Integer.parseInt(tmp);
@@ -533,9 +633,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the ActionPhaseList object
+   * Gets the enteredBy attribute of the ActionPhaseList object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -543,9 +643,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionPhaseList object
+   * Sets the enteredBy attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -553,9 +653,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionPhaseList object
+   * Sets the enteredBy attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -563,9 +663,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ActionPhaseList object
+   * Gets the modifiedBy attribute of the ActionPhaseList object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -573,9 +673,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionPhaseList object
+   * Sets the modifiedBy attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -583,9 +683,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionPhaseList object
+   * Sets the modifiedBy attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -593,9 +693,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the buildSteps attribute of the ActionPhaseList object
+   * Gets the buildSteps attribute of the ActionPhaseList object
    *
-   * @return    The buildSteps value
+   * @return The buildSteps value
    */
   public boolean getBuildSteps() {
     return buildSteps;
@@ -603,9 +703,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the buildSteps attribute of the ActionPhaseList object
+   * Sets the buildSteps attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new buildSteps value
+   * @param tmp The new buildSteps value
    */
   public void setBuildSteps(boolean tmp) {
     this.buildSteps = tmp;
@@ -613,9 +713,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the buildSteps attribute of the ActionPhaseList object
+   * Sets the buildSteps attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new buildSteps value
+   * @param tmp The new buildSteps value
    */
   public void setBuildSteps(String tmp) {
     this.buildSteps = DatabaseUtils.parseBoolean(tmp);
@@ -623,9 +723,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Gets the buildCompletePhaseList attribute of the ActionPhaseList object
+   * Gets the buildCompletePhaseList attribute of the ActionPhaseList object
    *
-   * @return    The buildCompletePhaseList value
+   * @return The buildCompletePhaseList value
    */
   public boolean getBuildCompletePhaseList() {
     return buildCompletePhaseList;
@@ -633,9 +733,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the buildCompletePhaseList attribute of the ActionPhaseList object
+   * Sets the buildCompletePhaseList attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new buildCompletePhaseList value
+   * @param tmp The new buildCompletePhaseList value
    */
   public void setBuildCompletePhaseList(boolean tmp) {
     this.buildCompletePhaseList = tmp;
@@ -643,9 +743,9 @@ public class ActionPhaseList extends ArrayList {
 
 
   /**
-   *  Sets the buildCompletePhaseList attribute of the ActionPhaseList object
+   * Sets the buildCompletePhaseList attribute of the ActionPhaseList object
    *
-   * @param  tmp  The new buildCompletePhaseList value
+   * @param tmp The new buildCompletePhaseList value
    */
   public void setBuildCompletePhaseList(String tmp) {
     this.buildCompletePhaseList = DatabaseUtils.parseBoolean(tmp);

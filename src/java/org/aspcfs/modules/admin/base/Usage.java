@@ -19,6 +19,7 @@ import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -47,6 +48,9 @@ public class Usage {
   public Usage() {
   }
 
+  public Usage(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
 
   /**
    * Sets the user in which the usage originated from.<p>
@@ -192,8 +196,8 @@ public class Usage {
     id = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO usage_log " +
-        "(" + (id > -1 ? "usage_id, " : "") + "enteredby, " + DatabaseUtils.addQuotes(db, "action")+ ", record_id, record_size) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
+            "(" + (id > -1 ? "usage_id, " : "") + "enteredby, " + DatabaseUtils.addQuotes(db, "action") + ", record_id, record_size) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -206,5 +210,13 @@ public class Usage {
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "usage_log_usage_id_seq", id);
     return true;
+  }
+
+  protected void buildRecord(ResultSet rs) throws SQLException {
+    id = rs.getInt("usage_id");
+    enteredBy = rs.getInt("enteredby");
+    action = rs.getInt("action");
+    recordId = rs.getInt("record_id");
+    recordSize = rs.getInt("record_size");
   }
 }

@@ -24,6 +24,7 @@ import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.XMLUtils;
+import org.aspcfs.utils.web.CustomLookupElement;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.w3c.dom.Element;
 
@@ -86,7 +87,8 @@ public class TransactionItem {
   /**
    * Constructor for the TransactionItem object
    */
-  public TransactionItem() { }
+  public TransactionItem() {
+  }
 
 
   /**
@@ -102,7 +104,7 @@ public class TransactionItem {
       this.setAction(objectElement);
       this.setObject(objectElement, mapping);
       ignoredProperties = XMLUtils.populateObject(object, objectElement);
-      
+
       //populate the object's user fields using the user that was authenticated 
       this.populateUserData(thisUser);
     } catch (Exception e) {
@@ -140,7 +142,7 @@ public class TransactionItem {
             ObjectUtils.setParam(object, param, value);
           }
         }
-      } 
+      }
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println(
@@ -490,8 +492,7 @@ public class TransactionItem {
       appendErrorMessage("Unsupported object specified");
       return;
     }
-    if (packetContext.getAuthenticationItem().getType() == AuthenticationItem.CENTRIC_USER)
-    {
+    if (packetContext.getAuthenticationItem().getType() == AuthenticationItem.CENTRIC_USER) {
       //Verify if user has permission to perform the action on this object
       String permission = ObjectUtils.getParam(object, "permission");
       if (!hasPermission(permission)) {
@@ -599,7 +600,7 @@ public class TransactionItem {
       //Determine the method to execute on the object
       String executeMethod = null;
       switch (action) {
-        case -1:
+        case-1:
           appendErrorMessage("Action not specified");
           break;
         case INSERT:
@@ -827,12 +828,24 @@ public class TransactionItem {
             SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(
                 lookupField + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupServerId(
-                  packetContext.getClientManager(), referencedTable.getId(), value);
-              ObjectUtils.setParam(object, param, String.valueOf(recordId));
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println(
-                    "TransactionItem-> Setting server parameter: " + param + " data: " + recordId);
+              if (object instanceof CustomLookupElement) {
+                String field = value.substring(0, value.indexOf("="));
+                value = value.substring(value.indexOf("=") + 1);
+                int recordId = syncClientMap.lookupServerId(
+                    packetContext.getClientManager(), referencedTable.getId(), (value.equals("-1") ? null : value));
+                ObjectUtils.setParam(object, "serverMapId", field + "=" + String.valueOf(recordId));
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println(
+                      "TransactionItem-> Setting server parameter: " + param + " data: " + recordId);
+                }
+              } else {
+                int recordId = syncClientMap.lookupServerId(
+                    packetContext.getClientManager(), referencedTable.getId(), value);
+                ObjectUtils.setParam(object, param, String.valueOf(recordId));
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println(
+                      "TransactionItem-> Setting server parameter: " + param + " data: " + recordId);
+                }
               }
             }
           } else {
@@ -1201,8 +1214,7 @@ public class TransactionItem {
         permission += "-delete";
       }
 
-      if (packetContext.getSystemStatus() != null && packetContext.getUserBean() != null)
-      {
+      if (packetContext.getSystemStatus() != null && packetContext.getUserBean() != null) {
         return (packetContext.getSystemStatus().hasPermission(
             packetContext.getUserBean().getUserId(), permission));
       }

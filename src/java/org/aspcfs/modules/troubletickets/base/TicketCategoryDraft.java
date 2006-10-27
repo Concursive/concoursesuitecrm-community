@@ -45,17 +45,41 @@ public class TicketCategoryDraft extends GenericBean {
   private int siteId = -1;
   private TicketCategoryDraftList shortChildList = new TicketCategoryDraftList();
 
+  private String baseTableName = "ticket_category_draft";
+
+
+  /**
+   * Gets the baseTableName attribute of the TicketCategoryDraft object
+   *
+   * @return The baseTableName value
+   */
+  public String getBaseTableName() {
+    return baseTableName;
+  }
+
+
+  /**
+   * Sets the baseTableName attribute of the TicketCategoryDraft object
+   *
+   * @param tmp The new baseTableName value
+   */
+  public void setBaseTableName(String tmp) {
+    this.baseTableName = tmp;
+  }
+
 
   /**
    * Constructor for the TicketCategoryDraft object
    */
-  public TicketCategoryDraft() { }
+  public TicketCategoryDraft() {
+  }
 
 
   /**
    * Constructor for the TicketCategoryDraft object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public TicketCategoryDraft(ResultSet rs) throws SQLException {
@@ -69,6 +93,7 @@ public class TicketCategoryDraft extends GenericBean {
    * @param db        Description of the Parameter
    * @param id        Description of the Parameter
    * @param tableName Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public TicketCategoryDraft(Connection db, int id, String tableName) throws SQLException {
@@ -101,6 +126,7 @@ public class TicketCategoryDraft extends GenericBean {
    * @param id        Description of the Parameter
    * @param tableName Description of the Parameter
    * @param siteId    Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public TicketCategoryDraft(Connection db, int id, String tableName, int siteId) throws SQLException {
@@ -379,14 +405,30 @@ public class TicketCategoryDraft extends GenericBean {
   /**
    * Description of the Method
    *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
+    return insert(db, baseTableName);
+  }
+
+
+  /**
+   * Description of the Method
+   *
    * @param db            Description of Parameter
    * @param baseTableName Description of the Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db, String baseTableName) throws SQLException {
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
       id = DatabaseUtils.getNextSeq(db, baseTableName + "_draft_id_seq");
       PreparedStatement pst = db.prepareStatement(
@@ -410,12 +452,18 @@ public class TicketCategoryDraft extends GenericBean {
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, baseTableName + "_draft_id_seq", id);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -635,6 +683,7 @@ public class TicketCategoryDraft extends GenericBean {
    * @param tableName     Description of the Parameter
    * @param linkId        Description of the Parameter
    * @param buildOnLinkId Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public TicketCategoryDraft(Connection db, String tableName, int linkId, boolean buildOnLinkId) throws SQLException {

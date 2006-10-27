@@ -15,6 +15,7 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -33,6 +34,12 @@ import java.util.Iterator;
  * @created April 10, 2003
  */
 public class FileFolderList extends ArrayList {
+  public final static String tableName = "project_folders";
+  public final static String uniqueField = "folder_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
 
   private int parentId = -1;
   private int linkModuleId = -1;
@@ -46,6 +53,74 @@ public class FileFolderList extends ArrayList {
    * Constructor for the FileFolderList object
    */
   public FileFolderList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -146,8 +221,8 @@ public class FileFolderList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_folders f " +
-        "WHERE f.link_module_id > -1 ");
+            "FROM project_folders f " +
+            "WHERE f.link_module_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -174,8 +249,8 @@ public class FileFolderList extends ArrayList {
     }
     sqlSelect.append(
         "f.* " +
-        "FROM project_folders f " +
-        "WHERE f.link_module_id > -1 ");
+            "FROM project_folders f " +
+            "WHERE f.link_module_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -224,6 +299,17 @@ public class FileFolderList extends ArrayList {
     if (topLevelOnly) {
       sqlFilter.append("AND parent_id IS NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -245,6 +331,17 @@ public class FileFolderList extends ArrayList {
     if (parentId > -1) {
       pst.setInt(++i, parentId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -262,8 +359,8 @@ public class FileFolderList extends ArrayList {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) as filecount " +
-        "FROM project_folders pf " +
-        "WHERE pf.link_module_id = ? and pf.link_item_id = ? ");
+            "FROM project_folders pf " +
+            "WHERE pf.link_module_id = ? and pf.link_item_id = ? ");
     pst.setInt(1, linkModuleId);
     pst.setInt(2, linkItemId);
     ResultSet rs = pst.executeQuery();

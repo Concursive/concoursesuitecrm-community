@@ -138,8 +138,8 @@ public class CustomField extends GenericBean implements Cloneable {
   public CustomField(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM custom_field_info cf " +
-        "WHERE cf.field_id = ? ");
+            "FROM custom_field_info cf " +
+            "WHERE cf.field_id = ? ");
     pst.setInt(1, thisId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1416,7 +1416,7 @@ public class CustomField extends GenericBean implements Cloneable {
       return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + rowElementId + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals(
           "") ? "" : "maxlength=\"" + maxlength + "\" ") +
           (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + StringUtils.toHtmlValue(
-              ObjectUtils.getParam(tmpResult, "description")) + "\"> ");
+          ObjectUtils.getParam(tmpResult, "description")) + "\"> ");
     } else {
       return (StringUtils.toHtmlValue(
           ObjectUtils.getParam(tmpResult, "description")));
@@ -1485,7 +1485,7 @@ public class CustomField extends GenericBean implements Cloneable {
       case LINK:
         return ("<a href=\"" + jsEvent + "\" >" + display + "</a>");
       case STATE_SELECT:
-        StateSelect stateSelect = new StateSelect(thisSystem,"UNITED STATES");
+        StateSelect stateSelect = new StateSelect(thisSystem, "UNITED STATES");
         return (stateSelect.getHtmlSelect(elementName, "UNITED STATES", StringUtils.toHtmlValue(enteredValue)));
       default:
         String maxlength = this.getParameter("maxlength");
@@ -1614,9 +1614,9 @@ public class CustomField extends GenericBean implements Cloneable {
     if (recordId > -1) {
       PreparedStatement pst = db.prepareStatement(
           "SELECT * " +
-          "FROM custom_field_data " +
-          "WHERE record_id = ? " +
-          "AND field_id = ? ");
+              "FROM custom_field_data " +
+              "WHERE record_id = ? " +
+              "AND field_id = ? ");
       pst.setInt(1, this.recordId);
       pst.setInt(2, this.id);
       ResultSet rs = pst.executeQuery();
@@ -1658,7 +1658,7 @@ public class CustomField extends GenericBean implements Cloneable {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO custom_field_data " +
-        "(record_id, field_id, selected_item_id, entered_value, entered_number, ");
+            "(record_id, field_id, selected_item_id, entered_value, entered_number, ");
     sql.append("entered_float ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
     sql.append("?) ");
@@ -1690,8 +1690,8 @@ public class CustomField extends GenericBean implements Cloneable {
     int result = 1;
     String sql =
         "UPDATE custom_field_info " +
-        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, group_id = ? " +
-        "WHERE field_id = ? ";
+            "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, group_id = ? " +
+            "WHERE field_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, level);
@@ -1712,9 +1712,11 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public boolean insertField(Connection db) throws SQLException {
     boolean result = false;
-
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       id = DatabaseUtils.getNextSeq(db, "custom_field_info_field_id_seq");
       String sql = "INSERT INTO custom_field_info " +
           "(" + (id > -1 ? "field_id, " : "") + "group_id, field_name, field_type, required, parameters, additional_text ) " +
@@ -1736,13 +1738,19 @@ public class CustomField extends GenericBean implements Cloneable {
       if (type == SELECT && elementData != null && elementData instanceof LookupList) {
         insertLookupList(db);
       }
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
       result = false;
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -1786,10 +1794,10 @@ public class CustomField extends GenericBean implements Cloneable {
 
     String sql =
         "UPDATE custom_field_info " +
-        "SET field_name = ?, field_type = ?, required = ?, parameters = ?, " +
-        "additional_text = ? " +
-        "WHERE group_id = ? " +
-        "AND field_id = ? ";
+            "SET field_name = ?, field_type = ?, required = ?, parameters = ?, " +
+            "additional_text = ? " +
+            "WHERE group_id = ? " +
+            "AND field_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, this.getName());
@@ -1843,7 +1851,7 @@ public class CustomField extends GenericBean implements Cloneable {
       //Delete the field from any records
       String sql =
           "DELETE FROM custom_field_data " +
-          "WHERE field_id = ? ";
+              "WHERE field_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(1, id);
       pst.execute();
@@ -1853,7 +1861,7 @@ public class CustomField extends GenericBean implements Cloneable {
       if (type == SELECT) {
         sql =
             "DELETE FROM custom_field_lookup " +
-            "WHERE field_id = ? ";
+                "WHERE field_id = ? ";
         pst = db.prepareStatement(sql);
         pst.setInt(1, id);
         pst.execute();
@@ -1863,7 +1871,7 @@ public class CustomField extends GenericBean implements Cloneable {
       //Delete the custom field
       sql =
           "DELETE FROM custom_field_info " +
-          "WHERE field_id = ? ";
+              "WHERE field_id = ? ";
       pst = db.prepareStatement(sql);
       pst.setInt(1, id);
       pst.execute();
@@ -2067,22 +2075,22 @@ public class CustomField extends GenericBean implements Cloneable {
 
   public String toString() {
     StringBuffer str = new StringBuffer();
-    str.append("CustomField::groupId "+groupId);
-    str.append("\nCustomField::id "+id);
-    str.append("\nCustomField::name "+name);
-    str.append("\nCustomField::level "+level);
-    str.append("\nCustomField::enteredValue "+enteredValue);
-    str.append("\nCustomField::enteredNumber "+enteredNumber);
-    str.append("\nCustomField::enteredDouble "+enteredDouble);
-    str.append("\nCustomField::selectedItemId "+selectedItemId);
-    str.append("\nCustomField::type "+type);
-    str.append("\nCustomField::validationType "+validationType);
-    str.append("\nCustomField::required "+required);
-    str.append("\nCustomField::startDate "+startDate);
-    str.append("\nCustomField::endDate "+endDate);
-    str.append("\nCustomField::entered "+entered);
-    str.append("\nCustomField::enabled "+enabled);
-    str.append("\nCustomField::additionalText "+additionalText);
+    str.append("CustomField::groupId " + groupId);
+    str.append("\nCustomField::id " + id);
+    str.append("\nCustomField::name " + name);
+    str.append("\nCustomField::level " + level);
+    str.append("\nCustomField::enteredValue " + enteredValue);
+    str.append("\nCustomField::enteredNumber " + enteredNumber);
+    str.append("\nCustomField::enteredDouble " + enteredDouble);
+    str.append("\nCustomField::selectedItemId " + selectedItemId);
+    str.append("\nCustomField::type " + type);
+    str.append("\nCustomField::validationType " + validationType);
+    str.append("\nCustomField::required " + required);
+    str.append("\nCustomField::startDate " + startDate);
+    str.append("\nCustomField::endDate " + endDate);
+    str.append("\nCustomField::entered " + entered);
+    str.append("\nCustomField::enabled " + enabled);
+    str.append("\nCustomField::additionalText " + additionalText);
     return str.toString();
   }
 
@@ -2111,8 +2119,8 @@ public class CustomField extends GenericBean implements Cloneable {
     int id = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT field_id " +
-        "FROM custom_field_info cf " +
-        "WHERE cf.field_name = ? ");
+            "FROM custom_field_info cf " +
+            "WHERE cf.field_name = ? ");
     pst.setString(1, name);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

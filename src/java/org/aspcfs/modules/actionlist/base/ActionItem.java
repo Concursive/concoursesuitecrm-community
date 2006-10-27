@@ -45,6 +45,86 @@ public class ActionItem extends GenericBean {
 
 
   /**
+   * Sets the actionId attribute of the ActionItem object
+   *
+   * @param tmp The new actionId value
+   */
+  public void setActionId(String tmp) {
+    this.actionId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the linkItemId attribute of the ActionItem object
+   *
+   * @param tmp The new linkItemId value
+   */
+  public void setLinkItemId(String tmp) {
+    this.linkItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the completeDate attribute of the ActionItem object
+   *
+   * @param tmp The new completeDate value
+   */
+  public void setCompleteDate(String tmp) {
+    this.completeDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the enteredBy attribute of the ActionItem object
+   *
+   * @param tmp The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the modifiedBy attribute of the ActionItem object
+   *
+   * @param tmp The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the modified attribute of the ActionItem object
+   *
+   * @param tmp The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the entered attribute of the ActionItem object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the enabled attribute of the ActionItem object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    * Constructor for the ActionItem object
    */
   public ActionItem() {
@@ -57,6 +137,7 @@ public class ActionItem extends GenericBean {
    * @param db Description of the Parameter
    * @param id Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public ActionItem(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -67,6 +148,7 @@ public class ActionItem extends GenericBean {
    * Constructor for the ActionItem object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ActionItem(ResultSet rs) throws SQLException {
@@ -327,9 +409,9 @@ public class ActionItem extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT ai.item_id, ai.action_id, ai.link_item_id, ai.completedate, " +
-        "ai.enteredby, ai.entered, ai.modifiedby, ai.modified, ai.enabled " +
-        "FROM action_item ai " +
-        "WHERE ai.item_id = ? ");
+            "ai.enteredby, ai.entered, ai.modifiedby, ai.modified, ai.enabled " +
+            "FROM action_item ai " +
+            "WHERE ai.item_id = ? ");
     int i = 0;
     pst.setInt(++i, id);
     ResultSet rs = pst.executeQuery();
@@ -352,15 +434,19 @@ public class ActionItem extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
       id = DatabaseUtils.getNextSeq(db, "action_item_code_seq");
       PreparedStatement pst = null;
       pst = db.prepareStatement(
           "INSERT INTO action_item " +
-          "(" + (id > -1 ? "item_id," : "") + "action_id, link_item_id, enteredby, modifiedby, enabled) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ? ) ");
+              "(" + (id > -1 ? "item_id," : "") + "action_id, link_item_id, enteredby, modifiedby, enabled) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ? ) ");
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -372,12 +458,18 @@ public class ActionItem extends GenericBean {
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "action_item_code_seq", id);
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -401,8 +493,8 @@ public class ActionItem extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_item " +
-          "SET completedate = ? " +
-          "WHERE item_id = ? ");
+              "SET completedate = ? " +
+              "WHERE item_id = ? ");
       if (this.getCompleteDate() != null && complete) {
         pst.setTimestamp(++i, this.getCompleteDate());
       } else if (complete && this.getCompleteDate() == null) {

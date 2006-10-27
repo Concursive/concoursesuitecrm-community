@@ -15,22 +15,25 @@
  */
 package org.aspcfs.modules.actionplans.base;
 
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @created    August 17, 2005
- * @version    $Id: ActionPlanWorkList.java,v 1.1.2.6 2005/08/29 14:45:22 partha
- *      Exp $
+ * @author Ananth
+ * @version $Id: ActionPlanWorkList.java,v 1.1.2.6 2005/08/29 14:45:22 partha
+ *          Exp $
+ * @created August 17, 2005
  */
 public class ActionPlanWorkList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -58,11 +61,86 @@ public class ActionPlanWorkList extends ArrayList {
   private boolean buildCurrentPhaseOnly = false;
   private boolean buildCurrentStepOnly = false;
 
+  public final static String tableName = "action_plan_work";
+  public final static String uniqueField = "plan_work_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   /**
-   *  Gets the userGroupId attribute of the ActionPlanWorkList object
+   * Sets the lastAnchor attribute of the ActionPlanWorkList object
    *
-   * @return    The userGroupId value
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionPlanWorkList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanWorkList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanWorkList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionPlanWorkList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActionPlanWorkList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionPlanWorkList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Gets the userGroupId attribute of the ActionPlanWorkList object
+   *
+   * @return The userGroupId value
    */
   public int getUserGroupId() {
     return userGroupId;
@@ -70,9 +148,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the userGroupId attribute of the ActionPlanWorkList object
+   * Sets the userGroupId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new userGroupId value
+   * @param tmp The new userGroupId value
    */
   public void setUserGroupId(int tmp) {
     this.userGroupId = tmp;
@@ -80,9 +158,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the userGroupId attribute of the ActionPlanWorkList object
+   * Sets the userGroupId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new userGroupId value
+   * @param tmp The new userGroupId value
    */
   public void setUserGroupId(String tmp) {
     this.userGroupId = Integer.parseInt(tmp);
@@ -90,9 +168,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the allMyPlans attribute of the ActionPlanWorkList object
+   * Gets the allMyPlans attribute of the ActionPlanWorkList object
    *
-   * @return    The allMyPlans value
+   * @return The allMyPlans value
    */
   public boolean getAllMyPlans() {
     return allMyPlans;
@@ -100,9 +178,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the allMyPlans attribute of the ActionPlanWorkList object
+   * Sets the allMyPlans attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new allMyPlans value
+   * @param tmp The new allMyPlans value
    */
   public void setAllMyPlans(boolean tmp) {
     this.allMyPlans = tmp;
@@ -110,9 +188,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the allMyPlans attribute of the ActionPlanWorkList object
+   * Sets the allMyPlans attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new allMyPlans value
+   * @param tmp The new allMyPlans value
    */
   public void setAllMyPlans(String tmp) {
     this.allMyPlans = DatabaseUtils.parseBoolean(tmp);
@@ -120,9 +198,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the opportunityId attribute of the ActionPlanWorkList object
+   * Gets the opportunityId attribute of the ActionPlanWorkList object
    *
-   * @return    The opportunityId value
+   * @return The opportunityId value
    */
   public int getOpportunityId() {
     return opportunityId;
@@ -130,9 +208,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the opportunityId attribute of the ActionPlanWorkList object
+   * Sets the opportunityId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new opportunityId value
+   * @param tmp The new opportunityId value
    */
   public void setOpportunityId(int tmp) {
     this.opportunityId = tmp;
@@ -140,9 +218,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the opportunityId attribute of the ActionPlanWorkList object
+   * Sets the opportunityId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new opportunityId value
+   * @param tmp The new opportunityId value
    */
   public void setOpportunityId(String tmp) {
     this.opportunityId = Integer.parseInt(tmp);
@@ -150,9 +228,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the ownerRange attribute of the ActionPlanWorkList object
+   * Gets the ownerRange attribute of the ActionPlanWorkList object
    *
-   * @return    The ownerRange value
+   * @return The ownerRange value
    */
   public String getOwnerRange() {
     return ownerRange;
@@ -160,9 +238,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the ownerRange attribute of the ActionPlanWorkList object
+   * Sets the ownerRange attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new ownerRange value
+   * @param tmp The new ownerRange value
    */
   public void setOwnerRange(String tmp) {
     this.ownerRange = tmp;
@@ -170,9 +248,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the hasCurrentPhase attribute of the ActionPlanWorkList object
+   * Gets the hasCurrentPhase attribute of the ActionPlanWorkList object
    *
-   * @return    The hasCurrentPhase value
+   * @return The hasCurrentPhase value
    */
   public int getHasCurrentPhase() {
     return hasCurrentPhase;
@@ -180,9 +258,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the hasCurrentPhase attribute of the ActionPlanWorkList object
+   * Sets the hasCurrentPhase attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new hasCurrentPhase value
+   * @param tmp The new hasCurrentPhase value
    */
   public void setHasCurrentPhase(int tmp) {
     this.hasCurrentPhase = tmp;
@@ -190,9 +268,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the hasCurrentPhase attribute of the ActionPlanWorkList object
+   * Sets the hasCurrentPhase attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new hasCurrentPhase value
+   * @param tmp The new hasCurrentPhase value
    */
   public void setHasCurrentPhase(String tmp) {
     this.hasCurrentPhase = Integer.parseInt(tmp);
@@ -200,9 +278,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the currentStepOwner attribute of the ActionPlanWorkList object
+   * Gets the currentStepOwner attribute of the ActionPlanWorkList object
    *
-   * @return    The currentStepOwner value
+   * @return The currentStepOwner value
    */
   public int getCurrentStepOwner() {
     return currentStepOwner;
@@ -210,9 +288,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the currentStepOwner attribute of the ActionPlanWorkList object
+   * Sets the currentStepOwner attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new currentStepOwner value
+   * @param tmp The new currentStepOwner value
    */
   public void setCurrentStepOwner(int tmp) {
     this.currentStepOwner = tmp;
@@ -220,9 +298,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the currentStepOwner attribute of the ActionPlanWorkList object
+   * Sets the currentStepOwner attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new currentStepOwner value
+   * @param tmp The new currentStepOwner value
    */
   public void setCurrentStepOwner(String tmp) {
     this.currentStepOwner = Integer.parseInt(tmp);
@@ -230,9 +308,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the viewpoint attribute of the ActionPlanWorkList object
+   * Gets the viewpoint attribute of the ActionPlanWorkList object
    *
-   * @return    The viewpoint value
+   * @return The viewpoint value
    */
   public int getViewpoint() {
     return viewpoint;
@@ -240,9 +318,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the viewpoint attribute of the ActionPlanWorkList object
+   * Sets the viewpoint attribute of the ActionPlanWorkList object
    *
-   * @param  viewpoint  The new viewpoint value
+   * @param viewpoint The new viewpoint value
    */
   public void setViewpoint(int viewpoint) {
     this.viewpoint = viewpoint;
@@ -250,9 +328,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the linkItemId attribute of the ActionPlanWorkList object
+   * Gets the linkItemId attribute of the ActionPlanWorkList object
    *
-   * @return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -260,9 +338,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the linkItemId attribute of the ActionPlanWorkList object
+   * Sets the linkItemId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -270,9 +348,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the linkItemId attribute of the ActionPlanWorkList object
+   * Sets the linkItemId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(String tmp) {
     this.linkItemId = Integer.parseInt(tmp);
@@ -280,9 +358,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the manager attribute of the ActionPlanWorkList object
+   * Gets the manager attribute of the ActionPlanWorkList object
    *
-   * @return    The manager value
+   * @return The manager value
    */
   public int getManager() {
     return manager;
@@ -290,9 +368,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the manager attribute of the ActionPlanWorkList object
+   * Sets the manager attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new manager value
+   * @param tmp The new manager value
    */
   public void setManager(int tmp) {
     this.manager = tmp;
@@ -300,9 +378,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the manager attribute of the ActionPlanWorkList object
+   * Sets the manager attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new manager value
+   * @param tmp The new manager value
    */
   public void setManager(String tmp) {
     this.manager = Integer.parseInt(tmp);
@@ -310,9 +388,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the ActionPlanWorkList object
+   * Gets the enabled attribute of the ActionPlanWorkList object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -320,9 +398,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ActionPlanWorkList object
+   * Sets the enabled attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -330,9 +408,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ActionPlanWorkList object
+   * Sets the enabled attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -340,9 +418,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildLinkedObject attribute of the ActionPlanWorkList object
+   * Gets the buildLinkedObject attribute of the ActionPlanWorkList object
    *
-   * @return    The buildLinkedObject value
+   * @return The buildLinkedObject value
    */
   public boolean getBuildLinkedObject() {
     return buildLinkedObject;
@@ -350,9 +428,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildLinkedObject attribute of the ActionPlanWorkList object
+   * Sets the buildLinkedObject attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildLinkedObject value
+   * @param tmp The new buildLinkedObject value
    */
   public void setBuildLinkedObject(boolean tmp) {
     this.buildLinkedObject = tmp;
@@ -360,9 +438,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildLinkedObject attribute of the ActionPlanWorkList object
+   * Sets the buildLinkedObject attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildLinkedObject value
+   * @param tmp The new buildLinkedObject value
    */
   public void setBuildLinkedObject(String tmp) {
     this.buildLinkedObject = DatabaseUtils.parseBoolean(tmp);
@@ -370,9 +448,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildPhaseWork attribute of the ActionPlanWorkList object
+   * Gets the buildPhaseWork attribute of the ActionPlanWorkList object
    *
-   * @return    The buildPhaseWork value
+   * @return The buildPhaseWork value
    */
   public boolean getBuildPhaseWork() {
     return buildPhaseWork;
@@ -380,9 +458,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildPhaseWork attribute of the ActionPlanWorkList object
+   * Sets the buildPhaseWork attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildPhaseWork value
+   * @param tmp The new buildPhaseWork value
    */
   public void setBuildPhaseWork(boolean tmp) {
     this.buildPhaseWork = tmp;
@@ -390,9 +468,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildPhaseWork attribute of the ActionPlanWorkList object
+   * Sets the buildPhaseWork attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildPhaseWork value
+   * @param tmp The new buildPhaseWork value
    */
   public void setBuildPhaseWork(String tmp) {
     this.buildPhaseWork = DatabaseUtils.parseBoolean(tmp);
@@ -400,9 +478,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildStepWork attribute of the ActionPlanWorkList object
+   * Gets the buildStepWork attribute of the ActionPlanWorkList object
    *
-   * @return    The buildStepWork value
+   * @return The buildStepWork value
    */
   public boolean getBuildStepWork() {
     return buildStepWork;
@@ -410,9 +488,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildStepWork attribute of the ActionPlanWorkList object
+   * Sets the buildStepWork attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildStepWork value
+   * @param tmp The new buildStepWork value
    */
   public void setBuildStepWork(boolean tmp) {
     this.buildStepWork = tmp;
@@ -420,20 +498,19 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildStepWork attribute of the ActionPlanWorkList object
+   * Sets the buildStepWork attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildStepWork value
+   * @param tmp The new buildStepWork value
    */
   public void setBuildStepWork(String tmp) {
     this.buildStepWork = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Gets the pagedListInfo attribute of the ActionPlanWorkList object
+   * Gets the pagedListInfo attribute of the ActionPlanWorkList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -441,9 +518,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionPlanWorkList object
+   * Sets the pagedListInfo attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -451,9 +528,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the linkModuleId attribute of the ActionPlanWorkList object
+   * Gets the linkModuleId attribute of the ActionPlanWorkList object
    *
-   * @return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -461,9 +538,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the ActionPlanWorkList object
+   * Sets the linkModuleId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -471,9 +548,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the ActionPlanWorkList object
+   * Sets the linkModuleId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -481,9 +558,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the ActionPlanWorkList object
+   * Gets the owner attribute of the ActionPlanWorkList object
    *
-   * @return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -491,9 +568,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the ActionPlanWorkList object
+   * Sets the owner attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -501,9 +578,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the ActionPlanWorkList object
+   * Sets the owner attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -511,9 +588,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the actionPlanId attribute of the ActionPlanWorkList object
+   * Gets the actionPlanId attribute of the ActionPlanWorkList object
    *
-   * @return    The actionPlanId value
+   * @return The actionPlanId value
    */
   public int getActionPlanId() {
     return actionPlanId;
@@ -521,9 +598,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the actionPlanId attribute of the ActionPlanWorkList object
+   * Sets the actionPlanId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new actionPlanId value
+   * @param tmp The new actionPlanId value
    */
   public void setActionPlanId(int tmp) {
     this.actionPlanId = tmp;
@@ -531,9 +608,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the actionPlanId attribute of the ActionPlanWorkList object
+   * Sets the actionPlanId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new actionPlanId value
+   * @param tmp The new actionPlanId value
    */
   public void setActionPlanId(String tmp) {
     this.actionPlanId = Integer.parseInt(tmp);
@@ -541,9 +618,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the ActionPlanWorkList object
+   * Gets the siteId attribute of the ActionPlanWorkList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -551,9 +628,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the ActionPlanWorkList object
+   * Sets the siteId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -561,9 +638,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the ActionPlanWorkList object
+   * Sets the siteId attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -571,9 +648,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the ActionPlanWorkList object
+   * Gets the exclusiveToSite attribute of the ActionPlanWorkList object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -581,9 +658,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ActionPlanWorkList object
+   * Sets the exclusiveToSite attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -591,9 +668,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ActionPlanWorkList object
+   * Sets the exclusiveToSite attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
@@ -601,9 +678,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the includeAllSites attribute of the ActionPlanWorkList object
+   * Gets the includeAllSites attribute of the ActionPlanWorkList object
    *
-   * @return    The includeAllSites value
+   * @return The includeAllSites value
    */
   public boolean getIncludeAllSites() {
     return includeAllSites;
@@ -611,9 +688,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the ActionPlanWorkList object
+   * Sets the includeAllSites attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(boolean tmp) {
     this.includeAllSites = tmp;
@@ -621,9 +698,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the ActionPlanWorkList object
+   * Sets the includeAllSites attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(String tmp) {
     this.includeAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -631,9 +708,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildCurrentPhaseOnly attribute of the ActionPlanWorkList object
+   * Gets the buildCurrentPhaseOnly attribute of the ActionPlanWorkList object
    *
-   * @return    The buildCurrentPhaseOnly value
+   * @return The buildCurrentPhaseOnly value
    */
   public boolean getBuildCurrentPhaseOnly() {
     return buildCurrentPhaseOnly;
@@ -641,9 +718,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildCurrentPhaseOnly attribute of the ActionPlanWorkList object
+   * Sets the buildCurrentPhaseOnly attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildCurrentPhaseOnly value
+   * @param tmp The new buildCurrentPhaseOnly value
    */
   public void setBuildCurrentPhaseOnly(boolean tmp) {
     this.buildCurrentPhaseOnly = tmp;
@@ -651,9 +728,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildCurrentPhaseOnly attribute of the ActionPlanWorkList object
+   * Sets the buildCurrentPhaseOnly attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildCurrentPhaseOnly value
+   * @param tmp The new buildCurrentPhaseOnly value
    */
   public void setBuildCurrentPhaseOnly(String tmp) {
     this.buildCurrentPhaseOnly = DatabaseUtils.parseBoolean(tmp);
@@ -661,9 +738,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildCurrentStepOnly attribute of the ActionPlanWorkList object
+   * Gets the buildCurrentStepOnly attribute of the ActionPlanWorkList object
    *
-   * @return    The buildCurrentStepOnly value
+   * @return The buildCurrentStepOnly value
    */
   public boolean getBuildCurrentStepOnly() {
     return buildCurrentStepOnly;
@@ -671,9 +748,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildCurrentStepOnly attribute of the ActionPlanWorkList object
+   * Sets the buildCurrentStepOnly attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildCurrentStepOnly value
+   * @param tmp The new buildCurrentStepOnly value
    */
   public void setBuildCurrentStepOnly(boolean tmp) {
     this.buildCurrentStepOnly = tmp;
@@ -681,9 +758,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildCurrentStepOnly attribute of the ActionPlanWorkList object
+   * Sets the buildCurrentStepOnly attribute of the ActionPlanWorkList object
    *
-   * @param  tmp  The new buildCurrentStepOnly value
+   * @param tmp The new buildCurrentStepOnly value
    */
   public void setBuildCurrentStepOnly(String tmp) {
     this.buildCurrentStepOnly = DatabaseUtils.parseBoolean(tmp);
@@ -691,10 +768,10 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -710,10 +787,10 @@ public class ActionPlanWorkList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM action_plan_work apw " +
-        "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
-        "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
-        "WHERE apw.plan_work_id > 0 ");
+            "FROM action_plan_work apw " +
+            "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
+            "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
+            "WHERE apw.plan_work_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -733,8 +810,8 @@ public class ActionPlanWorkList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(ap.plan_name) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(ap.plan_name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -760,12 +837,12 @@ public class ActionPlanWorkList extends ArrayList {
     }
     sqlSelect.append(
         "apw.*, " +
-        "ap.plan_name, ap.description, ap.site_id, " +
-        "c.namefirst, c.namelast " +
-        "FROM action_plan_work apw " +
-        "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
-        "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
-        "WHERE apw.plan_work_id > 0 ");
+            "ap.plan_name, ap.description, ap.site_id, " +
+            "c.namefirst, c.namelast " +
+            "FROM action_plan_work apw " +
+            "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
+            "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
+            "WHERE apw.plan_work_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -802,10 +879,10 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -842,13 +919,13 @@ public class ActionPlanWorkList extends ArrayList {
         }
         sqlFilter.append(
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE user_id = ? ))) " +
-            " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
-            " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE s.permission_type = ? AND s.group_id IN (SELECT group_id from user_group_map WHERE user_id = ? )) " +
-            " )) " +
-            "AND aphw.start_date IS NOT NULL AND aphw.end_date IS NULL AND aphw.status_id IS NULL ) ");
+                " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE user_id = ? ))) " +
+                " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
+                " WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
+                " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
+                " WHERE s.permission_type = ? AND s.group_id IN (SELECT group_id from user_group_map WHERE user_id = ? )) " +
+                " )) " +
+                "AND aphw.start_date IS NOT NULL AND aphw.end_date IS NULL AND aphw.status_id IS NULL ) ");
       }
     } else {
       if (owner > -1 || manager > -1 || currentStepOwner > -1) {
@@ -861,7 +938,7 @@ public class ActionPlanWorkList extends ArrayList {
         sqlFilter.append((owner > -1 ? "OR " : "") + " apw.manager = ? ");
       }
       if (currentStepOwner > -1) {
-        sqlFilter.append((owner > -1 || manager > -1 ? "OR " : "") + 
+        sqlFilter.append((owner > -1 || manager > -1 ? "OR " : "") +
             " apw.plan_work_id IN (SELECT aphw.plan_work_id FROM action_phase_work aphw " +
             " WHERE aphw.phase_work_id IN (SELECT phase_work_id FROM action_item_work aiw " +
             " WHERE aiw.start_date IS NOT NULL " +
@@ -876,13 +953,13 @@ public class ActionPlanWorkList extends ArrayList {
         }
         sqlFilter.append(
             " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE user_id = ? ))) " +
-            " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
-            " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
-            " WHERE s.permission_type = ? AND s.group_id IN (SELECT group_id from user_group_map WHERE user_id = ? )) " +
-            " )) " +
-            "AND aphw.start_date IS NOT NULL AND aphw.end_date IS NULL AND aphw.status_id IS NULL ) ");
+                " WHERE (s.permission_type = ? AND s.role_id IN (SELECT role_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE user_id = ? ))) " +
+                " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
+                " WHERE s.permission_type = ? AND s.department_id IN (SELECT department FROM contact WHERE user_id = ? )) " +
+                " OR aiw.action_step_id IN (SELECT s.step_id FROM action_step s " +
+                " WHERE s.permission_type = ? AND s.group_id IN (SELECT group_id from user_group_map WHERE user_id = ? )) " +
+                " )) " +
+                "AND aphw.start_date IS NOT NULL AND aphw.end_date IS NULL AND aphw.status_id IS NULL ) ");
       }
       if (owner > -1 || manager > -1 || currentStepOwner > -1) {
         sqlFilter.append(") ");
@@ -920,15 +997,26 @@ public class ActionPlanWorkList extends ArrayList {
         sqlFilter.append("AND ap.site_id IS NULL ");
       }
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -976,14 +1064,25 @@ public class ActionPlanWorkList extends ArrayList {
     if (!includeAllSites && siteId > -1) {
       pst.setInt(++i, siteId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Gets the enabledItem attribute of the ActionPlanWorkList object
+   * Gets the enabledItem attribute of the ActionPlanWorkList object
    *
-   * @return    The enabledItem value
+   * @return The enabledItem value
    */
   public int getEnabledItem() {
     int result = -1;
@@ -1000,10 +1099,10 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -1015,11 +1114,11 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Enable or disable Action Plan Work entries
+   * Enable or disable Action Plan Work entries
    *
-   * @param  db                Description of the Parameter
-   * @param  enable            Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param enable Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void enable(Connection db, boolean enable) throws SQLException {
     Iterator i = this.iterator();
@@ -1032,22 +1131,22 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  linkModuleId      Description of the Parameter
-   * @param  linkItemId        Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param linkModuleId Description of the Parameter
+   * @param linkItemId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int linkModuleId, int linkItemId) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(plan_work_id) as itemcount " +
-        "FROM action_plan_work apw " +
-        "WHERE apw.plan_work_id > 0 " +
-        "AND apw.link_module_id = ? " +
-        "AND apw.link_item_id = ? ");
+            "FROM action_plan_work apw " +
+            "WHERE apw.plan_work_id > 0 " +
+            "AND apw.link_module_id = ? " +
+            "AND apw.link_item_id = ? ");
     //TODO: implement trashing and uncomment this
     //"AND apw.trashed_date IS NULL ");
     pst.setInt(1, linkModuleId);
@@ -1063,9 +1162,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the latestPlan attribute of the ActionPlanWorkList object
+   * Gets the latestPlan attribute of the ActionPlanWorkList object
    *
-   * @return    The latestPlan value
+   * @return The latestPlan value
    */
   public ActionPlanWork getLatestPlan() {
     ActionPlanWork result = null;
@@ -1083,9 +1182,9 @@ public class ActionPlanWorkList extends ArrayList {
 
 
   /**
-   *  Gets the planIdHashMap attribute of the ActionPlanWorkList object
+   * Gets the planIdHashMap attribute of the ActionPlanWorkList object
    *
-   * @return    The planIdHashMap value
+   * @return The planIdHashMap value
    */
   public HashMap getPlanIdHashMap() {
     HashMap result = new HashMap();

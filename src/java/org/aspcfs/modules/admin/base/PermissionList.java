@@ -15,13 +15,14 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
-
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
  * Description of the Class
@@ -34,7 +35,19 @@ public class PermissionList extends Vector {
 
   private String currentCategory = "!new";
   private boolean viewpointsOnly = false;
+  private int enabled = Constants.TRUE;
 
+  public int getEnabled(int tmp) {
+    return enabled;
+  }
+
+  public void setEnabled(int tmp) {
+    this.enabled = tmp;
+  }
+
+  public void setEnabled(String tmp) {
+    this.enabled = Integer.parseInt(tmp);
+  }
 
   /**
    * Constructor for the PermissionList object
@@ -93,8 +106,8 @@ public class PermissionList extends Vector {
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT p.*, c.category " +
-        "FROM permission p, permission_category c " +
-        "WHERE p.category_id = c.category_id ");
+            "FROM permission p, permission_category c " +
+            "WHERE p.category_id = c.category_id ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY c." + DatabaseUtils.addQuotes(db, "level") + ", c.category, p." + DatabaseUtils.addQuotes(db, "level") + " ");
 
@@ -121,8 +134,11 @@ public class PermissionList extends Vector {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    sqlFilter.append("AND p.enabled = ? ");
-    sqlFilter.append("AND c.enabled = ? ");
+
+    if (enabled != Constants.UNDEFINED) {
+      sqlFilter.append("AND p.enabled = ? ");
+      sqlFilter.append("AND c.enabled = ? ");
+    }
 
     if (viewpointsOnly) {
       sqlFilter.append("AND p.viewpoints = ? ");
@@ -140,8 +156,10 @@ public class PermissionList extends Vector {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    pst.setBoolean(++i, true);
-    pst.setBoolean(++i, true);
+    if (enabled != Constants.UNDEFINED) {
+      pst.setBoolean(++i, (enabled == Constants.TRUE));
+      pst.setBoolean(++i, (enabled == Constants.TRUE));
+    }
     if (viewpointsOnly) {
       pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
@@ -164,5 +182,4 @@ public class PermissionList extends Vector {
       return true;
     }
   }
-
 }

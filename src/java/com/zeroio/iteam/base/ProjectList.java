@@ -37,6 +37,12 @@ import java.util.*;
  * @created August 9, 2002
  */
 public class ProjectList extends ArrayList {
+  public final static String tableName = "projects";
+  public final static String uniqueField = "project_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   // main project filters
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
@@ -88,6 +94,74 @@ public class ProjectList extends ArrayList {
   public ProjectList() {
   }
 
+
+  /**
+   * Sets the lastAnchor attribute of the ProjectList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ProjectList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ProjectList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ProjectList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ProjectList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ProjectList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ProjectList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the pagedListInfo attribute of the ProjectList object
@@ -743,8 +817,8 @@ public class ProjectList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM projects p " +
-        "WHERE project_id > -1 ");
+            "FROM projects p " +
+            "WHERE project_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -766,8 +840,8 @@ public class ProjectList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString() +
-          "AND " + DatabaseUtils.toLowerCase(db) + "(title) < ? ");
+              sqlFilter.toString() +
+              "AND " + DatabaseUtils.toLowerCase(db) + "(title) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -787,8 +861,8 @@ public class ProjectList extends ArrayList {
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
         "p.* " +
-        "FROM projects p " +
-        "WHERE project_id > -1 ");
+            "FROM projects p " +
+            "WHERE project_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -876,16 +950,16 @@ public class ProjectList extends ArrayList {
     if (projectsForUser > -1) {
       sqlFilter.append(
           "AND (p.project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          (invitationAcceptedOnly ? "AND status IS NULL " : "") +
-          (invitationPendingOnly ? "AND status = ? " : "") +
-          (daysLastAccessed > -1 ? "AND last_accessed > ? " : "") + ") " +
-          (includeGuestProjects ? "OR (allow_guests = ? AND approvaldate IS NOT NULL) " : "") +
-          ") ");
+              (invitationAcceptedOnly ? "AND status IS NULL " : "") +
+              (invitationPendingOnly ? "AND status = ? " : "") +
+              (daysLastAccessed > -1 ? "AND last_accessed > ? " : "") + ") " +
+              (includeGuestProjects ? "OR (allow_guests = ? AND approvaldate IS NOT NULL) " : "") +
+              ") ");
     }
     if (userRange != null) {
       sqlFilter.append(
           "AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id IN (" + userRange + ")) " +
-          "OR p.enteredBy IN (" + userRange + ")) ");
+              "OR p.enteredBy IN (" + userRange + ")) ");
     }
     if (enteredByUser > -1) {
       sqlFilter.append("AND (p.enteredby = ?) ");
@@ -921,6 +995,17 @@ public class ProjectList extends ArrayList {
       sqlFilter.append("AND p.trashed_date = ? ");
     } else {
       sqlFilter.append("AND p.trashed_date IS NULL ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -993,6 +1078,17 @@ public class ProjectList extends ArrayList {
     } else {
       // do nothing
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -1014,9 +1110,9 @@ public class ProjectList extends ArrayList {
     StringBuffer sqlTail = new StringBuffer();
     sqlSelect.append(
         "SELECT a.due_date, COUNT(*) AS ascount " +
-        "FROM projects p, project_assignments a " +
-        "WHERE p.project_id > -1 " +
-        "AND p.project_id = a.project_id ");
+            "FROM projects p, project_assignments a " +
+            "WHERE p.project_id > -1 " +
+            "AND p.project_id = a.project_id ");
     sqlTail.append("GROUP BY a.due_date ");
     createFilter(sqlFilter);
     if (assignmentsForUser > -1) {
@@ -1071,7 +1167,7 @@ public class ProjectList extends ArrayList {
     HashMap nameList = new HashMap();
     PreparedStatement pst = db.prepareStatement(
         "SELECT project_id, title " +
-        "FROM projects");
+            "FROM projects");
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       nameList.put(
@@ -1093,8 +1189,8 @@ public class ProjectList extends ArrayList {
   public static int buildProjectCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM projects p " +
-        "WHERE project_id > -1 ");
+            "FROM projects p " +
+            "WHERE project_id > -1 ");
     ResultSet rs = pst.executeQuery();
     rs.next();
     int count = rs.getInt("recordcount");
@@ -1115,9 +1211,9 @@ public class ProjectList extends ArrayList {
   public static int buildProjectCount(Connection db, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM projects p " +
-        "WHERE project_id > -1 " +
-        "AND enteredby = ? ");
+            "FROM projects p " +
+            "WHERE project_id > -1 " +
+            "AND enteredby = ? ");
     pst.setInt(1, userId);
     ResultSet rs = pst.executeQuery();
     rs.next();

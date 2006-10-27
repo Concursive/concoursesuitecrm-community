@@ -1,0 +1,15 @@
+<data-import-config>
+  <description>
+    Restores records into a v4.0 Centric Database 
+  </description>
+  <reader class="org.aspcfs.apps.transfer.reader.CFSXMLReader">
+    <xmlDataFile>@CONFIG.FILE@</xmlDataFile>
+  </reader>
+  <writer class="org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter">
+    <url>@URL@</url>
+    <id>@ID@</id>
+    <code>@CODE@</code>
+    <systemId>@SYSTEM@</systemId>
+    <clientId>1</clientId>
+  </writer>
+</data-import-config>

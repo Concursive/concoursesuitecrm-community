@@ -88,8 +88,8 @@ public class Criteria extends GenericBean {
   public void queryRecord(Connection db, int criteriaId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT c.* " +
-        "FROM report_criteria c " +
-        "WHERE criteria_id = ? ");
+            "FROM report_criteria c " +
+            "WHERE criteria_id = ? ");
     pst.setInt(1, criteriaId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -506,13 +506,16 @@ public class Criteria extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "report_criteria_criteria_id_seq");
       sql.append(
           "INSERT INTO report_criteria " +
-          "(report_id, owner, subject, enteredby, modifiedby, ");
+              "(report_id, owner, subject, enteredby, modifiedby, ");
       if (id > -1) {
         sql.append("criteria_id, ");
       }
@@ -558,12 +561,18 @@ public class Criteria extends GenericBean {
         parameters.setCriteriaId(id);
         parameters.insert(db);
       }
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -582,9 +591,9 @@ public class Criteria extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE report_criteria " +
-          "SET subject = ?, " +
-          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
-          "WHERE criteria_id = ? ");
+              "SET subject = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+              "WHERE criteria_id = ? ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, subject);

@@ -15,6 +15,9 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,9 +34,92 @@ import java.util.Iterator;
  * @created February 25, 2003
  */
 public class AssignmentFolderList extends ArrayList {
+  public final static String tableName = "action_item_log";
+  public final static String uniqueField = "log_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
+  private PagedListInfo pagedListInfo = null;
   private int requirementId = -1;
   private int parentId = -1;
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /**
+   * Sets the pagedListInfo attribute of the ActionItemLogList object
+   *
+   * @param pagedListInfo The new pagedListInfo value
+   */
+  public void setPagedListInfo(PagedListInfo pagedListInfo) {
+    this.pagedListInfo = pagedListInfo;
+  }
 
 
   /**
@@ -93,8 +179,11 @@ public class AssignmentFolderList extends ArrayList {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM project_assignments_folder " +
-        "WHERE requirement_id = ? ");
+            "FROM project_assignments_folder " +
+            "WHERE folder_id > -1 ");
+    if (requirementId > -1) {
+      sql.append("AND requirement_id = ? ");
+    }
     if (parentId > -1) {
       if (parentId == 0) {
         sql.append("AND parent_id IS NULL ");
@@ -104,7 +193,9 @@ public class AssignmentFolderList extends ArrayList {
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
-    pst.setInt(++i, requirementId);
+    if (requirementId > -1) {
+      pst.setInt(++i, requirementId);
+    }
     if (parentId > 0) {
       pst.setInt(++i, parentId);
     }
@@ -143,7 +234,7 @@ public class AssignmentFolderList extends ArrayList {
   public static void delete(Connection db, int requirementId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM project_assignments_folder " +
-        "WHERE requirement_id = ? ");
+            "WHERE requirement_id = ? ");
     pst.setInt(1, requirementId);
     pst.execute();
     pst.close();

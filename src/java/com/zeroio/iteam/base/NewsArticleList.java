@@ -35,6 +35,11 @@ import java.util.Iterator;
  * @created June 23, 2003
  */
 public class NewsArticleList extends ArrayList {
+  public final static String tableName = "project_news";
+  public final static String uniqueField = "news_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   //filters
   private int projectId = -1;
   private boolean overviewAll = false;
@@ -57,6 +62,73 @@ public class NewsArticleList extends ArrayList {
   public NewsArticleList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the projectId attribute of the NewsArticleList object
@@ -405,8 +477,8 @@ public class NewsArticleList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_news n " +
-        "WHERE n.news_id > -1 ");
+            "FROM project_news n " +
+            "WHERE n.news_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -426,8 +498,8 @@ public class NewsArticleList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString() +
-          "AND " + DatabaseUtils.toLowerCase(db) + "(n.subject) < ? ");
+              sqlFilter.toString() +
+              "AND " + DatabaseUtils.toLowerCase(db) + "(n.subject) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -449,9 +521,9 @@ public class NewsArticleList extends ArrayList {
     }
     sqlSelect.append(
         "n.* " +
-        "FROM project_news n " +
-        "LEFT JOIN project_news_category c ON (n.category_id = c.category_id) " +
-        "WHERE n.news_id > -1 ");
+            "FROM project_news n " +
+            "LEFT JOIN project_news_category c ON (n.category_id = c.category_id) " +
+            "WHERE n.news_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -489,20 +561,20 @@ public class NewsArticleList extends ArrayList {
     if (currentNews == Constants.TRUE) {
       sqlFilter.append(
           "AND n.start_date <= CURRENT_TIMESTAMP " +
-          "AND (CURRENT_TIMESTAMP <= n.end_date OR n.end_date IS NULL) " +
-          "AND status = ? ");
+              "AND (CURRENT_TIMESTAMP <= n.end_date OR n.end_date IS NULL) " +
+              "AND status = ? ");
     }
     if (archivedNews == Constants.TRUE) {
       sqlFilter.append(
           "AND CURRENT_TIMESTAMP > n.end_date " +
-          "AND n.end_date IS NOT NULL " +
-          "AND n.start_date IS NOT NULL " +
-          "AND status = ? ");
+              "AND n.end_date IS NOT NULL " +
+              "AND n.start_date IS NOT NULL " +
+              "AND status = ? ");
     }
     if (unreleasedNews == Constants.TRUE) {
       sqlFilter.append(
           "AND (CURRENT_TIMESTAMP < n.start_date OR n.start_date IS NULL) " +
-          "AND status = ? ");
+              "AND status = ? ");
     }
     if (incompleteNews == Constants.TRUE) {
       sqlFilter.append("AND (status = ? OR status IS NULL) ");
@@ -516,7 +588,7 @@ public class NewsArticleList extends ArrayList {
     if (forUser > -1) {
       sqlFilter.append(
           "AND (n.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          "AND status IS NULL) OR n.project_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
+              "AND status IS NULL) OR n.project_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
     }
     if (classificationId > -1) {
       sqlFilter.append("AND n.classification_id = ? ");
@@ -524,15 +596,26 @@ public class NewsArticleList extends ArrayList {
     if (overviewAll) {
       sqlFilter.append(
           "AND (( " +
-          "    n.start_date <= CURRENT_TIMESTAMP " +
-          "    AND (CURRENT_TIMESTAMP <= n.end_date OR n.end_date IS NULL) " +
-          "    AND status = ?) " +
-          "  OR ( " +
-          "          (CURRENT_TIMESTAMP < n.start_date OR n.start_date IS NULL)  " +
-          "          AND status = ?) " +
-          "  OR ( " +
-          "          (status = ? OR status IS NULL) " +
-          ")) ");
+              "    n.start_date <= CURRENT_TIMESTAMP " +
+              "    AND (CURRENT_TIMESTAMP <= n.end_date OR n.end_date IS NULL) " +
+              "    AND status = ?) " +
+              "  OR ( " +
+              "          (CURRENT_TIMESTAMP < n.start_date OR n.start_date IS NULL)  " +
+              "          AND status = ?) " +
+              "  OR ( " +
+              "          (status = ? OR status IS NULL) " +
+              ")) ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -579,6 +662,17 @@ public class NewsArticleList extends ArrayList {
       pst.setInt(++i, NewsArticle.PUBLISHED);
       pst.setInt(++i, NewsArticle.UNAPPROVED);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -593,7 +687,7 @@ public class NewsArticleList extends ArrayList {
   public static void delete(Connection db, int projectId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM project_news " +
-        "WHERE project_id = ? ");
+            "WHERE project_id = ? ");
     pst.setInt(1, projectId);
     pst.execute();
     pst.close();

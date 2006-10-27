@@ -74,6 +74,7 @@ public class PropertyMapList extends HashMap {
   public void loadMap(String mapFile, ArrayList modules) throws Exception {
     File configFile = new File(mapFile);
     XMLUtils xml = new XMLUtils(configFile);
+
     xml.getAllChildrenText(xml.getFirstChild("processes"), "module", modules);
     logger.info("PropertyMapList module count: " + modules.size());
 
@@ -126,6 +127,25 @@ public class PropertyMapList extends HashMap {
         this.put((String) map.getAttribute("class"), mapProperties);
       }
     }
+
+    /*
+    //A mappings file may further refer to other config files that have mappings
+    if (xml.getFirstChild("configs") != null) {
+      ArrayList configs = new ArrayList();
+      xml.getAllChildrenText(xml.getFirstChild("configs"), "config", configs);
+      if (configs.size() > 0) {
+        logger.info("PropertyMapList config count: " + configs.size());
+        Iterator config = configs.iterator();
+        while (config.hasNext()) {
+          String configName = (String) config.next();
+          loadMap(
+            (configFile.getParentFile().getPath() + 
+              System.getProperty("file.separator") + 
+                configName), modules);
+        }
+      }
+    }
+    */
   }
 
 
@@ -159,7 +179,7 @@ public class PropertyMapList extends HashMap {
           } else {
             record.addField(
                 thisProperty.getName(), ObjectUtils.getParam(
-                    object, thisProperty.getName()), thisProperty.getLookupValue(), thisProperty.getAlias());
+                object, thisProperty.getName()), thisProperty.getLookupValue(), thisProperty.getAlias());
           }
         }
       }
@@ -187,6 +207,7 @@ public class PropertyMapList extends HashMap {
     Iterator i = list.iterator();
     while (i.hasNext() && processOK) {
       Object object = i.next();
+      logger.info("Object: " + object.getClass().getName());
       DataRecord thisRecord = createDataRecord(object, action);
       processOK = writer.save(thisRecord);
     }

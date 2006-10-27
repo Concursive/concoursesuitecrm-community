@@ -38,6 +38,12 @@ import java.util.StringTokenizer;
  */
 public class TeamMemberList extends ArrayList {
 
+  public final static String tableName = "action_item_log";
+  public final static String uniqueField = "log_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private Project project = null;
@@ -58,6 +64,76 @@ public class TeamMemberList extends ArrayList {
    * Constructor for the TeamMemberList object
    */
   public TeamMemberList() {
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -229,13 +305,26 @@ public class TeamMemberList extends ArrayList {
     return project;
   }
 
+
+  /**
+   * Gets the userId attribute of the TeamMemberList object
+   *
+   * @return The userId value
+   */
   public int getUserId() {
     return userId;
   }
 
+
+  /**
+   * Sets the userId attribute of the TeamMemberList object
+   *
+   * @param userId The new userId value
+   */
   public void setUserId(int userId) {
     this.userId = userId;
   }
+
 
   /**
    * Description of the Method
@@ -256,22 +345,22 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
-	 * @return Returns the portalUsersOnly.
-	 */
-	public boolean getPortalUsersOnly() {
-		return portalUsersOnly;
-	}
+   * @return Returns the portalUsersOnly.
+   */
+  public boolean getPortalUsersOnly() {
+    return portalUsersOnly;
+  }
 
 
-	/**
-	 * @param portalUsersOnly The portalUsersOnly to set.
-	 */
-	public void setPortalUsersOnly(boolean portalUsersOnly) {
-		this.portalUsersOnly = portalUsersOnly;
-	}
+  /**
+   * @param portalUsersOnly The portalUsersOnly to set.
+   */
+  public void setPortalUsersOnly(boolean portalUsersOnly) {
+    this.portalUsersOnly = portalUsersOnly;
+  }
 
 
-	/**
+  /**
    * Description of the Method
    *
    * @param db Description of the Parameter
@@ -288,10 +377,10 @@ public class TeamMemberList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_team t, contact u, lookup_project_role r " +
-        "WHERE t.project_id > -1 " +
-        "AND t.user_id = u.user_id " +
-        "AND t.userlevel = r.code ");
+            "FROM project_team t, contact u, lookup_project_role r " +
+            "WHERE t.project_id > -1 " +
+            "AND t.user_id = u.user_id " +
+            "AND t.userlevel = r.code ");
     createFilter(db, sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -311,8 +400,8 @@ public class TeamMemberList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString() +
-          "AND project_id < ? ");
+              sqlFilter.toString() +
+              "AND project_id < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -330,10 +419,10 @@ public class TeamMemberList extends ArrayList {
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
         "t.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
-        "FROM project_team t, contact u, lookup_project_role r " +
-        "WHERE t.project_id > -1 " +
-        "AND t.user_id = u.user_id " +
-        "AND t.userlevel = r.code ");
+            "FROM project_team t, contact u, lookup_project_role r " +
+            "WHERE t.project_id > -1 " +
+            "AND t.user_id = u.user_id " +
+            "AND t.userlevel = r.code ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -369,7 +458,7 @@ public class TeamMemberList extends ArrayList {
     if (forProjectUser > -1) {
       sqlFilter.append(
           "AND project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          "AND status IS NULL) ");
+              "AND status IS NULL) ");
     }
     if (roleLevel > -1) {
       sqlFilter.append(
@@ -388,6 +477,17 @@ public class TeamMemberList extends ArrayList {
     if (portalUsersOnly) {
       sqlFilter.append("AND u.org_id > 0 ");
       sqlFilter.append("AND t.role_type = ").append(Constants.ROLETYPE_CUSTOMER).append(" ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -413,6 +513,17 @@ public class TeamMemberList extends ArrayList {
     if (userId > -1) {
       pst.setInt(++i, userId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -420,7 +531,10 @@ public class TeamMemberList extends ArrayList {
   /**
    * Description of the Method
    *
-   * @param db Description of the Parameter
+   * @param db           Description of the Parameter
+   * @param masterUserId Description of the Parameter
+   * @param groupId      Description of the Parameter
+   * @param addedUsers   Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
@@ -456,14 +570,14 @@ public class TeamMemberList extends ArrayList {
             //member.setUser(user);
             //this.add(member);
           } else {
-          	User user = new User(db, itemId);
+            User user = new User(db, itemId);
             // See if ID is already on the team
             if (!isOnTeam(db, projectId, itemId)) {
               // Insert the member
               PreparedStatement pst = db.prepareStatement(
                   "INSERT INTO project_team " +
-                  "(project_id, user_id, userlevel, enteredby, modifiedby, status, role_type) " +
-                  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+                      "(project_id, user_id, userlevel, enteredby, modifiedby, status, role_type) " +
+                      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
               int i = 0;
               pst.setInt(++i, projectId);
               pst.setInt(++i, itemId);
@@ -471,7 +585,7 @@ public class TeamMemberList extends ArrayList {
               pst.setInt(++i, enteredBy);
               pst.setInt(++i, modifiedBy);
               pst.setInt(++i, TeamMember.STATUS_PENDING);
-              DatabaseUtils.setInt(pst, ++i, user.getRoleType());              
+              DatabaseUtils.setInt(pst, ++i, user.getRoleType());
               pst.execute();
               pst.close();
               // Existing user will be sent an email
@@ -492,8 +606,8 @@ public class TeamMemberList extends ArrayList {
           if (Integer.parseInt(itemId) != modifiedBy) {
             PreparedStatement pst = db.prepareStatement(
                 "DELETE FROM project_team " +
-                "WHERE project_id = ? " +
-                "AND user_id = ?");
+                    "WHERE project_id = ? " +
+                    "AND user_id = ?");
             pst.setInt(1, projectId);
             pst.setInt(2, Integer.parseInt(itemId));
             pst.execute();
@@ -561,9 +675,9 @@ public class TeamMemberList extends ArrayList {
     boolean exists = false;
     PreparedStatement pst = db.prepareStatement(
         "SELECT userlevel " +
-        "FROM project_team " +
-        "WHERE project_id = ? " +
-        "AND user_id = ? ");
+            "FROM project_team " +
+            "WHERE project_id = ? " +
+            "AND user_id = ? ");
     pst.setInt(1, projectId);
     pst.setInt(2, userId);
     ResultSet rs = pst.executeQuery();
@@ -589,10 +703,10 @@ public class TeamMemberList extends ArrayList {
     boolean exists = false;
     PreparedStatement pst = db.prepareStatement(
         "SELECT p1.project_id " +
-        "FROM project_team p1, project_team p2 " +
-        "WHERE p1.project_id = p2.project_id " +
-        "AND p1.user_id = ? " +
-        "AND p2.user_id = ? ");
+            "FROM project_team p1, project_team p2 " +
+            "WHERE p1.project_id = p2.project_id " +
+            "AND p1.user_id = ? " +
+            "AND p2.user_id = ? ");
     pst.setInt(1, masterUserId);
     pst.setInt(2, userIdToCheck);
     ResultSet rs = pst.executeQuery();
@@ -604,6 +718,13 @@ public class TeamMemberList extends ArrayList {
     return exists;
   }
 
+
+  /**
+   * Gets the teamMember attribute of the TeamMemberList object
+   *
+   * @param id Description of the Parameter
+   * @return The teamMember value
+   */
   public TeamMember getTeamMember(int id) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
@@ -614,5 +735,29 @@ public class TeamMemberList extends ArrayList {
     }
     return null;
   }
-}
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public static ArrayList recordList(Connection db) throws SQLException {
+    ArrayList records = new ArrayList();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT t.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
+            "FROM project_team t, lookup_project_role r " +
+            "WHERE t.project_id > -1 " +
+            "AND t.userlevel = r.code ");
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      TeamMember thisMember = new TeamMember(rs);
+      records.add(thisMember);
+    }
+    rs.close();
+    pst.close();
+    return records;
+  }
+}

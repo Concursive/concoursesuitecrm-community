@@ -99,8 +99,8 @@ public class AccessLog extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT a.* " +
-        "FROM access_log a " +
-        "WHERE a.id = ? ");
+            "FROM access_log a " +
+            "WHERE a.id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -282,8 +282,11 @@ public class AccessLog extends GenericBean {
           "Log Entry must be associated to a Centric CRM user");
     }
     StringBuffer sql = new StringBuffer();
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       id = DatabaseUtils.getNextSeq(db, "access_log_id_seq");
       sql.append("INSERT INTO access_log (user_id, username, ip, ");
       if (id > -1) {
@@ -318,13 +321,18 @@ public class AccessLog extends GenericBean {
       pst.close();
 
       id = DatabaseUtils.getCurrVal(db, "access_log_id_seq", id);
-
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 
@@ -345,7 +353,7 @@ public class AccessLog extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM access_log " +
-          "WHERE id = ? ");
+              "WHERE id = ? ");
       pst.setInt(1, this.getId());
       pst.executeUpdate();
       pst.close();

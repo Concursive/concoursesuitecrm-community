@@ -33,6 +33,12 @@ import java.util.Iterator;
  * @created November 3, 2004
  */
 public class WebdavModuleList extends HashMap {
+
+  public final static String tableName = "webdav";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   // Permission Category is enabled by default
   // filters
   private int enabled = Constants.TRUE;
@@ -42,6 +48,74 @@ public class WebdavModuleList extends HashMap {
   private boolean buildContext = false;
   private String fileLibraryPath = null;
 
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the buildContext attribute of the WebdavModuleList object
@@ -192,9 +266,9 @@ public class WebdavModuleList extends HashMap {
     StringBuffer sqlOrder = new StringBuffer();
     sqlSelect.append(
         "SELECT w.*, pc.category, pc.webdav " +
-        "FROM webdav w " +
-        "LEFT JOIN permission_category pc ON (w.category_id = pc.category_id) " +
-        "WHERE w.id > 0 ");
+            "FROM webdav w " +
+            "LEFT JOIN permission_category pc ON (w.category_id = pc.category_id) " +
+            "WHERE w.id > 0 ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY id ");
     PreparedStatement pst = db.prepareStatement(
@@ -241,6 +315,17 @@ public class WebdavModuleList extends HashMap {
     if (displayName != null) {
       sqlFilter.append("AND pc.category = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -262,6 +347,17 @@ public class WebdavModuleList extends HashMap {
     }
     if (displayName != null) {
       pst.setString(++i, displayName);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

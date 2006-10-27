@@ -64,6 +64,7 @@ public class UpgradeDatabaseTask extends Task {
   private String params = null;
   private String languagePath = null;
   private String iceletsPath = null;
+  private String prefsPath = null;
 
 
   /**
@@ -172,6 +173,10 @@ public class UpgradeDatabaseTask extends Task {
     this.iceletsPath = iceletsPath;
   }
 
+  public void setPrefsPath(String prefsPath) {
+    this.prefsPath = prefsPath;
+  }
+
   /**
    * This method is called by Ant when the upgradeDatabaseTask is used
    *
@@ -185,6 +190,7 @@ public class UpgradeDatabaseTask extends Task {
       fileLibraryPath = StringUtils.replace(fileLibraryPath, "\\", "\\\\");
       languagePath = StringUtils.replace(languagePath, "\\", "\\\\");
       iceletsPath = StringUtils.replace(iceletsPath, "\\", "\\\\");
+      prefsPath = StringUtils.replace(prefsPath, "\\", "\\\\");
     }
     System.out.println("Checking databases to process...");
     try {
@@ -357,6 +363,7 @@ public class UpgradeDatabaseTask extends Task {
       script.set("fileLibraryPath", fileLibraryPath + fs);
       script.set("languagePath", languagePath + fs);
       script.set("iceletsPath", iceletsPath + fs);
+      script.set("prefsPath", prefsPath + fs);
       script.set("locale", locale);
       // Determine if fileLibrary is part of WEB-INF path
       File directory = new File(fileLibraryPath + fs + dbName);

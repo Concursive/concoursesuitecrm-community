@@ -377,15 +377,15 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_catalog_pricing pctlgprice " +
-        "LEFT JOIN product_catalog pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
-        "LEFT JOIN lookup_product_tax lpt ON (pctlgprice.tax_id = lpt.code) " +
-        "LEFT JOIN lookup_currency lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
-        "LEFT JOIN lookup_currency lcpc ON (pctlgprice.price_currency = lcpc.code) " +
-        "LEFT JOIN lookup_currency lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
-        "LEFT JOIN lookup_recurring_type lrt ON (pctlgprice.recurring_type = lrt.code) " +
-        "LEFT JOIN lookup_currency lccc ON (pctlgprice.cost_currency = lccc.code) " +
-        "WHERE pctlgprice.price_id > 0 ");
+            "FROM product_catalog_pricing pctlgprice " +
+            "LEFT JOIN product_catalog pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
+            "LEFT JOIN lookup_product_tax lpt ON (pctlgprice.tax_id = lpt.code) " +
+            "LEFT JOIN lookup_currency lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+            "LEFT JOIN lookup_currency lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+            "LEFT JOIN lookup_currency lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+            "LEFT JOIN lookup_recurring_type lrt ON (pctlgprice.recurring_type = lrt.code) " +
+            "LEFT JOIN lookup_currency lccc ON (pctlgprice.cost_currency = lccc.code) " +
+            "WHERE pctlgprice.price_id > 0 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -407,22 +407,22 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
     }
     sqlSelect.append(
         "pctlgprice.*, " +
-        "pctlg.product_name AS product_name, " +
-        "lpt.description AS tax_name, " +
-        "lcmsrp.description AS msrp_currency_name, " +
-        "lcpc.description AS price_currency_name, " +
-        "lcrc.description AS recurring_currency_name, " +
-        "lrt.description AS recurring_type_name, " +
-        "lccc.description AS cost_currency_name " +
-        "FROM product_catalog_pricing pctlgprice " +
-        "LEFT JOIN product_catalog pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
-        "LEFT JOIN lookup_product_tax lpt ON (pctlgprice.tax_id = lpt.code) " +
-        "LEFT JOIN lookup_currency lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
-        "LEFT JOIN lookup_currency lcpc ON (pctlgprice.price_currency = lcpc.code) " +
-        "LEFT JOIN lookup_currency lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
-        "LEFT JOIN lookup_recurring_type lrt ON (pctlgprice.recurring_type = lrt.code) " +
-        "LEFT JOIN lookup_currency lccc ON (pctlgprice.cost_currency = lccc.code) " +
-        "WHERE pctlgprice.price_id > 0 ");
+            "pctlg.product_name AS product_name, " +
+            "lpt.description AS tax_name, " +
+            "lcmsrp.description AS msrp_currency_name, " +
+            "lcpc.description AS price_currency_name, " +
+            "lcrc.description AS recurring_currency_name, " +
+            "lrt.description AS recurring_type_name, " +
+            "lccc.description AS cost_currency_name " +
+            "FROM product_catalog_pricing pctlgprice " +
+            "LEFT JOIN product_catalog pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
+            "LEFT JOIN lookup_product_tax lpt ON (pctlgprice.tax_id = lpt.code) " +
+            "LEFT JOIN lookup_currency lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+            "LEFT JOIN lookup_currency lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+            "LEFT JOIN lookup_currency lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+            "LEFT JOIN lookup_recurring_type lrt ON (pctlgprice.recurring_type = lrt.code) " +
+            "LEFT JOIN lookup_currency lccc ON (pctlgprice.cost_currency = lccc.code) " +
+            "WHERE pctlgprice.price_id > 0 ");
     sqlOrder.append("ORDER BY pctlgprice.price_amount ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -473,6 +473,17 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
       sqlFilter.append(
           "AND (pctlgprice.start_date > ? OR pctlgprice.expiration_date < ?) ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -503,6 +514,17 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
       currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
       pst.setTimestamp(++i, currentTime);
       pst.setTimestamp(++i, currentTime);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

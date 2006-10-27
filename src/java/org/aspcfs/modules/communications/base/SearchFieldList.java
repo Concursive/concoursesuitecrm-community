@@ -15,6 +15,9 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +33,12 @@ import java.util.ArrayList;
  * @created November 1, 2001
  */
 public class SearchFieldList extends ArrayList {
+  public final static String tableName = "search_fields";
+  public final static String uniqueField = "id ";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
 
   /**
    * Constructor for the SearchFieldList object
@@ -37,6 +46,86 @@ public class SearchFieldList extends ArrayList {
    * @since 1.1
    */
   public SearchFieldList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the SearchFieldList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the SearchFieldList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SearchFieldList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SearchFieldList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the SearchFieldList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the SearchFieldList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the SearchFieldList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the SearchFieldList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -50,8 +139,8 @@ public class SearchFieldList extends ArrayList {
   public void buildFieldList(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM search_fields " +
-        "WHERE searchable = ? ");
+            "FROM search_fields " +
+            "WHERE searchable = ? ");
     pst.setBoolean(1, true);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -66,8 +155,8 @@ public class SearchFieldList extends ArrayList {
     int id = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT id " +
-        "FROM search_fields " +
-        "WHERE field = ? ");
+            "FROM search_fields " +
+            "WHERE field = ? ");
     pst.setString(1, fieldName);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

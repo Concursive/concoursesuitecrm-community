@@ -23,6 +23,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Utilities for working with HTTP
@@ -33,7 +35,6 @@ import java.net.URLConnection;
  * @created August 29, 2002
  */
 public class HTTPUtils {
-
   /**
    * Generates acceptable html text when displaying in HTML, especially useful
    * within a table cell because a cell should not be left empty
@@ -79,6 +80,19 @@ public class HTTPUtils {
 
 
   /**
+   * Description of the Method
+   *
+   * @param address   Description of the Parameter
+   * @param xmlPacket Description of the Parameter
+   * @return Description of the Return Value
+   * @throws java.io.IOException Description of the Exception
+   */
+  public static String sendPacket(String address, String xmlPacket) throws java.io.IOException {
+    return sendPacket(address, xmlPacket, null);
+  }
+
+
+  /**
    * Sends a string to the specified URL, intended for communicating with web
    * servers. Use the SSLMessage for secure communication with a server
    * application.
@@ -88,7 +102,7 @@ public class HTTPUtils {
    * @return Description of the Return Value
    * @throws java.io.IOException Description of the Exception
    */
-  public static String sendPacket(String address, String xmlPacket) throws java.io.IOException {
+  public static String sendPacket(String address, String xmlPacket, HashMap headers) throws java.io.IOException {
     Exception errorMessage = null;
     try {
       //The default factory requires a trusted certificate
@@ -116,6 +130,14 @@ public class HTTPUtils {
       }
       ((HttpURLConnection) conn).setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
+      if (headers.size() > 0) {
+        Iterator i = headers.keySet().iterator();
+        while (i.hasNext()) {
+          String header = (String) i.next();
+          String value = (String) headers.get(header);
+          conn.setRequestProperty(header, value);
+        }
+      }
       conn.setDoInput(true);
       conn.setDoOutput(true);
       OutputStreamWriter out = new OutputStreamWriter(
@@ -248,7 +270,6 @@ public class HTTPUtils {
         System.out.println("HTTPUtils-> getServerName error: " + e.getMessage());
         e.printStackTrace(System.out);
       }
-
     }
     return null;
   }

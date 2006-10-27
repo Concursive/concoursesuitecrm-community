@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -112,9 +113,9 @@ public class RolePermissionList extends Hashtable {
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT p.*, c.category, role_add, role_view, role_edit, role_delete " +
-        "FROM permission p, permission_category c, role_permission r " +
-        "WHERE p.category_id = c.category_id " +
-        "AND p.permission_id = r.permission_id ");
+            "FROM permission p, permission_category c, role_permission r " +
+            "WHERE p.category_id = c.category_id " +
+            "AND p.permission_id = r.permission_id ");
     sqlOrder.append("ORDER BY r.role_id, c." + DatabaseUtils.addQuotes(db, "level") + ", p." + DatabaseUtils.addQuotes(db, "level") + " ");
     createFilter(sqlFilter);
     pst = db.prepareStatement(
@@ -203,6 +204,30 @@ public class RolePermissionList extends Hashtable {
       }
     }
     return false;
+  }
+
+  public static ArrayList recordList(Connection db) throws SQLException {
+    ArrayList records = new ArrayList();
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    sqlSelect.append(
+        "SELECT * " +
+            "FROM role_permission r " +
+            "WHERE r.id > -1 ");
+    pst = db.prepareStatement(sqlSelect.toString());
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      RolePermission permission = new RolePermission(rs);
+      records.add(permission);
+    }
+    rs.close();
+    pst.close();
+    return records;
   }
 }
 

@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -35,6 +36,12 @@ import java.util.Iterator;
  */
 public class SurveyResponseList extends ArrayList {
 
+  public final static String tableName = "active_survey_responses";
+  public final static String uniqueField = "response_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private int surveyId = -1;
   private int addressUpdated = -1;
@@ -47,6 +54,74 @@ public class SurveyResponseList extends ArrayList {
    * Constructor for the SurveyResponseList object
    */
   public SurveyResponseList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the SurveyResponseList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the SurveyResponseList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SurveyResponseList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SurveyResponseList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the SurveyResponseList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the SurveyResponseList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the SurveyResponseList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -200,9 +275,9 @@ public class SurveyResponseList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM active_survey_responses sr " +
-        "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
-        "WHERE sr.active_survey_id > -1 ");
+            "FROM active_survey_responses sr " +
+            "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
+            "WHERE sr.active_survey_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -222,8 +297,8 @@ public class SurveyResponseList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND (" + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? AND c.namelast IS NOT NULL) ");
+                sqlFilter.toString() +
+                "AND (" + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? AND c.namelast IS NOT NULL) ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -250,9 +325,9 @@ public class SurveyResponseList extends ArrayList {
     }
     sqlSelect.append(
         "sr.response_id, sr.active_survey_id, sr.contact_id, sr.unique_code, sr.ip_address, sr.entered " +
-        "FROM active_survey_responses sr " +
-        "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
-        "WHERE sr.active_survey_id > -1 ");
+            "FROM active_survey_responses sr " +
+            "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
+            "WHERE sr.active_survey_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -305,6 +380,17 @@ public class SurveyResponseList extends ArrayList {
     if (contactId != -1) {
       sqlFilter.append("AND sr.contact_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -331,6 +417,17 @@ public class SurveyResponseList extends ArrayList {
     }
     if (contactId != -1) {
       pst.setInt(++i, this.getContactId());
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

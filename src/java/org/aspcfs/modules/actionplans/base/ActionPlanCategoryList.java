@@ -16,9 +16,9 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,12 +29,12 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    September 6, 2005
- * @version    $Id: ActionPlanCategoryList.java,v 1.1.2.2 2005/10/14 21:12:39
- *      mrajkowski Exp $
+ * @author partha
+ * @version $Id: ActionPlanCategoryList.java,v 1.1.2.2 2005/10/14 21:12:39
+ *          mrajkowski Exp $
+ * @created September 6, 2005
  */
 public class ActionPlanCategoryList extends Vector {
   HtmlSelect catListSelect = new HtmlSelect();
@@ -47,19 +47,95 @@ public class ActionPlanCategoryList extends Vector {
   private int siteId = -1;
   private boolean exclusiveToSite = false;
 
+  public final static String tableName = "action_plan_category";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
 
   /**
-   *  Constructor for the ActionPlanCategoryList object
+   * Constructor for the ActionPlanCategoryList object
    */
-  public ActionPlanCategoryList() { }
+  public ActionPlanCategoryList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the ActionPlanCategoryList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Gets the htmlSelect attribute of the ActionPlanCategoryList object
+   * Sets the lastAnchor attribute of the ActionPlanCategoryList object
    *
-   * @param  selectName  Description of the Parameter
-   * @param  defaultKey  Description of the Parameter
-   * @return             The htmlSelect value
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanCategoryList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanCategoryList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionPlanCategoryList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActionPlanCategoryList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionPlanCategoryList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Gets the htmlSelect attribute of the ActionPlanCategoryList object
+   *
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     Iterator i = this.iterator();
@@ -71,7 +147,8 @@ public class ActionPlanCategoryList extends Vector {
         catListSelect.addItem(
             thisCat.getId(),
             elementText);
-      } else if ((!(thisCat.getEnabled()) && thisCat.getId() == defaultKey) || includeDisabled) {
+      } else
+      if ((!(thisCat.getEnabled()) && thisCat.getId() == defaultKey) || includeDisabled) {
         if (catListSelect.getSelectSize() > 1) {
           HashMap colorAttribute = new HashMap();
           colorAttribute.put("style", "color: red");
@@ -96,10 +173,10 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -115,8 +192,8 @@ public class ActionPlanCategoryList extends Vector {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM action_plan_category apc " +
-        "WHERE apc.id > -1 ");
+            "FROM action_plan_category apc " +
+            "WHERE apc.id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -124,7 +201,7 @@ public class ActionPlanCategoryList extends Vector {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -138,8 +215,8 @@ public class ActionPlanCategoryList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND apc.id < ? ");
+                sqlFilter.toString() +
+                "AND apc.id < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -166,8 +243,8 @@ public class ActionPlanCategoryList extends Vector {
     }
     sqlSelect.append(
         "apc.* " +
-        "FROM action_plan_category apc " +
-        "WHERE apc.id > -1 ");
+            "FROM action_plan_category apc " +
+            "WHERE apc.id > -1 ");
     pst = db.prepareStatement(new String(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString()));
     items = prepareFilter(pst);
     if (pagedListInfo != null) {
@@ -187,9 +264,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -213,15 +290,26 @@ public class ActionPlanCategoryList extends Vector {
     } else {
       sqlFilter.append("AND apc.site_id IS NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst            Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -237,15 +325,26 @@ public class ActionPlanCategoryList extends Vector {
     if (siteId > -1) {
       pst.setInt(++i, siteId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Gets the htmlSelect attribute of the ActionPlanCategoryList object
+   * Gets the htmlSelect attribute of the ActionPlanCategoryList object
    *
-   * @param  defaultKey  Description of the Parameter
-   * @return             The htmlSelect value
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect(int defaultKey) {
     HtmlSelect catListSelect = new HtmlSelect();
@@ -255,7 +354,8 @@ public class ActionPlanCategoryList extends Vector {
       String elementText = thisCat.getDescription();
       if (thisCat.getEnabled()) {
         catListSelect.addItem(thisCat.getId(), elementText);
-      } else if ((!thisCat.getEnabled() && thisCat.getId() == defaultKey) || includeDisabled) {
+      } else
+      if ((!thisCat.getEnabled() && thisCat.getId() == defaultKey) || includeDisabled) {
         if (catListSelect.getSelectSize() > 1) {
           HashMap colorAttribute = new HashMap();
           colorAttribute.put("style", "color: red");
@@ -272,10 +372,10 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the idFromValue attribute of the ActionPlanCategoryList object
+   * Gets the idFromValue attribute of the ActionPlanCategoryList object
    *
-   * @param  value  Description of the Parameter
-   * @return        The idFromValue value
+   * @param value Description of the Parameter
+   * @return The idFromValue value
    */
   public int getIdFromValue(String value) {
     Iterator i = this.iterator();
@@ -293,9 +393,9 @@ public class ActionPlanCategoryList extends Vector {
    *  Get and Set methods
    */
   /**
-   *  Gets the catListSelect attribute of the ActionPlanCategoryList object
+   * Gets the catListSelect attribute of the ActionPlanCategoryList object
    *
-   * @return    The catListSelect value
+   * @return The catListSelect value
    */
   public HtmlSelect getCatListSelect() {
     return catListSelect;
@@ -303,9 +403,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the catListSelect attribute of the ActionPlanCategoryList object
+   * Sets the catListSelect attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new catListSelect value
+   * @param tmp The new catListSelect value
    */
   public void setCatListSelect(HtmlSelect tmp) {
     this.catListSelect = tmp;
@@ -313,9 +413,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the ActionPlanCategoryList object
+   * Gets the pagedListInfo attribute of the ActionPlanCategoryList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -323,9 +423,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionPlanCategoryList object
+   * Sets the pagedListInfo attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -333,9 +433,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the parentCode attribute of the ActionPlanCategoryList object
+   * Gets the parentCode attribute of the ActionPlanCategoryList object
    *
-   * @return    The parentCode value
+   * @return The parentCode value
    */
   public int getParentCode() {
     return parentCode;
@@ -343,9 +443,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the parentCode attribute of the ActionPlanCategoryList object
+   * Sets the parentCode attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new parentCode value
+   * @param tmp The new parentCode value
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -353,9 +453,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the parentCode attribute of the ActionPlanCategoryList object
+   * Sets the parentCode attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new parentCode value
+   * @param tmp The new parentCode value
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -363,9 +463,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the catLevel attribute of the ActionPlanCategoryList object
+   * Gets the catLevel attribute of the ActionPlanCategoryList object
    *
-   * @return    The catLevel value
+   * @return The catLevel value
    */
   public int getCatLevel() {
     return catLevel;
@@ -373,9 +473,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the catLevel attribute of the ActionPlanCategoryList object
+   * Sets the catLevel attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new catLevel value
+   * @param tmp The new catLevel value
    */
   public void setCatLevel(int tmp) {
     this.catLevel = tmp;
@@ -383,9 +483,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the catLevel attribute of the ActionPlanCategoryList object
+   * Sets the catLevel attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new catLevel value
+   * @param tmp The new catLevel value
    */
   public void setCatLevel(String tmp) {
     this.catLevel = Integer.parseInt(tmp);
@@ -393,9 +493,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the htmlJsEvent attribute of the ActionPlanCategoryList object
+   * Gets the htmlJsEvent attribute of the ActionPlanCategoryList object
    *
-   * @return    The htmlJsEvent value
+   * @return The htmlJsEvent value
    */
   public String getHtmlJsEvent() {
     return HtmlJsEvent;
@@ -403,9 +503,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the htmlJsEvent attribute of the ActionPlanCategoryList object
+   * Sets the htmlJsEvent attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new htmlJsEvent value
+   * @param tmp The new htmlJsEvent value
    */
   public void setHtmlJsEvent(String tmp) {
     this.HtmlJsEvent = tmp;
@@ -413,9 +513,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the enabledState attribute of the ActionPlanCategoryList object
+   * Gets the enabledState attribute of the ActionPlanCategoryList object
    *
-   * @return    The enabledState value
+   * @return The enabledState value
    */
   public int getEnabledState() {
     return enabledState;
@@ -423,9 +523,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the enabledState attribute of the ActionPlanCategoryList object
+   * Sets the enabledState attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new enabledState value
+   * @param tmp The new enabledState value
    */
   public void setEnabledState(int tmp) {
     this.enabledState = tmp;
@@ -433,9 +533,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the enabledState attribute of the ActionPlanCategoryList object
+   * Sets the enabledState attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new enabledState value
+   * @param tmp The new enabledState value
    */
   public void setEnabledState(String tmp) {
     this.enabledState = Integer.parseInt(tmp);
@@ -443,9 +543,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the includeDisabled attribute of the ActionPlanCategoryList object
+   * Gets the includeDisabled attribute of the ActionPlanCategoryList object
    *
-   * @return    The includeDisabled value
+   * @return The includeDisabled value
    */
   public boolean getIncludeDisabled() {
     return includeDisabled;
@@ -453,9 +553,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the includeDisabled attribute of the ActionPlanCategoryList object
+   * Sets the includeDisabled attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new includeDisabled value
+   * @param tmp The new includeDisabled value
    */
   public void setIncludeDisabled(boolean tmp) {
     this.includeDisabled = tmp;
@@ -463,9 +563,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the includeDisabled attribute of the ActionPlanCategoryList object
+   * Sets the includeDisabled attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new includeDisabled value
+   * @param tmp The new includeDisabled value
    */
   public void setIncludeDisabled(String tmp) {
     this.includeDisabled = DatabaseUtils.parseBoolean(tmp);
@@ -473,9 +573,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the siteId attribute of the ActionPlanCategoryList object
+   * Gets the siteId attribute of the ActionPlanCategoryList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -483,9 +583,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the siteId attribute of the ActionPlanCategoryList object
+   * Sets the siteId attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -493,9 +593,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the siteId attribute of the ActionPlanCategoryList object
+   * Sets the siteId attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -503,9 +603,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the ActionPlanCategoryList object
+   * Gets the exclusiveToSite attribute of the ActionPlanCategoryList object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -513,9 +613,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ActionPlanCategoryList object
+   * Sets the exclusiveToSite attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -523,9 +623,9 @@ public class ActionPlanCategoryList extends Vector {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ActionPlanCategoryList object
+   * Sets the exclusiveToSite attribute of the ActionPlanCategoryList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);

@@ -34,14 +34,14 @@ import java.text.NumberFormat;
 import java.util.*;
 
 /**
- *  An OpportunityComponent makes up 1 or more elements of an Opportunity. An
- *  OpportunityHeader is a top level description for all of the components that
- *  make up the Opportunity.
+ * An OpportunityComponent makes up 1 or more elements of an Opportunity. An
+ * OpportunityHeader is a top level description for all of the components that
+ * make up the Opportunity.
  *
- * @author     chris
- * @created    December, 2002
- * @version    $Id: OpportunityComponent.java,v 1.5 2002/12/24 17:02:33 akhi_m
- *      Exp $
+ * @author chris
+ * @version $Id: OpportunityComponent.java,v 1.5 2002/12/24 17:02:33 akhi_m
+ *          Exp $
+ * @created December, 2002
  */
 
 public class OpportunityComponent extends GenericBean {
@@ -101,20 +101,22 @@ public class OpportunityComponent extends GenericBean {
 
   //import data variables
   private boolean importComponent = false;
+  private boolean updateOnInsert = true; //Backup-Restore disables this by default.
 
   /**
-   *  Constructor for the OpportunityComponent object
+   * Constructor for the OpportunityComponent object
    */
-  public OpportunityComponent() { }
+  public OpportunityComponent() {
+  }
 
 
   /**
-   *  Constructor for the OpportunityComponent object
+   * Constructor for the OpportunityComponent object
    *
-   * @param  rs                Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public OpportunityComponent(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -122,13 +124,13 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Constructor for the OpportunityComponent object
+   * Constructor for the OpportunityComponent object
    *
-   * @param  db                Description of Parameter
-   * @param  id                Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of Exception
+   * @param db Description of Parameter
+   * @param id Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public OpportunityComponent(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -136,13 +138,13 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Constructor for the OpportunityComponent object
+   * Constructor for the OpportunityComponent object
    *
-   * @param  db                Description of Parameter
-   * @param  id                Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of Exception
+   * @param db Description of Parameter
+   * @param id Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public OpportunityComponent(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -150,9 +152,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the TypeList attribute of the OpportunityComponent object
+   * Sets the TypeList attribute of the OpportunityComponent object
    *
-   * @param  typeList  The new TypeList value
+   * @param typeList The new TypeList value
    */
   public void setTypeList(ArrayList typeList) {
     this.typeList = typeList;
@@ -160,9 +162,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the TypeList attribute of the OpportunityComponent object
+   * Sets the TypeList attribute of the OpportunityComponent object
    *
-   * @param  criteriaString  The new TypeList value
+   * @param criteriaString The new TypeList value
    */
   public void setTypeList(String[] criteriaString) {
     if (criteriaString != null) {
@@ -175,9 +177,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the headerId attribute of the OpportunityComponent object
+   * Sets the headerId attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new headerId value
+   * @param tmp The new headerId value
    */
   public void setHeaderId(int tmp) {
     headerId = tmp;
@@ -185,9 +187,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the headerId attribute of the OpportunityComponent object
+   * Sets the headerId attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new headerId value
+   * @param tmp The new headerId value
    */
   public void setHeaderId(String tmp) {
     headerId = Integer.parseInt(tmp);
@@ -195,9 +197,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the alertText attribute of the Opportunity object
+   * Sets the alertText attribute of the Opportunity object
    *
-   * @param  alertText  The new alertText value
+   * @param alertText The new alertText value
    */
   public void setAlertText(String alertText) {
     this.alertText = alertText;
@@ -205,10 +207,10 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the HasEnabledOwnerAccount attribute of the OpportunityComponent
-   *  object
+   * Sets the HasEnabledOwnerAccount attribute of the OpportunityComponent
+   * object
    *
-   * @param  hasEnabledOwnerAccount  The new HasEnabledOwnerAccount value
+   * @param hasEnabledOwnerAccount The new HasEnabledOwnerAccount value
    */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
@@ -216,9 +218,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the OpenIt attribute of the Opportunity object
+   * Sets the OpenIt attribute of the Opportunity object
    *
-   * @param  openIt  The new OpenIt value
+   * @param openIt The new OpenIt value
    */
   public void setOpenIt(boolean openIt) {
     this.openIt = openIt;
@@ -226,9 +228,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the openIt attribute of the OpportunityComponent object
+   * Sets the openIt attribute of the OpportunityComponent object
    *
-   *@param  openIt  The new openIt value
+   * @param openIt The new openIt value
    */
   public void setOpenIt(String openIt) {
     this.openIt = DatabaseUtils.parseBoolean(openIt);
@@ -238,7 +240,7 @@ public class OpportunityComponent extends GenericBean {
   /**
    * Sets the Types attribute of the OpportunityComponent object
    *
-   * @param  types  The new Types value
+   * @param types The new Types value
    */
   public void setTypes(LookupList types) {
     this.types = types;
@@ -246,9 +248,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the Opportunity object
+   * Sets the alertDate attribute of the Opportunity object
    *
-   * @param  tmp  The new alertDate value
+   * @param tmp The new alertDate value
    */
   public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
@@ -256,9 +258,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the alertDate attribute of the Opportunity object
+   * Sets the alertDate attribute of the Opportunity object
    *
-   * @param  tmp  The new alertDate value
+   * @param tmp The new alertDate value
    */
   public void setAlertDate(String tmp) {
     this.alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -266,9 +268,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the alertDateTimeZone attribute of the OpportunityComponent object
+   * Sets the alertDateTimeZone attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new alertDateTimeZone value
+   * @param tmp The new alertDateTimeZone value
    */
   public void setAlertDateTimeZone(String tmp) {
     this.alertDateTimeZone = tmp;
@@ -276,9 +278,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Notes attribute of the OpportunityComponent object
+   * Sets the Notes attribute of the OpportunityComponent object
    *
-   * @param  notes  The new Notes value
+   * @param notes The new Notes value
    */
   public void setNotes(String notes) {
     this.notes = notes;
@@ -286,9 +288,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the Opportunity object
+   * Sets the closeDate attribute of the Opportunity object
    *
-   * @param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(java.sql.Timestamp tmp) {
     this.closeDate = tmp;
@@ -296,9 +298,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the stageDate attribute of the Opportunity object
+   * Sets the stageDate attribute of the Opportunity object
    *
-   * @param  tmp  The new stageDate value
+   * @param tmp The new stageDate value
    */
   public void setStageDate(java.sql.Timestamp tmp) {
     this.stageDate = tmp;
@@ -306,9 +308,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Opportunity object
+   * Sets the enabled attribute of the Opportunity object
    *
-   * @param  enabled  The new enabled value
+   * @param enabled The new enabled value
    */
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
@@ -316,9 +318,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Opportunity object
+   * Sets the enabled attribute of the Opportunity object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -326,9 +328,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the closeDate attribute of the Opportunity object
+   * Sets the closeDate attribute of the Opportunity object
    *
-   * @param  tmp  The new closeDate value
+   * @param tmp The new closeDate value
    */
   public void setCloseDate(String tmp) {
     this.closeDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -336,9 +338,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the stageDate attribute of the Opportunity object
+   * Sets the stageDate attribute of the Opportunity object
    *
-   * @param  tmp  The new stageDate value
+   * @param tmp The new stageDate value
    */
   public void setStageDate(String tmp) {
     this.stageDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -346,9 +348,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Entered attribute of the Opportunity object
+   * Sets the Entered attribute of the Opportunity object
    *
-   * @param  tmp  The new Entered value
+   * @param tmp The new Entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -356,9 +358,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Modified attribute of the Opportunity object
+   * Sets the Modified attribute of the Opportunity object
    *
-   * @param  tmp  The new Modified value
+   * @param tmp The new Modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -366,9 +368,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Opportunity object
+   * Sets the entered attribute of the Opportunity object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -376,9 +378,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Opportunity object
+   * Sets the modified attribute of the Opportunity object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -386,9 +388,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Owner attribute of the Opportunity object
+   * Sets the Owner attribute of the Opportunity object
    *
-   * @param  owner  The new Owner value
+   * @param owner The new Owner value
    */
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
@@ -396,9 +398,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the StageChange attribute of the Opportunity object
+   * Sets the StageChange attribute of the Opportunity object
    *
-   * @param  stageChange  The new StageChange value
+   * @param stageChange The new StageChange value
    */
   public void setStageChange(boolean stageChange) {
     this.stageChange = stageChange;
@@ -406,9 +408,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Closed attribute of the Opportunity object
+   * Sets the Closed attribute of the Opportunity object
    *
-   * @param  closed  The new Closed value
+   * @param closed The new Closed value
    */
   public void setClosed(String closed) {
     this.closed = closed;
@@ -416,9 +418,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Owner attribute of the Opportunity object
+   * Sets the Owner attribute of the Opportunity object
    *
-   * @param  owner  The new Owner value
+   * @param owner The new Owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -426,9 +428,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Opportunity object
+   * Sets the Id attribute of the Opportunity object
    *
-   * @param  id  The new Id value
+   * @param id The new Id value
    */
   public void setId(int id) {
     this.id = id;
@@ -436,9 +438,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Opportunity object
+   * Sets the id attribute of the Opportunity object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -446,9 +448,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the StageName attribute of the Opportunity object
+   * Sets the StageName attribute of the Opportunity object
    *
-   * @param  stageName  The new StageName value
+   * @param stageName The new StageName value
    */
   public void setStageName(String stageName) {
     this.stageName = stageName;
@@ -456,9 +458,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Terms attribute of the Opportunity object
+   * Sets the Terms attribute of the Opportunity object
    *
-   * @param  terms  The new Terms value
+   * @param terms The new Terms value
    */
   public void setTerms(String terms) {
     try {
@@ -470,9 +472,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the terms attribute of the OpportunityComponent object
+   * Sets the terms attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new terms value
+   * @param tmp The new terms value
    */
   public void setTerms(double tmp) {
     terms = tmp;
@@ -480,9 +482,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Opportunity object
+   * Sets the ModifiedBy attribute of the Opportunity object
    *
-   * @param  modifiedBy  The new ModifiedBy value
+   * @param modifiedBy The new ModifiedBy value
    */
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
@@ -490,9 +492,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Opportunity object
+   * Sets the modifiedBy attribute of the Opportunity object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -500,9 +502,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Opportunity object
+   * Sets the EnteredBy attribute of the Opportunity object
    *
-   * @param  enteredBy  The new EnteredBy value
+   * @param enteredBy The new EnteredBy value
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
@@ -510,9 +512,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Opportunity object
+   * Sets the enteredBy attribute of the Opportunity object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -520,9 +522,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Description attribute of the Opportunity object
+   * Sets the Description attribute of the Opportunity object
    *
-   * @param  description  The new Description value
+   * @param description The new Description value
    */
   public void setDescription(String description) {
     this.description = description;
@@ -530,9 +532,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the closeDateTimeZone attribute of the OpportunityComponent object
+   * Sets the closeDateTimeZone attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new closeDateTimeZone value
+   * @param tmp The new closeDateTimeZone value
    */
   public void setCloseDateTimeZone(String tmp) {
     this.closeDateTimeZone = tmp;
@@ -540,9 +542,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the closeDateTimeZone attribute of the OpportunityComponent object
+   * Gets the closeDateTimeZone attribute of the OpportunityComponent object
    *
-   * @return    The closeDateTimeZone value
+   * @return The closeDateTimeZone value
    */
   public String getCloseDateTimeZone() {
     return closeDateTimeZone;
@@ -550,9 +552,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the OpportunityComponent object
+   * Sets the trashedDate attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -560,9 +562,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the OpportunityComponent object
+   * Sets the trashedDate attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -570,9 +572,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the trashedDate attribute of the OpportunityComponent object
+   * Gets the trashedDate attribute of the OpportunityComponent object
    *
-   * @return    The trashedDate value
+   * @return The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -580,9 +582,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the trashed attribute of the OpportunityComponent object
+   * Gets the trashed attribute of the OpportunityComponent object
    *
-   * @return    The trashed value
+   * @return The trashed value
    */
   public boolean isTrashed() {
     return (trashedDate != null);
@@ -590,9 +592,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the low attribute of the OpportunityComponent object
+   * Gets the low attribute of the OpportunityComponent object
    *
-   * @return    The low value
+   * @return The low value
    */
   public double getLow() {
     return low;
@@ -600,9 +602,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the low attribute of the OpportunityComponent object
+   * Sets the low attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new low value
+   * @param tmp The new low value
    */
   public void setLow(double tmp) {
     this.low = tmp;
@@ -610,9 +612,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the low attribute of the OpportunityComponent object
+   * Sets the low attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new low value
+   * @param tmp The new low value
    */
   public void setLow(String tmp) {
     this.low = Double.parseDouble(tmp);
@@ -620,9 +622,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the guess attribute of the OpportunityComponent object
+   * Gets the guess attribute of the OpportunityComponent object
    *
-   * @return    The guess value
+   * @return The guess value
    */
   public double getGuess() {
     return guess;
@@ -630,11 +632,11 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the guess attribute of the OpportunityComponent object
+   * Gets the guess attribute of the OpportunityComponent object
    *
-   * @param  defaultUnits      Description of the Parameter
-   * @param  multiplierString  Description of the Parameter
-   * @return                   The guess value
+   * @param defaultUnits     Description of the Parameter
+   * @param multiplierString Description of the Parameter
+   * @return The guess value
    */
   public double getGuess(String defaultUnits, String multiplierString) {
     if (defaultUnits != null && "W".equals(defaultUnits)) {
@@ -649,9 +651,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the guess attribute of the OpportunityComponent object
+   * Sets the guess attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new guess value
+   * @param tmp The new guess value
    */
   public void setGuess(double tmp) {
     this.guess = tmp;
@@ -659,9 +661,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the guess attribute of the OpportunityComponent object
+   * Sets the guess attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new guess value
+   * @param tmp The new guess value
    */
   public void setGuess(String tmp) {
     this.guess = Double.parseDouble(tmp);
@@ -669,9 +671,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the high attribute of the OpportunityComponent object
+   * Gets the high attribute of the OpportunityComponent object
    *
-   * @return    The high value
+   * @return The high value
    */
   public double getHigh() {
     return high;
@@ -679,9 +681,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the high attribute of the OpportunityComponent object
+   * Sets the high attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new high value
+   * @param tmp The new high value
    */
   public void setHigh(double tmp) {
     this.high = tmp;
@@ -689,9 +691,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the high attribute of the OpportunityComponent object
+   * Sets the high attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new high value
+   * @param tmp The new high value
    */
   public void setHigh(String tmp) {
     this.high = Double.parseDouble(tmp);
@@ -699,9 +701,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Type attribute of the Opportunity object
+   * Sets the Type attribute of the Opportunity object
    *
-   * @param  type  The new Type value
+   * @param type The new Type value
    */
   public void setType(String type) {
     this.type = type;
@@ -709,9 +711,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Units attribute of the Opportunity object
+   * Sets the Units attribute of the Opportunity object
    *
-   * @param  units  The new Units value
+   * @param units The new Units value
    */
   public void setUnits(String units) {
     this.units = units;
@@ -719,9 +721,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the environment attribute of the OpportunityComponent object
+   * Gets the environment attribute of the OpportunityComponent object
    *
-   * @return    The environment value
+   * @return The environment value
    */
   public int getEnvironment() {
     return environment;
@@ -729,9 +731,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the environment attribute of the OpportunityComponent object
+   * Sets the environment attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new environment value
+   * @param tmp The new environment value
    */
   public void setEnvironment(int tmp) {
     this.environment = tmp;
@@ -739,9 +741,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the environment attribute of the OpportunityComponent object
+   * Sets the environment attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new environment value
+   * @param tmp The new environment value
    */
   public void setEnvironment(String tmp) {
     this.environment = Integer.parseInt(tmp);
@@ -749,9 +751,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the competitors attribute of the OpportunityComponent object
+   * Gets the competitors attribute of the OpportunityComponent object
    *
-   * @return    The competitors value
+   * @return The competitors value
    */
   public int getCompetitors() {
     return competitors;
@@ -759,9 +761,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the competitors attribute of the OpportunityComponent object
+   * Sets the competitors attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new competitors value
+   * @param tmp The new competitors value
    */
   public void setCompetitors(int tmp) {
     this.competitors = tmp;
@@ -769,9 +771,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the competitors attribute of the OpportunityComponent object
+   * Sets the competitors attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new competitors value
+   * @param tmp The new competitors value
    */
   public void setCompetitors(String tmp) {
     this.competitors = Integer.parseInt(tmp);
@@ -779,9 +781,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the compellingEvent attribute of the OpportunityComponent object
+   * Gets the compellingEvent attribute of the OpportunityComponent object
    *
-   * @return    The compellingEvent value
+   * @return The compellingEvent value
    */
   public int getCompellingEvent() {
     return compellingEvent;
@@ -789,9 +791,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the compellingEvent attribute of the OpportunityComponent object
+   * Sets the compellingEvent attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new compellingEvent value
+   * @param tmp The new compellingEvent value
    */
   public void setCompellingEvent(int tmp) {
     this.compellingEvent = tmp;
@@ -799,9 +801,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the compellingEvent attribute of the OpportunityComponent object
+   * Sets the compellingEvent attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new compellingEvent value
+   * @param tmp The new compellingEvent value
    */
   public void setCompellingEvent(String tmp) {
     this.compellingEvent = Integer.parseInt(tmp);
@@ -809,9 +811,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the budget attribute of the OpportunityComponent object
+   * Gets the budget attribute of the OpportunityComponent object
    *
-   * @return    The budget value
+   * @return The budget value
    */
   public int getBudget() {
     return budget;
@@ -819,9 +821,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the budget attribute of the OpportunityComponent object
+   * Sets the budget attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new budget value
+   * @param tmp The new budget value
    */
   public void setBudget(int tmp) {
     this.budget = tmp;
@@ -829,9 +831,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the budget attribute of the OpportunityComponent object
+   * Sets the budget attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new budget value
+   * @param tmp The new budget value
    */
   public void setBudget(String tmp) {
     this.budget = Integer.parseInt(tmp);
@@ -839,9 +841,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the CloseProb attribute of the Opportunity object
+   * Sets the CloseProb attribute of the Opportunity object
    *
-   * @param  closeProb  The new CloseProb value
+   * @param closeProb The new CloseProb value
    */
   public void setCloseProb(String closeProb) {
     if (closeProb != null && closeProb.endsWith("%")) {
@@ -862,9 +864,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Commission attribute of the Opportunity object
+   * Sets the Commission attribute of the Opportunity object
    *
-   * @param  commission  The new Commission value
+   * @param commission The new Commission value
    */
   public void setCommission(String commission) {
     if (commission != null && commission.endsWith("%")) {
@@ -875,9 +877,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Stage attribute of the Opportunity object
+   * Sets the Stage attribute of the Opportunity object
    *
-   * @param  stage  The new Stage value
+   * @param stage The new Stage value
    */
   public void setStage(String stage) {
     this.stage = Integer.parseInt(stage);
@@ -885,9 +887,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the stage attribute of the OpportunityComponent object
+   * Sets the stage attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new stage value
+   * @param tmp The new stage value
    */
   public void setStage(int tmp) {
     stage = tmp;
@@ -895,9 +897,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the CloseIt attribute of the Opportunity object
+   * Sets the CloseIt attribute of the Opportunity object
    *
-   * @param  closeIt  The new CloseIt value
+   * @param closeIt The new CloseIt value
    */
   public void setCloseIt(boolean closeIt) {
     this.closeIt = closeIt;
@@ -905,9 +907,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the closeNow attribute of the Opportunity object
+   * Sets the closeNow attribute of the Opportunity object
    *
-   * @param  tmp  The new closeNow value
+   * @param tmp The new closeNow value
    */
   public void setCloseNow(String tmp) {
     this.closeIt = ("ON".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -915,9 +917,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the accountName attribute of the OpportunityComponent object
+   * Sets the accountName attribute of the OpportunityComponent object
    *
-   * @param  accountName  The new accountName value
+   * @param accountName The new accountName value
    */
   public void setAccountName(String accountName) {
     this.accountName = accountName;
@@ -925,9 +927,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the OpportunityComponent object
+   * Sets the status attribute of the OpportunityComponent object
    *
-   *@param  status  The new status value
+   * @param status The new status value
    */
   public void setStatus(int status) {
     this.status = status;
@@ -935,9 +937,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the status attribute of the OpportunityComponent object
+   * Sets the status attribute of the OpportunityComponent object
    *
-   *@param  status  The new status value
+   * @param status The new status value
    */
   public void setStatus(String status) {
     this.status = Integer.parseInt(status);
@@ -945,9 +947,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the importComponent attribute of the OpportunityComponent object
+   * Sets the importComponent attribute of the OpportunityComponent object
    *
-   *@param  importComponent  The new importComponent value
+   * @param importComponent The new importComponent value
    */
   public void setImportComponent(boolean importComponent) {
     this.importComponent = importComponent;
@@ -955,9 +957,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the importComponent attribute of the OpportunityComponent object
+   * Gets the importComponent attribute of the OpportunityComponent object
    *
-   *@return    The importComponent value
+   * @return The importComponent value
    */
   public boolean getImportComponent() {
     return importComponent;
@@ -965,19 +967,31 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the importComponent attribute of the OpportunityComponent object
+   * Sets the importComponent attribute of the OpportunityComponent object
    *
-   *@param  importComponent  The new importComponent value
+   * @param importComponent The new importComponent value
    */
   public void setImportComponent(String importComponent) {
     this.importComponent = DatabaseUtils.parseBoolean(importComponent);
   }
 
 
+  public void setUpdateOnInsert(boolean tmp) {
+    this.updateOnInsert = tmp;
+  }
+
+  public void setUpdateOnInsert(String tmp) {
+    this.updateOnInsert = DatabaseUtils.parseBoolean(tmp);
+  }
+
+  public boolean getUpdateOnInsert() {
+    return this.updateOnInsert;
+  }
+
   /**
-   *  Gets the status attribute of the OpportunityComponent object
+   * Gets the status attribute of the OpportunityComponent object
    *
-   *@return    The status value
+   * @return The status value
    */
   public int getStatus() {
     return status;
@@ -987,7 +1001,7 @@ public class OpportunityComponent extends GenericBean {
   /**
    * Gets the accountName attribute of the OpportunityComponent object
    *
-   * @return    The accountName value
+   * @return The accountName value
    */
   public String getAccountName() {
     return accountName;
@@ -995,9 +1009,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the TypeList attribute of the OpportunityComponent object
+   * Gets the TypeList attribute of the OpportunityComponent object
    *
-   * @return    The TypeList value
+   * @return The TypeList value
    */
   public ArrayList getTypeList() {
     return typeList;
@@ -1005,9 +1019,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the alertText attribute of the Opportunity object
+   * Gets the alertText attribute of the Opportunity object
    *
-   * @return    The alertText value
+   * @return The alertText value
    */
   public String getAlertText() {
     return alertText;
@@ -1015,9 +1029,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the headerId attribute of the OpportunityComponent object
+   * Gets the headerId attribute of the OpportunityComponent object
    *
-   * @return    The headerId value
+   * @return The headerId value
    */
   public int getHeaderId() {
     return headerId;
@@ -1025,10 +1039,10 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the HasEnabledOwnerAccount attribute of the OpportunityComponent
-   *  object
+   * Gets the HasEnabledOwnerAccount attribute of the OpportunityComponent
+   * object
    *
-   * @return    The HasEnabledOwnerAccount value
+   * @return The HasEnabledOwnerAccount value
    */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
@@ -1036,9 +1050,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Types attribute of the OpportunityComponent object
+   * Gets the Types attribute of the OpportunityComponent object
    *
-   * @return    The Types value
+   * @return The Types value
    */
   public LookupList getTypes() {
     return types;
@@ -1046,9 +1060,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Notes attribute of the OpportunityComponent object
+   * Gets the Notes attribute of the OpportunityComponent object
    *
-   * @return    The Notes value
+   * @return The Notes value
    */
   public String getNotes() {
     return notes;
@@ -1056,9 +1070,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the alertDate attribute of the Opportunity object
+   * Gets the alertDate attribute of the Opportunity object
    *
-   * @return    The alertDate value
+   * @return The alertDate value
    */
   public java.sql.Timestamp getAlertDate() {
     return alertDate;
@@ -1066,9 +1080,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the alertDateTimeZone attribute of the OpportunityComponent object
+   * Gets the alertDateTimeZone attribute of the OpportunityComponent object
    *
-   * @return    The alertDateTimeZone value
+   * @return The alertDateTimeZone value
    */
   public String getAlertDateTimeZone() {
     return alertDateTimeZone;
@@ -1076,9 +1090,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the closeDate attribute of the Opportunity object
+   * Gets the closeDate attribute of the Opportunity object
    *
-   * @return    The closeDate value
+   * @return The closeDate value
    */
   public java.sql.Timestamp getCloseDate() {
     return closeDate;
@@ -1086,9 +1100,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the stageDate attribute of the Opportunity object
+   * Gets the stageDate attribute of the Opportunity object
    *
-   * @return    The stageDate value
+   * @return The stageDate value
    */
   public java.sql.Timestamp getStageDate() {
     return stageDate;
@@ -1096,9 +1110,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the alertDateString attribute of the Opportunity object
+   * Gets the alertDateString attribute of the Opportunity object
    *
-   * @return    The alertDateString value
+   * @return The alertDateString value
    */
   public String getAlertDateString() {
     String tmp = "";
@@ -1111,9 +1125,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the closeDateString attribute of the Opportunity object
+   * Gets the closeDateString attribute of the Opportunity object
    *
-   * @return    The closeDateString value
+   * @return The closeDateString value
    */
   public String getCloseDateString() {
     String tmp = "";
@@ -1126,9 +1140,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the stageDateString attribute of the Opportunity object
+   * Gets the stageDateString attribute of the Opportunity object
    *
-   * @return    The stageDateString value
+   * @return The stageDateString value
    */
   public String getStageDateString() {
     String tmp = "";
@@ -1141,9 +1155,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the OpenIt attribute of the Opportunity object
+   * Gets the OpenIt attribute of the Opportunity object
    *
-   * @return    The OpenIt value
+   * @return The OpenIt value
    */
   public boolean getOpenIt() {
     return openIt;
@@ -1151,9 +1165,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Entered attribute of the Opportunity object
+   * Gets the Entered attribute of the Opportunity object
    *
-   * @return    The Entered value
+   * @return The Entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -1161,9 +1175,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Modified attribute of the Opportunity object
+   * Gets the Modified attribute of the Opportunity object
    *
-   * @return    The Modified value
+   * @return The Modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -1171,9 +1185,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedString attribute of the Opportunity object
+   * Gets the ModifiedString attribute of the Opportunity object
    *
-   * @return    The ModifiedString value
+   * @return The ModifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
@@ -1187,9 +1201,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the EnteredString attribute of the Opportunity object
+   * Gets the EnteredString attribute of the Opportunity object
    *
-   * @return    The EnteredString value
+   * @return The EnteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -1203,9 +1217,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Closed attribute of the Opportunity object
+   * Gets the Closed attribute of the Opportunity object
    *
-   * @return    The Closed value
+   * @return The Closed value
    */
   public String getClosed() {
     return closed;
@@ -1213,9 +1227,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the StageChange attribute of the Opportunity object
+   * Gets the StageChange attribute of the Opportunity object
    *
-   * @return    The StageChange value
+   * @return The StageChange value
    */
   public boolean getStageChange() {
     return stageChange;
@@ -1223,9 +1237,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Units attribute of the Opportunity object
+   * Gets the Units attribute of the Opportunity object
    *
-   * @return    The Units value
+   * @return The Units value
    */
   public String getUnits() {
     return units;
@@ -1233,9 +1247,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Terms attribute of the Opportunity object
+   * Gets the Terms attribute of the Opportunity object
    *
-   * @return    The Terms value
+   * @return The Terms value
    */
   public double getTerms() {
     return terms;
@@ -1243,9 +1257,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the termsInMonths attribute of the OpportunityComponent object
+   * Gets the termsInMonths attribute of the OpportunityComponent object
    *
-   * @return    The termsInMonths value
+   * @return The termsInMonths value
    */
   public double getTermsInMonths() {
     if (this.getUnits().equals("W")) {
@@ -1256,12 +1270,12 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the termsInMonths attribute of the OpportunityComponent object
+   * Gets the termsInMonths attribute of the OpportunityComponent object
    *
-   * @param  defaultUnits               Description of the Parameter
-   * @param  defaultTermsString         Description of the Parameter
-   * @return                            The termsInMonths value
-   * @exception  NumberFormatException  Description of the Exception
+   * @param defaultUnits       Description of the Parameter
+   * @param defaultTermsString Description of the Parameter
+   * @return The termsInMonths value
+   * @throws NumberFormatException Description of the Exception
    */
   public double getTermsInMonths(String defaultUnits, String defaultTermsString) throws NumberFormatException {
     if (defaultUnits != null && "W".equals(defaultUnits)) {
@@ -1282,9 +1296,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the TermsString attribute of the Opportunity object
+   * Gets the TermsString attribute of the Opportunity object
    *
-   * @return    The TermsString value
+   * @return The TermsString value
    */
   public String getTermsString() {
     Double tmp = new Double(round(terms, 2));
@@ -1298,9 +1312,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the StageName attribute of the Opportunity object
+   * Gets the StageName attribute of the Opportunity object
    *
-   * @return    The StageName value
+   * @return The StageName value
    */
   public String getStageName() {
     if (this.getClosed() != null) {
@@ -1312,9 +1326,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Type attribute of the Opportunity object
+   * Gets the Type attribute of the Opportunity object
    *
-   * @return    The Type value
+   * @return The Type value
    */
   public String getType() {
     return type;
@@ -1322,9 +1336,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the Opportunity object
+   * Gets the Id attribute of the Opportunity object
    *
-   * @return    The Id value
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -1332,9 +1346,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Owner attribute of the Opportunity object
+   * Gets the Owner attribute of the Opportunity object
    *
-   * @return    The Owner value
+   * @return The Owner value
    */
   public int getOwner() {
     return owner;
@@ -1342,9 +1356,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Stage attribute of the Opportunity object
+   * Gets the Stage attribute of the Opportunity object
    *
-   * @return    The Stage value
+   * @return The Stage value
    */
   public int getStage() {
     return stage;
@@ -1352,9 +1366,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Opportunity object
+   * Gets the ModifiedBy attribute of the Opportunity object
    *
-   * @return    The ModifiedBy value
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -1362,9 +1376,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the CloseIt attribute of the Opportunity object
+   * Gets the CloseIt attribute of the Opportunity object
    *
-   * @return    The CloseIt value
+   * @return The CloseIt value
    */
   public boolean getCloseIt() {
     return closeIt;
@@ -1372,9 +1386,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Opportunity object
+   * Gets the EnteredBy attribute of the Opportunity object
    *
-   * @return    The EnteredBy value
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -1382,9 +1396,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Description attribute of the Opportunity object
+   * Gets the Description attribute of the Opportunity object
    *
-   * @return    The Description value
+   * @return The Description value
    */
   public String getDescription() {
     return description;
@@ -1392,9 +1406,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Description attribute of the Opportunity object
+   * Gets the Description attribute of the Opportunity object
    *
-   * @return    The Description value
+   * @return The Description value
    */
   public String getShortDescription() {
     if (description.length() <= 40) {
@@ -1406,9 +1420,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the CloseProb attribute of the Opportunity object
+   * Gets the CloseProb attribute of the Opportunity object
    *
-   * @return    The CloseProb value
+   * @return The CloseProb value
    */
   public double getCloseProb() {
     if (System.getProperty("DEBUG") != null) {
@@ -1419,9 +1433,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the CloseProbString attribute of the Opportunity object
+   * Gets the CloseProbString attribute of the Opportunity object
    *
-   * @return    The CloseProbString value
+   * @return The CloseProbString value
    */
   public String getCloseProbString() {
     return String.valueOf(closeProb);
@@ -1429,9 +1443,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the closeProbValue attribute of the Opportunity object
+   * Gets the closeProbValue attribute of the Opportunity object
    *
-   * @return    The closeProbValue value
+   * @return The closeProbValue value
    */
   public String getCloseProbValue() {
     double value_2dp = (double) Math.round(closeProb * 100.0 * 100.0) / 100.0;
@@ -1445,9 +1459,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the CloseProbPercent attribute of the Opportunity object
+   * Gets the CloseProbPercent attribute of the Opportunity object
    *
-   * @return    The CloseProbPercent value
+   * @return The CloseProbPercent value
    */
   public String getCloseProbPercent() {
     NumberFormat percentFormatter = NumberFormat.getPercentInstance(Locale.US);
@@ -1457,9 +1471,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Commission attribute of the Opportunity object
+   * Gets the Commission attribute of the Opportunity object
    *
-   * @return    The Commission value
+   * @return The Commission value
    */
   public double getCommission() {
     return commission;
@@ -1467,9 +1481,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the CommissionString attribute of the Opportunity object
+   * Gets the CommissionString attribute of the Opportunity object
    *
-   * @return    The CommissionString value
+   * @return The CommissionString value
    */
   public String getCommissionString() {
     String stringOut = (new java.math.BigDecimal(String.valueOf(commission))).toString();
@@ -1478,9 +1492,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the CommissionPercent attribute of the Opportunity object
+   * Gets the CommissionPercent attribute of the Opportunity object
    *
-   * @return    The CommissionPercent value
+   * @return The CommissionPercent value
    */
   public String getCommissionPercent() {
     NumberFormat percentFormatter = NumberFormat.getPercentInstance(Locale.US);
@@ -1490,9 +1504,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the commissionValue attribute of the Opportunity object
+   * Gets the commissionValue attribute of the Opportunity object
    *
-   * @return    The commissionValue value
+   * @return The commissionValue value
    */
   public String getCommissionValue() {
     double value_2dp = (double) Math.round(commission * 100.0 * 100.0) / 100.0;
@@ -1506,9 +1520,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the contactId attribute of the OpportunityComponent object
+   * Gets the contactId attribute of the OpportunityComponent object
    *
-   * @return    The contactId value
+   * @return The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -1516,9 +1530,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the OpportunityComponent object
+   * Sets the contactId attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -1526,9 +1540,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the contactId attribute of the OpportunityComponent object
+   * Sets the contactId attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new contactId value
+   * @param tmp The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -1536,9 +1550,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the orgId attribute of the OpportunityComponent object
+   * Gets the orgId attribute of the OpportunityComponent object
    *
-   * @return    The orgId value
+   * @return The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -1546,9 +1560,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the OpportunityComponent object
+   * Sets the orgId attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -1556,9 +1570,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the orgId attribute of the OpportunityComponent object
+   * Sets the orgId attribute of the OpportunityComponent object
    *
-   * @param  tmp  The new orgId value
+   * @param tmp The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -1566,10 +1580,10 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Determines if multiple components are allowed in this site
+   * Determines if multiple components are allowed in this site
    *
-   *@param  multiple  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param multiple Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean allowMultiple(String multiple) {
     if (multiple != null && "false".equals(multiple)) {
@@ -1580,9 +1594,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Ignores this field from in the isValid method
+   * Ignores this field from in the isValid method
    *
-   *@param  field  The feature to be added to the IgnoredValidationField attribute
+   * @param field The feature to be added to the IgnoredValidationField attribute
    */
   public void addIgnoredValidationField(String field) {
     ignoredValidationFields.add(field);
@@ -1592,9 +1606,9 @@ public class OpportunityComponent extends GenericBean {
   /**
    * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  id             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @param id Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -1602,10 +1616,10 @@ public class OpportunityComponent extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT " +
-        "oc.*, y.description AS stagename " +
-        "FROM opportunity_component oc " +
-        "LEFT JOIN lookup_stage y ON (oc.stage = y.code) " +
-        "WHERE id = ? ");
+            "oc.*, y.description AS stagename " +
+            "FROM opportunity_component oc " +
+            "LEFT JOIN lookup_stage y ON (oc.stage = y.code) " +
+            "WHERE id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1621,10 +1635,10 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
@@ -1632,8 +1646,8 @@ public class OpportunityComponent extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE user_id = ? AND enabled = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -1648,12 +1662,12 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  context        Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     if (insert(db)) {
@@ -1666,12 +1680,12 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  context        Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;
@@ -1684,8 +1698,8 @@ public class OpportunityComponent extends GenericBean {
       }
       PreparedStatement pst = db.prepareStatement(
           "SELECT owner " +
-          "FROM opportunity_component " +
-          "WHERE id = ?");
+              "FROM opportunity_component " +
+              "WHERE id = ?");
       pst.setInt(1, this.getId());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -1718,12 +1732,12 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  context        Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db, ActionContext context) throws SQLException {
     if (delete(db)) {
@@ -1738,11 +1752,11 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean disable(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1755,14 +1769,14 @@ public class OpportunityComponent extends GenericBean {
 
     sql.append(
         "UPDATE opportunity_component SET enabled = ? " +
-        "WHERE id = ? " +
-        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+            "WHERE id = ? " +
+            "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, false);
     pst.setInt(++i, id);
-    if(this.getModified() != null){
+    if (this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     int resultCount = pst.executeUpdate();
@@ -1775,11 +1789,11 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int updateHeaderModified(Connection db) throws SQLException {
     if (this.getHeaderId() == -1) {
@@ -1789,7 +1803,7 @@ public class OpportunityComponent extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE opportunity_header set modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE opp_id = ? ");
+            "WHERE opp_id = ? ");
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getHeaderId());
     resultCount = pst.executeUpdate();
@@ -1799,9 +1813,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public String toString() {
     StringBuffer out = new StringBuffer();
@@ -1818,14 +1832,14 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Inserts this object into the database, and populates this Id. For
-   *  maintenance, only the required fields are inserted, then an update is
-   *  executed to finish the record.
+   * Inserts this object into the database, and populates this Id. For
+   * maintenance, only the required fields are inserted, then an update is
+   * executed to finish the record.
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   public boolean insert(Connection db) throws SQLException {
     if (this.getHeaderId() == -1) {
@@ -1841,7 +1855,7 @@ public class OpportunityComponent extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "opportunity_component_id_seq");
       sql.append(
           "INSERT INTO opportunity_component " +
-          "(owner, closedate, closedate_timezone, stage, description, opp_id, status_id, trashed_date, ");
+              "(owner, closedate, closedate_timezone, stage, description, opp_id, status_id, trashed_date, ");
       sql.append("environment, competitors, compelling_event, budget, ");
       if (id > -1) {
         sql.append("id, ");
@@ -1904,8 +1918,11 @@ public class OpportunityComponent extends GenericBean {
       pst.close();
 
       id = DatabaseUtils.getCurrVal(db, "opportunity_component_id_seq", id);
-      this.update(db, true);
-      
+
+      if (updateOnInsert) {
+        this.update(db, true);
+      }
+
       if (doCommit) {
         db.commit();
       }
@@ -1924,17 +1941,17 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildTypes(Connection db) throws SQLException {
     ArrayList list = new ArrayList();
     PreparedStatement pst = db.prepareStatement(
         "SELECT otl.type_id " +
-        "FROM opportunity_component_levels otl " +
-        "WHERE otl.opp_id = ? ORDER BY otl." + DatabaseUtils.addQuotes(db, "level") + " ");
+            "FROM opportunity_component_levels otl " +
+            "WHERE otl.opp_id = ? ORDER BY otl." + DatabaseUtils.addQuotes(db, "level") + " ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -1945,7 +1962,7 @@ public class OpportunityComponent extends GenericBean {
       int thisTypeId = ((Integer) li.next()).intValue();
       types.add(
           new LookupElement(
-          db, thisTypeId, "lookup_opportunity_types"));
+              db, thisTypeId, "lookup_opportunity_types"));
     }
     rs.close();
     pst.close();
@@ -1953,11 +1970,11 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean resetType(Connection db) throws SQLException {
     if (id == -1) {
@@ -1974,13 +1991,13 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  type_id        Description of Parameter
-   * @param  level          Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param type_id Description of Parameter
+   * @param level   Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insertType(Connection db, int type_id, int level) throws SQLException {
     if (id == -1) {
@@ -1988,8 +2005,8 @@ public class OpportunityComponent extends GenericBean {
     }
     String sql =
         "INSERT INTO opportunity_component_levels " +
-        "(opp_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ") " +
-        "VALUES (?, ?, ?) ";
+            "(opp_id, type_id, " + DatabaseUtils.addQuotes(db, "level") + ") " +
+            "VALUES (?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getId());
@@ -2002,11 +2019,11 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  thisStatus        Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param thisStatus Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void changeStatus(Connection db, int thisStatus) throws SQLException {
     if (id == -1) {
@@ -2016,8 +2033,8 @@ public class OpportunityComponent extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE opportunity_component " +
-        "SET status_id = ? " +
-        "WHERE id = ? ");
+            "SET status_id = ? " +
+            "WHERE id = ? ");
     pst.setInt(++i, status);
     pst.setInt(++i, this.getId());
     pst.executeUpdate();
@@ -2026,7 +2043,7 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
    * @param context Description of Parameter
    */
@@ -2036,12 +2053,12 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  newOwner       Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param newOwner Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
@@ -2055,10 +2072,10 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @param  userId   Description of Parameter
+   * @param context Description of Parameter
+   * @param userId  Description of Parameter
    */
   public void invalidateUserData(ActionContext context, int userId) {
     if (context != null) {
@@ -2072,11 +2089,11 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -2109,12 +2126,12 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Delete the current object from the database
+   * Delete the current object from the database
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -2138,24 +2155,24 @@ public class OpportunityComponent extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_item_work " +
-          "SET link_module_id = ?, link_item_id = ? " +
-          "WHERE link_module_id = ? " +
-          "AND link_item_id = ? ");
+              "SET link_module_id = ?, link_item_id = ? " +
+              "WHERE link_module_id = ? " +
+              "AND link_item_id = ? ");
       DatabaseUtils.setInt(pst, ++i, -1);
       DatabaseUtils.setInt(pst, ++i, -1);
       pst.setInt(++i, pipelineComponent);
       pst.setInt(++i, this.getId());
       pst.executeUpdate();
       pst.close();
-      
+
       //delete component history
       pst = db.prepareStatement(
-        "DELETE FROM opportunity_component_log " +
-        "WHERE component_id = ? ");
+          "DELETE FROM opportunity_component_log " +
+              "WHERE component_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity_component WHERE id = " + this.getId());
@@ -2178,11 +2195,11 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Populates this object from a result set
+   * Populates this object from a result set
    *
-   * @param  rs             Description of Parameter
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //opportunity table
@@ -2226,30 +2243,30 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Update the database with changes to this Opportunity Component
+   * Update the database with changes to this Opportunity Component
    *
-   * @param  db             Opened database connection
-   * @param  override       Set to true on an Insert only
-   * @return                The number of records updated
-   * @throws  SQLException  update error
+   * @param db       Opened database connection
+   * @param override Set to true on an Insert only
+   * @return The number of records updated
+   * @throws SQLException update error
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
     PreparedStatement pst = null;
     boolean commit = true;
     try {
-        commit = db.getAutoCommit();
-        if (commit) {
-          db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      if (!override) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Opportunity Component-> Retrieving values from previous Opportunity Component");
         }
-        if (!override) {
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("Opportunity Component-> Retrieving values from previous Opportunity Component");
-          }
         pst = db.prepareStatement(
             "SELECT stage, closed " +
-            "FROM opportunity_component " +
-            "WHERE id = ? ");
+                "FROM opportunity_component " +
+                "WHERE id = ? ");
         pst.setInt(1, this.getId());
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
@@ -2269,127 +2286,127 @@ public class OpportunityComponent extends GenericBean {
         pst.close();
       }
 
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println(
-          "Opportunity Component-> Updating the opportunity component");
-    }
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "UPDATE opportunity_component " +
-        "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
-        "commission = ?, ");
-    if ((this.getStageChange() == true && override == false)) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "Opportunity Component-> Updating the opportunity component");
+      }
+      StringBuffer sql = new StringBuffer();
       sql.append(
-          "stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
-    }
-    sql.append(
-        "" + DatabaseUtils.addQuotes(db, "type") + " = ?, stage = ?, description = ?, " +
-        "closedate = ?, closedate_timezone = ?, alertdate = ?, alert = ?, alertdate_timezone = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
-    sql.append(
-        "environment = ?, competitors = ?, compelling_event = ?, budget = ?, ");
-    if (override == false) {
-      sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
-    }
-    sql.append("modifiedby = ? ");
-    if (this.getCloseIt() == true) {
-      sql.append(", closed = CURRENT_TIMESTAMP ");
-    } else if (this.getOpenIt() == true) {
-      sql.append(", closed = ? ");
-    }
-    sql.append("WHERE id = ? ");
-    if (!override) {
-      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
-    }
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    pst.setDouble(++i, this.getLow());
-    pst.setDouble(++i, this.getGuess());
-    pst.setDouble(++i, this.getHigh());
-    pst.setDouble(++i, this.getCloseProb());
-    pst.setDouble(++i, this.getCommission());
-    pst.setString(++i, this.getType());
-    pst.setInt(++i, this.getStage());
-    pst.setString(++i, this.getDescription());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getCloseDate());
-    pst.setString(++i, this.getCloseDateTimeZone());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getAlertDate());
-    pst.setString(++i, this.getAlertText());
-    pst.setString(++i, this.getAlertDateTimeZone());
-    pst.setDouble(++i, this.getTerms());
-    pst.setString(++i, this.getUnits());
-    pst.setInt(++i, this.getOwner());
-    pst.setString(++i, this.getNotes());
-    DatabaseUtils.setInt(pst, ++i, this.getEnvironment());
-    DatabaseUtils.setInt(pst, ++i, this.getCompetitors());
-    DatabaseUtils.setInt(pst, ++i, this.getCompellingEvent());
-    DatabaseUtils.setInt(pst, ++i, this.getBudget());
-    pst.setInt(++i, this.getModifiedBy());
-    if (this.getOpenIt() == true) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    }
-    pst.setInt(++i, this.getId());
-    if (!override && this.getModified() != null) {
-      pst.setTimestamp(++i, this.getModified());
-    }
-    resultCount = pst.executeUpdate();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println(
-          "Opportunity Component-> ResultCount: " + resultCount);
-    }
-    pst.close();
+          "UPDATE opportunity_component " +
+              "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
+              "commission = ?, ");
+      if ((this.getStageChange() == true && override == false)) {
+        sql.append(
+            "stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      sql.append(
+          "" + DatabaseUtils.addQuotes(db, "type") + " = ?, stage = ?, description = ?, " +
+              "closedate = ?, closedate_timezone = ?, alertdate = ?, alert = ?, alertdate_timezone = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
+      sql.append(
+          "environment = ?, competitors = ?, compelling_event = ?, budget = ?, ");
+      if (override == false) {
+        sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      sql.append("modifiedby = ? ");
+      if (this.getCloseIt() == true) {
+        sql.append(", closed = CURRENT_TIMESTAMP ");
+      } else if (this.getOpenIt() == true) {
+        sql.append(", closed = ? ");
+      }
+      sql.append("WHERE id = ? ");
+      if (!override) {
+        sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
+      }
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      pst.setDouble(++i, this.getLow());
+      pst.setDouble(++i, this.getGuess());
+      pst.setDouble(++i, this.getHigh());
+      pst.setDouble(++i, this.getCloseProb());
+      pst.setDouble(++i, this.getCommission());
+      pst.setString(++i, this.getType());
+      pst.setInt(++i, this.getStage());
+      pst.setString(++i, this.getDescription());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getCloseDate());
+      pst.setString(++i, this.getCloseDateTimeZone());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getAlertDate());
+      pst.setString(++i, this.getAlertText());
+      pst.setString(++i, this.getAlertDateTimeZone());
+      pst.setDouble(++i, this.getTerms());
+      pst.setString(++i, this.getUnits());
+      pst.setInt(++i, this.getOwner());
+      pst.setString(++i, this.getNotes());
+      DatabaseUtils.setInt(pst, ++i, this.getEnvironment());
+      DatabaseUtils.setInt(pst, ++i, this.getCompetitors());
+      DatabaseUtils.setInt(pst, ++i, this.getCompellingEvent());
+      DatabaseUtils.setInt(pst, ++i, this.getBudget());
+      pst.setInt(++i, this.getModifiedBy());
+      if (this.getOpenIt() == true) {
+        pst.setNull(++i, java.sql.Types.DATE);
+      }
+      pst.setInt(++i, this.getId());
+      if (!override && this.getModified() != null) {
+        pst.setTimestamp(++i, this.getModified());
+      }
+      resultCount = pst.executeUpdate();
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "Opportunity Component-> ResultCount: " + resultCount);
+      }
+      pst.close();
 
-    if (resultCount == 1) {
-      //Remove all opp types, add new list
-      if (typeList != null) {
-        resetType(db);
-        int lvlcount = 0;
-        for (int k = 0; k < typeList.size(); k++) {
-          String val = (String) typeList.get(k);
-          if (val != null && !"".equals(val)) {
-            int type_id = Integer.parseInt((String) typeList.get(k));
-            lvlcount++;
-            insertType(db, type_id, lvlcount);
-          } else {
-            lvlcount--;
+      if (resultCount == 1) {
+        //Remove all opp types, add new list
+        if (typeList != null) {
+          resetType(db);
+          int lvlcount = 0;
+          for (int k = 0; k < typeList.size(); k++) {
+            String val = (String) typeList.get(k);
+            if (val != null && !"".equals(val)) {
+              int type_id = Integer.parseInt((String) typeList.get(k));
+              lvlcount++;
+              insertType(db, type_id, lvlcount);
+            } else {
+              lvlcount--;
+            }
           }
         }
+        this.updateHeaderModified(db);
+
+        // insert a record into opportunity component log to maintain history.
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("OpportunityComponent-> Adding Component Log Entry");
+        }
+        OpportunityComponentLog oppCompLog = new OpportunityComponentLog(db, this);
+        oppCompLog.insert(db);
       }
-      this.updateHeaderModified(db);
-      
-      // insert a record into opportunity component log to maintain history.
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("OpportunityComponent-> Adding Component Log Entry");
+      if (commit) {
+        db.commit();
       }
-      OpportunityComponentLog oppCompLog = new OpportunityComponentLog(db, this);
-      oppCompLog.insert(db);
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      e.printStackTrace(System.out);
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
-    if (commit) {
-      db.commit();
-    }
-  } catch (SQLException e) {
-    if (commit) {
-      db.rollback();
-    }
-    e.printStackTrace(System.out);
-    throw new SQLException(e.getMessage());
-  } finally {
-    if (commit) {
-      db.setAutoCommit(true);
-    }
-  }
     return resultCount;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  toTrash        Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @param  tmpUserId      Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param context   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, ActionContext context, boolean toTrash, int tmpUserId) throws SQLException {
     int count = 0;
@@ -2402,10 +2419,10 @@ public class OpportunityComponent extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE opportunity_component " +
-          "SET trashed_date = ?, " +
-          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-          "modifiedby = ? " +
-          "WHERE id = ? ");
+              "SET trashed_date = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+              "modifiedby = ? " +
+              "WHERE id = ? ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (toTrash) {
@@ -2429,16 +2446,16 @@ public class OpportunityComponent extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "UPDATE action_item_work " +
-          "SET link_module_id = ?, link_item_id = ? " +
-          "WHERE link_module_id = ? " +
-          "AND link_item_id = ? ");
+              "SET link_module_id = ?, link_item_id = ? " +
+              "WHERE link_module_id = ? " +
+              "AND link_item_id = ? ");
       DatabaseUtils.setInt(pst, ++i, -1);
       DatabaseUtils.setInt(pst, ++i, -1);
       pst.setInt(++i, pipelineComponent);
       pst.setInt(++i, this.getId());
       pst.executeUpdate();
       pst.close();
-      
+
       if (commit) {
         db.commit();
       }
@@ -2458,9 +2475,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive for a Call
+   * Gets the properties that are TimeZone sensitive for a Call
    *
-   * @return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -2472,9 +2489,9 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the numberParams attribute of the OpportunityComponent class
+   * Gets the numberParams attribute of the OpportunityComponent class
    *
-   * @return    The numberParams value
+   * @return The numberParams value
    */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
@@ -2486,10 +2503,10 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  sets the items in the type list to the the lookup list 'types'
+   * sets the items in the type list to the the lookup list 'types'
    *
-   * @param  db             The new typeListToTypes value
-   * @throws  SQLException  Description of the Exception
+   * @param db The new typeListToTypes value
+   * @throws SQLException Description of the Exception
    */
   public void setTypeListToTypes(Connection db) throws SQLException {
     Iterator itr = typeList.iterator();
@@ -2497,24 +2514,24 @@ public class OpportunityComponent extends GenericBean {
       String tmpId = (String) itr.next();
       types.add(
           new LookupElement(
-          db, Integer.parseInt(tmpId), "lookup_opportunity_types"));
+              db, Integer.parseInt(tmpId), "lookup_opportunity_types"));
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  tz         Description of the Parameter
-   * @param  created    Description of the Parameter
-   * @param  category   Description of the Parameter
-   * @param  alertDate  Description of the Parameter
-   * @param  currency   Description of the Parameter
-   * @param  locale     Description of the Parameter
-   * @return            Description of the Return Value
+   * @param tz        Description of the Parameter
+   * @param created   Description of the Parameter
+   * @param category  Description of the Parameter
+   * @param alertDate Description of the Parameter
+   * @param currency  Description of the Parameter
+   * @param locale    Description of the Parameter
+   * @return Description of the Return Value
    */
   public String generateWebcalEvent(TimeZone tz, Timestamp created, String category,
-      String currency, Locale locale, Timestamp alertDate) {
+                                    String currency, Locale locale, Timestamp alertDate) {
 
     StringBuffer webcal = new StringBuffer();
     String CRLF = System.getProperty("line.separator");
@@ -2542,7 +2559,7 @@ public class OpportunityComponent extends GenericBean {
     if (alertDate != null) {
       webcal.append(
           "DTSTART;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(
-          tz, alertDate) + CRLF);
+              tz, alertDate) + CRLF);
     }
     if (alertText != null) {
       webcal.append(ICalendar.foldLine("SUMMARY:" + alertText) + CRLF);

@@ -982,30 +982,41 @@ public class OpportunityComponentList extends ArrayList {
     if (includeOnlyForGraph) {
       if (defaultUnits == null || "".equals(defaultUnits)) {
         sqlFilter.append(
-          "AND ((oc.units = ? AND oc.id IN ( SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
-              db, DatabaseUtils.MONTH, "terms", "closedate") + " > " + DatabaseUtils.getCurrentTimestamp(
-              db) + " )) OR ( oc.units = ? AND oc.id IN (  " +
-              "SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
-              db, DatabaseUtils.WEEK, "terms", "closedate") + " > " + DatabaseUtils.getCurrentTimestamp(
-              db) + " ))) ");
+            "AND ((oc.units = ? AND oc.id IN ( SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
+                db, DatabaseUtils.MONTH, "terms", "closedate") + " > " + DatabaseUtils.getCurrentTimestamp(
+                db) + " )) OR ( oc.units = ? AND oc.id IN (  " +
+                "SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
+                db, DatabaseUtils.WEEK, "terms", "closedate") + " > " + DatabaseUtils.getCurrentTimestamp(
+                db) + " ))) ");
       } else {
         sqlFilter.append(
-          "AND oc.id IN ( SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
-              db, DatabaseUtils.WEEK, "terms", "closedate", defaultUnits, java.lang.Math.round(defaultTerms)) + " > " + DatabaseUtils.getCurrentTimestamp(
-              db) + " ) ");
+            "AND oc.id IN ( SELECT id FROM opportunity_component WHERE " + DatabaseUtils.addTimestampInterval(
+                db, DatabaseUtils.WEEK, "terms", "closedate", defaultUnits, java.lang.Math.round(defaultTerms)) + " > " + DatabaseUtils.getCurrentTimestamp(
+                db) + " ) ");
       }
     }
     if (contactId != -1) {
       sqlFilter.append(
-            "AND oc.opp_id IN (SELECT opp_id from opportunity_header x " +
-                "WHERE x.contactlink = ?) ");
+          "AND oc.opp_id IN (SELECT opp_id from opportunity_header x " +
+              "WHERE x.contactlink = ?) ");
     }
     if (orgId != -1) {
       sqlFilter.append(
-            "AND oc.opp_id IN (SELECT opp_id from opportunity_header x " +
-                "WHERE x.acctlink = ?) ");
+          "AND oc.opp_id IN (SELECT opp_id from opportunity_header x " +
+              "WHERE x.acctlink = ?) ");
     }
 
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -1125,6 +1136,17 @@ public class OpportunityComponentList extends ArrayList {
     }
     if (orgId != -1) {
       pst.setInt(++i, orgId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

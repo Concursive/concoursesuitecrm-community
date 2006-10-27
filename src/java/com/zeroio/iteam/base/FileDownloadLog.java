@@ -70,9 +70,9 @@ public class FileDownloadLog extends GenericBean {
       throw new SQLException("ID not specified");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT item_id, version, user_download_id, download_date " +
-        "FROM project_files_download d " +
-        "WHERE d.item_id = ? ");
+        "SELECT item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id, download_date " +
+            "FROM project_files_download d " +
+            "WHERE d.item_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -247,8 +247,8 @@ public class FileDownloadLog extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO project_files_download " +
-        "(item_id, version, user_download_id, download_date) " +
-        "VALUES (?, ?, ?, ?)");
+            "(item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id, download_date) " +
+            "VALUES (?, ?, ?, ?)");
     int i = 0;
     pst.setInt(++i, itemId);
     pst.setDouble(++i, version);
@@ -274,16 +274,16 @@ public class FileDownloadLog extends GenericBean {
     //Record the raw number of downloads
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_files " +
-        "SET downloads = (downloads + 1) " +
-        "WHERE item_id = ? ");
+            "SET downloads = (downloads + 1) " +
+            "WHERE item_id = ? ");
     pst.setInt(1, itemId);
     pst.executeUpdate();
     pst.close();
     pst = db.prepareStatement(
         "UPDATE project_files_version " +
-        "SET downloads = (downloads + 1) " +
-        "WHERE item_id = ? " +
-        "AND version = ? ");
+            "SET downloads = (downloads + 1) " +
+            "WHERE item_id = ? " +
+            "AND " + DatabaseUtils.addQuotes(db, "version") + " = ? ");
     pst.setInt(1, itemId);
     pst.setDouble(2, version);
     pst.executeUpdate();
@@ -292,8 +292,8 @@ public class FileDownloadLog extends GenericBean {
     int usageId = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     String sql =
         "INSERT INTO usage_log " +
-        "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, action, record_id, record_size) " +
-        "VALUES (" + (usageId > -1 ? "?, " : "") + "?, ?, ?, ?) ";
+            "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, action, record_id, record_size) " +
+            "VALUES (" + (usageId > -1 ? "?, " : "") + "?, ?, ?, ?) ";
     int i = 0;
     pst = db.prepareStatement(sql);
     if (usageId > -1) {
@@ -311,7 +311,7 @@ public class FileDownloadLog extends GenericBean {
     }
     sql =
         "INSERT INTO project_files_download " +
-        "(item_id, version, user_download_id) VALUES (?, ?, ?) ";
+            "(item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id) VALUES (?, ?, ?) ";
     i = 0;
     pst = db.prepareStatement(sql);
     pst.setInt(++i, itemId);

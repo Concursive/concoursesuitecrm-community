@@ -15,6 +15,7 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -36,6 +37,12 @@ import java.util.Iterator;
  * @created January 3, 2003
  */
 public class AssignmentList extends ArrayList {
+
+  public final static String tableName = "project_assignments";
+  public final static String uniqueField = "assignment_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
@@ -65,6 +72,73 @@ public class AssignmentList extends ArrayList {
   public AssignmentList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the pagedListInfo attribute of the AssignmentList object
@@ -489,8 +563,8 @@ public class AssignmentList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_assignments a " +
-        "WHERE assignment_id > -1 ");
+            "FROM project_assignments a " +
+            "WHERE assignment_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -510,8 +584,8 @@ public class AssignmentList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.addQuotes(db, "role")+ ") < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.addQuotes(db, "role") + ") < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -538,14 +612,14 @@ public class AssignmentList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "a.*, s.description as status, s." + DatabaseUtils.addQuotes(db, "type")+ " as status_type, s.graphic as status_graphic, " +
-        "loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type, pr.description as priority " +
-        "FROM project_assignments a " +
-        " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
-        " LEFT JOIN lookup_project_loe loe_e ON (a.estimated_loetype = loe_e.code) " +
-        " LEFT JOIN lookup_project_loe loe_a ON (a.actual_loetype = loe_a.code) " +
-        " LEFT JOIN lookup_project_priority pr ON (a.priority_id = pr.code) " +
-        "WHERE assignment_id > -1 ");
+        "a.*, s.description as status, s." + DatabaseUtils.addQuotes(db, "type") + " as status_type, s.graphic as status_graphic, " +
+            "loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type, pr.description as priority " +
+            "FROM project_assignments a " +
+            " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
+            " LEFT JOIN lookup_project_loe loe_e ON (a.estimated_loetype = loe_e.code) " +
+            " LEFT JOIN lookup_project_loe loe_a ON (a.actual_loetype = loe_a.code) " +
+            " LEFT JOIN lookup_project_priority pr ON (a.priority_id = pr.code) " +
+            "WHERE assignment_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -590,7 +664,7 @@ public class AssignmentList extends ArrayList {
     if (forProjectUser > -1) {
       sqlFilter.append(
           "AND (a.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          "AND status IS NULL )) ");
+              "AND status IS NULL )) ");
     }
     if (closedOnly) {
       sqlFilter.append("AND complete_date IS NOT NULL ");
@@ -624,6 +698,17 @@ public class AssignmentList extends ArrayList {
     if (onlyIfRequirementOpen) {
       sqlFilter.append(
           "AND a.requirement_id IN (SELECT requirement_id FROM project_requirements WHERE closedate IS NULL) ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -669,6 +754,17 @@ public class AssignmentList extends ArrayList {
     }
     if (alertRangeEnd != null) {
       pst.setTimestamp(++i, alertRangeEnd);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }
@@ -778,15 +874,15 @@ public class AssignmentList extends ArrayList {
     //Assignment status
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM project_assignments_status " +
-        "WHERE assignment_id IN " +
-        "(SELECT assignment_id FROM project_assignments WHERE requirement_id = ?) ");
+            "WHERE assignment_id IN " +
+            "(SELECT assignment_id FROM project_assignments WHERE requirement_id = ?) ");
     pst.setInt(1, requirementId);
     pst.execute();
     pst.close();
     //Delete the assignments
     pst = db.prepareStatement(
         "DELETE FROM project_assignments " +
-        "WHERE requirement_id = ? ");
+            "WHERE requirement_id = ? ");
     pst.setInt(1, requirementId);
     pst.execute();
     pst.close();

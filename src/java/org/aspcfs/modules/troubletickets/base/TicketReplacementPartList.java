@@ -69,9 +69,11 @@ public class TicketReplacementPartList extends ArrayList {
 
     pst = db.prepareStatement(
         " SELECT *  " +
-        " FROM  trouble_asset_replacement " +
-        " WHERE link_form_id = ? ");
-    pst.setInt(1, tmpFormId);
+            " FROM  trouble_asset_replacement " +
+            (tmpFormId > -1 ? " WHERE link_form_id = ? " : ""));
+    if (tmpFormId > -1) {
+      pst.setInt(1, tmpFormId);
+    }
     if (System.getProperty("DEBUG") != null) {
       System.out.println(
           "TicketReplacementPartList-> before query: " + pst.toString());
@@ -104,8 +106,8 @@ public class TicketReplacementPartList extends ArrayList {
     PreparedStatement pst = null;
     pst = db.prepareStatement(
         " DELETE " +
-        " FROM  trouble_asset_replacement " +
-        " WHERE link_form_id = ? ");
+            " FROM  trouble_asset_replacement " +
+            " WHERE link_form_id = ? ");
 
     pst.setInt(1, tmpFormId);
     pst.execute();

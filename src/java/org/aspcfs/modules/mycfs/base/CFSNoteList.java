@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -22,8 +23,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * Description of the Class
@@ -33,6 +34,13 @@ import java.util.Iterator;
  * @created February 21, 2002
  */
 public class CFSNoteList extends Vector {
+
+
+  public final static String tableName = "cfsinbox_message";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int sentTo = -1;
@@ -49,6 +57,73 @@ public class CFSNoteList extends Vector {
   public CFSNoteList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the newMessagesOnly attribute of the CFSNoteList object
@@ -182,16 +257,16 @@ public class CFSNoteList extends Vector {
     if (sentMessagesOnly) {
       sqlCount.append(
           "SELECT COUNT(*) AS recordcount " +
-          "FROM cfsinbox_message m " +
-          "WHERE m.id > -1 ");
+              "FROM cfsinbox_message m " +
+              "WHERE m.id > -1 ");
     } else {
       sqlCount.append(
           "SELECT COUNT(*) AS recordcount " +
-          "FROM cfsinbox_messagelink ml,cfsinbox_message m " +
-          "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-          "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-          "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-          "WHERE m.id > -1 AND (m.id = ml.id) ");
+              "FROM cfsinbox_messagelink ml,cfsinbox_message m " +
+              "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+              "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+              "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
+              "WHERE m.id > -1 AND (m.id = ml.id) ");
     }
 
     createFilter(sqlFilter);
@@ -200,7 +275,7 @@ public class CFSNoteList extends Vector {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString());
+              sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -214,8 +289,8 @@ public class CFSNoteList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND subject < ? ");
+                sqlFilter.toString() +
+                "AND subject < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -244,16 +319,16 @@ public class CFSNoteList extends Vector {
     if (sentMessagesOnly) {
       sqlSelect.append(
           "m.id, m.subject, m.body, m.sent, m.delete_flag " +
-          "FROM cfsinbox_message m " +
-          "WHERE m.id > -1 ");
+              "FROM cfsinbox_message m " +
+              "WHERE m.id > -1 ");
     } else {
       sqlSelect.append(
           "m.*, ml.*, ct_sent.namefirst AS sent_namefirst, ct_sent.namelast AS sent_namelast " +
-          "FROM cfsinbox_messagelink ml, cfsinbox_message m " +
-          "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-          "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-          "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-          "WHERE m.id > -1 AND (m.id = ml.id) ");
+              "FROM cfsinbox_messagelink ml, cfsinbox_message m " +
+              "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+              "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+              "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
+              "WHERE m.id > -1 AND (m.id = ml.id) ");
     }
 
     pst = db.prepareStatement(
@@ -307,12 +382,23 @@ public class CFSNoteList extends Vector {
       sqlFilter.append("AND m.enteredby = ? ");
     }
 
-    if (oldMessagesOnly == true) {
+    if (oldMessagesOnly) {
       sqlFilter.append("AND ml.status = 2 ");
     } else if (newMessagesOnly) {
       sqlFilter.append("AND ml.status IN (0) ");
     } else if (!sentMessagesOnly) {
       sqlFilter.append("AND ml.status IN (0,1) ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -332,13 +418,22 @@ public class CFSNoteList extends Vector {
     if (buildAll) {
       return i;
     }
-
     if (sentTo > -1 && !sentMessagesOnly) {
       pst.setInt(++i, sentTo);
     } else {
       pst.setInt(++i, sentFrom);
     }
-
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 }

@@ -53,6 +53,38 @@ public class AssignmentFolder extends GenericBean {
   private int prevIndent = -1;
   private int prevMapId = -1;
 
+  private boolean recordMapItem = true;
+
+
+  /**
+   * Gets the recordMapItem attribute of the AssignmentFolder object
+   *
+   * @return The recordMapItem value
+   */
+  public boolean getRecordMapItem() {
+    return recordMapItem;
+  }
+
+
+  /**
+   * Sets the recordMapItem attribute of the AssignmentFolder object
+   *
+   * @param tmp The new recordMapItem value
+   */
+  public void setRecordMapItem(boolean tmp) {
+    this.recordMapItem = tmp;
+  }
+
+
+  /**
+   * Sets the recordMapItem attribute of the AssignmentFolder object
+   *
+   * @param tmp The new recordMapItem value
+   */
+  public void setRecordMapItem(String tmp) {
+    this.recordMapItem = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    * Description of the Method
@@ -68,6 +100,7 @@ public class AssignmentFolder extends GenericBean {
    * @param folderId  Description of the Parameter
    * @param projectId Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public AssignmentFolder(Connection db, int folderId, int projectId) throws SQLException {
     this.setProjectId(projectId);
@@ -79,6 +112,7 @@ public class AssignmentFolder extends GenericBean {
    * Description of the Method
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public AssignmentFolder(ResultSet rs) throws SQLException {
@@ -101,8 +135,8 @@ public class AssignmentFolder extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM project_assignments_folder " +
-        "WHERE folder_id = ? ");
+            "FROM project_assignments_folder " +
+            "WHERE folder_id = ? ");
     if (projectId > -1) {
       sql.append(
           "AND requirement_id IN (SELECT requirement_id FROM project_requirements WHERE project_id = ?) ");
@@ -649,7 +683,7 @@ public class AssignmentFolder extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "project_assignmen_folder_id_seq");
     sql.append(
         "INSERT INTO project_assignments_folder " +
-        "(requirement_id, parent_id, name, description, ");
+            "(requirement_id, parent_id, name, description, ");
     if (id > -1) {
       sql.append("folder_id, ");
     }
@@ -692,17 +726,19 @@ public class AssignmentFolder extends GenericBean {
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "project_assignmen_folder_id_seq", id);
     //Record the position of this entry
-    RequirementMapItem mapItem = new RequirementMapItem();
-    mapItem.setProjectId(projectId);
-    mapItem.setRequirementId(requirementId);
-    mapItem.setFolderId(id);
-    mapItem.setIndent(indent);
-    mapItem.setPrevIndent(prevIndent);
-    mapItem.setPrevMapId(prevMapId);
-    mapItem.append(db);
-    indent = mapItem.getIndent();
-    prevIndent = mapItem.getIndent();
-    prevMapId = mapItem.getId();
+    if (recordMapItem) {
+      RequirementMapItem mapItem = new RequirementMapItem();
+      mapItem.setProjectId(projectId);
+      mapItem.setRequirementId(requirementId);
+      mapItem.setFolderId(id);
+      mapItem.setIndent(indent);
+      mapItem.setPrevIndent(prevIndent);
+      mapItem.setPrevMapId(prevMapId);
+      mapItem.append(db);
+      indent = mapItem.getIndent();
+      prevIndent = mapItem.getIndent();
+      prevMapId = mapItem.getId();
+    }
     return true;
   }
 
@@ -786,8 +822,8 @@ public class AssignmentFolder extends GenericBean {
       //Move assignments to the left
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_assignments " +
-          "SET folder_id = ? " +
-          "WHERE folder_id = ? ");
+              "SET folder_id = ? " +
+              "WHERE folder_id = ? ");
       DatabaseUtils.setInt(pst, 1, parentId);
       pst.setInt(2, id);
       pst.executeUpdate();
@@ -795,8 +831,8 @@ public class AssignmentFolder extends GenericBean {
       //Move other folders to the left
       pst = db.prepareStatement(
           "UPDATE project_assignments_folder " +
-          "SET parent_id = ? " +
-          "WHERE parent_id = ? ");
+              "SET parent_id = ? " +
+              "WHERE parent_id = ? ");
       DatabaseUtils.setInt(pst, 1, parentId);
       pst.setInt(2, id);
       pst.executeUpdate();
@@ -804,7 +840,7 @@ public class AssignmentFolder extends GenericBean {
       //Delete this folder (which should have nothing in it now)
       pst = db.prepareStatement(
           "DELETE FROM project_assignments_folder " +
-          "WHERE folder_id = ? ");
+              "WHERE folder_id = ? ");
       pst.setInt(1, id);
       recordCount = pst.executeUpdate();
       pst.close();
@@ -856,17 +892,17 @@ public class AssignmentFolder extends GenericBean {
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments_folder " +
-        "SET name = ?, description = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP, parent_id = ? " +
-        "WHERE folder_id = ? " +
-        "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+            "SET name = ?, description = ?, " +
+            "modifiedBy = ?, modified = CURRENT_TIMESTAMP, parent_id = ? " +
+            "WHERE folder_id = ? " +
+            "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     int i = 0;
     pst.setString(++i, name);
     pst.setString(++i, description);
     pst.setInt(++i, this.getModifiedBy());
     DatabaseUtils.setInt(pst, ++i, parentId);
     pst.setInt(++i, this.getId());
-    if(this.getModified() != null){
+    if (this.getModified() != null) {
       pst.setTimestamp(++i, modified);
     }
     resultCount = pst.executeUpdate();

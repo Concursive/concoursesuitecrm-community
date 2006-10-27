@@ -153,7 +153,7 @@ public class StringUtils {
       htmlReady = replace(htmlReady, "//lt;", "<");
       htmlReady = replace(htmlReady, "//gt;", ">");
 
-      //a second call to the function (done in surveys) 
+      //a second call to the function (done in surveys)
       //changes <br> to &lt;br&gt;, this needs to be reverted
       htmlReady = replace(htmlReady, "&lt;br&gt;", "<br>");
 
@@ -1018,6 +1018,19 @@ public class StringUtils {
     result[0] = nameFirst;
     result[1] = nameLast;
     return result;
+  }
+
+  /**
+   * Gets the true attribute of the StringUtils class
+   *
+   * @param tmp Description of the Parameter
+   * @return The true value
+   */
+  public static boolean isTrue(String tmp) {
+    if (tmp != null) {
+      return "true".equals(tmp.trim());
+    }
+    return false;
   }
 }
 

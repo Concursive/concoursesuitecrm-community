@@ -50,6 +50,76 @@ public class ActionItemLog extends GenericBean {
 
 
   /**
+   * Sets the itemId attribute of the ActionItemLog object
+   *
+   * @param tmp The new itemId value
+   */
+  public void setItemId(String tmp) {
+    this.itemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the linkItemId attribute of the ActionItemLog object
+   *
+   * @param tmp The new linkItemId value
+   */
+  public void setLinkItemId(String tmp) {
+    this.linkItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the type attribute of the ActionItemLog object
+   *
+   * @param tmp The new type value
+   */
+  public void setType(String tmp) {
+    this.type = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the enteredBy attribute of the ActionItemLog object
+   *
+   * @param tmp The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the modifiedBy attribute of the ActionItemLog object
+   *
+   * @param tmp The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the modified attribute of the ActionItemLog object
+   *
+   * @param tmp The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the entered attribute of the ActionItemLog object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
    * Constructor for the ActionItemLog object
    */
   public ActionItemLog() {
@@ -60,6 +130,7 @@ public class ActionItemLog extends GenericBean {
    * Constructor for the ActionItemLog object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ActionItemLog(ResultSet rs) throws SQLException {
@@ -384,10 +455,10 @@ public class ActionItemLog extends GenericBean {
       throw new SQLException("Id not specified");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT al.log_id, al.item_id, al.link_item_id, al." + DatabaseUtils.addQuotes(db, "type")+ ", " +
-        "al.enteredby, al.entered, al.modifiedby, al.modified " +
-        "FROM action_item_log al " +
-        "WHERE log_id = ? ");
+        "SELECT al.log_id, al.item_id, al.link_item_id, al." + DatabaseUtils.addQuotes(db, "type") + ", " +
+            "al.enteredby, al.entered, al.modifiedby, al.modified " +
+            "FROM action_item_log al " +
+            "WHERE log_id = ? ");
     int i = 0;
     pst.setInt(++i, id);
     ResultSet rs = pst.executeQuery();
@@ -419,8 +490,8 @@ public class ActionItemLog extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "action_item_log_code_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO action_item_log " +
-          "(" + (id > -1 ? "log_id, " : "") + "item_id, link_item_id, " + DatabaseUtils.addQuotes(db, "type")+ ", enteredby, modifiedby) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ? ) ");
+              "(" + (id > -1 ? "log_id, " : "") + "item_id, link_item_id, " + DatabaseUtils.addQuotes(db, "type") + ", enteredby, modifiedby) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ? ) ");
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -436,8 +507,8 @@ public class ActionItemLog extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "UPDATE action_item " +
-          "SET modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-          "WHERE item_id = ? ");
+              "SET modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+              "WHERE item_id = ? ");
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getItemId());
       pst.execute();
@@ -473,7 +544,7 @@ public class ActionItemLog extends GenericBean {
     int recordCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM action_item_log " +
-        "WHERE log_id = ? ");
+            "WHERE log_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
@@ -502,7 +573,7 @@ public class ActionItemLog extends GenericBean {
     int recordCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM action_item_log " +
-        "WHERE link_item_id = ? AND " + DatabaseUtils.addQuotes(db, "type")+ " = ? ");
+            "WHERE link_item_id = ? AND " + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     pst.setInt(1, linkId);
     pst.setInt(2, thisType);
     recordCount = pst.executeUpdate();

@@ -37,6 +37,11 @@ import java.util.Vector;
  * @created August 13, 2002
  */
 public class SurveyAnswerList extends Vector {
+  public final static String tableName = "active_survey_answers";
+  public final static String uniqueField = "answer_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private int questionId = -1;
   private int hasComments = -1;
@@ -52,6 +57,74 @@ public class SurveyAnswerList extends Vector {
    * Constructor for the SurveyAnswerList object
    */
   public SurveyAnswerList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the SurveyAnswerList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the SurveyAnswerList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SurveyAnswerList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the SurveyAnswerList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the SurveyAnswerList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the SurveyAnswerList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the SurveyAnswerList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -273,8 +346,8 @@ public class SurveyAnswerList extends Vector {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM active_survey_answers sa, active_survey_responses sr " +
-        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id ");
+            "FROM active_survey_answers sa, active_survey_responses sr " +
+            "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id ");
 
     createFilter(sqlFilter);
 
@@ -302,8 +375,8 @@ public class SurveyAnswerList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND sa.comments < ? ");
+                sqlFilter.toString() +
+                "AND sa.comments < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         if (pagedListInfo != null) {
@@ -333,10 +406,10 @@ public class SurveyAnswerList extends Vector {
     }
     sqlSelect.append(
         "sa.*, c.namelast as lastname, c.namefirst as firstname, " +
-        "c.contact_id as contactid, sr.entered as entered " +
-        "FROM active_survey_answers sa, active_survey_responses sr " +
-        "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
-        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id ");
+            "c.contact_id as contactid, sr.entered as entered " +
+            "FROM active_survey_answers sa, active_survey_responses sr " +
+            "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
+            "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -377,6 +450,17 @@ public class SurveyAnswerList extends Vector {
         sqlFilter.append("AND sa.comments LIKE '' ");
       }
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -401,7 +485,17 @@ public class SurveyAnswerList extends Vector {
     if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
-
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 

@@ -27,20 +27,21 @@ import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.service.base.*;
 import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.LoginUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.io.BufferedReader;
 
 /**
  * An HTTP connector for incoming XML packet requests. Requests must include
@@ -70,6 +71,7 @@ public final class ProcessPacket extends CFSModule {
     Connection dbLookup = null;
     String encoding = "UTF-8";
     String commitLevel = "packet";
+    boolean validateObject = true;
 
     try {
       //Indicates if the commit happens at the packet level or the individual
@@ -79,6 +81,10 @@ public final class ProcessPacket extends CFSModule {
         commitLevel = "transaction";
       }
 
+      String validator = context.getRequest().getHeader("object-validation");
+      if (validator != null) {
+        validateObject = DatabaseUtils.parseBoolean(validator);
+      }
       //Put the request into an XML document
       HttpServletRequest request = context.getRequest();
       StringBuffer data = new StringBuffer();
@@ -178,6 +184,7 @@ public final class ProcessPacket extends CFSModule {
             Element thisElement = (Element) trans.next();
             Transaction thisTransaction = new Transaction();
             thisTransaction.setPacketContext(packetContext);
+            thisTransaction.setValidateObject(validateObject);
 
             SyncTable metaMapping = new SyncTable();
             metaMapping.setName("meta");
@@ -209,16 +216,22 @@ public final class ProcessPacket extends CFSModule {
             }
           }
           if ("packet".equals(commitLevel)) {
-            dbLookup.commit();
+            if (!dbLookup.getAutoCommit()) {
+              dbLookup.commit();
+            }
           }
         } catch (SQLException e) {
           if ("packet".equals(commitLevel)) {
-            dbLookup.rollback();
+            if (!dbLookup.getAutoCommit()) {
+              dbLookup.rollback();
+            }
           }
           throw new SQLException(e.getMessage());
         } finally {
           if ("packet".equals(commitLevel)) {
-            dbLookup.setAutoCommit(true);
+            if (!dbLookup.getAutoCommit()) {
+              dbLookup.setAutoCommit(true);
+            }
           }
         }
         //Each transaction provides a status that needs to be returned to the client
@@ -237,7 +250,7 @@ public final class ProcessPacket extends CFSModule {
       }
     } catch (Exception e) {
       //The transaction usually catches errors, but not always
-      e.printStackTrace();
+      e.printStackTrace(System.out);
       TransactionStatus thisStatus = new TransactionStatus();
       thisStatus.setStatusCode(1);
       thisStatus.setMessage("Error: " + e.getMessage());
@@ -288,7 +301,7 @@ public final class ProcessPacket extends CFSModule {
    * @return The userValid value
    */
   private UserBean isUserValid(ActionContext context, Connection db,
-                              AuthenticationItem auth, ApplicationPrefs applicationPrefs) throws Exception {
+                               AuthenticationItem auth, ApplicationPrefs applicationPrefs) throws Exception {
     //Perform User Validation similar to Login
     LoginUtils loginUtils = new LoginUtils(db, auth.getUsername(), auth.getCode());
     loginUtils.setApplicationPrefs(applicationPrefs);
@@ -316,8 +329,7 @@ public final class ProcessPacket extends CFSModule {
       return false;
     }
     // Test aspmode first
-    if ((client.getCode() == null || "".equals(client.getCode())) && "true".equals(getPref(context, "WEBSERVER.ASPMODE")))
-    {
+    if ((client.getCode() == null || "".equals(client.getCode())) && "true".equals(getPref(context, "WEBSERVER.ASPMODE"))) {
       return auth.isAuthenticated(context);
     }
     // Test client

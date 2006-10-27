@@ -30,10 +30,14 @@ import java.util.Iterator;
  * reader will process objects in a specific order so that data integrity will
  * be maintained during a copy process.<p>
  * <p/>
+ * <p/>
+ * <p/>
  * CFS Objects must have the following:<br>
  * - A method called: insert(Connection db)<br>
  * - A constructor like: new Object(Connection db, int id)<br>
  * - A modified field with a getModified() method<p>
+ * <p/>
+ * <p/>
  * <p/>
  * CFS List Objects must have the following fields:<br>
  * - tableName, uniqueField, lastAnchor, nextAnchor, syncType, pagedListInfo
@@ -162,7 +166,7 @@ public class CFSDatabaseReader implements DataReader {
    * @return The version value
    */
   public double getVersion() {
-    return 1.0d;
+    return 4.0d;
   }
 
 
@@ -172,7 +176,7 @@ public class CFSDatabaseReader implements DataReader {
    * @return The name value
    */
   public String getName() {
-    return "Centric CRM 2.x Database Reader";
+    return "Centric CRM 4.0 Database Reader";
   }
 
 
@@ -182,7 +186,7 @@ public class CFSDatabaseReader implements DataReader {
    * @return The description value
    */
   public String getDescription() {
-    return "Reads data from a Centric CRM version 2.x database";
+    return "Reads data from a Centric CRM version 4.0 database";
   }
 
 
@@ -232,19 +236,7 @@ public class CFSDatabaseReader implements DataReader {
     }
 
     try {
-      //Process the modules
-      boolean processOK = true;
-      Iterator moduleList = modules.iterator();
-      while (moduleList.hasNext() && processOK) {
-        String moduleClass = (String) moduleList.next();
-        logger.info("Processing: " + moduleClass);
-        Object module = Class.forName(moduleClass).newInstance();
-        processOK = ((CFSDatabaseReaderImportModule) module).process(
-            writer, db, mappings);
-        if (!processOK) {
-          logger.info("Module failed: " + moduleClass);
-        }
-      }
+      this.executeJob(db, writer);
     } catch (Exception ex) {
       ex.printStackTrace(System.out);
       //logger.info(ex.toString());
@@ -256,6 +248,31 @@ public class CFSDatabaseReader implements DataReader {
     }
 
     return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param writer Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
+   */
+  public boolean executeJob(Connection db, DataWriter writer) throws Exception {
+    boolean processOK = true;
+    Iterator moduleList = modules.iterator();
+    while (moduleList.hasNext() && processOK) {
+      String moduleClass = (String) moduleList.next();
+      logger.info("Processing: " + moduleClass);
+      Object module = Class.forName(moduleClass).newInstance();
+      processOK = ((CFSDatabaseReaderImportModule) module).process(
+          writer, db, mappings);
+      if (!processOK) {
+        logger.info("Module failed: " + moduleClass);
+      }
+    }
+    return processOK;
   }
 }
 

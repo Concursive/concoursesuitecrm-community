@@ -15,6 +15,9 @@
  */
 package org.aspcfs.modules.orders.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,8 +35,95 @@ import java.util.Iterator;
  * @created March 18, 2004
  */
 public class OrderProductOptionList extends ArrayList {
+  public final static String tableName = "order_product_options";
+  public final static String uniqueField = "order_product_option_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
+
   private int itemId = -1;
   private int statusId = -1;
+
+  /**
+   * Sets the lastAnchor attribute of the OrderProductOptionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the OrderProductOptionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the OrderProductOptionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the OrderProductOptionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the OrderProductOptionList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the OrderProductOptionList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the OrderProductOptionList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the OrderProductOptionList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -120,20 +210,20 @@ public class OrderProductOptionList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM order_product_options opo " +
-        "WHERE opo.order_product_option_id > -1 ");
+            "FROM order_product_options opo " +
+            "WHERE opo.order_product_option_id > -1 ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY status_id");
     //Build a base SQL statement for returning records
     sqlSelect.append("SELECT ");
     sqlSelect.append(
         "     opt.order_product_option_id, opt.item_id, opt.product_option_id, " +
-        "     opt.quantity, opt.price_currency, opt.price_amount, opt.recurring_currency, " +
-        "     opt.recurring_amount, opt.recurring_type, opt.extended_price, " +
-        "     opt.total_price, opt.status_id, " +
-        "     prod.product_id " +
-        " FROM order_product_options opt, order_product prod " +
-        " WHERE opt.item_id = prod.item_id AND opt.order_product_option_id > -1 ");
+            "     opt.quantity, opt.price_currency, opt.price_amount, opt.recurring_currency, " +
+            "     opt.recurring_amount, opt.recurring_type, opt.extended_price, " +
+            "     opt.total_price, opt.status_id, " +
+            "     prod.product_id " +
+            " FROM order_product_options opt, order_product prod " +
+            " WHERE opt.item_id = prod.item_id AND opt.order_product_option_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -165,6 +255,17 @@ public class OrderProductOptionList extends ArrayList {
     if (statusId > -1) {
       sqlFilter.append("AND opt.status_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -183,6 +284,17 @@ public class OrderProductOptionList extends ArrayList {
 
     if (statusId > -1) {
       pst.setInt(++i, statusId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

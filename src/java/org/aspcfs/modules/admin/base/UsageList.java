@@ -15,12 +15,14 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Represents a list of Usage objects. Can be used for generating the list by
@@ -32,7 +34,14 @@ import java.sql.SQLException;
  * @version $Id$
  * @created December 6, 2002
  */
-public class UsageList {
+public class UsageList extends ArrayList {
+
+  public final static String tableName = "usage_log";
+  public final static String uniqueField = "usage_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private int action = -1;
   private java.sql.Timestamp enteredRangeStart = null;
   private java.sql.Timestamp enteredRangeEnd = null;
@@ -45,6 +54,74 @@ public class UsageList {
    * Constructor for the UsageList object
    */
   public UsageList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -185,7 +262,39 @@ public class UsageList {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    throw new SQLException("Not implemented");
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    int items = -1;
+
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlCount = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlOrder = new StringBuffer();
+
+    //Need to build a base SQL statement for counting records
+    sqlCount.append(
+        "SELECT count(*) AS recordcount " +
+            "FROM usage_log ul ");
+
+    createFilter(db, sqlFilter);
+
+    sqlOrder.append("ORDER BY ul.usage_id ");
+
+    sqlSelect.append(" SELECT ");
+    sqlSelect.append(
+        "* " +
+            "FROM usage_log ul " +
+            "WHERE ul.usage_id > -1 ");
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    items = prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      Usage usage = new Usage(rs);
+      this.add(usage);
+    }
+    rs.close();
+    pst.close();
   }
 
 
@@ -200,8 +309,8 @@ public class UsageList {
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
         "SELECT COUNT(*) AS recordcount, SUM(record_size) AS recordsize " +
-        "FROM usage_log u " +
-        "WHERE u.usage_id > -1 ";
+            "FROM usage_log u " +
+            "WHERE u.usage_id > -1 ";
     createFilter(db, sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
@@ -226,13 +335,24 @@ public class UsageList {
       sqlFilter = new StringBuffer();
     }
     if (action > -1) {
-      sqlFilter.append("AND " + DatabaseUtils.addQuotes(db, "action")+ " = ? ");
+      sqlFilter.append("AND " + DatabaseUtils.addQuotes(db, "action") + " = ? ");
     }
     if (enteredRangeStart != null) {
       sqlFilter.append("AND entered >= ? ");
     }
     if (enteredRangeEnd != null) {
       sqlFilter.append("AND entered <= ? ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
     }
   }
 
@@ -254,6 +374,11 @@ public class UsageList {
     }
     if (enteredRangeEnd != null) {
       pst.setTimestamp(++i, enteredRangeEnd);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

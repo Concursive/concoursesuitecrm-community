@@ -15,6 +15,9 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,8 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
-
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
  * A tree of items for displaying
@@ -35,6 +36,12 @@ import org.aspcfs.utils.DatabaseUtils;
  * @created March 2003
  */
 public class RequirementMapList extends ArrayList {
+  public final static String tableName = "project_requirements_map";
+  public final static String uniqueField = "map_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   public final static int FILTER_PRIORITY = 1;
 
   private int projectId = -1;
@@ -47,6 +54,73 @@ public class RequirementMapList extends ArrayList {
   public RequirementMapList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the projectId attribute of the RequirementMapList object
@@ -118,10 +192,10 @@ public class RequirementMapList extends ArrayList {
     //All the items are in order by position
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM project_requirements_map " +
-        "WHERE project_id = ? " +
-        "AND requirement_id = ? " +
-        "ORDER BY " + DatabaseUtils.addQuotes(db, "position")+ " ");
+            "FROM project_requirements_map " +
+            "WHERE project_id = ? " +
+            "AND requirement_id = ? " +
+            "ORDER BY " + DatabaseUtils.addQuotes(db, "position") + " ");
     pst.setInt(1, projectId);
     pst.setInt(2, requirementId);
     ResultSet rs = pst.executeQuery();
@@ -148,7 +222,7 @@ public class RequirementMapList extends ArrayList {
                     new Integer(thisItem.getIndent() - 1)));
             ((RequirementMapItem) indents.get(
                 new Integer(thisItem.getIndent() - 1))).getChildren().add(
-                    thisItem);
+                thisItem);
             ((RequirementMapItem) indents.get(
                 new Integer(thisItem.getIndent()))).setFinalNode(false);
           }
@@ -199,7 +273,7 @@ public class RequirementMapList extends ArrayList {
   public static void delete(Connection db, int requirementId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM project_requirements_map " +
-        "WHERE requirement_id = ? ");
+            "WHERE requirement_id = ? ");
     pst.setInt(1, requirementId);
     pst.execute();
     pst.close();

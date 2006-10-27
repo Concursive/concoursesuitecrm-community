@@ -35,6 +35,12 @@ import java.util.ArrayList;
  */
 public class FileItemVersionList extends ArrayList {
 
+  public final static String tableName = "project_files_version";
+  public final static String uniqueField = "item_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private int itemId = -1;
   private int owner = -1;
@@ -49,6 +55,73 @@ public class FileItemVersionList extends ArrayList {
   public FileItemVersionList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionItemList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionItemList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionItemList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionItemList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the pagedListInfo attribute of the FileItemList object
@@ -151,22 +224,22 @@ public class FileItemVersionList extends ArrayList {
 
 
   /**
-	 * @return Returns the buildPortalRecords.
-	 */
-	public int getBuildPortalRecords() {
-		return buildPortalRecords;
-	}
+   * @return Returns the buildPortalRecords.
+   */
+  public int getBuildPortalRecords() {
+    return buildPortalRecords;
+  }
 
 
-	/**
-	 * @param buildPortalRecords The buildPortalRecords to set.
-	 */
-	public void setBuildPortalRecords(int buildPortalRecords) {
-		this.buildPortalRecords = buildPortalRecords;
-	}
+  /**
+   * @param buildPortalRecords The buildPortalRecords to set.
+   */
+  public void setBuildPortalRecords(int buildPortalRecords) {
+    this.buildPortalRecords = buildPortalRecords;
+  }
 
 
-	/**
+  /**
    * Generates a list of matching FileItems
    *
    * @param db Description of Parameter
@@ -185,8 +258,8 @@ public class FileItemVersionList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_files_version v " +
-        "WHERE v.item_id > -1 ");
+            "FROM project_files_version v " +
+            "WHERE v.item_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -206,8 +279,8 @@ public class FileItemVersionList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(subject) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(subject) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -223,7 +296,7 @@ public class FileItemVersionList extends ArrayList {
       pagedListInfo.setDefaultSort("version", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "version")+ " DESC ");
+      sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "version") + " DESC ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -234,8 +307,8 @@ public class FileItemVersionList extends ArrayList {
     }
     sqlSelect.append(
         "v.* " +
-        "FROM project_files_version v " +
-        "WHERE v.item_id > -1 ");
+            "FROM project_files_version v " +
+            "WHERE v.item_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -282,10 +355,20 @@ public class FileItemVersionList extends ArrayList {
     if (enteredRangeEnd != null) {
       sqlFilter.append("AND entered <= ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
     if (buildPortalRecords != Constants.UNDEFINED) {
       sqlFilter.append("AND allow_portal_access = ? ");
     }
-    
   }
 
 
@@ -310,6 +393,17 @@ public class FileItemVersionList extends ArrayList {
     if (enteredRangeEnd != null) {
       pst.setTimestamp(++i, enteredRangeEnd);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     if (buildPortalRecords != Constants.UNDEFINED) {
       pst.setBoolean(++i, buildPortalRecords == Constants.TRUE);
     }
@@ -329,8 +423,8 @@ public class FileItemVersionList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_files_version v " +
-        "WHERE v.item_id > -1 ";
+            "FROM project_files_version v " +
+            "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
@@ -356,9 +450,9 @@ public class FileItemVersionList extends ArrayList {
     long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size")+ ") AS recordsize " +
-        "FROM project_files_version v " +
-        "WHERE v.item_id > -1 ";
+        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size") + ") AS recordsize " +
+            "FROM project_files_version v " +
+            "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
@@ -384,10 +478,10 @@ public class FileItemVersionList extends ArrayList {
   public static long queryOwnerSize(Connection db, int ownerId) throws SQLException {
     long recordSize = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size")+ ") AS recordsize " +
-        "FROM project_files_version v " +
-        "WHERE v.item_id > -1 " +
-        "AND v.enteredby = ? ");
+        "SELECT SUM(" + DatabaseUtils.addQuotes(db, "size") + ") AS recordsize " +
+            "FROM project_files_version v " +
+            "WHERE v.item_id > -1 " +
+            "AND v.enteredby = ? ");
     pst.setInt(1, ownerId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -411,8 +505,8 @@ public class FileItemVersionList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
         "SELECT SUM(downloads) AS downloadcount " +
-        "FROM project_files_version v " +
-        "WHERE v.item_id > -1 ";
+            "FROM project_files_version v " +
+            "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
@@ -438,9 +532,9 @@ public class FileItemVersionList extends ArrayList {
     int downloadSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(downloads * " + DatabaseUtils.addQuotes(db, "size")+ ") AS downloadsize " +
-        "FROM project_files_version v " +
-        "WHERE v.item_id > -1 ";
+        "SELECT SUM(downloads * " + DatabaseUtils.addQuotes(db, "size") + ") AS downloadsize " +
+            "FROM project_files_version v " +
+            "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());

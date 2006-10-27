@@ -15,21 +15,25 @@
  */
 package org.aspcfs.modules.actionplans.base;
 
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @created    August 17, 2005
- * @version    $Id: ActionPhaseWorkList.java,v 1.1.2.8 2005/10/17 20:34:35
- *      partha Exp $
+ * @author Ananth
+ * @version $Id: ActionPhaseWorkList.java,v 1.1.2.8 2005/10/17 20:34:35
+ *          partha Exp $
+ * @created August 17, 2005
  */
 public class ActionPhaseWorkList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -44,12 +48,97 @@ public class ActionPhaseWorkList extends ArrayList {
   private boolean buildPhase = false;
   private ActionPlanWork planWork = null;
   private boolean buildCurrentStepsOnly = false;
+  public final static String tableName = "action_phase_work";
+  public final static String uniqueField = "phase_work_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
+  /**
+   * Sets the lastAnchor attribute of the ActionPhaseWorkList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Gets the global attribute of the ActionPhaseWorkList object
+   * Sets the lastAnchor attribute of the ActionPhaseWorkList object
    *
-   * @return    The global value
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPhaseWorkList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPhaseWorkList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionPhaseWorkList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the ActionPhaseWorkList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the ActionPhaseWorkList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionPhaseWorkList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Gets the global attribute of the ActionPhaseWorkList object
+   *
+   * @return The global value
    */
   public int getGlobal() {
     return global;
@@ -57,9 +146,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the global attribute of the ActionPhaseWorkList object
+   * Sets the global attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new global value
+   * @param tmp The new global value
    */
   public void setGlobal(int tmp) {
     this.global = tmp;
@@ -67,9 +156,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the global attribute of the ActionPhaseWorkList object
+   * Sets the global attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new global value
+   * @param tmp The new global value
    */
   public void setGlobal(String tmp) {
     this.global = Integer.parseInt(tmp);
@@ -77,9 +166,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the actionPhaseId attribute of the ActionPhaseWorkList object
+   * Gets the actionPhaseId attribute of the ActionPhaseWorkList object
    *
-   * @return    The actionPhaseId value
+   * @return The actionPhaseId value
    */
   public int getActionPhaseId() {
     return actionPhaseId;
@@ -87,9 +176,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the actionPhaseId attribute of the ActionPhaseWorkList object
+   * Sets the actionPhaseId attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new actionPhaseId value
+   * @param tmp The new actionPhaseId value
    */
   public void setActionPhaseId(int tmp) {
     this.actionPhaseId = tmp;
@@ -97,9 +186,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the actionPhaseId attribute of the ActionPhaseWorkList object
+   * Sets the actionPhaseId attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new actionPhaseId value
+   * @param tmp The new actionPhaseId value
    */
   public void setActionPhaseId(String tmp) {
     this.actionPhaseId = Integer.parseInt(tmp);
@@ -107,9 +196,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildPhase attribute of the ActionPhaseWorkList object
+   * Gets the buildPhase attribute of the ActionPhaseWorkList object
    *
-   * @return    The buildPhase value
+   * @return The buildPhase value
    */
   public boolean getBuildPhase() {
     return buildPhase;
@@ -117,9 +206,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildPhase attribute of the ActionPhaseWorkList object
+   * Sets the buildPhase attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildPhase value
+   * @param tmp The new buildPhase value
    */
   public void setBuildPhase(boolean tmp) {
     this.buildPhase = tmp;
@@ -127,9 +216,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildPhase attribute of the ActionPhaseWorkList object
+   * Sets the buildPhase attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildPhase value
+   * @param tmp The new buildPhase value
    */
   public void setBuildPhase(String tmp) {
     this.buildPhase = DatabaseUtils.parseBoolean(tmp);
@@ -137,9 +226,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the hasWork attribute of the ActionPhaseWorkList object
+   * Gets the hasWork attribute of the ActionPhaseWorkList object
    *
-   * @return    The hasWork value
+   * @return The hasWork value
    */
   public boolean getHasWork() {
     return hasWork;
@@ -147,9 +236,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the hasWork attribute of the ActionPhaseWorkList object
+   * Sets the hasWork attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new hasWork value
+   * @param tmp The new hasWork value
    */
   public void setHasWork(boolean tmp) {
     this.hasWork = tmp;
@@ -157,9 +246,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the hasWork attribute of the ActionPhaseWorkList object
+   * Sets the hasWork attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new hasWork value
+   * @param tmp The new hasWork value
    */
   public void setHasWork(String tmp) {
     this.hasWork = DatabaseUtils.parseBoolean(tmp);
@@ -167,9 +256,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildLinkedObject attribute of the ActionPhaseWorkList object
+   * Gets the buildLinkedObject attribute of the ActionPhaseWorkList object
    *
-   * @return    The buildLinkedObject value
+   * @return The buildLinkedObject value
    */
   public boolean getBuildLinkedObject() {
     return buildLinkedObject;
@@ -177,9 +266,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildLinkedObject attribute of the ActionPhaseWorkList object
+   * Sets the buildLinkedObject attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildLinkedObject value
+   * @param tmp The new buildLinkedObject value
    */
   public void setBuildLinkedObject(boolean tmp) {
     this.buildLinkedObject = tmp;
@@ -187,20 +276,19 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildLinkedObject attribute of the ActionPhaseWorkList object
+   * Sets the buildLinkedObject attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildLinkedObject value
+   * @param tmp The new buildLinkedObject value
    */
   public void setBuildLinkedObject(String tmp) {
     this.buildLinkedObject = DatabaseUtils.parseBoolean(tmp);
   }
 
 
-
   /**
-   *  Gets the planWorkId attribute of the ActionPhaseWorkList object
+   * Gets the planWorkId attribute of the ActionPhaseWorkList object
    *
-   * @return    The planWorkId value
+   * @return The planWorkId value
    */
   public int getPlanWorkId() {
     return planWorkId;
@@ -208,9 +296,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the planWorkId attribute of the ActionPhaseWorkList object
+   * Sets the planWorkId attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new planWorkId value
+   * @param tmp The new planWorkId value
    */
   public void setPlanWorkId(int tmp) {
     this.planWorkId = tmp;
@@ -218,9 +306,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the planWorkId attribute of the ActionPhaseWorkList object
+   * Sets the planWorkId attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new planWorkId value
+   * @param tmp The new planWorkId value
    */
   public void setPlanWorkId(String tmp) {
     this.planWorkId = Integer.parseInt(tmp);
@@ -228,9 +316,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildStepWork attribute of the ActionPhaseWorkList object
+   * Gets the buildStepWork attribute of the ActionPhaseWorkList object
    *
-   * @return    The buildStepWork value
+   * @return The buildStepWork value
    */
   public boolean getBuildStepWork() {
     return buildStepWork;
@@ -238,9 +326,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildStepWork attribute of the ActionPhaseWorkList object
+   * Sets the buildStepWork attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildStepWork value
+   * @param tmp The new buildStepWork value
    */
   public void setBuildStepWork(boolean tmp) {
     this.buildStepWork = tmp;
@@ -248,9 +336,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildStepWork attribute of the ActionPhaseWorkList object
+   * Sets the buildStepWork attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildStepWork value
+   * @param tmp The new buildStepWork value
    */
   public void setBuildStepWork(String tmp) {
     this.buildStepWork = DatabaseUtils.parseBoolean(tmp);
@@ -258,9 +346,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the planWork attribute of the ActionPhaseWorkList object
+   * Gets the planWork attribute of the ActionPhaseWorkList object
    *
-   * @return    The planWork value
+   * @return The planWork value
    */
   public ActionPlanWork getPlanWork() {
     return planWork;
@@ -268,9 +356,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the planWork attribute of the ActionPhaseWorkList object
+   * Sets the planWork attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new planWork value
+   * @param tmp The new planWork value
    */
   public void setPlanWork(ActionPlanWork tmp) {
     this.planWork = tmp;
@@ -278,9 +366,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the buildCurrentStepsOnly attribute of the ActionPhaseWorkList object
+   * Gets the buildCurrentStepsOnly attribute of the ActionPhaseWorkList object
    *
-   * @return    The buildCurrentStepsOnly value
+   * @return The buildCurrentStepsOnly value
    */
   public boolean getBuildCurrentStepsOnly() {
     return buildCurrentStepsOnly;
@@ -288,9 +376,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildCurrentStepsOnly attribute of the ActionPhaseWorkList object
+   * Sets the buildCurrentStepsOnly attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildCurrentStepsOnly value
+   * @param tmp The new buildCurrentStepsOnly value
    */
   public void setBuildCurrentStepsOnly(boolean tmp) {
     this.buildCurrentStepsOnly = tmp;
@@ -298,9 +386,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the buildCurrentStepsOnly attribute of the ActionPhaseWorkList object
+   * Sets the buildCurrentStepsOnly attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new buildCurrentStepsOnly value
+   * @param tmp The new buildCurrentStepsOnly value
    */
   public void setBuildCurrentStepsOnly(String tmp) {
     this.buildCurrentStepsOnly = DatabaseUtils.parseBoolean(tmp);
@@ -308,9 +396,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the isCurrent attribute of the ActionPhaseWorkList object
+   * Gets the isCurrent attribute of the ActionPhaseWorkList object
    *
-   * @return    The isCurrent value
+   * @return The isCurrent value
    */
   public boolean getIsCurrent() {
     return isCurrent;
@@ -318,9 +406,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the isCurrent attribute of the ActionPhaseWorkList object
+   * Sets the isCurrent attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new isCurrent value
+   * @param tmp The new isCurrent value
    */
   public void setIsCurrent(boolean tmp) {
     this.isCurrent = tmp;
@@ -328,9 +416,9 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the isCurrent attribute of the ActionPhaseWorkList object
+   * Sets the isCurrent attribute of the ActionPhaseWorkList object
    *
-   * @param  tmp  The new isCurrent value
+   * @param tmp The new isCurrent value
    */
   public void setIsCurrent(String tmp) {
     this.isCurrent = DatabaseUtils.parseBoolean(tmp);
@@ -338,10 +426,10 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -356,9 +444,9 @@ public class ActionPhaseWorkList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM action_phase_work apw " +
-        "LEFT JOIN action_phase ap ON (apw.action_phase_id = ap.phase_id) " +
-        "WHERE apw.phase_work_id > 0 ");
+            "FROM action_phase_work apw " +
+            "LEFT JOIN action_phase ap ON (apw.action_phase_id = ap.phase_id) " +
+            "WHERE apw.phase_work_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -378,8 +466,8 @@ public class ActionPhaseWorkList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(ap.phase_name) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(ap.phase_name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -405,10 +493,10 @@ public class ActionPhaseWorkList extends ArrayList {
     }
     sqlSelect.append(
         "apw.*, " +
-        "ap.phase_name, ap.description, ap.parent_id, ap." + DatabaseUtils.addQuotes(db, "global") + " " +
-        "FROM action_phase_work apw " +
-        "LEFT JOIN action_phase ap ON (apw.action_phase_id = ap.phase_id) " +
-        "WHERE apw.phase_work_id > 0 ");
+            "ap.phase_name, ap.description, ap.parent_id, ap." + DatabaseUtils.addQuotes(db, "global") + " " +
+            "FROM action_phase_work apw " +
+            "LEFT JOIN action_phase ap ON (apw.action_phase_id = ap.phase_id) " +
+            "WHERE apw.phase_work_id > 0 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -449,10 +537,10 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -473,15 +561,26 @@ public class ActionPhaseWorkList extends ArrayList {
     if (isCurrent) {
       sqlFilter.append("AND apw.start_date IS NOT NULL AND apw.end_date IS NULL AND apw.status_id IS NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -494,14 +593,25 @@ public class ActionPhaseWorkList extends ArrayList {
     if (global != Constants.UNDEFINED) {
       pst.setBoolean(++i, (global == Constants.TRUE));
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Gets the rootPhase attribute of the ActionPhaseWorkList object
+   * Gets the rootPhase attribute of the ActionPhaseWorkList object
    *
-   * @return    The rootPhase value
+   * @return The rootPhase value
    */
   public ActionPhaseWork getRootPhase() {
     Iterator i = this.iterator();
@@ -516,10 +626,10 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -532,10 +642,10 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Sets the phaseWorks attribute of the ActionPhaseWorkList object
+   * Sets the phaseWorks attribute of the ActionPhaseWorkList object
    *
-   * @param  map               The new phaseWorks value
-   * @exception  SQLException  Description of the Exception
+   * @param map The new phaseWorks value
+   * @throws SQLException Description of the Exception
    */
   public void setPhaseWorks(HashMap map) throws SQLException {
     Iterator i = this.iterator();
@@ -555,17 +665,17 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void reset(Connection db) throws SQLException {
     String nullStr = null;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_phase_work " +
-        "SET start_date = ?, end_date = ?, status_id = ? " +
-        "WHERE phase_work_id = ? ");
+            "SET start_date = ?, end_date = ?, status_id = ? " +
+            "WHERE phase_work_id = ? ");
     pst.setNull(1, java.sql.Types.DATE);
     pst.setNull(2, java.sql.Types.DATE);
     pst.setInt(3, ActionPlanWork.INCOMPLETE);
@@ -579,10 +689,10 @@ public class ActionPhaseWorkList extends ArrayList {
 
 
   /**
-   *  Gets the phaseWorkById attribute of the ActionPhaseWorkList object
+   * Gets the phaseWorkById attribute of the ActionPhaseWorkList object
    *
-   * @param  phaseWorkId  Description of the Parameter
-   * @return              The phaseWorkById value
+   * @param phaseWorkId Description of the Parameter
+   * @return The phaseWorkById value
    */
   public ActionPhaseWork getPhaseWorkById(int phaseWorkId) {
     ActionPhaseWork result = null;

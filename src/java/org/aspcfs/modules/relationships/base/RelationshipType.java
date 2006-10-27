@@ -17,7 +17,10 @@ package org.aspcfs.modules.relationships.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Represents a relationship type
@@ -36,6 +39,36 @@ public class RelationshipType {
   private int level = -1;
   private boolean defaultItem = false;
   private boolean enabled = false;
+
+
+  /**
+   * Gets the id attribute of the RelationshipType object
+   *
+   * @return The id value
+   */
+  public int getId() {
+    return typeId;
+  }
+
+
+  /**
+   * Sets the id attribute of the RelationshipType object
+   *
+   * @param tmp The new id value
+   */
+  public void setId(int tmp) {
+    this.typeId = tmp;
+  }
+
+
+  /**
+   * Sets the id attribute of the RelationshipType object
+   *
+   * @param tmp The new id value
+   */
+  public void setId(String tmp) {
+    this.typeId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -257,14 +290,64 @@ public class RelationshipType {
     return defaultItem;
   }
 
+  public RelationshipType() {
+  }
+
+  /**
+   * Constructor for the RelationshipType object
+   *
+   * @param db     Description of the Parameter
+   * @param typeId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public RelationshipType(Connection db, int typeId) throws SQLException {
+    queryRecord(db, typeId);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db     Description of the Parameter
+   * @param typeId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void queryRecord(Connection db, int typeId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT lrt.* " +
+            "FROM lookup_relationship_types lrt " +
+            "WHERE lrt.type_id = ? ");
+    pst.setInt(1, typeId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+    if (this.getId() == -1) {
+      throw new SQLException("Record Not Found");
+    }
+  }
+
 
   /**
    * Constructor for the RelationshipType object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public RelationshipType(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param rs Description of the Parameter
    * @throws java.sql.SQLException Description of the Exception
    */
-  public RelationshipType(ResultSet rs) throws java.sql.SQLException {
+  public void buildRecord(ResultSet rs) throws java.sql.SQLException {
     typeId = rs.getInt("type_id");
     categoryIdMapsFrom = rs.getInt("category_id_maps_from");
     categoryIdMapsTo = rs.getInt("category_id_maps_to");
@@ -273,6 +356,40 @@ public class RelationshipType {
     level = rs.getInt("level");
     defaultItem = rs.getBoolean("default_item");
     enabled = rs.getBoolean("enabled");
+  }
+
+  public boolean insert(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    typeId = DatabaseUtils.getNextSeq(db, "lookup_relationship_types_type_id_seq");
+    sql.append(
+        "INSERT INTO lookup_relationship_types " +
+            "(category_id_maps_from, category_id_maps_to, reciprocal_name_1, " +
+            "reciprocal_name_2, " + DatabaseUtils.addQuotes(db, "level") + ", default_item, ");
+    if (typeId > -1) {
+      sql.append("type_id, ");
+    }
+    sql.append("enabled) ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+    if (typeId > -1) {
+      sql.append("?, ");
+    }
+    sql.append("?) ");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, categoryIdMapsFrom);
+    pst.setInt(++i, categoryIdMapsTo);
+    pst.setString(++i, reciprocalName1);
+    pst.setString(++i, reciprocalName2);
+    pst.setInt(++i, level);
+    pst.setBoolean(++i, defaultItem);
+    if (typeId > -1) {
+      pst.setInt(++i, typeId);
+    }
+    pst.setBoolean(++i, enabled);
+    pst.execute();
+    pst.close();
+    typeId = DatabaseUtils.getCurrVal(db, "lookup_relationship_types_type_id_seq", typeId);
+    return true;
   }
 }
 

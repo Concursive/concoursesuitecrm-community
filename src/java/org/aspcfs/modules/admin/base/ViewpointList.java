@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -34,6 +35,12 @@ import java.util.Iterator;
  * @created Februagetry 24, 2003
  */
 public class ViewpointList extends ArrayList {
+  public final static String tableName = "viewpoint";
+  public final static String uniqueField = "viewpoint_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private int enteredBy = -1;
   private int userId = -1;
   private int vpUserId = -1;
@@ -182,9 +189,9 @@ public class ViewpointList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM viewpoint vp " +
-        "LEFT JOIN contact c ON c.user_id = vp.vp_user_id " +
-        "WHERE vp.viewpoint_id > -1 ");
+            "FROM viewpoint vp " +
+            "LEFT JOIN contact c ON c.user_id = vp.vp_user_id " +
+            "WHERE vp.viewpoint_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -204,8 +211,8 @@ public class ViewpointList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND (" + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? AND c.namelast IS NOT NULL) ");
+                sqlFilter.toString() +
+                "AND (" + DatabaseUtils.toLowerCase(db) + "(c.namelast) < ? AND c.namelast IS NOT NULL) ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -232,10 +239,10 @@ public class ViewpointList extends ArrayList {
     }
     sqlSelect.append(
         "vp.viewpoint_id, vp.user_id, vp.vp_user_id, " +
-        "vp.entered, vp.enteredby, vp.modified, vp.modifiedby, vp.enabled " +
-        "FROM viewpoint vp " +
-        "LEFT JOIN contact c ON c.user_id = vp.vp_user_id " +
-        "WHERE vp.viewpoint_id > -1 ");
+            "vp.entered, vp.enteredby, vp.modified, vp.modifiedby, vp.enabled " +
+            "FROM viewpoint vp " +
+            "LEFT JOIN contact c ON c.user_id = vp.vp_user_id " +
+            "WHERE vp.viewpoint_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -285,6 +292,17 @@ public class ViewpointList extends ArrayList {
     if (includeEnabledOnly) {
       sqlFilter.append("AND vp.enabled = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -308,6 +326,17 @@ public class ViewpointList extends ArrayList {
 
     if (includeEnabledOnly) {
       pst.setBoolean(++i, true);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
 
     return i;

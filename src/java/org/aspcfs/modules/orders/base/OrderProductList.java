@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.orders.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -35,11 +36,86 @@ import java.util.Iterator;
  * @created March 18, 2004
  */
 public class OrderProductList extends ArrayList {
+  public final static String tableName = "order_product";
+  public final static String uniqueField = "item_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private PagedListInfo pagedListInfo = null;
   private int orderId = -1;
   private int productId = -1;
   private int statusId = -1;
   private boolean buildResources = false;
+
+  /**
+   * Sets the lastAnchor attribute of the OrderProductList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the OrderProductList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the OrderProductList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the OrderProductList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the OrderProductList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the OrderProductList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the OrderProductList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -207,8 +283,8 @@ public class OrderProductList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM order_product op " +
-        "WHERE op.item_id > -1 ");
+            "FROM order_product op " +
+            "WHERE op.item_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -247,11 +323,11 @@ public class OrderProductList extends ArrayList {
     }
     sqlSelect.append(
         "     op.item_id, op.order_id, op.product_id, " +
-        "     op.quantity, op.msrp_currency, op.msrp_amount, op.price_currency, op.price_amount, " +
-        "     op.recurring_currency, op.recurring_amount, op.recurring_type, " +
-        "     op.extended_price, op.total_price, op.status_id, op.status_date " +
-        " FROM order_product op " +
-        " WHERE op.item_id > -1 ");
+            "     op.quantity, op.msrp_currency, op.msrp_amount, op.price_currency, op.price_amount, " +
+            "     op.recurring_currency, op.recurring_amount, op.recurring_type, " +
+            "     op.extended_price, op.total_price, op.status_id, op.status_date " +
+            " FROM order_product op " +
+            " WHERE op.item_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -301,6 +377,17 @@ public class OrderProductList extends ArrayList {
     if (statusId > -1) {
       sqlFilter.append("AND op.status_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -323,6 +410,17 @@ public class OrderProductList extends ArrayList {
 
     if (statusId > -1) {
       pst.setInt(++i, statusId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

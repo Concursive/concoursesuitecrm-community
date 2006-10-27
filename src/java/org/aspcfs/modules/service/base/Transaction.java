@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.service.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
@@ -42,6 +43,37 @@ public class Transaction extends ArrayList {
   private RecordList recordList = null;
   private TransactionMeta meta = null;
   private PacketContext packetContext = null;
+  private boolean validateObject = true;
+
+
+  /**
+   * Gets the validateObject attribute of the Transaction object
+   *
+   * @return The validateObject value
+   */
+  public boolean getValidateObject() {
+    return validateObject;
+  }
+
+
+  /**
+   * Sets the validateObject attribute of the Transaction object
+   *
+   * @param tmp The new validateObject value
+   */
+  public void setValidateObject(boolean tmp) {
+    this.validateObject = tmp;
+  }
+
+
+  /**
+   * Sets the validateObject attribute of the Transaction object
+   *
+   * @param tmp The new validateObject value
+   */
+  public void setValidateObject(String tmp) {
+    this.validateObject = DatabaseUtils.parseBoolean(tmp);
+  }
 
 
   /**
@@ -191,10 +223,12 @@ public class Transaction extends ArrayList {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
         thisItem.setTransactionContext(transactionContext);
-        //Verify if the Object is valid
-        if (!thisItem.isObjectValid(db)) {
-          appendErrorMessage("Object validation error");
-          throw new Exception("Object Validation Failed");
+        if (validateObject) {
+          //Verify if the Object is valid
+          if (!thisItem.isObjectValid(db)) {
+            appendErrorMessage("Object validation error");
+            throw new Exception("Object Validation Failed");
+          }
         }
         thisItem.execute(db, dbLookup);
         //If the item generated an error, then add it to the list to show the client

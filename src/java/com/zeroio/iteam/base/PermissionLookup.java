@@ -16,13 +16,12 @@
 package com.zeroio.iteam.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
-import org.aspcfs.utils.DatabaseUtils;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Description of the Class
@@ -38,8 +37,101 @@ public class PermissionLookup extends GenericBean {
   private int categoryId = -1;
   private String permission = null;
   private String description = null;
+  private boolean defaultItem = false;
+  private boolean enabled = true;
+  private int groupId = 0;
   private int defaultRole = -1;
   private int level = -1;
+
+  /**
+   * Gets the defaultItem attribute of the PermissionLookup object
+   *
+   * @return The defaultItem value
+   */
+  public boolean getDefaultItem() {
+    return defaultItem;
+  }
+
+
+  /**
+   * Sets the defaultItem attribute of the PermissionLookup object
+   *
+   * @param tmp The new defaultItem value
+   */
+  public void setDefaultItem(boolean tmp) {
+    this.defaultItem = tmp;
+  }
+
+
+  /**
+   * Sets the defaultItem attribute of the PermissionLookup object
+   *
+   * @param tmp The new defaultItem value
+   */
+  public void setDefaultItem(String tmp) {
+    this.defaultItem = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the enabled attribute of the PermissionLookup object
+   *
+   * @return The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the PermissionLookup object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the PermissionLookup object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Gets the groupId attribute of the PermissionLookup object
+   *
+   * @return The groupId value
+   */
+  public int getGroupId() {
+    return groupId;
+  }
+
+
+  /**
+   * Sets the groupId attribute of the PermissionLookup object
+   *
+   * @param tmp The new groupId value
+   */
+  public void setGroupId(int tmp) {
+    this.groupId = tmp;
+  }
+
+
+  /**
+   * Sets the groupId attribute of the PermissionLookup object
+   *
+   * @param tmp The new groupId value
+   */
+  public void setGroupId(String tmp) {
+    this.groupId = Integer.parseInt(tmp);
+  }
+
 
   /**
    * Constructor for the PermissionLookup object
@@ -51,7 +143,33 @@ public class PermissionLookup extends GenericBean {
   /**
    * Constructor for the PermissionLookup object
    *
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public PermissionLookup(Connection db, int id) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT lpp.* " +
+            "FROM lookup_project_permission lpp " +
+            "WHERE lpp.code = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+    if (this.id == -1) {
+      throw new SQLException("Record Not Found");
+    }
+  }
+
+
+  /**
+   * Constructor for the PermissionLookup object
+   *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public PermissionLookup(ResultSet rs) throws SQLException {
@@ -211,29 +329,53 @@ public class PermissionLookup extends GenericBean {
     categoryId = rs.getInt("category_id");
     permission = rs.getString("permission");
     description = rs.getString("description");
+    defaultItem = rs.getBoolean("default_item");
+    level = rs.getInt("level");
+    enabled = rs.getBoolean("enabled");
+    groupId = rs.getInt("group_id");
     defaultRole = rs.getInt("default_role");
   }
 
-  public void insert(Connection db) throws SQLException {
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "lookup_project_permission_code_seq");
-    PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO lookup_project_permission " +
-        "(" + (id > -1 ? "code, " : "") + "category_id, permission, description, " + DatabaseUtils.addQuotes(db, "level")+ ", default_role, group_id) VALUES " +
-        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?)"
-    );
-    int i = 0;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        " INSERT INTO lookup_project_permission" +
+            " (category_id, permission, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, ");
     if (id > -1) {
-      pst.setInt(++i, id);
+      sql.append("code, ");
     }
+    sql.append("group_id, default_role) ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
+    sql.append("?, ? )");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, categoryId);
     pst.setString(++i, permission);
     pst.setString(++i, description);
+    pst.setBoolean(++i, defaultItem);
     pst.setInt(++i, level);
+    pst.setBoolean(++i, enabled);
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setInt(++i, groupId);
     pst.setInt(++i, defaultRole);
-    pst.setInt(++i, 1);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "lookup_project_permission_code_seq", id);
+    return true;
   }
 }
 

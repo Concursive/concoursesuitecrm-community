@@ -94,7 +94,8 @@ public class Message extends GenericBean {
   /**
    * Constructor for the Message object
    */
-  public Message() { }
+  public Message() {
+  }
 
 
   /**
@@ -145,7 +146,7 @@ public class Message extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT m.* " +
-            "FROM " + DatabaseUtils.addQuotes(db, "message")+ " m " +
+            "FROM " + DatabaseUtils.addQuotes(db, "message") + " m " +
             "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
             "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
             "WHERE m.id = ? ");
@@ -818,12 +819,15 @@ public class Message extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
 
     StringBuffer sql = new StringBuffer();
-
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       id = DatabaseUtils.getNextSeq(db, "message_id_seq");
       sql.append(
-          "INSERT INTO " + DatabaseUtils.addQuotes(db, "message")+ " " +
+          "INSERT INTO " + DatabaseUtils.addQuotes(db, "message") + " " +
               "(name, access_type, ");
       if (id > -1) {
         sql.append("id, ");
@@ -869,13 +873,19 @@ public class Message extends GenericBean {
       id = DatabaseUtils.getCurrVal(db, "message_id_seq", id);
 
       this.update(db, true);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       e.printStackTrace();
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -891,15 +901,25 @@ public class Message extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       resultCount = this.update(db, false);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (Exception e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return resultCount;
   }
@@ -943,7 +963,7 @@ public class Message extends GenericBean {
         db.setAutoCommit(false);
       }
       st.executeUpdate("DELETE FROM contact_message WHERE message_id = " + this.getId());
-      st.executeUpdate("DELETE FROM " + DatabaseUtils.addQuotes(db, "message")+ " WHERE id = " + this.getId());
+      st.executeUpdate("DELETE FROM " + DatabaseUtils.addQuotes(db, "message") + " WHERE id = " + this.getId());
       st.close();
       if (commit) {
         db.commit();
@@ -1026,7 +1046,7 @@ public class Message extends GenericBean {
     StringBuffer sql = new StringBuffer();
 
     sql.append(
-        "UPDATE " + DatabaseUtils.addQuotes(db, "message")+ " " +
+        "UPDATE " + DatabaseUtils.addQuotes(db, "message") + " " +
             "SET name=?, description = ?, template_id = ?, subject = ?, " +
             "body = ?, reply_addr = ?, url = ?, img = ?, access_type = ?, " +
             "enabled = ?, ");
@@ -1039,7 +1059,7 @@ public class Message extends GenericBean {
         "modifiedby = ? " +
             "WHERE id = ? ");
     if (!override) {
-      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+      sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     }
 
     int i = 0;

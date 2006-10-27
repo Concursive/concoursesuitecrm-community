@@ -21,6 +21,7 @@ import org.aspcfs.modules.admin.base.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Reads all roles and permissions, and re-reads the user data for updating
@@ -77,8 +78,11 @@ public class ImportRoles implements CFSDatabaseReaderImportModule {
     }
 
     logger.info("ImportRoles-> Inserting Role Permissions");
-    processOK = ImportLookupTables.saveCustomLookupList(
-        writer, db, mappings, "rolePermission");
+    RolePermissionList rolePermissions = new RolePermissionList();
+    rolePermissions.buildCombinedList(db);
+    processOK = mappings.saveList(writer,
+        new ArrayList(rolePermissions.values()),
+        "insert");
     if (!processOK) {
       return false;
     }
@@ -98,6 +102,5 @@ public class ImportRoles implements CFSDatabaseReaderImportModule {
 
     return true;
   }
-
 }
 

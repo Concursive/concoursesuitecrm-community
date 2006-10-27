@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.accounts.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -32,7 +33,11 @@ import java.util.Vector;
  * @created January 13, 2003
  */
 public class RevenueDetailList extends Vector {
-
+  public final static String tableName = "revenue_detail";
+  public final static String uniqueField = "id ";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
   private int revenueId = -1;
 
@@ -43,6 +48,74 @@ public class RevenueDetailList extends Vector {
   public RevenueDetailList() {
   }
 
+  /**
+   * Sets the lastAnchor attribute of the RevenueDetailList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the RevenueDetailList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the RevenueDetailList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the RevenueDetailList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the RevenueDetailList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the RevenueDetailList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the RevenueDetailList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Description of the Method
@@ -64,11 +137,11 @@ public class RevenueDetailList extends Vector {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM revenue_detail rd " +
-        "LEFT JOIN contact ct_eb ON (rd.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (rd.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN lookup_revenue_types rdt ON (rd." + DatabaseUtils.addQuotes(db, "type")+ " = rdt.code) " +
-        "WHERE rd.id > -1 ");
+            "FROM revenue_detail rd " +
+            "LEFT JOIN contact ct_eb ON (rd.enteredby = ct_eb.user_id) " +
+            "LEFT JOIN contact ct_mb ON (rd.modifiedby = ct_mb.user_id) " +
+            "LEFT JOIN lookup_revenue_types rdt ON (rd." + DatabaseUtils.addQuotes(db, "type") + " = rdt.code) " +
+            "WHERE rd.id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -88,8 +161,8 @@ public class RevenueDetailList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(rd.description) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(rd.description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -116,13 +189,13 @@ public class RevenueDetailList extends Vector {
     }
     sqlSelect.append(
         "rd.*, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, rdt.description as typename " +
-        "FROM revenue_detail rd " +
-        "LEFT JOIN contact ct_eb ON (rd.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (rd.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN lookup_revenuedetail_types rdt ON (rd." + DatabaseUtils.addQuotes(db, "type")+ " = rdt.code) " +
-        "WHERE rd.id > -1 ");
+            "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+            "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, rdt.description as typename " +
+            "FROM revenue_detail rd " +
+            "LEFT JOIN contact ct_eb ON (rd.enteredby = ct_eb.user_id) " +
+            "LEFT JOIN contact ct_mb ON (rd.modifiedby = ct_mb.user_id) " +
+            "LEFT JOIN lookup_revenuedetail_types rdt ON (rd." + DatabaseUtils.addQuotes(db, "type") + " = rdt.code) " +
+            "WHERE rd.id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -205,6 +278,17 @@ public class RevenueDetailList extends Vector {
     if (revenueId != -1) {
       sqlFilter.append("AND rd.revenue_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -221,7 +305,17 @@ public class RevenueDetailList extends Vector {
     if (revenueId != -1) {
       pst.setInt(++i, revenueId);
     }
-
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 }

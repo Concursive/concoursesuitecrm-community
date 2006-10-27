@@ -15,26 +15,24 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.database.ConnectionElement;
-import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.troubletickets.base.*;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    November 10, 2005
- * @version    $Id: TicketCategoryAssignmentList.java,v 1.1.2.1 2005/11/14
- *      21:15:37 partha Exp $
+ * @author partha
+ * @version $Id: TicketCategoryAssignmentList.java,v 1.1.2.1 2005/11/14
+ *          21:15:37 partha Exp $
+ * @created November 10, 2005
  */
 public class TicketCategoryAssignmentList extends ArrayList {
   PagedListInfo pagedListInfo = null;
@@ -48,18 +46,93 @@ public class TicketCategoryAssignmentList extends ArrayList {
   protected boolean exclusiveToSite = false;
   protected boolean buildPlanMapList = false;
 
+  public final static String tableName = "ticket_category_assignment";
+  public final static String uniqueField = "map_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
 
   /**
-   *  Constructor for the TicketCategoryAssignmentList object
+   * Constructor for the TicketCategoryAssignmentList object
    */
-  public TicketCategoryAssignmentList() { }
+  public TicketCategoryAssignmentList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the TicketCategoryAssignmentList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Description of the Method
+   * Sets the lastAnchor attribute of the TicketCategoryAssignmentList object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the TicketCategoryAssignmentList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the TicketCategoryAssignmentList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the TicketCategoryAssignmentList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the TicketCategoryAssignmentList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the TicketCategoryAssignmentList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -72,9 +145,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM ticket_category_assignment tcda " +
-        " LEFT JOIN user_group ug ON (tcda.group_id = ug.group_id) " +
-        " WHERE tcda.map_id > -1 ");
+            " FROM ticket_category_assignment tcda " +
+            " LEFT JOIN user_group ug ON (tcda.group_id = ug.group_id) " +
+            " WHERE tcda.map_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -102,9 +175,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
     }
     sqlSelect.append(
         " tcda.*, ug.group_name " +
-        " FROM ticket_category_assignment tcda " +
-        " LEFT JOIN user_group ug ON (tcda.group_id = ug.group_id) " +
-        " WHERE tcda.map_id > -1 ");
+            " FROM ticket_category_assignment tcda " +
+            " LEFT JOIN user_group ug ON (tcda.group_id = ug.group_id) " +
+            " WHERE tcda.map_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -132,10 +205,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -171,15 +244,26 @@ public class TicketCategoryAssignmentList extends ArrayList {
         sqlFilter.append("AND tcda.category_id IN (SELECT id FROM ticket_category tc WHERE tc.site_id IS NULL) ");
       }
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -201,6 +285,17 @@ public class TicketCategoryAssignmentList extends ArrayList {
     if (checkSite && siteId > -1) {
       pst.setInt(++i, siteId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
@@ -209,10 +304,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
    *  Get and Set methods
    */
   /**
-   *  Gets the pagedListInfo attribute of the TicketCategoryAssignmentList
-   *  object
+   * Gets the pagedListInfo attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -220,10 +315,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TicketCategoryAssignmentList
-   *  object
+   * Sets the pagedListInfo attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -231,9 +326,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the TicketCategoryAssignmentList object
+   * Gets the id attribute of the TicketCategoryAssignmentList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -241,9 +336,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketCategoryAssignmentList object
+   * Sets the id attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -251,9 +346,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the TicketCategoryAssignmentList object
+   * Sets the id attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -261,9 +356,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the categoryId attribute of the TicketCategoryAssignmentList object
+   * Gets the categoryId attribute of the TicketCategoryAssignmentList object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -271,9 +366,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the TicketCategoryAssignmentList object
+   * Sets the categoryId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -281,9 +376,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the TicketCategoryAssignmentList object
+   * Sets the categoryId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -291,9 +386,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the departmentId attribute of the TicketCategoryAssignmentList object
+   * Gets the departmentId attribute of the TicketCategoryAssignmentList object
    *
-   * @return    The departmentId value
+   * @return The departmentId value
    */
   public int getDepartmentId() {
     return departmentId;
@@ -301,9 +396,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the departmentId attribute of the TicketCategoryAssignmentList object
+   * Sets the departmentId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new departmentId value
+   * @param tmp The new departmentId value
    */
   public void setDepartmentId(int tmp) {
     this.departmentId = tmp;
@@ -311,9 +406,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the departmentId attribute of the TicketCategoryAssignmentList object
+   * Sets the departmentId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new departmentId value
+   * @param tmp The new departmentId value
    */
   public void setDepartmentId(String tmp) {
     this.departmentId = Integer.parseInt(tmp);
@@ -321,9 +416,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the assignedTo attribute of the TicketCategoryAssignmentList object
+   * Gets the assignedTo attribute of the TicketCategoryAssignmentList object
    *
-   * @return    The assignedTo value
+   * @return The assignedTo value
    */
   public int getAssignedTo() {
     return assignedTo;
@@ -331,9 +426,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the assignedTo attribute of the TicketCategoryAssignmentList object
+   * Sets the assignedTo attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new assignedTo value
+   * @param tmp The new assignedTo value
    */
   public void setAssignedTo(int tmp) {
     this.assignedTo = tmp;
@@ -341,9 +436,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the assignedTo attribute of the TicketCategoryAssignmentList object
+   * Sets the assignedTo attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new assignedTo value
+   * @param tmp The new assignedTo value
    */
   public void setAssignedTo(String tmp) {
     this.assignedTo = Integer.parseInt(tmp);
@@ -351,9 +446,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the userGroupId attribute of the TicketCategoryAssignmentList object
+   * Gets the userGroupId attribute of the TicketCategoryAssignmentList object
    *
-   * @return    The userGroupId value
+   * @return The userGroupId value
    */
   public int getUserGroupId() {
     return userGroupId;
@@ -361,9 +456,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the userGroupId attribute of the TicketCategoryAssignmentList object
+   * Sets the userGroupId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new userGroupId value
+   * @param tmp The new userGroupId value
    */
   public void setUserGroupId(int tmp) {
     this.userGroupId = tmp;
@@ -371,9 +466,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the userGroupId attribute of the TicketCategoryAssignmentList object
+   * Sets the userGroupId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new userGroupId value
+   * @param tmp The new userGroupId value
    */
   public void setUserGroupId(String tmp) {
     this.userGroupId = Integer.parseInt(tmp);
@@ -381,10 +476,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the buildPlanMapList attribute of the TicketCategoryAssignmentList
-   *  object
+   * Gets the buildPlanMapList attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @return    The buildPlanMapList value
+   * @return The buildPlanMapList value
    */
   public boolean getBuildPlanMapList() {
     return buildPlanMapList;
@@ -392,10 +487,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the buildPlanMapList attribute of the TicketCategoryAssignmentList
-   *  object
+   * Sets the buildPlanMapList attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @param  tmp  The new buildPlanMapList value
+   * @param tmp The new buildPlanMapList value
    */
   public void setBuildPlanMapList(boolean tmp) {
     this.buildPlanMapList = tmp;
@@ -403,10 +498,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the buildPlanMapList attribute of the TicketCategoryAssignmentList
-   *  object
+   * Sets the buildPlanMapList attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @param  tmp  The new buildPlanMapList value
+   * @param tmp The new buildPlanMapList value
    */
   public void setBuildPlanMapList(String tmp) {
     this.buildPlanMapList = DatabaseUtils.parseBoolean(tmp);
@@ -414,9 +509,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the checkSite attribute of the TicketCategoryAssignmentList object
+   * Gets the checkSite attribute of the TicketCategoryAssignmentList object
    *
-   * @return    The checkSite value
+   * @return The checkSite value
    */
   public boolean getCheckSite() {
     return checkSite;
@@ -424,9 +519,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the checkSite attribute of the TicketCategoryAssignmentList object
+   * Sets the checkSite attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new checkSite value
+   * @param tmp The new checkSite value
    */
   public void setCheckSite(boolean tmp) {
     this.checkSite = tmp;
@@ -434,9 +529,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the checkSite attribute of the TicketCategoryAssignmentList object
+   * Sets the checkSite attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new checkSite value
+   * @param tmp The new checkSite value
    */
   public void setCheckSite(String tmp) {
     this.checkSite = DatabaseUtils.parseBoolean(tmp);
@@ -444,9 +539,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the TicketCategoryAssignmentList object
+   * Gets the siteId attribute of the TicketCategoryAssignmentList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -454,9 +549,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the TicketCategoryAssignmentList object
+   * Sets the siteId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -464,9 +559,9 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the TicketCategoryAssignmentList object
+   * Sets the siteId attribute of the TicketCategoryAssignmentList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -474,10 +569,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the TicketCategoryAssignmentList
-   *  object
+   * Gets the exclusiveToSite attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -485,10 +580,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the TicketCategoryAssignmentList
-   *  object
+   * Sets the exclusiveToSite attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -496,10 +591,10 @@ public class TicketCategoryAssignmentList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the TicketCategoryAssignmentList
-   *  object
+   * Sets the exclusiveToSite attribute of the TicketCategoryAssignmentList
+   * object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);

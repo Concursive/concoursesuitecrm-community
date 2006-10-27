@@ -18,6 +18,7 @@ package org.aspcfs.modules.documents.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -35,6 +36,12 @@ import java.util.Iterator;
  * @created
  */
 public class DocumentStorePermissionList extends HashMap {
+  public final static String tableName = "document_store_permissions";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
 
   private int documentStoreId = -1;
 
@@ -43,6 +50,86 @@ public class DocumentStorePermissionList extends HashMap {
    * Constructor for the DocumentStorePermissionList object
    */
   public DocumentStorePermissionList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the DocumentStorePermissionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the DocumentStorePermissionList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the DocumentStorePermissionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the DocumentStorePermissionList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the DocumentStorePermissionList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the DocumentStorePermissionList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the DocumentStorePermissionList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the DocumentStorePermissionList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
 
@@ -89,8 +176,8 @@ public class DocumentStorePermissionList extends HashMap {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT lp.permission, p.userlevel " +
-        "FROM document_store_permissions p, " + DatabaseUtils.getTableName(db, "lookup_document_store_permission") + " lp " +
-        "WHERE p.permission_id = lp.code ");
+            "FROM document_store_permissions p, " + DatabaseUtils.getTableName(db, "lookup_document_store_permission") + " lp " +
+            "WHERE p.permission_id = lp.code ");
     createFilter(sql);
     PreparedStatement pst = db.prepareStatement(sql.toString());
     prepareFilter(pst);
@@ -180,7 +267,7 @@ public class DocumentStorePermissionList extends HashMap {
       //Delete the previous settings
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM document_store_permissions " +
-          "WHERE document_store_id = ? ");
+              "WHERE document_store_id = ? ");
       pst.setInt(1, tmpDocumentStoreId);
       pst.execute();
       pst.close();
@@ -192,7 +279,7 @@ public class DocumentStorePermissionList extends HashMap {
             db, "document_store_permissions_id_seq");
         pst = db.prepareStatement(
             "INSERT INTO document_store_permissions (" + (id > -1 ? "id, " : "") + "document_store_id, permission_id, userlevel) " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?)");
+                "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?)");
         int i = 0;
         if (id > -1) {
           pst.setInt(++i, id);
@@ -201,7 +288,7 @@ public class DocumentStorePermissionList extends HashMap {
         pst.setInt(++i, Integer.parseInt(permissionId));
         pst.setInt(
             ++i, Integer.parseInt(
-                request.getParameter("perm" + count + "level")));
+            request.getParameter("perm" + count + "level")));
         pst.execute();
       }
       pst.close();
@@ -224,7 +311,7 @@ public class DocumentStorePermissionList extends HashMap {
   public static void delete(Connection db, int tmpDocumentStoreId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM document_store_permissions " +
-        "WHERE document_store_id = ? ");
+            "WHERE document_store_id = ? ");
     pst.setInt(1, tmpDocumentStoreId);
     pst.execute();
     pst.close();
@@ -242,8 +329,8 @@ public class DocumentStorePermissionList extends HashMap {
     //Make sure no permissions exist, then insert
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS perm_count " +
-        "FROM document_store_permissions " +
-        "WHERE document_store_id = ? ");
+            "FROM document_store_permissions " +
+            "WHERE document_store_id = ? ");
     pst.setInt(1, tmpDocumentStoreId);
     ResultSet rs = pst.executeQuery();
     rs.next();
@@ -263,8 +350,8 @@ public class DocumentStorePermissionList extends HashMap {
             db, "document_store_permissions_id_seq");
         pst = db.prepareStatement(
             "INSERT INTO document_store_permissions " +
-            "(" + (id > -1 ? "id, " : "") + "document_store_id, permission_id, userlevel) " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
+                "(" + (id > -1 ? "id, " : "") + "document_store_id, permission_id, userlevel) " +
+                "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
         int i = 0;
         if (id > -1) {
           pst.setInt(++i, id);

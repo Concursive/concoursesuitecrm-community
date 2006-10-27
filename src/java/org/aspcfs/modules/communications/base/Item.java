@@ -48,6 +48,7 @@ public class Item {
    *
    * @param rs Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public Item(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -167,11 +168,25 @@ public class Item {
   /**
    * Description of the Method
    *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void insert(Connection db) throws SQLException {
+    this.insert(db, this.questionId);
+  }
+
+
+  /**
+   * Description of the Method
+   *
    * @param db  Description of the Parameter
    * @param qid Description of the Parameter
    * @throws SQLException Description of the Exception
    */
   public void insert(Connection db, int qid) throws SQLException {
+    if (qid == -1) {
+      throw new SQLException("Question ID not specified");
+    }
     boolean doCommit = db.getAutoCommit();
     try {
       if (doCommit) {
@@ -180,8 +195,8 @@ public class Item {
       id = DatabaseUtils.getNextSeq(db, "survey_items_item_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO survey_items " +
-          "(" + (id > -1 ? "item_id, " : "") + "question_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description ) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
+              "(" + (id > -1 ? "item_id, " : "") + "question_id, " + DatabaseUtils.addQuotes(db, "type") + ", description ) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
       int i = 0;
       if (id > -1) {
         pst.setInt(++i, id);
@@ -225,8 +240,8 @@ public class Item {
       }
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_items " +
-          "SET description = ? " +
-          "WHERE question_id = ? ");
+              "SET description = ? " +
+              "WHERE question_id = ? ");
       int i = 0;
       pst.setString(++i, description);
       pst.setInt(++i, qId);

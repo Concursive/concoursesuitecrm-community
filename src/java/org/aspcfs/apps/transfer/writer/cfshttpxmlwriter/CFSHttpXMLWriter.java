@@ -18,19 +18,21 @@ package org.aspcfs.apps.transfer.writer.cfshttpxmlwriter;
 import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.modules.service.base.TransactionStatus;
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- * Writes data using an HTTP connection and passing objects as XML to a
- * web server.
+ * Writes data using an HTTP connection and passing objects as XML to a web
+ * server.
  *
  * @author matt rajkowski
  * @version $Id: CFSHttpXMLWriter.java,v 1.6 2002/10/07 19:04:00 mrajkowski
@@ -56,9 +58,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Gets the transactionMeta attribute of the CFSHttpXMLWriter object
+   * Gets the transactionMeta attribute of the CFSHttpXMLWriter object
    *
-   * @return    The transactionMeta value
+   * @return The transactionMeta value
    */
   public ArrayList getTransactionMeta() {
     return transactionMeta;
@@ -66,9 +68,9 @@ public class CFSHttpXMLWriter implements DataWriter {
 
 
   /**
-   *  Sets the transactionMeta attribute of the CFSHttpXMLWriter object
+   * Sets the transactionMeta attribute of the CFSHttpXMLWriter object
    *
-   * @param  tmp  The new transactionMeta value
+   * @param tmp The new transactionMeta value
    */
   public void setTransactionMeta(ArrayList tmp) {
     this.transactionMeta = tmp;
@@ -381,15 +383,15 @@ public class CFSHttpXMLWriter implements DataWriter {
    * @return Description of the Return Value
    */
   public boolean hasMetaInfo() {
-    return (transactionMeta != null 
-                && transactionMeta.size() > 0);
+    return (transactionMeta != null
+        && transactionMeta.size() > 0);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean commit() {
     try {
@@ -498,7 +500,15 @@ public class CFSHttpXMLWriter implements DataWriter {
           object.appendChild(field);
         }
       }
-      lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
+
+      HashMap headers = new HashMap();
+      headers.put("object-validation", "false");
+
+      lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document), headers);
+
+      if (responseStatus(lastResponse) == 1) {
+        return false;
+      }
       this.transaction.clear();
       this.setAutoCommit(true);
     } catch (Exception ex) {
@@ -507,6 +517,27 @@ public class CFSHttpXMLWriter implements DataWriter {
       return false;
     }
     return true;
+  }
+
+
+  /**
+   * Constructor for the responseStatus object
+   *
+   * @param lastResponse Description of the Parameter
+   * @return
+   */
+  protected int responseStatus(String lastResponse) {
+    try {
+      XMLUtils xmlUtils = new XMLUtils(lastResponse);
+      Element element = xmlUtils.getDocumentElement();
+      if (element != null) {
+        TransactionStatus status = new TransactionStatus(
+            XMLUtils.getFirstElement(element, "response"));
+        return status.getStatusCode();
+      }
+    } catch (Exception e) {
+    }
+    return 1;
   }
 
 
@@ -617,6 +648,13 @@ public class CFSHttpXMLWriter implements DataWriter {
    */
   public boolean close() {
     return true;
+  }
+
+
+  /**
+   * Description of the Method
+   */
+  public void initialize() {
   }
 }
 

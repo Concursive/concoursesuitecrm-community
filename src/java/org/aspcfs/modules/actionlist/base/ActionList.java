@@ -49,6 +49,36 @@ public class ActionList extends GenericBean {
 
 
   /**
+   * Sets the enteredBy attribute of the ActionList object
+   *
+   * @param tmp The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the modifiedBy attribute of the ActionList object
+   *
+   * @param tmp The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the entered attribute of the ActionList object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
    * Constructor for the ActionList object
    */
   public ActionList() {
@@ -61,6 +91,7 @@ public class ActionList extends GenericBean {
    * @param db Description of the Parameter
    * @param id Description of the Parameter
    * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public ActionList(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -71,6 +102,7 @@ public class ActionList extends GenericBean {
    * Constructor for the ActionList object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ActionList(ResultSet rs) throws SQLException {
@@ -505,9 +537,9 @@ public class ActionList extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT al.action_id, al.description, al.owner, al.completedate, al.link_module_id, " +
-        "al.enteredby, al.entered, al.modifiedby, al.modified, al.enabled " +
-        "FROM action_list al " +
-        "WHERE action_id = ? ");
+            "al.enteredby, al.entered, al.modifiedby, al.modified, al.enabled " +
+            "FROM action_list al " +
+            "WHERE action_id = ? ");
     int i = 0;
     pst.setInt(++i, id);
     ResultSet rs = pst.executeQuery();
@@ -530,14 +562,18 @@ public class ActionList extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
       id = DatabaseUtils.getNextSeq(db, "action_list_code_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO action_list " +
-          "(" + (id > -1 ? "action_id, " : "") + "description, owner, link_module_id, enteredby, modifiedby, enabled) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? ) ");
+              "(" + (id > -1 ? "action_id, " : "") + "description, owner, link_module_id, enteredby, modifiedby, enabled) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? ) ");
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -550,12 +586,18 @@ public class ActionList extends GenericBean {
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "action_list_code_seq", id);
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -579,9 +621,9 @@ public class ActionList extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_list " +
-          "SET modifiedby = ?, description = ?, " +
-          "modified = CURRENT_TIMESTAMP, completedate = ?, owner = ? " +
-          "WHERE action_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+              "SET modifiedby = ?, description = ?, " +
+              "modified = CURRENT_TIMESTAMP, completedate = ?, owner = ? " +
+              "WHERE action_id = ? AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
       if (previousList.getCompleteDate() != null && this.getComplete()) {
@@ -593,7 +635,7 @@ public class ActionList extends GenericBean {
       }
       pst.setInt(++i, this.getOwner());
       pst.setInt(++i, id);
-      if(this.getModified() != null){
+      if (this.getModified() != null) {
         pst.setTimestamp(++i, this.getModified());
       }
       count = pst.executeUpdate();
@@ -625,7 +667,7 @@ public class ActionList extends GenericBean {
       deleteRelationships(db);
       String sql =
           "DELETE from action_list " +
-          "WHERE action_id = ? ";
+              "WHERE action_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(1, this.getId());
       pst.execute();
@@ -657,13 +699,13 @@ public class ActionList extends GenericBean {
       }
       PreparedStatement pst = db.prepareStatement(
           "DELETE from action_item_log " +
-          "WHERE item_id IN (SELECT item_id from action_item where action_id = ? ) ");
+              "WHERE item_id IN (SELECT item_id from action_item where action_id = ? ) ");
       pst.setInt(1, this.getId());
       pst.execute();
 
       pst = db.prepareStatement(
           "DELETE from action_item " +
-          "WHERE action_id = ? ");
+              "WHERE action_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
 
@@ -698,8 +740,8 @@ public class ActionList extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) as total " +
-          "FROM action_item " +
-          "WHERE action_id = ? ");
+              "FROM action_item " +
+              "WHERE action_id = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -733,8 +775,8 @@ public class ActionList extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) as total " +
-        "FROM action_item " +
-        "WHERE action_id = ? ");
+            "FROM action_item " +
+            "WHERE action_id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -757,8 +799,8 @@ public class ActionList extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) as total_complete " +
-        "FROM action_item " +
-        "WHERE action_id = ? AND completedate IS NOT NULL ");
+            "FROM action_item " +
+            "WHERE action_id = ? AND completedate IS NOT NULL ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

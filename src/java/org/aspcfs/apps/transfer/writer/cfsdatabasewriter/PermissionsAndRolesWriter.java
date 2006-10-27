@@ -20,12 +20,12 @@ import com.darkhorseventures.database.ConnectionPool;
 import com.zeroio.webdav.base.WebdavModule;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.modules.actionplans.base.PlanEditor;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.ModuleFieldCategoryLink;
 import org.aspcfs.modules.reports.base.Report;
 import org.aspcfs.utils.web.LookupListElement;
-import org.aspcfs.modules.actionplans.base.PlanEditor;
-import org.aspcfs.modules.actionplans.base.ActionPlan;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -49,6 +49,7 @@ public class PermissionsAndRolesWriter
   private String user = null;
   private String pass = null;
 
+
   /**
    * Sets the driver attribute of the PermissionsAndRolesWriter object
    *
@@ -57,6 +58,7 @@ public class PermissionsAndRolesWriter
   public void setDriver(String tmp) {
     this.driver = tmp;
   }
+
 
   /**
    * Sets the url attribute of the PermissionsAndRolesWriter object
@@ -67,6 +69,7 @@ public class PermissionsAndRolesWriter
     this.url = tmp;
   }
 
+
   /**
    * Sets the user attribute of the PermissionsAndRolesWriter object
    *
@@ -75,6 +78,7 @@ public class PermissionsAndRolesWriter
   public void setUser(String tmp) {
     this.user = tmp;
   }
+
 
   /**
    * Sets the pass attribute of the PermissionsAndRolesWriter object
@@ -85,6 +89,7 @@ public class PermissionsAndRolesWriter
     this.pass = tmp;
   }
 
+
   /**
    * Sets the autoCommit attribute of the PermissionsAndRolesWriter object
    *
@@ -92,6 +97,7 @@ public class PermissionsAndRolesWriter
    */
   public void setAutoCommit(boolean flag) {
   }
+
 
   /**
    * Gets the driver attribute of the PermissionsAndRolesWriter object
@@ -102,6 +108,7 @@ public class PermissionsAndRolesWriter
     return driver;
   }
 
+
   /**
    * Gets the url attribute of the PermissionsAndRolesWriter object
    *
@@ -110,6 +117,7 @@ public class PermissionsAndRolesWriter
   public String getUrl() {
     return url;
   }
+
 
   /**
    * Gets the user attribute of the PermissionsAndRolesWriter object
@@ -120,6 +128,7 @@ public class PermissionsAndRolesWriter
     return user;
   }
 
+
   /**
    * Gets the pass attribute of the PermissionsAndRolesWriter object
    *
@@ -128,6 +137,7 @@ public class PermissionsAndRolesWriter
   public String getPass() {
     return pass;
   }
+
 
   /**
    * Gets the version attribute of the PermissionsAndRolesWriter object
@@ -138,6 +148,7 @@ public class PermissionsAndRolesWriter
     return 1.0d;
   }
 
+
   /**
    * Gets the name attribute of the PermissionsAndRolesWriter object
    *
@@ -146,6 +157,7 @@ public class PermissionsAndRolesWriter
   public String getName() {
     return "Permissions and Roles Writer";
   }
+
 
   /**
    * Gets the description attribute of the PermissionsAndRolesWriter object
@@ -156,9 +168,16 @@ public class PermissionsAndRolesWriter
     return "Inserts data directly into a Centric CRM database";
   }
 
+
+  /**
+   * Sets the db attribute of the PermissionsAndRolesWriter object
+   *
+   * @param db The new db value
+   */
   public void setDb(Connection db) {
     this.db = db;
   }
+
 
   /**
    * Gets the lastResponse attribute of the PermissionsAndRolesWriter object
@@ -168,6 +187,7 @@ public class PermissionsAndRolesWriter
   public String getLastResponse() {
     return String.valueOf(id);
   }
+
 
   /**
    * Gets the configured attribute of the PermissionsAndRolesWriter object
@@ -213,6 +233,7 @@ public class PermissionsAndRolesWriter
     }
     return true;
   }
+
 
   /**
    * Description of the Method
@@ -271,7 +292,7 @@ public class PermissionsAndRolesWriter
         categoryLink.insert(db);
         return true;
       }
-      
+
       if (record.getName().equals("planEditor")) {
         PlanEditor editor = new PlanEditor();
         editor.setModuleId(record.getIntValue("moduleId"));
@@ -334,7 +355,7 @@ public class PermissionsAndRolesWriter
         listViewEditor.insert(db);
         return true;
       }
-      
+
       if (record.getName().equals("role")) {
         Role thisRole = new Role();
         thisRole.setRole(record.getValue("role"));
@@ -384,6 +405,7 @@ public class PermissionsAndRolesWriter
     return true;
   }
 
+
   /**
    * Description of the Method
    *
@@ -392,6 +414,7 @@ public class PermissionsAndRolesWriter
   public boolean commit() {
     return true;
   }
+
 
   /**
    * Description of the Method
@@ -402,6 +425,7 @@ public class PermissionsAndRolesWriter
     return true;
   }
 
+
   /**
    * Description of the Method
    *
@@ -411,6 +435,7 @@ public class PermissionsAndRolesWriter
   public boolean load(DataRecord record) {
     return false;
   }
+
 
   /**
    * Description of the Method
@@ -426,4 +451,12 @@ public class PermissionsAndRolesWriter
     }
     return true;
   }
+
+
+  /**
+   * Description of the Method
+   */
+  public void initialize() {
+  }
 }
+

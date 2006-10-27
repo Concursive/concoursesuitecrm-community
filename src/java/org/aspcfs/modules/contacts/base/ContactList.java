@@ -3139,8 +3139,7 @@ public class ContactList extends Vector implements UserCentric {
 
             Calendar tmpCal = new GregorianCalendar(year, (month - 1), day);
             //fix it if "on or before" or "after" is selected.
-            if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10)
-            {
+            if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10) {
               tmpCal.add(java.util.Calendar.DATE, +1);
             }
 
@@ -3472,8 +3471,7 @@ public class ContactList extends Vector implements UserCentric {
    * @since 1.5
    */
   private boolean buildResources(Connection db) throws SQLException {
-    if (!buildTypes && !buildDetails && !checkUserAccess && !checkEnabledUserAccess && checkExcludedFromCampaign == -1)
-    {
+    if (!buildTypes && !buildDetails && !checkUserAccess && !checkEnabledUserAccess && checkExcludedFromCampaign == -1) {
       return false;
     }
     Iterator i = this.iterator();
@@ -3615,8 +3613,7 @@ public class ContactList extends Vector implements UserCentric {
       sqlFilter.append("AND o.owner = ? ");
     }
 
-    if (includeEnabledAccount == Constants.TRUE || includeEnabledAccount == Constants.FALSE)
-    {
+    if (includeEnabledAccount == Constants.TRUE || includeEnabledAccount == Constants.FALSE) {
       sqlFilter.append("AND o.enabled = ? ");
     }
 
@@ -3790,14 +3787,14 @@ public class ContactList extends Vector implements UserCentric {
 
     if (portalUsersOnly == Constants.TRUE) {
       sqlFilter.append(
-          "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access")+ " a " +
-          "WHERE c.user_id = a.user_id AND a.enabled = ? " +
-          "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role")+ " r WHERE r.role_type = ?)) ");
+          "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
+              "WHERE c.user_id = a.user_id AND a.enabled = ? " +
+              "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role") + " r WHERE r.role_type = ?)) ");
     } else if (portalUsersOnly == Constants.FALSE) {
       sqlFilter.append(
-          "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access")+ " a " +
-          "WHERE c.user_id = a.user_id " +
-          "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role")+ " r WHERE r.role_type != ?)) ");
+          "AND EXISTS (SELECT user_id FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
+              "WHERE c.user_id = a.user_id " +
+              "AND a.role_id IN (SELECT r.role_id FROM " + DatabaseUtils.addQuotes(db, "role") + " r WHERE r.role_type != ?)) ");
     }
 
     if (includeNonUsersOnly) {
@@ -3873,13 +3870,11 @@ public class ContactList extends Vector implements UserCentric {
       sqlFilter.append("AND c.lead = ? ");
     }
     if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
-      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED)
-      {
+      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
         sqlFilter.append("AND c.lead_status = ? ");
       }
     } else
-    if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED)
-    {
+    if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
       sqlFilter.append("AND c.lead_status = ? ");
       sqlFilter.append(
           "AND c.contact_id NOT IN ( " +
@@ -3888,8 +3883,7 @@ public class ContactList extends Vector implements UserCentric {
               "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) " +
               "");
     } else
-    if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE)
-    {
+    if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
       sqlFilter.append("AND c.lead_status IN (?, ?, ?) ");
     }
     if (source > -1) {
@@ -4811,19 +4805,16 @@ public class ContactList extends Vector implements UserCentric {
       pst.setBoolean(++i, (leadsOnly == Constants.TRUE));
     }
     if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
-      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED)
-      {
+      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
         pst.setInt(++i, leadStatus);
       }
     } else
-    if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED)
-    {
+    if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
       pst.setInt(++i, Contact.LEAD_UNPROCESSED);
       pst.setInt(++i, userId);
       pst.setInt(++i, userId);
     } else
-    if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE)
-    {
+    if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
       pst.setInt(++i, Contact.LEAD_TRASHED);
       pst.setInt(++i, Contact.LEAD_ASSIGNED);
       pst.setInt(++i, Contact.LEAD_UNPROCESSED);

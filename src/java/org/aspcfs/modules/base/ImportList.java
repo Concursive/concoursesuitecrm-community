@@ -31,20 +31,29 @@ import java.util.Iterator;
  * Represents a list of imports
  *
  * @author Mathur
- *@created    April 19, 2004
  * @version $Id$
+ * @created April 19, 2004
  */
 public class ImportList extends ArrayList {
+
+  public final static String tableName = "import";
+  public final static String uniqueField = "import_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   private int enteredBy = -1;
   private String enteredIdRange = null;
   private boolean controlledHierarchyOnly = false;
   private PagedListInfo pagedListInfo = null;
   private ImportManager manager = null;
   private int type = -1;
+  private int ignoreStatusId = Import.DELETED; //Ignores records with this status
   private SystemStatus systemStatus = null;
 
   private int siteId = -1;
   private boolean includeImportsApplicableToAllSites = false;
+  private boolean buildFileDetails = true;
 
 
   /**
@@ -134,6 +143,30 @@ public class ImportList extends ArrayList {
   }
 
 
+  public void setIgnoreStatusId(int tmp) {
+    this.ignoreStatusId = tmp;
+  }
+
+  public void setIgnoreStatusId(String tmp) {
+    this.ignoreStatusId = Integer.parseInt(tmp);
+  }
+
+  public int getIgnoreStatusId() {
+    return ignoreStatusId;
+  }
+
+  public boolean getBuildFileDetails() {
+    return this.buildFileDetails;
+  }
+
+  public void setBuildFileDetails(boolean tmp) {
+    this.buildFileDetails = tmp;
+  }
+
+  public void setBuildFileDetails(String tmp) {
+    this.buildFileDetails = DatabaseUtils.parseBoolean(tmp);
+  }
+
   /**
    * Sets the controlledHierarchyOnly attribute of the ImportList object
    *
@@ -215,9 +248,9 @@ public class ImportList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the ImportList object
+   * Sets the siteId attribute of the ImportList object
    *
-   *@param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -225,9 +258,9 @@ public class ImportList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the ImportList object
+   * Sets the siteId attribute of the ImportList object
    *
-   *@param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -235,10 +268,10 @@ public class ImportList extends ArrayList {
 
 
   /**
-   *  Sets the includeImportsApplicableToAllSites attribute of the ImportList
-   *  object
+   * Sets the includeImportsApplicableToAllSites attribute of the ImportList
+   * object
    *
-   *@param  tmp  The new includeImportsApplicableToAllSites value
+   * @param tmp The new includeImportsApplicableToAllSites value
    */
   public void setIncludeImportsApplicableToAllSites(boolean tmp) {
     this.includeImportsApplicableToAllSites = tmp;
@@ -246,10 +279,10 @@ public class ImportList extends ArrayList {
 
 
   /**
-   *  Sets the includeImportsApplicableToAllSites attribute of the ImportList
-   *  object
+   * Sets the includeImportsApplicableToAllSites attribute of the ImportList
+   * object
    *
-   *@param  tmp  The new includeImportsApplicableToAllSites value
+   * @param tmp The new includeImportsApplicableToAllSites value
    */
   public void setIncludeImportsApplicableToAllSites(String tmp) {
     this.includeImportsApplicableToAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -257,9 +290,9 @@ public class ImportList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the ImportList object
+   * Gets the siteId attribute of the ImportList object
    *
-   *@return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -267,10 +300,10 @@ public class ImportList extends ArrayList {
 
 
   /**
-   *  Gets the includeImportsApplicableToAllSites attribute of the ImportList
-   *  object
+   * Gets the includeImportsApplicableToAllSites attribute of the ImportList
+   * object
    *
-   *@return    The includeImportsApplicableToAllSites value
+   * @return The includeImportsApplicableToAllSites value
    */
   public boolean getIncludeImportsApplicableToAllSites() {
     return includeImportsApplicableToAllSites;
@@ -278,10 +311,10 @@ public class ImportList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -294,8 +327,8 @@ public class ImportList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM import m " +
-        "WHERE m.import_id > -1 AND status_id != ? ");
+            "FROM import m " +
+            "WHERE m.import_id > -1 AND status_id != ? ");
     createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -312,8 +345,8 @@ public class ImportList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND m.entered > ? ");
+                sqlFilter.toString() +
+                "AND m.entered > ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -337,11 +370,11 @@ public class ImportList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "m.import_id, m." + DatabaseUtils.addQuotes(db, "type")+ ", m.name, m.description, m.source_type, m.source, " +
-        "m.record_delimiter, m.column_delimiter, m.total_imported_records, m.total_failed_records, " +
-        "m.status_id, m.file_type, m.entered, m.enteredby, m.modified, m.modifiedby, m.site_id, m.rating, m.comments " +
-        "FROM import m " +
-        "WHERE m.import_id > -1 AND status_id != ? ");
+        "m.import_id, m." + DatabaseUtils.addQuotes(db, "type") + ", m.name, m.description, m.source_type, m.source, " +
+            "m.record_delimiter, m.column_delimiter, m.total_imported_records, m.total_failed_records, " +
+            "m.status_id, m.file_type, m.entered, m.enteredby, m.modified, m.modifiedby, m.site_id, m.rating, m.comments " +
+            "FROM import m " +
+            "WHERE m.import_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -365,12 +398,16 @@ public class ImportList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Import thisImport = (Import) i.next();
-      thisImport.buildFileDetails(db);
+      if (buildFileDetails) {
+        thisImport.buildFileDetails(db);
+      }
 
       //check for dead imports
-      Object activeImport = manager.getImport(thisImport.getId());
-      if (thisImport.isRunning() && activeImport == null) {
-        thisImport.updateStatus(db, Import.FAILED);
+      if (manager != null) {
+        Object activeImport = manager.getImport(thisImport.getId());
+        if (thisImport.isRunning() && activeImport == null) {
+          thisImport.updateStatus(db, Import.FAILED);
+        }
       }
     }
   }
@@ -386,6 +423,10 @@ public class ImportList extends ArrayList {
       sqlFilter = new StringBuffer();
     }
 
+    if (ignoreStatusId != -1) {
+      sqlFilter.append("AND m.status_id != ? ");
+    }
+
     if (enteredBy != -1) {
       sqlFilter.append("AND m.enteredby = ? ");
     }
@@ -395,27 +436,38 @@ public class ImportList extends ArrayList {
     }
 
     if (type != -1) {
-      sqlFilter.append("AND m." + DatabaseUtils.addQuotes(db, "type")+ " = ? ");
+      sqlFilter.append("AND m." + DatabaseUtils.addQuotes(db, "type") + " = ? ");
     }
 
     // includes only those imports with the specified site
     // and those that have no site associated with it
-    if (siteId != -1){
+    if (siteId != -1) {
       sqlFilter.append("AND ");
-      if (includeImportsApplicableToAllSites){
+      if (includeImportsApplicableToAllSites) {
         sqlFilter.append(" ( ");
       }
       sqlFilter.append("m.site_id = ? ");
-      if (includeImportsApplicableToAllSites){
+      if (includeImportsApplicableToAllSites) {
         sqlFilter.append("OR m.site_id IS NULL ) ");
       }
     }
 
     // includes only those imports with no site.
-    if (siteId == -1){
-      if (includeImportsApplicableToAllSites){
+    if (siteId == -1) {
+      if (includeImportsApplicableToAllSites) {
         sqlFilter.append("AND m.site_id IS NULL ");
       }
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND m.entered > ? ");
+      }
+      sqlFilter.append("AND m.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND m.modified > ? ");
+      sqlFilter.append("AND m.entered < ? ");
+      sqlFilter.append("AND m.modified < ? ");
     }
   }
 
@@ -423,14 +475,17 @@ public class ImportList extends ArrayList {
   /**
    * Description of the Method
    *
-   *@param  pst            Description of the Parameter
-   *@return                Description of the Return Value
-   *@throws  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
-    pst.setInt(++i, Import.DELETED);
+    if (ignoreStatusId != -1) {
+      pst.setInt(++i, ignoreStatusId);
+    }
+
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
@@ -441,6 +496,17 @@ public class ImportList extends ArrayList {
 
     if (siteId != -1) {
       pst.setInt(++i, siteId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

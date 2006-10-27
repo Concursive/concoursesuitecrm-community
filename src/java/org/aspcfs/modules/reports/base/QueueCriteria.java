@@ -16,7 +16,10 @@
 package org.aspcfs.modules.reports.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -46,7 +49,45 @@ public class QueueCriteria extends GenericBean {
   /**
    * Constructor for the QueueCriteria object
    *
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public QueueCriteria(Connection db, int id) throws SQLException {
+    queryRecord(db, id);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void queryRecord(Connection db, int id) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT q.* " +
+            "FROM report_queue_criteria q " +
+            "WHERE criteria_id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+    if (id == -1) {
+      throw new SQLException("Queue Criteria record not found.");
+    }
+  }
+
+
+  /**
+   * Constructor for the QueueCriteria object
+   *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public QueueCriteria(ResultSet rs) throws SQLException {
@@ -166,6 +207,31 @@ public class QueueCriteria extends GenericBean {
     queueId = rs.getInt("queue_id");
     parameter = rs.getString("parameter");
     value = rs.getString("value");
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void insert(Connection db) throws SQLException {
+    int id = DatabaseUtils.getNextSeq(db, "report_queue_criteria_criteria_id_seq");
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO report_queue_criteria " +
+            "(" + (id > -1 ? "criteria_id, " : "") + "queue_id, " + DatabaseUtils.addQuotes(db, "parameter") + ", " + DatabaseUtils.addQuotes(db, "value") + ") " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?) ");
+    int i = 0;
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    pst.setInt(++i, queueId);
+    pst.setString(++i, parameter);
+    pst.setString(++i, value);
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "report_queue_criteria_criteria_id_seq", id);
   }
 
 }

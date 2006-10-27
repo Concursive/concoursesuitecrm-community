@@ -36,6 +36,11 @@ import java.util.Vector;
  * @created August 7, 2002
  */
 public class SurveyList extends Vector {
+  public final static String tableName = "survey";
+  public final static String uniqueField = "survey_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int itemLength = -1;
@@ -74,8 +79,8 @@ public class SurveyList extends Vector {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM survey s " +
-        "WHERE s.survey_id > -1 ");
+            "FROM survey s " +
+            "WHERE s.survey_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -95,8 +100,8 @@ public class SurveyList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(s.name) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(s.name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -123,8 +128,8 @@ public class SurveyList extends Vector {
     }
     sqlSelect.append(
         "s.* " +
-        "FROM survey s " +
-        "WHERE s.survey_id > -1 ");
+            "FROM survey s " +
+            "WHERE s.survey_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -316,6 +321,17 @@ public class SurveyList extends Vector {
     if (enabled != -1) {
       sqlFilter.append("AND s.enabled = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -339,7 +355,17 @@ public class SurveyList extends Vector {
         pst.setBoolean(++i, true);
       }
     }
-
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 

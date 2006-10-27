@@ -26,19 +26,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    August 17, 2005
- * @version    $Id: ActionPlanList.java,v 1.1.2.1 2005/08/17 15:29:07 partha Exp
- *      $
+ * @author partha
+ * @version $Id: ActionPlanList.java,v 1.1.2.1 2005/08/17 15:29:07 partha Exp
+ *          $
+ * @created August 17, 2005
  */
 public class ActionPlanList extends ArrayList {
-  //filters
+  public String tableName = "action_plan";
+  public String uniqueField = "plan_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
   private int enteredBy = -1;
@@ -62,7 +66,7 @@ public class ActionPlanList extends ArrayList {
   private int linkSubCat2 = 0;
   private int linkSubCat3 = 0;
   private int linkObjectId = -1;
-  private String tableName = null;
+  private String nameTable = null;
   private int siteId = -1;
   //related filters
   private boolean buildPhases = false;
@@ -76,18 +80,117 @@ public class ActionPlanList extends ArrayList {
   private boolean exclusiveToSite = false;
 
 
-
   /**
-   *  Constructor for the ActionPlanList object
+   * Constructor for the ActionPlanList object
    */
-  public ActionPlanList() { }
+  public ActionPlanList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the ActionPlanList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Description of the Method
+   * Sets the lastAnchor attribute of the ActionPlanList object
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the ActionPlanList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the ActionPlanList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Sets the tableName attribute of the ActionPlanList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setTableName(String tmp) {
+    this.tableName = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the ActionPlanList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the ActionPlanList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Gets the nameTable attribute of the ActionPlanList object
+   *
+   * @return The nameTable value
+   */
+  public String getNameTable() {
+    return nameTable;
+  }
+
+
+  /**
+   * Sets the nameTable attribute of the ActionPlanList object
+   *
+   * @param tmp The new nameTable value
+   */
+  public void setNameTable(String tmp) {
+    this.nameTable = tmp;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -100,10 +203,10 @@ public class ActionPlanList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM action_plan ap " +
-        " LEFT JOIN action_plan_constants apc ON (ap.link_object_id = apc.map_id) " +
-        " LEFT JOIN lookup_site_id ls ON (ap.site_id = ls.code) " +
-        " WHERE ap.plan_id > -1 ");
+            " FROM action_plan ap " +
+            " LEFT JOIN action_plan_constants apc ON (ap.link_object_id = apc.map_id) " +
+            " LEFT JOIN lookup_site_id ls ON (ap.site_id = ls.code) " +
+            " WHERE ap.plan_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -121,8 +224,8 @@ public class ActionPlanList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND " + DatabaseUtils.toLowerCase(db) + "(ap.plan_name) < ? ");
+                sqlFilter.toString() +
+                "AND " + DatabaseUtils.toLowerCase(db) + "(ap.plan_name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -146,10 +249,10 @@ public class ActionPlanList extends ArrayList {
     }
     sqlSelect.append(
         " ap.*, ls.description AS site_name " +
-        " FROM action_plan ap " +
-        " LEFT JOIN action_plan_constants apc ON (ap.link_object_id = apc.map_id) " +
-        " LEFT JOIN lookup_site_id ls ON (ap.site_id = ls.code) " +
-        " WHERE ap.plan_id > -1 ");
+            " FROM action_plan ap " +
+            " LEFT JOIN action_plan_constants apc ON (ap.link_object_id = apc.map_id) " +
+            " LEFT JOIN lookup_site_id ls ON (ap.site_id = ls.code) " +
+            " WHERE ap.plan_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -185,10 +288,10 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -242,11 +345,11 @@ public class ActionPlanList extends ArrayList {
       sqlFilter.append("AND link_object_id = ? ");
     }
 
-    if (tableName != null && (linkSubCat3 != 0 || linkSubCat2 != 0 || linkSubCat1 != 0 || linkCatCode != 0)) {
+    if (nameTable != null && (linkSubCat3 != 0 || linkSubCat2 != 0 || linkSubCat1 != 0 || linkCatCode != 0)) {
       sqlFilter.append(
-          "AND ap.plan_id IN ( SELECT plan_id FROM " + tableName + "_plan_map " +
-          "WHERE category_id = ?) ");
-    } else if (tableName != null && displayNone) {
+          "AND ap.plan_id IN ( SELECT plan_id FROM " + nameTable + "_plan_map " +
+              "WHERE category_id = ?) ");
+    } else if (nameTable != null && displayNone) {
       sqlFilter.append("AND ap.plan_id = ? ");
     }
     if (!includeAllSites) {
@@ -260,15 +363,26 @@ public class ActionPlanList extends ArrayList {
         sqlFilter.append("AND ap.site_id IS NULL ");
       }
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -301,7 +415,7 @@ public class ActionPlanList extends ArrayList {
     if (linkObjectId != -1) {
       pst.setInt(++i, this.getLinkObjectId());
     }
-    if (tableName != null) {
+    if (nameTable != null) {
       if (linkSubCat3 != 0) {
         pst.setInt(++i, linkSubCat3);
       } else if (linkSubCat2 != 0) {
@@ -319,15 +433,26 @@ public class ActionPlanList extends ArrayList {
     if (!includeAllSites && siteId > -1) {
       pst.setInt(++i, siteId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Gets the htmlSelect attribute of the ActionPlanList object
+   * Gets the htmlSelect attribute of the ActionPlanList object
    *
-   * @param  selectName  Description of the Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -335,11 +460,11 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the ActionPlanList object
+   * Gets the htmlSelect attribute of the ActionPlanList object
    *
-   * @param  selectName  Description of the Parameter
-   * @param  defaultKey  Description of the Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect actionPlanListSelect = new HtmlSelect();
@@ -356,9 +481,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelectObj attribute of the ActionPlanList object
+   * Gets the htmlSelectObj attribute of the ActionPlanList object
    *
-   * @return    The htmlSelectObj value
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj() {
     HtmlSelect actionPlanListSelect = new HtmlSelect();
@@ -375,9 +500,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the enabledPlanId attribute of the ActionPlanList object
+   * Gets the enabledPlanId attribute of the ActionPlanList object
    *
-   * @return    The enabledPlanId value
+   * @return The enabledPlanId value
    */
   public int getEnabledPlanId() {
     int result = -1;
@@ -397,9 +522,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the enabledPlanName attribute of the ActionPlanList object
+   * Gets the enabledPlanName attribute of the ActionPlanList object
    *
-   * @return    The enabledPlanName value
+   * @return The enabledPlanName value
    */
   public String getEnabledPlanName() {
     String result = null;
@@ -419,9 +544,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the enabledActionPlan attribute of the ActionPlanList object
+   * Gets the enabledActionPlan attribute of the ActionPlanList object
    *
-   * @return    The enabledActionPlan value
+   * @return The enabledActionPlan value
    */
   public ActionPlan getEnabledActionPlan() {
     ActionPlan result = null;
@@ -441,12 +566,12 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelectGroup attribute of the ActionPlanList object
+   * Gets the htmlSelectGroup attribute of the ActionPlanList object
    *
-   * @param  selectName  Description of the Parameter
-   * @param  defaultKey  Description of the Parameter
-   * @param  thisSystem  Description of the Parameter
-   * @return             The htmlSelectGroup value
+   * @param selectName Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @param thisSystem Description of the Parameter
+   * @return The htmlSelectGroup value
    */
   public String getHtmlSelectGroup(SystemStatus thisSystem, String selectName, int defaultKey) {
     ArrayList archivedPlans = new ArrayList();
@@ -488,10 +613,10 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Iterates through the action plans and returns the first active plan. The
-   *  plan returned is used to display the user's action plan dashboard
+   * Iterates through the action plans and returns the first active plan. The
+   * plan returned is used to display the user's action plan dashboard
    *
-   * @return    The plan value
+   * @return The plan value
    */
   public ActionPlan getPlan() {
     Iterator i = this.iterator();
@@ -506,13 +631,13 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Adds a feature to the AtleastOne attribute of the ActionPlanList object
+   * Adds a feature to the AtleastOne attribute of the ActionPlanList object
    *
-   * @param  db                The feature to be added to the AtleastOne
-   *      attribute
-   * @param  workList          The feature to be added to the AtleastOne
-   *      attribute
-   * @exception  SQLException  Description of the Exception
+   * @param db       The feature to be added to the AtleastOne
+   *                 attribute
+   * @param workList The feature to be added to the AtleastOne
+   *                 attribute
+   * @throws SQLException Description of the Exception
    */
   public void addAtleastOne(Connection db, ActionPlanWorkList workList) throws SQLException {
     if (workList == null || workList.size() == 0) {
@@ -540,9 +665,9 @@ public class ActionPlanList extends ArrayList {
    *  Get and Set methods
    */
   /**
-   *  Gets the pagedListInfo attribute of the ActionPlanList object
+   * Gets the pagedListInfo attribute of the ActionPlanList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -550,9 +675,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the ActionPlanList object
+   * Sets the pagedListInfo attribute of the ActionPlanList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -560,9 +685,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the ActionPlanList object
+   * Gets the id attribute of the ActionPlanList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -570,9 +695,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActionPlanList object
+   * Sets the id attribute of the ActionPlanList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -580,9 +705,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the ActionPlanList object
+   * Sets the id attribute of the ActionPlanList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -590,9 +715,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the enteredBy attribute of the ActionPlanList object
+   * Gets the enteredBy attribute of the ActionPlanList object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -600,9 +725,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionPlanList object
+   * Sets the enteredBy attribute of the ActionPlanList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -610,9 +735,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the enteredBy attribute of the ActionPlanList object
+   * Sets the enteredBy attribute of the ActionPlanList object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -620,9 +745,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the ActionPlanList object
+   * Gets the modifiedBy attribute of the ActionPlanList object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -630,9 +755,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionPlanList object
+   * Sets the modifiedBy attribute of the ActionPlanList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -640,9 +765,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the ActionPlanList object
+   * Sets the modifiedBy attribute of the ActionPlanList object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -650,9 +775,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the buildPhases attribute of the ActionPlanList object
+   * Gets the buildPhases attribute of the ActionPlanList object
    *
-   * @return    The buildPhases value
+   * @return The buildPhases value
    */
   public boolean getBuildPhases() {
     return buildPhases;
@@ -660,9 +785,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the buildPhases attribute of the ActionPlanList object
+   * Sets the buildPhases attribute of the ActionPlanList object
    *
-   * @param  tmp  The new buildPhases value
+   * @param tmp The new buildPhases value
    */
   public void setBuildPhases(boolean tmp) {
     this.buildPhases = tmp;
@@ -670,9 +795,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the buildPhases attribute of the ActionPlanList object
+   * Sets the buildPhases attribute of the ActionPlanList object
    *
-   * @param  tmp  The new buildPhases value
+   * @param tmp The new buildPhases value
    */
   public void setBuildPhases(String tmp) {
     this.buildPhases = DatabaseUtils.parseBoolean(tmp);
@@ -680,9 +805,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the buildSteps attribute of the ActionPlanList object
+   * Gets the buildSteps attribute of the ActionPlanList object
    *
-   * @return    The buildSteps value
+   * @return The buildSteps value
    */
   public boolean getBuildSteps() {
     return buildSteps;
@@ -690,9 +815,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the buildSteps attribute of the ActionPlanList object
+   * Sets the buildSteps attribute of the ActionPlanList object
    *
-   * @param  tmp  The new buildSteps value
+   * @param tmp The new buildSteps value
    */
   public void setBuildSteps(boolean tmp) {
     this.buildSteps = tmp;
@@ -700,9 +825,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the buildSteps attribute of the ActionPlanList object
+   * Sets the buildSteps attribute of the ActionPlanList object
    *
-   * @param  tmp  The new buildSteps value
+   * @param tmp The new buildSteps value
    */
   public void setBuildSteps(String tmp) {
     this.buildSteps = DatabaseUtils.parseBoolean(tmp);
@@ -710,9 +835,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the archived attribute of the ActionPlanList object
+   * Gets the archived attribute of the ActionPlanList object
    *
-   * @return    The archived value
+   * @return The archived value
    */
   public int getArchived() {
     return archived;
@@ -720,9 +845,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the archived attribute of the ActionPlanList object
+   * Sets the archived attribute of the ActionPlanList object
    *
-   * @param  tmp  The new archived value
+   * @param tmp The new archived value
    */
   public void setArchived(int tmp) {
     this.archived = tmp;
@@ -730,9 +855,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the archived attribute of the ActionPlanList object
+   * Sets the archived attribute of the ActionPlanList object
    *
-   * @param  tmp  The new archived value
+   * @param tmp The new archived value
    */
   public void setArchived(String tmp) {
     this.archived = Integer.parseInt(tmp);
@@ -740,9 +865,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the approved attribute of the ActionPlanList object
+   * Gets the approved attribute of the ActionPlanList object
    *
-   * @return    The approved value
+   * @return The approved value
    */
   public java.sql.Timestamp getApproved() {
     return approved;
@@ -750,9 +875,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the approved attribute of the ActionPlanList object
+   * Sets the approved attribute of the ActionPlanList object
    *
-   * @param  tmp  The new approved value
+   * @param tmp The new approved value
    */
   public void setApproved(java.sql.Timestamp tmp) {
     this.approved = tmp;
@@ -760,9 +885,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the approved attribute of the ActionPlanList object
+   * Sets the approved attribute of the ActionPlanList object
    *
-   * @param  tmp  The new approved value
+   * @param tmp The new approved value
    */
   public void setApproved(String tmp) {
     this.approved = DatabaseUtils.parseTimestamp(tmp);
@@ -770,9 +895,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the includeOnlyApproved attribute of the ActionPlanList object
+   * Gets the includeOnlyApproved attribute of the ActionPlanList object
    *
-   * @return    The includeOnlyApproved value
+   * @return The includeOnlyApproved value
    */
   public int getIncludeOnlyApproved() {
     return includeOnlyApproved;
@@ -780,9 +905,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the includeOnlyApproved attribute of the ActionPlanList object
+   * Sets the includeOnlyApproved attribute of the ActionPlanList object
    *
-   * @param  tmp  The new includeOnlyApproved value
+   * @param tmp The new includeOnlyApproved value
    */
   public void setIncludeOnlyApproved(int tmp) {
     this.includeOnlyApproved = tmp;
@@ -790,9 +915,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the includeOnlyApproved attribute of the ActionPlanList object
+   * Sets the includeOnlyApproved attribute of the ActionPlanList object
    *
-   * @param  tmp  The new includeOnlyApproved value
+   * @param tmp The new includeOnlyApproved value
    */
   public void setIncludeOnlyApproved(String tmp) {
     this.includeOnlyApproved = Integer.parseInt(tmp);
@@ -800,9 +925,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the ActionPlanList object
+   * Gets the enabled attribute of the ActionPlanList object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -810,9 +935,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ActionPlanList object
+   * Sets the enabled attribute of the ActionPlanList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -820,9 +945,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the ActionPlanList object
+   * Sets the enabled attribute of the ActionPlanList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -830,9 +955,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the archiveDate attribute of the ActionPlanList object
+   * Gets the archiveDate attribute of the ActionPlanList object
    *
-   * @return    The archiveDate value
+   * @return The archiveDate value
    */
   public java.sql.Timestamp getArchiveDate() {
     return archiveDate;
@@ -840,9 +965,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the archiveDate attribute of the ActionPlanList object
+   * Sets the archiveDate attribute of the ActionPlanList object
    *
-   * @param  tmp  The new archiveDate value
+   * @param tmp The new archiveDate value
    */
   public void setArchiveDate(java.sql.Timestamp tmp) {
     this.archiveDate = tmp;
@@ -850,9 +975,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the archiveDate attribute of the ActionPlanList object
+   * Sets the archiveDate attribute of the ActionPlanList object
    *
-   * @param  tmp  The new archiveDate value
+   * @param tmp The new archiveDate value
    */
   public void setArchiveDate(String tmp) {
     this.archiveDate = DatabaseUtils.parseTimestamp(tmp);
@@ -860,9 +985,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the archiveDateBefore attribute of the ActionPlanList object
+   * Gets the archiveDateBefore attribute of the ActionPlanList object
    *
-   * @return    The archiveDateBefore value
+   * @return The archiveDateBefore value
    */
   public int getArchiveDateBefore() {
     return archiveDateBefore;
@@ -870,9 +995,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the archiveDateBefore attribute of the ActionPlanList object
+   * Sets the archiveDateBefore attribute of the ActionPlanList object
    *
-   * @param  tmp  The new archiveDateBefore value
+   * @param tmp The new archiveDateBefore value
    */
   public void setArchiveDateBefore(int tmp) {
     this.archiveDateBefore = tmp;
@@ -880,9 +1005,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the archiveDateBefore attribute of the ActionPlanList object
+   * Sets the archiveDateBefore attribute of the ActionPlanList object
    *
-   * @param  tmp  The new archiveDateBefore value
+   * @param tmp The new archiveDateBefore value
    */
   public void setArchiveDateBefore(String tmp) {
     this.archiveDateBefore = Integer.parseInt(tmp);
@@ -890,9 +1015,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the approvedBefore attribute of the ActionPlanList object
+   * Gets the approvedBefore attribute of the ActionPlanList object
    *
-   * @return    The approvedBefore value
+   * @return The approvedBefore value
    */
   public int getApprovedBefore() {
     return approvedBefore;
@@ -900,9 +1025,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the approvedBefore attribute of the ActionPlanList object
+   * Sets the approvedBefore attribute of the ActionPlanList object
    *
-   * @param  tmp  The new approvedBefore value
+   * @param tmp The new approvedBefore value
    */
   public void setApprovedBefore(int tmp) {
     this.approvedBefore = tmp;
@@ -910,9 +1035,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the approvedBefore attribute of the ActionPlanList object
+   * Sets the approvedBefore attribute of the ActionPlanList object
    *
-   * @param  tmp  The new approvedBefore value
+   * @param tmp The new approvedBefore value
    */
   public void setApprovedBefore(String tmp) {
     this.approvedBefore = Integer.parseInt(tmp);
@@ -920,9 +1045,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the buildRelatedRecords attribute of the ActionPlanList object
+   * Gets the buildRelatedRecords attribute of the ActionPlanList object
    *
-   * @return    The buildRelatedRecords value
+   * @return The buildRelatedRecords value
    */
   public boolean getBuildRelatedRecords() {
     return buildRelatedRecords;
@@ -930,9 +1055,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the buildRelatedRecords attribute of the ActionPlanList object
+   * Sets the buildRelatedRecords attribute of the ActionPlanList object
    *
-   * @param  tmp  The new buildRelatedRecords value
+   * @param tmp The new buildRelatedRecords value
    */
   public void setBuildRelatedRecords(boolean tmp) {
     this.buildRelatedRecords = tmp;
@@ -940,9 +1065,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the buildRelatedRecords attribute of the ActionPlanList object
+   * Sets the buildRelatedRecords attribute of the ActionPlanList object
    *
-   * @param  tmp  The new buildRelatedRecords value
+   * @param tmp The new buildRelatedRecords value
    */
   public void setBuildRelatedRecords(String tmp) {
     this.buildRelatedRecords = DatabaseUtils.parseBoolean(tmp);
@@ -950,9 +1075,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the ActionPlanList object
+   * Gets the owner attribute of the ActionPlanList object
    *
-   * @return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -960,9 +1085,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the ActionPlanList object
+   * Sets the owner attribute of the ActionPlanList object
    *
-   * @param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -970,9 +1095,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the ActionPlanList object
+   * Sets the owner attribute of the ActionPlanList object
    *
-   * @param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -980,9 +1105,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the catCode attribute of the ActionPlanList object
+   * Gets the catCode attribute of the ActionPlanList object
    *
-   * @return    The catCode value
+   * @return The catCode value
    */
   public int getCatCode() {
     return catCode;
@@ -990,9 +1115,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the catCode attribute of the ActionPlanList object
+   * Sets the catCode attribute of the ActionPlanList object
    *
-   * @param  tmp  The new catCode value
+   * @param tmp The new catCode value
    */
   public void setCatCode(int tmp) {
     this.catCode = tmp;
@@ -1000,9 +1125,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the catCode attribute of the ActionPlanList object
+   * Sets the catCode attribute of the ActionPlanList object
    *
-   * @param  tmp  The new catCode value
+   * @param tmp The new catCode value
    */
   public void setCatCode(String tmp) {
     this.catCode = Integer.parseInt(tmp);
@@ -1010,9 +1135,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the subCat1 attribute of the ActionPlanList object
+   * Gets the subCat1 attribute of the ActionPlanList object
    *
-   * @return    The subCat1 value
+   * @return The subCat1 value
    */
   public int getSubCat1() {
     return subCat1;
@@ -1020,9 +1145,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the subCat1 attribute of the ActionPlanList object
+   * Sets the subCat1 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new subCat1 value
+   * @param tmp The new subCat1 value
    */
   public void setSubCat1(int tmp) {
     this.subCat1 = tmp;
@@ -1030,9 +1155,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the subCat1 attribute of the ActionPlanList object
+   * Sets the subCat1 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new subCat1 value
+   * @param tmp The new subCat1 value
    */
   public void setSubCat1(String tmp) {
     this.subCat1 = Integer.parseInt(tmp);
@@ -1040,9 +1165,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the subCat2 attribute of the ActionPlanList object
+   * Gets the subCat2 attribute of the ActionPlanList object
    *
-   * @return    The subCat2 value
+   * @return The subCat2 value
    */
   public int getSubCat2() {
     return subCat2;
@@ -1050,9 +1175,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the subCat2 attribute of the ActionPlanList object
+   * Sets the subCat2 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new subCat2 value
+   * @param tmp The new subCat2 value
    */
   public void setSubCat2(int tmp) {
     this.subCat2 = tmp;
@@ -1060,9 +1185,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the subCat2 attribute of the ActionPlanList object
+   * Sets the subCat2 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new subCat2 value
+   * @param tmp The new subCat2 value
    */
   public void setSubCat2(String tmp) {
     this.subCat2 = Integer.parseInt(tmp);
@@ -1070,9 +1195,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the subCat3 attribute of the ActionPlanList object
+   * Gets the subCat3 attribute of the ActionPlanList object
    *
-   * @return    The subCat3 value
+   * @return The subCat3 value
    */
   public int getSubCat3() {
     return subCat3;
@@ -1080,9 +1205,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the subCat3 attribute of the ActionPlanList object
+   * Sets the subCat3 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new subCat3 value
+   * @param tmp The new subCat3 value
    */
   public void setSubCat3(int tmp) {
     this.subCat3 = tmp;
@@ -1090,9 +1215,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the subCat3 attribute of the ActionPlanList object
+   * Sets the subCat3 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new subCat3 value
+   * @param tmp The new subCat3 value
    */
   public void setSubCat3(String tmp) {
     this.subCat3 = Integer.parseInt(tmp);
@@ -1100,9 +1225,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the level0 attribute of the ActionPlanList object
+   * Sets the level0 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new level0 value
+   * @param tmp The new level0 value
    */
   public void setLevel0(String tmp) {
     this.catCode = Integer.parseInt(tmp);
@@ -1110,9 +1235,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the level1 attribute of the ActionPlanList object
+   * Sets the level1 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new level1 value
+   * @param tmp The new level1 value
    */
   public void setLevel1(String tmp) {
     this.subCat1 = Integer.parseInt(tmp);
@@ -1120,9 +1245,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the level2 attribute of the ActionPlanList object
+   * Sets the level2 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new level2 value
+   * @param tmp The new level2 value
    */
   public void setLevel2(String tmp) {
     this.subCat2 = Integer.parseInt(tmp);
@@ -1130,9 +1255,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the level3 attribute of the ActionPlanList object
+   * Sets the level3 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new level3 value
+   * @param tmp The new level3 value
    */
   public void setLevel3(String tmp) {
     this.subCat3 = Integer.parseInt(tmp);
@@ -1140,9 +1265,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the level0 attribute of the ActionPlanList object
+   * Gets the level0 attribute of the ActionPlanList object
    *
-   * @return    The level0 value
+   * @return The level0 value
    */
   public int getLevel0() {
     return catCode;
@@ -1150,9 +1275,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the level1 attribute of the ActionPlanList object
+   * Gets the level1 attribute of the ActionPlanList object
    *
-   * @return    The level1 value
+   * @return The level1 value
    */
   public int getLevel1() {
     return subCat1;
@@ -1160,9 +1285,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the level2 attribute of the ActionPlanList object
+   * Gets the level2 attribute of the ActionPlanList object
    *
-   * @return    The level2 value
+   * @return The level2 value
    */
   public int getLevel2() {
     return subCat2;
@@ -1170,9 +1295,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the level3 attribute of the ActionPlanList object
+   * Gets the level3 attribute of the ActionPlanList object
    *
-   * @return    The level3 value
+   * @return The level3 value
    */
   public int getLevel3() {
     return subCat3;
@@ -1180,9 +1305,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the linkObjectId attribute of the ActionPlanList object
+   * Gets the linkObjectId attribute of the ActionPlanList object
    *
-   * @return    The linkObjectId value
+   * @return The linkObjectId value
    */
   public int getLinkObjectId() {
     return linkObjectId;
@@ -1190,9 +1315,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkObjectId attribute of the ActionPlanList object
+   * Sets the linkObjectId attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkObjectId value
+   * @param tmp The new linkObjectId value
    */
   public void setLinkObjectId(int tmp) {
     this.linkObjectId = tmp;
@@ -1200,9 +1325,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkObjectId attribute of the ActionPlanList object
+   * Sets the linkObjectId attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkObjectId value
+   * @param tmp The new linkObjectId value
    */
   public void setLinkObjectId(String tmp) {
     this.linkObjectId = Integer.parseInt(tmp);
@@ -1210,9 +1335,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the linkCatCode attribute of the ActionPlanList object
+   * Gets the linkCatCode attribute of the ActionPlanList object
    *
-   * @return    The linkCatCode value
+   * @return The linkCatCode value
    */
   public int getLinkCatCode() {
     return linkCatCode;
@@ -1220,9 +1345,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkCatCode attribute of the ActionPlanList object
+   * Sets the linkCatCode attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkCatCode value
+   * @param tmp The new linkCatCode value
    */
   public void setLinkCatCode(int tmp) {
     this.linkCatCode = tmp;
@@ -1230,9 +1355,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkCatCode attribute of the ActionPlanList object
+   * Sets the linkCatCode attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkCatCode value
+   * @param tmp The new linkCatCode value
    */
   public void setLinkCatCode(String tmp) {
     this.linkCatCode = Integer.parseInt(tmp);
@@ -1240,9 +1365,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the linkSubCat1 attribute of the ActionPlanList object
+   * Gets the linkSubCat1 attribute of the ActionPlanList object
    *
-   * @return    The linkSubCat1 value
+   * @return The linkSubCat1 value
    */
   public int getLinkSubCat1() {
     return linkSubCat1;
@@ -1250,9 +1375,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkSubCat1 attribute of the ActionPlanList object
+   * Sets the linkSubCat1 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkSubCat1 value
+   * @param tmp The new linkSubCat1 value
    */
   public void setLinkSubCat1(int tmp) {
     this.linkSubCat1 = tmp;
@@ -1260,9 +1385,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkSubCat1 attribute of the ActionPlanList object
+   * Sets the linkSubCat1 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkSubCat1 value
+   * @param tmp The new linkSubCat1 value
    */
   public void setLinkSubCat1(String tmp) {
     this.linkSubCat1 = Integer.parseInt(tmp);
@@ -1270,9 +1395,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the linkSubCat2 attribute of the ActionPlanList object
+   * Gets the linkSubCat2 attribute of the ActionPlanList object
    *
-   * @return    The linkSubCat2 value
+   * @return The linkSubCat2 value
    */
   public int getLinkSubCat2() {
     return linkSubCat2;
@@ -1280,9 +1405,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkSubCat2 attribute of the ActionPlanList object
+   * Sets the linkSubCat2 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkSubCat2 value
+   * @param tmp The new linkSubCat2 value
    */
   public void setLinkSubCat2(int tmp) {
     this.linkSubCat2 = tmp;
@@ -1290,9 +1415,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkSubCat2 attribute of the ActionPlanList object
+   * Sets the linkSubCat2 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkSubCat2 value
+   * @param tmp The new linkSubCat2 value
    */
   public void setLinkSubCat2(String tmp) {
     this.linkSubCat2 = Integer.parseInt(tmp);
@@ -1300,9 +1425,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the linkSubCat3 attribute of the ActionPlanList object
+   * Gets the linkSubCat3 attribute of the ActionPlanList object
    *
-   * @return    The linkSubCat3 value
+   * @return The linkSubCat3 value
    */
   public int getLinkSubCat3() {
     return linkSubCat3;
@@ -1310,9 +1435,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkSubCat3 attribute of the ActionPlanList object
+   * Sets the linkSubCat3 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkSubCat3 value
+   * @param tmp The new linkSubCat3 value
    */
   public void setLinkSubCat3(int tmp) {
     this.linkSubCat3 = tmp;
@@ -1320,9 +1445,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the linkSubCat3 attribute of the ActionPlanList object
+   * Sets the linkSubCat3 attribute of the ActionPlanList object
    *
-   * @param  tmp  The new linkSubCat3 value
+   * @param tmp The new linkSubCat3 value
    */
   public void setLinkSubCat3(String tmp) {
     this.linkSubCat3 = Integer.parseInt(tmp);
@@ -1330,29 +1455,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the tableName attribute of the ActionPlanList object
+   * Gets the jsEvent attribute of the ActionPlanList object
    *
-   * @return    The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Sets the tableName attribute of the ActionPlanList object
-   *
-   * @param  tmp  The new tableName value
-   */
-  public void setTableName(String tmp) {
-    this.tableName = tmp;
-  }
-
-
-  /**
-   *  Gets the jsEvent attribute of the ActionPlanList object
-   *
-   * @return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -1360,9 +1465,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the jsEvent attribute of the ActionPlanList object
+   * Sets the jsEvent attribute of the ActionPlanList object
    *
-   * @param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -1370,9 +1475,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the categoryId attribute of the ActionPlanList object
+   * Gets the categoryId attribute of the ActionPlanList object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -1380,9 +1485,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the ActionPlanList object
+   * Sets the categoryId attribute of the ActionPlanList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -1390,9 +1495,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the categoryId attribute of the ActionPlanList object
+   * Sets the categoryId attribute of the ActionPlanList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -1400,9 +1505,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the displayNone attribute of the ActionPlanList object
+   * Gets the displayNone attribute of the ActionPlanList object
    *
-   * @return    The displayNone value
+   * @return The displayNone value
    */
   public boolean getDisplayNone() {
     return displayNone;
@@ -1410,9 +1515,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the displayNone attribute of the ActionPlanList object
+   * Sets the displayNone attribute of the ActionPlanList object
    *
-   * @param  tmp  The new displayNone value
+   * @param tmp The new displayNone value
    */
   public void setDisplayNone(boolean tmp) {
     this.displayNone = tmp;
@@ -1420,9 +1525,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the displayNone attribute of the ActionPlanList object
+   * Sets the displayNone attribute of the ActionPlanList object
    *
-   * @param  tmp  The new displayNone value
+   * @param tmp The new displayNone value
    */
   public void setDisplayNone(String tmp) {
     this.displayNone = DatabaseUtils.parseBoolean(tmp);
@@ -1430,9 +1535,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the ActionPlanList object
+   * Gets the siteId attribute of the ActionPlanList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -1440,9 +1545,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the ActionPlanList object
+   * Sets the siteId attribute of the ActionPlanList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -1450,9 +1555,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the ActionPlanList object
+   * Sets the siteId attribute of the ActionPlanList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -1460,9 +1565,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the includeAllSites attribute of the ActionPlanList object
+   * Gets the includeAllSites attribute of the ActionPlanList object
    *
-   * @return    The includeAllSites value
+   * @return The includeAllSites value
    */
   public boolean getIncludeAllSites() {
     return includeAllSites;
@@ -1470,9 +1575,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the ActionPlanList object
+   * Sets the includeAllSites attribute of the ActionPlanList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(boolean tmp) {
     this.includeAllSites = tmp;
@@ -1480,9 +1585,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the includeAllSites attribute of the ActionPlanList object
+   * Sets the includeAllSites attribute of the ActionPlanList object
    *
-   * @param  tmp  The new includeAllSites value
+   * @param tmp The new includeAllSites value
    */
   public void setIncludeAllSites(String tmp) {
     this.includeAllSites = DatabaseUtils.parseBoolean(tmp);
@@ -1490,9 +1595,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Gets the exclusiveToSite attribute of the ActionPlanList object
+   * Gets the exclusiveToSite attribute of the ActionPlanList object
    *
-   * @return    The exclusiveToSite value
+   * @return The exclusiveToSite value
    */
   public boolean getExclusiveToSite() {
     return exclusiveToSite;
@@ -1500,9 +1605,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ActionPlanList object
+   * Sets the exclusiveToSite attribute of the ActionPlanList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(boolean tmp) {
     this.exclusiveToSite = tmp;
@@ -1510,9 +1615,9 @@ public class ActionPlanList extends ArrayList {
 
 
   /**
-   *  Sets the exclusiveToSite attribute of the ActionPlanList object
+   * Sets the exclusiveToSite attribute of the ActionPlanList object
    *
-   * @param  tmp  The new exclusiveToSite value
+   * @param tmp The new exclusiveToSite value
    */
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);

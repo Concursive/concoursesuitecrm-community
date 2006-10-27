@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.help.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -32,11 +33,84 @@ import java.util.ArrayList;
  * @created May 20, 2004
  */
 public class HelpModuleList extends ArrayList {
+  public final static String tableName = "help_module";
+  public final static String uniqueField = "module_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int moduleId = -1;
   private int categoryId = -1;
 
+  /**
+   * Sets the lastAnchor attribute of the HelpModuleList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the HelpModuleList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the HelpModuleList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the HelpModuleList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the HelpModuleList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the HelpModuleList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the HelpModuleList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    * Sets the pagedListInfo attribute of the HelpNoteList object
@@ -137,8 +211,8 @@ public class HelpModuleList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM help_module hm " +
-        "WHERE hm.module_id > -1 ");
+            "FROM help_module hm " +
+            "WHERE hm.module_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -164,8 +238,8 @@ public class HelpModuleList extends ArrayList {
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
         "module_id, hm.category_id as category_id, category, module_brief_description, module_detail_description " +
-        "FROM help_module hm, permission_category pc " +
-        "WHERE hm.category_id = pc.category_id ");
+            "FROM help_module hm, permission_category pc " +
+            "WHERE hm.category_id = pc.category_id ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -203,6 +277,17 @@ public class HelpModuleList extends ArrayList {
     if (categoryId > -1) {
       sqlFilter.append("AND hm.category_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -221,6 +306,17 @@ public class HelpModuleList extends ArrayList {
 
     if (categoryId > -1) {
       pst.setInt(++i, categoryId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

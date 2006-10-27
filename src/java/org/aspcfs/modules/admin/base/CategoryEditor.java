@@ -20,12 +20,7 @@ import org.aspcfs.modules.base.Category;
 import org.aspcfs.modules.base.CategoryList;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryDraft;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryDraftPlanMapList;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryPlanMapList;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryAssignment;
-import org.aspcfs.modules.troubletickets.base.TicketCategoryDraftAssignment;
+import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
@@ -37,12 +32,12 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
- *  Maintains Category Editors for various components
+ * Maintains Category Editors for various components
  *
- * @author     akhi_m
- * @created    May 22, 2003
- * @version    $Id: CategoryEditor.java,v 1.5 2004/04/01 16:14:05 mrajkowski Exp
- *      $
+ * @author akhi_m
+ * @version $Id: CategoryEditor.java,v 1.5 2004/04/01 16:14:05 mrajkowski Exp
+ *          $
+ * @created May 22, 2003
  */
 public class CategoryEditor {
 
@@ -54,6 +49,7 @@ public class CategoryEditor {
   private String tableName = null;
   private int level = -1;
   private String description = null;
+  private java.sql.Timestamp entered = null;
   private int maxLevels = -1;
   // Helper properties for working with editors
   private HashMap categoryList = new HashMap();
@@ -65,24 +61,25 @@ public class CategoryEditor {
 
 
   /**
-   *  Constructor for the CategoryEditor object
+   * Constructor for the CategoryEditor object
    */
-  public CategoryEditor() { }
+  public CategoryEditor() {
+  }
 
 
   /**
-   *  Constructor for the CategoryEditor object
+   * Constructor for the CategoryEditor object
    *
-   * @param  db                Description of the Parameter
-   * @param  constantId        Description of the Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
+   * @param db         Description of the Parameter
+   * @param constantId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public CategoryEditor(Connection db, int constantId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM category_editor_lookup " +
-        "WHERE constant_id = ? ");
+            "FROM category_editor_lookup " +
+            "WHERE constant_id = ? ");
     pst.setInt(1, constantId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -94,11 +91,11 @@ public class CategoryEditor {
 
 
   /**
-   *  Constructor for the CategoryEditor object
+   * Constructor for the CategoryEditor object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public CategoryEditor(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -106,10 +103,10 @@ public class CategoryEditor {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
@@ -118,16 +115,30 @@ public class CategoryEditor {
     tableName = rs.getString("table_name");
     level = rs.getInt("level");
     description = rs.getString("description");
-    //entered
+    entered = rs.getTimestamp("entered");
     categoryId = rs.getInt("category_id");
     maxLevels = rs.getInt("max_levels");
   }
 
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("id =" + id + "\n");
+    sb.append("moduleId =" + moduleId + "\n");
+    sb.append("constantId =" + constantId + "\n");
+    sb.append("tableName =" + tableName + "\n");
+    sb.append("level =" + level + "\n");
+    sb.append("description =" + description + "\n");
+    sb.append("entered =" + entered + "\n");
+    sb.append("categoryId =" + categoryId + "\n");
+    sb.append("maxLevels =" + maxLevels + "\n");
+
+    return sb.toString().trim();
+  }
 
   /**
-   *  Sets the id attribute of the CategoryEditor object
+   * Sets the id attribute of the CategoryEditor object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -135,9 +146,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the id attribute of the CategoryEditor object
+   * Sets the id attribute of the CategoryEditor object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -145,9 +156,39 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the moduleId attribute of the CategoryEditor object
+   * Gets the entered attribute of the CategoryEditor object
    *
-   * @param  tmp  The new moduleId value
+   * @return The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   * Sets the entered attribute of the CategoryEditor object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   * Sets the entered attribute of the CategoryEditor object
+   *
+   * @param tmp The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   * Sets the moduleId attribute of the CategoryEditor object
+   *
+   * @param tmp The new moduleId value
    */
   public void setModuleId(int tmp) {
     this.moduleId = tmp;
@@ -155,9 +196,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the moduleId attribute of the CategoryEditor object
+   * Sets the moduleId attribute of the CategoryEditor object
    *
-   * @param  tmp  The new moduleId value
+   * @param tmp The new moduleId value
    */
   public void setModuleId(String tmp) {
     this.moduleId = Integer.parseInt(tmp);
@@ -165,9 +206,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the categoryId attribute of the CategoryEditor object
+   * Sets the categoryId attribute of the CategoryEditor object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -175,9 +216,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the categoryId attribute of the CategoryEditor object
+   * Sets the categoryId attribute of the CategoryEditor object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -185,9 +226,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the constantId attribute of the CategoryEditor object
+   * Sets the constantId attribute of the CategoryEditor object
    *
-   * @param  tmp  The new constantId value
+   * @param tmp The new constantId value
    */
   public void setConstantId(int tmp) {
     this.constantId = tmp;
@@ -195,9 +236,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the constantId attribute of the CategoryEditor object
+   * Sets the constantId attribute of the CategoryEditor object
    *
-   * @param  tmp  The new constantId value
+   * @param tmp The new constantId value
    */
   public void setConstantId(String tmp) {
     this.constantId = Integer.parseInt(tmp);
@@ -205,9 +246,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the tableName attribute of the CategoryEditor object
+   * Sets the tableName attribute of the CategoryEditor object
    *
-   * @param  tmp  The new tableName value
+   * @param tmp The new tableName value
    */
   public void setTableName(String tmp) {
     this.tableName = tmp;
@@ -215,9 +256,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the level attribute of the CategoryEditor object
+   * Sets the level attribute of the CategoryEditor object
    *
-   * @param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -225,9 +266,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the level attribute of the CategoryEditor object
+   * Sets the level attribute of the CategoryEditor object
    *
-   * @param  tmp  The new level value
+   * @param tmp The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -235,9 +276,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the description attribute of the CategoryEditor object
+   * Sets the description attribute of the CategoryEditor object
    *
-   * @param  tmp  The new description value
+   * @param tmp The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -245,9 +286,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the maxLevels attribute of the CategoryEditor object
+   * Sets the maxLevels attribute of the CategoryEditor object
    *
-   * @param  tmp  The new maxLevels value
+   * @param tmp The new maxLevels value
    */
   public void setMaxLevels(int tmp) {
     this.maxLevels = tmp;
@@ -255,9 +296,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the maxLevels attribute of the CategoryEditor object
+   * Sets the maxLevels attribute of the CategoryEditor object
    *
-   * @param  tmp  The new maxLevels value
+   * @param tmp The new maxLevels value
    */
   public void setMaxLevels(String tmp) {
     this.maxLevels = Integer.parseInt(tmp);
@@ -265,9 +306,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the systemStatus attribute of the CategoryEditor object
+   * Sets the systemStatus attribute of the CategoryEditor object
    *
-   * @param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -275,9 +316,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the systemStatus attribute of the CategoryEditor object
+   * Gets the systemStatus attribute of the CategoryEditor object
    *
-   * @return    The systemStatus value
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -285,9 +326,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the id attribute of the CategoryEditor object
+   * Gets the id attribute of the CategoryEditor object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -295,9 +336,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the moduleId attribute of the CategoryEditor object
+   * Gets the moduleId attribute of the CategoryEditor object
    *
-   * @return    The moduleId value
+   * @return The moduleId value
    */
   public int getModuleId() {
     return moduleId;
@@ -305,9 +346,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the categoryId attribute of the CategoryEditor object
+   * Gets the categoryId attribute of the CategoryEditor object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -315,9 +356,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the constantId attribute of the CategoryEditor object
+   * Gets the constantId attribute of the CategoryEditor object
    *
-   * @return    The constantId value
+   * @return The constantId value
    */
   public int getConstantId() {
     return constantId;
@@ -325,9 +366,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the tableName attribute of the CategoryEditor object
+   * Gets the tableName attribute of the CategoryEditor object
    *
-   * @return    The tableName value
+   * @return The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -335,9 +376,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the level attribute of the CategoryEditor object
+   * Gets the level attribute of the CategoryEditor object
    *
-   * @return    The level value
+   * @return The level value
    */
   public int getLevel() {
     return level;
@@ -345,9 +386,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the description attribute of the CategoryEditor object
+   * Gets the description attribute of the CategoryEditor object
    *
-   * @return    The description value
+   * @return The description value
    */
   public String getDescription() {
     return description;
@@ -355,9 +396,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the maxLevels attribute of the CategoryEditor object
+   * Gets the maxLevels attribute of the CategoryEditor object
    *
-   * @return    The maxLevels value
+   * @return The maxLevels value
    */
   public int getMaxLevels() {
     return maxLevels;
@@ -365,9 +406,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the categoryList attribute of the CategoryEditor object
+   * Sets the categoryList attribute of the CategoryEditor object
    *
-   * @param  categoryList  The new categoryList value
+   * @param categoryList The new categoryList value
    */
   public void setCategoryList(HashMap categoryList) {
     this.categoryList = categoryList;
@@ -375,9 +416,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the hierarchyCheck attribute of the CategoryEditor object
+   * Sets the hierarchyCheck attribute of the CategoryEditor object
    *
-   * @param  hierarchyCheck  The new hierarchyCheck value
+   * @param hierarchyCheck The new hierarchyCheck value
    */
   public void setHierarchyCheck(java.util.Date hierarchyCheck) {
     this.hierarchyCheck = hierarchyCheck;
@@ -385,9 +426,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the hierarchyUpdating attribute of the CategoryEditor object
+   * Sets the hierarchyUpdating attribute of the CategoryEditor object
    *
-   * @param  hierarchyUpdating  The new hierarchyUpdating value
+   * @param hierarchyUpdating The new hierarchyUpdating value
    */
   public void setHierarchyUpdating(boolean hierarchyUpdating) {
     this.hierarchyUpdating = hierarchyUpdating;
@@ -395,9 +436,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the topCategoryList attribute of the CategoryEditor object
+   * Sets the topCategoryList attribute of the CategoryEditor object
    *
-   * @param  topCategoryList  The new topCategoryList value
+   * @param topCategoryList The new topCategoryList value
    */
   public void setTopCategoryList(TicketCategoryDraftList topCategoryList) {
     this.topCategoryList = topCategoryList;
@@ -405,9 +446,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the topCategoryList attribute of the CategoryEditor object
+   * Gets the topCategoryList attribute of the CategoryEditor object
    *
-   * @return    The topCategoryList value
+   * @return The topCategoryList value
    */
   public TicketCategoryDraftList getTopCategoryList() {
     return topCategoryList;
@@ -415,9 +456,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the hierarchyCheck attribute of the CategoryEditor object
+   * Gets the hierarchyCheck attribute of the CategoryEditor object
    *
-   * @return    The hierarchyCheck value
+   * @return The hierarchyCheck value
    */
   public java.util.Date getHierarchyCheck() {
     return hierarchyCheck;
@@ -425,9 +466,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the hierarchyUpdating attribute of the CategoryEditor object
+   * Gets the hierarchyUpdating attribute of the CategoryEditor object
    *
-   * @return    The hierarchyUpdating value
+   * @return The hierarchyUpdating value
    */
   public boolean getHierarchyUpdating() {
     return hierarchyUpdating;
@@ -435,18 +476,18 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the category attribute of the CategoryEditor object
+   * Gets the category attribute of the CategoryEditor object
    *
-   * @param  categoryId  Description of the Parameter
-   * @return             The category value
+   * @param categoryId Description of the Parameter
+   * @return The category value
    */
   public TicketCategoryDraft getCategory(int categoryId) {
     boolean flag = false;
-    synchronized(this) {
+    synchronized (this) {
       flag = hierarchyUpdating;
     }
     while (flag) {
-      synchronized(this) {
+      synchronized (this) {
         flag = hierarchyUpdating;
       }
     }
@@ -455,17 +496,17 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the categoryList attribute of the CategoryEditor object
+   * Gets the categoryList attribute of the CategoryEditor object
    *
-   * @return    The categoryList value
+   * @return The categoryList value
    */
   public HashMap getCategoryList() {
     boolean flag = false;
-    synchronized(this) {
+    synchronized (this) {
       flag = hierarchyUpdating;
     }
     while (flag) {
-      synchronized(this) {
+      synchronized (this) {
         flag = hierarchyUpdating;
       }
     }
@@ -474,9 +515,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Gets the siteId attribute of the CategoryEditor object
+   * Gets the siteId attribute of the CategoryEditor object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -484,9 +525,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the siteId attribute of the CategoryEditor object
+   * Sets the siteId attribute of the CategoryEditor object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -494,9 +535,9 @@ public class CategoryEditor {
 
 
   /**
-   *  Sets the siteId attribute of the CategoryEditor object
+   * Sets the siteId attribute of the CategoryEditor object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -504,10 +545,10 @@ public class CategoryEditor {
 
 
   /**
-   *  Build the draft categories
+   * Build the draft categories
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void build(Connection db) throws SQLException {
     categoryList.clear();
@@ -550,12 +591,12 @@ public class CategoryEditor {
 
 
   /**
-   *  Recursively add draft subcategories to a given draft category
+   * Recursively add draft subcategories to a given draft category
    *
-   * @param  parentCategory  The feature to be added to the SubCategories
-   *      attribute
-   * @param  fullList        The feature to be added to the SubCategories
-   *      attribute
+   * @param parentCategory The feature to be added to the SubCategories
+   *                       attribute
+   * @param fullList       The feature to be added to the SubCategories
+   *                       attribute
    */
   private void addSubCategories(TicketCategoryDraft parentCategory, TicketCategoryDraftList fullList) {
     if (parentCategory.getShortChildList() == null) {
@@ -574,10 +615,10 @@ public class CategoryEditor {
 
 
   /**
-   *  Rebuilds the draft category list
+   * Rebuilds the draft category list
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void update(Connection db) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
@@ -600,13 +641,13 @@ public class CategoryEditor {
 
 
   /**
-   *  Updates all categories at a given level
+   * Updates all categories at a given level
    *
-   * @param  catList        Description of the Parameter
-   * @param  parentCode     Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param catList    Description of the Parameter
+   * @param parentCode Description of the Parameter
+   * @param db         Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateCategory(Connection db, String catList, int parentCode) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
@@ -670,12 +711,12 @@ public class CategoryEditor {
 
 
   /**
-   *  Recursively disables all categories under a given category
+   * Recursively disables all categories under a given category
    *
-   * @param  thisCategory   Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  enabled        Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param thisCategory Description of the Parameter
+   * @param db           Description of the Parameter
+   * @param enabled      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void toggleSubCategories(Connection db, TicketCategoryDraft thisCategory, boolean enabled) throws SQLException {
     //remove from universal list
@@ -713,10 +754,10 @@ public class CategoryEditor {
 
 
   /**
-   *  Resets the draft list to the active one.
+   * Resets the draft list to the active one.
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void reset(Connection db) throws SQLException {
     CategoryList activeTopCategoryList = new CategoryList(tableName);
@@ -763,13 +804,13 @@ public class CategoryEditor {
 
 
   /**
-   *  Recursively copies data from an active category to a draft category at the
-   *  database level.
+   * Recursively copies data from an active category to a draft category at the
+   * database level.
    *
-   * @param  db              Description of the Parameter
-   * @param  activeCategory  Description of the Parameter
-   * @param  parentCode      Description of the Parameter
-   * @throws  SQLException   Description of the Exception
+   * @param db             Description of the Parameter
+   * @param activeCategory Description of the Parameter
+   * @param parentCode     Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void copyCategory(Connection db, Category activeCategory, int parentCode) throws SQLException {
     TicketCategoryDraft draftCategory = new TicketCategoryDraft();
@@ -809,12 +850,12 @@ public class CategoryEditor {
 
 
   /**
-   *  Builds active subcategories for a given category
+   * Builds active subcategories for a given category
    *
-   * @param  parentCategory  The feature to be added to the ActiveSubCategories
-   *      attribute
-   * @param  fullList        The feature to be added to the ActiveSubCategories
-   *      attribute
+   * @param parentCategory The feature to be added to the ActiveSubCategories
+   *                       attribute
+   * @param fullList       The feature to be added to the ActiveSubCategories
+   *                       attribute
    */
   private void addActiveSubCategories(Category parentCategory, CategoryList fullList) {
     if (parentCategory.getShortChildList() == null) {
@@ -832,11 +873,11 @@ public class CategoryEditor {
 
 
   /**
-   *  Activates the draft categories
+   * Activates the draft categories
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean activate(Connection db) throws SQLException {
     Iterator i = topCategoryList.iterator();
@@ -849,12 +890,12 @@ public class CategoryEditor {
 
 
   /**
-   *  Recursively activate a given category
+   * Recursively activate a given category
    *
-   * @param  db             Description of the Parameter
-   * @param  draftCategory  Description of the Parameter
-   * @param  parentCode     Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db            Description of the Parameter
+   * @param draftCategory Description of the Parameter
+   * @param parentCode    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void activateCategory(Connection db, TicketCategoryDraft draftCategory, int parentCode) throws SQLException {
     Category activeCategory = null;
@@ -939,20 +980,20 @@ public class CategoryEditor {
 
 
   /**
-   *  Returns a list of hierarchy from the top of a given category
+   * Returns a list of hierarchy from the top of a given category
    *
-   * @param  categoryId  Description of the Parameter
-   * @return             The hierarchyAsList value
+   * @param categoryId Description of the Parameter
+   * @return The hierarchyAsList value
    */
   public HashMap getHierarchyAsList(int categoryId) {
     int parentCode = categoryId;
     HashMap thisHierarchy = new HashMap();
     boolean flag = false;
-    synchronized(this) {
+    synchronized (this) {
       flag = hierarchyUpdating;
     }
     while (flag) {
-      synchronized(this) {
+      synchronized (this) {
         flag = hierarchyUpdating;
       }
     }
@@ -969,10 +1010,10 @@ public class CategoryEditor {
 
 
   /**
-   *  Returns a list of immediate dependencies that a category has
+   * Returns a list of immediate dependencies that a category has
    *
-   * @param  catList  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param catList Description of the Parameter
+   * @return Description of the Return Value
    */
   public DependencyList processDependencies(String catList) {
     DependencyList dependencyList = new DependencyList();
@@ -998,18 +1039,18 @@ public class CategoryEditor {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "category_editor_lookup_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO category_editor_lookup " +
-        "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, table_name, " + DatabaseUtils.addQuotes(db, "level") +
-        ", description, category_id, max_levels) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
+            "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, table_name, " + DatabaseUtils.addQuotes(db, "level") +
+            ", description, category_id, max_levels) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);

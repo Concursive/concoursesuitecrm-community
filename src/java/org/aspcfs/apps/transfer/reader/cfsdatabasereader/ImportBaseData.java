@@ -15,16 +15,24 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
+import com.zeroio.webdav.base.WebdavModuleList;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.AccessLogList;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ImportList;
+import org.aspcfs.modules.base.NotificationMessageList;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.mycfs.base.CFSNoteList;
+import org.aspcfs.modules.system.base.DatabaseVersion;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -32,8 +40,8 @@ import java.util.Iterator;
  * created each item.
  *
  * @author matt rajkowski
- * @version $Id: ImportBaseData.java,v 1.33 2002/10/24 16:44:46 mrajkowski Exp
- *          $
+ * @version $Id: ImportBaseData.java,v 1.33 2002/10/24 16:44:46 mrajkowski
+ *          Exp $
  * @created September 4, 2002
  */
 public class ImportBaseData implements CFSDatabaseReaderImportModule {
@@ -57,12 +65,16 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     boolean processOK = true;
     boolean contactOK = true;
 
-    //Copy Users
-    logger.info("ImportBaseData-> Inserting users");
-    UserList userList = new UserList();
-    User baseUser = new User(db, "0");
-    userList.add(baseUser);
+    if (!processCustomLookups(writer, db, mappings)) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Users");
     writer.setAutoCommit(false);
+    User baseUser = new User(db, "0");
+    UserList userList = new UserList();
+    userList.buildList(db);
+    userList.add(baseUser);
     this.saveUserList(db, userList);
     processOK = writer.commit();
     userList = null;
@@ -71,8 +83,9 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       return false;
     }
 
-    logger.info("ImportBaseData-> Inserting access log records");
+    logger.info("ImportBaseData-> Inserting Access Log records");
     writer.setAutoCommit(false);
+    writer.initialize();
     AccessLogList accessLog = new AccessLogList();
     accessLog.buildList(db);
     mappings.saveList(writer, accessLog, "insert");
@@ -81,112 +94,354 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       return false;
     }
 
-    //Copy Accounts
-    logger.info("ImportBaseData-> Inserting accounts");
+    logger.info("ImportBaseData-> Inserting Usage records");
     writer.setAutoCommit(false);
-    Organization myCompany = new Organization(db, 0);
-    writer.save(mappings.createDataRecord(myCompany, "insert"));
+    writer.initialize();
+    UsageList usageList = new UsageList();
+    usageList.buildList(db);
+    mappings.saveList(writer, usageList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
 
+    logger.info("ImportBaseData-> Inserting Contact Types");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupContactTypes");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Sub-Segment Lookup");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupSubSegment");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting State records");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "state");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Accounts");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    Organization myCompany = new Organization(db, 0);
+    //Build a list of accounts
     OrganizationList accounts = new OrganizationList();
     accounts.setShowMyCompany(false);
     accounts.setIncludeEnabled(-1);
+    accounts.setExcludeUnapprovedAccounts(false);
     accounts.buildList(db);
-    mappings.saveList(writer, accounts, "insert");
-    processOK = writer.commit();
+
+    //Build a list of trashed accounts
+    OrganizationList trashedAccounts = new OrganizationList();
+    trashedAccounts.setShowMyCompany(false);
+    trashedAccounts.setIncludeEnabled(-1);
+    trashedAccounts.setExcludeUnapprovedAccounts(false);
+    trashedAccounts.setIncludeOnlyTrashed(true);
+    trashedAccounts.buildList(db);
+
+    accounts.add(myCompany);
+    accounts.addAll(trashedAccounts);
+
+    processOK = this.saveOrgList(db, accounts);
     if (!processOK) {
       return false;
     }
 
-    writer.setAutoCommit(true);
-    logger.info("ImportBaseData-> Inserting Account Type Levels");
-    processOK = ImportLookupTables.saveCustomLookupList(
-        writer, db, mappings, "accountTypeLevels");
-    if (!processOK) {
-      return false;
-    }
-
-    //Organization Phone?
-    logger.info("ImportBaseData-> Inserting account phone numbers");
+    logger.info("ImportBaseData-> Inserting Contacts");
     writer.setAutoCommit(false);
-    OrganizationPhoneNumberList phoneList = new OrganizationPhoneNumberList();
-    phoneList.buildList(db);
-    mappings.saveList(writer, phoneList, "insert");
-    processOK = writer.commit();
-    if (!processOK) {
-      return false;
-    }
-
-    //Organization email
-    logger.info("ImportBaseData-> Inserting account emails");
-    writer.setAutoCommit(false);
-    OrganizationEmailAddressList emailList = new OrganizationEmailAddressList();
-    emailList.buildList(db);
-    mappings.saveList(writer, emailList, "insert");
-    processOK = writer.commit();
-    if (!processOK) {
-      return false;
-    }
-
-    //Organization address
-    logger.info("ImportBaseData-> Inserting account addresses");
-    writer.setAutoCommit(false);
-    OrganizationAddressList addrList = new OrganizationAddressList();
-    addrList.buildList(db);
-    mappings.saveList(writer, addrList, "insert");
-    processOK = writer.commit();
-    if (!processOK) {
-      return false;
-    }
-
-    //Copy Contacts
-    logger.info("ImportBaseData-> Inserting contacts");
-    writer.setAutoCommit(false);
+    writer.initialize();
     ContactList contacts = new ContactList();
-    contacts.setIncludeEnabled(-1);
-    contacts.setAllContacts(true);
     contacts.setIncludeAllSites(true);
+    contacts.setIncludeEnabled(Constants.UNDEFINED);
+    contacts.setExcludeUnapprovedContacts(false);
+    contacts.setShowTrashedAndNormal(true);
+    contacts.setPersonalId(ContactList.IGNORE_PERSONAL);
     contacts.buildList(db);
-    mappings.saveList(writer, contacts, "insert");
-
-    processOK = writer.commit();
+    processOK = this.saveContactList(db, contacts);
     if (!processOK) {
       return false;
     }
 
-    //Contact Phone?
-    logger.info("ImportBaseData-> Inserting contact phone numbers");
+    logger.info("ImportBaseData-> Inserting Skipped Leads Information");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "contactLeadSkippedMap");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Leads Read Information");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "contactLeadReadMap");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Roles");
+    RoleList roles = new RoleList();
+    roles.setEnabledState(-1);
+    roles.buildList(db);
+    processOK = mappings.saveList(writer, roles, "insert");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Permission Categories");
+    PermissionCategoryList categories = new PermissionCategoryList();
+    categories.buildList(db);
+    processOK = mappings.saveList(writer, categories, "insert");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Permissions");
+    PermissionList permissions = new PermissionList();
+    permissions.setEnabled(Constants.UNDEFINED);
+    permissions.buildList(db);
+    processOK = mappings.saveList(writer, permissions, "insert");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Role Permissions");
+    processOK = mappings.saveList(writer,
+        RolePermissionList.recordList(db),
+        "insert");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting News");
     writer.setAutoCommit(false);
-    ContactPhoneNumberList phoneList2 = new ContactPhoneNumberList();
-    phoneList2.buildList(db);
-    mappings.saveList(writer, phoneList2, "insert");
+    writer.initialize();
+    NewsArticleList newsArticleList = new NewsArticleList();
+    newsArticleList.buildList(db);
+    mappings.saveList(writer, newsArticleList, "insert");
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
 
-    //Contact email
-    logger.info("ImportBaseData-> Inserting contact emails");
+    logger.info("ImportBaseData-> Inserting Notifications");
     writer.setAutoCommit(false);
-    ContactEmailAddressList emailList2 = new ContactEmailAddressList();
-    emailList2.buildList(db);
-    mappings.saveList(writer, emailList2, "insert");
+    writer.initialize();
+    NotificationMessageList notifications = new NotificationMessageList();
+    notifications.buildList(db);
+    mappings.saveList(writer, notifications, "insert");
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
 
-    //Contact address
-    logger.info("ImportBaseData-> Inserting contact addresses");
+    logger.info("ImportBaseData-> Inserting CFS Notes");
     writer.setAutoCommit(false);
-    ContactAddressList addrList2 = new ContactAddressList();
-    addrList2.buildList(db);
-    mappings.saveList(writer, addrList2, "insert");
+    writer.initialize();
+    CFSNoteList noteList = new CFSNoteList();
+    noteList.setBuildAll(true);
+    noteList.buildList(db);
+    mappings.saveList(writer, noteList, "insert");
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
+
+    logger.info("ImportBaseData-> Inserting CFSNote Link records");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "cfsNoteLink");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Account Type Levels");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    mappings.saveList(writer, AccountTypeLevel.recordList(db), "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting contact Type Levels");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "contactTypeLevels");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Lookup Lists lookup");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupListsLookup");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Webdav");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    WebdavModuleList webdavModuleList = new WebdavModuleList();
+    webdavModuleList.buildList(db);
+    mappings.saveList(writer, new ArrayList(webdavModuleList.values()), "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting CategoryEditor records");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "categoryEditorLookup");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Viewpoint");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    ViewpointList viewpointList = new ViewpointList();
+    viewpointList.buildList(db);
+    mappings.saveList(writer, viewpointList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Viewpoint Permissions");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    mappings.saveList(writer, ViewpointPermissionList.recordList(db), "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Import");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    ImportList importList = new ImportList();
+    importList.setIgnoreStatusId(-1);//fetches all records without filtering based on status
+    importList.setBuildFileDetails(false);
+    importList.buildList(db);
+    mappings.saveList(writer, importList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    //Database Version
+    logger.info("ImportBaseData-> Inserting Database Versions");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    mappings.saveList(writer, DatabaseVersion.recordList(db), "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    //Contact and Account History
+    logger.info("ImportBaseData-> Inserting history");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    ContactHistoryList contactHistoryList = new ContactHistoryList();
+    contactHistoryList.setDefaultFilters(true);
+    contactHistoryList.setShowDisabledWithEnabled(true);
+    contactHistoryList.buildList(db);
+    mappings.saveList(writer, contactHistoryList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting User Groups");
+    writer.setAutoCommit(false);
+    writer.initialize();
+    UserGroupList userGroupList = new UserGroupList();
+    userGroupList.buildList(db);
+    mappings.saveList(writer, userGroupList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting User Group Map");
+    writer.setAutoCommit(true);
+    writer.initialize();
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "userGroupMap");
+    if (!processOK) {
+      return false;
+    }
+
+    this.updateUserList(db);
 
     return true;
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param writer   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param mappings Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  private boolean processCustomLookups(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
+    writer.setAutoCommit(true);
+    writer.initialize();
+    boolean processOK = true;
+
+    logger.info("ImportBaseData-> Inserting Access Type");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupAccessTypes");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Industry Types");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupIndustry");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Site IDs");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupSiteId");
+    if (!processOK) {
+      return false;
+    }
+
+    logger.info("ImportBaseData-> Inserting Stage Types");
+    processOK = ImportLookupTables.saveCustomLookupList(
+        writer, db, mappings, "lookupStage");
+    if (!processOK) {
+      return false;
+    }
+
+    return processOK;
   }
 
 
@@ -203,17 +458,59 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       User thisUser = (User) users.next();
       DataRecord thisRecord = mappings.createDataRecord(thisUser, "insert");
       thisRecord.removeField("enteredBy");
+      thisRecord.removeField("modifiedBy");
       thisRecord.removeField("contactId");
       thisRecord.removeField("roleId");
       thisRecord.removeField("managerId");
       thisRecord.removeField("assistant");
       thisRecord.removeField("alias");
+      thisRecord.addField("addContact", "false");
       writer.save(thisRecord);
+    }
+  }
 
-      UserList newUserList = new UserList();
-      newUserList.setEnteredBy(thisUser.getId());
-      newUserList.buildList(db);
-      saveUserList(db, newUserList);
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  private void updateUserList(Connection db) throws SQLException {
+    HashMap userIdHash = new HashMap();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT contact_id, user_id " +
+            "FROM contact c " +
+            "WHERE c.user_id > 0 ");
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      userIdHash.put(
+          String.valueOf(rs.getInt("user_id")),
+          String.valueOf(rs.getInt("contact_id"))
+      );
+    }
+    rs.close();
+    pst.close();
+
+    //Update the user records now that they all exist
+    User firstUser = new User(db, "0");
+
+    UserList finalUserList = new UserList();
+    finalUserList.buildList(db);
+    finalUserList.add(firstUser);
+
+    Iterator users = finalUserList.iterator();
+    while (users.hasNext()) {
+      User thisUser = (User) users.next();
+      DataRecord thisRecord = mappings.createDataRecord(thisUser, "update");
+      if (userIdHash.containsKey(String.valueOf(thisUser.getId()))) {
+        thisRecord.removeField("contactId");
+        thisRecord.addField("contactId",
+            (String) userIdHash.get(String.valueOf(thisUser.getId())));
+      }
+      thisRecord.removeField("isXMLObject");
+      thisRecord.addField("isXMLObject", "true");
+      writer.save(thisRecord);
     }
   }
 
@@ -223,16 +520,16 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
    *
    * @param db          Description of the Parameter
    * @param contactList Description of the Parameter
+   * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private void saveContactList(Connection db, ContactList contactList) throws SQLException {
+  private boolean saveContactList(Connection db, ContactList contactList) throws SQLException {
     Iterator contacts = contactList.iterator();
 
     while (contacts.hasNext()) {
       Contact thisContact = (Contact) contacts.next();
       DataRecord thisRecord = mappings.createDataRecord(thisContact, "insert");
       writer.save(thisRecord);
-
       writer.commit();
 
       ContactEmailAddressList emailList = new ContactEmailAddressList();
@@ -282,7 +579,38 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
         writer.commit();
       }
 
+      ContactInstantMessageAddressList contactInstantMessageAddressList = new ContactInstantMessageAddressList();
+      contactInstantMessageAddressList.setContactId(thisContact.getId());
+      contactInstantMessageAddressList.buildList(db);
+
+      logger.info(
+          "ImportBaseData-> Inserting " + contactInstantMessageAddressList.size() + " Contact IM Addresses");
+
+      Iterator imAddresses = contactInstantMessageAddressList.iterator();
+      while (imAddresses.hasNext()) {
+        ContactInstantMessageAddress imAddress = (ContactInstantMessageAddress) imAddresses.next();
+        DataRecord imAddrRecord = mappings.createDataRecord(imAddress, "insert");
+        writer.save(imAddrRecord);
+        writer.commit();
+      }
+
+      ContactTextMessageAddressList contactTextMessageAddressList = new ContactTextMessageAddressList();
+      contactTextMessageAddressList.setContactId(thisContact.getId());
+      contactTextMessageAddressList.buildList(db);
+
+      logger.info(
+          "ImportBaseData-> Inserting " + contactTextMessageAddressList.size() + " Contact Text Msg Addresses");
+
+      Iterator textMsgAddrs = contactTextMessageAddressList.iterator();
+      while (textMsgAddrs.hasNext()) {
+        ContactTextMessageAddress textMsgAddr = (ContactTextMessageAddress) textMsgAddrs.next();
+        DataRecord textMsgAddrRec = mappings.createDataRecord(textMsgAddr, "insert");
+        writer.save(textMsgAddrRec);
+        writer.commit();
+      }
     }
+
+    return true;
   }
 
 
@@ -291,14 +619,16 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
    *
    * @param db      Description of the Parameter
    * @param orgList Description of the Parameter
+   * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private void saveOrgList(Connection db, OrganizationList orgList) throws SQLException {
+  private boolean saveOrgList(Connection db, OrganizationList orgList) throws SQLException {
     Iterator orgs = orgList.iterator();
 
     while (orgs.hasNext()) {
       Organization thisOrg = (Organization) orgs.next();
       DataRecord thisRecord = mappings.createDataRecord(thisOrg, "insert");
+      thisRecord.addField("insertPrimaryContact", "false");
       writer.save(thisRecord);
       writer.commit();
 
@@ -349,9 +679,9 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
         writer.save(anotherRecord);
         writer.commit();
       }
-
     }
-  }
 
+    return true;
+  }
 }
 

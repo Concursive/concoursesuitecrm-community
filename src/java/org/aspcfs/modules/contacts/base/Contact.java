@@ -98,6 +98,7 @@ public class Contact extends GenericBean {
   private String nameMiddle = "";
   private String nameLast = "";
   private String nameSuffix = "";
+  private int assistant = -1;
   private String additionalNames = "";
   private String nickname = "";
   private String role = "";
@@ -722,6 +723,16 @@ public class Contact extends GenericBean {
 
 
   /**
+   * Sets the employee attribute of the Contact object
+   *
+   * @param tmp The new employee value
+   */
+  public void setEmployee(String tmp) {
+    this.employee = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    * Sets the noMail attribute of the Contact object
    *
    * @param tmp The new noMail value
@@ -1318,9 +1329,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Employees attribute of the Organization object
+   * Gets the Employees attribute of the Organization object
    *
-   * @return    The Employees value
+   * @return The Employees value
    */
   public int getEmployees() {
     return employees;
@@ -1342,13 +1353,13 @@ public class Contact extends GenericBean {
     return yearStarted;
   }
 
-	public void setSicDescription(String tmp) {
-		this.sicDescription = tmp;
-	}
-	
-	public String getSicDescription() {
-		return sicDescription;
-	}
+  public void setSicDescription(String tmp) {
+    this.sicDescription = tmp;
+  }
+
+  public String getSicDescription() {
+    return sicDescription;
+  }
 
   /**
    * @param businessNameTwo the businessNameTwo to set
@@ -1383,9 +1394,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the Employees attribute of the Organization object
+   * Sets the Employees attribute of the Organization object
    *
-   * @param  employees  The new Employees value
+   * @param employees The new Employees value
    */
   public void setEmployees(String employees) {
     try {
@@ -1424,14 +1435,14 @@ public class Contact extends GenericBean {
    * @param yearStarted the yearStarted to set
    */
   public void setYearStarted(String yearStarted) {
-    if(!"".equals(yearStarted)&& yearStarted!= null){
-    this.yearStarted = Integer.parseInt(yearStarted);
+    if (!"".equals(yearStarted) && yearStarted != null) {
+      this.yearStarted = Integer.parseInt(yearStarted);
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
    * @param db Description of the Parameter
    * @throws SQLException Description of the Exception
@@ -1721,6 +1732,36 @@ public class Contact extends GenericBean {
    */
   public void setNameSuffix(String tmp) {
     this.nameSuffix = tmp;
+  }
+
+
+  /**
+   * Gets the assistant attribute of the Contact object
+   *
+   * @return The assistant value
+   */
+  public int getAssistant() {
+    return assistant;
+  }
+
+
+  /**
+   * Sets the assistant attribute of the Contact object
+   *
+   * @param tmp The new assistant value
+   */
+  public void setAssistant(int tmp) {
+    this.assistant = tmp;
+  }
+
+
+  /**
+   * Sets the assistant attribute of the Contact object
+   *
+   * @param tmp The new assistant value
+   */
+  public void setAssistant(String tmp) {
+    this.assistant = Integer.parseInt(tmp);
   }
 
 
@@ -3319,9 +3360,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the assignedDate attribute of the Contact object
+   * Gets the assignedDate attribute of the Contact object
    *
-   * @return    The assignedDate value
+   * @return The assignedDate value
    */
   public java.sql.Timestamp getAssignedDate() {
     return assignedDate;
@@ -3329,9 +3370,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the assignedDate attribute of the Contact object
+   * Sets the assignedDate attribute of the Contact object
    *
-   * @param  tmp  The new assignedDate value
+   * @param tmp The new assignedDate value
    */
   public void setAssignedDate(java.sql.Timestamp tmp) {
     this.assignedDate = tmp;
@@ -3339,9 +3380,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the assignedDate attribute of the Contact object
+   * Sets the assignedDate attribute of the Contact object
    *
-   * @param  tmp  The new assignedDate value
+   * @param tmp The new assignedDate value
    */
   public void setAssignedDate(String tmp) {
     this.assignedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -3349,9 +3390,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the leadTrashedDate attribute of the Contact object
+   * Gets the leadTrashedDate attribute of the Contact object
    *
-   * @return    The leadTrashedDate value
+   * @return The leadTrashedDate value
    */
   public java.sql.Timestamp getLeadTrashedDate() {
     return leadTrashedDate;
@@ -3359,9 +3400,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the leadTrashedDate attribute of the Contact object
+   * Sets the leadTrashedDate attribute of the Contact object
    *
-   * @param  tmp  The new leadTrashedDate value
+   * @param tmp The new leadTrashedDate value
    */
   public void setLeadTrashedDate(java.sql.Timestamp tmp) {
     this.leadTrashedDate = tmp;
@@ -3369,9 +3410,9 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the leadTrashedDate attribute of the Contact object
+   * Sets the leadTrashedDate attribute of the Contact object
    *
-   * @param  tmp  The new leadTrashedDate value
+   * @param tmp The new leadTrashedDate value
    */
   public void setLeadTrashedDate(String tmp) {
     this.leadTrashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -3379,7 +3420,7 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the siteName attribute of the Contact object
+   * Gets the siteName attribute of the Contact object
    *
    * @return The siteName value
    */
@@ -3506,7 +3547,7 @@ public class Contact extends GenericBean {
       }
       sql.append(
           "additional_names, nickname, birthdate, " + DatabaseUtils.addQuotes(db, "role") + ", site_id, " +
-          "revenue, industry_temp_code, potential, ");
+              "revenue, industry_temp_code, potential, ");
       sql.append("employees, duns_type, duns_number, business_name_two, year_started, sic_code, sic_description, ");
 
       if (this.getIsLead()) {
@@ -3700,14 +3741,12 @@ public class Contact extends GenericBean {
         db.setAutoCommit(false);
       }
       resultCount = this.update(db, false);
-      if (this.getPrimaryContact() && !this.getIsLead() && !this.getEmployee())
-      {
+      if (this.getPrimaryContact() && !this.getIsLead() && !this.getEmployee()) {
         Organization thisOrg = new Organization(db, this.getOrgId());
         if (!((thisOrg.getNameFirst() != null && this.getNameFirst() != null && thisOrg.getNameFirst().equals(this.getNameFirst())) &&
             (thisOrg.getNameLast() != null && this.getNameLast() != null && thisOrg.getNameLast().equals(this.getNameLast())) &&
             (thisOrg.getNameMiddle() != null && this.getNameMiddle() != null && thisOrg.getNameMiddle().equals(this.getNameMiddle()))) ||
-            (thisOrg.getOwnerId() != this.getOwner() && this.getLeadStatus() > -1))
-        {
+            (thisOrg.getOwnerId() != this.getOwner() && this.getLeadStatus() > -1)) {
           thisOrg.setNameFirst(this.getNameFirst());
           thisOrg.setNameLast(this.getNameLast());
           thisOrg.setNameMiddle(this.getNameMiddle());
@@ -4562,12 +4601,14 @@ public class Contact extends GenericBean {
     orgId = DatabaseUtils.getInt(rs, "org_id");
     company = rs.getString("company");
     title = rs.getString("title");
-    department = DatabaseUtils.getInt(rs, "department", 0);
+    //TODO: Determine why department was made to default to 0? department = DatabaseUtils.getInt(rs, "department", 0);
+    department = DatabaseUtils.getInt(rs, "department");
     nameSalutation = rs.getString("namesalutation");
     nameLast = rs.getString("namelast");
     nameFirst = rs.getString("namefirst");
     nameMiddle = rs.getString("namemiddle");
     nameSuffix = rs.getString("namesuffix");
+    assistant = DatabaseUtils.getInt(rs, "assistant");
     notes = rs.getString("notes");
     site = rs.getString("site");
     locale = rs.getInt("locale");

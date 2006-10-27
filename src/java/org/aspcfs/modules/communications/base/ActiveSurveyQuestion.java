@@ -46,6 +46,67 @@ public class ActiveSurveyQuestion {
   private SurveyAnswerList answerList = null;
   private ArrayList responseTotals = new ArrayList();
   LinkedHashMap comments = null;
+  private boolean recordItems = true;
+
+
+  /**
+   * Gets the recordItems attribute of the ActiveSurveyQuestion object
+   *
+   * @return The recordItems value
+   */
+  public boolean getRecordItems() {
+    return recordItems;
+  }
+
+
+  /**
+   * Sets the recordItems attribute of the ActiveSurveyQuestion object
+   *
+   * @param tmp The new recordItems value
+   */
+  public void setRecordItems(boolean tmp) {
+    this.recordItems = tmp;
+  }
+
+
+  /**
+   * Sets the recordItems attribute of the ActiveSurveyQuestion object
+   *
+   * @param tmp The new recordItems value
+   */
+  public void setRecordItems(String tmp) {
+    this.recordItems = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Sets the position attribute of the ActiveSurveyQuestion object
+   *
+   * @param tmp The new position value
+   */
+  public void setPosition(String tmp) {
+    this.position = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the average attribute of the ActiveSurveyQuestion object
+   *
+   * @param tmp The new average value
+   */
+  public void setAverage(String tmp) {
+    this.average = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   * Sets the required attribute of the ActiveSurveyQuestion object
+   *
+   * @param tmp The new required value
+   */
+  public void setRequired(String tmp) {
+    this.required = DatabaseUtils.parseBoolean(tmp);
+  }
 
 
   /**
@@ -73,6 +134,7 @@ public class ActiveSurveyQuestion {
    * Constructor for the ActiveSurveyQuestion object
    *
    * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ActiveSurveyQuestion(ResultSet rs) throws SQLException {
@@ -397,6 +459,17 @@ public class ActiveSurveyQuestion {
   /**
    * Description of the Method
    *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void insert(Connection db) throws SQLException {
+    insert(db, this.activeSurveyId);
+  }
+
+
+  /**
+   * Description of the Method
+   *
    * @param db             Description of the Parameter
    * @param activeSurveyId Description of the Parameter
    * @throws SQLException Description of the Exception
@@ -407,9 +480,9 @@ public class ActiveSurveyQuestion {
     int i = 0;
     pst = db.prepareStatement(
         "INSERT INTO active_survey_questions " +
-        "(" + (id > -1 ? "question_id, " : "") + "active_survey_id, " + DatabaseUtils.addQuotes(db, "type")+ ", description, required, " + DatabaseUtils.addQuotes(db, "position")+ ") " +
-        "VALUES " +
-        "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+            "(" + (id > -1 ? "question_id, " : "") + "active_survey_id, " + DatabaseUtils.addQuotes(db, "type") + ", description, required, " + DatabaseUtils.addQuotes(db, "position") + ") " +
+            "VALUES " +
+            "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
     if (id > -1) {
       pst.setInt(++i, id);
     }
@@ -422,11 +495,13 @@ public class ActiveSurveyQuestion {
     pst.close();
     this.setId(
         DatabaseUtils.getCurrVal(db, "active_survey_q_question_id_seq", id));
-    if (this.getType() == SurveyQuestion.ITEMLIST) {
-      Iterator y = this.getItemList().iterator();
-      while (y.hasNext()) {
-        ActiveSurveyQuestionItem thisItem = (ActiveSurveyQuestionItem) y.next();
-        thisItem.insert(db, this.getId());
+    if (recordItems) {
+      if (this.getType() == SurveyQuestion.ITEMLIST) {
+        Iterator y = this.getItemList().iterator();
+        while (y.hasNext()) {
+          ActiveSurveyQuestionItem thisItem = (ActiveSurveyQuestionItem) y.next();
+          thisItem.insert(db, this.getId());
+        }
       }
     }
   }
@@ -443,8 +518,8 @@ public class ActiveSurveyQuestion {
   public void update(Connection db, int activeSurveyId, int surveyType) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE active_survey_questions " +
-        "SET active_survey_id = ?, " + DatabaseUtils.addQuotes(db, "type")+ " = ?, description = ?, required = ?, " + DatabaseUtils.addQuotes(db, "position")+ " = ? " +
-        "WHERE question_id = ? ");
+            "SET active_survey_id = ?, " + DatabaseUtils.addQuotes(db, "type") + " = ?, description = ?, required = ?, " + DatabaseUtils.addQuotes(db, "position") + " = ? " +
+            "WHERE question_id = ? ");
     int i = 0;
     pst.setInt(++i, activeSurveyId);
     pst.setInt(++i, surveyType);

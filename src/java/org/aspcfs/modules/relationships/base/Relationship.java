@@ -16,13 +16,12 @@
 package org.aspcfs.modules.relationships.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
-
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.modules.actionplans.base.ActionItemWork;
 import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
@@ -30,11 +29,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Represents a relationship
+ * Represents a relationship
  *
- * @author     Mathur
- * @version    $id:exp$
- * @created    August 11, 2004
+ * @author Mathur
+ * @version $id:exp$
+ * @created August 11, 2004
  */
 public class Relationship extends GenericBean {
   private int id = -1;
@@ -55,18 +54,19 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Constructor for the Relationship object
+   * Constructor for the Relationship object
    */
-  public Relationship() { }
+  public Relationship() {
+  }
 
 
   /**
-   *  Constructor for the Relationship object
+   * Constructor for the Relationship object
    *
-   * @param  db                Description of the Parameter
-   * @param  thisId            Description of the Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
+   * @param db     Description of the Parameter
+   * @param thisId Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public Relationship(Connection db, int thisId) throws SQLException {
     if (thisId == -1) {
@@ -75,11 +75,11 @@ public class Relationship extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT r.relationship_id, r.type_id, r.object_id_maps_from, r.category_id_maps_from, " +
-        "r.object_id_maps_to, r.category_id_maps_to, r.entered, r.enteredby, " +
-        "r.modified, r.modifiedby, r.trashed_date, rt.reciprocal_name_1, rt.reciprocal_name_2 " +
-        "FROM relationship r " +
-        "LEFT JOIN lookup_relationship_types rt ON (rt.type_id = r.type_id) " +
-        "WHERE relationship_id = ? ");
+            "r.object_id_maps_to, r.category_id_maps_to, r.entered, r.enteredby, " +
+            "r.modified, r.modifiedby, r.trashed_date, rt.reciprocal_name_1, rt.reciprocal_name_2 " +
+            "FROM relationship r " +
+            "LEFT JOIN lookup_relationship_types rt ON (rt.type_id = r.type_id) " +
+            "WHERE relationship_id = ? ");
     int i = 0;
     pst.setInt(++i, thisId);
     ResultSet rs = pst.executeQuery();
@@ -95,11 +95,11 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public Relationship(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -107,9 +107,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Relationship object
+   * Sets the id attribute of the Relationship object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -117,9 +117,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Relationship object
+   * Sets the id attribute of the Relationship object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -127,9 +127,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the typeId attribute of the Relationship object
+   * Sets the typeId attribute of the Relationship object
    *
-   * @param  tmp  The new typeId value
+   * @param tmp The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -137,9 +137,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the type_id attribute of the Relationship object
+   * Sets the type_id attribute of the Relationship object
    *
-   * @param  tmp  The new type_id value
+   * @param tmp The new type_id value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -147,9 +147,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the Relationship object
+   * Sets the categoryIdMapsFrom attribute of the Relationship object
    *
-   * @param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(int tmp) {
     this.categoryIdMapsFrom = tmp;
@@ -157,9 +157,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the categoryIdMapsFrom attribute of the Relationship object
+   * Sets the categoryIdMapsFrom attribute of the Relationship object
    *
-   * @param  tmp  The new categoryIdMapsFrom value
+   * @param tmp The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(String tmp) {
     this.categoryIdMapsFrom = Integer.parseInt(tmp);
@@ -167,9 +167,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the objectIdMapsTo attribute of the Relationship object
+   * Sets the objectIdMapsTo attribute of the Relationship object
    *
-   * @param  tmp  The new objectIdMapsTo value
+   * @param tmp The new objectIdMapsTo value
    */
   public void setObjectIdMapsTo(int tmp) {
     this.objectIdMapsTo = tmp;
@@ -177,9 +177,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the objectIdMapsTo attribute of the Relationship object
+   * Sets the objectIdMapsTo attribute of the Relationship object
    *
-   * @param  tmp  The new objectIdMapsTo value
+   * @param tmp The new objectIdMapsTo value
    */
   public void setObjectIdMapsTo(String tmp) {
     this.objectIdMapsTo = Integer.parseInt(tmp);
@@ -187,9 +187,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the categoryIdMapsTo attribute of the Relationship object
+   * Sets the categoryIdMapsTo attribute of the Relationship object
    *
-   * @param  tmp  The new categoryIdMapsTo value
+   * @param tmp The new categoryIdMapsTo value
    */
   public void setCategoryIdMapsTo(int tmp) {
     this.categoryIdMapsTo = tmp;
@@ -197,9 +197,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the categoryIdMapsTo attribute of the Relationship object
+   * Sets the categoryIdMapsTo attribute of the Relationship object
    *
-   * @param  tmp  The new categoryIdMapsTo value
+   * @param tmp The new categoryIdMapsTo value
    */
   public void setCategoryIdMapsTo(String tmp) {
     this.categoryIdMapsTo = Integer.parseInt(tmp);
@@ -207,9 +207,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Relationship object
+   * Sets the modified attribute of the Relationship object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -217,9 +217,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Relationship object
+   * Sets the modified attribute of the Relationship object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -227,9 +227,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Relationship object
+   * Sets the entered attribute of the Relationship object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -237,9 +237,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Relationship object
+   * Sets the entered attribute of the Relationship object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -247,9 +247,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Relationship object
+   * Sets the enteredBy attribute of the Relationship object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -257,9 +257,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Relationship object
+   * Sets the enteredBy attribute of the Relationship object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -267,9 +267,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Relationship object
+   * Sets the modifiedBy attribute of the Relationship object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -277,9 +277,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Relationship object
+   * Sets the modifiedBy attribute of the Relationship object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -287,9 +287,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Relationship object
+   * Sets the enabled attribute of the Relationship object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -297,9 +297,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Relationship object
+   * Sets the enabled attribute of the Relationship object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -307,9 +307,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the mappedObject attribute of the Relationship object
+   * Sets the mappedObject attribute of the Relationship object
    *
-   * @param  tmp  The new mappedObject value
+   * @param tmp The new mappedObject value
    */
   public void setMappedObject(Object tmp) {
     this.mappedObject = tmp;
@@ -317,9 +317,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the mappedObject attribute of the Relationship object
+   * Gets the mappedObject attribute of the Relationship object
    *
-   * @return    The mappedObject value
+   * @return The mappedObject value
    */
   public Object getMappedObject() {
     return mappedObject;
@@ -327,9 +327,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the objectIdMapsFrom attribute of the Relationship object
+   * Gets the objectIdMapsFrom attribute of the Relationship object
    *
-   * @return    The objectIdMapsFrom value
+   * @return The objectIdMapsFrom value
    */
   public int getObjectIdMapsFrom() {
     return objectIdMapsFrom;
@@ -337,9 +337,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the categoryIdMapsFrom attribute of the Relationship object
+   * Gets the categoryIdMapsFrom attribute of the Relationship object
    *
-   * @return    The categoryIdMapsFrom value
+   * @return The categoryIdMapsFrom value
    */
   public int getCategoryIdMapsFrom() {
     return categoryIdMapsFrom;
@@ -347,9 +347,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the objectIdMapsTo attribute of the Relationship object
+   * Gets the objectIdMapsTo attribute of the Relationship object
    *
-   * @return    The objectIdMapsTo value
+   * @return The objectIdMapsTo value
    */
   public int getObjectIdMapsTo() {
     return objectIdMapsTo;
@@ -357,9 +357,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the categoryIdMapsTo attribute of the Relationship object
+   * Gets the categoryIdMapsTo attribute of the Relationship object
    *
-   * @return    The categoryIdMapsTo value
+   * @return The categoryIdMapsTo value
    */
   public int getCategoryIdMapsTo() {
     return categoryIdMapsTo;
@@ -367,9 +367,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Relationship object
+   * Gets the id attribute of the Relationship object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -377,9 +377,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the type_id attribute of the Relationship object
+   * Gets the type_id attribute of the Relationship object
    *
-   * @return    The type_id value
+   * @return The type_id value
    */
   public int getTypeId() {
     return typeId;
@@ -387,9 +387,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the objectIdMapsFrom attribute of the Relationship object
+   * Sets the objectIdMapsFrom attribute of the Relationship object
    *
-   * @param  tmp  The new objectIdMapsFrom value
+   * @param tmp The new objectIdMapsFrom value
    */
   public void setObjectIdMapsFrom(int tmp) {
     this.objectIdMapsFrom = tmp;
@@ -397,9 +397,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the objectIdMapsFrom attribute of the Relationship object
+   * Sets the objectIdMapsFrom attribute of the Relationship object
    *
-   * @param  tmp  The new objectIdMapsFrom value
+   * @param tmp The new objectIdMapsFrom value
    */
   public void setObjectIdMapsFrom(String tmp) {
     this.objectIdMapsFrom = Integer.parseInt(tmp);
@@ -407,9 +407,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Relationship object
+   * Gets the modified attribute of the Relationship object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -417,9 +417,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Relationship object
+   * Gets the entered attribute of the Relationship object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -427,9 +427,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Relationship object
+   * Gets the enteredBy attribute of the Relationship object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -437,9 +437,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Relationship object
+   * Gets the modifiedBy attribute of the Relationship object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -447,9 +447,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Relationship object
+   * Gets the enabled attribute of the Relationship object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -457,9 +457,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the reciprocalName1 attribute of the Relationship object
+   * Sets the reciprocalName1 attribute of the Relationship object
    *
-   * @param  tmp  The new reciprocalName1 value
+   * @param tmp The new reciprocalName1 value
    */
   public void setReciprocalName1(String tmp) {
     this.reciprocalName1 = tmp;
@@ -467,9 +467,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the reciprocalName2 attribute of the Relationship object
+   * Sets the reciprocalName2 attribute of the Relationship object
    *
-   * @param  tmp  The new reciprocalName2 value
+   * @param tmp The new reciprocalName2 value
    */
   public void setReciprocalName2(String tmp) {
     this.reciprocalName2 = tmp;
@@ -477,9 +477,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the reciprocalName1 attribute of the Relationship object
+   * Gets the reciprocalName1 attribute of the Relationship object
    *
-   * @return    The reciprocalName1 value
+   * @return The reciprocalName1 value
    */
   public String getReciprocalName1() {
     return reciprocalName1;
@@ -487,9 +487,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the reciprocalName2 attribute of the Relationship object
+   * Gets the reciprocalName2 attribute of the Relationship object
    *
-   * @return    The reciprocalName2 value
+   * @return The reciprocalName2 value
    */
   public String getReciprocalName2() {
     return reciprocalName2;
@@ -497,9 +497,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the trashedDate attribute of the Relationship object
+   * Gets the trashedDate attribute of the Relationship object
    *
-   * @return    The trashedDate value
+   * @return The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -507,9 +507,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Relationship object
+   * Sets the trashedDate attribute of the Relationship object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -517,9 +517,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Relationship object
+   * Sets the trashedDate attribute of the Relationship object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -527,20 +527,23 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "relationship_relationship_id_seq");
       sql.append(
           "INSERT INTO relationship " +
-          "(type_id, object_id_maps_from, category_id_maps_from, object_id_maps_to, category_id_maps_to, trashed_date, ");
+              "(type_id, object_id_maps_from, category_id_maps_from, object_id_maps_to, category_id_maps_to, trashed_date, ");
       if (id > -1) {
         sql.append("relationship_id, ");
       }
@@ -586,23 +589,29 @@ public class Relationship extends GenericBean {
       pst.close();
       id = DatabaseUtils.getCurrVal(
           db, "relationship_relationship_id_seq", id);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     String sql = null;
@@ -620,7 +629,7 @@ public class Relationship extends GenericBean {
           "SET modifiedby = ?, object_id_maps_from = ?, category_id_maps_from = ?, " +
           "object_id_maps_to = ?, category_id_maps_to = ?, trashed_date = ?, " +
           "modified = CURRENT_TIMESTAMP " +
-          "WHERE relationship_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
+          "WHERE relationship_id = ? AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? ");
       int i = 0;
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getModifiedBy());
@@ -630,7 +639,7 @@ public class Relationship extends GenericBean {
       pst.setInt(++i, this.getCategoryIdMapsTo());
       DatabaseUtils.setTimestamp(pst, ++i, this.getTrashedDate());
       pst.setInt(++i, id);
-      if(this.getModified() != null){
+      if (this.getModified() != null) {
         pst.setTimestamp(++i, this.getModified());
       }
       count = pst.executeUpdate();
@@ -647,11 +656,11 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -665,22 +674,22 @@ public class Relationship extends GenericBean {
     //Reset the step attachments, if any, with this relationship
     try {
       int linkModuleId = ActionPlan.getMapIdGivenConstantId(
-            db, ActionPlan.ACTION_ITEM_WORK_RELATIONSHIP_OBJECT);
-      ActionItemWork itemWork = new ActionItemWork(db, 
-            linkModuleId, this.getId());
+          db, ActionPlan.ACTION_ITEM_WORK_RELATIONSHIP_OBJECT);
+      ActionItemWork itemWork = new ActionItemWork(db,
+          linkModuleId, this.getId());
       itemWork.resetAttachment(db);
     } catch (SQLException e) {
     }
-    
-    
+
+
     int recordCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM relationship " +
-        "WHERE relationship_id = ? ");
+            "WHERE relationship_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
-    
+
     if (recordCount == 0) {
       return false;
     }
@@ -689,11 +698,11 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  direction      Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param direction Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildMappedObject(Connection db, String direction) throws SQLException {
     //determine the mapping and mapped entities
@@ -714,9 +723,9 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the mappedObjectLabel attribute of the Relationship object
+   * Gets the mappedObjectLabel attribute of the Relationship object
    *
-   * @return    The mappedObjectLabel value
+   * @return The mappedObjectLabel value
    */
   public String getMappedObjectLabel() {
     if (mappedObject != null) {
@@ -730,10 +739,10 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("relationship_id");
@@ -765,13 +774,13 @@ public class Relationship extends GenericBean {
    *  }
    */
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  toTrash           Description of the Parameter
-   * @param  tmpUserId         Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
     boolean commit = true;
@@ -784,10 +793,10 @@ public class Relationship extends GenericBean {
       }
       sql.append(
           "UPDATE relationship " +
-          "SET trashed_date = ? , " +
-          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
-          "modifiedby = ? " +
-          "WHERE relationship_id = ? ");
+              "SET trashed_date = ? , " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+              "modifiedby = ? " +
+              "WHERE relationship_id = ? ");
 
       int i = 0;
       pst = db.prepareStatement(sql.toString());
@@ -808,9 +817,9 @@ public class Relationship extends GenericBean {
         int relationshipLinkModuleId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACTION_ITEM_WORK_RELATIONSHIP_OBJECT);
         pst = db.prepareStatement(
             "UPDATE action_item_work " +
-            "SET link_item_id = ? " +
-            "WHERE link_module_id = ? " +
-            "AND link_item_id = ? ");
+                "SET link_item_id = ? " +
+                "WHERE link_module_id = ? " +
+                "AND link_item_id = ? ");
         DatabaseUtils.setInt(pst, ++i, -1);
         pst.setInt(++i, relationshipLinkModuleId);
         pst.setInt(++i, this.getId());
@@ -840,11 +849,11 @@ public class Relationship extends GenericBean {
 
 
   /**
-   *  Gets the present attribute of the Relationship object
+   * Gets the present attribute of the Relationship object
    *
-   * @param  finalSelection  Description of the Parameter
-   * @param  type            Description of the Parameter
-   * @return                 The present value
+   * @param finalSelection Description of the Parameter
+   * @param type           Description of the Parameter
+   * @return The present value
    */
   public boolean isPresent(ArrayList finalSelection, String type) {
     if (finalSelection != null) {

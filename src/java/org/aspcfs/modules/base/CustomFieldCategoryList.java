@@ -53,9 +53,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the linkItemId attribute of the CustomFieldCategoryList object
+   * Sets the linkItemId attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -63,9 +63,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the linkItemId attribute of the CustomFieldCategoryList object
+   * Sets the linkItemId attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(String tmp) {
     this.linkItemId = Integer.parseInt(tmp);
@@ -73,9 +73,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the linkItemId attribute of the CustomFieldCategoryList object
+   * Gets the linkItemId attribute of the CustomFieldCategoryList object
    *
-   * @return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -83,10 +83,10 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the buildTotalNumOfRecords attribute of the CustomFieldCategoryList
-   *  object
+   * Sets the buildTotalNumOfRecords attribute of the CustomFieldCategoryList
+   * object
    *
-   * @param  tmp  The new buildTotalNumOfRecords value
+   * @param tmp The new buildTotalNumOfRecords value
    */
   public void setBuildTotalNumOfRecords(boolean tmp) {
     this.buildTotalNumOfRecords = tmp;
@@ -94,10 +94,10 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the buildTotalNumOfRecords attribute of the CustomFieldCategoryList
-   *  object
+   * Sets the buildTotalNumOfRecords attribute of the CustomFieldCategoryList
+   * object
    *
-   * @param  tmp  The new buildTotalNumOfRecords value
+   * @param tmp The new buildTotalNumOfRecords value
    */
   public void setBuildTotalNumOfRecords(String tmp) {
     this.buildTotalNumOfRecords = DatabaseUtils.parseBoolean(tmp);
@@ -105,10 +105,10 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the buildTotalNumOfRecords attribute of the CustomFieldCategoryList
-   *  object
+   * Gets the buildTotalNumOfRecords attribute of the CustomFieldCategoryList
+   * object
    *
-   * @return    The buildTotalNumOfRecords value
+   * @return The buildTotalNumOfRecords value
    */
   public boolean getBuildTotalNumOfRecords() {
     return buildTotalNumOfRecords;
@@ -116,15 +116,16 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Constructor for the CustomFieldCategoryList object
+   * Constructor for the CustomFieldCategoryList object
    */
-  public CustomFieldCategoryList() { }
+  public CustomFieldCategoryList() {
+  }
 
 
   /**
-   *  Sets the PagedListInfo attribute of the CustomFieldCategoryList object
+   * Sets the PagedListInfo attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new PagedListInfo value
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -132,9 +133,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the CustomFieldCategoryList object
+   * Sets the linkModuleId attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -142,9 +143,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the CustomFieldCategoryList object
+   * Sets the linkModuleId attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -152,9 +153,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the includeEnabled attribute of the CustomFieldCategoryList object
+   * Sets the includeEnabled attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new includeEnabled value
+   * @param tmp The new includeEnabled value
    */
   public void setIncludeEnabled(int tmp) {
     this.includeEnabled = tmp;
@@ -162,9 +163,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the includeScheduled attribute of the CustomFieldCategoryList object
+   * Sets the includeScheduled attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new includeScheduled value
+   * @param tmp The new includeScheduled value
    */
   public void setIncludeScheduled(int tmp) {
     this.includeScheduled = tmp;
@@ -172,9 +173,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the BuildResources attribute of the CustomFieldCategoryList object
+   * Sets the BuildResources attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new BuildResources value
+   * @param tmp The new BuildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -182,9 +183,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the jsEvent attribute of the CustomFieldCategoryList object
+   * Sets the jsEvent attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -192,9 +193,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the allSelectOption attribute of the CustomFieldCategoryList object
+   * Sets the allSelectOption attribute of the CustomFieldCategoryList object
    *
-   * @param  allSelectOption  The new allSelectOption value
+   * @param allSelectOption The new allSelectOption value
    */
   public void setAllSelectOption(boolean allSelectOption) {
     this.allSelectOption = allSelectOption;
@@ -202,9 +203,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the PagedListInfo attribute of the CustomFieldCategoryList object
+   * Gets the PagedListInfo attribute of the CustomFieldCategoryList object
    *
-   * @return    The PagedListInfo value
+   * @return The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -212,9 +213,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the linkModuleId attribute of the CustomFieldCategoryList object
+   * Gets the linkModuleId attribute of the CustomFieldCategoryList object
    *
-   * @return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -222,9 +223,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the includeEnabled attribute of the CustomFieldCategoryList object
+   * Gets the includeEnabled attribute of the CustomFieldCategoryList object
    *
-   * @return    The includeEnabled value
+   * @return The includeEnabled value
    */
   public int getIncludeEnabled() {
     return includeEnabled;
@@ -232,9 +233,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the includeScheduled attribute of the CustomFieldCategoryList object
+   * Gets the includeScheduled attribute of the CustomFieldCategoryList object
    *
-   * @return    The includeScheduled value
+   * @return The includeScheduled value
    */
   public int getIncludeScheduled() {
     return includeScheduled;
@@ -242,9 +243,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the allSelectOption attribute of the CustomFieldCategoryList object
+   * Gets the allSelectOption attribute of the CustomFieldCategoryList object
    *
-   * @return    The allSelectOption value
+   * @return The allSelectOption value
    */
   public boolean getAllSelectOption() {
     return allSelectOption;
@@ -252,9 +253,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the BuildResources attribute of the CustomFieldCategoryList object
+   * Gets the BuildResources attribute of the CustomFieldCategoryList object
    *
-   * @return    The BuildResources value
+   * @return The BuildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -262,9 +263,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the jsEvent attribute of the CustomFieldCategoryList object
+   * Gets the jsEvent attribute of the CustomFieldCategoryList object
    *
-   * @return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -272,9 +273,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the defaultCategoryId attribute of the CustomFieldCategoryList object
+   * Gets the defaultCategoryId attribute of the CustomFieldCategoryList object
    *
-   * @return    The defaultCategoryId value
+   * @return The defaultCategoryId value
    */
   public int getDefaultCategoryId() {
     int tmpDefault = -1;
@@ -296,9 +297,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the defaultCategory attribute of the CustomFieldCategoryList object
+   * Gets the defaultCategory attribute of the CustomFieldCategoryList object
    *
-   * @return    The defaultCategory value
+   * @return The defaultCategory value
    */
   public CustomFieldCategory getDefaultCategory() {
     Iterator i = this.iterator();
@@ -313,10 +314,10 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the category attribute of the CustomFieldCategoryList object
+   * Gets the category attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  Description of Parameter
-   * @return      The category value
+   * @param tmp Description of Parameter
+   * @return The category value
    */
   public CustomFieldCategory getCategory(int tmp) {
     Iterator i = this.iterator();
@@ -331,11 +332,11 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the CustomFieldCategoryList object
+   * Gets the htmlSelect attribute of the CustomFieldCategoryList object
    *
-   * @param  selectName  Description of Parameter
-   * @param  defaultKey  Description of Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, String defaultKey) {
     return this.getHtmlSelect(selectName, Integer.parseInt(defaultKey));
@@ -343,11 +344,11 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the CustomFieldCategoryList object
+   * Gets the htmlSelect attribute of the CustomFieldCategoryList object
    *
-   * @param  selectName  Description of Parameter
-   * @param  defaultKey  Description of Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect thisSelect = new HtmlSelect();
@@ -371,10 +372,10 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -390,8 +391,8 @@ public class CustomFieldCategoryList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
-        "FROM custom_field_category cfc, module_field_categorylink mfc " +
-        "WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
+            "FROM custom_field_category cfc, module_field_categorylink mfc " +
+            "WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
 
     createFilter(sqlFilter);
 
@@ -424,11 +425,11 @@ public class CustomFieldCategoryList extends ArrayList {
     }
     sqlSelect.append(
         " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc." + DatabaseUtils.addQuotes(db, "level") + " as " + DatabaseUtils.addQuotes(db, "level") + ",  " +
-        " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
-        " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
-        " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
-        " FROM custom_field_category cfc, module_field_categorylink mfc " +
-        " WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
+            " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
+            " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
+            " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
+            " FROM custom_field_category cfc, module_field_categorylink mfc " +
+            " WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -446,7 +447,6 @@ public class CustomFieldCategoryList extends ArrayList {
     }
     rs.close();
     pst.close();
-
     if (buildResources) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
@@ -470,9 +470,9 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -494,11 +494,11 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst            Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -516,10 +516,10 @@ public class CustomFieldCategoryList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);

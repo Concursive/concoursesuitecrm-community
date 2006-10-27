@@ -51,13 +51,15 @@ public class SyncTable extends GenericBean {
   /**
    * Constructor for the SyncTable object
    */
-  public SyncTable() { }
+  public SyncTable() {
+  }
 
 
   /**
    * Constructor for the SyncTable object
    *
    * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    * @throws SQLException Description of Exception
    */
@@ -371,6 +373,31 @@ public class SyncTable extends GenericBean {
     pst.setInt(++i, systemId);
     pst.setString(++i, name);
     pst.executeUpdate();
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db   Description of the Parameter
+   * @param name Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  public static boolean hasMapping(Connection db, String name) throws SQLException {
+    int count = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) as recordcount " +
+            "FROM sync_table " +
+            "WHERE element_name = ? ");
+    pst.setString(1, name);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("recordcount");
+    }
+    rs.close();
+    pst.close();
+    return (count > 0);
   }
 }
 

@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.products.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -33,12 +34,97 @@ import java.util.Iterator;
  * @created April 20, 2004
  */
 public class CustomerProductHistoryList extends ArrayList {
+  public final static String tableName = "customer_product_history";
+  public final static String uniqueField = "history_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int orderId = -1;
   private int customerProductId = -1;
   private int orderItemId = -1;
+
+  /**
+   * Sets the lastAnchor attribute of the CustomerProductHistoryList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the CustomerProductHistoryList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the CustomerProductHistoryList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the CustomerProductHistoryList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the CustomerProductHistoryList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+  /**
+   * Sets the PagedListInfo attribute of the CustomerProductHistoryList object. <p>
+   * <p/>
+   * The query results will be constrained to the PagedListInfo parameters.
+   *
+   * @param tmp The new PagedListInfo value
+   * @since 1.1
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+  /**
+   * Gets the tableName attribute of the CustomerProductHistoryList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the CustomerProductHistoryList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**
@@ -188,8 +274,8 @@ public class CustomerProductHistoryList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
-        " FROM customer_product_history cph " +
-        " WHERE cph.history_id > -1 ");
+            " FROM customer_product_history cph " +
+            " WHERE cph.history_id > -1 ");
 
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -230,17 +316,17 @@ public class CustomerProductHistoryList extends ArrayList {
     }
     sqlSelect.append(
         "  cph.history_id, cph.customer_product_id, cph.org_id, cph.order_id, " +
-        "  cph.product_start_date, cph.product_end_date, cph.entered, cph.enteredby, " +
-        "  cph.modified, cph.modifiedby, cph.order_item_id, " +
-        "  pc.product_name, pc.short_description, pcp.price_amount, pcat.category_name " +
-        " FROM customer_product_history cph " +
-        " LEFT JOIN order_entry o ON (cph.order_id = o.order_id) " +
-        " LEFT JOIN order_product op ON (cph.order_item_id = op.item_id) " +
-        " LEFT JOIN product_catalog pc ON (op.product_id = pc.product_id) " +
-        " LEFT JOIN product_catalog_category_map pccm ON (pc.product_id = pccm.product_id) " +
-        " LEFT JOIN product_category pcat ON (pccm.category_id = pcat.category_id) " +
-        " LEFT JOIN product_catalog_pricing pcp ON (pc.product_id = pcp.product_id) " +
-        " WHERE cph.history_id > -1 ");
+            "  cph.product_start_date, cph.product_end_date, cph.entered, cph.enteredby, " +
+            "  cph.modified, cph.modifiedby, cph.order_item_id, " +
+            "  pc.product_name, pc.short_description, pcp.price_amount, pcat.category_name " +
+            " FROM customer_product_history cph " +
+            " LEFT JOIN order_entry o ON (cph.order_id = o.order_id) " +
+            " LEFT JOIN order_product op ON (cph.order_item_id = op.item_id) " +
+            " LEFT JOIN product_catalog pc ON (op.product_id = pc.product_id) " +
+            " LEFT JOIN product_catalog_category_map pccm ON (pc.product_id = pccm.product_id) " +
+            " LEFT JOIN product_category pcat ON (pccm.category_id = pcat.category_id) " +
+            " LEFT JOIN product_catalog_pricing pcp ON (pc.product_id = pcp.product_id) " +
+            " WHERE cph.history_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -282,6 +368,17 @@ public class CustomerProductHistoryList extends ArrayList {
     if (customerProductId > -1) {
       sqlFilter.append("AND cph.customer_product_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -320,6 +417,17 @@ public class CustomerProductHistoryList extends ArrayList {
     }
     if (customerProductId > -1) {
       pst.setInt(++i, customerProductId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

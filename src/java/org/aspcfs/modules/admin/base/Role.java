@@ -83,8 +83,8 @@ public class Role extends GenericBean {
   public Role(Connection db, int roleId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
-        "WHERE role_id = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
+            "WHERE role_id = ? ");
     pst.setInt(1, roleId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -459,10 +459,10 @@ public class Role extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE " + DatabaseUtils.addQuotes(db, "role") + " " +
-          "SET " + DatabaseUtils.addQuotes(db, "role") + " = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
-          "modifiedby = ?, enabled = ? " +
-          "WHERE modified " + ((this.getModified() == null)?"IS NULL ":"= ? ") +
-          "AND role_id = ? ");
+              "SET " + DatabaseUtils.addQuotes(db, "role") + " = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
+              "modifiedby = ?, enabled = ? " +
+              "WHERE modified " + ((this.getModified() == null) ? "IS NULL " : "= ? ") +
+              "AND role_id = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setString(++i, this.getRole());
@@ -470,7 +470,7 @@ public class Role extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, getRoleType());
       pst.setInt(++i, this.getModifiedBy());
       pst.setBoolean(++i, this.getEnabled());
-      if(this.getModified() != null){
+      if (this.getModified() != null) {
         pst.setTimestamp(++i, this.getModified());
       }
       pst.setInt(++i, id);
@@ -502,10 +502,10 @@ public class Role extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS user_count " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE role_id = ? " +
-        "AND user_id <> 0 " +
-        "AND enabled = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE role_id = ? " +
+            "AND user_id <> 0 " +
+            "AND enabled = ? ");
     pst.setInt(++i, this.getId());
     pst.setBoolean(++i, true);
     ResultSet rs = pst.executeQuery();
@@ -533,13 +533,16 @@ public class Role extends GenericBean {
    * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
       id = DatabaseUtils.getNextSeq(db, "role_role_id_seq");
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       StringBuffer sql = new StringBuffer();
       sql.append("INSERT INTO " + DatabaseUtils.addQuotes(db, "role") + " (" + DatabaseUtils.addQuotes(db, "role") + ", description, role_type, ");
       if (entered != null) {
-      sql.append("entered, ");
+        sql.append("entered, ");
       }
       if (id > -1) {
         sql.append("role_id, ");
@@ -549,7 +552,7 @@ public class Role extends GenericBean {
       }
       sql.append(
           "enteredby, modifiedby, enabled ) " +
-          "VALUES (?, ?, ?, ");
+              "VALUES (?, ?, ?, ");
       if (id > -1) {
         sql.append("?, ");
       }
@@ -581,12 +584,18 @@ public class Role extends GenericBean {
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "role_role_id_seq", id);
       insertPermissions(db);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -613,8 +622,8 @@ public class Role extends GenericBean {
       if (buildUserCount(db, false)) {
         pst = db.prepareStatement(
             "UPDATE " + DatabaseUtils.addQuotes(db, "role") + " " +
-            "SET enabled = ? " +
-            "WHERE role_id = ? ");
+                "SET enabled = ? " +
+                "WHERE role_id = ? ");
         pst.setBoolean(1, false);
         pst.setInt(2, id);
         recordCount = pst.executeUpdate();
@@ -622,7 +631,7 @@ public class Role extends GenericBean {
         deletePermissions(db);
         pst = db.prepareStatement(
             "DELETE FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
-            "WHERE role_id = ? ");
+                "WHERE role_id = ? ");
         pst.setInt(1, id);
         recordCount = pst.executeUpdate();
       }
@@ -665,8 +674,8 @@ public class Role extends GenericBean {
         db, "role_permission_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO role_permission " +
-        "(" + (rolePermissionId > -1 ? "id, " : "") + "role_id, permission_id, role_add, role_view, role_edit, role_delete) " +
-        "VALUES (" + (rolePermissionId > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? ) ");
+            "(" + (rolePermissionId > -1 ? "id, " : "") + "role_id, permission_id, role_add, role_view, role_edit, role_delete) " +
+            "VALUES (" + (rolePermissionId > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? ) ");
     if (rolePermissionId > -1) {
       pst.setInt(++i, rolePermissionId);
     }
@@ -739,9 +748,9 @@ public class Role extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
-        "FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
-        "WHERE " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.addQuotes(db, "role") + ") = ? " +
-        "AND enabled = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "role") + " " +
+            "WHERE " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.addQuotes(db, "role") + ") = ? " +
+            "AND enabled = ? ");
     if (id > -1) {
       sql.append("AND role_id <> ? ");
     }
@@ -779,11 +788,11 @@ public class Role extends GenericBean {
     int resultCount = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS thecount " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE role_id = ? " +
-        "AND contact_id > 0 " +
-        "AND (alias = -1 OR alias IS NULL) " +
-        (activeUsersOnly ? "AND enabled = ? " : ""));
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE role_id = ? " +
+            "AND contact_id > 0 " +
+            "AND (alias = -1 OR alias IS NULL) " +
+            (activeUsersOnly ? "AND enabled = ? " : ""));
     pst.setInt(1, id);
     if (activeUsersOnly) {
       pst.setBoolean(2, true);
@@ -813,7 +822,7 @@ public class Role extends GenericBean {
     PreparedStatement pst = null;
     pst = db.prepareStatement(
         "DELETE FROM role_permission " +
-        "WHERE role_id = " + id);
+            "WHERE role_id = " + id);
     pst.execute();
     pst.close();
   }

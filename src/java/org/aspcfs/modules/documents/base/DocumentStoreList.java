@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.documents.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -28,15 +29,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
  * @author
+ * @version $Id: DocumentStoreList.java,v 1.1.2.4 2004/11/19 21:31:09
+ *          kbhoopal Exp $
  * @created
- * @version    $Id: DocumentStoreList.java,v 1.1.2.4 2004/11/19 21:31:09
- *      kbhoopal Exp $
  */
 public class DocumentStoreList extends ArrayList {
-  // main document store filters
+  public final static String tableName = "document_store";
+  public final static String uniqueField = "document_store_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int groupId = -1;
@@ -61,15 +66,85 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Constructor for the DocumentStoreList object
+   * Constructor for the DocumentStoreList object
    */
-  public DocumentStoreList() { }
+  public DocumentStoreList() {
+  }
+
+  /**
+   * Sets the lastAnchor attribute of the DocumentStoreList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the DocumentStoreList object
+   * Sets the lastAnchor attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the DocumentStoreList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the DocumentStoreList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the DocumentStoreList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Gets the tableName attribute of the DocumentStoreList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the DocumentStoreList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   * Sets the pagedListInfo attribute of the DocumentStoreList object
+   *
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -77,9 +152,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the emptyHtmlSelectRecord attribute of the DocumentStoreList object
+   * Sets the emptyHtmlSelectRecord attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new emptyHtmlSelectRecord value
+   * @param tmp The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -87,9 +162,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the groupId attribute of the DocumentStoreList object
+   * Sets the groupId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(int tmp) {
     this.groupId = tmp;
@@ -97,9 +172,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the groupId attribute of the DocumentStoreList object
+   * Sets the groupId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new groupId value
+   * @param tmp The new groupId value
    */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
@@ -107,9 +182,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the documentStoreId attribute of the DocumentStoreList object
+   * Sets the documentStoreId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new documentStoreId value
+   * @param tmp The new documentStoreId value
    */
   public void setDocumentStoreId(int tmp) {
     this.documentStoreId = tmp;
@@ -117,9 +192,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the documentStoreId attribute of the DocumentStoreList object
+   * Sets the documentStoreId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new documentStoreId value
+   * @param tmp The new documentStoreId value
    */
   public void setDocumentStoreId(String tmp) {
     this.documentStoreId = Integer.parseInt(tmp);
@@ -127,9 +202,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the documentStoresForUser attribute of the DocumentStoreList object
+   * Sets the documentStoresForUser attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new documentStoresForUser value
+   * @param tmp The new documentStoresForUser value
    */
   public void setDocumentStoresForUser(int tmp) {
     this.documentStoresForUser = tmp;
@@ -137,9 +212,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the documentStoresForUser attribute of the DocumentStoreList object
+   * Sets the documentStoresForUser attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new documentStoresForUser value
+   * @param tmp The new documentStoresForUser value
    */
   public void setDocumentStoresForUser(String tmp) {
     this.documentStoresForUser = Integer.parseInt(tmp);
@@ -147,9 +222,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the userRole attribute of the DocumentStoreList object
+   * Sets the userRole attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new userRole value
+   * @param tmp The new userRole value
    */
   public void setUserRole(int tmp) {
     this.userRole = tmp;
@@ -157,9 +232,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the userRole attribute of the DocumentStoreList object
+   * Sets the userRole attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new userRole value
+   * @param tmp The new userRole value
    */
   public void setUserRole(String tmp) {
     this.userRole = Integer.parseInt(tmp);
@@ -167,9 +242,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the departmentId attribute of the DocumentStoreList object
+   * Sets the departmentId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new departmentId value
+   * @param tmp The new departmentId value
    */
   public void setDepartmentId(int tmp) {
     this.departmentId = tmp;
@@ -177,9 +252,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the departmentId attribute of the DocumentStoreList object
+   * Sets the departmentId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new departmentId value
+   * @param tmp The new departmentId value
    */
   public void setDepartmentId(String tmp) {
     this.departmentId = Integer.parseInt(tmp);
@@ -187,9 +262,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the enteredByUser attribute of the DocumentStoreList object
+   * Sets the enteredByUser attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new enteredByUser value
+   * @param tmp The new enteredByUser value
    */
   public void setEnteredByUser(int tmp) {
     this.enteredByUser = tmp;
@@ -197,9 +272,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the enteredByUser attribute of the DocumentStoreList object
+   * Sets the enteredByUser attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new enteredByUser value
+   * @param tmp The new enteredByUser value
    */
   public void setEnteredByUser(String tmp) {
     this.enteredByUser = Integer.parseInt(tmp);
@@ -207,9 +282,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the enteredByUserRange attribute of the DocumentStoreList object
+   * Sets the enteredByUserRange attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new enteredByUserRange value
+   * @param tmp The new enteredByUserRange value
    */
   public void setEnteredByUserRange(String tmp) {
     this.enteredByUserRange = tmp;
@@ -217,9 +292,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the userRange attribute of the DocumentStoreList object
+   * Sets the userRange attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new userRange value
+   * @param tmp The new userRange value
    */
   public void setUserRange(String tmp) {
     this.userRange = tmp;
@@ -227,9 +302,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the openDocumentStoresOnly attribute of the DocumentStoreList object
+   * Sets the openDocumentStoresOnly attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new openDocumentStoresOnly value
+   * @param tmp The new openDocumentStoresOnly value
    */
   public void setOpenDocumentStoresOnly(boolean tmp) {
     this.openDocumentStoresOnly = tmp;
@@ -237,9 +312,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the openDocumentStoresOnly attribute of the DocumentStoreList object
+   * Sets the openDocumentStoresOnly attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new openDocumentStoresOnly value
+   * @param tmp The new openDocumentStoresOnly value
    */
   public void setOpenDocumentStoresOnly(String tmp) {
     this.openDocumentStoresOnly = DatabaseUtils.parseBoolean(tmp);
@@ -247,10 +322,10 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the closedDocumentStoresOnly attribute of the DocumentStoreList
-   *  object
+   * Sets the closedDocumentStoresOnly attribute of the DocumentStoreList
+   * object
    *
-   * @param  tmp  The new closedDocumentStoresOnly value
+   * @param tmp The new closedDocumentStoresOnly value
    */
   public void setClosedDocumentStoresOnly(boolean tmp) {
     this.closedDocumentStoresOnly = tmp;
@@ -258,10 +333,10 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the closedDocumentStoresOnly attribute of the DocumentStoreList
-   *  object
+   * Sets the closedDocumentStoresOnly attribute of the DocumentStoreList
+   * object
    *
-   * @param  tmp  The new closedDocumentStoresOnly value
+   * @param tmp The new closedDocumentStoresOnly value
    */
   public void setClosedDocumentStoresOnly(String tmp) {
     this.closedDocumentStoresOnly = DatabaseUtils.parseBoolean(tmp);
@@ -269,9 +344,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the invitationPendingOnly attribute of the DocumentStoreList object
+   * Sets the invitationPendingOnly attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new invitationPendingOnly value
+   * @param tmp The new invitationPendingOnly value
    */
   public void setInvitationPendingOnly(boolean tmp) {
     this.invitationPendingOnly = tmp;
@@ -279,9 +354,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the invitationPendingOnly attribute of the DocumentStoreList object
+   * Sets the invitationPendingOnly attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new invitationPendingOnly value
+   * @param tmp The new invitationPendingOnly value
    */
   public void setInvitationPendingOnly(String tmp) {
     this.invitationPendingOnly = DatabaseUtils.parseBoolean(tmp);
@@ -289,9 +364,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the invitationAcceptedOnly attribute of the DocumentStoreList object
+   * Sets the invitationAcceptedOnly attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new invitationAcceptedOnly value
+   * @param tmp The new invitationAcceptedOnly value
    */
   public void setInvitationAcceptedOnly(boolean tmp) {
     this.invitationAcceptedOnly = tmp;
@@ -299,9 +374,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the invitationAcceptedOnly attribute of the DocumentStoreList object
+   * Sets the invitationAcceptedOnly attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new invitationAcceptedOnly value
+   * @param tmp The new invitationAcceptedOnly value
    */
   public void setInvitationAcceptedOnly(String tmp) {
     this.invitationAcceptedOnly = DatabaseUtils.parseBoolean(tmp);
@@ -309,9 +384,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the daysLastAccessed attribute of the DocumentStoreList object
+   * Sets the daysLastAccessed attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new daysLastAccessed value
+   * @param tmp The new daysLastAccessed value
    */
   public void setDaysLastAccessed(int tmp) {
     this.daysLastAccessed = tmp;
@@ -319,9 +394,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the daysLastAccessed attribute of the DocumentStoreList object
+   * Sets the daysLastAccessed attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new daysLastAccessed value
+   * @param tmp The new daysLastAccessed value
    */
   public void setDaysLastAccessed(String tmp) {
     this.daysLastAccessed = Integer.parseInt(tmp);
@@ -329,9 +404,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the trashedDate attribute of the DocumentStoreList object
+   * Sets the trashedDate attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -339,9 +414,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the trashedDate attribute of the DocumentStoreList object
+   * Sets the trashedDate attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -349,9 +424,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the includeOnlyTrashed attribute of the DocumentStoreList object
+   * Sets the includeOnlyTrashed attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new includeOnlyTrashed value
+   * @param tmp The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(boolean tmp) {
     this.includeOnlyTrashed = tmp;
@@ -359,9 +434,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the includeOnlyTrashed attribute of the DocumentStoreList object
+   * Sets the includeOnlyTrashed attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new includeOnlyTrashed value
+   * @param tmp The new includeOnlyTrashed value
    */
   public void setIncludeOnlyTrashed(String tmp) {
     this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
@@ -369,9 +444,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the DocumentStoreList object
+   * Sets the alertRangeStart attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
@@ -379,9 +454,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the DocumentStoreList object
+   * Sets the alertRangeStart attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
@@ -389,9 +464,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the DocumentStoreList object
+   * Sets the alertRangeEnd attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
@@ -399,9 +474,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the DocumentStoreList object
+   * Sets the alertRangeEnd attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
@@ -409,9 +484,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the DocumentStoreList object
+   * Gets the pagedListInfo attribute of the DocumentStoreList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -419,9 +494,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the emptyHtmlSelectRecord attribute of the DocumentStoreList object
+   * Gets the emptyHtmlSelectRecord attribute of the DocumentStoreList object
    *
-   * @return    The emptyHtmlSelectRecord value
+   * @return The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -429,9 +504,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the groupId attribute of the DocumentStoreList object
+   * Gets the groupId attribute of the DocumentStoreList object
    *
-   * @return    The groupId value
+   * @return The groupId value
    */
   public int getGroupId() {
     return groupId;
@@ -439,9 +514,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the documentStoreId attribute of the DocumentStoreList object
+   * Gets the documentStoreId attribute of the DocumentStoreList object
    *
-   * @return    The documentStoreId value
+   * @return The documentStoreId value
    */
   public int getDocumentStoreId() {
     return documentStoreId;
@@ -449,9 +524,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the documentStoresForUser attribute of the DocumentStoreList object
+   * Gets the documentStoresForUser attribute of the DocumentStoreList object
    *
-   * @return    The documentStoresForUser value
+   * @return The documentStoresForUser value
    */
   public int getDocumentStoresForUser() {
     return documentStoresForUser;
@@ -459,9 +534,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the userRole attribute of the DocumentStoreList object
+   * Gets the userRole attribute of the DocumentStoreList object
    *
-   * @return    The userRole value
+   * @return The userRole value
    */
   public int getUserRole() {
     return userRole;
@@ -469,9 +544,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the departmentId attribute of the DocumentStoreList object
+   * Gets the departmentId attribute of the DocumentStoreList object
    *
-   * @return    The departmentId value
+   * @return The departmentId value
    */
   public int getDepartmentId() {
     return departmentId;
@@ -479,9 +554,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the enteredByUser attribute of the DocumentStoreList object
+   * Gets the enteredByUser attribute of the DocumentStoreList object
    *
-   * @return    The enteredByUser value
+   * @return The enteredByUser value
    */
   public int getEnteredByUser() {
     return enteredByUser;
@@ -489,9 +564,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the enteredByUserRange attribute of the DocumentStoreList object
+   * Gets the enteredByUserRange attribute of the DocumentStoreList object
    *
-   * @return    The enteredByUserRange value
+   * @return The enteredByUserRange value
    */
   public String getEnteredByUserRange() {
     return enteredByUserRange;
@@ -499,9 +574,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the userRange attribute of the DocumentStoreList object
+   * Gets the userRange attribute of the DocumentStoreList object
    *
-   * @return    The userRange value
+   * @return The userRange value
    */
   public String getUserRange() {
     return userRange;
@@ -509,9 +584,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the openDocumentStoresOnly attribute of the DocumentStoreList object
+   * Gets the openDocumentStoresOnly attribute of the DocumentStoreList object
    *
-   * @return    The openDocumentStoresOnly value
+   * @return The openDocumentStoresOnly value
    */
   public boolean getOpenDocumentStoresOnly() {
     return openDocumentStoresOnly;
@@ -519,10 +594,10 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the closedDocumentStoresOnly attribute of the DocumentStoreList
-   *  object
+   * Gets the closedDocumentStoresOnly attribute of the DocumentStoreList
+   * object
    *
-   * @return    The closedDocumentStoresOnly value
+   * @return The closedDocumentStoresOnly value
    */
   public boolean getClosedDocumentStoresOnly() {
     return closedDocumentStoresOnly;
@@ -530,9 +605,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the invitationPendingOnly attribute of the DocumentStoreList object
+   * Gets the invitationPendingOnly attribute of the DocumentStoreList object
    *
-   * @return    The invitationPendingOnly value
+   * @return The invitationPendingOnly value
    */
   public boolean getInvitationPendingOnly() {
     return invitationPendingOnly;
@@ -540,9 +615,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the invitationAcceptedOnly attribute of the DocumentStoreList object
+   * Gets the invitationAcceptedOnly attribute of the DocumentStoreList object
    *
-   * @return    The invitationAcceptedOnly value
+   * @return The invitationAcceptedOnly value
    */
   public boolean getInvitationAcceptedOnly() {
     return invitationAcceptedOnly;
@@ -550,9 +625,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the daysLastAccessed attribute of the DocumentStoreList object
+   * Gets the daysLastAccessed attribute of the DocumentStoreList object
    *
-   * @return    The daysLastAccessed value
+   * @return The daysLastAccessed value
    */
   public int getDaysLastAccessed() {
     return daysLastAccessed;
@@ -560,9 +635,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the trashedDate attribute of the DocumentStoreList object
+   * Gets the trashedDate attribute of the DocumentStoreList object
    *
-   * @return    The trashedDate value
+   * @return The trashedDate value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -570,9 +645,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the includeOnlyTrashed attribute of the DocumentStoreList object
+   * Gets the includeOnlyTrashed attribute of the DocumentStoreList object
    *
-   * @return    The includeOnlyTrashed value
+   * @return The includeOnlyTrashed value
    */
   public boolean getIncludeOnlyTrashed() {
     return includeOnlyTrashed;
@@ -580,9 +655,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeStart attribute of the DocumentStoreList object
+   * Gets the alertRangeStart attribute of the DocumentStoreList object
    *
-   * @return    The alertRangeStart value
+   * @return The alertRangeStart value
    */
   public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
@@ -590,9 +665,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeEnd attribute of the DocumentStoreList object
+   * Gets the alertRangeEnd attribute of the DocumentStoreList object
    *
-   * @return    The alertRangeEnd value
+   * @return The alertRangeEnd value
    */
   public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
@@ -600,9 +675,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the siteId attribute of the DocumentStoreList object
+   * Gets the siteId attribute of the DocumentStoreList object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -610,9 +685,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the DocumentStoreList object
+   * Sets the siteId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -620,9 +695,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Sets the siteId attribute of the DocumentStoreList object
+   * Sets the siteId attribute of the DocumentStoreList object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -630,10 +705,10 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the DocumentStoreList object
+   * Gets the htmlSelect attribute of the DocumentStoreList object
    *
-   * @param  selectName  Description of Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -641,11 +716,11 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the DocumentStoreList object
+   * Gets the htmlSelect attribute of the DocumentStoreList object
    *
-   * @param  selectName  Description of Parameter
-   * @param  defaultKey  Description of Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of Parameter
+   * @param defaultKey Description of Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect listSelect = this.getHtmlSelect();
@@ -654,9 +729,9 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Gets the htmlSelect attribute of the DocumentStoreList object
+   * Gets the htmlSelect attribute of the DocumentStoreList object
    *
-   * @return    The htmlSelect value
+   * @return The htmlSelect value
    */
   public HtmlSelect getHtmlSelect() {
     HtmlSelect listSelect = new HtmlSelect();
@@ -675,10 +750,10 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -693,8 +768,8 @@ public class DocumentStoreList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM document_store ds " +
-        "WHERE ds.document_store_id > -1 ");
+            "FROM document_store ds " +
+            "WHERE ds.document_store_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -716,8 +791,8 @@ public class DocumentStoreList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(
           sqlCount.toString() +
-          sqlFilter.toString() +
-          "AND " + DatabaseUtils.toLowerCase(db) + "(title) < ? ");
+              sqlFilter.toString() +
+              "AND " + DatabaseUtils.toLowerCase(db) + "(title) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -737,8 +812,8 @@ public class DocumentStoreList extends ArrayList {
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
         "ds.* " +
-        "FROM document_store ds " +
-        "WHERE ds.document_store_id > -1 ");
+            "FROM document_store ds " +
+            "WHERE ds.document_store_id > -1 ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -760,10 +835,10 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of Parameter
-   * @param  db         Description of the Parameter
+   * @param sqlFilter Description of Parameter
+   * @param db        Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (sqlFilter == null) {
@@ -792,7 +867,7 @@ public class DocumentStoreList extends ArrayList {
     if (userRange != null) {
       sqlFilter.append(
           "AND (ds.document_store_id IN (SELECT DISTINCT document_store_id FROM document_store_user_member WHERE item_id IN (" + userRange + ")) " +
-          "OR ds.enteredBy IN (" + userRange + ")) ");
+              "OR ds.enteredBy IN (" + userRange + ")) ");
     }
     if (enteredByUser > -1) {
       sqlFilter.append("AND (ds.enteredby = ?) ");
@@ -807,15 +882,26 @@ public class DocumentStoreList extends ArrayList {
     } else {
       sqlFilter.append("AND ds.trashed_date IS NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst            Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -849,22 +935,33 @@ public class DocumentStoreList extends ArrayList {
     } else {
       // do nothing
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static HashMap buildNameList(Connection db) throws SQLException {
     HashMap nameList = new HashMap();
     PreparedStatement pst = db.prepareStatement(
         "SELECT document_store_id, title " +
-        "FROM document_store");
+            "FROM document_store");
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       nameList.put(
@@ -877,17 +974,17 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int buildDocumentStoreCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM document_store " +
-        "WHERE document_store_id > -1 ");
+            "FROM document_store " +
+            "WHERE document_store_id > -1 ");
     ResultSet rs = pst.executeQuery();
     rs.next();
     int count = rs.getInt("recordcount");
@@ -898,19 +995,19 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  tmpUserId      Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int buildDocumentStoreCount(Connection db, int tmpUserId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM document_store " +
-        "WHERE document_store_id > -1 " +
-        "AND enteredby = ? ");
+            "FROM document_store " +
+            "WHERE document_store_id > -1 " +
+            "AND enteredby = ? ");
     pst.setInt(1, tmpUserId);
     ResultSet rs = pst.executeQuery();
     rs.next();
@@ -922,11 +1019,11 @@ public class DocumentStoreList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  filePath       Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param filePath Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db, String filePath) throws SQLException {
     Iterator itr = this.iterator();
