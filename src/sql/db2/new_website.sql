@@ -233,5 +233,5 @@ CREATE SEQUENCE url_map_url_id_seq;
 CREATE TABLE url_map (
   url_id INTEGER NOT NULL PRIMARY KEY,
   time_in_millis DECIMAL NOT NULL,
-  url CLOB(2G)
+  url CLOB(2G) NOT LOGGED
 );
