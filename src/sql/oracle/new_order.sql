@@ -343,7 +343,7 @@ CREATE TABLE order_payment_status (
   PRIMARY KEY (PAYMENT_STATUS_ID)
 );
 
-CREATE SEQUENCE creditcard_creditcard_id_seq;
+CREATE SEQUENCE credit_card_creditcard_id_seq;
 CREATE TABLE credit_card (
   creditcard_id INTEGER NOT NULL PRIMARY KEY,
   card_type INT REFERENCES lookup_creditcard_types (code),
@@ -359,7 +359,7 @@ CREATE TABLE credit_card (
   modifiedby INT NOT NULL REFERENCES "access"(user_id)
 );
 
-CREATE SEQUENCE lookup_payment_gateway_seq;
+CREATE SEQUENCE lookup_paymen_gateway_code_seq;
 CREATE TABLE lookup_payment_gateway (
   code int NOT NULL PRIMARY KEY,
   description NVARCHAR2(50) NOT NULL,
@@ -369,7 +369,7 @@ CREATE TABLE lookup_payment_gateway (
   constant_id int
 );
 
-CREATE SEQUENCE merchant_payment_gateway_seq;
+CREATE SEQUENCE merchant_paym_t_gateway_id_seq;
 CREATE TABLE merchant_payment_gateway (
   merchant_payment_gateway_id INTEGER NOT NULL PRIMARY KEY,
   gateway_id int REFERENCES lookup_payment_gateway(code),

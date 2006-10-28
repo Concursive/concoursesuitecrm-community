@@ -318,7 +318,7 @@ CREATE TABLE order_payment_status(
     PRIMARY KEY(payment_status_id)
 );
 
-CREATE SEQUENCE creditcard_creditcard_id_seq;
+CREATE SEQUENCE credit_card_creditcard_id_seq;
 CREATE TABLE credit_card (
   creditcard_id INT NOT NULL,
   card_type INTEGER REFERENCES lookup_creditcard_types(code),
@@ -335,7 +335,7 @@ CREATE TABLE credit_card (
   PRIMARY KEY (creditcard_id)
 );
 
-CREATE SEQUENCE lookup_payment_gateway_seq;
+CREATE SEQUENCE lookup_paymen_gateway_code_seq;
 CREATE TABLE lookup_payment_gateway (
   code INT NOT NULL,
   description VARGRAPHIC(50) NOT NULL,
@@ -346,7 +346,7 @@ CREATE TABLE lookup_payment_gateway (
   PRIMARY KEY (code)
 );
 
-CREATE SEQUENCE merchant_payment_gateway_seq;
+CREATE SEQUENCE merchant_paym_t_gateway_id_seq;
 CREATE TABLE merchant_payment_gateway (
   merchant_payment_gateway_id INT NOT NULL,
   gateway_id int REFERENCES lookup_payment_gateway (code),
