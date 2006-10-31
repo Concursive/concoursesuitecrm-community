@@ -148,7 +148,7 @@ CREATE TABLE ticket(
     subcat_code1 INTEGER REFERENCES ticket_category(id),
     subcat_code2 INTEGER REFERENCES ticket_category(id),
     subcat_code3 INTEGER REFERENCES ticket_category(id),
-    assigned_to INTEGER REFERENCES "access",
+    assigned_to INTEGER REFERENCES "access"(user_id),
     "comment" VARGRAPHIC(2000),
     solution CLOB(2G) NOT LOGGED,
     scode INTEGER REFERENCES ticket_severity(code),

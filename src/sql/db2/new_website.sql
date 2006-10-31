@@ -39,8 +39,8 @@ CREATE TABLE web_site (
 CREATE SEQUENCE web_site_log_site_log_id_seq;
 CREATE TABLE web_site_log (
   site_log_id INTEGER NOT NULL PRIMARY KEY,
-  site_id INTEGER references web_site(site_id),
-  user_id INTEGER references "access"(user_id),
+  site_id INTEGER REFERENCES web_site(site_id),
+  user_id INTEGER REFERENCES "access"(user_id),
   username VARGRAPHIC(80) NOT NULL,
   ip VARGRAPHIC(80),
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -52,7 +52,7 @@ CREATE TABLE web_tab (
   tab_id INTEGER NOT NULL PRIMARY KEY,
   display_text VARGRAPHIC(300) NOT NULL,
   internal_description CLOB(2G) NOT LOGGED,
-  site_id INTEGER references web_site(site_id),
+  site_id INTEGER REFERENCES web_site(site_id),
   tab_position INTEGER NOT NULL,
   enabled CHAR(1) NOT NULL DEFAULT '1',
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

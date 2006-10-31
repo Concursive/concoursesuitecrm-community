@@ -120,7 +120,7 @@ CREATE TABLE ticket (
   subcat_code1 INT REFERENCES ticket_category(id),
   subcat_code2 INT REFERENCES ticket_category(id),
   subcat_code3 INT REFERENCES ticket_category(id),
-  assigned_to INT REFERENCES "access",
+  assigned_to INT REFERENCES "access"(user_id),
   "comment" NVARCHAR2(2000),
   solution CLOB,
   scode INT REFERENCES ticket_severity(code),
