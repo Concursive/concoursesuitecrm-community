@@ -376,6 +376,7 @@ public final class AccountsCalls extends CFSModule {
     addModuleBean(context, "View Accounts", "Save an Activity");
     //Process the parameters
     String contactId = context.getRequest().getParameter("contactId");
+    String followupContactId = context.getRequest().getParameter("followupContactId");
     String parentId = context.getRequest().getParameter("parentId");
     String action = context.getRequest().getParameter("action");
     //Save the current call
@@ -383,6 +384,7 @@ public final class AccountsCalls extends CFSModule {
     Call previousParentCall = null;
     thisCall.setModifiedBy(getUserId(context));
     thisCall.setContactId(contactId);
+    thisCall.setFollowupContactId(followupContactId);
     if (thisCall.getId() > 0) {
       permission = "accounts-accounts-contacts-calls-edit";
     }
@@ -441,7 +443,10 @@ public final class AccountsCalls extends CFSModule {
       context.getRequest().setAttribute("action","schedule");}
       //add account and contact to the request
       addFormElements(context, db);
-
+      ContactList cl = new ContactList();
+      cl.setOrgId(thisCall.getOrgId());
+      cl.buildList(db);
+      context.getRequest().setAttribute("contactList", cl);
       if (!recordInserted && resultCount == -1) {
         thisCall.setStatusId(tmpStatusId);
         if (thisCall.getAlertText() != null && !"".equals(

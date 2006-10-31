@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -12,7 +12,7 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id: accounts_contacts_calls_modify.jsp 15115 2006-05-31 16:47:51Z matt $
   - Description:
   --%>
@@ -51,47 +51,47 @@
     formTest = true;
     message = "";
 <% if("pending".equals(request.getParameter("view"))){ %>
-    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) {
       message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
-    if (checkNullString(form.alertText.value)) { 
+    if (checkNullString(form.alertText.value)) {
       message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
-    if (form.alertCallTypeId.value == "0") { 
+    if (form.alertCallTypeId.value == "0") {
       message += label("specify.alert.type", "- Please specify an alert type\r\n");
       formTest = false;
     }
 <% }else{ %>
-  if (checkNullString(form.subject.value)) { 
+  if (checkNullString(form.subject.value)) {
       message += label("specify.blank.records", "- Blank records cannot be saved\r\n");
       formTest = false;
     }
-    
-    if (form.callTypeId.value == "0") { 
+
+    if (form.callTypeId.value == "0") {
       message += label("specify.type", "- Please specify a type\r\n");
       formTest = false;
     }
-    
+
     if(form.hasFollowup != null && form.hasFollowup.checked){
-      if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+      if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) {
         message += label("specify.alert.date", "- Please specify an alert date\r\n");
         formTest = false;
       }
-      if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
+      if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) {
         message += label("specify.alert.description", "- Please specify an alert description\r\n");
         formTest = false;
       }
-      if (checkNullString(form.alertText.value)) { 
+      if (checkNullString(form.alertText.value)) {
         message += label("specify.alert.description", "- Please specify an alert description\r\n");
         formTest = false;
       }
-      if (form.alertCallTypeId.value == "0") { 
+      if (form.alertCallTypeId.value == "0") {
         message += label("specify.alert.type", "- Please specify an alert type\r\n");
         formTest = false;
       }
-     } 
+     }
 <% } %>
   if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
@@ -101,7 +101,7 @@
       return true;
     }
   }
-  
+
   function checkFollowup(form){
     if(form.hasFollowup != null && !form.hasFollowup.checked){
       form.alertText.value = '';
@@ -119,7 +119,7 @@
       }
     }
   }
-  
+
   <% if((!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null) ||
   !((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null)){ %>
   function toggleSpan(cb, tag) {
@@ -134,18 +134,18 @@
       hideSpan(tag);
     }
   }
-  
+
   function makeSuggestion(){
     if(document.getElementById('resultId').value > -1){
       window.frames['server_commands'].location.href='AccountsCalls.do?command=SuggestCall&resultId=' + document.getElementById('resultId').value;
     }
   }
-  
+
   function addFollowup(hours, typeId){
     var form = document.addCall;
     var selectedIndex = 0;
     var callTypes = form.alertCallTypeId;
-    
+
     for(i = 0; i < callTypes.options.length; i++){
       if(callTypes.options[i].value == typeId){
         selectedIndex = i;
@@ -172,7 +172,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
@@ -206,6 +206,7 @@
     <% if("pending".equals(request.getParameter("view"))){ %>
       <%-- include pending activity form --%>
       <%@ include file="../contacts/call_followup_include.jsp" %>
+      <input type="hidden" name="action" value="<%=action %>">
       &nbsp;
       <%-- include completed activity details --%>
       <%@ include file="accounts_contacts_calls_details_include.jsp" %>

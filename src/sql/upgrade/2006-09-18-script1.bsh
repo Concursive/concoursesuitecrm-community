@@ -1,24 +1,21 @@
 import java.sql.*;
+import org.aspcfs.modules.admin.base.PaymentGateway;
 
 //Add new lines to lookup_payment_gateway table
 print("Add new lines to lookup_payment_gateway table...");
 
-PreparedStatement pst = db.prepareStatement(
-  "INSERT INTO lookup_payment_gateway "+
-        "( description, level, enabled, constant_id) "+ 
-        " VALUES (?, ?, ?, ?)");
-pst.setString(1, "Authorize.net");
-pst.setInt(2, 10);
-pst.setBoolean(3, true);
-pst.setInt(4, 8110621);
-pst.executeUpdate();
+PaymentGateway elt = new PaymentGateway();
+elt.setDescription("Authorize.net");
+elt.setLevel(10);
+elt.setEnabled(true);
+elt.setConstantId(8110621);
+elt.insert(db);
 
-pst.setString(1, "PPIPaymover");
-pst.setInt(2, 10);
-pst.setBoolean(3, true);
-pst.setInt(4, 8110622);
-pst.executeUpdate();
-
-pst.close();
+PaymentGateway elt = new PaymentGateway();
+elt.setDescription("PPIPaymover");
+elt.setLevel(10);
+elt.setEnabled(true);
+elt.setConstantId(8110622);
+elt.insert(db);
 
 print("Finished");

@@ -757,9 +757,10 @@ public class CallList extends ArrayList {
     sqlSelect.append(
         "SELECT c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate, c.alert, " +
         "c.owner, c.notes, c." + DatabaseUtils.addQuotes(db, "length") + ", c.followup_notes, c.complete_date, c.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " +
-        "ct.org_name as ctcompany, o.name as orgname, c.status_id, c.entered, p.description as priority, " +
+        "ct.org_name as ctcompany, o.name as orgname, c.status_id, c.entered, p.description as priority, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, " +
         "c.followup_contact_id "+
         "FROM call_log c " +
+        "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
         "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
@@ -799,12 +800,23 @@ public class CallList extends ArrayList {
       thisCall.setStatusId(rs.getInt("status_id"));
       thisCall.setEntered(rs.getTimestamp("entered"));
       thisCall.setPriorityString(rs.getString("priority"));
-      thisCall.setFollowupContactId(rs.getInt("followup_contact_id"));
-
+      thisCall.setFollowupContactId(DatabaseUtils.getInt(rs, "followup_contact_id"));
+      String followupContactName = Contact.getNameLastFirst(
+          rs.getString("fctlast"), rs.getString("fctfirst"));
+      if (followupContactName == null || "".equals(followupContactName)) {
+        followupContactName = rs.getString("fctcompany");
+      }
+      thisCall.setFollowupContactName(followupContactName);
       //build Contact Details
+      if(thisCall.getContactId()>0){
       Contact thisContact = new Contact();
       thisContact.setId(thisCall.getContactId());
       thisCall.setContact(thisContact);
+      }else if(thisCall.getFollowupContactId()>0){
+        Contact thisContact = new Contact();
+        thisContact.setId(thisCall.getFollowupContactId());
+        thisCall.setContact(thisContact);
+        }
 
       //add call to list
       this.add(thisCall);

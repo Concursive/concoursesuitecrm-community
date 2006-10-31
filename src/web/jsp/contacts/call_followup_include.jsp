@@ -69,7 +69,7 @@
     </td>
   </tr>
 </dhv:evaluate>
-<% if(contactList!=null && !contactList.isEmpty() && "accountItem".equals(actionSource)){%>    
+<% if(contactList!=null && !contactList.isEmpty()){%>    
   <tr class="containerBody">
   <td class="formLabel">
       <dhv:label name="accounts.accounts_add.Contact">Contact</dhv:label>

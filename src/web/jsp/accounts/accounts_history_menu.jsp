@@ -80,8 +80,15 @@
       } else {
         hideSpan('menuEditAccountHistoryObject');
       }
+      if(thisContactId!=-1){
       urlDetails = 'AccountContactsCalls.do?command=Details&contactId='+thisContactId+'&id='+ thisItemId+'&trailSource=accounts';
       urlModify = 'AccountContactsCalls.do?command=Modify&contactId='+thisContactId+'&id='+ thisItemId;
+      }
+      else{
+      urlDetails = 'AccountsCalls.do?command=Details&orgId='+thisOrgId+'&id='+ thisItemId+'&trailSource=accounts';
+      urlModify = 'AccountsCalls.do?command=Modify&orgId='+thisOrgId+'&id='+ thisItemId;
+      
+      }
       isPopup = false;
     } else if(thisObjectId == '<%= OrganizationHistory.CANCELED_ACTIVITY %>') {
       hideSpan('menuDeleteAccountHistoryObject');
@@ -91,7 +98,13 @@
         hideSpan('menuViewAccountHistoryObject');
       }
       hideSpan('menuEditAccountHistoryObject');
+      if(thisContactId!=-1){
       urlDetails = 'AccountContactsCalls.do?command=Details&contactId='+thisContactId+'&id='+ thisItemId+'&trailSource=accounts';
+      }
+      else
+      {
+      urlDetails = 'AccountsCalls.do?command=Details&orgId='+thisOrgId+'&id='+ thisItemId+'&trailSource=accounts';
+      }
       isPopup = false;
     } else if(thisObjectId == '<%= OrganizationHistory.CFSNOTE %>') {
       hideSpan('menuDeleteAccountHistoryObject');

@@ -179,8 +179,7 @@ public class DatabaseUtils {
       return ORACLE;
     } else if (databaseName.indexOf("oracle") > -1) {
       return ORACLE;
-    } else if (databaseName.startsWith(
-        "in.co.daffodil.db.jdbc.DaffodilDBConnection")) {
+    } else if ("in.co.daffodil.db.jdbc.DaffodilDBConnection".equals(databaseName)) {
       return DAFFODILDB;
     } else if (databaseName.indexOf("db2") > -1) {
       return DB2;

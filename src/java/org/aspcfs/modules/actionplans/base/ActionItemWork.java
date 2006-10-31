@@ -1559,6 +1559,16 @@ public class ActionItemWork extends GenericBean {
       if (nextStep != null && nextStep.isCurrent()) {
         return true;
       }
+      if(nextStep!=null && nextStep.getPlanWork()!=null && this.getPlanWork().getPhaseWorkList() != null)
+      {
+        ActionPhaseWork nextPhaseWork = nextStep.getPlanWork().getPhaseWorkList().getPhaseWorkById(nextStep.getPhaseWorkId());
+        if (nextPhaseWork != null) {
+          if (nextPhaseWork.getPhase() != null && nextPhaseWork.getPhase().getRandom() && nextPhaseWork.getItemWorkList() != null 
+              && nextPhaseWork.getItemWorkList().size() > 0 && nextPhaseWork.noStepComplete()) {
+            return true;
+          }
+        }
+      }
     } else {
       //Last step in the plan. Check if it already has a status
       if (hasStatus()) {

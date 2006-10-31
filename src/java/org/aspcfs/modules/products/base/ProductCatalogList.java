@@ -82,7 +82,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private String dateAfter = null;
   private String groupKeywords = null;
   private String[] keywords = null;
-  
+
   private boolean excludeUnapprovedProducts = true;
   //Logger
   private long milies = -1;
@@ -91,8 +91,8 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if(System.getProperty("DEBUG")!= null){
       logger.setLevel(Level.DEBUG);
     }
-  }  
-  
+  }
+
 
   //resources
   private boolean buildResources = false;
@@ -1427,7 +1427,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
         sqlFilter.append(" AND ( " + DatabaseUtils.toLowerCase(db) +"(pctlg.product_name) like ? OR " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.convertToVarChar(db, "pctlg.short_description") + ") like ? OR " + DatabaseUtils.toLowerCase(db) + "(" + DatabaseUtils.convertToVarChar(db, "pctlg.long_description") + ") like ?) ");
       }
     }
-    
+
     if (abbreviation != null) {
       if (abbreviation.indexOf("%") >= 0) {
         sqlFilter.append(
@@ -1635,7 +1635,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
         pst.setString(++i, ("%"+keywords[i1].toLowerCase()+"%"));
       }
     }
-    
+
     if (abbreviation != null) {
       pst.setString(++i, abbreviation.toLowerCase());
     }
@@ -1964,7 +1964,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
   /**
    * Sets the dateAfter attribute of the ProductCatalogList object
-   * dateAfter - The Search attribute 
+   * dateAfter - The Search attribute
    * Parse on  the mask  number_ dimensions
    * number - int
    * dimensions - Field name of the java.util.Calendar (HOUR|MONTH|YEAR)
@@ -1972,22 +1972,22 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
    */
   public void setDateAfter(String dateAfter) throws Exception{
     this.dateAfter = dateAfter;
-    if(dateAfter != null && dateAfter != "" ){ 
+    if(dateAfter != null && dateAfter != "" ){
       String[] temp = dateAfter.split("_");
       Calendar cal = Calendar.getInstance();
       int calendarConst = -1;
-      java.lang.reflect.Field[] fields = cal.getClass().getFields();      
+      java.lang.reflect.Field[] fields = cal.getClass().getFields();
       for(int i=0;i<fields.length;i++){
         if(fields[i].getName().equals(temp[1])){
           calendarConst = fields[i].getInt(cal);
           break;
         }
-          
+
       }
       cal.add(calendarConst,-1*Integer.parseInt(temp[0]));
       java.util.Date date = cal.getTime();
       this.startDate = new Timestamp(date.getTime());
-    }    
+    }
   }
 
 
@@ -1995,7 +1995,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
    * Gets the groupKeywords attribute of the ProductCatalogList object
    *
    */
-	 public void setGroupKeywords(String tmp) { 
+	 public void setGroupKeywords(String tmp) {
 	 	this.groupKeywords = tmp;
 		keywords = groupKeywords.split(" ");
 	 }
@@ -2006,7 +2006,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
    *
    * @return The groupKeywords value
    */
-	 public String getGroupKeywords() { 
+	 public String getGroupKeywords() {
 	 	return groupKeywords;
 	 }
 
@@ -2023,7 +2023,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
   /**
    * Sets the keywords attribute of the ProductCatalogList object
-   *  
+   *
    * @param keywords The new keywords value
    */
   public void setKeywords(String[] keywords) {

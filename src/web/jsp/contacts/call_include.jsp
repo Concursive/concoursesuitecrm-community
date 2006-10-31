@@ -58,8 +58,7 @@
       message += label("specify.type","- Please specify a type\r\n");
       formTest = false;
     }
-    
-    if(form.hasFollowup != null && form.hasFollowup.checked){
+    if(form.hasFollowup != null && form.hasFollowup.checked || form.action.value=='schedule'){
     if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
       message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;

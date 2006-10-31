@@ -67,7 +67,7 @@
     <tr <%= toString(pendingCall.getPriorityString()).startsWith("H") ? "class=\"highlightRow\"" : ""%>>
      <td valign="top">
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getContactId() %>', '<%= pendingCall.getId() %>','pending');" 
+       <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getFollowupContactId() %>', '<%= pendingCall.getId() %>','pending');" 
           onMouseOver="over(0, <%= menuCount %>);" 
           onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall');"><img
           src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
@@ -76,8 +76,8 @@
        <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" timeOnly="true"/>
      </td>
      <td nowrap valign="top">
-     <% if(pendingCall.getContactName()!=null){ %>
-      <%= toString(pendingCall.getContactName()) %>
+     <% if(pendingCall.getFollowupContactName()!=null){ %>
+      <%= toString(pendingCall.getFollowupContactName()) %>
        <%} else {%>
       <%= StringUtils.trimToSize(toString(pendingCall.getOrgName()), 20) %>
        <%}%>
@@ -143,7 +143,7 @@
   <tr>
    <td valign="top">
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-     <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= completedCall.getOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
+     <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
         onMouseOver="over(0, <%= menuCount %>)" 
         onMouseOut="out(0, <%= menuCount %>);hideMenu('menuCall');"><img 
         src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0"></a>

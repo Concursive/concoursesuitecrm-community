@@ -32,6 +32,7 @@ public class OrderPayment extends GenericBean {
   private int orderId = -1;
   private int orderItemId = -1;
   private int historyId = -1;
+  private int gatewayId = -1;
   private int paymentMethodId = -1;
   private double amount = 0;
 
@@ -50,6 +51,35 @@ public class OrderPayment extends GenericBean {
   private String status = null;
   private boolean buildOrderPaymentStatusList = false;
   private OrderPaymentStatusList orderPaymentStatusList = null;
+
+
+  /**
+   * Gets the gatewayId attribute of the OrderPayment object
+   *
+   * @return gatewayId The gatewayId value
+   */
+  public int getGatewayId() {
+    return this.gatewayId;
+  }
+
+
+  /**
+   * Sets the gatewayId attribute of the OrderPayment object
+   *
+   * @param gatewayId The new gatewayId value
+   */
+  public void setGatewayId(int gatewayId) {
+    this.gatewayId = gatewayId;
+  }
+
+  /**
+   * Sets the gatewayId attribute of the OrderPayment object
+   *
+   * @param gatewayId The new gatewayId value
+   */
+  public void setGatewayId(String gatewayId) {
+    this.gatewayId = Integer.parseInt(gatewayId);
+  }
 
 
   /**
@@ -704,7 +734,9 @@ public class OrderPayment extends GenericBean {
     creditCardId = DatabaseUtils.getInt(rs, "creditcard_id");
     bankId = DatabaseUtils.getInt(rs, "bank_id");
     statusId = DatabaseUtils.getInt(rs, "status_id");
+    gatewayId = DatabaseUtils.getInt(rs, "gateway_id");
 
+    
     //lookup_payment_status table
     status = rs.getString("status_description");
   }
@@ -723,7 +755,7 @@ public class OrderPayment extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO order_payment(order_id, order_item_id, history_id, payment_method_id, payment_amount, " +
-        " 	authorization_ref_number, authorization_code, authorization_date, status_id, ");
+        " 	authorization_ref_number, authorization_code, authorization_date, status_id, gateway_id, ");
     if (id > -1) {
       sql.append("payment_id, ");
     }
@@ -735,7 +767,7 @@ public class OrderPayment extends GenericBean {
       sql.append(" modified, ");
     }
     sql.append(" modifiedby, date_to_process, creditcard_id, bank_id )");
-    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ");
     if (id > -1) {
       sql.append("?,");
     }
@@ -760,6 +792,7 @@ public class OrderPayment extends GenericBean {
     pst.setString(++i, this.getAuthorizationCode());
     pst.setTimestamp(++i, this.getAuthorizationDate());
     DatabaseUtils.setInt(pst, ++i, this.getStatusId());
+    DatabaseUtils.setInt(pst, ++i, this.getGatewayId());
     if (id > -1) {
       pst.setInt(++i, id);
     }
@@ -853,6 +886,7 @@ public class OrderPayment extends GenericBean {
         "     authorization_code = ?, " +
         "     authorization_date = ?, " +
         "     status_id = ?, " +
+        "     gateway_id = ?, " +
         "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "     modifiedby = ? " +
         " WHERE payment_id = ? ");
@@ -869,6 +903,7 @@ public class OrderPayment extends GenericBean {
     pst.setString(++i, this.getAuthorizationCode());
     DatabaseUtils.setTimestamp(pst, ++i, this.getAuthorizationDate());
     DatabaseUtils.setInt(pst, ++i, this.getStatusId());
+    DatabaseUtils.setInt(pst, ++i, this.getGatewayId());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
 

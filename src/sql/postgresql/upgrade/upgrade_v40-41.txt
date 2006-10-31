@@ -61,8 +61,6 @@
 
 # E-commerce
 2006-09-14-script1.bsh
-### TODO: the following script needs to use Objects, not a Statement
-### because it will most likely work with PSQL and MSSQL only
 2006-09-18-script1.bsh
 
 # Import fields for D&B

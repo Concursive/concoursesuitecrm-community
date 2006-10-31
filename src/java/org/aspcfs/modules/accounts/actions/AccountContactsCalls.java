@@ -445,6 +445,10 @@ public final class AccountContactsCalls extends CFSModule {
       //add account and contact to the request
       addFormElements(context, db);
 
+      ContactList cl = new ContactList();
+      cl.setOrgId(thisCall.getOrgId());
+      cl.buildList(db);
+      context.getRequest().setAttribute("contactList",cl);
       if (!recordInserted && resultCount == -1) {
         thisCall.setStatusId(tmpStatusId);
         if (thisCall.getAlertText() != null && !"".equals(
@@ -540,6 +544,10 @@ public final class AccountContactsCalls extends CFSModule {
       //add account and contact to the request
       Contact thisContact = addFormElements(context, db);
 
+      ContactList cl = new ContactList();
+      cl.setOrgId(orgId);
+      cl.buildList(db);
+      context.getRequest().setAttribute("contactList",cl);
       addModifyFormElements(db, context, thisCall);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -883,7 +891,7 @@ public final class AccountContactsCalls extends CFSModule {
     Contact thisContact = (Contact) context.getRequest().getAttribute(
         "ContactDetails");
     Organization thisOrganization = null;
-    if (thisContact == null && contactId != null && !"-1".equals(contactId)) {
+    if (thisContact == null && contactId!=null && !"-1".equals(contactId) && !"0".equals(contactId)) {
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
