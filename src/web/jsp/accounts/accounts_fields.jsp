@@ -53,7 +53,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>"  appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="folders" object="OrgDetails" hideContainer="<%= "true".equals(request.getParameter("actionplan")) %>" param="<%= "orgId=" + OrgDetails.getOrgId() %>"  appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
       <td>
@@ -75,8 +75,8 @@
   </table>
   <br>
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
-    <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>';submit();"></dhv:permission>
-    <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>';confirmSubmit(this.form);"></dhv:permission>
+    <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>';submit();"></dhv:permission>
+    <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>';confirmSubmit(this.form);"></dhv:permission>
     <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
       <br /><br /><dhv:formMessage showSpace="false" />
     </dhv:permission>
@@ -147,8 +147,8 @@
   </table>
   <br>
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
-    <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>';submit();"></dhv:permission>
-    <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>';confirmSubmit(this.form);"></dhv:permission>
+    <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>';submit();"></dhv:permission>
+    <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>';confirmSubmit(this.form);"></dhv:permission>
   </dhv:evaluate>
 </dhv:container>
 </form>

@@ -50,22 +50,22 @@
       <td>
         <input type="hidden" name="catalogId" value="<%= productCatalog.getId() %>">
         <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-          <dhv:permission name="product-catalog-edit">
+          <dhv:permission name="product-catalog-product-edit">
             <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Modify&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
           </dhv:permission>
-          <dhv:permission name="product-catalog-add">
+          <dhv:permission name="product-catalog-product-add">
             <input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Clone&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&actionReq=clone'"/>
           </dhv:permission>
-          <dhv:permission name="product-catalog-delete">
+          <dhv:permission name="product-catalog-product-delete">
             <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogs.do?command=ConfirmDelete&productId=<%=productCatalog.getId()%>&popup=true','ProductCatalogEditor.do?command=List&moduleId=<%=permissionCategory.getId()%>&categoryId=<%= productCategory.getId() %>', 'Delete_category','320','200','yes','no');">
           </dhv:permission>
         </dhv:evaluate>
         <dhv:evaluate if="<%= productCatalog.isTrashed() %>">
-          <dhv:permission name="product-catalog-delete">
+          <dhv:permission name="product-catalog-product-delete">
             <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Restore&productId=<%=productCatalog.getId()%>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
           </dhv:permission>
         </dhv:evaluate>
-        <dhv:permission name="product-catalog-edit,product-catalog-add,product-catalog-delete">
+        <dhv:permission name="product-catalog-product-edit,product-catalog-product-add,product-catalog-product-delete">
         &nbsp;<br /><br />
         </dhv:permission>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -225,18 +225,18 @@
         </table>
         <br />
         <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-          <dhv:permission name="product-catalog-edit">
+          <dhv:permission name="product-catalog-product-edit">
             <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Modify&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
           </dhv:permission>
-          <dhv:permission name="product-catalog-add">
+          <dhv:permission name="product-catalog-product-add">
             <input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Clone&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&actionReq=clone'"/>
           </dhv:permission>
-          <dhv:permission name="product-catalog-delete">
+          <dhv:permission name="product-catalog-product-delete">
             <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogs.do?command=ConfirmDelete&productId=<%=productCatalog.getId()%>&popup=true','ProductCatalogEditor.do?command=List&moduleId=<%=permissionCategory.getId()%>&categoryId=<%= productCategory.getId() %>', 'Delete_category','320','200','yes','no');">
           </dhv:permission>
         </dhv:evaluate>
         <dhv:evaluate if="<%=productCatalog.getTrashedDate() != null%>">
-          <dhv:permission name="product-catalog-delete">
+          <dhv:permission name="product-catalog-product-delete">
             <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:window.location.href='ProductCatalogs.do?command=Restore&productId=<%=productCatalog.getId()%>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>'">
           </dhv:permission>
         </dhv:evaluate>

@@ -53,7 +53,7 @@
   }
 
   function deleteContract() {
-    popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContractId + '&popup=true<%= isPopup(request)?"&popupType=true":"" %>','AccountsServiceContracts.do?command=List&orgId=' + thisOrgId,'Delete_servicecontract','330','200','yes','no');
+    popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContractId + '&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountsServiceContracts.do?command=List&orgId=' + thisOrgId,'Delete_servicecontract','330','200','yes','no');
   }
 
 </script>

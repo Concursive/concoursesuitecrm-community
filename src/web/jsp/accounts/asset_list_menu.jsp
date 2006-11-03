@@ -53,7 +53,7 @@
   }
 
   function deleteAsset() {
-    popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisAssetId + '&popup=true<%= isPopup(request)?"&popupType=true":"" %>','AccountsAssets.do?command=List&orgId=' + thisOrgId,'Delete_asset','330','200','yes','no');
+    popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisAssetId + '&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountsAssets.do?command=List&orgId=' + thisOrgId,'Delete_asset','330','200','yes','no');
   }
 
 </script>

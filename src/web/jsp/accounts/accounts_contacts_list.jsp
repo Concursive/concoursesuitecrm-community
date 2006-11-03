@@ -37,7 +37,7 @@
 </script>
 <script language="JavaScript" TYPE="text/javascript">
 function reopen() {
-  window.location.href='Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() + (isPopup(request)?"&popup=true":"") %>';
+  window.location.href='Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() + (isPopup(request)?"&popup=true":"")+("true".equals(request.getParameter("actionplan"))?"&actionplan=true":"")  %>';
 }
 </script>
 <dhv:evaluate if="<%= !isPopup(request) %>">
@@ -54,9 +54,9 @@ function reopen() {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() || "true".equals(request.getParameter("actionplan")) %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
   <dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
-    <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")+ (isPopup(request)?"&popup=true":"")%>"><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></a></dhv:permission>
+    <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")+ (isPopup(request)?"&popup=true":"")+("true".equals(request.getParameter("actionplan"))?"&actionplan=true":"") %>"><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></a></dhv:permission>
   </dhv:evaluate>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="ContactListInfo"/></center></dhv:include>
@@ -97,7 +97,7 @@ function reopen() {
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuContact');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="center" width="50%">
-        <a href="Contacts.do?command=Details&id=<%=thisContact.getId()+ (isPopup(request)?"&popup=true":"") %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
+        <a href="Contacts.do?command=Details&id=<%=thisContact.getId()+ (isPopup(request)?"&popup=true":"")+("true".equals(request.getParameter("actionplan"))?"&actionplan=true":"")  %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
       </td>
       <td valign="center" width="50%">
         <%= toHtml(thisContact.getTitle()) %>

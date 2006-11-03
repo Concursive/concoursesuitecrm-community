@@ -32,7 +32,7 @@ if (categoryId != -1) {
   PermissionCategory permissionCategory = new PermissionCategory(db, categoryId);
 
   // See if permission already exists
-  int existingId = Permission.lookupId(db, "product-catalog");
+  int existingId = Permission.lookupId(db, "product-catalog-product-imports");
 
   if (existingId == -1) {
     // Insert a new permission so that user roles can access folders

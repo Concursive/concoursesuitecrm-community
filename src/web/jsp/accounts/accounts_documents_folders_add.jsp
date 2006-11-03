@@ -44,7 +44,7 @@
     return true;
   }
 </script>
-<form method="POST" name="inputForm" action="AccountsDocumentsFolders.do?command=Save&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return checkForm(this);">
+<form method="POST" name="inputForm" action="AccountsDocumentsFolders.do?command=Save&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>" onSubmit="return checkForm(this);">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -66,12 +66,12 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="documents" object="OrgDetails" hideContainer="<%= "true".equals(request.getParameter("actionplan")) %>" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
 <%
-String documentFolderList = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId()+ addLinkParams(request, "popup|popupType|actionId");
+String documentFolderList = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId()+ addLinkParams(request, "popup|popupType|actionId|actionplan");
 String documentModule = "Accounts";
 %>
       <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
@@ -80,7 +80,7 @@ String documentModule = "Accounts";
 </table>
 <br>
   <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';" /><br />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';" /><br />
   <dhv:formMessage />
   <br />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -112,7 +112,7 @@ String documentModule = "Accounts";
   <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   <input type="hidden" name="dosubmit" value="true">
   <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save" />
-  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';" /><br />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';" /><br />
 </dhv:container>
 </form>
 </body>

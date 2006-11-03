@@ -58,7 +58,7 @@
     <td>
 			<strong><dhv:label name="product.priceNumber.symbol">Price #</dhv:label><%= Pricing.getId() %></strong><br>
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="product-catalog-edit">
+        <dhv:permission name="product-catalog-product-edit">
           &nbsp;<br />
           <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogPricings.do?command=ModifyPricing&pricingId=<%= Pricing.getId() %>&categoryId=<%= productCategory.getId() %>&productId=<%= productCatalog.getId() %>&moduleId=<%= permissionCategory.getId() %>'"/>
           <% if (Pricing.getEnabled()) { %>
@@ -177,7 +177,7 @@
 			<input type="hidden" name="catalogId" value="<%= productCatalog.getId() %>" />
 			<input type="hidden" name="moduleId" value="<%= permissionCategory.getId() %>" />
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="product-catalog-edit">
+        <dhv:permission name="product-catalog-product-edit">
         <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCatalogPricings.do?command=ModifyPricing&pricingId=<%= Pricing.getId() %>&categoryId=<%= productCategory.getId() %>&productId=<%= productCatalog.getId() %>&moduleId=<%= permissionCategory.getId() %>'"/>
         <% if (Pricing.getEnabled()) { %>
           <input type="button" value="<dhv:label name="button.disable">Disable</dhv:label>" onClick="javascript:confirmDelete('ProductCatalogPricings.do?command=DisablePricing&productId=<%= productCatalog.getId() %>&pricingId=<%= Pricing.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>&return=details');"/>

@@ -254,7 +254,7 @@
             <input type="text" size="20" maxlength="30" name="searchcodeAssetSerialNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeAssetSerialNumber") %>">
           </td>
         </tr>
-      <dhv:evaluate if="<%= SiteList.size() > 1 %>">
+      <dhv:evaluate if="<%= SiteList.size() > 2 %>">
         <tr>
           <td nowrap class="formLabel">
             <dhv:label name="accounts.site">Site</dhv:label>
@@ -269,8 +269,8 @@
            </dhv:evaluate>
           </td>
         </tr>
-      </dhv:evaluate> 
-      <dhv:evaluate if="<%= SiteList.size() <= 1 %>">
+      </dhv:evaluate>  
+      <dhv:evaluate if="<%= SiteList.size() <= 2 %>">
         <input type="hidden" name="searchcodeOrgSiteId" id="searchcodeOrgSiteId" value="-1" />
       </dhv:evaluate>
         <%--

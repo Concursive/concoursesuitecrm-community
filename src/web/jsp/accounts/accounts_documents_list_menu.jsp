@@ -39,43 +39,43 @@
 
   //Folder operations
   function viewFolder() {
-    window.location.href='AccountsDocuments.do?command=View&orgId=' + thisOrgId + '&folderId=' + thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='AccountsDocuments.do?command=View&orgId=' + thisOrgId + '&folderId=' + thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
 
   function editFolder() {
-    window.location.href='AccountsDocumentsFolders.do?command=Modify&orgId=' + thisOrgId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='AccountsDocumentsFolders.do?command=Modify&orgId=' + thisOrgId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
   function moveFolder() {
     popURL('AccountsDocumentsFolders.do?command=Move&orgId=' + thisOrgId + '&id=' + thisFolderId + '&popup=true&return=AccountsDocuments&param='+ thisOrgId+'&param2='+ thisFolderId ,'Files','400','375','yes','yes');
   }
   function deleteFolder() {
-    confirmDelete('AccountsDocumentsFolders.do?command=Delete&orgId=' + thisOrgId + '&id=' + thisFolderId + '&folderId=' + thisFileId+'<%= addLinkParams(request, "popup|popupType|actionId") %>' );
+    confirmDelete('AccountsDocumentsFolders.do?command=Delete&orgId=' + thisOrgId + '&id=' + thisFolderId + '&folderId=' + thisFileId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>' );
   }
 
   //File operations
   function viewFileHistory() {
-    document.location.href='AccountsDocuments.do?command=Details&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    document.location.href='AccountsDocuments.do?command=Details&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
   function details() {
-    window.location.href='AccountsDocuments.do?command=Details&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='AccountsDocuments.do?command=Details&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
   function modify() {
-    window.location.href='AccountsDocuments.do?command=Modify&orgId=' + thisOrgId + '&fid=' + thisFileId +'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='AccountsDocuments.do?command=Modify&orgId=' + thisOrgId + '&fid=' + thisFileId +'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
   function download() {
-    window.location.href='AccountsDocuments.do?command=Download&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='AccountsDocuments.do?command=Download&orgId=' + thisOrgId + '&fid=' + thisFileId+'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
   function view() {
     popURL('AccountsDocuments.do?command=Download&orgId='+ thisOrgId +'&fid=' + thisFileId + '&view=true', 'Content', 640,480, 1, 1);
   }
   function addVersion() {
-    document.location.href='AccountsDocuments.do?command=AddVersion&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    document.location.href='AccountsDocuments.do?command=AddVersion&orgId='+ thisOrgId +'&fid=' + thisFileId + '&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
   function moveFile() {
     popURL('AccountsDocuments.do?command=Move&orgId='+ thisOrgId+'&fid=' + thisFileId + '&popup=true&return=AccountsDocuments&param='+thisOrgId+'&param2='+thisFolderId,'Files','400','375','yes','yes');
   }
   function deleteFile() {
-    confirmDelete('AccountsDocuments.do?command=Delete&fid=' + thisFileId + '&orgId=' + thisOrgId+'&folderId='+ thisFolderId);
+    confirmDelete('AccountsDocuments.do?command=Delete&fid=' + thisFileId + '&orgId=' + thisOrgId+'&folderId='+ thisFolderId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>');
   }
   
 </script>

@@ -49,15 +49,15 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='OpportunitiesComponents.do?command=DetailsComponent&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='OpportunitiesComponents.do?command=DetailsComponent&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
 
   function log() {
-    window.location.href='OpportunitiesComponents.do?command=ComponentHistory&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId+'<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='OpportunitiesComponents.do?command=ComponentHistory&orgId=' + thisOrgId + '&headerId=' + thisHeaderId + '&id=' + thisCompId+'<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
 
   function modify() {
-    window.location.href='OpportunitiesComponents.do?command=ModifyComponent&id=' + thisCompId  + '&orgId=' + thisOrgId  + '&headerId=' + thisHeaderId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='OpportunitiesComponents.do?command=ModifyComponent&id=' + thisCompId  + '&orgId=' + thisOrgId  + '&headerId=' + thisHeaderId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
 
   function deleteOpp() {

@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -316,6 +317,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     renderParams.put("searchResults", new String[]{request.getParameter("searchResults")});
     request.setAttribute("page", request.getParameter("page"));
     request.setAttribute("offset", request.getParameter("offset"));
+    request.setAttribute("parentOffset", request.getParameter("parentOffset"));
     productCatalogListInfo.setRenderParameters(renderParams);
 
     String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
@@ -420,6 +422,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
     request.setAttribute("parentCategory", parentCategory);
 
+    // Set parent category offset
+    this.setProductCatalogOffset(String.valueOf(parentCategory.getId()), request.getParameter("parentOffset"), request.getPortletSession());
+
     // Get Paged List handler for product catalog list
     PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
     productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
@@ -449,6 +454,9 @@ public class ProductCatalogPortlet extends GenericPortlet {
 
     // Set previous page
     request.getPortletSession().setAttribute("previousPage", "summary");
+    request.setAttribute("parentOffset",
+          this.getProductCatalogOffset(request.getParameter("categoryId"),
+                                       request.getPortletSession()));
     request.setAttribute("productCatalogList", productCatalogList);
     request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
   }
@@ -470,6 +478,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     // Get Paged List handler for product catalog list
     PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
     productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
+    productCatalogListInfo.setItemsPerPage(request.getParameter("itemsPerPage"));
     // Setting URL
     HashMap renderParams = new HashMap();
     renderParams.put("viewType", new String[]{"searchResult"});
@@ -612,6 +621,30 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
   }
 
+  private void setProductCatalogOffset(String categogoryId, String offset, PortletSession portletSession){
+    HashMap catalogOffset;
+    if(portletSession.getAttribute("ProductCatalogOffset") != null){ 
+      catalogOffset = (HashMap)portletSession.getAttribute("ProductCatalogOffset");
+    }else{
+      catalogOffset = new HashMap();
+    }
+     catalogOffset.put(categogoryId,offset);
+     portletSession.setAttribute("ProductCatalogOffset",catalogOffset);
+  }
+  
+  private String getProductCatalogOffset(String categogoryId, PortletSession portletSession){
+    HashMap catalogOffset;
+    if(portletSession.getAttribute("ProductCatalogOffset") != null){ 
+      catalogOffset = (HashMap)portletSession.getAttribute("ProductCatalogOffset");
+    }else{
+      return "0";
+    }
+    if(catalogOffset.containsKey(categogoryId)){
+       return (String)catalogOffset.get(categogoryId);
+      }
+    return "0";
+  }
+  
 }
 
-
+ 

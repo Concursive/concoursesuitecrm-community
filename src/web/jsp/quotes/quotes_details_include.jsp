@@ -393,7 +393,7 @@ rowCounter = '<%= rowCounter %>';
 <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
   <dhv:evaluate if="<%=(!quote.getLock())%>" >
   <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popURL('ProductsCatalog.do?command=Categories&amp;quoteId=<%= quote.getId() %>','Products','600','500','yes','yes');" />
-  <dhv:permission name="product-catalog-add"><input type="button" value="<dhv:label name="button.create">Create</dhv:label>" onClick="javascript:popURL('QuotesProducts.do?command=CreateForm&quoteId=<%= quote.getId() %>','QuoteItem','500','400','yes','yes');"/></dhv:permission> &nbsp;
+  <dhv:permission name="product-catalog-product-add"><input type="button" value="<dhv:label name="button.create">Create</dhv:label>" onClick="javascript:popURL('QuotesProducts.do?command=CreateForm&quoteId=<%= quote.getId() %>','QuoteItem','500','400','yes','yes');"/></dhv:permission> &nbsp;
   </dhv:evaluate>
   <input type="checkbox" name="showTotals" id="showTotals" value="0" <%= quote.getShowTotal()?"CHECKED":"" %> onClick="javascript:setShowTotal(this);" /> <dhv:label name="quotes.showGrandTotalPrice">Show the grand total price</dhv:label>
   <input type="checkbox" name="showSubtotals" id="showSubtotals" value="0" <%= quote.getShowSubtotal()?"CHECKED":"" %> onClick="javascript:setShowSubtotal(this);" /> <dhv:label name="quotes.showSubTotalPrice">Show the sub-total price</dhv:label>
@@ -415,7 +415,7 @@ rowCounter = '<%= rowCounter %>';
     <dhv:evaluate if="<%= (quote.getClosed() == null) && (!quote.isTrashed()) %>" >
      <dhv:evaluate if="<%=(!quote.getLock())%>" >
       <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript:popURL('ProductsCatalog.do?command=Categories&amp;quoteId=<%= quote.getId() %>','Products','500','400','yes','yes');" />
-      <dhv:permission name="product-catalog-add"><input type="button" value="<dhv:label name="button.create">Create</dhv:label>" onClick="javascript:popURL('QuotesProducts.do?command=CreateForm&quoteId=<%= quote.getId() %>','QuoteItem','500','400','yes','yes');" /></dhv:permission>
+      <dhv:permission name="product-catalog-product-add"><input type="button" value="<dhv:label name="button.create">Create</dhv:label>" onClick="javascript:popURL('QuotesProducts.do?command=CreateForm&quoteId=<%= quote.getId() %>','QuoteItem','500','400','yes','yes');" /></dhv:permission>
      </dhv:evaluate>
     </dhv:evaluate>&nbsp;
     </td>

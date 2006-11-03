@@ -80,7 +80,7 @@
   <tr>
     <td>
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="product-catalog-add">
+        <dhv:permission name="product-catalog-product-add">
           <a href="ProductCatalogOptions.do?command=Add&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>"><dhv:label name="product.addProductOption">Add Product Option</dhv:label></a>
         </dhv:permission>
       </dhv:evaluate>

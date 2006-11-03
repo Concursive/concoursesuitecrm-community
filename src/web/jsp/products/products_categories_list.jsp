@@ -55,7 +55,7 @@
     </td>
   </tr>
 </table>
-<dhv:permission name="product-catalog-add">
+<dhv:permission name="product-catalog-product-add">
   <table border="0" cellpadding="1" cellspacing="0" width="100%">
     <tr>
       <td>

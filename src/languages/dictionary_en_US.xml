@@ -10792,29 +10792,22 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Document Stores]]></value>
     </param>
     <param name="pagedListInfo.pagedListControlHandler.notAbbreviation">
-      <value><![CDATA[
-      Page ${pagedListInfo.numericalPageEntry} of ${pagedListInfo.numberOfPages}, Items per page: ${pagedListInfo.itemsPerPageEntry}
-    ]]></value>
+      <value><![CDATA[Page ${pagedListInfo.numericalPageEntry} of ${pagedListInfo.numberOfPages}, Items per page: ${pagedListInfo.itemsPerPageEntry}]]></value>
+    </param>
+    <param name="pagedListInfo.itemsPerPage">
+      <value><![CDATA[Items per page]]></value>
     </param>
     <param name="pagedListInfo.pagedListControlHandler.abbreviation">
-      <value><![CDATA[
-      Page ${pagedListInfo.numericalPageEntry} of ${pagedListInfo.numberOfPages}
-    ]]></value>
+      <value><![CDATA[Page ${pagedListInfo.numericalPageEntry} of ${pagedListInfo.numberOfPages}]]></value>
     </param>
     <param name="pagedListInfo.pagedListStatus.oneItemsPerPageData">
-      <value><![CDATA[
-      ${pagedListInfo.currentOffset} of ${pagedListInfo.maxRecords}
-    ]]></value>
+      <value><![CDATA[${pagedListInfo.currentOffset} of ${pagedListInfo.maxRecords}]]></value>
     </param><!-- Example: 1 of 20 [Previous|Next] -->
     <param name="pagedListInfo.pagedListStatus.itemsPerPageData">
-      <value><![CDATA[
-      ${label} ${pagedListInfo.currentOffset} to ${pagedListInfo.itemsPerPageDecision} of ${pagedListInfo.maxRecords} total
-    ]]></value>
+      <value><![CDATA[${label} ${pagedListInfo.currentOffset} to ${pagedListInfo.itemsPerPageDecision} of ${pagedListInfo.maxRecords} total]]></value>
     </param><!-- Example: Items 1 to 10 of 20 total [Previous|Next] -->
     <param name="pagedListInfo.pagedListStatus.noneAvailable">
-      <value><![CDATA[
-      No ${label} to display
-    ]]></value>
+      <value><![CDATA[No ${label} to display]]></value>
     </param><!-- Example: No items to display -->
     <param name="pagedListInfo.pagedListStatus.endOfList">
       <value><![CDATA[End of List]]></value>

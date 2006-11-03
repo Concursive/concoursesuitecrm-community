@@ -38,7 +38,7 @@
 
   function reopenOpportunity(id) {
     if (id == '<%= opportunityHeader.getId() %>') {
-      scrollReload('Opportunities.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
+      scrollReload('Opportunities.do?command=View&orgId=<%= orgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>');
       return id;
     } else {
       return '<%= opportunityHeader.getId() %>';
@@ -65,7 +65,7 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:formMessage showSpace="false" />
-<dhv:container name="accounts" selected="opportunities" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>

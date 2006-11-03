@@ -49,11 +49,11 @@
   }
   //Menu link functions
   function details() {
-    window.location.href='Opportunities.do?command=Details&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&reset=true<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='Opportunities.do?command=Details&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&reset=true<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
 
   function modify() {
-    window.location.href='Opportunities.do?command=Modify&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href='Opportunities.do?command=Modify&headerId=' + thisHeaderId + '&orgId=' + thisOrgId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';
   }
 
   function deleteOpp() {

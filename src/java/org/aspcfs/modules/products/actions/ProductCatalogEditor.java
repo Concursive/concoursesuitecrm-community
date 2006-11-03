@@ -53,7 +53,7 @@ public final class ProductCatalogEditor extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandOptions(ActionContext context) {
-    if (!(hasPermission(context, "product-catalog-view"))) {
+    if (!(hasPermission(context, "product-catalog-product-view"))) {
       return ("PermissionError");
     }
     Connection db = null;

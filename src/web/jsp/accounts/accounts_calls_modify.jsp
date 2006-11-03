@@ -196,9 +196,9 @@
       <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
     </dhv:evaluate>
     <% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "view|trailSource|popup|popupType|actionId") %>';this.form.dosubmit.value='false';">
     <%}else {%>
-      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "trailSource") %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "trailSource|popup|popupType|actionId") %>';this.form.dosubmit.value='false';">
     <%}%>
     <br />
     <dhv:formMessage />
@@ -246,9 +246,9 @@
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
     </dhv:evaluate>
     <% if ("list".equals(request.getParameter("return"))) {%>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>';this.form.dosubmit.value='false';">
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "view|trailSource|popup|popupType|actionId") %>';this.form.dosubmit.value='false';">
     <%}else {%>
-    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "trailSource") %>';this.form.dosubmit.value='false';">
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "trailSource|popup|popupType|actionId") %>';this.form.dosubmit.value='false';">
     <%}%>
     <input type="hidden" name="dosubmit" value="true" />
     <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>" />

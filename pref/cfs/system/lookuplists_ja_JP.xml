@@ -1,0 +1,1118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+- we assume enabled=true
+
+- we assume level = the order listed
+
+- we assume default_item=false, unless...
+
+- if a default, then specify the default_item as an attribute
+
+- use CDATA for each XML record
+
+- Some lookup table records have custom attributes/data columns that need
+  if attributes other than 'enabled' and 'default_item', specify its datatype in the attribute element.
+  For e.g., if an attribute link_id exists of type integer, specify its datatype
+  as follows 
+  <attribute name="link_id" type="integer"/>
+  if the attribute is not defined its data type is assumed to be a string
+
+- In certain lookup tables, a column value may refer to another column value in another lookup table
+   (i.e., a foreign key constraint on the column of a lookup table)
+   Consider the following example
+  			
+     <lookup table="lookup_l1">							
+      <record LUID="2005022510"><![CDATA[1a-1]]></record>					
+      <record LUID="2005022511"><![CDATA[1b-1]]></record>					
+      <record LUID="2005022512"><![CDATA[1c-1]]></record>					
+      <record LUID="2005022513"><![CDATA[1d-1]]></record>					
+      <record LUID="2005022514"><![CDATA[1e-1]]></record>					
+    </lookup>                              							
+    <lookup table="lookup_l11">							
+      <attribute name="link_id" type="look_upl1.LUID"/>							
+      <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record>					
+      <record link_id="lookup_l1.2005022511"><![CDATA[11b-1]]></record>					
+      <record link_id="lookup_l1.2005022512"><![CDATA[11c-1]]></record>					
+      <record link_id="lookup_l1.2005022513"><![CDATA[11d-1]]></record>					
+    </lookup>							
+							
+  The values of attribute 'link_id' (lookup_l1.NUM) of table 'lookup_l11' refers to the value							
+  of the attribute 'LUID' (Locally Unique Identifier) attribute of 'lookup_l1'. 							
+  							
+  In the element <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record> the 					
+  attribute value "lookup_l1.2005022510" refers to  value "2005022510" of attribute "LUID" in							
+  lookup table 'lookup_l1'							
+							
+  Note that the datatype of 'link_id' is defined as 'look_upl1.LUID', more generically it is 							
+  '<referring tablename>.LUID' 							
+							
+- The primary key of lookup tables is assumed to be 'code'. If the primary key differs specify the 							
+   primary key as an attribute 'key' in the 'lookup' element and the value of the attribute as the name 							
+   of the primary key. For example if the primary key of a table is 'type_id' specify as follows 							
+    <lookup table="lookup_l1" key="type_id">							
+      <record><![CDATA[A]]></record>					
+      <record><![CDATA[B]]></record>					
+      <record><![CDATA[C]]></record>					
+    </lookup>							
+     							
+- Most tables have a single description column, which is represented as a CDATA for each 'record' element, however							
+  if more than one field exists that are similar to description, the following method can be used to specify the 							
+  values of those columns							
+							
+ <lookup table="lookup_l4">							
+  <record>							
+    <item1><![CDATA[4a-1-1]]></item1>					
+    <item2><![CDATA[4a-2-1]]></item2>					
+  </record>							
+  <record>							
+    <item1><![CDATA[4b-1-1]]></item1>					
+    <item2><![CDATA[4b-2-1]]></item2>					
+  </record>             							
+  <record>							
+    <item1><![CDATA[4c-1-1]]></item1>					
+    <item2><![CDATA[4c-2-1]]></item2>					
+  </record>             							
+ </lookup>							
+							
+  In this example it is assumed that the table lookup_l4 has two columns 'item1' and 'item2' which 							
+  are equivalent to description (and hence required translation)							
+							
+- As and when other variations are required for a lookup table , they may be included, 							
+  but a custom handler needs to be implemented for this lookup list
+  
+- Some lookup lists may be preceded by an explanation or comment. They should be read and
+  understood before their values are changed                                							
+-->							
+<lookupLists>							
+    <lookup table="asset_category_draft" key="id">							
+      <attribute name="parent_cat_code" type="asset_category_draft.LUID"/>							
+      <attribute name="cat_level" type="integer"/>							
+      <record LUID="2005022711"><![CDATA[ソフトウェア]]></record>					
+      <record LUID="2005022712"><![CDATA[ハードウェア]]></record>					
+      <record LUID="2005022714" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[オペレーティングシステム]]></record>					
+      <record LUID="2005022715" cat_level="1" parent_cat_code="asset_category_draft.2005022711"><![CDATA[アプリケーション・ソフト]]></record>					
+      <record LUID="2005022717" cat_level="1" parent_cat_code="asset_category_draft.2005022712"><![CDATA[デスクトップ]]></record>					
+      <record LUID="2005022718" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[サーバを郵送してください。]]></record>					
+      <record LUID="2005022719" cat_level="2" parent_cat_code="asset_category_draft.2005022715"><![CDATA[CRM]]></record>					
+      <record LUID="2005022720" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[リナックス]]></record>					
+      <record LUID="2005022721" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[unix]]></record>					
+      <record LUID="2005022722" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Windows2003]]></record>					
+    </lookup>            							
+    <!-- 							
+      The CDATA for the operator element SHOULD NOT be changed							
+      The CDATA for the display_text may be changed for the chosen language							
+    -->							
+    <lookup table="field_types" key="id">							
+      <attribute name="data_typeid" type="integer" />							
+      <attribute name="data_type" type="string" />							
+      <record data_typeid="0" data_type="string">							
+        <operator><![CDATA[=]]></operator>					
+        <display_text><![CDATA[あります。]]></display_text>					
+      </record>							
+      <record data_typeid="0" data_type="string">							
+        <operator><![CDATA[!=]]></operator>					
+        <display_text><![CDATA[ありません。]]></display_text>					
+      </record>							
+      <record data_typeid="0" data_type="string" enabled="false">							
+        <operator><![CDATA[= | or field_name is null]]></operator>					
+        <display_text><![CDATA[空]]></display_text>					
+      </record>							
+      <record data_typeid="0" data_type="string" enabled="false">							
+        <operator><![CDATA[!= | and field_name is not null]]></operator>					
+        <display_text><![CDATA[空でない]]></display_text>					
+      </record>							
+      <record data_typeid="0" data_type="string" enabled="false">							
+        <operator><![CDATA[like %search_value%]]></operator>					
+        <display_text><![CDATA[含んでいます。]]></display_text>					
+      </record>							
+      <record data_typeid="0" data_type="string" enabled="false">							
+        <operator><![CDATA[not like %search_value%]]></operator>					
+        <display_text><![CDATA[含んでいません。]]></display_text>					
+      </record>							
+      <record data_typeid="1" data_type="date">							
+        <operator><![CDATA[<]]></operator>					
+        <display_text><![CDATA[以前]]></display_text>					
+      </record>							
+      <record data_typeid="1" data_type="date">							
+        <operator><![CDATA[>]]></operator>					
+        <display_text><![CDATA[後]]></display_text>					
+      </record>							
+      <record data_typeid="1" data_type="date" enabled="false">							
+        <operator><![CDATA[between]]></operator>					
+        <display_text><![CDATA[間]]></display_text>					
+      </record>							
+      <record data_typeid="1" data_type="date">							
+        <operator><![CDATA[<=]]></operator>					
+        <display_text><![CDATA[on or before]]></display_text>					
+      </record>							
+      <record data_typeid="1" data_type="date">							
+        <operator><![CDATA[>=]]></operator>					
+        <display_text><![CDATA[オンであるか後です。]]></display_text>					
+      </record>							
+							
+      <record data_typeid="2" data_type="number">							
+        <operator><![CDATA[>]]></operator>					
+        <display_text><![CDATA[すばらしい]]></display_text>					
+      </record>							
+      <record data_typeid="2" data_type="number">							
+        <operator><![CDATA[<]]></operator>					
+        <display_text><![CDATA[より少ない]]></display_text>					
+      </record>							
+      <record data_typeid="2" data_type="number">							
+        <operator><![CDATA[=]]></operator>					
+        <display_text><![CDATA[同輩]]></display_text>					
+      </record>							
+      <record data_typeid="2" data_type="number">							
+        <operator><![CDATA[>=]]></operator>					
+        <display_text><![CDATA[greater than or equal to]]></display_text>					
+      </record>							
+      <record data_typeid="2" data_type="number">							
+        <operator><![CDATA[<=]]></operator>					
+        <display_text><![CDATA[less than or equal to]]></display_text>					
+      </record>							
+      <record data_typeid="2" data_type="number">							
+        <operator><![CDATA[is not null]]></operator>					
+        <display_text><![CDATA[存在してください。]]></display_text>					
+      </record>							
+      <record data_typeid="2" data_type="number">							
+        <operator><![CDATA[is null]]></operator>					
+        <display_text><![CDATA[存在していません。]]></display_text>					
+      </record>							
+    </lookup>							
+    <lookup table="lookup_access_types">							
+      <attribute name="link_module_id" type="integer" />							
+      <attribute name="rule_id" type="integer" />							
+      <record link_module_id="626030330" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>							
+      <record link_module_id="626030330" rule_id="626030334">Public</record>							
+      <record link_module_id="626030330" rule_id="626030333">Personal</record>							
+      <record link_module_id="626030331" default_item="true" rule_id="626030334">Public</record>							
+      <record link_module_id="626030332" default_item="true" rule_id="626030334">Public</record>							
+      <record link_module_id="707031028" default_item="true" rule_id="626030335">Controlled-Hierarchy</record>							
+      <record link_module_id="707031028" rule_id="626030334">Public</record>							
+      <record link_module_id="707031028" rule_id="626030333">Personal</record>							
+      <record link_module_id="804051057" default_item="true" rule_id="626030334">Public</record>							
+      <record link_module_id="804051057" rule_id="626030335">Controlled-Hierarchy</record>							
+    </lookup>							
+    <lookup table="lookup_account_types">							
+      <record><![CDATA[小さい]]></record>					
+      <record><![CDATA[媒体]]></record>					
+      <record><![CDATA[大きい]]></record>					
+      <record><![CDATA[契約]]></record>					
+      <record><![CDATA[非契約です。]]></record>					
+      <record><![CDATA[領土1: 北東部]]></record>					
+      <record><![CDATA[領土2: 南東]]></record>					
+      <record><![CDATA[領土3: 中西部]]></record>					
+      <record><![CDATA[領土4: ノースウェスト]]></record>					
+      <record><![CDATA[領土5: サウスウェスト]]></record>					
+    </lookup>							
+    <lookup table="lookup_asset_status">							
+      <record default_item="true"><![CDATA[使用中であり]]></record>					
+      <record><![CDATA[使用中でない]]></record>					
+      <record><![CDATA[維持を必要とします。]]></record>					
+      <record><![CDATA[退職します。]]></record>					
+    </lookup>							
+    <lookup table="lookup_call_priority">							
+      <attribute name="weight" type="integer" />							
+      <record default_item="true" weight="10"><![CDATA[安値]]></record>					
+      <record weight="20"><![CDATA[媒体]]></record>					
+      <record weight="30"><![CDATA[高値]]></record>					
+    </lookup>							
+    <!-- 							
+      The value for the attribute base_value of the record element 							
+      denotes seconds equivalent of whatever is specified in the CDATA							
+      for the record element. For e.g., A 'Minute' has 60 seconds, hence the attribute							
+      value is "60"							
+    -->							
+    <lookup table="lookup_call_reminder">							
+      <attribute name="base_value" type="integer" />							
+      <record base_value="60" default_item="true"><![CDATA[分(s)]]></record>					
+      <record base_value="3600"><![CDATA[時間(s)]]></record>					
+      <record base_value="86400"><![CDATA[日(s)]]></record>					
+      <record base_value="604800"><![CDATA[週(s)]]></record>					
+      <record base_value="18144000"><![CDATA[月(s)]]></record>					
+    </lookup>							
+    <lookup table="lookup_call_result" key="result_id">							
+        <attribute name="next_required" type="boolean"/>							
+        <attribute name="next_days" type="integer"/>							
+        <attribute name="canceled_type" type="boolean"/>							
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[はい--ビジネス進歩]]></record>					
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[いいえ--このときのビジネスがありません。]]></record>					
+        <record next_required="true" next_days="0" canceled_type="false"><![CDATA[不確か--、不確かであるかいいえ、接触は作りました。]]></record>					
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[競争相手に負けられます。]]></record>					
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[さらなる関心がありません。]]></record>					
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[出来事は、延期したか、または取り消されました。]]></record>					
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[別の未定の動き]]></record>					
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[別の接触取り扱い出来事]]></record>					
+        <record next_required="false" next_days="0" canceled_type="true"><![CDATA[もう会社でないとの接触]]></record>					
+        <record next_required="false" next_days="0" canceled_type="false"><![CDATA[整備点検]]></record>					
+    </lookup>							
+    <lookup table="lookup_call_types">							
+      <record default_item="true"><![CDATA[かかってきた電話]]></record>					
+      <record><![CDATA[発信電話]]></record>					
+      <record><![CDATA[先を見越す呼び出し]]></record>					
+      <record><![CDATA[Inhouseミーティング]]></record>					
+      <record><![CDATA[アポイントメントの外で]]></record>					
+      <record><![CDATA[先を見越すミーティング]]></record>					
+      <record><![CDATA[メール整備点検]]></record>					
+      <record><![CDATA[メール先を見越します。]]></record>					
+      <record><![CDATA[ファックス整備点検]]></record>					
+      <record><![CDATA[ファックス先を見越します。]]></record>					
+    </lookup>							
+    <lookup table="lookup_contactaddress_types">							
+      <record><![CDATA[ビジネス]]></record>					
+      <record><![CDATA[ホーム]]></record>					
+      <record><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_contactemail_types">							
+      <record><![CDATA[ビジネス]]></record>					
+      <record><![CDATA[個人的]]></record>					
+      <record><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_contactphone_types">							
+      <record><![CDATA[ビジネス]]></record>					
+      <record><![CDATA[ビジネス2]]></record>					
+      <record><![CDATA[ビジネスファックス]]></record>					
+      <record><![CDATA[ホーム]]></record>					
+      <record><![CDATA[ホーム2]]></record>					
+      <record><![CDATA[ホームファックス]]></record>					
+      <record><![CDATA[モバイル]]></record>					
+      <record><![CDATA[ポケットベル]]></record>					
+      <record><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_contact_types">							
+      <attribute name="category" type="integer"/>							
+      <record category="0"><![CDATA[知人]]></record>					
+      <record category="0"><![CDATA[競争相手]]></record>					
+      <record category="0"><![CDATA[顧客]]></record>					
+      <record category="0"><![CDATA[友人]]></record>					
+      <record category="0"><![CDATA[見通し]]></record>					
+      <record category="0"><![CDATA[株主]]></record>					
+      <record category="0"><![CDATA[業者]]></record>					
+      <record category="1"><![CDATA[会計]]></record>					
+      <record category="1"><![CDATA[管理]]></record>					
+      <record category="1"><![CDATA[ビジネスデベロップメント]]></record>					
+      <record category="1"><![CDATA[顧客サービス]]></record>					
+      <record category="1"><![CDATA[工学]]></record>					
+      <record category="1"><![CDATA[幹部社員]]></record>					
+      <record category="1"><![CDATA[財政]]></record>					
+      <record category="1"><![CDATA[マーケティング]]></record>					
+      <record category="1"><![CDATA[操作]]></record>					
+      <record category="1"><![CDATA[調達]]></record>					
+      <record category="1"><![CDATA[販売]]></record>					
+      <record category="1"><![CDATA[送料/受信]]></record>					
+      <record category="1"><![CDATA[技術]]></record>					
+    </lookup>							
+    <lookup table="lookup_contact_source">							
+      <record><![CDATA[広告]]></record>					
+      <record><![CDATA[従業員紹介]]></record>					
+      <record><![CDATA[外部の紹介]]></record>					
+      <record><![CDATA[パートナー]]></record>					
+      <record><![CDATA[広報]]></record>					
+      <record><![CDATA[見本市]]></record>					
+      <record><![CDATA[ウェブ]]></record>					
+      <record><![CDATA[口コミ]]></record>					
+      <record><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_creditcard_types">							
+      <record><![CDATA[ビザ]]></record>					
+      <record><![CDATA[マスターカード]]></record>					
+      <record><![CDATA[アメリカン・エキスプレス]]></record>					
+      <record><![CDATA[発見します。]]></record>					
+    </lookup>							
+    <lookup table="lookup_currency">							
+    </lookup>							
+    <!-- The order of the records in 'lookup_delivery_options' SHOULD not be changed -->							
+    <lookup table="lookup_delivery_options">							
+      <record><![CDATA[メール専用]]></record>					
+      <record><![CDATA[ファックス専用]]></record>					
+      <record><![CDATA[手紙専用]]></record>					
+      <record><![CDATA[当時のファックスをメールしてください。]]></record>					
+      <record><![CDATA[当時の手紙をメールしてください。]]></record>					
+      <record><![CDATA[メール、ファックス、当時の手紙]]></record>					
+      <record enabled="false"><![CDATA[インスタントメッセージ]]></record>					
+      <record enabled="false"><![CDATA[安全なソケット]]></record>					
+      <record><![CDATA[放送]]></record>					
+    </lookup>							
+    <lookup table="lookup_department">							
+      <record><![CDATA[会計]]></record>					
+      <record><![CDATA[政権]]></record>					
+      <record><![CDATA[支払い]]></record>					
+      <record><![CDATA[苦情処理係]]></record>					
+      <record><![CDATA[工学]]></record>					
+      <record><![CDATA[財政]]></record>					
+      <record><![CDATA[人的資源]]></record>					
+      <record><![CDATA[法的]]></record>					
+      <record><![CDATA[マーケティング]]></record>					
+      <record><![CDATA[操作]]></record>					
+      <record><![CDATA[購入]]></record>					
+      <record><![CDATA[販売]]></record>					
+      <record><![CDATA[送料/受信]]></record>					
+    </lookup>							
+    <lookup table="lookup_document_store_permission_category">							
+      <record LUID="2251509"><![CDATA[ドキュメントストアの詳細]]></record>					
+      <record LUID="2251510"><![CDATA[チームメンバー]]></record>					
+      <record LUID="2251511"><![CDATA[ドキュメント図書館]]></record>					
+      <record LUID="2251512"><![CDATA[セットアップ]]></record>					
+      <record LUID="2251513"><![CDATA[アカウント]]></record>					
+    </lookup>							
+    <lookup table="lookup_document_store_role">							
+      <attribute name="group_id" type="integer" />							
+      <record group_id="1" level="1" LUID="2251509"><![CDATA[マネージャ]]></record>					
+      <record group_id="1" level="2" LUID="2251510"><![CDATA[貢献者レベル3]]></record>					
+      <record group_id="1" level="3" LUID="2251511"><![CDATA[貢献者レベル2]]></record>					
+      <record group_id="1" level="4" LUID="2251512"><![CDATA[貢献者レベル1]]></record>					
+      <record group_id="1" level="5" LUID="2251513"><![CDATA[客]]></record>					
+    </lookup>							
+    <lookup table="lookup_document_store_permission">							
+      <attribute name="group_id" type="integer" />							
+      <attribute name="category_id" type="lookup_document_store_permission_category.LUID" />							
+      <attribute name="default_role" type="lookup_document_store_role.LUID" />							
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251513" permission="documentcenter-details-view"><![CDATA[視点ドキュメント店の詳細]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-edit"><![CDATA[ドキュメント店の詳細を変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251509" default_role="lookup_document_store_role.2251509" permission="documentcenter-details-delete"><![CDATA[ドキュメント店を削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251513" permission="documentcenter-team-view"><![CDATA[視点チームメンバー]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251512" permission="documentcenter-team-view-email"><![CDATA[チームメンバーEメールアドレスを見てください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit"><![CDATA[チームを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251510" default_role="lookup_document_store_role.2251509" permission="documentcenter-team-edit-role"><![CDATA[チームメンバーの役割を変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-view"><![CDATA[視点ドキュメント]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-add"><![CDATA[フォルダーを作成してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-folders-edit"><![CDATA[フォルダーを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-folders-delete"><![CDATA[フォルダーを削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251512" permission="documentcenter-documents-files-upload"><![CDATA[アップロードファイル]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251513" permission="documentcenter-documents-files-download"><![CDATA[ファイルをダウンロードしてください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251511" permission="documentcenter-documents-files-rename"><![CDATA[ファイルを改名してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251511" default_role="lookup_document_store_role.2251510" permission="documentcenter-documents-files-delete"><![CDATA[視点ドキュメント店の詳細]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251512" default_role="lookup_document_store_role.2251509" permission="documentcenter-setup-permissions"><![CDATA[ドキュメント店許容を構成してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251513" permission="documentcenter-accounts-view"><![CDATA[視点ドキュメント店アカウント]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251512" permission="documentcenter-accounts-edit"><![CDATA[ドキュメント店アカウントを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251511" permission="documentcenter-accounts-add"><![CDATA[ドキュメント店アカウントを加えてください。]]></record>					
+      <record group_id="1" category_id="lookup_document_store_permission_category.2251513" default_role="lookup_document_store_role.2251510" permission="documentcenter-accounts-delete"><![CDATA[ドキュメント店アカウントを削除してください。]]></record>					
+    </lookup>							
+    <lookup table="lookup_email_model">							
+      <record><![CDATA[メールサポートがありません。]]></record>					
+      <record><![CDATA[2時間]]></record>					
+      <record><![CDATA[4時間]]></record>					
+      <record><![CDATA[同じ日]]></record>					
+      <record><![CDATA[次の営業日]]></record>					
+    </lookup>							
+    <lookup table="lookup_employment_types">							
+    </lookup>							
+    <lookup table="lookup_help_features">							
+    </lookup>							
+    <lookup table="lookup_hours_reason">							
+      <record><![CDATA[購買]]></record>					
+      <record><![CDATA[更新]]></record>					
+      <record><![CDATA[修正]]></record>					
+    </lookup>							
+    <lookup table="lookup_im_types">							
+      <record><![CDATA[ビジネス]]></record>					
+      <record><![CDATA[個人的]]></record>					
+      <record><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_im_services">							
+      <record><![CDATA[目的としてください。]]></record>					
+      <record><![CDATA[おしゃべり]]></record>					
+      <record><![CDATA[MSN]]></record>					
+      <record><![CDATA[ICQ]]></record>					
+      <record><![CDATA[Yahoo]]></record>					
+    </lookup>							
+    <lookup table="lookup_industry">							
+      <record><![CDATA[自動車]]></record>					
+      <record><![CDATA[バイオテクノロジー]]></record>					
+      <record><![CDATA[放送とケーブル]]></record>					
+      <record><![CDATA[コンピュータ]]></record>					
+      <record><![CDATA[コンサルティング]]></record>					
+      <record><![CDATA[ディフェンス]]></record>					
+      <record><![CDATA[エネルギー]]></record>					
+      <record><![CDATA[教育]]></record>					
+      <record><![CDATA[金融サービス]]></record>					
+      <record><![CDATA[食物]]></record>					
+      <record><![CDATA[ヘルスケア]]></record>					
+      <record><![CDATA[歓待]]></record>					
+      <record><![CDATA[保険]]></record>					
+      <record><![CDATA[インターネット]]></record>					
+      <record><![CDATA[法律事務所]]></record>					
+      <record><![CDATA[メディア]]></record>					
+      <record><![CDATA[製薬品]]></record>					
+      <record><![CDATA[不動産]]></record>					
+      <record><![CDATA[小売]]></record>					
+      <record><![CDATA[テレコミュニケーション]]></record>					
+      <record><![CDATA[輸送]]></record>					
+    </lookup>							
+    <lookup table="lookup_locale">							
+    </lookup>							
+    <lookup table="lookup_onsite_model">							
+      <record><![CDATA[現場のサービスがありません。]]></record>					
+      <record><![CDATA[M-F午前7時-午後4時]]></record>					
+      <record><![CDATA[M-F午前8時-午後5時]]></record>					
+      <record><![CDATA[M-F午前8時-午後8時]]></record>					
+      <record><![CDATA[年中無休、24時間]]></record>					
+    </lookup>							
+    <lookup table="lookup_opportunity_types">							
+      <attribute name="order_id" type="integer" />							
+      <record><![CDATA[年金]]></record>					
+      <record><![CDATA[相談]]></record>					
+      <record><![CDATA[開発]]></record>					
+      <record><![CDATA[維持]]></record>					
+      <record><![CDATA[製品販売]]></record>					
+      <record><![CDATA[サービス]]></record>					
+    </lookup>							
+    <lookup table="lookup_orderaddress_types">							
+      <record><![CDATA[支払い]]></record>					
+      <record><![CDATA[送料]]></record>					
+    </lookup>							
+    <lookup table="lookup_order_source">							
+    </lookup>							
+    <lookup table="lookup_order_status">							
+      <record><![CDATA[未定]]></record>					
+      <record><![CDATA[進行中で]]></record>					
+      <record><![CDATA[取り消されます。]]></record>					
+      <record><![CDATA[拒絶されます。]]></record>					
+      <record><![CDATA[完全]]></record>					
+      <record><![CDATA[閉じられます。]]></record>					
+    </lookup>							
+    <lookup table="lookup_order_terms">							
+    </lookup>							
+    <lookup table="lookup_order_type">							
+      <record><![CDATA[新しい]]></record>					
+      <record><![CDATA[変化]]></record>					
+      <record><![CDATA[アップグレード]]></record>					
+      <record><![CDATA[ダウングレード]]></record>					
+      <record><![CDATA[分離]]></record>					
+      <record><![CDATA[移動]]></record>					
+      <record><![CDATA[リターン]]></record>					
+      <record><![CDATA[中断します。]]></record>					
+      <record><![CDATA[中断しません]]></record>					
+    </lookup>							
+    <lookup table="lookup_orgaddress_types">							
+      <record><![CDATA[予備選挙]]></record>					
+      <record><![CDATA[補助物]]></record>					
+      <record><![CDATA[支払い]]></record>					
+      <record><![CDATA[送料]]></record>					
+    </lookup>							
+    <lookup table="lookup_orgemail_types">							
+      <record><![CDATA[予備選挙]]></record>					
+      <record><![CDATA[補助物]]></record>					
+    </lookup>							
+    <lookup table="lookup_orgphone_types">							
+      <record><![CDATA[メイン]]></record>					
+      <record><![CDATA[ファックス]]></record>					
+    </lookup>							
+    <lookup table="lookup_payment_methods">							
+      <record><![CDATA[現金]]></record>					
+      <record><![CDATA[クレジットカード]]></record>					
+      <record><![CDATA[個人の小切手]]></record>					
+      <record><![CDATA[為替]]></record>					
+      <record><![CDATA[支払保証小切手]]></record>					
+    </lookup>							
+    <lookup table="lookup_payment_status">							
+      <record><![CDATA[未定]]></record>					
+      <record><![CDATA[進行中で]]></record>					
+      <record><![CDATA[承認されます。]]></record>					
+      <record><![CDATA[減退します。]]></record>					
+    </lookup>							
+    <lookup table="lookup_phone_model">							
+      <record><![CDATA[電話サポートがありません。]]></record>					
+      <record><![CDATA[<15分]]></record>					
+      <record><![CDATA[<5分]]></record>					
+      <record><![CDATA[M-F午前7時-午後4時]]></record>					
+      <record><![CDATA[M-F午前8時-午後5時]]></record>					
+      <record><![CDATA[M-F午前8時-午後8時]]></record>					
+      <record><![CDATA[年中無休、24時間]]></record>					
+    </lookup>							
+    <lookup table="lookup_product_category_type">							
+    </lookup>							
+    <lookup table="lookup_product_conf_result">							
+      <record><![CDATA[整数]]></record>					
+      <record><![CDATA[浮遊物]]></record>					
+      <record><![CDATA[論理演算子]]></record>					
+      <record><![CDATA[タイムスタンプ]]></record>					
+      <record><![CDATA[ストリング]]></record>					
+    </lookup>							
+    <lookup table="lookup_product_format">							
+      <record><![CDATA[物理的]]></record>					
+      <record><![CDATA[電子]]></record>					
+    </lookup>							
+    <lookup table="lookup_product_keyword">							
+    </lookup>							
+    <lookup table="lookup_product_manufacturer">							
+    </lookup>							
+    <lookup table="lookup_product_shipping">							
+      <record><![CDATA[DHL]]></record>					
+      <record><![CDATA[FEDEX]]></record>					
+      <record><![CDATA[上]]></record>					
+      <record><![CDATA[USPS]]></record>					
+    </lookup>							
+    <lookup table="lookup_product_ship_time">							
+      <record><![CDATA[24 時間]]></record>					
+      <record><![CDATA[2日間]]></record>					
+      <record><![CDATA[1 週]]></record>					
+    </lookup>							
+    <lookup table="lookup_product_tax">							
+      <record><![CDATA[国税]]></record>					
+      <record><![CDATA[消費税]]></record>					
+    </lookup>							
+    <lookup table="lookup_product_type">							
+    </lookup>							
+    <lookup table="lookup_project_activity">							
+    </lookup>							
+    <lookup table="lookup_project_category">							
+    </lookup>							
+    <lookup table="lookup_project_loe">							
+      <attribute name="base_value" type="integer"/>							
+      <record default_item="true" base_value="60"><![CDATA[分(s)]]></record>					
+      <record base_value="3600"><![CDATA[時間(s)]]></record>					
+      <record base_value="86400"><![CDATA[日(s)]]></record>					
+      <record base_value="604800"><![CDATA[週(s)]]></record>					
+      <record base_value="18144000"><![CDATA[月(s)]]></record>					
+    </lookup>							
+    <lookup table="lookup_project_role">							
+      <attribute name="group_id" type="integer"/>							
+      <record group_id="1" level="10" LUID="2251509"><![CDATA[プロジェクトリード]]></record>					
+      <record group_id="1" level="20" LUID="2251510"><![CDATA[貢献者]]></record>					
+      <record group_id="1" level="30" LUID="2251511"><![CDATA[観察者]]></record>					
+      <record group_id="1" level="100" LUID="2251512"><![CDATA[客]]></record>					
+    </lookup>							
+    <lookup table="lookup_project_permission_category">							
+      <attribute name="group_id" type="integer"/>							
+      <record group_id="1" LUID="2251509"><![CDATA[プロジェクトの詳細]]></record>					
+      <record group_id="1" LUID="2251510"><![CDATA[チームメンバー]]></record>					
+      <record group_id="1" LUID="2251511"><![CDATA[ニュース]]></record>					
+      <record group_id="1" LUID="2251512"><![CDATA[プラン/アウトライン]]></record>					
+      <record group_id="1" LUID="2251513"><![CDATA[リスト]]></record>					
+      <record group_id="1" LUID="2251514"><![CDATA[議論]]></record>					
+      <record group_id="1" LUID="2251515"><![CDATA[チケット]]></record>					
+      <record group_id="1" LUID="2251516"><![CDATA[ドキュメント図書館]]></record>					
+      <record group_id="1" LUID="2251520"><![CDATA[アカウント]]></record>					
+      <record group_id="1" LUID="2251517"><![CDATA[セットアップ]]></record>					
+    </lookup>							
+    <lookup table="lookup_project_permission">							
+      <attribute name="group_id" type="integer" />							
+      <attribute name="category_id" type="lookup_project_permission_category.LUID" />							
+      <attribute name="default_role" type="lookup_project_role.LUID" />							
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251512" permission="project-details-view"><![CDATA[視点プロジェクトの詳細]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-edit"><![CDATA[プロジェクトの詳細を変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251509" default_role="lookup_project_role.2251509" permission="project-details-delete"><![CDATA[プロジェクトを削除してください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251512" permission="project-team-view"><![CDATA[視点チームメンバー]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251511" permission="project-team-view-email"><![CDATA[チームメンバーEメールアドレスを見てください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit"><![CDATA[チームを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251510" default_role="lookup_project_role.2251509" permission="project-team-edit-role"><![CDATA[チームメンバーの役割を変更してください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-view"><![CDATA[視点の現在のニュース]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-view-unreleased"><![CDATA[視点はニュースを非リリースしました。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251511" permission="project-news-view-archived"><![CDATA[視点はニュースを格納しました。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-add"><![CDATA[ニュースを加えてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251510" permission="project-news-edit"><![CDATA[編集ニュース]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251511" default_role="lookup_project_role.2251512" permission="project-news-delete"><![CDATA[ニュースを削除してください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251512" permission="project-plan-view"><![CDATA[視点アウトライン]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-add"><![CDATA[アウトラインを加えてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-edit"><![CDATA[既存のアウトラインの詳細を変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-delete"><![CDATA[アウトラインを削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-outline-modify"><![CDATA[アウトラインへの変更を行ってください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251512" default_role="lookup_project_role.2251509" permission="project-plan-activities-assign"><![CDATA[活動を再選任してください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251512" permission="project-lists-view"><![CDATA[視点リスト]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-add"><![CDATA[リストを加えてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-edit"><![CDATA[既存のリストの細部を変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251509" permission="project-lists-delete"><![CDATA[リストを削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251513" default_role="lookup_project_role.2251510" permission="project-lists-modify"><![CDATA[変更を行って、項目を記載してください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-forums-view"><![CDATA[視点ディスカッション・フォーラム]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-add"><![CDATA[ディスカッション・フォーラムを加えてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-edit"><![CDATA[ディスカッション・フォーラムを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251509" permission="project-discussion-forums-delete"><![CDATA[ディスカッション・フォーラムを削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251512" permission="project-discussion-topics-view"><![CDATA[視点フォーラム話題]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-add"><![CDATA[フォーラム話題を加えてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-edit"><![CDATA[フォーラム話題を変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-topics-delete"><![CDATA[フォーラム話題を削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-add"><![CDATA[ポストメッセージ]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251511" permission="project-discussion-messages-reply"><![CDATA[メッセージに答えてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-edit"><![CDATA[既存のメッセージを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251514" default_role="lookup_project_role.2251510" permission="project-discussion-messages-delete"><![CDATA[メッセージを削除してください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251512" permission="project-tickets-view"><![CDATA[視点チケット]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251511" permission="project-tickets-add"><![CDATA[チケットを加えてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251510" permission="project-tickets-edit"><![CDATA[既存のチケットを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-delete"><![CDATA[チケットを削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251515" default_role="lookup_project_role.2251509" permission="project-tickets-assign"><![CDATA[チケットを割り当ててください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-view"><![CDATA[視点ドキュメント]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-add"><![CDATA[フォルダーを作成してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-edit"><![CDATA[フォルダーを変更してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-folders-delete"><![CDATA[フォルダーを削除してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-upload"><![CDATA[アップロードファイル]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251512" permission="project-documents-files-download"><![CDATA[ファイルをダウンロードしてください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251510" permission="project-documents-files-rename"><![CDATA[ファイルを改名してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251516" default_role="lookup_project_role.2251509" permission="project-documents-files-delete"><![CDATA[削除]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251511" permission="project-accounts-view"><![CDATA[視点アカウントリンク]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251520" default_role="lookup_project_role.2251509" permission="project-accounts-manage"><![CDATA[アカウントリンクを管理してください。]]></record>					
+							
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-customize"><![CDATA[プロジェクト機能をカスタム設計してください。]]></record>					
+      <record group_id="1" category_id="lookup_project_permission_category.2251517" default_role="lookup_project_role.2251509" permission="project-setup-permissions"><![CDATA[プロジェクト許容を構成してください。]]></record>					
+    </lookup>							
+    <lookup table="lookup_project_priority">							
+      <attribute name="type" type="integer"/>							
+      <attribute name="graphic" type="integer"/>							
+      <attribute name="group_id" type="integer"/>							
+      <record group_id="1" type="10"><![CDATA[安値]]></record>					
+      <record group_id="1" type="20" default_item="true"><![CDATA[標準]]></record>					
+      <record group_id="1" type="30"><![CDATA[高値]]></record>					
+    </lookup>							
+    <lookup table="lookup_project_status">							
+      <attribute name="group_id" type="integer"/>							
+      <attribute name="type" type="integer"/>      							
+      <record group_id="1" graphic="box.gif" type="1"><![CDATA[始められません。]]></record>					
+      <record group_id="1" graphic="box.gif" type="2"><![CDATA[進行中で]]></record>					
+      <record group_id="1" graphic="box-checked.gif" type="3"><![CDATA[完全]]></record>					
+      <record group_id="1" graphic="box-closed.gif" type="4"><![CDATA[閉じられます。]]></record>					
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[保持で]]></record>					
+      <record group_id="1" graphic="box-hold.gif" type="5"><![CDATA[Reqsで、待っています。]]></record>					
+    </lookup>							
+    <!--							
+    <lookup table="lookup_news_template">							
+      <attribute name="group_id" type="integer"/>							
+      <attribute name="load_article" type="integer"/>							
+      <record group_id="1" mapped_jsp="templateArticle.jsp" load_article="true"><![CDATA[記事]]></record>					
+    </lookup>							
+    -->							
+    <lookup table="lookup_quote_condition">							
+    </lookup>							
+    <lookup table="lookup_quote_delivery">							
+      <record><![CDATA[メール]]></record>					
+      <record><![CDATA[ファックス]]></record>					
+      <record><![CDATA[自分で]]></record>					
+      <record><![CDATA[DHL]]></record>					
+      <record><![CDATA[FEDEX]]></record>					
+      <record><![CDATA[上]]></record>					
+      <record><![CDATA[USPS]]></record>					
+    </lookup>							
+    <lookup table="lookup_quote_remarks">							
+    </lookup>							
+    <lookup table="lookup_quote_source">							
+      <record><![CDATA[メール]]></record>					
+      <record><![CDATA[ファックス]]></record>					
+      <record><![CDATA[入って来る電話]]></record>					
+      <record><![CDATA[外向的な電話]]></record>					
+      <record><![CDATA[自分で]]></record>					
+      <record><![CDATA[メール]]></record>					
+      <record><![CDATA[エージェント要求]]></record>					
+    </lookup>							
+    <lookup table="lookup_quote_status">							
+      <record><![CDATA[不完全]]></record>					
+      <record><![CDATA[未定の内部の承認]]></record>					
+      <record><![CDATA[内部的に承認されます。]]></record>					
+      <record><![CDATA[承認でない、内部的]]></record>					
+      <record><![CDATA[未定の顧客承認]]></record>					
+      <record><![CDATA[顧客によって受け入れられます。]]></record>					
+      <record><![CDATA[顧客によって拒絶されます。]]></record>					
+      <record><![CDATA[顧客によって要求された変化]]></record>					
+      <record><![CDATA[取り消されます。]]></record>					
+      <record><![CDATA[完全]]></record>					
+    </lookup>							
+    <lookup table="lookup_quote_terms">							
+    </lookup>							
+    <lookup table="lookup_quote_type">							
+      <record><![CDATA[新しい]]></record>					
+      <record><![CDATA[変化]]></record>					
+      <record><![CDATA[アップグレード/ダウングレード]]></record>					
+      <record><![CDATA[分離]]></record>					
+      <record><![CDATA[移動]]></record>					
+    </lookup>							
+    <lookup table="lookup_recurring_type">							
+      <record><![CDATA[週刊誌]]></record>					
+      <record><![CDATA[毎月]]></record>					
+      <record><![CDATA[年一度]]></record>					
+    </lookup>							
+    <lookup table="lookup_relationship_types" key="type_id">							
+      <attribute name="category_id_maps_from" type="integer" />							
+      <attribute name="category_id_maps_to" type="integer" />							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[補助]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[親]]></reciprocal_name_2>					
+      </record>							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[顧客]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[供給者]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[パートナー]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[パートナー]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[競争相手]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[競争相手]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[従業員]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[雇い主]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[部]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[上がるようにされた組織]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[分類します。]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[上がるようにされた組織]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[メンバー]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[上がるようにされた組織]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[コンサルタント]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[コンサルタント]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[よりInfluencerである]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[影響を及ぼされます。]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[敵]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[敵]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[提案者]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[是認されます。]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[同盟します。]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[同盟します。]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[スポンサー]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[後援されます。]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[相対的]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[相対的]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[系列]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[系列]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[チームメート]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[チームメート]]></reciprocal_name_2>					
+      </record>             							
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">							
+        <reciprocal_name_1><![CDATA[財政家]]></reciprocal_name_1>					
+        <reciprocal_name_2><![CDATA[融資されます。]]></reciprocal_name_2>					
+      </record>							
+  <!--							
+    Parent of, Child of							
+    GPO of, Member of							
+    Manager of, Managed by							
+							
+  -->							
+    </lookup>							
+    <lookup table="lookup_response_model">							
+      <record><![CDATA[保証されなかった応答時間全く]]></record>					
+      <record><![CDATA[M-F8つの一時間の午前8時-午後5時]]></record>					
+      <record><![CDATA[M-F6つの一時間の午前8時-午後5時]]></record>					
+      <record><![CDATA[M-F4つの一時間の午前8時-午後5時]]></record>					
+      <record><![CDATA[M-F午前8時-午後5時の同じ日]]></record>					
+      <record><![CDATA[次のM-F午前8時-午後5時の営業日]]></record>					
+      <record><![CDATA[M-F4つの一時間の午前8時-午後8時]]></record>					
+      <record><![CDATA[M-F2つの一時間の午前8時-午後8時]]></record>					
+      <record><![CDATA[年中無休、24時間間の8時間]]></record>					
+      <record><![CDATA[年中無休、24時間間の4時間]]></record>					
+      <record><![CDATA[年中無休、24時間間の2時間]]></record>					
+    </lookup>							
+    <lookup table="lookup_revenuedetail_types">							
+    </lookup>							
+    <lookup table="lookup_revenue_types">							
+    </lookup>							
+    <lookup table="lookup_sc_category">							
+      <record><![CDATA[コンサルティング]]></record>					
+      <record><![CDATA[ハードウェアの保守管理]]></record>					
+      <record><![CDATA[メーカーの維持]]></record>					
+      <record><![CDATA[モニターであること]]></record>					
+      <record><![CDATA[時間と材料]]></record>					
+      <record><![CDATA[保証]]></record>					
+    </lookup>							
+    <lookup table="lookup_sc_type">							
+    </lookup>							
+    <lookup table="lookup_stage">							
+      <record><![CDATA[探鉱]]></record>					
+      <record><![CDATA[資格]]></record>					
+      <record><![CDATA[分析を必要とします。]]></record>					
+      <record><![CDATA[価値命題]]></record>					
+      <record><![CDATA[知覚分析]]></record>					
+      <record><![CDATA[提案/価格表]]></record>					
+      <record><![CDATA[交渉/レビュー]]></record>					
+      <record><![CDATA[勝たれた状態で、閉じられます。]]></record>					
+      <record><![CDATA[無くなった状態で、閉じられます。]]></record>					
+    </lookup>							
+    <lookup table="lookup_survey_types">							
+      <record><![CDATA[制限のない]]></record>					
+      <record><![CDATA[量的(ノーコメント)]]></record>					
+      <record><![CDATA[量的(コメントがある)]]></record>					
+      <record><![CDATA[項目リスト]]></record>					
+    </lookup>							
+    <lookup table="lookup_task_category">							
+    </lookup>							
+    <lookup table="lookup_task_loe">							
+      <record><![CDATA[分(s)]]></record>					
+      <record><![CDATA[時間(s)]]></record>					
+      <record><![CDATA[日(s)]]></record>					
+      <record><![CDATA[週(s)]]></record>					
+      <record><![CDATA[月(s)]]></record>					
+    </lookup>							
+    <lookup table="lookup_task_priority">							
+      <record default_item="true"><![CDATA[1]]></record>					
+      <record><![CDATA[2]]></record>					
+      <record><![CDATA[3]]></record>					
+      <record><![CDATA[4]]></record>					
+      <record><![CDATA[5]]></record>					
+    </lookup>							
+    <lookup table="lookup_textmessage_types">							
+      <record><![CDATA[ビジネス]]></record>					
+      <record><![CDATA[個人的]]></record>					
+      <record><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_ticketsource">							
+      <record><![CDATA[電話]]></record>					
+      <record><![CDATA[メール]]></record>					
+      <record><![CDATA[ウェブ]]></record>					
+      <record><![CDATA[手紙]]></record>					
+      <record><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_ticket_status" />							
+    <lookup table="product_option_configurator" key="configurator_id">							
+      <attribute name="result_type" type="integer" />							
+      <attribute name="class_name" type="string" />							
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.StringConfigurator">							
+        <configurator_name><![CDATA[テキスト]]></configurator_name>					
+        <short_description><![CDATA[自由形式追加情報のためのテキストフィールド]]></short_description>					
+        <long_description><![CDATA[ストリングは構成します。]]></long_description>					
+      </record>							
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.CheckboxConfigurator">							
+        <configurator_name><![CDATA[チェック・ボックス]]></configurator_name>					
+        <short_description><![CDATA[はい/いいえ情報のためのチェック・ボックス]]></short_description>					
+        <long_description><![CDATA[チェックボックスは構成します。]]></long_description>					
+      </record>							
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.LookupListConfigurator">							
+        <configurator_name><![CDATA[ルックアップリスト]]></configurator_name>					
+        <short_description><![CDATA[選択することができる利用可能な選択のリスト]]></short_description>					
+        <long_description><![CDATA[リストが構成する上に見えてください。]]></long_description>					
+      </record>							
+      <record result_type="1" class_name="org.aspcfs.modules.products.configurator.NumericalConfigurator">							
+        <configurator_name><![CDATA[数]]></configurator_name>					
+        <short_description><![CDATA[数だけを許容する入力フィールド]]></short_description>					
+        <long_description><![CDATA[数字、構成]]></long_description>					
+      </record>							
+    </lookup>							
+    <lookup table="search_fields" key="id">							
+      <attribute name="field" type="string" />							
+      <attribute name="searchable" type="boolean" />							
+      <attribute name="field_typeid" type="integer" />							
+      <attribute name="table_name" type="string" />							
+      <attribute name="object_class" type="string" />							
+      <record field="company" searchable="true" field_typeid="0"><![CDATA[会社名]]></record>					
+      <record field="namefirst" searchable="true" field_typeid="0"><![CDATA[名に連絡してください。]]></record>					
+      <record field="namelast" searchable="true" field_typeid="0"><![CDATA[姓に連絡してください。]]></record>					
+      <record field="entered" searchable="true" field_typeid="1"><![CDATA[入力された期日]]></record>					
+      <record field="zip" searchable="true" field_typeid="0"><![CDATA[郵便番号]]></record>					
+      <record field="areacode" searchable="true" field_typeid="0"><![CDATA[市外局番]]></record>					
+      <record field="city" searchable="true" field_typeid="0"><![CDATA[市]]></record>					
+      <record field="typeId" searchable="true" field_typeid="0"><![CDATA[連絡タイプ]]></record>					
+      <record field="contactId" searchable="false" field_typeid="0"><![CDATA[IDに接触してください。]]></record>					
+      <record field="title" searchable="false" field_typeid="0"><![CDATA[連絡タイトル]]></record>					
+      <record field="accountTypeId" searchable="true" field_typeid="0"><![CDATA[アカウントタイプ]]></record>					
+      <record field="siteId" searchable="true" field_typeid="0"><![CDATA[サイト]]></record>					
+    </lookup>							
+    <lookup table="survey" key="survey_id">							
+      <attribute name="type" type="integer" />							
+      <attribute name="enteredby" type="integer" />							
+      <attribute name="modifiedby" type="integer" />							
+      <record type="2" enteredby="0" modifiedby="0">							
+        <name>Address Update Request</name>							
+      </record>							
+    </lookup>							
+    <lookup table="ticket_level">							
+      <record><![CDATA[入社の段階]]></record>					
+      <record><![CDATA[最初に、レベル]]></record>					
+      <record><![CDATA[第2レベル]]></record>					
+      <record><![CDATA[第3レベル]]></record>					
+      <record><![CDATA[トップレベル]]></record>					
+    </lookup>							
+    <lookup table="ticket_priority">							
+      <record><![CDATA[次へ]]></record>					
+      <record style="background-color:lightgreen;color:black;"><![CDATA[予定されたように]]></record>					
+      <record style="background-color:yellow;color:black;"><![CDATA[緊急]]></record>					
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[批判的]]></record>					
+    </lookup>							
+    <lookup table="ticket_severity">							
+      <record style="background-color:lightgreen;color:black;"><![CDATA[標準]]></record>					
+      <record style="background-color:yellow;color:black;"><![CDATA[重要]]></record>					
+      <record style="background-color:red;color:black;font-weight:bold;"><![CDATA[批判的]]></record>					
+    </lookup>							
+    <lookup table="ticket_category_draft" key="id">							
+      <attribute name="parent_cat_code" type="ticket_category_draft.LUID"/>							
+      <attribute name="cat_level" type="integer"/>							
+      <record LUID="2005022711"><![CDATA[販売]]></record>					
+      <record LUID="2005022712"><![CDATA[支払い]]></record>					
+      <record LUID="2005022714"><![CDATA[技術的]]></record>					
+      <record LUID="2005022715"><![CDATA[オーダー]]></record>					
+      <record LUID="2005022717"><![CDATA[他]]></record>					
+    </lookup>							
+    <lookup table="lookup_opportunity_environment">							
+    </lookup>							
+    <lookup table="lookup_opportunity_competitors">							
+    </lookup>							
+    <lookup table="lookup_opportunity_event_compelling">							
+    </lookup>							
+    <lookup table="lookup_opportunity_budget">							
+    </lookup>							
+    <lookup table="lookup_duration_type">							
+      <record><![CDATA[分]]></record>					
+      <record><![CDATA[時間]]></record>					
+      <record><![CDATA[日]]></record>					
+      <record><![CDATA[週間]]></record>					
+      <record><![CDATA[月]]></record>					
+      <record><![CDATA[年]]></record>					
+    </lookup>							
+    <lookup table="lookup_step_actions">							
+      <attribute name="constant_id" type="integer" />							
+      <record constant_id="110061030"><![CDATA[ユーザが機会を付けるか、または作成するのを必要にしてください。]]></record>					
+      <record constant_id="110061031"><![CDATA[ユーザがドキュメントを添付するか、またはアップロードするのを必要にしてください。]]></record>					
+<!--      <record constant_id="110061032"><![CDATA[ユーザが活動を付けるか、または作成するのを必要にしてください。]]></record> --> 					
+      <record constant_id="110061033"><![CDATA[ユーザが特定の行動計画フォルダーをアップデートするのを必要にしてください。]]></record>					
+      <record constant_id="110061034"><![CDATA[ユーザが格付けをアップデートするのを必要にしてください。]]></record>					
+      <record constant_id="110061035"><![CDATA[ユーザがただ一つの注意を添付するか、または作成するのを必要にしてください。]]></record>					
+      <record constant_id="110061036"><![CDATA[ユーザが複数の注意を添付するか、または作成するのを必要にしてください。]]></record>					
+<!--      <record constant_id="110061037"><![CDATA[ユーザがルックアップリストを添付するか、または作成するのを必要にしてください。]]></record> -->					
+      <record constant_id="110061038"><![CDATA[ユーザにアカウントを見させてください。]]></record>					
+      <record constant_id="110061039"><![CDATA[ユーザがアカウント接触を付けるか、または引き起こすのを必要にしてください。]]></record>					
+      <record constant_id="110061040"><![CDATA[ユーザがアカウント関係を作成するのを必要にしてください。]]></record>					
+      <record constant_id="302061653"><![CDATA[ユーザが活発なキャンペーンに受取人を加えるのを必要にしてください。]]></record>					
+    </lookup>							
+    <lookup table="lookup_asset_materials">							
+    </lookup>							
+    <lookup table="lookup_ticket_cause">							
+    </lookup>							
+    <lookup table="lookup_ticket_resolution">							
+    </lookup>							
+    <lookup table="action_plan_constants" key="map_id">							
+      <attribute name="constant_id" type="integer"/>							
+      <record LUID="2005101901" constant_id="42420034"><![CDATA[アカウント]]></record>					
+      <record LUID="2005101902" constant_id="912051329"><![CDATA[チケット]]></record>					
+      <record LUID="2005101903" constant_id="2"><![CDATA[接触]]></record>					
+      <record LUID="2005101904" constant_id="912051328"><![CDATA[引用文]]></record>					
+      <record LUID="2005101905" constant_id="3"><![CDATA[パイプライン]]></record>					
+      <record LUID="2005101906" constant_id="912051330"><![CDATA[プロジェクト]]></record>					
+      <record LUID="2005101907" constant_id="912051331"><![CDATA[コミュニケーション]]></record>					
+      <record LUID="2005101908" constant_id="912051332"><![CDATA[アドミン]]></record>					
+      <record LUID="2005101909" constant_id="912051333"><![CDATA[呼び出し]]></record>					
+      <record LUID="2005101910" constant_id="912051334"><![CDATA[cfsnote]]></record>					
+      <record LUID="2005101911" constant_id="912051335"><![CDATA[パイプライン_呼び出し]]></record>					
+      <record LUID="2005101912" constant_id="912051336"><![CDATA[myhomepage]]></record>					
+      <record LUID="2005101913" constant_id="831200519"><![CDATA[注意]]></record>					
+      <record LUID="2005101914" constant_id="831200520"><![CDATA[選択]]></record>					
+      <record LUID="2005101915" constant_id="1011200517"><![CDATA[パイプライン_コンポーネント]]></record>					
+      <record LUID="2005101916" constant_id="110061020"><![CDATA[関係]]></record>					
+    </lookup>							
+    <lookup table="step_action_map" key="map_id">							
+      <attribute name="constant_id" type="action_plan_constants.LUID"/>							
+      <attribute name="action_constant_id" type="integer"/>							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061030" />							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061031" />							
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061032" /> -->							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061033" />							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061034" />							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061035" />							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061036" />							
+<!--      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061037" /> -->							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061038" />							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061039" />							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="110061040" />							
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061035" />							
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061036" />							
+<!--      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061037" /> -->							
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="110061038" />							
+      <record constant_id="action_plan_constants.2005101901" action_constant_id="302061653" />							
+      <record constant_id="action_plan_constants.2005101902" action_constant_id="302061653" />							
+    </lookup>							
+    <lookup table="lookup_ticket_task_category">							
+    </lookup>							
+    <lookup table="lookup_account_size">							
+      <record><![CDATA[1月10日]]></record>					
+      <record><![CDATA[11-100]]></record>					
+      <record><![CDATA[101-1000]]></record>					
+      <record><![CDATA[>1000]]></record>					
+    </lookup>							
+    <lookup table="lookup_segments">							
+    </lookup>							
+    <lookup table="lookup_sub_segment">							
+    </lookup>							
+    <lookup table="lookup_site_id">							
+    </lookup>							
+    <lookup table="lookup_title">							
+      <record><![CDATA[さん]]></record>					
+      <record><![CDATA[夫人]]></record>					
+      <record><![CDATA[さん]]></record>					
+      <record><![CDATA[さん]]></record>					
+      <record><![CDATA[博士]]></record>					
+      <record><![CDATA[教授]]></record>					
+    </lookup>							
+    <lookup table="lookup_ticket_state">							
+      <record><![CDATA[レビューで]]></record>					
+      <record><![CDATA[進行中で]]></record>					
+      <record><![CDATA[ソリューションはテストされています。]]></record>					
+      <record><![CDATA[ソリューションは確かめられています。]]></record>					
+      <record><![CDATA[ソリューション完全です。]]></record>					
+      <record><![CDATA[決議することができません。]]></record>					
+      <record><![CDATA[写し]]></record>					
+    </lookup>							
+	 <lookup table="web_layout" key="layout_id">						
+		<attribute name="custom" type="boolean" />					
+		<attribute name="layout_constant" type="integer" />					
+		<record LUID="5190610" custom="false" layout_constant="2006051813">					
+			<layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>		
+			<jsp><![CDATA[layout_2006051813_top_left.jsp]]></jsp>		
+			<thumbnail><![CDATA[layout_2006051813_top_left.jpg]]></thumbnail>		
+		</record>					
+		<record LUID="5190614" custom="false" layout_constant="2006051914">					
+			<layout_name><![CDATA[Top Menu w/Right Aligned Pages]]></layout_name>		
+			<jsp><![CDATA[layout_2006051813_top_left_narrow.jsp]]></jsp>		
+			<thumbnail><![CDATA[layout_2006051813_top_left_narrow.jpg]]></thumbnail>		
+		</record>					
+		<record LUID="5190611" custom="false" layout_constant="2006051814">					
+			<layout_name><![CDATA[Top Menu w/Left Aligned Pages]]></layout_name>		
+			<jsp><![CDATA[layout_2006051814_top_right.jsp]]></jsp>		
+			<thumbnail><![CDATA[layout_2006051814_top_right.jpg]]></thumbnail>		
+		</record>					
+		<record LUID="5190612" custom="false" layout_constant="2006051815">					
+			<layout_name><![CDATA[Top Menu w/Submenu]]></layout_name>		
+			<jsp><![CDATA[layout_2006051815_top_top.jsp]]></jsp>		
+			<thumbnail><![CDATA[layout_2006051815_top_top.jpg]]></thumbnail>		
+		</record>					
+		<record LUID="5190613" custom="false" layout_constant="2006051909">					
+			<layout_name><![CDATA[Top Menu w/Submenu Narrow]]></layout_name>		
+			<jsp><![CDATA[layout_2006051815_top_top_narrow.jsp]]></jsp>		
+			<thumbnail><![CDATA[layout_2006051815_top_top_narrow.jpg]]></thumbnail>		
+		</record>					
+	 </lookup>						
+    <lookup table="web_style" key="style_id">							
+			<attribute name="custom" type="boolean" />				
+			<attribute name="style_constant" type="integer" />				
+			<record LUID="5190614" custom="false" style_constant="2006051811">				
+				<style_name><![CDATA[blue]]></style_name>	
+				<css><![CDATA[style_2006051811_blue.css]]></css>	
+				<thumbnail><![CDATA[style_2006051811_blue.jpg]]></thumbnail>	
+			</record>				
+			<record LUID="5190615" custom="false" style_constant="2006051909">				
+				<style_name><![CDATA[red black]]></style_name>	
+				<css><![CDATA[style_2006051909_red_black.css]]></css>	
+				<thumbnail><![CDATA[style_2006051909_red_black.jpg]]></thumbnail>	
+			</record>				
+		</lookup>					
+	 <lookup table="lookup_payment_gateway">						
+	 	<attribute name="constant_id" type="integer"/>					
+	 	<record constant_id="8110621" enabled="true" level="10"><![CDATA[Authorize.net]]></record>			
+	 	<record constant_id="8110622" enabled="true" level="10"><![CDATA[PPIPaymover]]></record>			
+	 </lookup>						
+</lookupLists>							

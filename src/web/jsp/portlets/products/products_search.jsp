@@ -74,6 +74,7 @@
    }
 </script>
 <!--  <body onLoad="javascript:document.searchCondition.searchgroupKeywords.focus();"> -->
+<%-- TODO: Hide the following table when the Search is the default --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <td colspan="1" style="text-align:left;" nowrap>
 			<portlet:renderURL portletMode="view" var="url">
@@ -151,6 +152,23 @@
 						<option value="1_MONTH">Last Month</option>
 						<option value="3_MONTH">Last 3 Months</option>
 						<option value="6_MONTH">Last 6 Months</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="formLabel">
+				<dhv:label name="pagedListInfo.itemsPerPage">Items per page</dhv:label>
+			</td>
+			<td>
+				<select size="1" name="forwarditemsPerPage">
+							<option value="6">6</option>
+							<option selected="selected" value="10">10</option>
+							<option value="12">12</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+							<option value="-1"><dhv:label name="quotes.all">All</dhv:label></option>
 				</select>
 			</td>
 		</tr>

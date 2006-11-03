@@ -436,12 +436,14 @@ public class AccountsAssets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    boolean inline = (context.getRequest().getParameter("popupType") != null && "inline"
+        .equals(context.getRequest().getParameter("popupType")));
     if (recordUpdated) {
       context.getRequest().setAttribute(
           "refreshUrl", "AccountsAssets.do?command=List&orgId=" + context.getRequest().getParameter(
-              "orgId"));
+              "orgId")+(inline?"&popup=true":""));
       //return (executeCommandList(context));
-      return getReturn(context, "Delete");
+      return "DeleteOK";
     }
     processErrors(context, thisAsset.getErrors());
     context.getRequest().setAttribute(
@@ -449,7 +451,7 @@ public class AccountsAssets extends CFSModule {
             "object.validation.actionError.assetDeletion"));
     context.getRequest().setAttribute(
         "refreshUrl", "AccountsAssets.do?command=View&orgId=" + context.getRequest().getParameter(
-            "orgId"));
+            "orgId")+(inline?"&popup=true":""));
     //return executeCommandView(context);
     return "DeleteOK";
   }

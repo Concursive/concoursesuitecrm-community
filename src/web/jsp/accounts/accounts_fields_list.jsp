@@ -49,7 +49,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="folders" object="OrgDetails" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
       <td>
@@ -70,7 +70,7 @@
   <br />
   <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
     <dhv:permission name="accounts-accounts-folders-add">
-      <a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&popup=<%= isPopup(request) %>&catId=<%= (String)request.getAttribute("catId") %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>">
+      <a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>&catId=<%= (String)request.getAttribute("catId") %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>">
         <dhv:label name="accounts.accounts_fields_list.AddRecordToFolder">Add a record to this folder</dhv:label></a>
       <br>&nbsp;<br>
     </dhv:permission>
@@ -115,7 +115,7 @@
         </td>
       </dhv:evaluate>
       <td align="left" width="100%" nowrap class="row<%= rowid %>">
-        <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&popup=<%= isPopup(request) %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
+        <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
       </td>
       <td nowrap class="row<%= rowid %>">
       <zeroio:tz timestamp="<%= thisRecord.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />

@@ -574,7 +574,6 @@ public class CartPortlet extends GenericPortlet {
     thisUser.setPassword1(request.getParameter("password"));
     thisUser.setPassword2(request.getParameter("confirmPassword"));
     if (!thisUser.isDuplicate(db)) {
-      
       Contact thisContact = new Contact();
       AccessTypeList accessTypes = PortletUtils.getSystemStatus(request)
           .getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
@@ -609,7 +608,7 @@ public class CartPortlet extends GenericPortlet {
       thisUser.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
       boolean userInserted = thisUser.insert(db);
       if (userInserted) {
-//      Add account
+        // Add account
         Organization account = new Organization();
         account.setName(request.getParameter("orgName"));
         account.setNameFirst(request.getParameter("nameFirst"));
@@ -629,7 +628,7 @@ public class CartPortlet extends GenericPortlet {
         account.setOwner(thisUser.getId());
         account.setInsertPrimaryContact(false);
         inserted = account.insert(db);
-        if(inserted){
+        if (inserted) {
           thisContact.setOrgId(account.getId());
           thisContact.setOrgName(account.getName());
           thisContact.setModifiedBy(thisUser.getId());
@@ -1010,7 +1009,8 @@ public class CartPortlet extends GenericPortlet {
           "MAILSERVER"));
       mailToReviewer.setType("text/html");
       mailToReviewer.addTo(request.getPreferences().getValue(EMAIL_TO, "-1"));
-      mailToReviewer.setFrom(userEmail);
+      mailToReviewer.setFrom(PortletUtils.getApplicationPrefs(request,
+          "EMAILADDRESS"));
       mailToReviewer.addReplyTo(userEmail);
       mailToReviewer.setSubject(request.getPreferences().getValue(
           EMAIL_SUBJECT, "Quote request"));
@@ -1024,38 +1024,43 @@ public class CartPortlet extends GenericPortlet {
       getMailBody(cartBean, mailToReviewer, request, messageHeader);
       if (mailToReviewer.send() == 2) {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CartPortlet-> Send error: "
-              + mailToReviewer.getErrorMsg() + "<br><br>");
+          System.out.println("CartPortlet-> Send message to reviewer error: "
+              + mailToReviewer.getErrorMsg());
         }
         System.err.println(mailToReviewer.getErrorMsg());
       } else {
-        ((HttpServletRequest) request).getSession().removeAttribute("CartBean");
-        response.setRenderParameter("viewType", "email");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CartPortlet -> Sending message to reviewer...");
+        }
       }
 
       SMTPMessage mailToRequester = new SMTPMessage();
       mailToRequester.setHost(PortletUtils.getApplicationPrefs(request,
           "MAILSERVER"));
       mailToRequester.setType("text/html");
+      mailToRequester.setFrom(PortletUtils.getApplicationPrefs(request,
+          "EMAILADDRESS"));
       mailToRequester.addTo(userEmail);
       mailToRequester.setSubject((String) request.getPreferences().getValue(
           EMAIL_SUBJECT, "Quote request"));
-
       template = new Template();
       template.setText(request.getPreferences().getValue(MESSAGE_TO_REQUESTER,
           userName + " has requested a quote for the following items:"));
       template.addParseElement("${quoteReviewer.email}", request
-          .getPreferences().getValue(EMAIL_TO, ""));
+          .getPreferences().getValue(EMAIL_TO, "-1"));
       messageHeader = template.getParsedText();
 
       getMailBody(cartBean, mailToRequester, request, messageHeader);
       if (mailToRequester.send() == 2) {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CartPortlet-> Send error: "
-              + mailToRequester.getErrorMsg() + "<br><br>");
+          System.out.println("CartPortlet-> Send  message to requester error: "
+              + mailToRequester.getErrorMsg());
         }
         System.err.println(mailToRequester.getErrorMsg());
       } else {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CartPortlet -> Sending message to requester...");
+        }
         ((HttpServletRequest) request).getSession().removeAttribute("CartBean");
         response.setRenderParameter("viewType", "email");
       }

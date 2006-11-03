@@ -42,7 +42,7 @@
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
 <dhv:container name="productcategories" selected="details" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
       <input type="hidden" name="categoryId" value="<%= ProductCategory.getId() %>">
-      <dhv:permission name="product-catalog-edit">
+      <dhv:permission name="product-catalog-product-edit">
         <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCategories.do?command=Modify&categoryId=<%= ProductCategory.getId() %>&moduleId=<%= PermissionCategory.getId() %>'">
       </dhv:permission>
 			<%-- <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCategories.do?command=ConfirmDelete&categoryId=<%=ProductCategory.getId()%>&popup=true','ProductCategories.do?command=List&moduleId=<%=PermissionCategory.getId()%>', 'Delete_category','320','200','yes','no');"> --%>

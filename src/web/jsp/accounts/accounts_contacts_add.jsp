@@ -134,7 +134,7 @@
 </table>
 </dhv:evaluate>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= "true".equals(request.getParameter("actionplan")) %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="return checkForm(this.form)">
   <dhv:evaluate if="<%= !popUp || !hiddensource %>">

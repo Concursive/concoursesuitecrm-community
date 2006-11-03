@@ -1224,6 +1224,7 @@ public class ContactImport extends Import implements Runnable {
     to.setBusinessNameTwo(from.getBusinessNameTwo());
     to.setSicDescription(from.getSicDescription());
     to.setSicCode(from.getSicCode());
+    to.setNotes(from.getNotes());
   }
 
   /**

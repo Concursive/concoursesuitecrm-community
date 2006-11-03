@@ -1523,6 +1523,10 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       sqlFilter.append(" AND pctlg.start_date >= ? ");
     }
 
+    if (lastAnchor != null) {
+      sqlFilter.append(" AND pctlg.entered >= ? ");
+    }
+
     if (endDate != null) {
       sqlFilter.append(" AND pctlg.start_date <= ? ");
     }
@@ -1678,6 +1682,9 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
     if (startDate != null) {
       pst.setTimestamp(++i, startDate);
+    }
+    if (lastAnchor != null) {
+      pst.setTimestamp(++i, lastAnchor);
     }
 
     if (endDate != null) {
@@ -1990,7 +1997,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       }
       cal.add(calendarConst,-1*Integer.parseInt(temp[0]));
       java.util.Date date = cal.getTime();
-      this.startDate = new Timestamp(date.getTime());
+      this.lastAnchor = new Timestamp(date.getTime());
     }
   }
 

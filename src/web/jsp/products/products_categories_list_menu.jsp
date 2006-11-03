@@ -102,49 +102,49 @@
 <div id="menuCatalogContainer" class="menu">
   <div id="menuCatalogContent">
     <table id="menuCatalogTable" class="pulldown" width="170" cellspacing="0">
-      <dhv:permission name="product-catalog-view">
+      <dhv:permission name="product-catalog-product-view">
       <tr id="menuViewProduct" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="viewProductDetails()">
         <th><img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.viewProduct">View Product</dhv:label></td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="product-catalog-edit">
+      <dhv:permission name="product-catalog-product-edit">
       <tr id="menuModifyProduct" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modifyProduct()">
         <th><img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.modifyProduct">Modify Product</dhv:label></td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="product-catalog-add">
+      <dhv:permission name="product-catalog-product-add">
       <tr id="menuCloneProduct" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="cloneProduct()">
         <th><img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.cloneProduct">Clone Product</dhv:label></td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="product-catalog-edit">
+      <dhv:permission name="product-catalog-product-edit">
       <tr id="menuMoveProduct" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="moveProduct()">
         <th><img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.manageCategoryAssociations">Manage Category Associations</dhv:label></td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="product-catalog-delete">
+      <dhv:permission name="product-catalog-product-delete">
       <tr id="menuDeleteProduct" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteProduct()">
         <th><img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.deleteProduct">Delete Product</dhv:label></td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="product-catalog-edit">
+      <dhv:permission name="product-catalog-product-edit">
       <tr id="menuRenameCategory" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="renameCategory()">
         <th><img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.renameCategory">Rename Category</dhv:label></td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="product-catalog-edit">
+      <dhv:permission name="product-catalog-product-edit">
       <tr id="menuMoveCategory" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="moveCategory()">
         <th><img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.moveCategory">Move Category</dhv:label></td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="product-catalog-delete">
+      <dhv:permission name="product-catalog-product-delete">
       <tr id="menuDeleteCategory" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCategory()">
         <th><img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/></th>
         <td width="100%"><dhv:label name="product.deleteCategory">Delete Category</dhv:label></td>

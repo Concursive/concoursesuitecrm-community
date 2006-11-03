@@ -63,13 +63,13 @@
     <td>
     	<strong><%= toHtml(productOption.getLabel()) %></strong><br/><br/>
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="product-catalog-edit">
+        <dhv:permission name="product-catalog-product-edit">
           <input type="submit" value="<dhv:label name="button.modify">Modify</dhv:label>">
         </dhv:permission>
-        <dhv:permission name="product-catalog-delete">
+        <dhv:permission name="product-catalog-product-delete">
           <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogOptions.do?command=ConfirmDelete&optionId=<%= productOption.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&popup=true', 'ProductCatalogOptions.do?command=List', 'Delete_productoption', '330', '200', 'yes', 'no');"/>
         </dhv:permission>
-        <dhv:permission name="product-catalog-edit,product-catalog-delete">
+        <dhv:permission name="product-catalog-product-edit,product-catalog-product-delete">
           &nbsp;<br /><br />
         </dhv:permission>
       </dhv:evaluate>
@@ -275,10 +275,10 @@
     </table>
     <br />
     <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-      <dhv:permission name="product-catalog-edit">
+      <dhv:permission name="product-catalog-product-edit">
         <input type="submit" value="<dhv:label name="button.modify">Modify</dhv:label>">
       </dhv:permission>
-      <dhv:permission name="product-catalog-delete">
+      <dhv:permission name="product-catalog-product-delete">
 			  <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductCatalogOptions.do?command=ConfirmDelete&optionId=<%= productOption.getId() %>&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&popup=true', 'ProductCatalogOptions.do?command=List', 'Delete_productoption', '330', '200', 'yes', 'no');"/>
       </dhv:permission>
     </dhv:evaluate>

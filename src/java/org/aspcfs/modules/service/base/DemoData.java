@@ -194,7 +194,7 @@ public class DemoData {
     role.addPermission(db, Permission.lookupId(db, "quotes"), false, true, false, false);
     role.addPermission(db, Permission.lookupId(db, "quotes-quotes"), true, true, true, true);
 
-    role.addPermission(db, Permission.lookupId(db, "product-catalog"), false, true, false, false);
+//    role.addPermission(db, Permission.lookupId(db, "product-catalog"), false, true, false, false);
     role.addPermission(db, Permission.lookupId(db, "product-catalog-product"), true, true, true, true);
 
     role.addPermission(db, Permission.lookupId(db, "campaign"), false, true, false, false);

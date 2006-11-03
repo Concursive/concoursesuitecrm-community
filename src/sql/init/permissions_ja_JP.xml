@@ -1,0 +1,1098 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+  <!-- Every individual permission has a unique name -->
+  <!-- Permission Categories can be arranged in any order, but they must have a unique sequntial id that
+       matches the id used in the CFS code -->
+  <!-- Permissions within a Category are in the order to appear on-screen, and can be changed without
+       concerns about the code-->
+  <!-- Permission attributes include: View, Add, Edit, Delete (vaed) and can be in any order -->
+  <permissions>
+    <category id="13" name="システム" folders="false" lookups="false">
+      <permission name="globalitems-search" attributes="v---" description="グローバルな検索へのアクセス"/>
+      <permission name="globalitems-myitems" attributes="v---" description="私の項目へのアクセス"/>
+      <permission name="globalitems-recentitems" attributes="v---" description="最近の項目へのアクセス"/>
+    </category>
+    <category id="14" name="私のホームページ" folders="false" lookups="false" reports="true">
+      <permission name="myhomepage" attributes="v---" description="私のホームページモジュールへのアクセス"/>
+      <permission name="myhomepage-dashboard" attributes="v---" description="視点パフォーマンスダッシュボード"/>
+      <permission name="myhomepage-miner" attributes="va-d" description="産業ニュース記録"  enabled="false"/>
+      <permission name="myhomepage-inbox" attributes="v---" description="メールボックス"/>
+      <permission name="myhomepage-tasks" attributes="vaed" description="タスク"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" description="項目を再選任してください。"/>
+      <permission name="myhomepage-profile" attributes="v---" description="プロフィール"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" description="個人情報"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" description="設定"  enabled="false"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" description="パスワード"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" description="動作リスト"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" description="行動計画"/>
+      <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Task list by due date" description="日付の範囲をふじづるで縛るタスク支払われるべきものは何ですか?"/>
+      <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Task list" description="システムのすべてのタスクが何ですか?"/>
+      <report file="contact_activities.xml" type="user" permission="contacts-external_contacts-calls" title="Contact Activities" description="接触に関連している活動は何ですか?"/>
+    </category>
+    <category id="420041014" name="製品とサービス" folders="false" lookups="false" reports="false"  enabled="false">
+      <permission name="products" attributes="v---" description="製品へのアクセスとサービスモジュール"/>
+    </category>
+    <category id="223061200" name="ウェブサイト" folders="false" lookups="true" reports="false" categories="false" products="false">
+      <permission name="website" attributes="v---" description="ウェブサイトモジュールへのアクセス"  enabled="true"/>
+      <permission name="website-portfolio" attributes="vaed" description="ポートフォリオエディタ"  enabled="true"/>
+      <permission name="site-editor" attributes="vaed" description="サイトエディタ"  enabled="true"/>
+    </category>
+    <category id="228051100" name="Leads" folders="false" lookups="true" reports="true">
+      <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description=""/>
+      <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description=""/>
+      <permission name="sales" attributes="v---" description="先導モジュールへのアクセス"/>
+      <permission name="sales-leads" attributes="vaed" description="記録を導いてください。"/>
+      <permission name="sales-import" attributes="v---" description="輸入するアクセスは導きます。"/>
+      <permission name="sales-dashboard" attributes="v---" description="ダッシュボードを導きます。"/>
+      <permission name="sales-reports" attributes="va-d" description="輸出はデータを導きます。"/>
+      <report file="leads_user.xml" type="user" permission="sales-leads" title="ユーザ先導" description="特定のユーザによって所有されていた先導はだれですか?"/>
+      <report file="leads_to_accounts.xml" type="user" permission="sales-leads" title="アカウント概要に通じます" description="いくつの先導がアカウントに変換されましたか?"/>
+    </category>
+    <category id="2" name="接触" folders="true" lookups="true" reports="true">
+      <folder constantId="2" description="接触"/>
+      <lookup constantId="1" class="contactType" table="lookup_contact_types" description="タイプ"/>
+      <lookup constantId="2" class="lookupList" table="lookup_contactemail_types" description="メールタイプ"/>
+      <lookup constantId="3" class="lookupList" table="lookup_contactaddress_types" description="アドレスタイプ"/>
+      <lookup constantId="4" class="lookupList" table="lookup_contactphone_types" description="タイプに電話をしてください。"/>
+      <lookup constantId="111051354" class="lookupList" table="lookup_textmessage_types" description="テキスト・メッセージングタイプ"/>
+      <lookup constantId="128051433" class="lookupList" table="lookup_title" description="挨拶"/>
+      <!--
+      <lookup constantId="111051308" class="lookupList" table="lookup_im_types" description="インスタントメッセージングタイプ"/>
+      -->
+      <permission name="contacts" attributes="v---" description="連絡モジュールへのアクセス"/>
+      <permission name="contacts-external_contacts" attributes="vaed" description="一般連絡記録"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" description="輸出連絡データ"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" description="フォルダー"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" description="活動"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" description="メッセージ"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="機会"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" description="輸入"/>
+      <permission name="contacts-external-contact-updater" attributes="v---" description="問い合わせ先最新版を要求してください。"/>
+      <permission name="contacts-external_contacts-history" attributes="vaed" description="連絡歴史"/>
+      <report file="contacts_user.xml" type="user" permission="contacts" title="Contacts" description="私の接触はだれですか?"/>
+    </category>
+    <category id="4" name="パイプライン" folders="true" lookups="true viewpoints=true" reports="true">
+      <folder constantId="120200514" description="パイプライン"/>
+      <lookup constantId="1" class="lookupList" table="lookup_stage" description="ステージ"/>
+      <lookup constantId="2" class="lookupList" table="lookup_opportunity_types" description="機会のタイプ"/>
+      <lookup constantId="707050229" class="lookupList" table="lookup_opportunity_environment" description="環境"/>
+      <lookup constantId="707050230" class="lookupList" table="lookup_opportunity_competitors" description="競争相手"/>
+      <lookup constantId="707050231" class="lookupList" table="lookup_opportunity_event_compelling" description="出来事を強制します。"/>
+      <lookup constantId="707050232" class="lookupList" table="lookup_opportunity_budget" description="予算"/>
+      <lookup constantId="206061500" class="lookupList" table="lookup_call_types" description="活動タイプ"/>
+      <permission name="pipeline" attributes="v---" description="パイプラインモジュールへのアクセス" viewpoints="true"/>
+      <permission name="pipeline-opportunities" attributes="vaed" description="機会の記録"/>
+      <permission name="pipeline-dashboard" attributes="v---" description="ダッシュボード"/>
+      <permission name="pipeline-reports" attributes="va-d" description="輸出機会のデータ"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" description="活動"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" description="ドキュメント"/>
+      <permission name="pipeline-folders" attributes="vaed" description="フォルダー"/>
+      <permission name="pipeline-quotes" attributes="vaed" description="引用文"/>
+      <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="段階に従った機会" description="段階に従った私の今度の機会は何ですか?"/>
+      <report file="opportunity_account.xml" type="user" permission="pipeline-opportunities" title="アカウントによる機会" description="私の機会に関連しているすべてのアカウントが何ですか?"/>
+      <report file="opportunity_owner.xml" type="user" permission="pipeline-opportunities" title="所有者による機会" description="所有権に基づくすべての機会が何ですか?"/>
+      <report file="opportunity_contact.xml" type="user" permission="pipeline-opportunities" title="機会の接触" description="私の機会の接触はだれですか?"/>
+    </category>
+    <category id="1" name="アカウント" folders="true" lookups="true" reports="true" webdav="true" actionPlans="true">
+      <folder constantId="1" description="アカウント"/>
+      <lookup constantId="1" class="lookupList" table="lookup_account_types" description="アカウントタイプ"/>
+      <lookup constantId="2" class="lookupList" table="lookup_revenue_types" description="収入タイプ"/>
+      <lookup constantId="3" class="contactType" table="lookup_contact_types" description="接触はタイプされます。"/>
+      <lookup constantId="819041648" class="lookupList" table="lookup_orgemail_types" description="メールタイプ"/>
+      <lookup constantId="819041649" class="lookupList" table="lookup_orgaddress_types" description="アドレスタイプ"/>
+      <lookup constantId="819041650" class="lookupList" table="lookup_orgphone_types" description="タイプに電話をしてください。"/>
+      <lookup constantId="302051030" class="lookupList" table="lookup_industry" description="産業タイプ"/>
+      <lookup constantId="128051430" class="lookupList" table="lookup_segments" description="セグメント"/>
+      <lookup constantId="128051431" class="lookupList" table="lookup_sub_segment" description="潜水艦セグメント"/>
+      <lookup constantId="128051432" class="lookupList" table="lookup_site_id" description="サイト"/>
+      <lookup constantId="158051538" class="lookupList" table="lookup_account_size" description="アカウントサイズ"/>
+      <webdav class="org.aspcfs.modules.accounts.webdav.AccountsWebdavContext"/>
+      <permission name="accounts" attributes="v---" description="アカウントモジュールへのアクセス"/>
+      <permission name="accounts-accounts" attributes="vaed" description="報告書"/>
+      <permission name="accounts-accounts-folders" attributes="vaed" description="フォルダー"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed" description="接触"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" description="接触の機会"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="接触活動"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" description="完成した活動"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed" description="連絡メッセージ"/>
+      <permission name="accounts-accounts-contacts-move" attributes="v---" description="他のアカウントに接触を動かしてください。"/>
+      <permission name="accounts-accounts-contacts-history" attributes="vaed" description="連絡歴史"/>
+      <permission name="accounts-accounts-opportunities" attributes="vaed" description="機会"/>
+      <permission name="accounts-accounts-tickets" attributes="vaed" description="チケット"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vaed" description="チケットタスク"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vaed" description="チケットフォルダー"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vaed" description="チケットドキュメント"/>
+      <permission name="accounts-accounts-documents" attributes="vaed" description="ドキュメント"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" description="輸出勘定データ"/>
+      <permission name="accounts-accounts-history" attributes="vaed" description="口座利用明細"/>
+      <permission name="accounts-dashboard" attributes="v---" description="ダッシュボード"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed" description="収入"  enabled="false"/>
+      <permission name="accounts-autoguide-inventory" attributes="vaed" description="自動ガイド乗り物の目録"  enabled="false"/>
+      <permission name="accounts-service-contracts" attributes="vaed" description="役務契約"/>
+      <permission name="accounts-assets" attributes="vaed" description="資産"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" description="チケット維持注意"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" description="チケット活動"/>
+      <permission name="portal-user" attributes="vaed" description="顧客入り口のユーザ"/>
+      <permission name="accounts-quotes" attributes="vaed" description="「引用文」"/>
+      <permission name="accounts-orders" attributes="vaed" description="命令"  enabled="false"/>
+      <permission name="accounts-products" attributes="vaed" description="製品とサービス"  enabled="false"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" description="輸入勘定/接触"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" description="関係"/>
+      <permission name="accounts-accounts-contact-updater" attributes="v---" description="問い合わせ先最新版を要求してください。"/>
+      <permission name="accounts-projects" attributes="v---" description="プロジェクト"/>
+      <permission name="accounts-action-plans" attributes="vaed" description="行動計画"/>
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" description="連絡機会の引用文"/>
+      <permission name="accounts-directbill" attributes="vaed" description="ダイレクトビル"  enabled="false"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed" description="接触フォルダー"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" description="接触機会のフォルダー"/>
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" description="シェアアカウントドキュメント"/>
+      <permission name="accounts-accounts-documentstore" attributes="vaed" description="アカウントドキュメントストア"/>      
+      <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="タイプによるアカウント" description="タイプによる私のアカウントは何ですか?"/>
+      <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="日付によるアカウントは加えました" description="私の最近のアカウントは何ですか?"/>
+      <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="契約終了日までにアカウント" description="期限が切れるのはどのアカウントですか?"/>
+      <report file="accounts_current.xml" type="user" permission="accounts-accounts" title="当座預金" description="私の当座預金は何ですか?"/>
+      <report file="accounts_contacts.xml" type="user" permission="accounts-accounts-contacts" title="アカウント接触" description="各アカウントにおける接触はだれですか?"/>
+      <report file="folder_accounts.xml" type="user" permission="accounts-accounts-folders" title="アカウントフォルダー" description="各アカウントのためのフォルダーデータは何ですか?"/>
+      <report file="action_plan_summary.xml" type="user" permission="accounts-action-plans" title="行動計画概要" description="各アカウントのための行動計画概要は何ですか?"/>
+      <report file="action_plan_activity.xml" type="user" permission="accounts-action-plans" title="行動計画活動" description="各アカウントのための日付までに行動計画活動は何ですか?"/>
+      <actionPlanEditor constantId="42420034" description="アカウントに関連する行動計画"/>
+    </category>
+    <category id="330041409" name="製品カタログ" folders="true" lookups="true" reports="false" categories="false">
+      <folder constantId="200403192" description="製品カタログカテゴリ"  enabled="false"/>
+      <permission name="product-catalog" attributes="vaed" description="製品カタログモジュールへのアクセス"  enabled="true"/>
+      <permission name="product-catalog-product" attributes="vaed" description="製品"  enabled="false"/>
+      <permission name="product-catalog-product-imports" attributes="vaed" description="製品カタログ輸入"  enabled="true"/>
+      <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="製品タイプ"/>
+      <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="製品形式タイプ"/>
+      <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="製品送料タイプ"/>
+      <lookup constantId="1017040904" class="lookupList" table="lookup_product_ship_time" description="製品送料回数"/>
+      <lookup constantId="1017040905" class="lookupList" table="lookup_product_category_type" description="製品カテゴリタイプ"/>
+      <lookup constantId="1017040906" class="lookupList" table="lookup_product_tax" description="製品税金タイプ"/>
+      <lookup constantId="1017040907" class="lookupList" table="lookup_currency" description="通貨はタイプされます。"/>
+      <lookup constantId="1017040908" class="lookupList" table="lookup_recurring_type" description="価格再発タイプ"/>
+      <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="製品メーカータイプ"/>
+    </category>
+    <category id="3" name="車のガイド" folders="false" lookups="false"  enabled="false">
+      <permission name="autoguide" attributes="v---" description="自動ガイドモジュールへのアクセス"/>
+      <permission name="autoguide-adruns" attributes="--e-" description="広告の走行の完全な状態"/>
+    </category>
+    <category id="420041017" name="Quotes" folders="false" lookups="true" reports="false" logos="true">
+      <permission name="quotes" attributes="v---" description="引用文のモジュールへのアクセス"/>
+      <permission name="quotes-quotes" attributes="vaed" description="記録を見積ってください。"/>
+      <lookup constantId="1123041000" class="lookupList" table="lookup_quote_status" description="状態を引用してください。"/>
+      <!--
+      <lookup constantId="1123041001" class="lookupList" table="lookup_quote_type" description="タイプを引用してください。"/>
+      <lookup constantId="1123041002" class="lookupList" table="lookup_quote_terms" description="条件を言ってください。"/>
+      -->
+      <lookup constantId="1123041003" class="lookupList" table="lookup_quote_source" description="ソースを引用してください。"/>
+      <lookup constantId="1123041004" class="lookupList" table="lookup_quote_delivery" description="配送を引用してください。"/>
+      <lookup constantId="1123041005" class="lookupList" table="lookup_quote_condition" description="引用文用語と増幅器; 状態"/>
+      <lookup constantId="1123041006" class="lookupList" table="lookup_quote_remarks" description="所見を引用してください。"/>
+    </category>
+    <category id="420041018" name="Orders" folders="false" lookups="false" reports="true"  enabled="false">
+      <permission name="orders" attributes="v---" description="命令モジュールへのアクセス"/>
+      <permission name="orders-orders" attributes="vaed" description="オーダー記録"/>
+    </category>
+    <category id="6" name="Communications" folders="false" lookups="false" reports="true">
+      <permission name="campaign" attributes="v---" description="コミュニケーションモジュールへのアクセス"/>
+      <permission name="campaign-dashboard" attributes="v---" description="ダッシュボード"/>
+      <permission name="campaign-campaigns" attributes="vaed" description="キャンペーン記録"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" description="グループ・レコード"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" description="メッセージ記録"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" description="調査記録"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" description="問い合わせ先最新版を要求してください。"/>
+      <report file="campaign.xml" type="user" permission="campaign-campaigns" title="Campaigns by date" description="私の活発なキャンペーンは何ですか?"/>
+    </category>
+    <category id="7" name="Projects" folders="false" lookups="false"  enabled="true" webdav="true">
+      <webdav class="com.zeroio.iteam.webdav.ProjectsWebdavContext"/>
+      <permission name="projects" attributes="v---" description="管理モジュールを映し出すアクセス"/>
+      <permission name="projects-personal" attributes="v---" description="個人的な視点"/>
+      <permission name="projects-enterprise" attributes="v---" description="エンタープライズ視点"/>
+      <permission name="projects-projects" attributes="vaed" description="プロジェクト記録"/>
+    </category>
+    <category id="130041100" name="Service Contracts" folders="false" lookups="true" reports="false" categories="false">
+      <lookup constantId="130041305" class="lookupList" table="lookup_sc_category" description="役務契約カテゴリ"/>
+      <lookup constantId="130041306" class="lookupList" table="lookup_sc_type" description="サービス契約形式"/>
+      <lookup constantId="116041409" class="lookupList" table="lookup_response_model" description="応答時間モデル"/>
+      <lookup constantId="116041410" class="lookupList" table="lookup_phone_model" description="サービスモデルに電話をしてください。"/>
+      <lookup constantId="116041411" class="lookupList" table="lookup_onsite_model" description="現場サービスモデル"/>
+      <lookup constantId="116041412" class="lookupList" table="lookup_email_model" description="メールサービスモデル"/>
+      <lookup constantId="308041546" class="lookupList" table="lookup_hours_reason" description="契約何時間もの調整理由"/>
+    </category>
+    <category id="130041000" name="Assets" folders="false" lookups="true" reports="false" categories="true">
+      <lookup constantId="130041304" class="lookupList" table="lookup_asset_status" description="資産状態"/>
+      <lookup constantId="928051135" class="lookupList" table="lookup_asset_materials" description="資産の材料"/>
+      <lookup constantId="910040914" class="lookupList" table="lookup_asset_vendor" description="資産業者"/>
+      <lookup constantId="910040915" class="lookupList" table="lookup_asset_manufacturer" description="資産メーカー"/>
+      <multipleCategory constantId="202041400" table="asset_category" maxLevels="3" description="資産カテゴリ"/>
+    </category>
+    <category id="8" name="Help Desk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true" actionPlans="true" customListViews="true">
+      <folder constantId="11072003" description="チケット"/>
+      <lookup constantId="1" class="lookupList" table="lookup_ticketsource" description="チケットソース"/>
+      <lookup constantId="2" class="lookupList" table="ticket_severity" description="チケットの厳しさ"/>
+      <lookup constantId="3" class="lookupList" table="ticket_priority" description="チケット優先権"/>
+      <lookup constantId="922051718" class="lookupList" table="lookup_ticket_cause" description="チケット原因"/>
+      <lookup constantId="922051719" class="lookupList" table="lookup_ticket_resolution" description="チケット解決"/>
+      <lookup constantId="101705190" class="lookupList" table="lookup_ticket_task_category" description="チケットタスクカテゴリ"/>
+      <lookup constantId="910040913" class="lookupList" table="lookup_ticket_escalation" description="チケット増大レベル"/>
+      <lookup constantId="112205113" class="lookupList" table="lookup_ticket_state" description="チケット状態"/>
+      <permission name="tickets" attributes="v---" description="ヘルプDeskモジュールへのアクセス"/>
+      <permission name="tickets-tickets" attributes="vaed" description="チケット記録"/>
+      <permission name="tickets-reports" attributes="vaed" description="輸出チケットデータ"/>
+      <permission name="tickets-tickets-tasks" attributes="vaed" description="タスク"/>
+      <permission name="tickets-maintenance-report" attributes="vaed" description="維持注意"/>
+      <permission name="tickets-activity-log" attributes="vaed" description="活動"/>
+      <permission name="tickets-knowledge-base" attributes="vaed" description="知識ベース"/>
+      <permission name="tickets-defects" attributes="vaed" description="チケット欠陥"/>
+      <permission name="tickets-action-plans" attributes="vaed" description="行動計画"/>
+      <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="部のそばのチケット" description="どんなチケットが各部にありますか?"/>
+      <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="部によるチケットカウント" description="いくつのチケットが特定の日にシステムにありますか?"/>
+      <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="部によるチケット活動" description="いくつのチケットが日付の範囲の中に存在していますか?"/>
+      <report file="open_calls_report.xml" type="user" permission="tickets-tickets" title="オープンコール" description="どのチケットが開いていますか?"/>
+      <report file="contract_review_report.xml" type="user" permission="tickets-tickets" title="契約レビュー" description="各契約のための有効期限は何ですか?"/>
+      <report file="call_history_report.xml" type="user" permission="tickets-tickets" title="歴史に電話" description="チケットはどのように決議されましたか?"/>
+      <report file="assets_under_contract_report.xml" type="user" permission="tickets-tickets" title="契約に基づく資産" description="どの資産が契約でカバーされていますか?"/>
+      <report file="activity_log_report.xml" type="user" permission="tickets-tickets" title="契約活動概要" description="各契約のための1時間ごとの概要は何ですか?"/>
+      <report file="callvolume_day_assignee.xml" type="user" permission="tickets-tickets" title="1日あたりの指定代理人で量を呼んで" description="いくつのチケットが1日あたりの指定代理人でありますか?"/>
+      <report file="callvolume_month_assignee.xml" type="user" permission="tickets-tickets" title="1カ月あたりの指定代理人で量を呼んで" description="いくつのチケットが1カ月あたりの指定代理人でありますか?"/>
+      <report file="callvolume_day_cat.xml" type="user" permission="tickets-tickets" title="1日あたりのカテゴリで量を呼んで" description="いくつのチケットが1日あたりのカテゴリでありますか?"/>
+      <report file="callvolume_month_cat.xml" type="user" permission="tickets-tickets" title="1カ月あたりのカテゴリで量を呼んで" description="いくつのチケットが1カ月あたりのカテゴリでありますか?"/>
+      <report file="callvolume_day_enteredby.xml" type="user" permission="tickets-tickets" title="1日単位で入られたユーザで量を呼んで" description="いくつのチケットが1日あたりのチケットを入れたユーザでいますか?"/>
+      <report file="callvolume_month_ent.xml" type="user" permission="tickets-tickets" title="1月単位で入られたユーザで量を呼んで" description="いくつのチケットが1カ月あたりのチケットを入れたユーザでいますか?"/>
+      <report file="callvolume_resolved_by.xml" type="user" permission="tickets-tickets" title="ユーザによるボリュームが決心していると言って" description="いくつのチケットがユーザによって決議されましたか?"/>
+      <report file="callvolume_resolvable_account.xml" type="user" permission="tickets-tickets" title="1アカウントあたりのボリュームに電話(溶解性)" description="いくつのチケットがアカウント単位で溶解性ですか?"/>
+      <report file="callvolume_resolvable_category.xml" type="user" permission="tickets-tickets" title="1カテゴリあたりのボリュームに電話(溶解性)" description="いくつのチケットがカテゴリ単位で溶解性ですか?"/>
+      <report file="callvolume_entered_timeofday.xml" type="user" permission="tickets-tickets" title="ボリュームに電話(時刻)" description="いくつのチケットが特定の時刻で入れられましたか?"/>
+      <multipleCategory constantId="202041401" table="ticket_category" maxLevels="4" description="チケットカテゴリ"/>
+      <actionPlanEditor constantId="912051329" description="チケットに関連する行動計画"/>
+      <customListViewCategory constantId="113051436" description="チケット習慣リスト視点"/>
+    </category>
+    <category id="1202041528" name="Documents" lookups="false"  enabled="true" webdav="true">
+      <webdav class="org.aspcfs.modules.documents.webdav.DocumentsWebdavContext"/>
+      <permission name="documents" attributes="v---" description="ドキュメントモジュールへのアクセス"/>
+      <permission name="documents_documentstore" attributes="vaed" description="ドキュメントストアを経営してください。"/>
+    </category>
+    <category id="1021051129" name="NetApp" reports="true"  enabled="false">
+      <permission name="netapps_expiration_contracts" attributes="vaed" description="ネットワークアプリケーション情報を管理してください。"/>
+      <permission name="netapps_expiration_contracts_imports" attributes="vaed" description="ネットワークアプリケーション輸入"/>
+      <report file="dataline_contract_renewal.xml" type="user" permission="netapps_expiration_contracts" title="日付で満期を契約し" description="どの契約が何か2つの日付の間で期限が切れますか?"/>
+    </category>
+    <category id="1111031131" name="Employees" folders="true" lookups="true" reports="true">
+      <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="部"/>
+      <folder constantId="120200513" description="従業員"/>
+      <permission name="employees" attributes="v---" description="従業員モジュールへのアクセス"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" description="従業員"/>
+      <permission name="contacts-internal_contacts-folders" attributes="vaed" description="「フォルダー」"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" description="プロジェクト"/>
+      <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="従業員" description="私の組織の従業員はだれですか?"/>
+    </category>
+    <category id="16" name="Reports" folders="false" lookups="false">
+      <permission name="reports" attributes="v---" description="レポートモジュールへのアクセス"/>
+    </category>
+    <category id="9" name="Admin" folders="false" lookups="false" reports="true">
+      <permission name="admin" attributes="v---" description="アドミンモジュールへのアクセス"/>
+      <permission name="admin-users" attributes="vaed" description="ユーザ"/>
+      <permission name="admin-roles" attributes="vaed" description="役割"/>
+      <permission name="admin-portalroleeditor" attributes="vaed" description="入り口の役割"/>
+      <permission name="admin-usage" attributes="v---" description="システム用法"/>
+      <permission name="admin-sysconfig" attributes="v-e-" description="システム構成"/>
+      <permission name="admin-sysconfig-lists" attributes="v-e-" description="ルックアップリストを構成してください。"/>
+      <permission name="admin-sysconfig-folders" attributes="vaed" description="習慣フォルダーと増幅器を構成してください; 分野"/>
+      <permission name="admin-object-workflow" attributes="vaed" description="物の作業フローを構成してください。"/>
+      <permission name="admin-sysconfig-categories" attributes="vaed" description="モジュールカテゴリを構成してください。"/>
+      <permission name="admin-sysconfig-logos" attributes="vaed" description="モジュールロゴを構成してください。"/>
+      <permission name="admin-actionplans" attributes="vaed" description="行動計画を構成してください。"/>
+      <report file="users.xml" type="user" permission="admin" title="システムユーザ" description="システムのすべてのユーザがだれですか?"/>
+      <report file="login_usage.xml" type="user" permission="admin-usage" title="システム用法" description="1日のユーザあたりのログイン活動は何ですか?"/>
+      <multipleCategory constantId="907051127" table="action_plan_category" maxLevels="4" description="Action Plan Categories"/>
+    </category>
+    <category id="10" name="Help" folders="false" lookups="false">
+      <permission name="help" attributes="v---" description="システムを助けるアクセス"/>
+    </category>
+    <category id="15" name="QA" folders="false" lookups="false"  enabled="false">
+      <permission name="qa" attributes="vaed" description="QAツールへのアクセス"/>
+    </category>
+    <category id="5" name="Demo" folders="false" lookups="false"  enabled="false">
+      <permission name="demo" attributes="vaed" description="非のデモ/扱いの特徴へのアクセス"/>
+    </category>
+  </permissions>
+  <roles>
+    <role name="管理者" description="システム構成と維持を実行します">
+      <permission name="myhomepage" attributes="v---"/>
+      <permission name="myhomepage-dashboard" attributes="v---"/>
+      <permission name="myhomepage-miner" attributes="va-d"/>
+      <permission name="myhomepage-inbox" attributes="v---"/>
+      <permission name="myhomepage-tasks" attributes="vaed"/>
+      <permission name="myhomepage-profile" attributes="v---"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+      <permission name="myhomepage-profile-password" attributes="--e-"/>
+      <permission name="myhomepage-action-lists" attributes="vaed"/>
+      <permission name="myhomepage-action-plans" attributes="vaed"/>
+      <permission name="myhomepage-reassign" attributes="v-e-"/>
+      <permission name="products" attributes="v---"/>
+      <permission name="sales" attributes="v---"/>
+      <permission name="sales-leads" attributes="vaed"/>
+      <permission name="sales-import" attributes="v---"/>
+      <permission name="contacts" attributes="v---"/>
+      <permission name="contacts-external_contacts" attributes="vaed"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed"/>
+      <permission name="contacts-external_contacts-history" attributes="vaed"/>
+      <permission name="contacts-external-contact-updater" attributes="v---"/>
+      <permission name="pipeline" attributes="v---"/>
+      <permission name="pipeline-opportunities" attributes="vaed"/>
+      <permission name="pipeline-dashboard" attributes="v---"/>
+      <permission name="pipeline-reports" attributes="va-d"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed"/>
+      <permission name="pipeline-folders" attributes="vaed"/>
+      <permission name="pipeline-quotes" attributes="vaed"/>
+      <permission name="accounts" attributes="v---"/>
+      <permission name="accounts-accounts" attributes="vaed"/>
+      <permission name="accounts-accounts-folders" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-move" attributes="v---"/>
+      <permission name="accounts-accounts-contacts-history" attributes="vaed"/>
+      <permission name="accounts-accounts-opportunities" attributes="vaed"/>
+      <permission name="accounts-accounts-tickets" attributes="vaed"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vaed"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vaed"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
+      <permission name="accounts-accounts-documents" attributes="vaed"/>
+      <permission name="accounts-accounts-reports" attributes="va-d"/>
+      <permission name="accounts-accounts-history" attributes="vaed"/>
+      <permission name="accounts-service-contracts" attributes="vaed"/>
+      <permission name="accounts-assets" attributes="vaed"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
+      <permission name="accounts-quotes" attributes="vaed"/>
+      <permission name="accounts-orders" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed"/>
+      <permission name="accounts-accounts-contact-updater" attributes="v---"/>
+      <permission name="accounts-projects" attributes="v---"/>
+      <permission name="accounts-action-plans" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed"/>
+      <permission name="accounts-accounts-documentstore" attributes="vaed"/>
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed"/>
+      <permission name="portal-user" attributes="vaed"/>
+      <permission name="quotes" attributes="v---"/>
+      <permission name="quotes-quotes" attributes="vaed"/>
+      <permission name="orders" attributes="v---"/>
+      <permission name="campaign" attributes="v---"/>
+      <permission name="campaign-dashboard" attributes="v---"/>
+      <permission name="campaign-campaigns" attributes="vaed"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+      <permission name="tickets" attributes="v---"/>
+      <permission name="tickets-tickets" attributes="vaed"/>
+      <permission name="tickets-reports" attributes="vaed"/>
+      <permission name="tickets-tickets-tasks" attributes="vaed"/>
+      <permission name="tickets-maintenance-report" attributes="vaed"/>
+      <permission name="tickets-activity-log" attributes="vaed"/>
+      <permission name="tickets-knowledge-base" attributes="vaed"/>
+      <permission name="tickets-defects" attributes="vaed"/>
+      <permission name="tickets-action-plans" attributes="vaed"/>
+      <permission name="employees" attributes="vae-"/>
+      <permission name="contacts-internal_contacts" attributes="vaed"/>
+      <permission name="contacts-internal_contacts-folders" attributes="vaed"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+      <permission name="reports" attributes="v---"/>
+      <permission name="admin" attributes="v---"/>
+      <permission name="admin-users" attributes="vaed"/>
+      <permission name="admin-roles" attributes="vaed"/>
+      <permission name="admin-portalroleeditor" attributes="vaed"/>
+      <permission name="admin-sysconfig" attributes="v-e-"/>
+      <permission name="admin-usage" attributes="v---"/>
+      <permission name="admin-sysconfig-lists" attributes="v-e-"/>
+      <permission name="admin-sysconfig-folders" attributes="vaed"/>
+      <permission name="admin-object-workflow" attributes="vaed"/>
+      <permission name="admin-sysconfig-categories" attributes="vaed"/>
+      <permission name="admin-sysconfig-logos" attributes="vaed"/>
+      <permission name="admin-actionplans" attributes="vaed"/>
+      <permission name="help" attributes="v---"/>
+      <permission name="globalitems-search" attributes="v---"/>
+      <permission name="globalitems-myitems" attributes="v---"/>
+      <permission name="globalitems-recentitems" attributes="v---"/>
+      <permission name="projects" attributes="v---"/>
+      <permission name="projects-personal" attributes="v---"/>
+      <permission name="projects-enterprise" attributes="v---"/>
+      <permission name="projects-projects" attributes="vaed"/>
+      <permission name="documents" attributes="v---"/>
+      <permission name="documents_documentstore" attributes="vaed"/>
+      <permission name="product-catalog-product-imports" attributes="vaed"/>
+    </role>
+    <role name="運用管理者" description="操作を管理します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-reassign" attributes="v-e-"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="contacts" attributes="v---"/>
+       <permission name="contacts-external_contacts" attributes="vaed"/>
+       <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+       <permission name="contacts-external_contacts-folders" attributes="vaed"/>
+       <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+       <permission name="contacts-external_contacts-messages" attributes="v---"/>
+       <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
+       <permission name="pipeline" attributes="v---"/>
+       <permission name="pipeline-opportunities" attributes="vaed"/>
+       <permission name="pipeline-dashboard" attributes="v---"/>
+       <permission name="pipeline-reports" attributes="va-d"/>
+       <permission name="pipeline-opportunities-calls" attributes="vaed"/>
+       <permission name="pipeline-opportunities-documents" attributes="vaed"/>
+       <permission name="pipeline-folders" attributes="vaed"/>
+       <permission name="pipeline-quotes" attributes="vaed"/>
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="vaed"/>
+       <permission name="accounts-accounts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-opportunities" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-calls" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-"/>
+       <permission name="accounts-accounts-contacts-messages" attributes="vaed"/>
+       <permission name="accounts-accounts-opportunities" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets" attributes="vaed"/>
+       <permission name="accounts-accounts-documents" attributes="vaed"/>
+       <permission name="accounts-accounts-reports" attributes="va-d"/>
+       <permission name="accounts-accounts-history" attributes="vaed"/>
+       <permission name="accounts-accounts-revenue" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vaed"/>
+       <permission name="accounts-service-contracts" attributes="vaed"/>
+       <permission name="accounts-accounts-relationships" attributes="vaed"/>
+       <permission name="accounts-assets" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
+       <permission name="accounts-projects" attributes="v---"/>
+       <permission name="accounts-action-plans" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-opps-folders" attributes="vae-"/>
+       <permission name="portal-user" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+       <permission name="tickets" attributes="v---"/>
+       <permission name="tickets-tickets" attributes="vae-"/>
+       <permission name="tickets-reports" attributes="vaed"/>
+       <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="vae-"/>
+       <permission name="tickets-activity-log" attributes="vae-"/>
+       <permission name="tickets-knowledge-base" attributes="vae-"/>
+       <permission name="tickets-defects" attributes="vae-"/>
+       <permission name="tickets-action-plans" attributes="vae-"/>
+       <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
+       <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+      <permission name="documents" attributes="v---"/>
+      <permission name="documents_documentstore" attributes="vaed"/>
+    </role>
+    <role name="販売部長" description="すべてのアカウントと機会を管理します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-reassign" attributes="v-e-"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="sales" attributes="v---"/>
+       <permission name="sales-leads" attributes="vaed"/>
+       <permission name="sales-import" attributes="v---"/>
+       <permission name="contacts" attributes="v---"/>
+       <permission name="contacts-external_contacts" attributes="vaed"/>
+       <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+       <permission name="contacts-external_contacts-folders" attributes="vaed"/>
+       <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+       <permission name="contacts-external_contacts-messages" attributes="v---"/>
+       <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
+       <permission name="pipeline" attributes="v---"/>
+       <permission name="pipeline-opportunities" attributes="vaed"/>
+       <permission name="pipeline-dashboard" attributes="v---"/>
+       <permission name="pipeline-reports" attributes="va-d"/>
+       <permission name="pipeline-opportunities-calls" attributes="vaed"/>
+       <permission name="pipeline-opportunities-documents" attributes="vaed"/>
+       <permission name="pipeline-folders" attributes="vaed"/>
+       <permission name="pipeline-quotes" attributes="vaed"/>
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="vaed"/>
+       <permission name="accounts-accounts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-opportunities" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-calls" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-"/>
+       <permission name="accounts-accounts-contacts-messages" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-move" attributes="v---"/>
+       <permission name="accounts-accounts-opportunities" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets" attributes="vae-"/>
+       <permission name="accounts-accounts-documents" attributes="vaed"/>
+       <permission name="accounts-accounts-reports" attributes="va-d"/>
+       <permission name="accounts-accounts-history" attributes="vaed"/>
+       <permission name="accounts-dashboard" attributes="v---"/>
+       <permission name="accounts-accounts-revenue" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="vae-"/>
+       <permission name="accounts-assets" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-relationships" attributes="vaed"/>
+       <permission name="accounts-projects" attributes="v---"/>
+       <permission name="accounts-action-plans" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-folders" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed"/>
+       <permission name="portal-user" attributes="v---"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+       <permission name="tickets" attributes="v---"/>
+       <permission name="tickets-tickets" attributes="vae-"/>
+       <permission name="tickets-reports" attributes="vaed"/>
+       <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="v---"/>
+       <permission name="tickets-activity-log" attributes="v---"/>
+       <permission name="tickets-knowledge-base" attributes="v---"/>
+       <permission name="tickets-defects" attributes="v---"/>
+       <permission name="tickets-action-plans" attributes="v---"/>
+       <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
+       <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+       <permission name="accounts-quotes" attributes="vaed"/>
+       <permission name="quotes" attributes="v---"/>
+       <permission name="quotes-quotes" attributes="vaed"/>
+       <permission name="documents" attributes="v---"/>
+       <permission name="documents_documentstore" attributes="vaed"/>
+       <permission name="contacts-external-contact-updater" attributes="v---"/>
+       <permission name="accounts-accounts-contact-updater" attributes="v---"/>
+    </role>
+    <role name="販売員" description="自己のアカウントと機会を管理します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="sales" attributes="v---"/>
+       <permission name="sales-leads" attributes="vae-"/>
+       <permission name="sales-import" attributes="v---"/>
+       <permission name="contacts" attributes="v---"/>
+       <permission name="contacts-external_contacts" attributes="vaed"/>
+       <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+       <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+       <permission name="contacts-external_contacts-messages" attributes="vaed"/>
+       <permission name="contacts-external_contacts-opportunities" attributes="v---"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
+       <permission name="pipeline" attributes="v---"/>
+       <permission name="pipeline-opportunities" attributes="vae-"/>
+       <permission name="pipeline-dashboard" attributes="v---"/>
+       <permission name="pipeline-reports" attributes="va-d"/>
+       <permission name="pipeline-opportunities-calls" attributes="vaed"/>
+       <permission name="pipeline-opportunities-documents" attributes="vaed"/>
+       <permission name="pipeline-folders" attributes="vaed"/>
+       <permission name="pipeline-quotes" attributes="vaed"/>
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="vae-"/>
+       <permission name="accounts-accounts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-opportunities" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-calls" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-"/>
+       <permission name="accounts-accounts-contacts-messages" attributes="vae-"/>
+       <permission name="accounts-accounts-opportunities" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets" attributes="vae-"/>
+       <permission name="accounts-accounts-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-reports" attributes="va-d"/>
+       <permission name="accounts-accounts-history" attributes="vae-"/>
+       <permission name="accounts-dashboard" attributes="v---"/>
+       <permission name="accounts-accounts-revenue" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="v---"/>
+       <permission name="accounts-assets" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-relationships" attributes="vae-"/>
+       <permission name="accounts-projects" attributes="v---"/>
+       <permission name="accounts-action-plans" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-opps-folders" attributes="vae-"/>
+       <permission name="portal-user" attributes="v---"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+       <permission name="tickets" attributes="v---"/>
+       <permission name="tickets-tickets" attributes="vae-"/>
+       <permission name="tickets-reports" attributes="va-d"/>
+       <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="v---"/>
+       <permission name="tickets-activity-log" attributes="v---"/>
+       <permission name="tickets-knowledge-base" attributes="vae-"/>
+       <permission name="tickets-defects" attributes="vae-"/>
+       <permission name="tickets-action-plans" attributes="vae-"/>
+       <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
+       <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+       <permission name="accounts-quotes" attributes="vae-"/>
+       <permission name="quotes" attributes="v---"/>
+       <permission name="quotes-quotes" attributes="vae-"/>
+       <permission name="documents" attributes="v---"/>
+       <permission name="documents_documentstore" attributes="vaed"/>
+       <permission name="contacts-external-contact-updater" attributes="v---"/>
+       <permission name="accounts-accounts-contact-updater" attributes="v---"/>
+    </role>
+    <role name="顧客サービス・マネージャ" description="すべてのチケットを管理します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-reassign" attributes="v-e-"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="vae-"/>
+       <permission name="accounts-accounts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-calls" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-"/>
+       <permission name="accounts-accounts-contacts-messages" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-move" attributes="v---"/>
+       <permission name="accounts-accounts-tickets" attributes="vaed"/>
+       <permission name="accounts-accounts-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-reports" attributes="va-d"/>
+       <permission name="accounts-accounts-history" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vaed"/>
+       <permission name="accounts-service-contracts" attributes="vaed"/>
+       <permission name="accounts-assets" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
+       <permission name="accounts-accounts-relationships" attributes="vaed"/>
+       <permission name="accounts-projects" attributes="v---"/>
+       <permission name="accounts-action-plans" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-folders" attributes="vaed"/>
+       <permission name="portal-user" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+       <permission name="tickets" attributes="v---"/>
+       <permission name="tickets-tickets" attributes="vaed"/>
+       <permission name="tickets-reports" attributes="vaed"/>
+       <permission name="tickets-tickets-tasks" attributes="vaed"/>
+       <permission name="tickets-maintenance-report" attributes="vaed"/>
+       <permission name="tickets-activity-log" attributes="vaed"/>
+       <permission name="tickets-knowledge-base" attributes="vaed"/>
+       <permission name="tickets-defects" attributes="vaed"/>
+       <permission name="tickets-action-plans" attributes="vaed"/>
+       <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
+       <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+       <permission name="documents" attributes="v---"/>
+       <permission name="documents_documentstore" attributes="vaed"/>
+    </role>
+    <role name="お客様相談窓口" description="自身のチケットを管理します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-reassign" attributes="v-e-"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="vae-"/>
+       <permission name="accounts-accounts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-calls" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-"/>
+       <permission name="accounts-accounts-contacts-messages" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets" attributes="vae-"/>
+       <permission name="accounts-accounts-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-reports" attributes="va-d"/>
+       <permission name="accounts-accounts-history" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="vae-"/>
+       <permission name="accounts-assets" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
+       <permission name="accounts-accounts-relationships" attributes="vae-"/>
+       <permission name="accounts-projects" attributes="v---"/>
+       <permission name="accounts-action-plans" attributes="vae-"/>
+       <permission name="portal-user" attributes="vaed"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+       <permission name="tickets" attributes="v---"/>
+       <permission name="tickets-tickets" attributes="vae-"/>
+       <permission name="tickets-reports" attributes="vae-"/>
+       <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="vae-"/>
+       <permission name="tickets-activity-log" attributes="vae-"/>
+       <permission name="tickets-knowledge-base" attributes="vae-"/>
+       <permission name="tickets-defects" attributes="vae-"/>
+       <permission name="tickets-action-plans" attributes="vae-"/>
+       <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
+       <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+       <permission name="documents" attributes="v---"/>
+       <permission name="documents_documentstore" attributes="v---"/>
+    </role>
+    <role name="販売責任者" description="コミュニケーションを管理します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-reassign" attributes="v-e-"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-lists" attributes="vaed"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="contacts" attributes="v---"/>
+       <permission name="contacts-external_contacts" attributes="vaed"/>
+       <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+       <permission name="contacts-external_contacts-folders" attributes="vaed"/>
+       <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+       <permission name="contacts-external_contacts-messages" attributes="v---"/>
+       <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
+       <permission name="pipeline" attributes="v---"/>
+       <permission name="pipeline-opportunities" attributes="vaed"/>
+       <permission name="pipeline-dashboard" attributes="v---"/>
+       <permission name="pipeline-reports" attributes="va-d"/>
+       <permission name="pipeline-opportunities-calls" attributes="vaed"/>
+       <permission name="pipeline-opportunities-documents" attributes="vaed"/>
+       <permission name="pipeline-folders" attributes="vaed"/>
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="vae-"/>
+       <permission name="accounts-accounts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-opportunities" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-calls" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-"/>
+       <permission name="accounts-accounts-contacts-messages" attributes="vae-"/>
+       <permission name="accounts-accounts-opportunities" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets" attributes="vae-"/>
+       <permission name="accounts-accounts-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-reports" attributes="va-d"/>
+       <permission name="accounts-accounts-history" attributes="v---"/>
+       <permission name="accounts-dashboard" attributes="v---"/>
+       <permission name="accounts-accounts-revenue" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="v---"/>
+       <permission name="accounts-assets" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed"/>
+       <permission name="accounts-accounts-relationships" attributes="vaed"/>
+       <permission name="accounts-projects" attributes="v---"/>
+       <permission name="accounts-action-plans" attributes="vae-"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>              
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+       <permission name="tickets" attributes="v---"/>
+       <permission name="tickets-tickets" attributes="vae-"/>
+       <permission name="tickets-reports" attributes="vae-"/>
+       <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="v---"/>
+       <permission name="tickets-activity-log" attributes="v---"/>
+       <permission name="tickets-knowledge-base" attributes="v---"/>
+       <permission name="tickets-defects" attributes="v---"/>
+       <permission name="tickets-action-plans" attributes="v---"/>
+       <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
+       <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+       <permission name="documents" attributes="v---"/>
+       <permission name="documents_documentstore" attributes="vaed"/>
+    </role>
+    <role name="経理担当重役" description="収入と機会について調査します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-reassign" attributes="v-e-"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="contacts" attributes="v---"/>
+       <permission name="contacts-external_contacts" attributes="vaed"/>
+       <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+       <permission name="contacts-external_contacts-folders" attributes="vaed"/>
+       <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+       <permission name="contacts-external_contacts-messages" attributes="v---"/>
+       <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
+       <permission name="pipeline" attributes="v---"/>
+       <permission name="pipeline-opportunities" attributes="v---"/>
+       <permission name="pipeline-dashboard" attributes="v---"/>
+       <permission name="pipeline-reports" attributes="va-d"/>
+       <permission name="pipeline-opportunities-calls" attributes="v---"/>
+       <permission name="pipeline-opportunities-documents" attributes="v---"/>
+       <permission name="pipeline-folders" attributes="v---"/>
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="vaed"/>
+       <permission name="accounts-accounts-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-contacts" attributes="vaed"/>
+       <permission name="accounts-accounts-contacts-calls" attributes="v---"/>
+       <permission name="accounts-accounts-contacts-messages" attributes="v---"/>
+       <permission name="accounts-accounts-opportunities" attributes="v---"/>
+       <permission name="accounts-accounts-tickets" attributes="v---"/>
+       <permission name="accounts-accounts-documents" attributes="v---"/>
+       <permission name="accounts-accounts-reports" attributes="va-d"/>
+       <permission name="accounts-accounts-history" attributes="v---"/>
+       <permission name="accounts-accounts-revenue" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="v---"/>
+       <permission name="accounts-service-contracts" attributes="v---"/>
+       <permission name="accounts-assets" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed"/>
+       <permission name="accounts-accounts-relationships" attributes="vaed"/>
+       <permission name="accounts-projects" attributes="v---"/>
+       <permission name="accounts-action-plans" attributes="vae-"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>              
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="campaign-campaign-contact-updater" attributes="v---"/>
+       <permission name="tickets" attributes="v---"/>
+       <permission name="tickets-tickets" attributes="v---"/>
+       <permission name="tickets-reports" attributes="vaed"/>
+       <permission name="tickets-tickets-tasks" attributes="v---"/>
+       <permission name="tickets-maintenance-report" attributes="v---"/>
+       <permission name="tickets-activity-log" attributes="v---"/>
+       <permission name="tickets-knowledge-base" attributes="v---"/>
+       <permission name="tickets-defects" attributes="v---"/>
+       <permission name="tickets-action-plans" attributes="v---"/>
+       <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
+       <permission name="contacts-internal_contacts-projects" attributes="v---"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+       <permission name="accounts-quotes" attributes="v---"/>
+       <permission name="quotes" attributes="v---"/>
+       <permission name="quotes-quotes" attributes="v---"/>
+       <permission name="documents" attributes="v---"/>
+       <permission name="documents_documentstore" attributes="vaed"/>
+    </role>
+    <role name="時間代表します" description="従業員情報を管理します">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="myhomepage-inbox" attributes="v---"/>
+       <permission name="myhomepage-tasks" attributes="vaed"/>
+       <permission name="myhomepage-reassign" attributes="v-e-"/>
+       <permission name="myhomepage-profile" attributes="v---"/>
+       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+       <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="myhomepage-action-plans" attributes="vaed"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
+       <permission name="product-catalog-product-imports" attributes="v---"/>       
+       <permission name="campaign" attributes="v---"/>
+       <permission name="campaign-dashboard" attributes="v---"/>
+       <permission name="campaign-campaigns" attributes="vaed"/>
+       <permission name="campaign-campaigns-groups" attributes="vaed"/>
+       <permission name="campaign-campaigns-messages" attributes="vaed"/>
+       <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+       <permission name="employees" attributes="vaed"/>
+       <permission name="contacts-internal_contacts" attributes="vaed"/>
+       <permission name="reports" attributes="v---"/>
+       <permission name="help" attributes="v---"/>
+       <permission name="globalitems-search" attributes="v---"/>
+       <permission name="globalitems-myitems" attributes="v---"/>
+       <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---"/>
+       <permission name="projects-personal" attributes="v---"/>
+       <permission name="projects-enterprise" attributes="v---"/>
+       <permission name="projects-projects" attributes="vaed"/>
+       <permission name="documents" attributes="v---"/>
+       <permission name="documents_documentstore" attributes="vaed"/>
+       <permission name="contacts-internal_contacts-folders" attributes="vaed"/>
+    </role>
+    <role name="顧客" description="顧客入り口のユーザ" type="1">
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="v---"/>
+       <permission name="accounts-accounts-contacts" attributes="v---"/>
+       <permission name="accounts-service-contracts" attributes="v---"/>
+       <permission name="accounts-assets" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-contacts" attributes="v---"/>
+       <permission name="accounts-accounts-tickets" attributes="va--"/>
+    </role>
+    <role name="製品とサービス顧客" description="製品とサービス入り口のユーザ" type="420041011"  enabled="false">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="products" attributes="v---"/>
+    </role>
+    <!--
+    <role name="Marketing assistant" description="">
+    </role>
+    <role name="IT Help Desk Manager" description="">
+    </role>
+    <role name="IT Help Desk Representative" description="">
+    </role>
+    -->
+  </roles>
+</modules>

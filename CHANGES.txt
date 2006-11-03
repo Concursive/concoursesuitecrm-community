@@ -30,6 +30,8 @@ New features:
 - Added a lead conversion report and data elements for a converted lead
   - When lead assigned
   - When lead archived
+- Product Importer (.csv w/images.zip)
+- Added Japanese translation (ja_JP)
 
 Enhancements:
 - Usability and stability improvements as assigned (details online)
@@ -58,7 +60,6 @@ Unreleased features, target version to be determined:
       - Email cart
       - Cart checkout
   - Added a "hit" tracker for web pages, products, and emails
-- Product Importer (.csv w/images.zip)
 
 
 ----------------------------------------------------------------------------

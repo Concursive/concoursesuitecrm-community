@@ -48,7 +48,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-view")) {
+    if (!hasPermission(context, "product-catalog-product-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -108,7 +108,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-add")) {
+    if (!hasPermission(context, "product-catalog-product-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -155,7 +155,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-view")) {
+    if (!hasPermission(context, "product-catalog-product-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -261,7 +261,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandOptionList(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-view")) {
+    if (!hasPermission(context, "product-catalog-product-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -443,7 +443,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-delete")) {
+    if (!hasPermission(context, "product-catalog-product-delete")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -495,7 +495,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-delete")) {
+    if (!hasPermission(context, "product-catalog-product-delete")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -543,7 +543,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAddNew(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-add")) {
+    if (!hasPermission(context, "product-catalog-product-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -581,7 +581,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandLoadConfigurator(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-add")) {
+    if (!hasPermission(context, "product-catalog-product-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -665,7 +665,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandInsertOption(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-add")) {
+    if (!hasPermission(context, "product-catalog-product-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -756,7 +756,7 @@ public final class ProductCatalogOptions extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandUpdateOption(ActionContext context) {
-    if (!hasPermission(context, "product-catalog-edit")) {
+    if (!hasPermission(context, "product-catalog-product-edit")) {
       return ("PermissionError");
     }
     Connection db = null;

@@ -56,10 +56,10 @@
         <%if (!ProductDetails.isApproved()) {
 
 			%>
-        <dhv:permission name="product-catalog-delete">
+        <dhv:permission name="product-catalog-product-delete">
           <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteProduct();">
         </dhv:permission>
-        <dhv:permission name="product-catalog-delete">
+        <dhv:permission name="product-catalog-product-delete">
         &nbsp;<br />
           <br />
         </dhv:permission>
@@ -325,7 +325,8 @@
             </th>
             <th style="text-align: center;">
               <dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label>
-            </th>            <th style="text-align: center;">
+            </th>
+            <th style="text-align: center;">
               <dhv:label name="quotes.date">Date</dhv:label>
             </th>
           </tr>
@@ -414,7 +415,7 @@
         <%if (!ProductDetails.isApproved()) {
 
 			%>
-        <dhv:permission name="product-catalog-delete">
+        <dhv:permission name="product-catalog-product-delete">
           <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteProduct();">
         </dhv:permission>
         <%}%>

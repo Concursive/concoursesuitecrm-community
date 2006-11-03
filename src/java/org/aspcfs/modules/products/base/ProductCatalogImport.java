@@ -675,6 +675,7 @@ public class ProductCatalogImport extends Import implements Runnable {
                 thisProductCatalog.setEstimatedShipTime(this.getValue(
                     thisRecord, propertyMap.getProperty("estimatedShipTime")));
               }
+              // List Order              
               if (this.getValue(thisRecord, propertyMap
                   .getProperty("listOrder")) != null) {
                 thisProductCatalog.setListOrder(this.getValue(thisRecord,
@@ -682,6 +683,7 @@ public class ProductCatalogImport extends Import implements Runnable {
               }
               String productCode = this.getValue(thisRecord, propertyMap
                   .getProperty("sku"));
+              // Product Code
               if (!"".equals(StringUtils.toString(productCode))) {
                 thisProductCatalog.setSku(productCode);
               }

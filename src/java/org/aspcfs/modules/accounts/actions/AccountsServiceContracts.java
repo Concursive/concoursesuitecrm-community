@@ -417,19 +417,22 @@ public class AccountsServiceContracts extends CFSModule {
       this.freeConnection(context, db);
     }
 
+    boolean inline = (context.getRequest().getParameter("popupType") != null && "inline"
+        .equals(context.getRequest().getParameter("popupType")));
     if (recordDeleted) {
       context.getRequest().setAttribute(
-          "refreshUrl", "AccountsServiceContracts.do?command=List&orgId=" + context.getRequest().getParameter(
-              "orgId"));
-      return getReturn(context, "Delete");
+          "refreshUrl",
+          "AccountsServiceContracts.do?command=List&orgId="
+              + context.getRequest().getParameter("orgId")
+              + (inline ? "&popup=true" : ""));
+			return "DeleteOK";
     }
-    boolean inline = (context.getRequest().getParameter("popupType") != null 
-                      && "inline".equals(context.getRequest().getParameter("popupType")));
     processErrors(context, thisContract.getErrors());
     context.getRequest().setAttribute(
-        "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
-        "orgId") + "&id=" + context.getRequest().getParameter("id")+(inline?"&popup=true":""));
-    return "DeleteOK";
+        "refreshUrl",
+        "AccountsServiceContracts.do?command=View&orgId="
+            + context.getRequest().getParameter("orgId") + "&id=" + context.getRequest().getParameter("id")+(inline?"&popup=true":""));
+		return "DeleteOK";
   }
 
 

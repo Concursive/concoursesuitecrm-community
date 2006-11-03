@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Import;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
@@ -1938,5 +1939,23 @@ public class ProductCategory extends GenericBean {
     }
     return fullName;
   }
+  
+  public static int getCategoryById(String catalogName,int importId,Connection db) throws SQLException {
+    String QUERY = "SELECT category_id FROM product_category WHERE category_name = ? "
+                  + " and (import_id = ? or status_id = ? )";
+    PreparedStatement pst = db.prepareStatement(QUERY);
+    pst.setString(1, catalogName);
+    pst.setInt(2,importId);
+    pst.setInt(3,Import.PROCESSED_APPROVED);
+    ResultSet rs = pst.executeQuery();                        
+    int id = -1;
+    if(rs.next()) {
+      id = DatabaseUtils.getInt(rs,"category_id");
+    }
+    rs.close();
+    pst.close();
+    return id; 
+  }
+  
 }
 

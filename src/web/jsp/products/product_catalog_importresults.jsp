@@ -92,7 +92,7 @@
           int hasDeletePermission = 0;
           if(!thisProduct.isApproved()){
           %>
-            <dhv:permission name="product-catalog-delete">
+            <dhv:permission name="product-catalog-product-delete">
               <% hasDeletePermission = 1; %>
             </dhv:permission>
         <% } %>

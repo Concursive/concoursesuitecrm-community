@@ -38,7 +38,7 @@
 
   function reopenOpportunity(id) {
     if (id == '<%= OpportunityHeader.getId() %>') {
-      scrollReload('Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
+      scrollReload('Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>');
       return id;
     } else {
       return '<%= OpportunityHeader.getId() %>';
@@ -61,7 +61,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -88,23 +88,23 @@
       &nbsp;
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.description") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.closed") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.GuessAmount">Guess Amount</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_contacts_opps_details.GuessAmount">Guess Amount</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.guessvalue") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("oc.closedate") %>
     </th>
     <th nowrap>
-      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label></a>
+      <a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label></a>
       <%= AccountsComponentListInfo.getSortIcon("stagename") %>
     </th>
     <th>
@@ -132,7 +132,7 @@
         <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppComponent.getId() %>', '<%= OpportunityHeader.getId() %>','<%= (OpportunityHeader.isTrashed() || oppComponent.isTrashed()) %>','<%= hasPermission %>');" onMouseOver="over(0, <%=i%>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td width="100%" valign="top">
-        <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&headerId=<%=oppComponent.getHeaderId()%>&id=<%=oppComponent.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>">
+        <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&headerId=<%=oppComponent.getHeaderId()%>&id=<%=oppComponent.getId()%><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
         <dhv:evaluate if="<%=allowMultiple%>" >
           <%= toHtml(oppComponent.getDescription()) %>
         </dhv:evaluate>
@@ -179,7 +179,7 @@
   <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
     <dhv:evaluate if="<%= !OpportunityHeader.isTrashed() %>" >
       <br />
-      <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='Opportunities.do?command=Modify&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"></dhv:permission>
+      <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='Opportunities.do?command=Modify&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';"></dhv:permission>
       <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= OpportunityHeader.getId() %>&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
     </dhv:evaluate>
   </dhv:evaluate>

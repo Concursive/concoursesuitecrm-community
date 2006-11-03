@@ -57,7 +57,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>" >
     <dhv:permission name="accounts-accounts-opportunities-add">
       <a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %><%= isPopup(request)?"&popup=true&popupType=inline":"" %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a>
@@ -87,7 +87,7 @@
         &nbsp;
       </th>
       <th width="100%" nowrap>
-        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.OpportunityName">Opportunity Name</dhv:label></a></strong>
+        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.OpportunityName">Opportunity Name</dhv:label></a></strong>
         <%= OpportunityPagedInfo.getSortIcon("x.description") %>
       </th>
       <th nowrap>
@@ -98,7 +98,7 @@
           <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.stage">Stage</dhv:label></strong>
         </th>
         <th nowrap>
-          <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=oc.closedate<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></strong>
+          <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=oc.closedate<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></strong>
           <%= OpportunityPagedInfo.getSortIcon("oc.closedate") %>
         </th>
         <th nowrap>
@@ -111,7 +111,7 @@
         </th>
       </dhv:include>
       <th nowrap>
-        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
+        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
         <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
       </th>
     </tr>
@@ -142,7 +142,7 @@
          <% } %>
       </td>
       <td valign="center">
-          <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true<%= addLinkParams(request, "popup|popupType|actionId") %>">
+          <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
           <%= toHtml(oppHeader.getDescription()) %></a>
           (<%= oppHeader.getComponentCount() %>)
         <dhv:evaluate if="<%= oppHeader.hasFiles() %>">

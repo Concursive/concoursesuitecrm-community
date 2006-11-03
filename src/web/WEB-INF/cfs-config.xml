@@ -597,7 +597,7 @@
     <forward name="ProductsOK" resource="/products/product_products.jsp"
              layout="nav"/>
     <forward name="AddProductsOK" resource="/products/product_options.jsp"
-             layout="nav"/>
+             layout="style"/>
     <forward name="AddOptionsOK" resource="/products/product_set_opener.jsp"
              layout="nav"/>
     <forward name="AccountProductCategoriesOK"
@@ -2326,6 +2326,9 @@
              resource="/accounts/accounts_fields.jsp"
              layout="style"/>
     <forward name="UpdateFieldsAttachPlanOK"
+             resource="/accounts/accounts_folders_closepopup.jsp"
+             layout="style"/>
+    <forward name="InsertFieldsAttachPlanOK"
              resource="/accounts/accounts_folders_closepopup.jsp"
              layout="style"/>
     <forward name="InsertFieldsPopupOK"

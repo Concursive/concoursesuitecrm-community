@@ -35,15 +35,15 @@
   }
   //Menu link functions
   function folderDetails() {
-    window.location.href='Accounts.do?command=Fields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId+'&popup=<%= isPopup(request) %>&source=<%= (String) request.getAttribute("source") %>&actionStepId=<%= (String) request.getAttribute("actionStepId") %>';
+    window.location.href='Accounts.do?command=Fields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId+'&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>&source=<%= (String) request.getAttribute("source") %>&actionStepId=<%= (String) request.getAttribute("actionStepId") %>';
   }
   
   function modify() {
-    window.location.href = 'Accounts.do?command=ModifyFields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list'+'&popup=<%= isPopup(request) %>&source=<%= (String) request.getAttribute("source") %>&actionStepId=<%= (String) request.getAttribute("actionStepId") %>';
+    window.location.href = 'Accounts.do?command=ModifyFields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list'+'&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>&source=<%= (String) request.getAttribute("source") %>&actionStepId=<%= (String) request.getAttribute("actionStepId") %>';
   }
   
   function deleteFolder() {
-    confirmDelete('Accounts.do?command=DeleteFields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list'+'&popup=<%= isPopup(request) %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>');
+    confirmDelete('Accounts.do?command=DeleteFields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list'+'&popup=<%= isPopup(request) %>&actionplan=<%="true".equals(request.getParameter("actionplan")) %>&source=<%= request.getAttribute("source") != null?(String) request.getAttribute("source"):"" %>&actionStepId=<%= request.getAttribute("actionStepId") != null?(String) request.getAttribute("actionStepId"):"" %>');
   }
 </script>
 <div id="menuFoldersContainer" class="menu">

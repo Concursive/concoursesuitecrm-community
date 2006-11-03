@@ -95,7 +95,7 @@ public class ProductCatalog extends GenericBean {
   private ProductOptionList optionList = null;
   private ProductCategoryList categoryList = new ProductCategoryList();
   private ProductCatalogPricingList priceList = new ProductCatalogPricingList();
-  private ProductCatalogPricing activePrice = null;
+  private ProductCatalogPricing activePrice = new ProductCatalogPricing();
 
   // helper properties
   private boolean hasCustomerProduct = false;
@@ -165,7 +165,7 @@ public class ProductCatalog extends GenericBean {
    * @return The approved value
    */
   public boolean isApproved() {
-    return (statusId == Import.PROCESSED_UNAPPROVED ? false : true);
+    return (statusId != Import.PROCESSED_UNAPPROVED);
   }
 
   /**
@@ -1955,9 +1955,7 @@ public class ProductCatalog extends GenericBean {
         sql.append(" entered, ");
       }
       sql.append(" modifiedBy, ");
-      if (modified != null) {
-        sql.append(" modified, ");
-      }
+      sql.append(" modified, ");
       sql.append("start_date, expiration_date, enabled, " + DatabaseUtils.addQuotes(db, "active") + ")");
       sql
           .append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
@@ -2046,10 +2044,14 @@ public class ProductCatalog extends GenericBean {
             thisCategoryId = DatabaseUtils.getCurrVal(db,
                 "product_category_category_id_seq", id);
           }
-        } else {
-          thisCategoryId = thisCategory.getId();
         }
-
+        if (thisCategoryId < 0) {
+          if (thisCategory.getId() < 0) {
+            thisCategoryId = ProductCategory.getCategoryById(thisCategory.getName(), importId, db);
+          } else {
+            thisCategoryId = thisCategory.getId();
+          }
+        }
         this.addCategoryMapping(db, thisCategoryId);
       }
 
@@ -2573,9 +2575,9 @@ public class ProductCatalog extends GenericBean {
 
   /**
    * Gets the numberParams attribute of the ProductCatalog class
-     *
-     * @return The numberParams value
-     */
+   *
+   * @return The numberParams value
+   */
   public static ArrayList getNumberParams() {
     ArrayList thisList = new ArrayList();
     thisList.add("priceAmount");
@@ -2586,8 +2588,8 @@ public class ProductCatalog extends GenericBean {
 
   public boolean hasPricing() {
     if (this.getMsrpAmount() > 0
-      || this.getPriceAmount() > 0
-      || this.getCostAmount() > 0) {
+        || this.getPriceAmount() > 0
+        || this.getCostAmount() > 0) {
       return true;
     }
     return false;

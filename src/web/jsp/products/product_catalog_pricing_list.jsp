@@ -65,7 +65,7 @@
   <tr>
     <td>
       <dhv:evaluate if="<%= !productCatalog.isTrashed() %>">
-        <dhv:permission name="product-catalog-add">
+        <dhv:permission name="product-catalog-product-add">
           <a href="ProductCatalogPricings.do?command=AddPricing&moduleId=<%= permissionCategory.getId() %>&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>"><dhv:label name="product.addProductPrice">Add Product Price</dhv:label></a>
           &nbsp;<br />
         </dhv:permission>

@@ -69,7 +69,7 @@
 <dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() || !asset.isTrashed()%>">
     <dhv:permission name="accounts-assets-edit"><input type=submit value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
-    <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true<%= isPopup(request)?"&popupType=true":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
+    <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
   </dhv:evaluate>
     <input type="hidden" name="orgId" value = <%= OrgDetails.getOrgId() %> />
     <input type="hidden" name="id" value = <%= asset.getOrgId() %> />
@@ -396,7 +396,7 @@
     <br />
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() || !asset.isTrashed() %>">
     <dhv:permission name="accounts-assets-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" /></dhv:permission>
-    <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true<%= isPopup(request)?"&popupType=true":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
+    <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
   </dhv:evaluate>
 </dhv:container>
 </dhv:container>

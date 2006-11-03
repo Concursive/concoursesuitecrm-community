@@ -59,7 +59,7 @@
   //Menu link functions
   function details() {
     var url = 'AccountsCalls.do?command=Details&contactId=' + thisContactId+ '&orgId=' + thisOrgId + '&id=' + thisCallId +
-   '&trailSource=accounts&return=list';
+   '&trailSource=accounts&return=list' + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending&action=schedule';
     }
@@ -68,7 +68,7 @@
 
   function complete() {
     var url = 'AccountsCalls.do?command=Complete&contactId=' + thisContactId+ '&orgId=' + thisOrgId + '&id=' + thisCallId +
-   '&trailSource=accounts&return=list';
+   '&trailSource=accounts&return=list' + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending&action=schedule';
     }
@@ -77,7 +77,7 @@
 
   function modify() {
     var url = 'AccountsCalls.do?command=Modify&contactId=' + thisContactId + '&orgId=' + thisOrgId+ '&id=' + thisCallId +
-   '&trailSource=accounts&return=list';
+   '&trailSource=accounts&return=list' + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending&action=schedule';
     }
@@ -86,7 +86,7 @@
 
   function forward() {
     var url ='AccountsCalls.do?command=ForwardCall&contactId=' + thisContactId+ '&orgId=' + thisOrgId + '&id=' + thisCallId +
-   '&trailSource=accounts&return=list&forwardType=<%= Constants.TASKS %>';
+   '&trailSource=accounts&return=list&forwardType=<%= Constants.TASKS %><%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending&action=schedule';
     }
@@ -94,7 +94,7 @@
   }
 
   function deleteCall() {
-  var url = 'AccountsCalls.do?command=Cancel&contactId=' + thisContactId + '&orgId=' + thisOrgId+ '&id=' + thisCallId + '&return=list&action=cancel&trailSource=accounts';
+  var url = 'AccountsCalls.do?command=Cancel&contactId=' + thisContactId + '&orgId=' + thisOrgId+ '&id=' + thisCallId + '&return=list&action=cancel&trailSource=accounts' + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
     if(thisView == 'pending'){
       url += '&view=pending&action=schedule';
     }

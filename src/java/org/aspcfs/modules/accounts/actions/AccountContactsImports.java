@@ -949,9 +949,12 @@ public final class AccountContactsImports extends CFSModule {
       Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
       if (!isRecordAccessPermitted(context, thisOrg)){
         return ("PermissionError");
-      }
+      } 
       if (thisOrg.getStatusId() != Import.PROCESSED_APPROVED) {
-        recordDeleted = thisOrg.delete(db, context, getDbNamePath(context));
+          thisOrg.setContactDelete(true);
+          thisOrg.setRevenueDelete(true);
+          thisOrg.setDocumentDelete(true);
+    	recordDeleted = thisOrg.delete(db, context, getDbNamePath(context));
         processErrors(context, thisOrg.getErrors());
         if (!recordDeleted) {
           context.getRequest().setAttribute("OrgDetails", thisOrg);

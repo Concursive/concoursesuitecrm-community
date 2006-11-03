@@ -17,7 +17,7 @@
 - Version: $Id:  $
 - Description:
 --%>
-<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %> 
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/portlet.tld" prefix="portlet" %>
 <%@ page import="java.io.*, java.util.*, org.aspcfs.modules.products.base.*" %>
@@ -27,6 +27,7 @@
 <jsp:useBean id="productCategoryList" class="org.aspcfs.modules.products.base.ProductCategoryList" scope="request"/>
 <jsp:useBean id="productCatalogList" class="org.aspcfs.modules.products.base.ProductCatalogList" scope="request"/>
 <jsp:useBean id="searchResults" class="java.lang.String" scope="request"/>
+<jsp:useBean id="parentOffset" class="java.lang.String" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="PRODUCT_SEARCH" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SHOW_PRICE" class="java.lang.String" scope="request"/>
@@ -60,28 +61,26 @@
                 <portlet:renderURL var="parentUrl">
                   <portlet:param name="viewType" value="summary"/>
                   <portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getParentId()) %>"/>
+                  <portlet:param name="offset" value="<%=parentOffset%>"/>                  
                 </portlet:renderURL>
                 <a href="<%= pageContext.getAttribute("parentUrl") %>">Back to Previous Category</a><br />
               </dhv:evaluate>
               <dhv:evaluate if="<%= productCategoryList.size() > 0 %>">
 <%
   Iterator categoryIterator = productCategoryList.iterator();
+  int offset = productCatalogList.getPagedListInfo().getCurrentOffset();  
   while (categoryIterator.hasNext()) {
     ProductCategory productCategory = (ProductCategory)categoryIterator.next();
 %>
                 <portlet:renderURL var="categoryUrl">
                   <portlet:param name="viewType" value="summary"/>
                   <portlet:param name="categoryId" value="<%= String.valueOf(productCategory.getId())%>"/>
+                  <portlet:param name="offset" value="0"/>                  
+									<portlet:param name="parentOffset" value="<%= String.valueOf(offset) %>"/>                  
                 </portlet:renderURL>
                 <a href="<%= pageContext.getAttribute("categoryUrl") %>"><%=  toHtml(productCategory.getName()) %></a>
-<%
-    if (categoryIterator.hasNext()) {
-%>
-                ::
-<%
-    }
-  }
-%>
+<%if (categoryIterator.hasNext()) {%>::<%}
+}%>
               </dhv:evaluate>
             </dhv:evaluate>
           </td>
@@ -107,8 +106,8 @@
   <tr>
     <td>
 <%
-	Iterator productIterator = productCatalogList.iterator();
-  int offset = productCatalogList.getPagedListInfo().getCurrentOffset();
+	Iterator productIterator = productCatalogList.iterator(); 
+  int offset = productCatalogList.getPagedListInfo().getCurrentOffset();  
   while (productIterator.hasNext()) {
     ProductCatalog productCatalog = (ProductCatalog)productIterator.next();
 	%>
@@ -142,6 +141,14 @@
   }
  %>
 		</td>
+	
 	</tr>
   </dhv:evaluate>
+  <tr>
+    <th>
+      <dhv:pagedListControl object="productCatalogListInfo" />
+    </th>
+  </tr>  
 </table>
+
+

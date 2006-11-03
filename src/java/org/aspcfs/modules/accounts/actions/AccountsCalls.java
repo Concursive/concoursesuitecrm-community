@@ -494,10 +494,10 @@ public final class AccountsCalls extends CFSModule {
       if (context.getRequest().getParameter("actionSource") != null) {
         return getReturn(context, "InsertCall");
       }
-      return getReturn(context, "List");
+      return "ListOK";
     } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
-        return getReturn(context, "List");
+      return "ListOK";
       }
 
       return getReturn(context, "Update");
@@ -792,7 +792,7 @@ public final class AccountsCalls extends CFSModule {
     }
     context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
     context.getRequest().setAttribute("Note", newNote);
-    return ("ForwardMessageOK");
+    return getReturn(context,"ForwardMessage");
   }
 
   /**
@@ -927,6 +927,6 @@ public final class AccountsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("action", context.getRequest().getParameter("action"));
-    return getReturn(context, "SendCall");
+    return "SendCallOK";
   }
 }

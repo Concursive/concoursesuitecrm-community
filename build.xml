@@ -922,17 +922,27 @@
           description="Compile deployed JSPs to check for errors">
     <delete dir="${build.jsp.dir}"/>
     <delete dir="${build.jspclasses.dir}"/>
+    <echo message="" />
+    <echo message="Converting JSPs to Class files..." />
     <mkdir dir="${build.jsp.dir}"/>
     <java classname="org.apache.jasper.JspC" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
         <pathelement location="${env.ANT_HOME}/lib/ant.jar"/>
+        <fileset dir="${CATALINA_HOME}${fs}common${fs}lib">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${CATALINA_HOME}${fs}server{fs}lib">
+          <include name="*.jar"/>
+        </fileset>
       </classpath>
       <arg line="-v -d ${build.jsp.dir} -p org.apache.jsp
                 -uriroot ${CENTRIC_HOME}
                 -webinc ${build.jsp.dir}/webinc.xml
                 -webapp ${CENTRIC_HOME} "/>
     </java>
+    <echo message="" />
+    <echo message="Compiling JSP Class files..." />
     <mkdir dir="${build.jspclasses.dir}"/>
     <javac srcdir="${build.jsp.dir}" destdir="${build.jspclasses.dir}"
            verbose="off" deprecation="on">
@@ -1066,6 +1076,7 @@
     <!-- Copy the .zipped portal templates -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/portal_templates"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/portal_templates">
+      <!-- Unzipped files: <fileset dir="${src.dir}/portal_templates"> -->
       <fileset dir="${CENTRIC_HOME}/WEB-INF/portal_templates">
         <include name="**/*"/>
       </fileset>

@@ -38,11 +38,11 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="documents" object="OrgDetails" hideContainer="<%= "true".equals(request.getParameter("actionplan")) %>" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
   <table border="0" cellpadding="4" cellspacing="0" width="100%">
     <tr class="subtab">
       <td>
-        <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId()+ addLinkParams(request, "popup|popupType|actionId"); %>
+        <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId()+ addLinkParams(request, "popup|popupType|actionId|actionplan"); %>
         <zeroio:folderHierarchy module="Accounts" link="<%= documentLink %>" showLastLink="true"/> >
         <%= FileItem.getSubject() %>
       </td>
@@ -74,7 +74,7 @@
   %>
       <tr class="row<%= rowid %>">
         <td width="10" align="center" rowspan="2" nowrap>
-          <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a>
+          <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a>
         </td>
         <td width="100%">
           <%= FileItem.getImageTag("-23") %><%= thisVersion.getClientFilename() %>

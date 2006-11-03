@@ -390,7 +390,6 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandListAllProducts(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-view")) {
     if (!hasPermission(context, "product-catalog-view")) {
       return ("PermissionError");
     }
@@ -433,8 +432,7 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandViewProductDetails(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-view")) {
-    if (!hasPermission(context, "product-catalog-view")) {
+    if (!hasPermission(context, "product-catalog-product-view")) {
       return ("PermissionError");
     }
     ProductCategoryList categoryList = null;
@@ -475,8 +473,7 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAddProduct(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-add")) {
-    if (!hasPermission(context, "product-catalog-add")) {
+    if (!hasPermission(context, "product-catalog-product-add")) {
       return ("PermissionError");
     }
     ProductCategoryList categoryList = null;
@@ -513,8 +510,7 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandSaveProduct(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-add")) {
-    if (!hasPermission(context, "product-catalog-add")) {
+    if (!hasPermission(context, "product-catalog-product-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -558,8 +554,7 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandModifyProduct(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-edit")) {
-    if (!hasPermission(context, "product-catalog-edit")) {
+    if (!hasPermission(context, "product-catalog-product-edit")) {
       return ("PermissionError");
     }
     ProductCategoryList categoryList = null;
@@ -600,8 +595,7 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandUpdateProduct(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-edit")) {
-    if (!hasPermission(context, "product-catalog-edit")) {
+    if (!hasPermission(context, "product-catalog-product-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -643,8 +637,7 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandConfirmDeleteProduct(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-delete")) {
-    if (!hasPermission(context, "product-catalog-delete")) {
+    if (!hasPermission(context, "product-catalog-product-delete")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -700,8 +693,7 @@ public final class ProductsCatalog extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDeleteProduct(ActionContext context) {
-    //if (!hasPermission(context, "product-catalog-product-delete")) {
-    if (!hasPermission(context, "product-catalog-delete")) {
+    if (!hasPermission(context, "product-catalog-product-delete")) {
       return ("PermissionError");
     }
     Connection db = null;

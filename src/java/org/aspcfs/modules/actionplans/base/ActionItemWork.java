@@ -1577,8 +1577,6 @@ public class ActionItemWork extends GenericBean {
     }
     return false;
   }
-
-
   /**
    *  Description of the Method
    *

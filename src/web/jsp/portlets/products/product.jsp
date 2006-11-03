@@ -39,6 +39,7 @@
 <jsp:useBean id="EMAIL_SUBJECT" class="java.lang.String" scope="request"/>
 <jsp:useBean id="previousPage" class="java.lang.String" scope="request"/>
 <jsp:useBean id="offset" class="java.lang.String" scope="request"/>
+<jsp:useBean id="parentOffset" class="java.lang.String" scope="request"/>
 <jsp:useBean id="searchResult" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPopupMenu.jsp" %>
@@ -79,6 +80,7 @@
           <td nowrap>
             <portlet:renderURL portletMode="view" var="url">
               <portlet:param name="viewType" value="<%=previousPage%>"/>
+							<portlet:param name="parentOffset" value="<%= parentOffset %>"/>
               <portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
               <portlet:param name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>"/>
             </portlet:renderURL>
@@ -227,6 +229,7 @@
 			<input type="hidden" name="categoryId" value="<%=  parentCategory.getId() %>" />
 			<input type="hidden" name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>" />
 			<input type="hidden" name="offset" value="<%= offset %>" />
+			<input type="hidden" name="parentOffset" value="<%= parentOffset %>" />
 			<input type="hidden" name="viewType" value="details" />
 		</table>
 	</form>

@@ -3238,11 +3238,11 @@ public class Organization extends GenericBean {
       throw new SQLException("Organization ID not specified.");
     }
     boolean commit = db.getAutoCommit();
-    try {
+    try { 
       if (commit) {
         db.setAutoCommit(false);
       }
-
+ 
       //build the relationship list(both from and to mappings)
       RelationshipList thisList = new RelationshipList();
       thisList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
@@ -3261,7 +3261,7 @@ public class Organization extends GenericBean {
       ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.setIncludeOnlyTrashed(true);
-      ticketList.buildList(db);
+      ticketList.buildList(db); 
       ticketList.delete(db, baseFilePath);
       ticketList = null;
 
@@ -3372,6 +3372,14 @@ public class Organization extends GenericBean {
         contactList.buildList(db);
         contactList.delete(db, baseFilePath, forceDelete);
         contactList = null;
+        
+        contactList = new ContactList();
+        contactList.setImportId(this.getImportId());
+        contactList.setOrgId(this.getOrgId());
+        contactList.setIncludeAllSites(true);
+        contactList.setExcludeUnapprovedContacts(false);
+        contactList.buildList(db); 	
+        contactList.delete(db, baseFilePath, forceDelete);
       }
 
       //delete related action plan records

@@ -61,7 +61,7 @@
     &nbsp;<br>
     <dhv:formMessage />
     <%@ include file="product_catalog_include.jsp" %>
-    <br />
+    <br /> 
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
       <tr>
         <th colspan="2">
@@ -77,7 +77,6 @@
           <input type="text" name="activePrice_msrpAmount" size="15" value="<zeroio:number value="<%= productCatalog.getActivePrice().getMsrpAmount() %>" locale="<%= User.getLocale() %>" />">
           <%= showAttribute(request, "msrpAmountError") %>
         </td>
-      </tr>
       </tr>
       <tr class="containerBody">
         <td class="formLabel">

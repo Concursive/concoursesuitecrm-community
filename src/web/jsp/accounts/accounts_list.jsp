@@ -58,7 +58,7 @@
 <center><dhv:pagedListAlphabeticalLinks object="SearchOrgListInfo"/></center></dhv:include>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
 <% int columnCount = 0; %>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+<table cellpadding="8" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th width="8" <% ++columnCount; %>>
       &nbsp;
@@ -67,6 +67,11 @@
       <strong><a href="Accounts.do?command=Search&column=o.name"><dhv:label name="organization.name">Account Name</dhv:label></a></strong>
       <%= SearchOrgListInfo.getSortIcon("o.name") %>
     </th>
+    
+    <th nowrap <% ++columnCount; %>>
+      <strong><dhv:label name="organization.owner">Owner Name</dhv:label></strong>     
+    </th>
+    
 <%--    <dhv:include name="organization.list.siteId" none="true"> --%>
 <zeroio:debug value="<%="JSP::accounts_list.jsp "+ SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId")+" == "+(String.valueOf(Constants.INVALID_SITE)) %>"/>
       <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
@@ -75,16 +80,31 @@
         </th>
       </dhv:evaluate>
 <%--    </dhv:include> --%>
-    <dhv:include name="organization.phoneNumbers" none="true">
-    <th nowrap <% ++columnCount; %>>
-        <strong><dhv:label name="account.phoneFax">Phone/Fax</dhv:label></strong>
+      <dhv:include name="organization.addresses" none="true">
+        <th nowrap <% ++columnCount; %>>
+           <strong><dhv:label name="accounts.accounts_add.City">City</dhv:label></strong>
+	 	</th>
+      </dhv:include>    
+      <dhv:include name="organization.addresses" none="true">
+    	<th nowrap <% ++columnCount; %>>
+          <strong><dhv:label name="accounts.accounts_add.State">State</dhv:label></strong>
 		</th>
-    </dhv:include>
-    <dhv:include name="organization.emailAddresses" none="true">
-    <th nowrap <% ++columnCount; %>>
-        <strong><dhv:label name="accounts.accounts_add.Email">Email</dhv:label></strong>
+	  </dhv:include>
+      <dhv:include name="organization.addresses" none="true">
+        <th nowrap <% ++columnCount; %>>
+          <strong><dhv:label name="accounts.accounts_add.Zip">Zip</dhv:label></strong>
 		</th>
-    </dhv:include>
+      </dhv:include>
+      <dhv:include name="organization.phoneNumbers" none="true">
+        <th nowrap <% ++columnCount; %>>
+          <strong><dhv:label name="account.phoneFax">Phone/Fax</dhv:label></strong>
+		</th>
+      </dhv:include>
+      <dhv:include name="organization.addresses" none="true">
+        <th nowrap <% ++columnCount; %>>
+          <strong><dhv:label name="accounts.accounts_add.County">County</dhv:label></strong>
+		</th>
+      </dhv:include>
   </tr>
 <%
 	Iterator j = OrgList.iterator();
@@ -104,14 +124,100 @@
        <a href="javascript:displayMenu('select<%= i %>','menuAccount', '<%= thisOrg.getOrgId() %>', '<%= status %>', '<%=thisOrg.isTrashed() %>');"
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAccount');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-		<td>
+	<td>
       <a href="Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
-		</td>
+	</td>
+	
+	<td>
+      <%= toHtml(thisOrg.getOwnerName()) %>
+	</td>
+		
+		
 <%--    <dhv:include name="organization.list.siteId" none="true"> --%>
       <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
         <td valign="top"><%= SiteIdList.getSelectedValue(thisOrg.getSiteId()) %></td>
       </dhv:evaluate>
 <%--    </dhv:include> --%>
+      <dhv:include name="organization.addresses" none="true">
+		<td valign="center" nowrap>
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
+	     <% if ( thisOrg.getPrimaryAddress() != null) { %>	
+           <% if ( (!"".equals(thisOrg.getPrimaryAddress().getCity()))) { %>
+             <%= toHtml(thisOrg.getPrimaryAddress().getCity()) %>
+           <%} else {%>
+             &nbsp;
+           <%}%>
+         <%} else {%>
+           &nbsp;
+         <%}%>
+		</dhv:evaluate>     
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() != null)%>">
+		<% if ( thisOrg.getPrimaryContact().getPrimaryAddress() != null) { %>	
+          <% if ( (!"".equals(thisOrg.getPrimaryContact().getPrimaryAddress().getCity()))) { %>
+            <%= toHtml(thisOrg.getPrimaryContact().getPrimaryAddress().getCity()) %>  
+          <%} else {%>
+            &nbsp;
+          <%}%>  
+        <%} else {%>
+          &nbsp;
+        <%}%>  
+		</dhv:evaluate>
+		</td>
+    </dhv:include>
+    <dhv:include name="organization.addresses" none="true">
+		<td valign="center" nowrap>
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
+	     <% if ( thisOrg.getPrimaryAddress() != null) { %>	
+           <% if ( (!"-1".equals(thisOrg.getPrimaryAddress().getState()))) { %>
+             <%= toHtml(thisOrg.getPrimaryAddress().getState()) %>
+           <%} else {%>
+             &nbsp;
+           <%}%>
+         <%} else {%>
+           &nbsp;
+         <%}%>
+		</dhv:evaluate>     
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() != null)%>">
+		<% if ( thisOrg.getPrimaryContact().getPrimaryAddress() != null) { %>	
+          <% if ( (!"-1".equals(thisOrg.getPrimaryContact().getPrimaryAddress().getState()))) { %>
+            <%= toHtml(thisOrg.getPrimaryContact().getPrimaryAddress().getState()) %>  
+          <%} else {%>
+            &nbsp;
+          <%}%>  
+        <%} else {%>
+          &nbsp;
+        <%}%>  
+		</dhv:evaluate>
+		</td>
+    </dhv:include>
+    <dhv:include name="organization.addresses" none="true">
+		<td valign="center" nowrap>
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
+	     <% if ( thisOrg.getPrimaryAddress() != null) { %>	
+           <% if ( (!"".equals(thisOrg.getPrimaryAddress().getZip()))) { %>
+             <%= toHtml(thisOrg.getPrimaryAddress().getZip()) %>
+           <%} else {%>
+             &nbsp;
+           <%}%>
+         <%} else {%>
+           &nbsp;
+         <%}%>
+		</dhv:evaluate>     
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() != null)%>">
+		<% if ( thisOrg.getPrimaryContact().getPrimaryAddress() != null) { %>	
+          <% if ( (!"".equals(thisOrg.getPrimaryContact().getPrimaryAddress().getZip()))) { %>
+            <%= toHtml(thisOrg.getPrimaryContact().getPrimaryAddress().getZip()) %>  
+          <%} else {%>
+            &nbsp;
+          <%}%>  
+        <%} else {%>
+          &nbsp;
+        <%}%>  
+		</dhv:evaluate>
+		</td>
+    </dhv:include>
+
+
     <dhv:include name="organization.phoneNumbers" none="true">
 		<td valign="center" nowrap>
 		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
@@ -132,24 +238,33 @@
 		</dhv:evaluate>
 		</td>
     </dhv:include>
-    <dhv:include name="organization.emailAddresses" none="true">
+    <dhv:include name="organization.addresses" none="true">
 		<td valign="center" nowrap>
 		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
-      <% if ( (!"".equals(thisOrg.getPrimaryEmailAddress()))) { %>
-        <a href="mailto:<%= toHtml(thisOrg.getPrimaryEmailAddress()) %>"><%= toHtml(thisOrg.getPrimaryEmailAddress()) %></a>
-      <%} else {%>
-        &nbsp;
-      <%}%>
-		</dhv:evaluate>    
+	     <% if ( thisOrg.getPrimaryAddress() != null) { %>	
+           <% if ( (!"".equals(thisOrg.getPrimaryAddress().getCounty()))) { %>
+             <%= toHtml(thisOrg.getPrimaryAddress().getCounty()) %>
+           <%} else {%>
+             &nbsp;
+           <%}%>
+         <%} else {%>
+           &nbsp;
+         <%}%>
+		</dhv:evaluate>     
 		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() != null)%>">
-      <% if ( (!"".equals(thisOrg.getPrimaryContact().getPrimaryEmailAddress()))) { %>
-        <a href="mailto:<%= toHtml(thisOrg.getPrimaryContact().getPrimaryEmailAddress()) %>"><%= toHtml(thisOrg.getPrimaryContact().getPrimaryEmailAddress()) %></a>
-      <%} else {%>
-        &nbsp;
-      <%}%>    
+		<% if ( thisOrg.getPrimaryContact().getPrimaryAddress() != null) { %>	
+          <% if ( (!"".equals(thisOrg.getPrimaryContact().getPrimaryAddress().getCounty()))) { %>
+            <%= toHtml(thisOrg.getPrimaryContact().getPrimaryAddress().getCounty()) %>  
+          <%} else {%>
+            &nbsp;
+          <%}%>  
+        <%} else {%>
+          &nbsp;
+        <%}%>  
 		</dhv:evaluate>
 		</td>
     </dhv:include>
+
   </tr>
 <%}%>
 <%} else {%>

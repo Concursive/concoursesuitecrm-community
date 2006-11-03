@@ -287,7 +287,7 @@
 			<input type="text" size="35" maxlength="80" name="shortDescription" value="<%= toHtmlValue(productCatalog.getShortDescription()) %>">
 		</td>
 	</tr>
-	<tr class="containerBody">
+	<tr class="containerBody"> 
     <td valign="top" nowrap class="formLabel"><dhv:label name="documents.details.longDescription">Long Description</dhv:label></td>
     <td>
 			<TEXTAREA NAME="longDescription" ROWS="3" COLS="50"><%= toString(productCatalog.getLongDescription()) %></TEXTAREA>
@@ -301,17 +301,21 @@
   </tr>
 </table>
 <br/>
+<zeroio:debug value="1"/>
 <dhv:evaluate if="<%= (productCatalog.getId() == -1) %>">
+<zeroio:debug value="2"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
       <strong><dhv:label name="products.detail.otherCategories">Other categories in which this product is included</dhv:label></strong>
     </th>
   </tr>
+  <zeroio:debug value="3"/>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
       <dhv:label name="products.detail.categories">Categories</dhv:label>
     </td>
+    <zeroio:debug value="4"/>
     <td>
       <input type="button" value="<dhv:label name="button.choose">Choose</dhv:label>" onClick="javascript: popCategories();" /><br />
       <iframe src="../empty.html" name="server_list" id="server_list" border="0" frameborder="0" width="100%" height="0"></iframe>
@@ -320,4 +324,6 @@
   </tr>
 </table>
 </dhv:evaluate>
+<zeroio:debug value="5"/>
 <input type="hidden" name="onlyWarnings" value="<%= (productCatalog.getOnlyWarnings()? "on" : "off") %>">
+<zeroio:debug value="6"/>

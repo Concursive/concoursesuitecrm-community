@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <mappings>
+    <map id="contactInformation.details" displayName="Contact Information"><![CDATA[
+私たちには、あなたへのファイルの以下の問い合わせ先があります…
+<br />
+<b>名前:</b> ${name}<br /> 
+<b>追加名前:</b> ${additionalNames}<br />
+<b>あだ名:</b> ${nickname}<br />
+<b>生年月日:</b> ${birthDate}<br />
+<b>タイトル:</b> ${title}<br />
+<b>役割:</b> ${role}<br />
+<br />
+<b>Eメールアドレス:</b><br />
+${emailAddresses}
+${noEmailAddresses=No email address on record.<br />}
+<br />
+<br />
+<b>インスタントメッセージアドレス:</b><br />
+${instantMessageAddresses}
+${noInstantMessageAddresses=No instant message address on record.<br />}
+<br />
+<br />
+<b>テキストメッセージアドレス:</b><br />
+${textMessageAddresses}
+${noTextMessageAddresses=No text message address on record.<br />}
+<br />
+<br />
+<b>電話番号:</b><br />
+${phoneNumbers}
+${noPhoneNumbers=No phone number on record.<br />}
+<br />
+<br />
+<b>郵便の宛先:</b><br />
+${postalAddresses}
+${noPostalAddresses=No postal address on record.<br />}
+]]></map>
+    <!-- Project Management User Added -->
+    <map id="projects.userAdded.subject" displayName="Project Management User Added"><![CDATA[プロジェクト招待]]></map>
+    <map id="projects.userAdded.body" displayName="Project Management User Added"><![CDATA[
+<body>
+こんにちは ${invite.name},<br />
+<br />
+${user.name} 以下のCentric CRMが映し出すセットアップを持って、あなたが参加するのを要求しています:<br />
+<br />
+プロジェクト名: ${project.name}<br />
+プロジェクト記述: ${project.description}<br />
+<br />
+招待、ログイン、およびレビューを応じるか、または拒絶するために、以下をクリックするのによるあなたのプロジェクトはリンクされます:<br />
+<a href="${link}" target="_blank">${link}</a><br />
+<br />
+いったんログインされる後、プロジェクトモジュールへナビゲートしてください、そして、あなたの招待状を見るのを選んでください。<br />
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+    <!-- Project Management News Email -->
+    <map id="projects.news.email.subject" displayName="Project Management News Email"><![CDATA[${news.subject}]]></map>
+    <map id="projects.news.email.body" displayName="Project Management News Email"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td>
+      ${news.intro}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ${news.continued=[メッセージは続けられています…]}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">オンラインでこのメッセージを見て</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+
+<!-- Assigned Leads Email -->
+<map id="leads.assigned.email.subject" displayName="Assigned Leads Email"><![CDATA[${leads.assigned.email.subject}]]></map>
+<map id="leads.assigned.email.body" displayName="Assigned Leads Email"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td colspan="2">
+      先導モジュールでリードをあなたに割り当ててあります
+    </td>
+  </tr>
+  <tr>
+    <td>
+      先導詳細:
+    </td>
+    <td>${contact.name} ${contact.company}</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">オンラインで先導を見て</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+
+<!-- Worked Leads Email -->
+<map id="leads.worked.email.subject" displayName="Worked Leads Email"><![CDATA[${leads.worked.email.subject}]]></map>
+<map id="leads.worked.email.body" displayName="Worked Leads Email"><![CDATA[
+<body>
+<table border="0">
+  <tr>
+    <td colspan="2">
+      アカウントモジュールで新しい見通しをあなたに割り当ててあります
+    </td>
+  </tr>
+  <tr>
+    <td>
+      見通しの詳細:
+    </td>
+    <td>${contact.name} ${contact.company}</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="${link}">オンラインで見通しを見て</a>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]></map>
+<!-- Action Plan Assignment Email -->
+<map id="actionplan.assign.email.subject" displayName="Action Plan Assignment Email"><![CDATA[行動計画課題]]></map>
+<map id="actionplan.assign.email.body" displayName="Action Plan Assignment Email"><![CDATA[
+<body>
+<strong>以下の行動計画を割り当ててあります:</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">アカウント:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">マネージャ:</td>
+    <td>${actionplan.manager}</td>
+  </tr>
+  <tr>
+    <td align="right">割り当:</td>
+    <td>${actionplan.assignedTo}</td>
+  </tr>
+</table>
+<br />
+<br />
+ここで<a href="${link}">クリック</a>して、行動計画を見て
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- Action Plan Re-assignment Email -->
+<map id="actionplan.reassign.email.subject" displayName="Action Plan Re-assignment Email"><![CDATA[Action Plan Re-assignment]]></map>
+<map id="actionplan.reassign.email.body" displayName="Action Plan Re-assignment Email"><![CDATA[
+<body>
+<strong>The following Action Plan has been Re-assigned</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">アカウント:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">マネージャ:</td>
+    <td>${actionplan.manager}</td>
+  </tr>
+  <tr>
+    <td align="right">割り当から:</td>
+    <td>${actionplan.assignedFrom}</td>
+  </tr>
+  <tr>
+    <td align="right">割り当:</td>
+    <td>${actionplan.assignedTo}</td>
+  </tr>
+</table>
+<br />
+<br />
+ここで<a href="${link}">クリック</a>して、行動計画を見て
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- Action Step Alert Email -->
+<map id="actionstep.alert.email.subject" displayName="Action Step Alert Email"><![CDATA[動作ステップ警戒]]></map>
+<map id="actionstep.alert.email.body" displayName="Action Plan Alert Email"><![CDATA[
+<body>
+<strong>以下の動作ステップはあなたの注意を必要とします</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">アカウント:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">ステップ:</td>
+    <td>${actionstep.description}</td>
+  </tr>
+  <tr>
+    <td align="right">所有者:</td>
+    <td>${actionstep.owner}</td>
+  </tr>
+</table>
+<br />
+<br />
+ここで<a href="${link}">クリック</a>して、行動計画を見て
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- Action Step Completion Alert Email -->
+<map id="actionstep.stepCompletion.alert.email.subject" displayName="Action Step Completion Alert Email"><![CDATA[動作ステップ完成警戒]]></map>
+<map id="actionstep.stepCompletion.alert.email.body" displayName="Action Plan Step Completion Alert Email"><![CDATA[
+<body>
+<strong>以下の動作ステップは終了しました</strong><br />
+<br />
+<table border="0" cellpadding="4" cellspacing="0">
+  <tr>
+    <td align="right">アカウント:</td>
+    <td>${organization.name}</td>
+  </tr>
+  <tr>
+    <td align="right">ステップ:</td>
+    <td>${actionstep.description}</td>
+  </tr>
+  <tr>
+    <td align="right">所有者:</td>
+    <td>${actionstep.owner}</td>
+  </tr>
+</table>
+<br />
+<br />
+ここで<a href="${link}">クリック</a>して、行動計画を見て
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+<!-- New User Email Alert -->
+<map id="newuser.alert.email.subject" displayName="User Account Alert Email"><![CDATA[Centric CRMアカウント情報]]></map>
+<map id="newuser.alert.email.body" displayName="User Account Alert Email"><![CDATA[
+<body>
+あなたのCentric CRMに関するこのメッセージ詳細情報は説明されます。<br />
+<br />
+あなたのCentric CRMユーザアカウントパスワードは${modUserName}によってリセットされました。<br />
+<br />
+以下の情報で、ログインしてください:<br />
+<br />
+ユーザ名: ${user.username}<br />
+パスワード: ${user.password} <br />
+<br />
+あなたがCentric CRMにログインする次の時にパスワードを変えるのは、お勧めです。.<br />
+<br />
+<br />
+ここで<a href="${url}">クリック${endUrl}して、サイトを見て.
+<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
+</mappings>
+</templates>
