@@ -17,7 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
+<jsp:useBean id="APP_VERSION" class="java.lang.String" scope="application"/>
 <jsp:useBean id="database" class="org.aspcfs.modules.setup.beans.DatabaseBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -43,13 +43,16 @@
   <tr>
     <td>&nbsp;</td>
   </tr>
-<dhv:evaluate if="<%= hasText(APP_TEXT) %>">
+<dhv:evaluate if="<%= hasText(APP_VERSION) %>">
   <tr>
     <td>
       <dhv:label name="setup.createDatabaseTables.text">Centric CRM will now create all of the necessary database tables and initial data in the following database:</dhv:label><br>
       <br>
       <b><%= toHtmlValue(database.getUrl()) %></b><br>
       <br>
+      If restoring from a Centric CRM XML backup file, specify the file on the local server to restore from:<br/>
+      <input type="text" name="backupFile" value="" size="40" /><br />
+      <br />
       <dhv:label name="setup.takesFewMinutes.text">This can take a few minutes depending on connectivity to the database, select Continue to begin.</dhv:label><br>
       <br>
       <span id="buttons" name="buttons">
@@ -61,7 +64,7 @@
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate if="<%= !hasText(APP_TEXT) %>">
+<dhv:evaluate if="<%= !hasText(APP_VERSION) %>">
   <tr>
     <td>
       The Centric CRM Community Edition requires that the necessary database tables and initial data have been installed using &quot;ant installdb&quot; in the following database:<br />

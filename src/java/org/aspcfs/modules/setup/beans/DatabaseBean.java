@@ -185,7 +185,7 @@ public class DatabaseBean extends GenericBean {
   }
 
   public boolean isEmbedded() {
-    return ("DaffodilDB".equals(type) || "Firebird".equals(type) || "Derby".equals(type));
+    return ("DaffodilDB".equals(type) || "Derby".equals(type));
   }
 
 
@@ -246,7 +246,7 @@ public class DatabaseBean extends GenericBean {
    */
   public String getUrl() {
     if ("in.co.daffodil.db.jdbc.DaffodilDBDriver".equals(this.getDriver())) {
-      return "jdbc:daffodilDB_embedded:" + this.getName() + ";path=" + path + "daffodildb";
+      return "jdbc:daffodilDB_embedded:" + this.getName() + ";create=true;path=" + path + "daffodildb";
     }
     if ("org.postgresql.Driver".equals(this.getDriver())) {
       return "jdbc:postgresql://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
@@ -262,7 +262,7 @@ public class DatabaseBean extends GenericBean {
       return "jdbc:microsoft:sqlserver://" + this.getIp() + ":" + this.getPort() + ";SelectMethod=cursor;DatabaseName=" + this.getName();
     }
     if ("org.firebirdsql.jdbc.FBDriver".equals(this.getDriver())) {
-      return "jdbc:firebirdsql:" + this.getIp() + "/" + this.getPort() + ":" + path + this.getName();
+      return "jdbc:firebirdsql:" + this.getIp() + "/" + this.getPort() + ":" + path;
     }
     if ("oracle.jdbc.driver.OracleDriver".equals(this.getDriver())) {
       // jdbc:oracle:thin:@//127.0.0.1:1521/XE
@@ -273,7 +273,7 @@ public class DatabaseBean extends GenericBean {
       return "jdbc:mysql://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
     if ("org.apache.derby.jdbc.EmbeddedDriver".equals(this.getDriver())) {
-      return "jdbc:derby:" + path;
+      return "jdbc:derby:" + path + "derbydb" + ";create=true;upgrade=true";
     }
     return "";
   }

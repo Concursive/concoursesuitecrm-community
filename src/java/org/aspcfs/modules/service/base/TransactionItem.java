@@ -26,6 +26,7 @@ import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.web.CustomLookupElement;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.apps.transfer.DataRecord;
 import org.w3c.dom.Element;
 
 import java.lang.reflect.Method;
@@ -38,21 +39,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Every Transaction can be made of many TransactionItems. TransactionItems
- * represent objects in which a method will be called upon.<p>
- * <p/>
- * <p/>
- * <p/>
- * Example:<br>
- * The TransactionItem is to insert an Organization. So, the object is
- * Organization, the action is an INSERT, the meta property contains fields
- * that are to be returned after the insert is executed, any errors that occur
- * are placed in the errorMessage property.
+ *  Every Transaction can be made of many TransactionItems. TransactionItems
+ *  represent objects in which a method will be called upon.<p>
  *
- * @author matt rajkowski
- * @version $Id: TransactionItem.java,v 1.13 2002/04/24 15:39:44 mrajkowski
- *          Exp $
- * @created April 10, 2002
+ *  <p/>
+ *
+ *  <p/>
+ *
+ *  <p/>
+ *
+ *  Example:<br>
+ *  The TransactionItem is to insert an Organization. So, the object is
+ *  Organization, the action is an INSERT, the meta property contains fields
+ *  that are to be returned after the insert is executed, any errors that occur
+ *  are placed in the errorMessage property.
+ *
+ * @author     matt rajkowski
+ * @version    $Id: TransactionItem.java,v 1.13 2002/04/24 15:39:44 mrajkowski
+ *      Exp $
+ * @created    April 10, 2002
  */
 public class TransactionItem {
 
@@ -85,19 +90,18 @@ public class TransactionItem {
 
 
   /**
-   * Constructor for the TransactionItem object
+   *  Constructor for the TransactionItem object
    */
-  public TransactionItem() {
-  }
+  public TransactionItem() { }
 
 
   /**
-   * Constructor a TransactionItem Object from an XML element, using the
-   * supplied mapping to translate the XML element tag name to a Class.
+   *  Constructor a TransactionItem Object from an XML element, using the
+   *  supplied mapping to translate the XML element tag name to a Class.
    *
-   * @param objectElement Description of Parameter
-   * @param mapping       Description of Parameter
-   * @param thisUser      Description of the Parameter
+   * @param  objectElement  Description of Parameter
+   * @param  mapping        Description of Parameter
+   * @param  thisUser       Description of the Parameter
    */
   public TransactionItem(Element objectElement, HashMap mapping, UserBean thisUser) {
     try {
@@ -105,7 +109,7 @@ public class TransactionItem {
       this.setObject(objectElement, mapping);
       ignoredProperties = XMLUtils.populateObject(object, objectElement);
 
-      //populate the object's user fields using the user that was authenticated 
+      //populate the object's user fields using the user that was authenticated
       this.populateUserData(thisUser);
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
@@ -119,10 +123,33 @@ public class TransactionItem {
 
 
   /**
-   * When user logs in through an external client, populate the object's user
-   * related fields (record keeping fields, ownership fields etc).
+   *  Constructor for the TransactionItem object
    *
-   * @param thisUser The new userData value
+   * @param  record   Description of the Parameter
+   * @param  mapping  Description of the Parameter
+   */
+  public TransactionItem(DataRecord record, HashMap mapping) {
+    try {
+      this.setAction(record.getAction());
+      this.setObject(record.getName(), mapping);
+      ignoredProperties = ObjectUtils.populateObject(object, record);
+      shareKey = record.getShareKey();
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "TransactionItem-> Cannot create: " + record.getName());
+        e.printStackTrace(System.out);
+      }
+      appendErrorMessage("Invalid element: " + record.getName());
+    }
+  }
+
+
+  /**
+   *  When user logs in through an external client, populate the object's user
+   *  related fields (record keeping fields, ownership fields etc).
+   *
+   * @param  thisUser  The new userData value
    */
   public void populateUserData(UserBean thisUser) {
     try {
@@ -155,9 +182,9 @@ public class TransactionItem {
 
 
   /**
-   * Sets the object attribute of the TransactionItem object
+   *  Sets the object attribute of the TransactionItem object
    *
-   * @param tmp The new object value
+   * @param  tmp  The new object value
    */
   public void setObject(Object tmp) {
     object = tmp;
@@ -165,17 +192,14 @@ public class TransactionItem {
 
 
   /**
-   * Sets the object attribute of the TransactionItem object from XML based on
-   * the mapping data. If the element tag is "contact" and there is a mapping
-   * to "org.aspcfs.modules.contacts.base.Contact", then the Object is created
-   * and populated from the XML.
+   *  Sets the object attribute of the TransactionItem object
    *
-   * @param element The new object value
-   * @param mapping The new object value
-   * @throws Exception Description of Exception
+   * @param  name           The new object value
+   * @param  mapping        The new object value
+   * @exception  Exception  Description of the Exception
    */
-  public void setObject(Element element, HashMap mapping) throws Exception {
-    name = element.getTagName();
+  public void setObject(String name, HashMap mapping) throws Exception {
+    this.name = name;
     if (mapping.containsKey(name)) {
       object = Class.forName(
           ((SyncTable) mapping.get(name)).getMappedClassName()).newInstance();
@@ -188,9 +212,24 @@ public class TransactionItem {
 
 
   /**
-   * Sets the action attribute of the TransactionItem object
+   *  Sets the object attribute of the TransactionItem object from XML based on
+   *  the mapping data. If the element tag is "contact" and there is a mapping
+   *  to "org.aspcfs.modules.contacts.base.Contact", then the Object is created
+   *  and populated from the XML.
    *
-   * @param tmp The new action value
+   * @param  element     The new object value
+   * @param  mapping     The new object value
+   * @throws  Exception  Description of Exception
+   */
+  public void setObject(Element element, HashMap mapping) throws Exception {
+    this.setObject(element.getTagName(), mapping);
+  }
+
+
+  /**
+   *  Sets the action attribute of the TransactionItem object
+   *
+   * @param  tmp  The new action value
    */
   public void setAction(int tmp) {
     action = tmp;
@@ -198,10 +237,10 @@ public class TransactionItem {
 
 
   /**
-   * Determines the methods that are allowed from a specified action. These are
-   * the methods that can be executed on the new Object.
+   *  Determines the methods that are allowed from a specified action. These are
+   *  the methods that can be executed on the new Object.
    *
-   * @param tmp The new action value
+   * @param  tmp  The new action value
    */
   public void setAction(String tmp) {
     if ("insert".equals(tmp) || tmp.startsWith("insert")) {
@@ -232,9 +271,9 @@ public class TransactionItem {
 
 
   /**
-   * Sets the action attribute of the TransactionItem object
+   *  Sets the action attribute of the TransactionItem object
    *
-   * @param objectElement The new action value
+   * @param  objectElement  The new action value
    */
   public void setAction(Element objectElement) {
     if (objectElement.hasAttributes()) {
@@ -269,9 +308,9 @@ public class TransactionItem {
 
 
   /**
-   * Sets the meta attribute of the TransactionItem object
+   *  Sets the meta attribute of the TransactionItem object
    *
-   * @param tmp The new meta value
+   * @param  tmp  The new meta value
    */
   public void setMeta(TransactionMeta tmp) {
     this.meta = tmp;
@@ -279,9 +318,9 @@ public class TransactionItem {
 
 
   /**
-   * Sets the packetContext attribute of the TransactionItem object
+   *  Sets the packetContext attribute of the TransactionItem object
    *
-   * @param tmp The new packetContext value
+   * @param  tmp  The new packetContext value
    */
   public void setPacketContext(PacketContext tmp) {
     this.packetContext = tmp;
@@ -289,9 +328,9 @@ public class TransactionItem {
 
 
   /**
-   * Sets the transactionContext attribute of the TransactionItem object
+   *  Sets the transactionContext attribute of the TransactionItem object
    *
-   * @param tmp The new transactionContext value
+   * @param  tmp  The new transactionContext value
    */
   public void setTransactionContext(TransactionContext tmp) {
     this.transactionContext = tmp;
@@ -299,9 +338,9 @@ public class TransactionItem {
 
 
   /**
-   * Sets the shareKey attribute of the TransactionItem object
+   *  Sets the shareKey attribute of the TransactionItem object
    *
-   * @param tmp The new shareKey value
+   * @param  tmp  The new shareKey value
    */
   public void setShareKey(boolean tmp) {
     this.shareKey = tmp;
@@ -309,9 +348,9 @@ public class TransactionItem {
 
 
   /**
-   * Gets the errorMessage attribute of the TransactionItem object
+   *  Gets the errorMessage attribute of the TransactionItem object
    *
-   * @return The errorMessage value
+   * @return    The errorMessage value
    */
   public String getErrorMessage() {
     return (errorMessage.toString());
@@ -319,9 +358,9 @@ public class TransactionItem {
 
 
   /**
-   * Gets the name attribute of the TransactionItem object
+   *  Gets the name attribute of the TransactionItem object
    *
-   * @return The name value
+   * @return    The name value
    */
   public String getName() {
     return name;
@@ -329,9 +368,9 @@ public class TransactionItem {
 
 
   /**
-   * Gets the object attribute of the TransactionItem object
+   *  Gets the object attribute of the TransactionItem object
    *
-   * @return The object value
+   * @return    The object value
    */
   public Object getObject() {
     return object;
@@ -339,9 +378,9 @@ public class TransactionItem {
 
 
   /**
-   * Gets the recordList attribute of the TransactionItem object
+   *  Gets the recordList attribute of the TransactionItem object
    *
-   * @return The recordList value
+   * @return    The recordList value
    */
   public RecordList getRecordList() {
     return recordList;
@@ -349,9 +388,9 @@ public class TransactionItem {
 
 
   /**
-   * Gets the meta attribute of the TransactionItem object
+   *  Gets the meta attribute of the TransactionItem object
    *
-   * @return The meta value
+   * @return    The meta value
    */
   public TransactionMeta getMeta() {
     return meta;
@@ -359,9 +398,9 @@ public class TransactionItem {
 
 
   /**
-   * Gets the transactionContext attribute of the TransactionItem object
+   *  Gets the transactionContext attribute of the TransactionItem object
    *
-   * @return The transactionContext value
+   * @return    The transactionContext value
    */
   public TransactionContext getTransactionContext() {
     return transactionContext;
@@ -369,9 +408,9 @@ public class TransactionItem {
 
 
   /**
-   * Gets the shareKey attribute of the TransactionItem object
+   *  Gets the shareKey attribute of the TransactionItem object
    *
-   * @return The shareKey value
+   * @return    The shareKey value
    */
   public boolean getShareKey() {
     return shareKey;
@@ -379,11 +418,11 @@ public class TransactionItem {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db     Description of Parameter
-   * @param record Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @param  record         Description of Parameter
+   * @throws  SQLException  Description of Exception
    */
   public void insertClientMapping(Connection db, Record record) throws SQLException {
     if (record.containsKey("guid")) {
@@ -400,11 +439,11 @@ public class TransactionItem {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db     Description of the Parameter
-   * @param record Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  record         Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void updateClientMapping(Connection db, Record record) throws SQLException {
     if (record.containsKey("guid")) {
@@ -416,11 +455,11 @@ public class TransactionItem {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db     Description of the Parameter
-   * @param record Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  record         Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void deleteClientMapping(Connection db, Record record) throws SQLException {
     if (record.containsKey("guid")) {
@@ -436,11 +475,11 @@ public class TransactionItem {
 
 
   /**
-   * Gets the objectValid attribute of the TransactionItem object
+   *  Gets the objectValid attribute of the TransactionItem object
    *
-   * @param db Description of the Parameter
-   * @return The objectValid value
-   * @throws Exception Description of the Exception
+   * @param  db          Description of the Parameter
+   * @return             The objectValid value
+   * @throws  Exception  Description of the Exception
    */
   public boolean isObjectValid(Connection db) throws Exception {
     if (action == INSERT || action == UPDATE) {
@@ -470,18 +509,22 @@ public class TransactionItem {
 
 
   /**
-   * Assumes that the Object has already been built and populated, now the
-   * specified action will be executed. A database connection is passed along
-   * since the Object will need it.<p>
-   * <p/>
-   * <p/>
-   * <p/>
-   * Data can be selected, inserted, updated, deleted, and synchronized with
-   * client systems.
+   *  Assumes that the Object has already been built and populated, now the
+   *  specified action will be executed. A database connection is passed along
+   *  since the Object will need it.<p>
    *
-   * @param db       Description of Parameter
-   * @param dbLookup Description of Parameter
-   * @throws Exception Description of Exception
+   *  <p/>
+   *
+   *  <p/>
+   *
+   *  <p/>
+   *
+   *  Data can be selected, inserted, updated, deleted, and synchronized with
+   *  client systems.
+   *
+   * @param  db          Description of Parameter
+   * @param  dbLookup    Description of Parameter
+   * @throws  Exception  Description of Exception
    */
   public void execute(Connection db, Connection dbLookup) throws Exception {
     if (System.getProperty("DEBUG") != null) {
@@ -600,7 +643,7 @@ public class TransactionItem {
       //Determine the method to execute on the object
       String executeMethod = null;
       switch (action) {
-        case-1:
+        case -1:
           appendErrorMessage("Action not specified");
           break;
         case INSERT:
@@ -723,9 +766,9 @@ public class TransactionItem {
           this.setReferencedTable();
           if (thisRecord != null &&
               syncClientMap.lookupClientId(
-                  packetContext.getClientManager(),
-                  syncClientMap.getTableId(),
-                  ObjectUtils.getParam(object, "id")) != -1) {
+              packetContext.getClientManager(),
+              syncClientMap.getTableId(),
+              ObjectUtils.getParam(object, "id")) != -1) {
             this.deleteClientMapping(dbLookup, thisRecord);
           } else {
             if (System.getProperty("DEBUG") != null) {
@@ -746,9 +789,9 @@ public class TransactionItem {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
+   * @return    Description of the Returned Value
    */
   public boolean hasError() {
     return (errorMessage.length() > 0);
@@ -756,9 +799,9 @@ public class TransactionItem {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Returned Value
+   * @return    Description of the Returned Value
    */
   public boolean hasRecordList() {
     return (recordList != null);
@@ -766,9 +809,9 @@ public class TransactionItem {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param tmp Description of Parameter
+   * @param  tmp  Description of Parameter
    */
   public void appendErrorMessage(String tmp) {
     if (tmp != null) {
@@ -781,10 +824,10 @@ public class TransactionItem {
 
 
   /**
-   * Sets the objectId attribute of the TransactionItem object
+   *  Sets the objectId attribute of the TransactionItem object
    *
-   * @param db The new objectId value
-   * @throws SQLException Description of the Exception
+   * @param  db             The new objectId value
+   * @throws  SQLException  Description of the Exception
    */
   public void setObjectId(Connection db) throws SQLException {
     if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
@@ -805,12 +848,12 @@ public class TransactionItem {
 
 
   /**
-   * Sets the guidParameters attribute of the TransactionItem object. When a
-   * client is inserting or updating records, the server needs to retrieve the
-   * ids used by the client from the client/server mapping.
+   *  Sets the guidParameters attribute of the TransactionItem object. When a
+   *  client is inserting or updating records, the server needs to retrieve the
+   *  ids used by the client from the client/server mapping.
    *
-   * @param db The new guidParameters value
-   * @throws SQLException Description of Exception
+   * @param  db             The new guidParameters value
+   * @throws  SQLException  Description of Exception
    */
   private void setGuidParameters(Connection db) throws SQLException {
     if (ignoredProperties != null && ignoredProperties.size() > 0) {
@@ -872,8 +915,8 @@ public class TransactionItem {
 
 
   /**
-   * Sets the contextParameters, these are values from other objects within the
-   * same transaction
+   *  Sets the contextParameters, these are values from other objects within the
+   *  same transaction
    */
   private void setContextParameters() {
     //Go through the ignored property values and see if any need data from the context
@@ -901,12 +944,12 @@ public class TransactionItem {
 
 
   /**
-   * Processes the object according to the executeMethod
+   *  Processes the object according to the executeMethod
    *
-   * @param db            Description of Parameter
-   * @param executeMethod Description of Parameter
-   * @return Description of the Returned Value
-   * @throws Exception Description of Exception
+   * @param  db             Description of Parameter
+   * @param  executeMethod  Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  Exception     Description of Exception
    */
   private Object doExecute(Connection db, String executeMethod) throws Exception {
     //Prepare the objects for execution
@@ -955,9 +998,9 @@ public class TransactionItem {
 
 
   /**
-   * Processes any errors returned by the object, currently for debugging
+   *  Processes any errors returned by the object, currently for debugging
    *
-   * @param result Description of the Parameter
+   * @param  result  Description of the Parameter
    */
   private void checkResult(Object result) {
     try {
@@ -979,8 +1022,8 @@ public class TransactionItem {
 
 
   /**
-   * Configures the object with a pagedList, used when a subset of objects in a
-   * list will be returned
+   *  Configures the object with a pagedList, used when a subset of objects in a
+   *  list will be returned
    */
   private void doSetPagedListInfo() {
     try {
@@ -1000,13 +1043,13 @@ public class TransactionItem {
 
 
   /**
-   * Adds a feature to the Records attribute of the TransactionItem object
+   *  Adds a feature to the Records attribute of the TransactionItem object
    *
-   * @param object   The feature to be added to the Records attribute
-   * @param db       The feature to be added to the Records attribute
-   * @param syncType The feature to be added to the Records attribute
-   * @param dbLookup The feature to be added to the Records attribute
-   * @throws Exception Description of Exception
+   * @param  object      The feature to be added to the Records attribute
+   * @param  db          The feature to be added to the Records attribute
+   * @param  syncType    The feature to be added to the Records attribute
+   * @param  dbLookup    The feature to be added to the Records attribute
+   * @throws  Exception  Description of Exception
    */
   private void buildRecords(Object object, Connection db, Connection dbLookup, int syncType) throws Exception {
     PreparedStatement pst = null;
@@ -1057,13 +1100,13 @@ public class TransactionItem {
 
 
   /**
-   * Adds a feature to the Records attribute of the TransactionItem object
+   *  Adds a feature to the Records attribute of the TransactionItem object
    *
-   * @param object       The feature to be added to the Records attribute
-   * @param recordList   The feature to be added to the Records attribute
-   * @param recordAction The feature to be added to the Records attribute
-   * @return Description of the Return Value
-   * @throws SQLException Description of Exception
+   * @param  object         The feature to be added to the Records attribute
+   * @param  recordList     The feature to be added to the Records attribute
+   * @param  recordAction   The feature to be added to the Records attribute
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of Exception
    */
   private Record addRecords(Object object, RecordList recordList, String recordAction) throws SQLException {
     if (recordList != null) {
@@ -1090,13 +1133,13 @@ public class TransactionItem {
 
 
   /**
-   * Adds property names and values to the Record object, based on the supplied
-   * meta data
+   *  Adds property names and values to the Record object, based on the supplied
+   *  meta data
    *
-   * @param thisRecord The feature to be added to the Fields attribute
-   * @param thisMeta   The feature to be added to the Fields attribute
-   * @param thisObject The feature to be added to the Fields attribute
-   * @throws SQLException Description of Exception
+   * @param  thisRecord     The feature to be added to the Fields attribute
+   * @param  thisMeta       The feature to be added to the Fields attribute
+   * @param  thisObject     The feature to be added to the Fields attribute
+   * @throws  SQLException  Description of Exception
    */
   private void addFields(Record thisRecord, TransactionMeta thisMeta, Object thisObject) throws SQLException {
     if (thisMeta != null && thisMeta.getFields() != null) {
@@ -1179,9 +1222,9 @@ public class TransactionItem {
 
 
   /**
-   * Sets the referencedTable attribute of the TransactionItem object
+   *  Sets the referencedTable attribute of the TransactionItem object
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean setReferencedTable() {
     //The client requested an object, but the mapping is stored as the objectList
@@ -1198,9 +1241,10 @@ public class TransactionItem {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @param  permission  Description of the Parameter
+   * @return             Description of the Return Value
    */
   protected boolean hasPermission(String permission) {
     if (permission != null && !"".equals(permission.trim())) {

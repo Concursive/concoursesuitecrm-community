@@ -32,6 +32,10 @@ import org.w3c.dom.NodeList;
 
 String fs = System.getProperty("file.separator") ;
 String mapFile = prefsPath + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
+File importFile = new File(mapFile);
+if (!importFile.exists()) {
+  mapFile = prefsPath + fs + "import-mappings.xml";
+}
 
 void insertLookupMapping(Connection db, String id) {
   SyncTable baseMap = new SyncTable();

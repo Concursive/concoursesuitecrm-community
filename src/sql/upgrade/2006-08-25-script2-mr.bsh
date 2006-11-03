@@ -1,0 +1,25 @@
+// Script (C) 2006 Dark Horse Ventures LLC, all rights reserved
+
+import java.sql.*;
+import org.aspcfs.utils.web.LookupElement;
+
+print("Inserting new lookup table data...");
+String tableName = "lookup_payment_gateway";
+if (1 == 1) {
+  LookupElement listItem = new LookupElement();
+  listItem.setTableName(tableName);
+  listItem.setDescription("Authorize.net");
+  listItem.setLevel(LookupElement.retrieveMaxLevel(db, tableName));
+  listItem.setEnabled(true);
+  listItem.setConstantId(8110621);
+  listItem.insert(db);
+}
+if (1 == 1) {
+  LookupElement listItem = new LookupElement();
+  listItem.setTableName(tableName);
+  listItem.setDescription("PPIPaymover");
+  listItem.setLevel(LookupElement.retrieveMaxLevel(db, tableName));
+  listItem.setEnabled(true);
+  listItem.setConstantId(8110622);
+  listItem.insert(db);
+}

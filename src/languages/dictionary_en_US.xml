@@ -8641,7 +8641,7 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Database Port:]]></value>
     </param>
     <param name="setup.databaseName.colon">
-      <value><![CDATA[Database Name:]]></value>
+      <value><![CDATA[Database Name/Path:]]></value>
     </param>
     <param name="setup.databaseUserName.colon">
       <value><![CDATA[Database User Name:]]></value>
@@ -8683,7 +8683,7 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Users will have the capability to upload and create files on the server.<br />Where should Centric CRM store files that get created?]]></value>
     </param>
     <param name="setup.targetDirectoryFileStore.text">
-      <value><![CDATA[<ul><li>If the target directory does not exist it will be created</li><li>The target directory should have plenty of free storage space for uploads</li><li>The target directory must have write permissions</li><li>The target directory should be backed up often to prevent data loss</li><li>The target directory should not be located in the servlet path to make upgrades easier</li></ul>]]></value>
+      <value><![CDATA[<ul><li>If the target directory does not exist it will be created</li><li>The target directory should have plenty of free storage space for uploads</li><li>The target directory must have write permissions</li><li>The target directory should be backed up often to prevent data loss</li><li>The target directory should not be located in the servlet path to make upgrades easier</li><li>If restoring, choose an existing file library to use</li></ul>]]></value>
     </param>
     <param name="setup.targetDirectory.colon">
       <value><![CDATA[Target Directory:]]></value>
@@ -9558,7 +9558,7 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[The following report has been added to the report queue.  The report can be retrieved from the ${report}queue${end} once the server has finished processing the report.]]></value>
     </param>
     <param name="setup.configureDatabase.url.text">
-      <value><![CDATA[Centric CRM works best with the Open Source database server ${postgres}PostgreSQL${end}. You can also use ${mssql}Microsoft SQL Server${end}.]]></value>
+      <value><![CDATA[Centric CRM works best with the Open Source database server ${postgres}PostgreSQL${end}. You can also use any other supported database.]]></value>
     </param>
     <param name="setup.configureServer.faxingComponent.text">
       <value><![CDATA[The faxing component requires a properly configured ${hylafax}HylaFax${end} server including fax hardware.]]></value>

@@ -15,6 +15,9 @@
  */
 package org.aspcfs.utils;
 
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataField;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -22,23 +25,25 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- * Reflective utilities for working with objects
+ *  Reflective utilities for working with objects
  *
- * @author matt rajkowski
- * @version $Id$
- * @created June 13, 2002
+ * @author     matt rajkowski
+ * @version    $Id$
+ * @created    June 13, 2002
  */
 public class ObjectUtils {
 
   /**
-   * Sets the param attribute of the ObjectUtils class
+   *  Sets the param attribute of the ObjectUtils class
    *
-   * @param target The new param value
-   * @param param  The new param value
-   * @param value  The new param value
-   * @return Description of the Returned Value
+   * @param  target  The new param value
+   * @param  param   The new param value
+   * @param  value   The new param value
+   * @return         Description of the Returned Value
    */
   public static boolean setParam(Object target, String param, Object value) {
     try {
@@ -56,12 +61,12 @@ public class ObjectUtils {
 
 
   /**
-   * Sets the param attribute of the ObjectUtils class
+   *  Sets the param attribute of the ObjectUtils class
    *
-   * @param target The new param value
-   * @param param  The new param value
-   * @param value  The new param value
-   * @return Description of the Return Value
+   * @param  target  The new param value
+   * @param  param   The new param value
+   * @param  value   The new param value
+   * @return         Description of the Return Value
    */
   public static boolean setParam(Object target, String param, double value) {
     try {
@@ -77,12 +82,12 @@ public class ObjectUtils {
 
 
   /**
-   * Sets the param attribute of the ObjectUtils class
+   *  Sets the param attribute of the ObjectUtils class
    *
-   * @param target The new param value
-   * @param param  The new param value
-   * @param value  The new param value
-   * @return Description of the Return Value
+   * @param  target  The new param value
+   * @param  param   The new param value
+   * @param  value   The new param value
+   * @return         Description of the Return Value
    */
   public static boolean setParam(Object target, String param, boolean value) {
     try {
@@ -98,11 +103,11 @@ public class ObjectUtils {
 
 
   /**
-   * Gets the param attribute of the ObjectUtils class
+   *  Gets the param attribute of the ObjectUtils class
    *
-   * @param target Description of Parameter
-   * @param param  Description of Parameter
-   * @return The param value
+   * @param  target  Description of Parameter
+   * @param  param   Description of Parameter
+   * @return         The param value
    */
   public static String getParam(Object target, String param) {
     try {
@@ -156,12 +161,12 @@ public class ObjectUtils {
 
 
   /**
-   * Invokes the specified method
+   *  Invokes the specified method
    *
-   * @param target     The new param value
-   * @param value      The new param value
-   * @param thisMethod Description of the Parameter
-   * @return Description of the Returned Value
+   * @param  target      The new param value
+   * @param  value       The new param value
+   * @param  thisMethod  Description of the Parameter
+   * @return             Description of the Returned Value
    */
   public static boolean invokeMethod(Object target, String thisMethod, Object value) {
     try {
@@ -182,11 +187,11 @@ public class ObjectUtils {
 
 
   /**
-   * Gets the object attribute of the ObjectUtils class
+   *  Gets the object attribute of the ObjectUtils class
    *
-   * @param target Description of Parameter
-   * @param param  Description of Parameter
-   * @return The object value
+   * @param  target  Description of Parameter
+   * @param  param   Description of Parameter
+   * @return         The object value
    */
   public static Object getObject(Object target, String param) {
     try {
@@ -202,10 +207,10 @@ public class ObjectUtils {
 
 
   /**
-   * Constructs an object with a null constructor
+   *  Constructs an object with a null constructor
    *
-   * @param theClass Description of the Parameter
-   * @return Description of the Return Value
+   * @param  theClass  Description of the Parameter
+   * @return           Description of the Return Value
    */
   public static Object constructObject(Class theClass) {
     try {
@@ -220,13 +225,13 @@ public class ObjectUtils {
 
 
   /**
-   * Constructs a new object in which the object loads itself from a database
-   * given a parameter
+   *  Constructs a new object in which the object loads itself from a database
+   *  given a parameter
    *
-   * @param theClass  Description of the Parameter
-   * @param parameter Description of the Parameter
-   * @param db        Description of the Parameter
-   * @return Description of the Return Value
+   * @param  theClass   Description of the Parameter
+   * @param  parameter  Description of the Parameter
+   * @param  db         Description of the Parameter
+   * @return            Description of the Return Value
    */
   public static Object constructObject(Class theClass, Object parameter, Connection db) {
     try {
@@ -242,13 +247,13 @@ public class ObjectUtils {
 
 
   /**
-   * Constructs a new object in which the object loads itself from a database
-   * given an id for the object
+   *  Constructs a new object in which the object loads itself from a database
+   *  given an id for the object
    *
-   * @param theClass Description of Parameter
-   * @param db       Description of Parameter
-   * @param objectId Description of Parameter
-   * @return Description of the Returned Value
+   * @param  theClass  Description of Parameter
+   * @param  db        Description of Parameter
+   * @param  objectId  Description of Parameter
+   * @return           Description of the Returned Value
    */
   public static Object constructObject(Class theClass, Connection db, int objectId) {
     try {
@@ -263,15 +268,15 @@ public class ObjectUtils {
 
 
   /**
-   * Constructs a new object in which the object loads itself from a database
-   * given an id for the object and a String typically used as a tableName for
-   * a lookupElement object
+   *  Constructs a new object in which the object loads itself from a database
+   *  given an id for the object and a String typically used as a tableName for
+   *  a lookupElement object
    *
-   * @param theClass  Description of the Parameter
-   * @param db        Description of the Parameter
-   * @param objectId  Description of the Parameter
-   * @param tableName Description of the Parameter
-   * @return Description of the Return Value
+   * @param  theClass   Description of the Parameter
+   * @param  db         Description of the Parameter
+   * @param  objectId   Description of the Parameter
+   * @param  tableName  Description of the Parameter
+   * @return            Description of the Return Value
    */
   public static Object constructObject(Class theClass, Connection db, int objectId, String tableName) {
     try {
@@ -287,14 +292,14 @@ public class ObjectUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param theClass    Description of the Parameter
-   * @param db          Description of the Parameter
-   * @param objectId    Description of the Parameter
-   * @param tableName   Description of the Parameter
-   * @param uniqueField Description of the Parameter
-   * @return Description of the Return Value
+   * @param  theClass     Description of the Parameter
+   * @param  db           Description of the Parameter
+   * @param  objectId     Description of the Parameter
+   * @param  tableName    Description of the Parameter
+   * @param  uniqueField  Description of the Parameter
+   * @return              Description of the Return Value
    */
   public static Object constructObject(Class theClass, Connection db, int objectId, String tableName, String uniqueField) {
     try {
@@ -313,11 +318,11 @@ public class ObjectUtils {
 
 
   /**
-   * Serialize an object to a byte array
+   *  Serialize an object to a byte array
    *
-   * @param object Description of the Parameter
-   * @return Description of the Return Value
-   * @throws Exception Description of the Exception
+   * @param  object      Description of the Parameter
+   * @return             Description of the Return Value
+   * @throws  Exception  Description of the Exception
    */
   public static byte[] toByteArray(Object object) throws Exception {
     ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
@@ -331,11 +336,11 @@ public class ObjectUtils {
 
 
   /**
-   * Reconstruct on object from a byte array
+   *  Reconstruct on object from a byte array
    *
-   * @param byteArray Description of the Parameter
-   * @return Description of the Return Value
-   * @throws Exception Description of the Exception
+   * @param  byteArray   Description of the Parameter
+   * @return             Description of the Return Value
+   * @throws  Exception  Description of the Exception
    */
   public static Object toObject(byte[] byteArray) throws Exception {
     ByteArrayInputStream byteIn = new ByteArrayInputStream(byteArray);
@@ -343,6 +348,64 @@ public class ObjectUtils {
     Object tmpObj = objIn.readObject();
     objIn.close();
     return tmpObj;
+  }
+
+
+  /**
+   *  Populates the specified object with all of the fields available in the
+   *  data record, returning a hashmap of all of the invalid fields/values.<p>
+   *  <p/>
+   *  If the field cannot be set, then the field and value are put in a HashMap.
+   *
+   * @param  target  Description of the Parameter
+   * @param  record  Description of the Parameter
+   * @return         Description of the Return Value
+   */
+  public static HashMap populateObject(Object target, DataRecord record) {
+    if (target != null && record != null) {
+      HashMap ignoredProperties = new HashMap();
+      Iterator fields = record.iterator();
+      while (fields.hasNext()) {
+        DataField field = (DataField) fields.next();
+        String param = field.getName();
+        String value = field.getValue();
+        if (ObjectUtils.setParam(target, param, value)) {
+          //The value was set successfully
+          if (System.getProperty("DEBUG") != null) {
+            String displayParam = param.substring(0, 1).toUpperCase() + param.substring(
+                1);
+            System.out.println(
+                "ObjectUtils-> set" + displayParam + "(" + value + ")");
+          }
+          //For synchronization, if an object is populated and a lookup will need
+          //to be done for the client id, then the lookup attribute will exist
+          String lookup = field.getValueLookup();
+          if (lookup != null) {
+            ignoredProperties.put(param + "^" + lookup + "Guid", value);
+          } else if (value != null && value.indexOf("$C{") > -1) {
+            //The value is a TransactionContext parameter to be used by other
+            //TransactionItems during processing, so add it to the ignoredList
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println(
+                  "ObjectUtils-> set" + param + "(" + value + ") **CONTEXT");
+            }
+            ignoredProperties.put(param, value);
+          }
+        } else {
+          //The value was not set successfully, so add it to the ignored list,
+          //however the value may be processed later under certain conditions
+          if (System.getProperty("DEBUG") != null) {
+            String displayParam = param.substring(0, 1).toUpperCase() + param.substring(
+                1);
+            System.out.println(
+                "ObjectUtils-> set" + displayParam + "(" + value + ") **IGNORED");
+          }
+          ignoredProperties.put(param, value);
+        }
+      }
+      return ignoredProperties;
+    }
+    return null;
   }
 }
 

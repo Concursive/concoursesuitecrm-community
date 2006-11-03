@@ -130,7 +130,7 @@ public class HTTPUtils {
       }
       ((HttpURLConnection) conn).setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
-      if (headers.size() > 0) {
+      if (headers != null && headers.size() > 0) {
         Iterator i = headers.keySet().iterator();
         while (i.hasNext()) {
           String header = (String) i.next();
@@ -152,6 +152,9 @@ public class HTTPUtils {
     } catch (java.security.KeyManagementException e) {
       errorMessage = e;
     } catch (java.security.NoSuchAlgorithmException e) {
+      errorMessage = e;
+    } catch (NullPointerException e) {
+      e.printStackTrace(System.out);
       errorMessage = e;
     }
     if (errorMessage != null) {

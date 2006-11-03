@@ -1017,90 +1017,43 @@
       </fileset>
     </copy>
     <!-- Copy the default preference files -->
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup" verbose="true">
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup/init" verbose="true">
       <fileset dir="${pref.dir}/cfs/system">
         <include name="*.xml"/>
       </fileset>
     </copy>
-    <!-- Copy the database files (PostgreSQL) -->
-    <copy file="${src.sql.dir}/postgresql/distribution/postgresql.sql"
-          todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
-      <fileset dir="${src.sql.dir}/postgresql/distribution">
-        <include name="postgresql_*.sql"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup/init" verbose="true">
+      <fileset dir="${pref.dir}/cfs/transfer">
+        <include name="import-mappings.xml"/>
       </fileset>
     </copy>
-    <!-- Copy the database files (MSSQL) -->
-    <copy file="${src.sql.dir}/mssql/distribution/mssql.sql"
-          todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <!-- Copy the database files (all databases) -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup">
-      <fileset dir="${src.sql.dir}/mssql/distribution">
-        <include name="mssql_*.sql"/>
+      <fileset dir="${src.sql.dir}">
+        <exclude name="**/upgrade/**"/>
+        <exclude name="**/init"/>
+        <include name="**/*"/>
       </fileset>
     </copy>
-    <!-- Copy the database files (Firebird SQL) -->
-    <!--
-    <copy file="${src.sql.dir}/firebird/distribution/firebird.zip" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
-      <fileset dir="${src.sql.dir}/firebird/distribution">
-        <include name="firebird_*.sql"/>
-      </fileset>
-    </copy>
-    -->
-    <!-- Copy the database files (Oracle) -->
-    <!--
-    <copy file="${src.sql.dir}/oracle/distribution/oracle.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
-      <fileset dir="${src.sql.dir}/oracle/distribution">
-        <include name="oracle_*.sql"/>
-      </fileset>
-    </copy>
-    -->
-    <!-- Copy the database files (DaffodilDB) -->
-    <copy file="${src.sql.dir}/daffodildb/distribution/daffodildb.zip"
-          todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
-      <fileset dir="${src.sql.dir}/daffodildb/distribution">
-        <include name="daffodildb_*.sql"/>
-      </fileset>
-    </copy>
-    <!-- Copy the database files (MySQL) -->
-    <!--
-    <copy file="${src.sql.dir}/mysql/distribution/mysql.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
-      <fileset dir="${src.sql.dir}/mysql/distribution">
-        <include name="mysql_*.sql"/>
-      </fileset>
-    </copy>
-    -->
-    <!-- Copy the database files (Derby) -->
-    <!--
-    <copy file="${src.sql.dir}/derby/distribution/derby.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
-      <fileset dir="${src.sql.dir}/derby/distribution">
-        <include name="derby_*.sql"/>
-      </fileset>
-    </copy>
-    -->
     <!-- Copy the database upgrade files -->
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup/upgrade">
       <fileset dir="${src.sql.dir}/upgrade">
         <include name="*.bsh"/>
       </fileset>
     </copy>
     <!-- Copy the database install files -->
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup/init">
       <fileset dir="${src.sql.dir}/init">
         <include name="*.bsh"/>
       </fileset>
     </copy>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup/init">
       <fileset dir="${src.sql.dir}/init">
         <include name="*.xml"/>
       </fileset>
     </copy>
     <copy file="${src.sql.dir}/init/help.xml"
-          todir="${dist.dir}/cfs/WEB-INF/setup"/>
+          todir="${dist.dir}/cfs/WEB-INF/setup/init"/>
     <!-- Copy Icelets -->
     <copy todir="${dist.dir}/cfs/WEB-INF/icelets" verbose="true">
       <fileset dir="${src.dir}/icelets">
@@ -1377,17 +1330,14 @@
       <fileset dir="${base.dir}">
         <!-- src/java -->
         <include name="src/java/org/aspcfs/utils/CRMConnection.java"/>
-        <include
-            name="src/java/org/aspcfs/apps/transfer/writer/cfshttpxmlwriter/CFSHttpXMLWriter.java"/>
-        <include
-            name="src/java/org/aspcfs/apps/transfer/DataImportHandler.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/writer/cfshttpxmlwriter/CFSHttpXMLWriter.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataImportHandler.java"/>
         <include name="src/java/org/aspcfs/apps/transfer/Transfer.java"/>
         <include name="src/java/org/aspcfs/utils/XMLUtils.java"/>
         <include name="src/java/org/aspcfs/utils/HTTPUtils.java"/>
         <include name="src/java/org/aspcfs/utils/HttpsTrustManager.java"/>
         <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifier.java"/>
-        <include
-            name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java"/>
+        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java"/>
         <include name="src/java/org/aspcfs/utils/StringUtils.java"/>
         <include name="src/java/org/aspcfs/utils/ObjectUtils.java"/>
         <include name="src/java/org/aspcfs/utils/PasswordHash.java"/>
@@ -1395,6 +1345,9 @@
         <include name="src/java/org/aspcfs/apps/transfer/DataField.java"/>
         <include name="src/java/org/aspcfs/apps/transfer/DataWriter.java"/>
         <include name="src/java/org/aspcfs/apps/transfer/DataReader.java"/>
+        <include name="src/java/org/aspcfs/modules/service/base/TransactionStatus.java"/>
+        <include name="src/java/org/aspcfs/modules/service/base/RecordList.java"/>
+        <include name="src/java/org/aspcfs/modules/service/base/Record.java"/>
       </fileset>
     </copy>
     <mkdir dir="${dist.dir}/files/classes"/>

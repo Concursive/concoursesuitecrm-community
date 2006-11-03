@@ -124,7 +124,7 @@ CREATE TABLE order_product_options (
 
 CREATE TABLE order_product_option_boolean (
 	order_product_option_id INTEGER REFERENCES order_product_options(order_product_option_id),
-	value boolean NOT NULL
+	value BOOLEAN NOT NULL
 );
 
 CREATE TABLE order_product_option_float (
@@ -152,14 +152,14 @@ CREATE SEQUENCE lookup_orderaddress_types_code_seq;
 CREATE TABLE lookup_orderaddress_types (
 	code INT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
-  default_item boolean DEFAULT false,
+  default_item BOOLEAN DEFAULT false,
   "level" INTEGER DEFAULT 0,
-	enabled boolean DEFAULT true
+	enabled BOOLEAN DEFAULT true
 );
 
 CREATE SEQUENCE order_address_address_id_seq;
 CREATE TABLE order_address (
-	address_id INT  PRIMARY KEY,
+	address_id INT PRIMARY KEY,
 	order_id INT REFERENCES order_entry(order_id) NOT NULL,
 	address_type INT REFERENCES lookup_orderaddress_types(code),
 	addrline1 VARCHAR(300),
@@ -182,9 +182,9 @@ CREATE SEQUENCE lookup_payment_methods_code_seq;
 CREATE TABLE lookup_payment_methods (
 	code INT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
-  default_item boolean DEFAULT false,
+  default_item BOOLEAN DEFAULT false,
   "level" INTEGER DEFAULT 0,
-	enabled boolean DEFAULT true
+	enabled BOOLEAN DEFAULT true
 );
 
 -- Example: Visa, Master Card, Discover, American Express
@@ -193,9 +193,9 @@ CREATE SEQUENCE lookup_creditcard_type_code_seq;
 CREATE TABLE lookup_creditcard_types (
   code INT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
-  default_item boolean DEFAULT false,
+  default_item BOOLEAN DEFAULT false,
   "level" INTEGER DEFAULT 0,
-	enabled boolean DEFAULT true
+	enabled BOOLEAN DEFAULT true
 );
 
 CREATE SEQUENCE payment_creditcard_creditcard_id_seq;
@@ -244,7 +244,7 @@ CREATE TABLE customer_product (
   enteredby INT REFERENCES access(user_id) NOT NULL ,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,  
   modifiedby INT REFERENCES access(user_id) NOT NULL ,
-  enabled boolean DEFAULT true
+  enabled BOOLEAN DEFAULT true,
   contact_id INTEGER
 );
 
@@ -261,7 +261,7 @@ CREATE TABLE customer_product_history (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL , 
   modifiedby INT REFERENCES access(user_id) NOT NULL ,
-  order_item_id INTEGER REFERENCES order_product(item_id) NOT NULL
+  order_item_id INTEGER REFERENCES order_product(item_id) NOT NULL,
   contact_id INTEGER
 );
 
@@ -310,7 +310,7 @@ CREATE TABLE order_payment_status (
   modifiedby INT REFERENCES access(user_id) NOT NULL 
 );
 
-CREATE SEQUENCE creditcard_creditcard_id_seq;
+CREATE SEQUENCE credit_card_creditcard_id_seq;
 CREATE TABLE credit_card (
   creditcard_id INT PRIMARY KEY,
   card_type INTEGER REFERENCES lookup_creditcard_types (code),
@@ -322,11 +322,11 @@ CREATE TABLE credit_card (
   company_name_on_card varchar(300),
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INT REFERENCES "access" (user_id) NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INT REFERENCES "access" (user_id) NOT NULL
 );
 
-CREATE SEQUENCE lookup_payment_gateway_seq;
+CREATE SEQUENCE lookup_payment_gateway_code_seq;
 CREATE TABLE lookup_payment_gateway (
   code INT PRIMARY KEY,
   description varchar(50) NOT NULL,
@@ -336,7 +336,7 @@ CREATE TABLE lookup_payment_gateway (
   constant_id int
 );
 
-CREATE SEQUENCE merchant_payment_gateway_seq;
+CREATE SEQUENCE merchant_payment_gateway_merchant_payment_gateway_id_seq;
 CREATE TABLE merchant_payment_gateway (
   merchant_payment_gateway_id INT PRIMARY KEY,
   gateway_id int REFERENCES lookup_payment_gateway (code),

@@ -376,10 +376,12 @@ public class SyncClient extends GenericBean {
    * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    id = DatabaseUtils.getNextSeq(db, "sync_client_client_id_seq");
+    if (id == -1) {
+      id = DatabaseUtils.getNextSeq(db, "sync_client_client_id_seq");
+    }
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO sync_client " +
-            "(" + (id > -1 ? "client_id, " : "") + "" + DatabaseUtils.addQuotes(db, "type")+ ", version, enabled, code, enteredby, modifiedby) " +
+            "(" + (id > -1 ? "client_id, " : "") + "" + DatabaseUtils.addQuotes(db, "type") + ", version, enabled, code, enteredby, modifiedby) " +
             "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
@@ -393,7 +395,9 @@ public class SyncClient extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "sync_client_client_id_seq", id);
+    if (id == -1) {
+      id = DatabaseUtils.getCurrVal(db, "sync_client_client_id_seq", id);
+    }
     return true;
   }
 
@@ -417,55 +421,46 @@ public class SyncClient extends GenericBean {
 
       PreparedStatement pst = null;
       //Delete related records (mappings)
+      pst = db.prepareStatement(
+          "DELETE FROM sync_map " +
+              "WHERE client_id = ? ");
+      pst.setInt(1, id);
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(
+          "DELETE FROM sync_conflict_log " +
+              "WHERE client_id = ? ");
+      pst.setInt(1, id);
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(
+          "DELETE FROM sync_log " +
+              "WHERE client_id = ? ");
+      pst.setInt(1, id);
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(
+          "DELETE FROM process_log " +
+              "WHERE client_id = ? ");
+      pst.setInt(1, id);
+      pst.execute();
+      pst.close();
 
       //Delete the record
-      int recordCount = 0;
       pst = db.prepareStatement(
           "DELETE FROM sync_client " +
               "WHERE client_id = ? ");
       pst.setInt(1, id);
-      recordCount = pst.executeUpdate();
+      pst.execute();
       pst.close();
 
-      if (recordCount == 0) {
-        errors.put(
-            "actionError",
-            "Sync Client could not be deleted because it no longer exists.");
-        return false;
-      } else {
-        pst = db.prepareStatement(
-            "DELETE FROM sync_map " +
-                "WHERE client_id = ? ");
-        pst.setInt(1, id);
-        pst.executeUpdate();
-        pst.close();
-
-        pst = db.prepareStatement(
-            "DELETE FROM sync_conflict_log " +
-                "WHERE client_id = ? ");
-        pst.setInt(1, id);
-        pst.executeUpdate();
-        pst.close();
-
-        pst = db.prepareStatement(
-            "DELETE FROM sync_log " +
-                "WHERE client_id = ? ");
-        pst.setInt(1, id);
-        pst.executeUpdate();
-        pst.close();
-
-        pst = db.prepareStatement(
-            "DELETE FROM process_log " +
-                "WHERE client_id = ? ");
-        pst.setInt(1, id);
-        pst.executeUpdate();
-        pst.close();
-
-        if (commit) {
-          db.commit();
-        }
-        return true;
+      if (commit) {
+        db.commit();
       }
+      return true;
     } catch (SQLException e) {
       if (commit) {
         db.rollback();
@@ -496,7 +491,7 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE sync_client " +
-            "SET " + DatabaseUtils.addQuotes(db, "type")+ " = ?, version = ?, code = ?, modifiedby = ?, " +
+            "SET " + DatabaseUtils.addQuotes(db, "type") + " = ?, version = ?, code = ?, modifiedby = ?, " +
             "enabled = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE client_id = ? ");

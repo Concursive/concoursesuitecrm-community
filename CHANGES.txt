@@ -2,10 +2,8 @@
 Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-October 6, 2006
+November 2, 2006
 ----------------------------------------------------------------------------
-
-** UNDER DEVELOPMENT **
 
 The following is a running list until release...
 
@@ -13,6 +11,13 @@ Latest information can be found in the Centric CRM 4.1 Community:
 http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109
 
 New features:
+- Accounts can now be imported without a contact
+- Additional Account search form fields
+- Added new fields to lead/contact/account: revenue, lat/longitude, business
+  name 2, year started, SIC, DUNS Type, DUNS Number
+- Accounts can now have activities (without specifying a contact)
+- Activities have been split into "Log an Activity" for previously completed
+  activities, and "Schedule an Activitiy" for recording upcoming activities
 - IBM DB2 database support
 - IBM WAS-CE Websphere Application Server Community Edition support
 - Portal Role editor allows for admins to define roles and permissions for
@@ -25,10 +30,6 @@ New features:
 - Added a lead conversion report and data elements for a converted lead
   - When lead assigned
   - When lead archived
-- Accounts can now be imported without a contact
-- Additional Account search form fields
-- Added new fields to lead/contact/account: revenue, lat/longitude, business
-  name 2, year started, SIC, DUNS Type, DUNS Number
 
 Enhancements:
 - Usability and stability improvements as assigned (details online)

@@ -318,6 +318,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Database");
+    CustomHook.populateDatabaseCheck(context);
     DatabaseBean bean = (DatabaseBean) context.getFormBean();
     if (bean.getConfigured() == -1) {
       //Check the database pref, if it exists then add to request for confirm
@@ -358,6 +359,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Database");
+    CustomHook.populateDatabaseCheck(context);
     ApplicationPrefs prefs = getApplicationPrefs(context);
     //See if required info is filled in
     DatabaseBean bean = (DatabaseBean) context.getFormBean();
@@ -376,11 +378,18 @@ public class Setup extends CFSModule {
       String setupPath =
           context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
       //Create a connection
-      Class.forName(bean.getDriver());
+      try {
+        Class.forName(bean.getDriver());
+      } catch (ClassNotFoundException e) {
+        context.getRequest().setAttribute(
+            "actionError",
+            "Driver missing -- class not found: " + e.getMessage());
+        return "ConfigureDatabaseERROR";
+      }
       DriverManager.setLoginTimeout(10);
       if (bean.isEmbedded()) {
         bean.setPath(dbPath);
-        CustomHook.populateDatabase(bean, setupPath, dbPath);
+        //CustomHook.populateDatabase(bean, setupPath, dbPath);
       }
       Connection db = DatabaseUtils.getConnection(
           bean.getUrl(), bean.getUser(), bean.getPassword());
@@ -393,14 +402,14 @@ public class Setup extends CFSModule {
       dbDirectory.mkdirs();
       //Copy setup files
       FileUtils.copyFile(
-          new File(setupPath + "application.xml"), new File(
+          new File(setupPath + "init" + fs + "application.xml"), new File(
           dbPath + "application.xml"), true);
       FileUtils.copyFile(
-          new File(setupPath + "system.xml"), new File(dbPath + "system.xml"), false);
+          new File(setupPath + "init" + fs + "system.xml"), new File(dbPath + "system.xml"), false);
       FileUtils.copyFile(
-          new File(setupPath + "workflow_*.xml"), new File(dbPath), true);
+          new File(setupPath + "init" + fs + "workflow_*.xml"), new File(dbPath), true);
       FileUtils.copyFile(
-          new File(setupPath + "templates_*.xml"), new File(dbPath), true);
+          new File(setupPath + "init" + fs + "templates_*.xml"), new File(dbPath), true);
       //See if the database has been created
       boolean databaseExists = isDatabaseInstalled(db);
       //Finished testing
@@ -452,78 +461,32 @@ public class Setup extends CFSModule {
     String setupPath = context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
     String dbFileLibraryPath = prefs.get("FILELIBRARY") + prefs.get(
         "GATEKEEPER.DATABASE") + fs;
+    String backupFile = context.getRequest().getParameter("backupFile");
+    boolean isRestoreFromBackup = (backupFile != null && !"".equals(backupFile));
     //See if the database connection works
     Connection db = null;
+    Connection dbLookup = null;
     try {
+      if (isRestoreFromBackup) {
+        File restoreFile = new File(backupFile);
+        if (!restoreFile.exists()) {
+          context.getRequest().setAttribute(
+              "actionError",
+              "The backup file was not found: " + backupFile);
+          return "ConfigureDatabaseRestoreERROR";
+        }
+      }
       db = getDbConnection(context);
       if (!isDatabaseInstalled(db)) {
         try {
           // The database must already be created, this creates the schema and
           // inserts the default data
-          switch (DatabaseUtils.getType(db)) {
-            case DatabaseUtils.POSTGRESQL:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing PostgreSQL Schema");
-              }
-              DatabaseUtils.executeSQL(db, setupPath + "postgresql.sql");
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            case DatabaseUtils.FIREBIRD:
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            case DatabaseUtils.MSSQL:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing MSSQL Schema");
-              }
-              DatabaseUtils.executeSQL(db, setupPath + "mssql.sql");
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            case DatabaseUtils.ORACLE:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing Oracle Schema");
-              }
-              DatabaseUtils.executeSQL(db, setupPath + "oracle.sql");
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            case DatabaseUtils.DB2:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing DB2 Schema");
-              }
-              DatabaseUtils.executeSQL(db, setupPath + "db2.sql");
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            case DatabaseUtils.DAFFODILDB:
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            case DatabaseUtils.MYSQL:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing MySQL Schema");
-              }
-              DatabaseUtils.executeSQL(db, setupPath + "mysql.sql");
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            case DatabaseUtils.DERBY:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing Apache Derby Schema");
-              }
-              DatabaseUtils.executeSQL(db, setupPath + "derby.sql");
-              SetupUtils.insertDefaultData(
-                  db, dbFileLibraryPath, setupPath, locale);
-              break;
-            default:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println(
-                    "Setup-> * Database could not be determined: " + DatabaseUtils.getType(
-                        db));
-              }
-              break;
+          SetupUtils.createDatabaseSchema(db, setupPath);
+          SetupUtils.insertDefaultData(db, dbFileLibraryPath, setupPath, locale, isRestoreFromBackup);
+          if (isRestoreFromBackup) {
+            // Call the restore program
+            dbLookup = getDbConnection(context);
+            SetupUtils.restoreFromBackup(db, dbLookup, backupFile);
           }
         } catch (SQLException cre) {
           throw new SQLException(cre.getMessage());
@@ -531,6 +494,12 @@ public class Setup extends CFSModule {
         if (db != null) {
           try {
             db.close();
+          } catch (Exception cle) {
+          }
+        }
+        if (dbLookup != null) {
+          try {
+            dbLookup.close();
           } catch (Exception cle) {
           }
         }
@@ -553,6 +522,12 @@ public class Setup extends CFSModule {
       if (db != null) {
         try {
           db.close();
+        } catch (Exception e) {
+        }
+      }
+      if (dbLookup != null) {
+        try {
+          dbLookup.close();
         } catch (Exception e) {
         }
       }

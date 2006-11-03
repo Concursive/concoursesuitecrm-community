@@ -1,7 +1,0 @@
-# Permission Category Constants
-2005-03-10-script01.sql
-
-# 
-# update and insert statements included in other sql upgrade files
-#
-dataline-data-upgrade-2005-11-04-script02-kailash.sql

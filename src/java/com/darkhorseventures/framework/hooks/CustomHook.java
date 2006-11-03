@@ -131,4 +131,10 @@ public class CustomHook {
   public static String populateAdminConfig(String module) {
     return null;
   }
+
+  public static void populateDatabaseCheck(ActionContext context) {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CustomHook-> populateDatabaseCheck");
+    }
+  }
 }

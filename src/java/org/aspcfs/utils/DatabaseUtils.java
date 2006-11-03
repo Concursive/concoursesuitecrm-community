@@ -1229,6 +1229,7 @@ public class DatabaseUtils {
    * @throws IOException  Description of the Exception
    */
   public static void executeSQL(Connection db, String filename) throws SQLException, IOException {
+    System.out.println("DatabaseUtils-> executeSQL: " + filename);
     BufferedReader in = new BufferedReader(new FileReader(filename));
     executeSQL(db, in);
     in.close();
@@ -1280,22 +1281,22 @@ public class DatabaseUtils {
       }
       sql.append(line);
       // check for delimiter
-      if (line.endsWith(";")) {
+      if (line.trim().endsWith(";")) {
         // Got a transaction, so execute it
         ++tCount;
         try {
-          st.execute(sql.substring(0, sql.length() - 1));
+          st.execute(sql.substring(0, sql.lastIndexOf(";")));
         } catch (SQLException e) {
           System.out.println(
               "DatabaseUtils-> ERROR(1), line: " + lineCount + " message: " + e.getMessage());
           throw new SQLException(e.getMessage());
         }
         sql.setLength(0);
-      } else if (line.equals("GO")) {
+      } else if (line.trim().equals("GO")) {
         // Got a transaction, so execute it
         ++tCount;
         try {
-          st.execute(sql.substring(0, sql.length() - 2));
+          st.execute(sql.substring(0, sql.lastIndexOf("GO")));
         } catch (SQLException e) {
           System.out.println(
               "DatabaseUtils-> ERROR(2), line: " + lineCount + " message: " + e.getMessage());

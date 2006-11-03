@@ -17,7 +17,7 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
+<jsp:useBean id="APP_VERSION" class="java.lang.String" scope="application"/>
 <jsp:useBean id="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request"/>
 <jsp:useBean id="userAddress" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -35,7 +35,7 @@
       &nbsp;<br />
     </td>
   </tr>
-<dhv:evaluate if="<%= hasText(APP_TEXT) %>">
+<dhv:evaluate if="<%= hasText(APP_VERSION) %>">
   <dhv:evaluate if="<%= server.getLdapEnabled() %>">
   <tr class="sectionTitle">
     <th><dhv:label name="setup.ldap">LDAP Server</dhv:label></th>

@@ -50,7 +50,7 @@ CREATE TABLE lookup_sic_codes(
   code INTEGER NOT NULL,
   description VARGRAPHIC(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
-  level INTEGER,
+  "level" INTEGER,
   enabled CHAR(1) DEFAULT '1',
   constant_id INTEGER UNIQUE NOT NULL,
   PRIMARY KEY(code)

@@ -42,6 +42,7 @@ public class LookupElement {
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
   protected int fieldId = -1;
+  protected int constantId = -1;
   protected boolean group = false;
 
 
@@ -86,7 +87,7 @@ public class LookupElement {
    * Constructor for the LookupElement object
    *
    * @param db        Description of the Parameter
-   * @param Description   Description of the Parameter
+   * @param description   Description of the Parameter
    * @param tableName Description of the Parameter
    * @throws java.sql.SQLException Description of the Exception
    */
@@ -367,6 +368,14 @@ public class LookupElement {
   }
 
 
+  public void setConstantId(int constantId) {
+    this.constantId = constantId;
+  }
+
+  public void setConstantId(String constantId) {
+    this.constantId = Integer.parseInt(constantId);
+  }
+
   /**
    * Sets the group attribute of the LookupElement object
    *
@@ -495,6 +504,10 @@ public class LookupElement {
     return fieldId;
   }
 
+
+  public int getConstantId() {
+    return constantId;
+  }
 
   /**
    * Gets the group attribute of the LookupElement object
@@ -657,8 +670,8 @@ public class LookupElement {
     sql.append(
         "INSERT INTO " + DatabaseUtils.getTableName(db, tableName) + " " +
         "(" + (id > -1 ? "code, " : "") + "description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled" +
-        (fieldId > -1 ? ", field_id" : "") + ") " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?" + (fieldId > -1 ? ", ?" : "") + ") ");
+        (fieldId > -1 ? ", field_id" : "") + (constantId > -1 ? ", constant_id" : "") + ") " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?" + (fieldId > -1 ? ", ?" : "") + (constantId > -1 ? ", ?" : "") + ") ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     if (id > -1) {
@@ -669,6 +682,9 @@ public class LookupElement {
     pst.setBoolean(++i, true);
     if (fieldId > -1) {
       pst.setInt(++i, fieldId);
+    }
+    if (constantId > -1) {
+      pst.setInt(++i, constantId);
     }
     pst.execute();
     pst.close();

@@ -33,8 +33,6 @@
 # Upgrade scripts
 2006-07-21-script01-ananth.bsh
 
-############################ TODO: verify and add the following to next 4.1 .war
-
 ### TODO: needs BSH
 2006-07-25-script01-ananth.sql
 

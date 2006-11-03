@@ -5499,6 +5499,8 @@
              layout="centric"/>
     <forward name="ConfigureDatabaseCreateERROR"
              resource="/SetupDatabase.do?command=ConfigureDatabaseCheck"/>
+    <forward name="ConfigureDatabaseRestoreERROR"
+             resource="/SetupDatabase.do?command=ConfigureDatabaseCheck"/>
   </action>
   <action name="SetupServerDetails"
           class="org.aspcfs.modules.setup.actions.Setup">
