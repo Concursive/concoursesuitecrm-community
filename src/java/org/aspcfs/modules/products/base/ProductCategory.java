@@ -18,6 +18,8 @@ package org.aspcfs.modules.products.base;
 import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
@@ -76,6 +78,16 @@ public class ProductCategory extends GenericBean {
   // hierarchy builder helper
   private int level = -1;
 
+  //Logger
+  private long milies = -1;
+  private static Logger logger = Logger.getLogger(ProductCategory.class);
+
+  static{
+    if(System.getProperty("DEBUG")!= null){
+      logger.setLevel(Level.DEBUG);
+    }
+  }
+  
   /**
    * Gets the buildChildCount attribute of the ProductCategory object
    *
@@ -1702,9 +1714,9 @@ public class ProductCategory extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public boolean checkForProducts(Connection db) throws SQLException {
-    this.buildChildList(db);
-    this.buildProductList(db);
-    if (this.getProductList().size() > 0) {
+  this.buildChildList(db);
+  this.buildProductList(db);
+  if (this.getProductList().size() > 0) {
       return true;
     }
     if (!this.getChildList().filterProductCategories(db)) {
@@ -1902,7 +1914,6 @@ public class ProductCategory extends GenericBean {
 
   public static ProductCategoryList buildFullName(Connection db, ProductCategoryList fullName, int currentId, boolean includeCurrent)
       throws SQLException {
-
     PreparedStatement pst = db
         .prepareStatement("SELECT parent_id, category_name, category_id "
             + "FROM product_category " + "WHERE category_id = ? ");
@@ -1919,7 +1930,6 @@ public class ProductCategory extends GenericBean {
     ProductCategory pc = new ProductCategory();
     pc.setId(currentId);
     pc.setName(name);
-
     if (parentId > -1) {
       fullName = ProductCategory.buildFullName(db, fullName, parentId, true);
     }

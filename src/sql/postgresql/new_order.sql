@@ -316,7 +316,7 @@ CREATE TABLE credit_card (
 );
 
 CREATE TABLE lookup_payment_gateway (
-  code SERIAL PRIMARY KEY,
+  code  SERIAL PRIMARY KEY,
   description varchar(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   "level" int DEFAULT 0,

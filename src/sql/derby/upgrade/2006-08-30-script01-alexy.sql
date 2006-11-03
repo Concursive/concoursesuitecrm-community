@@ -71,3 +71,5 @@ create index contact_super on contact  (super);
 create index contact_user_id on contact  (user_id);
 
 create index contact_employee_id on contact (employee_id);
+
+create index product_pricing_product_idx on  product_catalog_pricing (product_id);

@@ -82,6 +82,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private String dateAfter = null;
   private String groupKeywords = null;
   private String[] keywords = null;
+  private boolean determineCategory = false;
 
   private boolean excludeUnapprovedProducts = true;
   //Logger
@@ -1266,11 +1267,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     }
     rs.close();
     pst.close();
-    // Each product's option list is generated
     Iterator i = this.iterator();
     while (i.hasNext()) {
       ProductCatalog thisProduct = (ProductCatalog) i.next();
-      thisProduct.determineCategory(db);
+      if (determineCategory) {
+        thisProduct.determineCategory(db);
+      }
       if (buildResources) {
         thisProduct.buildOptions(db);
       }
@@ -1280,6 +1282,8 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       //TODO: remove this adsjet specific stuff
       //determineMatch();
     }
+
+
     //TODO: remove this adsjet specific stuff
     // detemine the product's actual category trail since it might
     // exist several levels down the category tree
@@ -2029,5 +2033,29 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   public void setKeywords(String[] keywords) {
     this.keywords = keywords;
   }
+
+
+  /**
+   * @return the determineCategory
+   */
+  public boolean isDetermineCategory() {
+    return determineCategory;
+  }
+
+
+  /**
+   * @param determineCategory the determineCategory to set
+   */
+  public void setDetermineCategory(boolean determineCategory) {
+    this.determineCategory = determineCategory;
+  }
+
+  /**
+   * @param determineCategory the determineCategory to set
+   */
+  public void setDetermineCategory(String determineCategory) {
+    this.determineCategory =  Boolean.parseBoolean(determineCategory);
+  }
+
 
 }

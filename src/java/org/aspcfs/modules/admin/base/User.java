@@ -591,14 +591,14 @@ public class User extends GenericBean {
       return false;
     }
   }
-
+  
   /**
    * Description of the Method
    */
   public void doLeadsLock() {
-    while (leadsLock == true) {
+    while (leadsLock) {
     }
-    synchronized (this) {
+    synchronized(this) {
       while (leadsLock) {
       }
       this.leadsLock = true;

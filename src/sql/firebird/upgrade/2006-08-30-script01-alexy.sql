@@ -79,4 +79,7 @@ create index caddress_primary_address on  contact_address (primary_address);
 create index contact_entered on contact (entered);
 
 create index laccess_types_rule_id on lookup_access_types (rule_id);
+
+create index product_pricing_product_idx on  product_catalog_pricing (product_id);
+
 

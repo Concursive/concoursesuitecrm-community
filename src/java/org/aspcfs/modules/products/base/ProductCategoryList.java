@@ -15,17 +15,25 @@
  */
 package org.aspcfs.modules.products.base;
 
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.Import;
-import org.aspcfs.modules.base.SyncableList;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.web.PagedListInfo;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Import;
+import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.modules.products.utils.ProductCategoryCount;
+import org.aspcfs.modules.products.utils.ProductCategoryCounter;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
 
 /**
  * The List class of Product Category.
@@ -78,6 +86,16 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private int buildActiveProducts = Constants.UNDEFINED;
   private boolean buildActivePrice = false;
   private boolean excludeUnapprovedCategories = true;
+  
+  //Logger
+  private long milies = -1;
+  private static Logger logger = Logger.getLogger(ProductCategory.class);
+
+  static{
+    if(System.getProperty("DEBUG")!= null){
+      logger.setLevel(Level.DEBUG);
+    }
+  }  
 
   /**
    * Gets the buildChildCount attribute of the ProductCategory object
@@ -1264,11 +1282,13 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
    * @param db Description of the Parameter
    * @throws SQLException Description of the Exception
    */
-  public void removeNonProductCategories(Connection db) throws SQLException {
+  public void removeNonProductCategories(ProductCategoryCounter genericProductCounter) throws SQLException {
     Iterator iterator = (Iterator) this.iterator();
+    ProductCategoryCount productCategoryCount;
     while (iterator.hasNext()) {
       ProductCategory category = (ProductCategory) iterator.next();
-      if (!category.checkForProducts(db)) {
+      productCategoryCount = genericProductCounter.getProductCategoryCountObject(category.getId());
+      if (productCategoryCount == null || productCategoryCount.getCountOfProduct()<=0) {
         iterator.remove();
       }
     }

@@ -803,7 +803,9 @@ public final class SalesImports extends CFSModule {
       thisList.setExcludeUnapprovedContacts(false);
       thisList.setLeadsOnly(Constants.TRUE);
       thisList.setUserId(this.getUserId(context));
-      thisList.setBuildDetails(true);
+      thisList.setBuildDetails(false);
+      thisList.setBuildPhoneNumbers(true);
+      thisList.setBuildTypes(false);
       thisList.setIncludeAllSites(true);
       thisList.buildList(db);
       context.getRequest().setAttribute("ImportResults", thisList);

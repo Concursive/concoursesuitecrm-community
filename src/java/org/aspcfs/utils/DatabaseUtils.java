@@ -59,6 +59,9 @@ public class DatabaseUtils {
   public final static int WEEK = 2;
   public final static int MONTH = 3;
   public final static int YEAR = 4;
+  public final static int HOUR = 5;
+  public final static int MINUTE = 6;
+  public final static int SECOND = 7;
 
 
   /**
@@ -179,7 +182,8 @@ public class DatabaseUtils {
       return ORACLE;
     } else if (databaseName.indexOf("oracle") > -1) {
       return ORACLE;
-    } else if ("in.co.daffodil.db.jdbc.DaffodilDBConnection".equals(databaseName)) {
+    } else
+    if ("in.co.daffodil.db.jdbc.DaffodilDBConnection".equals(databaseName)) {
       return DAFFODILDB;
     } else if (databaseName.indexOf("db2") > -1) {
       return DB2;
@@ -1494,6 +1498,7 @@ public class DatabaseUtils {
     return connection;
   }
 
+
   /**
    * Description of the Method
    *
@@ -1526,4 +1531,142 @@ public class DatabaseUtils {
       pst.setMaxRows(maxRowsCount);
     }
   }
+
+
+  public static String getTruncDateDialect(String dateColumn, int truncTo, int dbType) {
+    String truncSQL = "";
+    String dateFormat = "";
+    switch (dbType) {
+      case DatabaseUtils.POSTGRESQL:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            dateFormat = "day";
+            break;
+          case DatabaseUtils.MONTH:
+            dateFormat = "month";
+            break;
+          case DatabaseUtils.MINUTE:
+            dateFormat = "minute";
+            break;
+          case DatabaseUtils.HOUR:
+            dateFormat = "hour";
+            break;
+          case DatabaseUtils.YEAR:
+            dateFormat = "year";
+          default:
+            return null;
+        }
+        truncSQL = "date_trunc('" + dateFormat + "'," + dateColumn + ")";
+        break;
+      case DatabaseUtils.MSSQL:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            truncSQL = "CAST(CONVERT(varchar, " + dateColumn + ",101) AS DATETIME) ";
+            break;
+          case DatabaseUtils.MONTH:
+            // TODO: fix this
+            truncSQL = "CAST(CONVERT(varchar, " + dateColumn + ",101) AS DATETIME) ";
+            break;
+          case DatabaseUtils.MINUTE:
+            truncSQL = "CAST(CONVERT(varchar, " + dateColumn + ",100) AS DATETIME) ";
+            break;
+          case DatabaseUtils.HOUR:
+            // TODO: fix this
+            truncSQL = "CAST(CONVERT(varchar, " + dateColumn + ",101) AS DATETIME) ";
+            break;
+          case DatabaseUtils.YEAR:
+            // TODO: fix this
+            truncSQL = "CAST(CONVERT(varchar, " + dateColumn + ",101) AS DATETIME) ";
+            break;
+          default:
+            return null;
+        }
+        break;
+      case DatabaseUtils.DAFFODILDB:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            dateFormat = "DD";
+            break;
+          case DatabaseUtils.MONTH:
+            dateFormat = "MM";
+            break;
+          case DatabaseUtils.MINUTE:
+            dateFormat = "MI";
+            break;
+          case DatabaseUtils.HOUR:
+            dateFormat = "HH";
+            break;
+          case DatabaseUtils.YEAR:
+            dateFormat = "YYYY";
+            break;
+          default:
+            return null;
+        }
+        truncSQL = "trunc(" + dateColumn + ",'" + dateFormat + "')";
+        break;
+      case DatabaseUtils.ORACLE:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            dateFormat = "DD";
+            break;
+          case DatabaseUtils.MONTH:
+            dateFormat = "MM";
+            break;
+          case DatabaseUtils.MINUTE:
+            dateFormat = "MI";
+            break;
+          case DatabaseUtils.HOUR:
+            dateFormat = "HH";
+            break;
+          case DatabaseUtils.YEAR:
+            dateFormat = "YYYY";
+            break;
+          default:
+            return null;
+        }
+        truncSQL = "trunc(" + dateColumn + ",'" + dateFormat + "')";
+        break;
+      case DatabaseUtils.DB2:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            truncSQL = "DATE(" + dateColumn + ") ";
+            break;
+          default:
+            return null;
+        }
+        break;
+      case DatabaseUtils.FIREBIRD:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            truncSQL = "CAST(" + dateColumn + " AS date) ";
+            break;
+          default:
+            return null;
+        }
+
+        break;
+      case DatabaseUtils.MYSQL:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            truncSQL = "DATE(" + dateColumn + ") ";
+            break;
+          default:
+            return null;
+        }
+        break;
+      case DatabaseUtils.DERBY:
+        switch (truncTo) {
+          case DatabaseUtils.DAY:
+            truncSQL = "DATE(" + dateColumn + ") ";
+            break;
+          default:
+            return null;
+        }
+        break;
+    }
+
+    return truncSQL;
+  }
+
+
 }

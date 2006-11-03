@@ -797,8 +797,9 @@ public final class AccountContactsOppQuotes extends CFSModule {
       //Retrieve the ticket
       if (ticketId != -1) {
         ticket = new Ticket(db, ticketId);
-        ProductCatalog product = new ProductCatalog(db, productId);
-        quote.setProductId(product.getId());
+        ProductCatalog product = new ProductCatalog(db, productId);        
+        quote.setProductId(product.getId());    
+        product.determineCategory(db);
         quote.setShortDescription(product.getCategoryName() + ", " + product.getName() + ": ");
         //if the ticket is not for a new ad design, retrieve the customer product from the database
         if (!ticket.getProblem().equals("New Ad Design Request") && ticket.getCustomerProductId() != -1) {

@@ -349,6 +349,7 @@ public class Contact extends GenericBean {
   public Contact(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
+   
 
 
   /**
@@ -4586,7 +4587,28 @@ public class Contact extends GenericBean {
     processTextMessageAddress(db);
   }
 
-
+ /**
+  * Populates this object from a shortened result set
+  * 
+  * @param rs
+  * @throws SQLException
+  */
+  protected void buildShortRecord(ResultSet rs) throws SQLException{
+	  // c.user_id, c.contact_id, c.namelast, c.namefirst, o.name, c.owner, c.status_id, c.entered
+	  this.setId(rs.getInt("contact_id"));
+	    userId = DatabaseUtils.getInt(rs, "user_id");      
+	    nameLast = rs.getString("namelast");
+	    nameFirst = rs.getString("namefirst");
+	    orgName = rs.getString("name");
+	    statusId = DatabaseUtils.getInt(rs, "status_id");
+	    owner = DatabaseUtils.getInt(rs, "owner");
+	    entered = rs.getTimestamp("entered");
+      isLead = rs.getBoolean("lead");
+      leadStatus = DatabaseUtils.getInt(rs, "lead_status");
+      orgId = DatabaseUtils.getInt(rs, "org_id");
+      siteId = DatabaseUtils.getInt(rs, "site_id");
+  }
+  
   /**
    * Populates this object from a result set
    *

@@ -19,7 +19,6 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.webutils.FileDownload;
-
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationAddress;
@@ -37,6 +36,8 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.GraphSummaryList;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.contacts.utils.QualifiedLeadsCount;
+import org.aspcfs.modules.contacts.utils.QualifiedLeadsCounter;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
@@ -66,63 +67,62 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    March 4, 2005
- * @version    $Id: Sales.java 14202 2006-02-07 15:05:58 -0500 (Tue, 07 Feb
- *      2006) partha@darkhorseventures.com $
+ * @author partha
+ * @version $Id: Sales.java 14202 2006-02-07 15:05:58 -0500 (Tue, 07 Feb 2006)
+ *          partha@darkhorseventures.com $
+ * @created March 4, 2005
  */
 public final class Sales extends CFSModule {
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandDashboard(context);
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!hasPermission(context, "sales-dashboard-view")) {
       if (!(hasPermission(context, "sales-view"))) {
         return ("PermissionError");
       }
-      //Bypass dashboard to the search form
+      // Bypass dashboard to the search form
       return (executeCommandSearchForm(context));
     }
-    //Prepare the user id to base all data on
+    // Prepare the user id to base all data on
     int idToUse = 0;
     User thisRec = null;
     int userId = this.getUserId(context);
     addModuleBean(context, "Dashboard", "Dashboard");
 
-    //Check if a specific user was selected
-    int overrideId = StringUtils.parseInt(
-        context.getRequest().getParameter("oid"), -1);
+    // Check if a specific user was selected
+    int overrideId = StringUtils.parseInt(context.getRequest().getParameter("oid"), -1);
 
-    //Check if the list is being reset
+    // Check if the list is being reset
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       overrideId = -1;
       context.getSession().removeAttribute("salesoverride");
       context.getSession().removeAttribute("salesothername");
       context.getSession().removeAttribute("salespreviousId");
     }
-    //Determine the user whose data is being shown, by default it's the current user
+    // Determine the user whose data is being shown, by default it's the current
+    // user
     if (overrideId < 0) {
       if (context.getSession().getAttribute("salesoverride") != null) {
-        overrideId = StringUtils.parseInt(
-            (String) context.getSession().getAttribute("salesoverride"), -1);
+        overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("salesoverride"), -1);
       } else {
         overrideId = userId;
       }
@@ -130,9 +130,7 @@ public final class Sales extends CFSModule {
 
     String myLeads = (String) context.getRequest().getParameter("myLeads");
     String savedValue = (String) context.getSession().getAttribute("myLeads");
-    if (myLeads != null && savedValue != null
-         && !"".equals(myLeads) && !"".equals(savedValue)
-         && !savedValue.equals(myLeads)) {
+    if (myLeads != null && savedValue != null && !"".equals(myLeads) && !"".equals(savedValue) && !savedValue.equals(myLeads)) {
       context.getSession().removeAttribute("myLeads");
       context.getSession().setAttribute("myLeads", myLeads);
     }
@@ -153,7 +151,7 @@ public final class Sales extends CFSModule {
     UserList shortChildList = new UserList();
     ContactList realFullLeadList = new ContactList();
 
-    //Determine the graph type to generate
+    // Determine the graph type to generate
     String graphString = "lccr";
     Locale locale = getUser(context, getUserId(context)).getLocale();
 
@@ -161,7 +159,7 @@ public final class Sales extends CFSModule {
 
     try {
       db = getConnection(context);
-      //Check that the user hasAuthority for this oid
+      // Check that the user hasAuthority for this oid
       if (hasAuthority(context, overrideId)) {
         idToUse = overrideId;
       } else {
@@ -169,26 +167,19 @@ public final class Sales extends CFSModule {
       }
       thisRec = this.getUser(context, idToUse);
       shortChildList = thisRec.getShortChildList();
-      shortChildList = UserList.sortEnabledUsers(
-          shortChildList, new UserList());
+      shortChildList = UserList.sortEnabledUsers(shortChildList, new UserList());
 
-      //Track the id in the request and the session
-      if (context.getRequest().getParameter("oid") != null && !"true".equals(
-          (String) context.getRequest().getParameter("reset"))) {
+      // Track the id in the request and the session
+      if (context.getRequest().getParameter("oid") != null && !"true".equals((String) context.getRequest().getParameter("reset"))) {
         context.getRequest().setAttribute("override", String.valueOf(idToUse));
-        context.getRequest().setAttribute(
-            "othername", thisRec.getContact().getNameFull());
-        context.getRequest().setAttribute(
-            "previousId", String.valueOf(thisRec.getManagerId()));
-        context.getSession().setAttribute(
-            "salesoverride", String.valueOf(overrideId));
-        context.getSession().setAttribute(
-            "salesothername", thisRec.getContact().getNameFull());
-        context.getSession().setAttribute(
-            "salespreviousId", String.valueOf(thisRec.getManagerId()));
+        context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
+        context.getRequest().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));
+        context.getSession().setAttribute("salesoverride", String.valueOf(overrideId));
+        context.getSession().setAttribute("salesothername", thisRec.getContact().getNameFull());
+        context.getSession().setAttribute("salespreviousId", String.valueOf(thisRec.getManagerId()));
       }
 
-      //Check the cache and see if the current graph exists and is valid
+      // Check the cache and see if the current graph exists and is valid
       if (thisRec.getIsValidLead() == true) {
         if (graphString.equals("lccr")) {
           checkFileName = thisRec.getLccr().getLastFileName();
@@ -200,15 +191,15 @@ public final class Sales extends CFSModule {
         File checkFile = new File(context.getServletContext().getRealPath("/") + "graphs" + fs + checkFileName + ".jpg");
         if (!checkFile.exists()) {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("Sales-> Invalidating data, file not found: " + context.getServletContext().getRealPath("/") + "graphs" + fs + checkFileName + ".jpg");
+            System.out.println("Sales-> Invalidating data, file not found: " + context.getServletContext().getRealPath("/") + "graphs" + fs + checkFileName
+                + ".jpg");
           }
           thisRec.setIsValidLead(false, true);
           checkFileName = null;
         }
       }
-      //Generate the leads pagedList for the currentId, right of graph
-      PagedListInfo dashboardListInfo = this.getPagedListInfo(
-          context, "SalesDashboardListInfo");
+      // Generate the leads pagedList for the currentId, right of graph
+      PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "SalesDashboardListInfo");
       dashboardListInfo.setLink("Sales.do?command=Dashboard");
       dashboardListInfo.setColumnToSortBy("c.entered DESC");
       ContactList leads = new ContactList();
@@ -235,20 +226,20 @@ public final class Sales extends CFSModule {
         leads.setLeadStatusExists(Constants.TRUE);
         context.getRequest().setAttribute("myLeads", "" + true);
       }
-      leads.buildList(db);
+      leads.setBuildTypes(false);
+      leads.setBuildDetails(false);
+      leads.buildShortList(db);
       context.getRequest().setAttribute("contactList", leads);
 
-      //Build the leads for the graph
-      //FullChildList is the complete user hierarchy for the selected user and
-      //is needed for the graph
+      // Build the leads for the graph
+      // FullChildList is the complete user hierarchy for the selected user and
+      // is needed for the graph
       if (checkFileName == null) {
-        fullChildList = thisRec.getFullChildList(
-            shortChildList, new UserList());
-        fullChildList = UserList.sortEnabledUsers(
-            fullChildList, new UserList());
+        fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
+        fullChildList = UserList.sortEnabledUsers(fullChildList, new UserList());
         String range = fullChildList.getUserListIds(idToUse);
-        //All of the opportunities that make up this graph calculation
-        //TODO: Set a max date for less records
+        // All of the opportunities that make up this graph calculation
+        // TODO: Set a max date for less records
         realFullLeadList.setOwnerIdRange(range);
         realFullLeadList.setLeadsOnly(Constants.FALSE);
         realFullLeadList.setEmployeesOnly(Constants.FALSE);
@@ -260,10 +251,12 @@ public final class Sales extends CFSModule {
         if (thisRec.getSiteId() == -1) {
           realFullLeadList.setIncludeAllSites(true);
         }
+        realFullLeadList.setBuildTypes(false);
+        realFullLeadList.setBuildDetails(false);
         realFullLeadList.buildList(db);
       }
 
-      //Lookup Lists in the dashboard
+      // Lookup Lists in the dashboard
       LookupList sources = new LookupList(db, "lookup_contact_source");
       sources.addItem(-1, systemStatus.getLabel("pipeline.any"));
       context.getRequest().setAttribute("SourceList", sources);
@@ -277,22 +270,22 @@ public final class Sales extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    //TODO:: Graph related code
+    // TODO:: Graph related code
     try {
-      //Determine if a graph has to be generated
+      // Determine if a graph has to be generated
       if (checkFileName != null) {
-        //Existing graph is good
+        // Existing graph is good
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Sales-> Using cached chart");
         }
         context.getRequest().setAttribute("GraphFileName", checkFileName);
       } else {
-        //Need to generate a new graph
+        // Need to generate a new graph
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Sales-> Preparing the chart");
         }
 
-        //Prepare the values for the graph
+        // Prepare the values for the graph
         ContactList tempLeadList = new ContactList();
         Iterator z = realFullLeadList.iterator();
         while (z.hasNext()) {
@@ -301,38 +294,31 @@ public final class Sales extends CFSModule {
             tempLeadList.add(tempLead);
           }
         }
-        //add up all leads for children line on graph
+        // add up all leads for children line on graph
+        QualifiedLeadsCounter gqlc = QualifiedLeadsCounter.getQualifiedLeadsCounter(db);
         UserList tempUserList = new UserList();
         Iterator n = fullChildList.iterator();
         while (n.hasNext()) {
           User thisRecord = (User) n.next();
-          tempUserList = prepareLines(
-              thisRecord, realFullLeadList, tempUserList);
+          if (thisRec.getId() == thisRecord.getManagerId()) {
+            tempUserList = prepareLines(thisRecord, tempUserList, gqlc);
+          }
         }
         UserList linesToDraw = new UserList();
         linesToDraw = calculateLine(tempUserList, linesToDraw);
-        //set my own, on top of the children line
-        tempUserList = prepareLines(thisRec, tempLeadList, tempUserList);
+        // set my own, on top of the children line
+        tempUserList = prepareLines(thisRec, tempUserList, gqlc);
+
         linesToDraw = calculateLine(thisRec, linesToDraw);
 
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Sales-> Drawing the chart");
         }
-        //Store the data in the collection
-        XYSeriesCollection categoryData = createCategoryDataset(
-            linesToDraw, graphString);
-        JFreeChart chart =
-            ChartFactory.createTimeSeriesChart(
-            "",
-            "",
-            "",
-            categoryData,
-            false,
-            true,
-            false);
+        // Store the data in the collection
+        XYSeriesCollection categoryData = createCategoryDataset(linesToDraw, graphString);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart("", "", "", categoryData, false, true, false);
         chart.setBackgroundPaint(Color.white);
-        SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
-            DateFormat.SHORT, locale);
+        SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
         // X and Y axis
         XYPlot plot = chart.getXYPlot();
         ValueAxis yAxis = plot.getRangeAxis();
@@ -349,11 +335,10 @@ public final class Sales extends CFSModule {
           rr.setShapesFilled(false);
           rr.setItemLabelsVisible(true);
           // Tool tip formatting using locale {1} = Date, {2} = Amount
-          StandardXYToolTipGenerator ttg = new StandardXYToolTipGenerator(
-              "{2} ({1})", sdf, NumberFormat.getInstance(locale));
+          StandardXYToolTipGenerator ttg = new StandardXYToolTipGenerator("{2} ({1})", sdf, NumberFormat.getInstance(locale));
           rr.setToolTipGenerator(ttg);
         }
-        //Output the chart
+        // Output the chart
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Sales-> Drawing the chart");
         }
@@ -366,23 +351,19 @@ public final class Sales extends CFSModule {
           graphDirectory.mkdirs();
         }
         java.util.Date testDate = new java.util.Date();
-        String fileName = "leads" + String.valueOf(testDate.getTime()) + String.valueOf(
-            context.getSession().getCreationTime());
+        String fileName = "leads" + String.valueOf(testDate.getTime()) + String.valueOf(context.getSession().getCreationTime());
 
-        ChartRenderingInfo info = new ChartRenderingInfo(
-            new StandardEntityCollection());
+        ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
         File imageFile = new File(filePath + fileName + ".jpg");
-        ChartUtilities.saveChartAsJPEG(
-            imageFile, 1.0f, chart, width, height, info);
-        PrintWriter pw = new PrintWriter(
-            new BufferedWriter(new FileWriter(filePath + fileName + ".map")), true);
+        ChartUtilities.saveChartAsJPEG(imageFile, 1.0f, chart, width, height, info);
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(filePath + fileName + ".map")), true);
         ChartUtilities.writeImageMap(pw, fileName, info, false);
-        //Update the cached filename
+        // Update the cached filename
         if (graphString.equals("lccr")) {
           thisRec.getLccr().setLastFileName(fileName);
         }
         context.getRequest().setAttribute("GraphFileName", fileName);
-        }
+      }
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -393,12 +374,11 @@ public final class Sales extends CFSModule {
     return "DashboardOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSearchForm(ActionContext context) {
     if (!(hasPermission(context, "sales-view"))) {
@@ -408,14 +388,13 @@ public final class Sales extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      //Create the paged list info to store the search form
-      PagedListInfo salesListInfo = this.getPagedListInfo(
-          context, "SalesListInfo");
+      // Create the paged list info to store the search form
+      PagedListInfo salesListInfo = this.getPagedListInfo(context, "SalesListInfo");
       salesListInfo.setCurrentLetter("");
       salesListInfo.setCurrentOffset(0);
-//      salesListInfo.setItemsPerPage(100);
+      // salesListInfo.setItemsPerPage(100);
 
-      //Lookup Lists in the dashboard
+      // Lookup Lists in the dashboard
       LookupList sources = new LookupList(db, "lookup_contact_source");
       if (sources.size() > 0) {
         sources.addItem(-1, systemStatus.getLabel("pipeline.any"));
@@ -426,8 +405,7 @@ public final class Sales extends CFSModule {
         ratings.addItem(-1, systemStatus.getLabel("pipeline.any"));
       }
       context.getRequest().setAttribute("RatingList", ratings);
-      CountrySelect countrySelect = new CountrySelect(
-          systemStatus.getLabel("pipeline.any"));
+      CountrySelect countrySelect = new CountrySelect(systemStatus.getLabel("pipeline.any"));
       context.getRequest().setAttribute("countrySelect", countrySelect);
       context.getRequest().setAttribute("listForm", "" + true);
       LookupList siteList = new LookupList(db, "lookup_site_id");
@@ -448,12 +426,11 @@ public final class Sales extends CFSModule {
     return "SearchOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-add"))) {
@@ -461,20 +438,18 @@ public final class Sales extends CFSModule {
     }
     Connection db = null;
     Contact thisContact = null;
-    String addAnother = (String) context.getRequest().getAttribute(
-        "addAnother");
+    String addAnother = (String) context.getRequest().getAttribute("addAnother");
     if (addAnother == null || "".equals(addAnother.trim())) {
       thisContact = (Contact) context.getFormBean();
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = getConnection(context);
-      //prepare userList for reassigning owner
+      // prepare userList for reassigning owner
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
       User thisRec = thisUser.getUserRecord();
       UserList shortChildList = thisRec.getShortChildList();
-      UserList userList = thisRec.getFullChildList(
-          shortChildList, new UserList());
+      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
       userList.setMyId(getUserId(context));
       userList.setMyValue(thisUser.getContact().getNameLastFirst());
       userList.setIncludeMe(true);
@@ -483,7 +458,8 @@ public final class Sales extends CFSModule {
 
       LookupList siteList = new LookupList(db, "lookup_site_id");
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
-//      siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
+      // siteList.addItem(Constants.INVALID_SITE,
+      // systemStatus.getLabel("accounts.allSites"));
       context.getRequest().setAttribute("SiteIdList", siteList);
       LookupList industryList = new LookupList(db, "lookup_industry");
       industryList.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
@@ -503,12 +479,11 @@ public final class Sales extends CFSModule {
     return "PrepareOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-add"))) {
@@ -521,8 +496,7 @@ public final class Sales extends CFSModule {
       contactId = (String) context.getRequest().getAttribute("contactId");
     }
     Contact thisContact = (Contact) context.getFormBean();
-    String addAnother = (String) context.getRequest().getAttribute(
-        "addAnother");
+    String addAnother = (String) context.getRequest().getAttribute("addAnother");
     thisContact = (Contact) context.getFormBean();
     SystemStatus systemStatus = this.getSystemStatus(context);
     try {
@@ -533,12 +507,11 @@ public final class Sales extends CFSModule {
         thisContact.setBuildDetails(true);
         thisContact.queryRecord(db, Integer.parseInt(contactId));
       }
-      //prepare userList for reassigning owner
+      // prepare userList for reassigning owner
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
       User thisRec = thisUser.getUserRecord();
       UserList shortChildList = thisRec.getShortChildList();
-      UserList userList = thisRec.getFullChildList(
-          shortChildList, new UserList());
+      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
       userList.setMyId(getUserId(context));
       userList.setMyValue(thisUser.getContact().getNameLastFirst());
       userList.setIncludeMe(true);
@@ -564,15 +537,14 @@ public final class Sales extends CFSModule {
     return "PrepareOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    //check for appropriate permissions
+    // check for appropriate permissions
     if (!hasPermission(context, "sales-leads-add")) {
       return ("PermissionError");
     }
@@ -591,8 +563,7 @@ public final class Sales extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(
-          db, AccessType.GENERAL_CONTACTS);
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
       thisContact.setAccessType(accessTypeList.getCode(AccessType.PUBLIC));
       // trying to insert a contact
       isValid = validateObject(context, db, thisContact);
@@ -613,10 +584,10 @@ public final class Sales extends CFSModule {
       if (isValid && (recordInserted || resultCount != -1)) {
         thisContact = new Contact(db, thisContact.getId());
         context.getRequest().setAttribute("ContactDetails", thisContact);
-        context.getRequest().setAttribute(
-            "contactId", "" + thisContact.getId());
+        context.getRequest().setAttribute("contactId", "" + thisContact.getId());
         if (resultCount != -1) {
-          ActionPlanWork actionPlanWork = ActionPlanWork.getActionPlanWork(db, ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS), thisContact.getId());
+          ActionPlanWork actionPlanWork = ActionPlanWork
+              .getActionPlanWork(db, ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS), thisContact.getId());
           if (oldContact.getSiteId() != thisContact.getSiteId() && actionPlanWork != null && actionPlanWork.getId() > 0) {
             actionPlanWork.setManagerId(this.getUserId(context));
             actionPlanWork.update(db);
@@ -640,13 +611,12 @@ public final class Sales extends CFSModule {
     addModuleBean(context, "Leads", "Add a Lead");
     // decide what happend with the processing
     if (recordInserted) {
-      if ("true".equals(
-          (String) context.getRequest().getParameter("saveAndNew"))) {
+      if ("true".equals((String) context.getRequest().getParameter("saveAndNew"))) {
         context.getRequest().removeAttribute("ContactDetails");
         context.getRequest().setAttribute("addAnother", "" + true);
         return executeCommandAdd(context);
-      } else if ("true".equals(
-          (String) context.getRequest().getParameter("saveAndClone"))) {
+      } else
+      if ("true".equals((String) context.getRequest().getParameter("saveAndClone"))) {
         return "SaveOK";
       }
     } else if (resultCount != -1) {
@@ -655,12 +625,11 @@ public final class Sales extends CFSModule {
     return executeCommandDashboard(context);
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-view"))) {
@@ -681,11 +650,9 @@ public final class Sales extends CFSModule {
     boolean fetchedList = false;
     User user = this.getUser(context, this.getUserId(context));
     ContactList contacts = new ContactList();
-    //Prepare pagedListInfo
-    PagedListInfo searchListInfo = this.getPagedListInfo(
-        context, "SalesListInfo");
-    searchListInfo.setLink(
-        "Sales.do?command=List&listForm=" + (listForm != null ? listForm : ""));
+    // Prepare pagedListInfo
+    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SalesListInfo");
+    searchListInfo.setLink("Sales.do?command=List&listForm=" + (listForm != null ? listForm : ""));
     SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
@@ -693,7 +660,7 @@ public final class Sales extends CFSModule {
       if (searchListInfo.getSearchOptionValue("searchcodeCountry") != null) {
         StateSelect stateSelect = new StateSelect(systemStatus, searchListInfo.getSearchOptionValue("searchcodeCountry"));
         HashMap map = new HashMap();
-        map.put((String) searchListInfo.getSearchOptionValue("searchcodeOtherState"), (String)searchListInfo.getSearchOptionValue("searchcodeOtherState"));
+        map.put((String) searchListInfo.getSearchOptionValue("searchcodeOtherState"), (String) searchListInfo.getSearchOptionValue("searchcodeOtherState"));
         stateSelect.setPreviousStates(map);
         context.getRequest().setAttribute("stateSelect", stateSelect);
       } else {
@@ -701,17 +668,14 @@ public final class Sales extends CFSModule {
         context.getRequest().setAttribute("stateSelect", stateSelect);
       }
 
-      LookupList sources = systemStatus.getLookupList(
-          db, "lookup_contact_source");
+      LookupList sources = systemStatus.getLookupList(db, "lookup_contact_source");
       sources.addItem(-1, systemStatus.getLabel("quotes.all"));
       context.getRequest().setAttribute("sourceList", sources);
 
-      LookupList ratings = systemStatus.getLookupList(
-          db, "lookup_contact_rating");
+      LookupList ratings = systemStatus.getLookupList(db, "lookup_contact_rating");
       ratings.addItem(-1, systemStatus.getLabel("quotes.all"));
       context.getRequest().setAttribute("ratingList", ratings);
-      LookupList segments = systemStatus.getLookupList(
-          db, "lookup_industry");
+      LookupList segments = systemStatus.getLookupList(db, "lookup_industry");
       segments.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("segmentList", segments);
       LookupList siteList = new LookupList(db, "lookup_site_id");
@@ -749,8 +713,9 @@ public final class Sales extends CFSModule {
       }
       context.getRequest().setAttribute("contacts", contacts);
 
-      //Make the CountrySelect drop down menus available in the request.
-      //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
+      // Make the CountrySelect drop down menus available in the request.
+      // This needs to be done here to provide the SystemStatus to the
+      // constructors, otherwise translation is not possible
       CountrySelect countrySelect = new CountrySelect(systemStatus);
       context.getRequest().setAttribute("countrySelect", countrySelect);
       context.getRequest().setAttribute("systemStatus", systemStatus);
@@ -772,12 +737,11 @@ public final class Sales extends CFSModule {
     return "ListOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-view"))) {
@@ -795,16 +759,14 @@ public final class Sales extends CFSModule {
     if (listForm != null && !"".equals(listForm)) {
       context.getRequest().setAttribute("listForm", listForm);
     }
-    String readStatusString = (String) context.getRequest().getAttribute(
-        "readStatus");
+    String readStatusString = (String) context.getRequest().getAttribute("readStatus");
     String contactId = (String) context.getRequest().getAttribute("contactId");
     if (contactId == null || "".equals(contactId)) {
       contactId = (String) context.getRequest().getParameter("contactId");
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
     ContactList contacts = new ContactList();
-    PagedListInfo searchListInfo = this.getPagedListInfo(
-        context, "SalesListInfo", false);
+    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SalesListInfo", false);
     Contact contact = null;
     Connection db = null;
     try {
@@ -830,33 +792,26 @@ public final class Sales extends CFSModule {
           contacts.setLeadStatus(-1);
           contacts.setLeadsOnly(Constants.UNDEFINED);
         }
-        contactId = "" + LeadUtils.getNextLead(
-            db, Integer.parseInt(contactId), contacts, contacts.getSiteId(), (contacts.getSiteId() == Constants.INVALID_SITE));
+        contactId = ""
+            + LeadUtils.getNextLead(db, Integer.parseInt(contactId), contacts, contacts.getSiteId(), (contacts.getSiteId() == Constants.INVALID_SITE));
       }
-//    context.getRequest().setAttribute("nextValue", ""+true);
+      // context.getRequest().setAttribute("nextValue", ""+true);
 
       LookupList sources = new LookupList(db, "lookup_contact_source");
-      sources.addItem(
-          -1, systemStatus.getLabel(
-          "accounts.accounts_contacts_calls_details_followup_include.None"));
+      sources.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
       context.getRequest().setAttribute("SourceList", sources);
 
       LookupList ratings = new LookupList(db, "lookup_contact_rating");
-      ratings.addItem(
-          -1, systemStatus.getLabel(
-          "accounts.accounts_contacts_calls_details_followup_include.None"));
+      ratings.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
       context.getRequest().setAttribute("RatingList", ratings);
 
       LookupList industryList = new LookupList(db, "lookup_industry");
-      industryList.addItem(
-          -1, systemStatus.getLabel(
-          "accounts.accounts_contacts_calls_details_followup_include.None"));
+      industryList.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
       context.getRequest().setAttribute("IndustryList", industryList);
 
       if (readStatusString == null || "".equals(readStatusString.trim())) {
         if (hasPermission(context, "sales-leads-edit")) {
-          readStatus = LeadUtils.setReadStatus(
-              db, Integer.parseInt(contactId), this.getUserId(context));
+          readStatus = LeadUtils.setReadStatus(db, Integer.parseInt(contactId), this.getUserId(context));
         }
       } else {
         try {
@@ -865,15 +820,14 @@ public final class Sales extends CFSModule {
         }
       }
       context.getRequest().setAttribute("readStatus", "" + readStatus);
-      if (contactId != null && !"".equals(contactId) && Integer.parseInt(
-          contactId) != -1) {
+      if (contactId != null && !"".equals(contactId) && Integer.parseInt(contactId) != -1) {
         contact = new Contact(db, contactId);
         if (!isRecordAccessPermitted(context, contact)) {
           return ("PermissionError");
         }
         context.getRequest().setAttribute("ContactDetails", contact);
 
-        //build a list of "Action Plans" mapped to "Accounts"
+        // build a list of "Action Plans" mapped to "Accounts"
         ActionPlanList actionPlanList = new ActionPlanList();
         actionPlanList.setIncludeOnlyApproved(Constants.TRUE);
         actionPlanList.setEnabled(Constants.TRUE);
@@ -884,21 +838,17 @@ public final class Sales extends CFSModule {
         actionPlanSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "-- None --"));
         context.getRequest().setAttribute("actionPlanSelect", actionPlanSelect);
 
-        ActionPlanWork actionPlanWork =
-            ActionPlanWork.getActionPlanWork(db, ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS), contact.getId());
+        ActionPlanWork actionPlanWork = ActionPlanWork.getActionPlanWork(db, ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS), contact.getId());
         context.getRequest().setAttribute("actionPlanWork", actionPlanWork);
       } else {
         HashMap errors = new HashMap();
-        errors.put(
-            "actionError", systemStatus.getLabel(
-            "object.validation.leadsSearchActionError"));
+        errors.put("actionError", systemStatus.getLabel("object.validation.leadsSearchActionError"));
         processErrors(context, errors);
         return executeCommandSearchForm(context);
       }
-      //build the import details of the import for this contact
+      // build the import details of the import for this contact
       if (contact.getImportId() != -1) {
-        ContactImport thisImport = new ContactImport(
-            db, contact.getImportId());
+        ContactImport thisImport = new ContactImport(db, contact.getImportId());
         context.getRequest().setAttribute("ImportDetails", thisImport);
       }
 
@@ -907,27 +857,22 @@ public final class Sales extends CFSModule {
       siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
       context.getRequest().setAttribute("SiteIdList", siteList);
 
-      boolean hasGcPermission = hasPermission(
-          context, "contacts-external_contacts-view");
-      boolean hasAcPermission = hasPermission(
-          context, "accounts-accounts-contacts-view");
-      boolean hasAccountPermission = hasPermission(
-          context, "accounts-accounts-view");
+      boolean hasGcPermission = hasPermission(context, "contacts-external_contacts-view");
+      boolean hasAcPermission = hasPermission(context, "accounts-accounts-contacts-view");
+      boolean hasAccountPermission = hasPermission(context, "accounts-accounts-view");
       if (hasGcPermission || hasAcPermission) {
-        context.getRequest().setAttribute(
-            "hasDuplicateLastName", "" + ContactUtils.hasDuplicateLastName(
-            db, contact.getNameLast(), user.getIdRange(), hasGcPermission, hasAcPermission));
+        context.getRequest().setAttribute("hasDuplicateLastName",
+            "" + ContactUtils.hasDuplicateLastName(db, contact.getNameLast(), user.getIdRange(), hasGcPermission, hasAcPermission));
         if (contact.getEmailAddressList().size() > 0) {
           context.getRequest().setAttribute(
-              "hasDuplicateEmailAddress", ContactUtils.hasDuplicateEmailAddresses(
-              db, contact.getEmailAddressList().getConcatenatedList(), user.getIdRange(), hasGcPermission, hasAcPermission));
+              "hasDuplicateEmailAddress",
+              ContactUtils.hasDuplicateEmailAddresses(db, contact.getEmailAddressList().getConcatenatedList(), user.getIdRange(), hasGcPermission,
+                  hasAcPermission));
         }
       }
-      if ((hasGcPermission || hasAccountPermission) && contact.getCompany() != null && !"".equals(
-          contact.getCompany().trim())) {
-        context.getRequest().setAttribute(
-            "hasDuplicateCompany", ContactUtils.hasDuplicateCompany(
-            db, contact.getCompany(), user.getIdRange(), hasGcPermission, hasAccountPermission));
+      if ((hasGcPermission || hasAccountPermission) && contact.getCompany() != null && !"".equals(contact.getCompany().trim())) {
+        context.getRequest().setAttribute("hasDuplicateCompany",
+            ContactUtils.hasDuplicateCompany(db, contact.getCompany(), user.getIdRange(), hasGcPermission, hasAccountPermission));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -940,12 +885,11 @@ public final class Sales extends CFSModule {
     return "DetailsOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAssignLead(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-edit"))) {
@@ -964,8 +908,7 @@ public final class Sales extends CFSModule {
     if (listForm != null && !"".equals(listForm)) {
       context.getRequest().setAttribute("listForm", listForm);
     }
-    String readStatusString = (String) context.getRequest().getAttribute(
-        "readStatus");
+    String readStatusString = (String) context.getRequest().getAttribute("readStatus");
     String contactId = (String) context.getRequest().getAttribute("contactId");
     if (contactId == null || "".equals(contactId)) {
       contactId = (String) context.getRequest().getParameter("contactId");
@@ -977,8 +920,7 @@ public final class Sales extends CFSModule {
       db = getConnection(context);
 
       if (nextValue != null && !"".equals(nextValue.trim())) {
-        contactId = "" + LeadUtils.getNextLead(
-            db, Integer.parseInt(contactId), contacts, this.getUserSiteId(context), true);
+        contactId = "" + LeadUtils.getNextLead(db, Integer.parseInt(contactId), contacts, this.getUserSiteId(context), true);
       }
 
       LookupList ratings = new LookupList(db, "lookup_contact_rating");
@@ -993,8 +935,7 @@ public final class Sales extends CFSModule {
 
       if (readStatusString == null || "".equals(readStatusString.trim())) {
         if (hasPermission(context, "sales-leads-edit")) {
-          readStatus = LeadUtils.setReadStatus(
-              db, Integer.parseInt(contactId), this.getUserId(context));
+          readStatus = LeadUtils.setReadStatus(db, Integer.parseInt(contactId), this.getUserId(context));
         }
       } else {
         try {
@@ -1004,12 +945,11 @@ public final class Sales extends CFSModule {
       }
       context.getRequest().setAttribute("readStatus", "" + readStatus);
 
-      if (contactId != null && !"".equals(contactId) && Integer.parseInt(
-          contactId) != -1) {
+      if (contactId != null && !"".equals(contactId) && Integer.parseInt(contactId) != -1) {
         contact = new Contact(db, contactId);
         context.getRequest().setAttribute("contactDetails", contact);
 
-        //build a list of "Action Plans" mapped to "Accounts"
+        // build a list of "Action Plans" mapped to "Accounts"
         ActionPlanList actionPlanList = new ActionPlanList();
         actionPlanList.setIncludeOnlyApproved(Constants.TRUE);
         actionPlanList.setEnabled(Constants.TRUE);
@@ -1034,12 +974,11 @@ public final class Sales extends CFSModule {
     return "AssignLeadOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandCheckAssignStatus(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-edit"))) {
@@ -1074,11 +1013,9 @@ public final class Sales extends CFSModule {
       db = getConnection(context);
       if (!"skip".equals(next)) {
         if (owner != null && !"".equals(owner)) {
-          assignStatus = LeadUtils.tryToAssignLead(
-              db, Integer.parseInt(contactId), userId, Integer.parseInt(owner));
+          assignStatus = LeadUtils.tryToAssignLead(db, Integer.parseInt(contactId), userId, Integer.parseInt(owner));
         } else {
-          assignStatus = LeadUtils.tryToAssignLead(
-              db, Integer.parseInt(contactId), userId);
+          assignStatus = LeadUtils.tryToAssignLead(db, Integer.parseInt(contactId), userId);
         }
         if (assignStatus) {
           context.getRequest().setAttribute("assignStatus", "assigned");
@@ -1086,8 +1023,7 @@ public final class Sales extends CFSModule {
           context.getRequest().setAttribute("assignStatus", "notAssigned");
         }
       } else {
-        skippedStatus = LeadUtils.skipLead(
-            db, Integer.parseInt(contactId), userId);
+        skippedStatus = LeadUtils.skipLead(db, Integer.parseInt(contactId), userId);
         context.getRequest().setAttribute("assignStatus", "skipped");
       }
     } catch (Exception e) {
@@ -1101,12 +1037,11 @@ public final class Sales extends CFSModule {
     return "CheckAssignStatusOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandWorkLead(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-edit"))) {
@@ -1114,7 +1049,7 @@ public final class Sales extends CFSModule {
     }
     Connection db = null;
     addModuleBean(context, "Add Contact", "Add Contact to Account");
-    String contactId =  context.getRequest().getParameter("id");
+    String contactId = context.getRequest().getParameter("id");
     String rating = context.getRequest().getParameter("rating");
     String comments = context.getRequest().getParameter("comments");
 
@@ -1130,8 +1065,7 @@ public final class Sales extends CFSModule {
         contact.setLeadStatus(Contact.LEAD_ASSIGNED);
       }
       contact.setIsLead(false);
-      contact.setConversionDate(
-          new Timestamp(Calendar.getInstance().getTimeInMillis()));
+      contact.setConversionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
       if (rating != null && !"".equals(rating)) {
         contact.setRating(Integer.parseInt(rating));
       }
@@ -1140,9 +1074,8 @@ public final class Sales extends CFSModule {
       }
       contact.update(db, context);
       processUpdateHook(context, oldContact, contact);
-      int size = LeadUtils.cleanUpContact(
-          db, contact.getId(), this.getUserId(context));
-      this.sendEmail(context,db, contact, contact.getOwner(), (String) null);
+      int size = LeadUtils.cleanUpContact(db, contact.getId(), this.getUserId(context));
+      this.sendEmail(context, db, contact, contact.getOwner(), (String) null);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
@@ -1154,12 +1087,11 @@ public final class Sales extends CFSModule {
     return "WorkLeadOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandWorkAccount(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-edit"))) {
@@ -1178,7 +1110,7 @@ public final class Sales extends CFSModule {
     try {
       db = getConnection(context);
 
-      //insert an account if company name exists
+      // insert an account if company name exists
       boolean status = false;
       int resultCount = -1;
       Contact contact = new Contact(db, contactId);
@@ -1195,7 +1127,7 @@ public final class Sales extends CFSModule {
       } else {
         orgId = Organization.lookupAccount(db, contact.getNameFirst(), contact.getNameMiddle(), contact.getNameLast(), -1, contact.getSiteId());
       }
-       {
+      {
         if (orgId > 0) {
           thisOrg = new Organization(db, orgId);
         }
@@ -1215,41 +1147,36 @@ public final class Sales extends CFSModule {
         }
         thisOrg.setSiteId(contact.getSiteId());
         thisOrg.setModifiedBy(this.getUserId(context));
-        if ((thisOrg.getId() > 0 && thisOrg.getAccountNumber() != null &&
-            contact.getAccountNumber() != null &&
-            !contact.getAccountNumber().equals(thisOrg.getAccountNumber()))
-             || thisOrg.getOrgId() == -1) {
+        if ((thisOrg.getId() > 0 && thisOrg.getAccountNumber() != null && contact.getAccountNumber() != null && !contact.getAccountNumber().equals(
+            thisOrg.getAccountNumber()))
+            || thisOrg.getOrgId() == -1) {
           thisOrg.setAccountNumber(contact.getAccountNumber());
         }
-        if ((thisOrg.getId() > 0 && contact.getOwner() != thisOrg.getOwner())
-             || thisOrg.getOrgId() == -1) {
+        if ((thisOrg.getId() > 0 && contact.getOwner() != thisOrg.getOwner()) || thisOrg.getOrgId() == -1) {
           thisOrg.setOwner(contact.getOwner());
         }
-        if ((thisOrg.getId() > 0 && contact.getPotential() != thisOrg.getPotential())
-             || thisOrg.getOrgId() == -1) {
+        if ((thisOrg.getId() > 0 && contact.getPotential() != thisOrg.getPotential()) || thisOrg.getOrgId() == -1) {
           thisOrg.setPotential(contact.getPotential());
         }
-        if ((thisOrg.getId() > 0 && contact.getIndustryTempCode() != thisOrg.getIndustry())
-             || thisOrg.getOrgId() == -1) {
+        if ((thisOrg.getId() > 0 && contact.getIndustryTempCode() != thisOrg.getIndustry()) || thisOrg.getOrgId() == -1) {
           thisOrg.setIndustry(contact.getIndustryTempCode());
         }
-        if ((thisOrg.getId() > 0 && contact.getSource() != thisOrg.getSource())
-             || thisOrg.getOrgId() == -1) {
+        if ((thisOrg.getId() > 0 && contact.getSource() != thisOrg.getSource()) || thisOrg.getOrgId() == -1) {
           thisOrg.setSource(contact.getSource());
         }
-        if ((thisOrg.getId() > 0 && contact.getRating() != thisOrg.getRating())
-             || thisOrg.getOrgId() == -1) {
+        if ((thisOrg.getId() > 0 && contact.getRating() != thisOrg.getRating()) || thisOrg.getOrgId() == -1) {
           thisOrg.setRating(contact.getRating());
         }
         copyPropertiesFromContactToOrganization(contact, thisOrg);
 
-        //Copy postal address from contact to organization
+        // Copy postal address from contact to organization
         ContactAddressList contactAddressList = new ContactAddressList();
         contactAddressList.setContactId(contact.getId());
         contactAddressList.buildList(db);
         Iterator addressIterator = contactAddressList.iterator();
         while (addressIterator.hasNext()) {
-          //DEVELOPER NOTE: probably needs to be in  the OrganizationEmailAddress Constructor
+          // DEVELOPER NOTE: probably needs to be in the
+          // OrganizationEmailAddress Constructor
           ContactAddress contactAddress = (ContactAddress) addressIterator.next();
           OrganizationAddress organizationAddress = new OrganizationAddress();
           organizationAddress.setStreetAddressLine1(contactAddress.getStreetAddressLine1());
@@ -1277,13 +1204,14 @@ public final class Sales extends CFSModule {
           organizationAddress.setPrimaryAddress(contactAddress.getPrimaryAddress());
           thisOrg.getAddressList().add(organizationAddress);
         }
-        //Copy email address from contact to organization
+        // Copy email address from contact to organization
         ContactEmailAddressList contactEmailAddressList = new ContactEmailAddressList();
         contactEmailAddressList.setContactId(contact.getId());
         contactEmailAddressList.buildList(db);
         Iterator emailAddressIterator = contactEmailAddressList.iterator();
         while (emailAddressIterator.hasNext()) {
-          //DEVELOPER NOTE: probably needs to be in  the OrganizationEmailAddress Constructor
+          // DEVELOPER NOTE: probably needs to be in the
+          // OrganizationEmailAddress Constructor
           ContactEmailAddress contactEmailAddress = (ContactEmailAddress) emailAddressIterator.next();
           OrganizationEmailAddress organizationEmailAddress = new OrganizationEmailAddress();
           organizationEmailAddress.setEmail(contactEmailAddress.getEmail());
@@ -1304,13 +1232,14 @@ public final class Sales extends CFSModule {
           organizationEmailAddress.setPrimaryEmail(contactEmailAddress.getPrimaryEmail());
           thisOrg.getEmailAddressList().add(organizationEmailAddress);
         }
-        //Copy phone numbers from contact to organization
+        // Copy phone numbers from contact to organization
         ContactPhoneNumberList contactPhoneNumberList = new ContactPhoneNumberList();
         contactPhoneNumberList.setContactId(contact.getId());
         contactPhoneNumberList.buildList(db);
         Iterator phoneNumberIterator = contactPhoneNumberList.iterator();
         while (phoneNumberIterator.hasNext()) {
-          //DEVELOPER NOTE: probably needs to be in  the OrganizationPhoneNumber Constructor
+          // DEVELOPER NOTE: probably needs to be in the OrganizationPhoneNumber
+          // Constructor
           ContactPhoneNumber contactPhoneNumber = (ContactPhoneNumber) phoneNumberIterator.next();
           OrganizationPhoneNumber organizationPhoneNumber = new OrganizationPhoneNumber();
           organizationPhoneNumber.setNumber(contactPhoneNumber.getNumber());
@@ -1347,8 +1276,7 @@ public final class Sales extends CFSModule {
       }
       if (status) {
         contact.setIsLead(false);
-        contact.setConversionDate(
-            new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        contact.setConversionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
         if (rating != null && !"".equals(rating)) {
           contact.setRating(Integer.parseInt(rating));
         }
@@ -1358,10 +1286,9 @@ public final class Sales extends CFSModule {
           contact.disable(db);
         }
         processUpdateHook(context, oldContact, contact);
-        int size = LeadUtils.cleanUpContact(
-            db, contact.getId(), this.getUserId(context));
+        int size = LeadUtils.cleanUpContact(db, contact.getId(), this.getUserId(context));
       }
-      //Record a corressponding Action Plan Work Item
+      // Record a corressponding Action Plan Work Item
       if (status && resultCount > 0) {
         String actionPlanId = context.getRequest().getParameter("actionPlan");
         String managerId = context.getRequest().getParameter("manager");
@@ -1380,7 +1307,7 @@ public final class Sales extends CFSModule {
           actionPlanWork.setEnteredBy(this.getUserId(context));
           actionPlanWork.setModifiedBy(this.getUserId(context));
           actionPlanWork.insert(db, actionPlan);
-          
+
           assigned = this.getUser(context, actionPlanWork.getAssignedTo());
           assigned.setBuildContact(true);
           assigned.setBuildContactDetails(true);
@@ -1398,20 +1325,15 @@ public final class Sales extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    //Process Emails
+    // Process Emails
     if (actionPlanWork.getId() > -1) {
       try {
         String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(context) + ".xml";
         if (!FileUtils.fileExists(templateFile)) {
           templateFile = getDbNamePath(context) + "templates_en_US.xml";
         }
-        //Send an email to the Action Plan "owner" & Action Plan "manager"
-        actionPlanWork.sendEmail(
-            context,
-            assigned.getContact(),
-            manager.getContact(),
-            thisOrg.getName(),
-            templateFile);
+        // Send an email to the Action Plan "owner" & Action Plan "manager"
+        actionPlanWork.sendEmail(context, assigned.getContact(), manager.getContact(), thisOrg.getName(), templateFile);
       } catch (Exception e) {
         context.getRequest().setAttribute("Error", e);
         return ("SystemError");
@@ -1421,12 +1343,11 @@ public final class Sales extends CFSModule {
     return getReturn(context, "WorkAccount");
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "sales-leads-edit")) {
@@ -1447,12 +1368,10 @@ public final class Sales extends CFSModule {
     if (nextValue == null || "".equals(nextValue)) {
       nextValue = (String) context.getRequest().getParameter("nextValue");
     }
-    context.getRequest().setAttribute(
-        "nextValue", nextValue != null ? nextValue : "");
+    context.getRequest().setAttribute("nextValue", nextValue != null ? nextValue : "");
     String contactId = context.getRequest().getParameter("contactId");
     String owner = (String) context.getRequest().getParameter("owner");
-    String leadStatus = (String) context.getRequest().getParameter(
-        "leadStatus");
+    String leadStatus = (String) context.getRequest().getParameter("leadStatus");
     String comments = (String) context.getRequest().getParameter("comments");
     String rating = (String) context.getRequest().getParameter("rating");
     Contact thisContact = null;
@@ -1472,13 +1391,9 @@ public final class Sales extends CFSModule {
       if (leadStatus != null && !"".equals(leadStatus)) {
         thisContact.setLeadStatus(Integer.parseInt(leadStatus));
         if (Integer.parseInt(leadStatus) == Contact.LEAD_ASSIGNED) {
-          thisContact.setAssignedDate(
-            DateUtils.roundUpToNextFive(
-              System.currentTimeMillis()));
+          thisContact.setAssignedDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
         } else if (Integer.parseInt(leadStatus) == Contact.LEAD_TRASHED) {
-          thisContact.setLeadTrashedDate(
-            DateUtils.roundUpToNextFive(
-              System.currentTimeMillis()));
+          thisContact.setLeadTrashedDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
         }
       }
       if (comments != null && !"".equals(comments)) {
@@ -1513,16 +1428,16 @@ public final class Sales extends CFSModule {
       String leadAssignment = context.getRequest().getParameter("leadAssignment");
       if (next != null && "assignaccount".equals(next)) {
         // TODO: The following should not be executed in this Action because now
-        // this request is using an additional database connection without closing the first!
+        // this request is using an additional database connection without
+        // closing the first!
         // it could be moved down below to fix this
-        String retVal = null;
         if (leadAssignment == null || !"true".equals(leadAssignment)) {
-          retVal = executeCommandWorkAccount(context);
+          executeCommandWorkAccount(context);
         } else {
           context.getRequest().setAttribute("id", contactId);
           return "CloseOK";
         }
-        return  getReturn(context, "WorkAccount");
+        return getReturn(context, "WorkAccount");
       }
     }
     addModuleBean(context, "Leads", "Update Lead");
@@ -1534,12 +1449,11 @@ public final class Sales extends CFSModule {
     }
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-delete"))) {
@@ -1564,20 +1478,16 @@ public final class Sales extends CFSModule {
       DependencyList dependencies = contact.processDependencies(db);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(
-          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl(
-            "javascript:window.location.href='Sales.do?command=Delete&contactId=" + contactId + "&listForm=" + (listForm != null ? listForm : "") + RequestUtils.addLinkParams(
-            context.getRequest(), "from|nextValue") + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='Sales.do?command=Delete&contactId=" + contactId + "&listForm="
+            + (listForm != null ? listForm : "") + RequestUtils.addLinkParams(context.getRequest(), "from|nextValue") + "'");
       } else {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header2"));
-        htmlDialog.addButton(
-            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Sales.do?command=Trash&contactId=" + contactId + "&listForm=" + (listForm != null ? listForm : "") + RequestUtils.addLinkParams(
-            context.getRequest(), "popup|from|nextValue") + "'");
-        htmlDialog.addButton(
-            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Sales.do?command=Trash&contactId=" + contactId
+            + "&listForm=" + (listForm != null ? listForm : "") + RequestUtils.addLinkParams(context.getRequest(), "popup|from|nextValue") + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -1591,12 +1501,11 @@ public final class Sales extends CFSModule {
     return "ConfirmDeleteOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandTrash(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-delete"))) {
@@ -1609,21 +1518,16 @@ public final class Sales extends CFSModule {
     try {
       db = getConnection(context);
       contact = new Contact(db, contactId);
-      int size = LeadUtils.cleanUpContact(
-          db, contact.getId(), this.getUserId(context));
+      int size = LeadUtils.cleanUpContact(db, contact.getId(), this.getUserId(context));
       if (!hasAuthority(context, contact.getOwner())) {
         return "PermissionError";
       }
       contact.updateStatus(db, context, true, this.getUserId(context));
       String returnType = (String) context.getRequest().getParameter("from");
       if (returnType != null && !"list".equals(returnType)) {
-        context.getRequest().setAttribute(
-            "refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(
-            context.getRequest(), "actionId"));
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
       } else {
-        context.getRequest().setAttribute(
-            "refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(
-            context.getRequest(), "actionId|listForm|from"));
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -1636,12 +1540,11 @@ public final class Sales extends CFSModule {
     return "DeleteOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "sales-leads-delete"))) {
@@ -1654,21 +1557,16 @@ public final class Sales extends CFSModule {
     try {
       db = getConnection(context);
       contact = new Contact(db, contactId);
-      int size = LeadUtils.cleanUpContact(
-          db, contact.getId(), this.getUserId(context));
+      int size = LeadUtils.cleanUpContact(db, contact.getId(), this.getUserId(context));
       if (!hasAuthority(context, contact.getOwner())) {
         return "PermissionError";
       }
       contact.delete(db, context, getDbNamePath(context));
       String returnType = (String) context.getRequest().getParameter("from");
       if (returnType != null && !"list".equals(returnType)) {
-        context.getRequest().setAttribute(
-            "refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(
-            context.getRequest(), "actionId"));
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
       } else {
-        context.getRequest().setAttribute(
-            "refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(
-            context.getRequest(), "actionId|listForm|from"));
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -1681,19 +1579,17 @@ public final class Sales extends CFSModule {
     return "DeleteOK";
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandContactList(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-view")) {
       return ("PermissionError");
     }
-    PagedListInfo searchContactsInfo = this.getPagedListInfo(
-        context, "SalesContactListInfo");
+    PagedListInfo searchContactsInfo = this.getPagedListInfo(context, "SalesContactListInfo");
     searchContactsInfo.setLink("Sales.do?command=ContactList");
     String source = (String) context.getRequest().getParameter("source");
     addModuleBean(context, "Sales Contacts", "Search Results");
@@ -1702,13 +1598,13 @@ public final class Sales extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      //set the searchcriteria
+      // set the searchcriteria
       searchContactsInfo.setSearchCriteria(contactList, context);
-      //make sure user has access to view account contacts
+      // make sure user has access to view account contacts
       if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
         contactList.setExcludeAccountContacts(true);
       }
-      //set properties on contact list
+      // set properties on contact list
       contactList.setPagedListInfo(searchContactsInfo);
       contactList.setBuildDetails(true);
       contactList.setBuildTypes(false);
@@ -1733,89 +1629,70 @@ public final class Sales extends CFSModule {
     return ("ContactListOK");
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pertainsTo    Description of the Parameter
-   *@param  leadsList     Description of the Parameter
-   *@param  usersToGraph  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param pertainsTo            Description of the Parameter
+   * @param usersToGraph          Description of the Parameter
+   * @param gqlc Description of the Parameter
+   * @return Description of the Return Value
    */
-  private UserList prepareLines(User pertainsTo, ContactList leadsList, UserList usersToGraph) {
+  private UserList prepareLines(User pertainsTo, UserList usersToGraph, QualifiedLeadsCounter gqlc) {
     java.util.Date myDate = null;
     Calendar readDate = Calendar.getInstance();
     Calendar readDateAdjusted = Calendar.getInstance();
     Double lccrAddTerm = new Double(0.0);
     String valKey = "";
-    Calendar rightNow = Calendar.getInstance();
-    rightNow.set(Calendar.DAY_OF_MONTH, 1);
-    Calendar rightNowAdjusted = Calendar.getInstance();
-    rightNowAdjusted.set(Calendar.DAY_OF_MONTH, 1);
-    rightNowAdjusted.add(Calendar.DATE, -1);
-    //two months ago
-    Calendar twoMonthsAgo = Calendar.getInstance();
-    twoMonthsAgo.set(Calendar.DAY_OF_MONTH, 1);
-    twoMonthsAgo.add(Calendar.MONTH, -3);
+    List leadCountList;
+
     if (pertainsTo.getIsValidLead() == false) {
       pertainsTo.doLeadsLock();
       if (pertainsTo.getIsValidLead() == false) {
         try {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println(
-                "Sales-> (RE)BUILDING LEADS DATA FOR " + pertainsTo.getId());
+            System.out.println("Sales-> (RE)BUILDING LEADS DATA FOR " + pertainsTo.getId());
           }
-          pertainsTo.setLccr(
-              new GraphSummaryList(8, GraphSummaryList.WEEK_RANGE, false));
-          Iterator leadsIterator = leadsList.iterator();
+          pertainsTo.setLccr(new GraphSummaryList(8, GraphSummaryList.WEEK_RANGE, false));
+          leadCountList = gqlc.getQualifiedLeadsCounter(pertainsTo.getId());
+          if (leadCountList == null) {
+            return new UserList();
+          }
+          Iterator leadsIterator = leadCountList.iterator();
           while (leadsIterator.hasNext()) {
-            Contact tempLead = (Contact) leadsIterator.next();
-            if ((tempLead.getOwner() == pertainsTo.getId())) {
-              myDate = new java.util.Date(
-                  tempLead.getConversionDate().getTime());
-              readDate.setTime(myDate);
-              readDateAdjusted.setTime(myDate);
-              readDate.add(
-                  Calendar.DAY_OF_WEEK, -(readDate.get(Calendar.DAY_OF_WEEK) - readDate.getFirstDayOfWeek()));
-              //Fix this readDate as it should show a lot more intervals of readDate
-              valKey = String.valueOf(readDate.get(java.util.Calendar.YEAR)) + String.valueOf(
-                  readDate.get(java.util.Calendar.MONTH)) + String.valueOf(
-                  readDate.get(java.util.Calendar.DATE));
-              //get the individual graph values
-              lccrAddTerm = new Double(
-                  (tempLead.getConversionDate() != null) ? 1.0 : 0.0);
-              //case: conversion date within 0-2m range
-//if (((rightNow.after(readDate) || rightNowAdjusted.after(readDate)) && twoMonthsAgo.before(readDate)) || rightNow.equals(readDate) || twoMonthsAgo.equals(readDate)) {
-              pertainsTo.setGraphValuesLeads(valKey, lccrAddTerm);
-//}
-            }
+            QualifiedLeadsCount tempLeadCounter = (QualifiedLeadsCount) leadsIterator.next();
+            myDate = tempLeadCounter.getConversionDate();
+            readDate.setTime(myDate);
+            readDateAdjusted.setTime(myDate);
+            readDate.add(Calendar.DAY_OF_WEEK, -(readDate.get(Calendar.DAY_OF_WEEK) - readDate.getFirstDayOfWeek()));
+            // Fix this readDate as it should show a lot more intervals of
+            // readDate
+            valKey = String.valueOf(readDate.get(java.util.Calendar.YEAR)) + String.valueOf(readDate.get(java.util.Calendar.MONTH))
+                + String.valueOf(readDate.get(java.util.Calendar.DATE));
+            // get the individual graph values
+            lccrAddTerm = new Double(tempLeadCounter.getCountOfConversion());
+            pertainsTo.setGraphValuesLeads(valKey, lccrAddTerm);
+            // }
           }
           pertainsTo.setIsValidLead(true, true);
         } catch (Exception e) {
           e.printStackTrace();
-          System.err.println(
-              "Sales-> Unwanted exception occurred: " + e.toString());
+          System.err.println("Sales-> Unwanted exception occurred: " + e.toString());
         }
       }
       pertainsTo.doLeadsUnlock();
     }
     usersToGraph.add(pertainsTo);
-    if (leadsList.size() == 0) {
-      return new UserList();
-    } else {
-      return usersToGraph;
-    }
+    return usersToGraph;
   }
 
-
   /**
-   *  This method takes a userlist, then for each user the specified graph data
-   *  is pulled out by date range and put in an XYSeries, and then the XYSeries
-   *  is added to an XYSeriesCollection.
+   * This method takes a userlist, then for each user the specified graph data
+   * is pulled out by date range and put in an XYSeries, and then the XYSeries
+   * is added to an XYSeriesCollection.
    *
-   *@param  linesToDraw  Description of Parameter
-   *@param  whichGraph   Description of Parameter
-   *@return              Description of the Returned Value
+   * @param linesToDraw Description of Parameter
+   * @param whichGraph  Description of Parameter
+   * @return Description of the Returned Value
    */
   private XYSeriesCollection createCategoryDataset(UserList linesToDraw, String whichGraph) {
     XYSeriesCollection xyDataset = new XYSeriesCollection();
@@ -1832,9 +1709,7 @@ public final class Sales extends CFSModule {
       String[] valKeys = thisUser.getLccr().getWeekRange(8);
       Calendar iteratorDate = Calendar.getInstance();
       for (int count = 0; count < 8; count++) {
-        java.util.Date dateValue = createDate(
-            iteratorDate.get(Calendar.YEAR), iteratorDate.get(Calendar.MONTH), iteratorDate.get(
-            Calendar.DATE));
+        java.util.Date dateValue = createDate(iteratorDate.get(Calendar.YEAR), iteratorDate.get(Calendar.MONTH), iteratorDate.get(Calendar.DATE));
         Double itemValue = new Double(0);
         if (whichGraph.equals("lccr")) {
           itemValue = thisUser.getLccr().getValue(valKeys[count]);
@@ -1847,53 +1722,40 @@ public final class Sales extends CFSModule {
     return xyDataset;
   }
 
-
   /**
-   *  Create the x and y data for a chart for a single user, on top of another
-   *  list of user's data.. Each year, month and date combo for the past 2
-   *  months from the beginning of this month are stored under a new single User
-   *  object (hmph) for drawing a line on the graph to show cumulative data. @
-   *  param primaryNode Description of Parameter @ param currentLines
-   *  Description of Parameter @ return Description of the Returned Value
+   * Create the x and y data for a chart for a single user, on top of another
+   * list of user's data.. Each year, month and date combo for the past 2 months
+   * from the beginning of this month are stored under a new single User object
+   * (hmph) for drawing a line on the graph to show cumulative data. @ param
+   * primaryNode Description of Parameter @ param currentLines Description of
+   * Parameter @ return Description of the Returned Value
    *
-   *@param  primaryNode   Description of the Parameter
-   *@param  currentLines  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param primaryNode  Description of the Parameter
+   * @param currentLines Description of the Parameter
+   * @return Description of the Return Value
    */
   private UserList calculateLine(User primaryNode, UserList currentLines) {
     if (currentLines.size() == 0) {
       currentLines.add(primaryNode);
       return currentLines;
     }
-    User thisLine = new User();
-    thisLine.getLccr().setIsFutureDateRange(false);
-    String[] valKeys = thisLine.getLccr().getWeekRange(8);
-    Iterator x = currentLines.iterator();
-    while (x.hasNext()) {
-      User addToMe = (User) x.next();
-      for (int count = 0; count < 8; count++) {
-        thisLine.getLccr().setValue(
-            valKeys[count], new Double(
-            primaryNode.getLccr().getValue(valKeys[count]).doubleValue() + (addToMe.getLccr().getValue(
-            valKeys[count])).doubleValue()));
-      }
-    }
-    currentLines.add(thisLine);
+    primaryNode.getLccr().setIsFutureDateRange(false);
+    currentLines.add(primaryNode);
     return currentLines;
+
   }
 
-
   /**
-   *  Create the x and y data for a chart for a list of users. Each year, month
-   *  and year combo for the past 2 months from the beginning of this month are
-   *  added together for each user and stored under a new single User object
-   *  (hmph) for drawing a line on the graph. @ param toRollUp Description of
-   *  Parameter @ param currentLines Description of Parameter @ return
-   *  Description of the Returned Value
+   * Create the x and y data for a chart for a list of users. Each year, month
+   * and year combo for the past 2 months from the beginning of this month are
+   * added together for each user and stored under a new single User object
+   * (hmph) for drawing a line on the graph. @ param toRollUp Description of
+   * Parameter @ param currentLines Description of Parameter @ return
+   * Description of the Returned Value
    *
-   *@param  toRollUp      Description of the Parameter
-   *@param  currentLines  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param toRollUp     Description of the Parameter
+   * @param currentLines Description of the Parameter
+   * @return Description of the Return Value
    */
   private UserList calculateLine(UserList toRollUp, UserList currentLines) {
     if (toRollUp.size() == 0) {
@@ -1906,38 +1768,36 @@ public final class Sales extends CFSModule {
     while (x.hasNext()) {
       User thisUser = (User) x.next();
       for (int count = 0; count < 8; count++) {
-        thisLine.getLccr().setValue(
-            valKeys[count], thisUser.getLccr().getValue(valKeys[count]));
+        thisLine.getLccr().setValue(valKeys[count], thisUser.getLccr().getValue(valKeys[count]));
+        //System.out.println("UserId " + thisUser.getId() + " Date:" + valKeys[count] +"   Value: "+ thisUser.getLccr().getValue(valKeys[count]).toString());
       }
     }
     currentLines.add(thisLine);
     return currentLines;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  y  Description of the Parameter
-   *@param  m  Description of the Parameter
-   *@param  d  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param y Description of the Parameter
+   * @param m Description of the Parameter
+   * @param d Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.util.Date createDate(int y, int m, int d) {
     GregorianCalendar calendar = new GregorianCalendar(y, m, d, 0, 0, 0);
     return calendar.getTime();
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context         Description of the Parameter
-   *@param  currentContact  Description of the Parameter
-   *@param  owner           Description of the Parameter
-   *@param  type            Description of the Parameter
-   *@return                 Description of the Return Value
-   *@exception  Exception   Description of the Exception
+   * @param context        Description of the Parameter
+   * @param currentContact Description of the Parameter
+   * @param owner          Description of the Parameter
+   * @param type           Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean sendEmail(ActionContext context, Connection db, Contact currentContact, int owner, String type) throws Exception {
     User user = this.getUser(context, owner);
@@ -1947,8 +1807,7 @@ public final class Sales extends CFSModule {
     if (type != null && !"".equals(type) && user.getId() == this.getUserId(context)) {
       return true;
     }
-    String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(
-        context) + ".xml";
+    String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(context) + ".xml";
     if (!FileUtils.fileExists(templateFile)) {
       templateFile = getDbNamePath(context) + "templates_en_US.xml";
     }
@@ -1973,12 +1832,11 @@ public final class Sales extends CFSModule {
     return true;
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandReports(ActionContext context) {
     if (!(hasPermission(context, "sales-reports-view"))) {
@@ -1990,8 +1848,7 @@ public final class Sales extends CFSModule {
     files.setLinkModuleId(Constants.DOCUMENTS_SALES_REPORTS);
     files.setLinkItemId(-1);
 
-    PagedListInfo rptListInfo = this.getPagedListInfo(
-        context, "salesRptListInfo");
+    PagedListInfo rptListInfo = this.getPagedListInfo(context, "salesRptListInfo");
     rptListInfo.setLink("Sales.do?command=Reports");
     files.setPagedListInfo(rptListInfo);
 
@@ -2014,12 +1871,11 @@ public final class Sales extends CFSModule {
     return ("ReportsOK");
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
     if (!hasPermission(context, "sales-reports-add")) {
@@ -2048,12 +1904,11 @@ public final class Sales extends CFSModule {
     return ("GenerateFormOK");
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandExportReport(ActionContext context) {
     if (!hasPermission(context, "sales-reports-add")) {
@@ -2065,26 +1920,24 @@ public final class Sales extends CFSModule {
     String sourceCode = context.getRequest().getParameter("sourceCode");
     String industryCode = context.getRequest().getParameter("industryCode");
 
-    //setup file stuff
+    // setup file stuff
     String filePath = this.getPath(context, "sales-reports");
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
     String datePathToUse1 = formatter1.format(new java.util.Date());
     SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
     String datePathToUse2 = formatter2.format(new java.util.Date());
     filePath += datePathToUse1 + fs + datePathToUse2 + fs;
-    //Prepare the report
+    // Prepare the report
     ContactReport leadReport = new ContactReport();
     leadReport.setType(Contact.LEAD_TYPE);
 
-    leadReport.setCriteria(
-        context.getRequest().
-        getParameterValues("selectedList"));
+    leadReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
 
     leadReport.setFilePath(filePath);
     leadReport.setSubject(subject);
     leadReport.setUserId(this.getUserId(context));
-    
-    //build only leads
+
+    // build only leads
     leadReport.setLeadStatus(leadStatus);
     if (Integer.parseInt(leadStatus) == Contact.LEAD_WORKED) {
       leadReport.setLeadsOnly(Constants.FALSE);
@@ -2098,7 +1951,7 @@ public final class Sales extends CFSModule {
     }
     leadReport.setLeadStatusExists(Constants.TRUE);
 
-    //Prepare the pagedList to provide sorting
+    // Prepare the pagedList to provide sorting
     PagedListInfo thisInfo = new PagedListInfo();
     thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
     thisInfo.setItemsPerPage(0);
@@ -2108,7 +1961,7 @@ public final class Sales extends CFSModule {
     if (this.getUserSiteId(context) == -1) {
       leadReport.setIncludeAllSites(true);
     }
-    //Check the form selections and criteria
+    // Check the form selections and criteria
     if (sourceCode != null) {
       leadReport.setSource(sourceCode);
     }
@@ -2116,14 +1969,14 @@ public final class Sales extends CFSModule {
       leadReport.setIndustry(industryCode);
     }
     leadReport.setControlledHierarchyOnly(true, this.getUserRange(context));
-    
+
     try {
       db = this.getConnection(context);
-      //builds list also
+      // builds list also
       leadReport.buildReportFull(db, this.getUserTable(context));
       leadReport.setEnteredBy(getUserId(context));
       leadReport.setModifiedBy(getUserId(context));
-      //TODO: set owner, enteredby, and modified names
+      // TODO: set owner, enteredby, and modified names
       leadReport.saveAndInsert(db);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -2134,12 +1987,11 @@ public final class Sales extends CFSModule {
     return executeCommandReports(context);
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
     if (!hasPermission(context, "sales-reports-view")) {
@@ -2151,8 +2003,7 @@ public final class Sales extends CFSModule {
     try {
       db = getConnection(context);
       thisItem = new FileItem(db, Integer.parseInt(itemId));
-      String filePath = this.getPath(context, "sales-reports") + getDatePath(
-          thisItem.getEntered()) + thisItem.getFilename() + ".html";
+      String filePath = this.getPath(context, "sales-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       String textToShow = includeFile(filePath);
       context.getRequest().setAttribute("ReportText", textToShow);
     } catch (Exception errorMessage) {
@@ -2167,12 +2018,11 @@ public final class Sales extends CFSModule {
     return ("ReportHtmlOK");
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
     if (!(hasPermission(context, "sales-reports-view"))) {
@@ -2183,8 +2033,7 @@ public final class Sales extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      thisItem = new FileItem(
-          db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_SALES_REPORTS);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_SALES_REPORTS);
       if (!hasAuthority(context, thisItem.getEnteredBy())) {
         return ("PermissionError");
       }
@@ -2194,26 +2043,25 @@ public final class Sales extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    //Start the download
+    // Start the download
     try {
       FileItem itemToDownload = null;
       itemToDownload = thisItem;
-      //itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "sales-reports") + getDatePath(
-          itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
+      // itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "sales-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
       if (fileDownload.fileExists()) {
         fileDownload.sendFile(context);
-        //Get a db connection now that the download is complete
+        // Get a db connection now that the download is complete
         db = getConnection(context);
         itemToDownload.updateCounter(db);
       } else {
         System.err.println("PMF-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
-      //User either canceled the download or lost connection
+      // User either canceled the download or lost connection
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -2223,12 +2071,11 @@ public final class Sales extends CFSModule {
     return ("-none-");
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
     if (!(hasPermission(context, "sales-reports-delete"))) {
@@ -2239,24 +2086,20 @@ public final class Sales extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      FileItem thisItem = new FileItem(
-          db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_SALES_REPORTS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_SALES_REPORTS);
       if (!hasAuthority(context, thisItem.getEnteredBy())) {
         return ("PermissionError");
       }
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(
-            db, this.getPath(context, "sales-reports"));
+        recordDeleted = thisItem.delete(db, this.getPath(context, "sales-reports"));
 
-        String filePath1 = this.getPath(context, "sales-reports") + getDatePath(
-            thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+        String filePath1 = this.getPath(context, "sales-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
         java.io.File fileToDelete1 = new java.io.File(filePath1);
         if (!fileToDelete1.delete()) {
           System.err.println("FileItem-> Tried to delete file: " + filePath1);
         }
 
-        String filePath2 = this.getPath(context, "sales-reports") + getDatePath(
-            thisItem.getEntered()) + thisItem.getFilename() + ".html";
+        String filePath2 = this.getPath(context, "sales-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
         java.io.File fileToDelete2 = new java.io.File(filePath2);
         if (!fileToDelete2.delete()) {
           System.err.println("FileItem-> Tried to delete file: " + filePath2);
@@ -2275,15 +2118,15 @@ public final class Sales extends CFSModule {
       return ("DeleteReportERROR");
     }
   }
-  private static void copyPropertiesFromContactToOrganization(Contact from, Organization to){
-    to.setRevenue( from.getRevenue() );
-    to.setEmployees( from.getEmployees() );
-    to.setDunsType( from.getDunsType() );
-    to.setYearStarted( from.getYearStarted() );
-    to.setDunsNumber( from.getDunsNumber() );
-    to.setBusinessNameTwo( from.getBusinessNameTwo() );
-    to.setSicCode( from.getSicCode() );
+
+  private static void copyPropertiesFromContactToOrganization(Contact from, Organization to) {
+    to.setRevenue(from.getRevenue());
+    to.setEmployees(from.getEmployees());
+    to.setDunsType(from.getDunsType());
+    to.setYearStarted(from.getYearStarted());
+    to.setDunsNumber(from.getDunsNumber());
+    to.setBusinessNameTwo(from.getBusinessNameTwo());
+    to.setSicCode(from.getSicCode());
   }
 
 }
-

@@ -915,6 +915,7 @@ public class ProductCatalogImports extends CFSModule {
         context.getRequest().setAttribute("ImportDetails", thisImport);
 
         ProductCatalogList thisList = new  ProductCatalogList();
+        thisList.setDetermineCategory(true);
         thisList.setPagedListInfo(pagedListInfo);
         pagedListInfo.setSearchCriteria(thisList, context);
         thisList.setImportId(Integer.parseInt(importId));

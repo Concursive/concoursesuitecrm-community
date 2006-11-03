@@ -121,7 +121,7 @@
   <target name="init.servlet4.exists" depends="init.environment"
           if="TYPE.CATALINA">
     <available file="${CATALINA_HOME}/common/lib/servlet.jar"
-               property="build.servlet4.present"/>
+      property="build.servlet4.present"/>
   </target>
   <target name="init.servlet4.set" depends="init.servlet4.exists"
           if="build.servlet4.present">

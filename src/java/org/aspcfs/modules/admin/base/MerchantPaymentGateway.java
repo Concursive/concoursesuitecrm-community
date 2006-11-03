@@ -348,10 +348,9 @@ public class MerchantPaymentGateway extends GenericBean {
    */
   public int insert(Connection db) throws SQLException {
     int result = 0;
-    id = DatabaseUtils.getNextSeq(db, "creditcard_creditcard_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "merchant_payment_gateway_merchant_payment_gateway_id_seq");
     StringBuffer sql = new StringBuffer();
-    sql
-        .append(" INSERT INTO merchant_payment_gateway(gateway_id, merchant_id, merchant_code,");
+    sql.append("INSERT INTO merchant_payment_gateway(gateway_id, merchant_id, merchant_code,");
     if (id > -1) {
       sql.append("merchant_payment_gateway_id, ");
     }
@@ -393,7 +392,7 @@ public class MerchantPaymentGateway extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "merchant_payment_gateway_seq", id);
+    id = DatabaseUtils.getCurrVal(db, "merchant_payment_gateway_merchant_payment_gateway_id_seq", id);
     result = 1;
     return result;
   }

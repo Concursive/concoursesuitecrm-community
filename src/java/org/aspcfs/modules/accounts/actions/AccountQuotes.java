@@ -884,8 +884,8 @@ public final class AccountQuotes extends CFSModule {
         ticket = new Ticket(db, ticketId);
         ProductCatalog product = new ProductCatalog(db, productId);
         quote.setProductId(product.getId());
-        quote.setShortDescription(
-            product.getCategoryName() + ", " + product.getName() + ": ");
+        product.determineCategory(db);
+        quote.setShortDescription(product.getCategoryName() + ", " + product.getName() + ": ");
         //if the ticket is not for a new ad design, retrieve the customer product from the database
         if (!ticket.getProblem().equals("New Ad Design Request") && ticket.getCustomerProductId() != -1) {
           CustomerProduct customerProduct = new CustomerProduct(

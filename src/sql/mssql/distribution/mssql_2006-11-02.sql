@@ -144,6 +144,8 @@ create index pcategory_thumbnail_image_id on product_category (thumbnail_image_i
 
 create index pcategory_type_id on product_category (type_id);
 
+create index product_pricing_product_idx on  product_catalog_pricing (product_id);
+
 create index contact_access_type on contact  (access_type);
 
 create index contact_assistant on contact  (assistant);

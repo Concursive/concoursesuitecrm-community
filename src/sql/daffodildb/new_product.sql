@@ -294,7 +294,7 @@ CREATE TABLE product_option_values (
   msrp_currency INTEGER REFERENCES lookup_currency(code),
   msrp_amount FLOAT DEFAULT 0 NOT NULL ,
   price_currency INTEGER REFERENCES lookup_currency(code),
-  price_amount FLOAT DEFAULT 0 NOT NULL , 
+  price_amount FLOAT DEFAULT 0 NOT NULL ,
   recurring_currency INTEGER REFERENCES lookup_currency(code),
   recurring_amount FLOAT DEFAULT 0 NOT NULL ,
   recurring_type INTEGER REFERENCES lookup_recurring_type(code),
@@ -304,7 +304,7 @@ CREATE TABLE product_option_values (
   range_min INTEGER DEFAULT 1,
   range_max INTEGER DEFAULT 1,
   cost_currency INTEGER REFERENCES lookup_currency(code),
-  cost_amount FLOAT DEFAULT 0 NOT NULL 
+  cost_amount FLOAT DEFAULT 0 NOT NULL
 );
 CREATE INDEX idx_pr_opt_val ON product_option_values (option_id, result_id);
 
@@ -313,7 +313,7 @@ CREATE SEQUENCE product_option_map_product_option_id_seq;
 CREATE TABLE product_option_map (
   product_option_id INT PRIMARY KEY,
   product_id INTEGER REFERENCES product_catalog(product_id) NOT NULL ,
-  option_id INTEGER REFERENCES product_option(option_id) NOT NULL 
+  option_id INTEGER REFERENCES product_option(option_id) NOT NULL
 );
 
 -- For each option, there are structure fields specified by the configurator
@@ -361,7 +361,7 @@ CREATE TABLE lookup_product_keyword (
 
 CREATE TABLE product_keyword_map (
   product_id INTEGER REFERENCES product_catalog(product_id) NOT NULL ,
-  keyword_id INTEGER REFERENCES lookup_product_keyword(code) NOT NULL 
+  keyword_id INTEGER REFERENCES lookup_product_keyword(code) NOT NULL
 );
 CREATE INDEX idx_pr_key_map ON product_keyword_map (product_id, keyword_id);
 
@@ -378,7 +378,7 @@ create index pcatalog_name on product_catalog (product_name);
 create index product_category_map_cid on product_catalog_category_map (category_id);
 
 create index pcatalog_enteredby on product_catalog (enteredby);
-      
+
 create index pcatalog_estimated_ship_time on product_catalog (estimated_ship_time);
 
 create index pcatalog_format_id on product_catalog (format_id);
@@ -415,4 +415,5 @@ create index pcategory_thumbnail_image_id on product_category (thumbnail_image_i
 
 create index pcategory_type_id on product_category (type_id);
 
-
+create index product_pricing_product_idx on  product_catalog_pricing (product_id);
+

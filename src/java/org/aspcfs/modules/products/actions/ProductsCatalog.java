@@ -23,6 +23,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.products.base.*;
 import org.aspcfs.modules.products.configurator.OptionConfigurator;
+import org.aspcfs.modules.products.utils.ProductCategoryCounter;
 import org.aspcfs.modules.quotes.base.*;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -180,11 +181,11 @@ public final class ProductsCatalog extends CFSModule {
         productList.setHasCategories(Constants.FALSE);
       }
       categoryList.buildList(db);
-      if (categoryList.size() > 0) {
-        categoryList.removeNonProductCategories(db);
+      if (categoryList.size() > 0) {        
+        categoryList.removeNonProductCategories(ProductCategoryCounter.getProductCategoryCounter(db));
       }
       productList.setActive(Constants.TRUE);
-      productList.setBuildResources(true);
+      productList.setBuildResources(false);
       productList.setBuildActivePrice(true);
       productList.setBuildActiveProductsOnly(Constants.TRUE);
       productList.buildList(db);
@@ -200,7 +201,7 @@ public final class ProductsCatalog extends CFSModule {
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
       return ("SystemError");
-    } finally {
+    } finally {      
       this.freeConnection(context, db);
     }
     return "CategoriesOK";
