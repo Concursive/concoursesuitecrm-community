@@ -21,8 +21,6 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.IndexEvent;
 import com.zeroio.iteam.base.Project;
 import com.zeroio.iteam.base.TeamMember;
-import com.zeroio.iteam.utils.ProjectUtils;
-
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
@@ -37,8 +35,8 @@ import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.beans.ModuleBean;
 import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.modules.communications.base.CampaignUserGroupMapList;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.documents.base.DocumentStore;
 import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
 import org.aspcfs.modules.login.beans.UserBean;
@@ -64,32 +62,32 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- *  Base class for all modules
+ * Base class for all modules
  *
- * @author     mrajkowski
- * @created    July 15, 2001
- * @version    $Id: CFSModule.java,v 1.34.2.2 2002/12/20 22:22:40 mrajkowski Exp
- *      $
+ * @author mrajkowski
+ * @version $Id: CFSModule.java,v 1.34.2.2 2002/12/20 22:22:40 mrajkowski Exp
+ *          $
+ * @created July 15, 2001
  */
 public class CFSModule {
 
   public final static String fs = System.getProperty("file.separator");
   public final static String NOT_UPDATED_MESSAGE =
       "<b>This record could not be updated because someone else updated it first.</b><p>" +
-      "You can hit the back button to review the changes that could not be committed, " +
-      "but you must reload the record and make the changes again.";
+          "You can hit the back button to review the changes that could not be committed, " +
+          "but you must reload the record and make the changes again.";
 
 
   /**
-   *  This is the default call by all actions if a command= paramter is not
-   *  passed along with the request. Descendant classes should override this
-   *  method to carry out default behavior that should occur BEFORE the initial
-   *  JSP page is displayed. This is most useful when the initial page needs to
-   *  show a list of items that are populated from the database, such as a
-   *  drop-down list of activity for a client, etc.
+   * This is the default call by all actions if a command= paramter is not
+   * passed along with the request. Descendant classes should override this
+   * method to carry out default behavior that should occur BEFORE the initial
+   * JSP page is displayed. This is most useful when the initial page needs to
+   * show a list of items that are populated from the database, such as a
+   * drop-down list of activity for a client, etc.
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     return "DefaultOK";
@@ -97,12 +95,12 @@ public class CFSModule {
 
 
   /**
-   *  Gets the PagedListInfo attribute of the CFSModule object
+   * Gets the PagedListInfo attribute of the CFSModule object
    *
-   * @param  context   Description of Parameter
-   * @param  viewName  Description of Parameter
-   * @return           The PagedListInfo value
-   * @since            1.1
+   * @param context  Description of Parameter
+   * @param viewName Description of Parameter
+   * @return The PagedListInfo value
+   * @since 1.1
    */
   protected PagedListInfo getPagedListInfo(ActionContext context, String viewName) {
     return getPagedListInfo(context, viewName, true);
@@ -110,14 +108,14 @@ public class CFSModule {
 
 
   /**
-   *  Retrieves the specified PagedList object and creates it if it does not
-   *  exist<br>
-   *  Optionally sets parameters from the request based on "setParams" parameter
+   * Retrieves the specified PagedList object and creates it if it does not
+   * exist<br>
+   * Optionally sets parameters from the request based on "setParams" parameter
    *
-   * @param  context    Description of the Parameter
-   * @param  viewName   Description of the Parameter
-   * @param  setParams  Description of the Parameter
-   * @return            The pagedListInfo value
+   * @param context   Description of the Parameter
+   * @param viewName  Description of the Parameter
+   * @param setParams Description of the Parameter
+   * @return The pagedListInfo value
    */
   protected PagedListInfo getPagedListInfo(ActionContext context, String viewName, boolean setParams) {
     PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(
@@ -135,13 +133,13 @@ public class CFSModule {
 
 
   /**
-   *  Get the pagedListInfo, if it doesn't already exist then set the default
-   *  items per page
+   * Get the pagedListInfo, if it doesn't already exist then set the default
+   * items per page
    *
-   * @param  context
-   * @param  viewName
-   * @param  defaultItemsPerPage
-   * @return                      pagedListInfo value
+   * @param context
+   * @param viewName
+   * @param defaultItemsPerPage
+   * @return pagedListInfo value
    */
   protected PagedListInfo getPagedListInfo(ActionContext context, String viewName, int defaultItemsPerPage) {
     PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(
@@ -160,13 +158,13 @@ public class CFSModule {
 
 
   /**
-   *  Returns the ViewpointInfo object setting the required parameters <br>
-   *  Creates the object and stores it in the session if it's not already in
-   *  there.
+   * Returns the ViewpointInfo object setting the required parameters <br>
+   * Creates the object and stores it in the session if it's not already in
+   * there.
    *
-   * @param  context   Description of the Parameter
-   * @param  viewName  Description of the Parameter
-   * @return           The viewpointInfo value
+   * @param context  Description of the Parameter
+   * @param viewName Description of the Parameter
+   * @return The viewpointInfo value
    */
   protected ViewpointInfo getViewpointInfo(ActionContext context, String viewName) {
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -189,13 +187,13 @@ public class CFSModule {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the CFSModule object
+   * Gets the pagedListInfo attribute of the CFSModule object
    *
-   * @param  context        Description of the Parameter
-   * @param  viewName       Description of the Parameter
-   * @param  defaultColumn  Description of the Parameter
-   * @param  defaultOrder   Description of the Parameter
-   * @return                The pagedListInfo value
+   * @param context       Description of the Parameter
+   * @param viewName      Description of the Parameter
+   * @param defaultColumn Description of the Parameter
+   * @param defaultOrder  Description of the Parameter
+   * @return The pagedListInfo value
    */
   protected PagedListInfo getPagedListInfo(ActionContext context, String viewName, String defaultColumn, String defaultOrder) {
     PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(
@@ -213,12 +211,12 @@ public class CFSModule {
 
 
   /**
-   *  Retrieves a connection from the connection pool
+   * Retrieves a connection from the connection pool
    *
-   * @param  context        Description of Parameter
-   * @return                The Connection value
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param context Description of Parameter
+   * @return The Connection value
+   * @throws SQLException Description of Exception
+   * @since 1.1
    */
   protected Connection getConnection(ActionContext context) throws SQLException {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -228,12 +226,12 @@ public class CFSModule {
 
 
   /**
-   *  Gets the connection attribute of the CFSModule object
+   * Gets the connection attribute of the CFSModule object
    *
-   * @param  context        Description of the Parameter
-   * @param  ce             Description of the Parameter
-   * @return                The connection value
-   * @throws  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param ce      Description of the Parameter
+   * @return The connection value
+   * @throws SQLException Description of the Exception
    */
   protected Connection getConnection(ActionContext context, ConnectionElement ce) throws SQLException {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
@@ -243,11 +241,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the UserId attribute of the CFSModule object
+   * Gets the UserId attribute of the CFSModule object
    *
-   * @param  context  Description of Parameter
-   * @return          The UserId value
-   * @since           1.7
+   * @param context Description of Parameter
+   * @return The UserId value
+   * @since 1.7
    */
   public int getUserId(ActionContext context) {
     return UserUtils.getUserId(context.getRequest());
@@ -255,10 +253,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the actualUserId attribute of the CFSModule object
+   * Gets the actualUserId attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @return          The actualUserId value
+   * @param context Description of the Parameter
+   * @return The actualUserId value
    */
   protected int getActualUserId(ActionContext context) {
     return ((UserBean) context.getSession().getAttribute("User")).getActualUserId();
@@ -266,10 +264,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the UserRange attribute of the CFSModule object
+   * Gets the UserRange attribute of the CFSModule object
    *
-   * @param  context  Description of Parameter
-   * @return          The UserRange value
+   * @param context Description of Parameter
+   * @return The UserRange value
    */
   protected String getUserRange(ActionContext context) {
     return UserUtils.getUserIdRange(context.getRequest());
@@ -277,10 +275,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the userSiteId attribute of the CFSModule object
+   * Gets the userSiteId attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @return          The userSiteId value
+   * @param context Description of the Parameter
+   * @return The userSiteId value
    */
   public int getUserSiteId(ActionContext context) {
     return UserUtils.getUserSiteId(context.getRequest());
@@ -288,11 +286,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the comma-delimited list of users for the specified siteId
+   * Gets the comma-delimited list of users for the specified siteId
    *
-   * @param  context  Description of the Parameter
-   * @param  siteId   Description of the Parameter
-   * @return          The siteUserRange value
+   * @param context Description of the Parameter
+   * @param siteId  Description of the Parameter
+   * @return The siteUserRange value
    */
   protected String getSiteUserRange(ActionContext context, int siteId) {
     return getSystemStatus(context).getSiteIdRange(siteId);
@@ -300,11 +298,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the userRange attribute of the CFSModule object
+   * Gets the userRange attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @param  userId   Description of the Parameter
-   * @return          The userRange value
+   * @param context Description of the Parameter
+   * @param userId  Description of the Parameter
+   * @return The userRange value
    */
   protected String getUserRange(ActionContext context, int userId) {
     User userRecord = this.getUser(context, userId);
@@ -316,10 +314,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the NameLast attribute of the CFSModule object
+   * Gets the NameLast attribute of the CFSModule object
    *
-   * @param  context  Description of Parameter
-   * @return          The NameLast value
+   * @param context Description of Parameter
+   * @return The NameLast value
    */
   protected String getNameLast(ActionContext context) {
     return ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameLast();
@@ -327,10 +325,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the NameFirst attribute of the CFSModule object
+   * Gets the NameFirst attribute of the CFSModule object
    *
-   * @param  context  Description of Parameter
-   * @return          The NameFirst value
+   * @param context Description of Parameter
+   * @return The NameFirst value
    */
   protected String getNameFirst(ActionContext context) {
     return ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameFirst();
@@ -338,10 +336,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the systemStatus attribute of the CFSModule object
+   * Gets the systemStatus attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @return          The systemStatus value
+   * @param context Description of the Parameter
+   * @return The systemStatus value
    */
   protected SystemStatus getSystemStatus(ActionContext context) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -351,11 +349,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the systemStatus attribute of the CFSModule object
+   * Gets the systemStatus attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @param  ce       Description of the Parameter
-   * @return          The systemStatus value
+   * @param context Description of the Parameter
+   * @param ce      Description of the Parameter
+   * @return The systemStatus value
    */
   protected SystemStatus getSystemStatus(ActionContext context, ConnectionElement ce) {
     if (ce != null) {
@@ -371,11 +369,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the User attribute of the CFSModule object
+   * Gets the User attribute of the CFSModule object
    *
-   * @param  context  Description of Parameter
-   * @param  userId   Description of Parameter
-   * @return          The User value
+   * @param context Description of Parameter
+   * @param userId  Description of Parameter
+   * @return The User value
    */
   public User getUser(ActionContext context, int userId) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -387,10 +385,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the userTable attribute of the CFSModule object
+   * Gets the userTable attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @return          The userTable value
+   * @param context Description of the Parameter
+   * @return The userTable value
    */
   protected Hashtable getUserTable(ActionContext context) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -402,11 +400,11 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context     Description of the Parameter
-   * @param  permission  Description of the Parameter
-   * @return             Description of the Return Value
+   * @param context    Description of the Parameter
+   * @param permission Description of the Parameter
+   * @return Description of the Return Value
    */
   protected boolean hasPermission(ActionContext context, String permission) {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
@@ -416,10 +414,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sourceFile  Description of the Parameter
-   * @return             Description of the Return Value
+   * @param sourceFile Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String includeFile(String sourceFile) {
     StringBuffer HTMLBuffer = new StringBuffer();
@@ -440,10 +438,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the DbName attribute of the CFSModule object
+   * Gets the DbName attribute of the CFSModule object
    *
-   * @param  context  Description of Parameter
-   * @return          The DbName value
+   * @param context Description of Parameter
+   * @return The DbName value
    */
   public static String getDbName(ActionContext context) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -457,10 +455,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the dbName attribute of the CFSModule class
+   * Gets the dbName attribute of the CFSModule class
    *
-   * @param  ce  Description of the Parameter
-   * @return     The dbName value
+   * @param ce Description of the Parameter
+   * @return The dbName value
    */
   public static String getDbName(ConnectionElement ce) {
     if (ce != null) {
@@ -472,10 +470,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the Path attribute of the CFSModule object
+   * Gets the Path attribute of the CFSModule object
    *
-   * @param  context  Description of Parameter
-   * @return          The Path value
+   * @param context Description of Parameter
+   * @return The Path value
    */
   protected String getPath(ActionContext context) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -485,11 +483,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the path attribute of the CFSModule object
+   * Gets the path attribute of the CFSModule object
    *
-   * @param  context           Description of the Parameter
-   * @param  moduleFolderName  Description of the Parameter
-   * @return                   The path value
+   * @param context          Description of the Parameter
+   * @param moduleFolderName Description of the Parameter
+   * @return The path value
    */
   protected String getPath(ActionContext context, String moduleFolderName) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -501,12 +499,12 @@ public class CFSModule {
 
 
   /**
-   *  Gets the path attribute of the CFSModule object
+   * Gets the path attribute of the CFSModule object
    *
-   * @param  context           Description of the Parameter
-   * @param  ce                Description of the Parameter
-   * @param  moduleFolderName  Description of the Parameter
-   * @return                   The path value
+   * @param context          Description of the Parameter
+   * @param ce               Description of the Parameter
+   * @param moduleFolderName Description of the Parameter
+   * @return The path value
    */
   protected String getPath(ActionContext context, ConnectionElement ce, String moduleFolderName) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -518,10 +516,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the dbNamePath attribute of the CFSModule class
+   * Gets the dbNamePath attribute of the CFSModule class
    *
-   * @param  context  Description of the Parameter
-   * @return          The dbNamePath value
+   * @param context Description of the Parameter
+   * @return The dbNamePath value
    */
   public static String getDbNamePath(ActionContext context) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -531,10 +529,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the datePath attribute of the CFSModule class
+   * Gets the datePath attribute of the CFSModule class
    *
-   * @param  fileDate  Description of the Parameter
-   * @return           The datePath value
+   * @param fileDate Description of the Parameter
+   * @return The datePath value
    */
   public static String getDatePath(java.util.Date fileDate) {
     return DateUtils.getDatePath(fileDate);
@@ -542,10 +540,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the DatePath attribute of the CFSModule object
+   * Gets the DatePath attribute of the CFSModule object
    *
-   * @param  fileDate  Description of Parameter
-   * @return           The DatePath value
+   * @param fileDate Description of Parameter
+   * @return The DatePath value
    */
   public static String getDatePath(java.sql.Timestamp fileDate) {
     return DateUtils.getDatePath(fileDate);
@@ -553,10 +551,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the datePath attribute of the CFSModule class
+   * Gets the datePath attribute of the CFSModule class
    *
-   * @param  filenameDate  Description of the Parameter
-   * @return               The datePath value
+   * @param filenameDate Description of the Parameter
+   * @return The datePath value
    */
   public static String getDatePath(String filenameDate) {
     if (filenameDate.length() > 7) {
@@ -569,10 +567,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the User's TimeZone
+   * Gets the User's TimeZone
    *
-   * @param  context  Description of the Parameter
-   * @return          The userTimeZone value
+   * @param context Description of the Parameter
+   * @return The userTimeZone value
    */
   public TimeZone getUserTimeZone(ActionContext context) {
     TimeZone timeZone = Calendar.getInstance().getTimeZone();
@@ -586,11 +584,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the WEB-INF path and appends the specified directory name
+   * Gets the WEB-INF path and appends the specified directory name
    *
-   * @param  context           Description of the Parameter
-   * @param  moduleFolderName  Description of the Parameter
-   * @return                   The webInfPath value
+   * @param context          Description of the Parameter
+   * @param moduleFolderName Description of the Parameter
+   * @return The webInfPath value
    */
   protected String getWebInfPath(ActionContext context, String moduleFolderName) {
     return (context.getServletContext().getRealPath("/") + "WEB-INF" + fs + moduleFolderName + fs);
@@ -598,11 +596,11 @@ public class CFSModule {
 
 
   /**
-   *  Removes an object from the session
+   * Removes an object from the session
    *
-   * @param  context   Description of Parameter
-   * @param  viewName  Description of Parameter
-   * @since            1.6
+   * @param context  Description of Parameter
+   * @param viewName Description of Parameter
+   * @since 1.6
    */
   protected void deletePagedListInfo(ActionContext context, String viewName) {
     PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(
@@ -614,11 +612,11 @@ public class CFSModule {
 
 
   /**
-   *  Returns a connection back to the connection pool
+   * Returns a connection back to the connection pool
    *
-   * @param  context  Description of Parameter
-   * @param  db       Description of Parameter
-   * @since           1.1
+   * @param context Description of Parameter
+   * @param db      Description of Parameter
+   * @since 1.1
    */
   protected void freeConnection(ActionContext context, Connection db) {
     if (db != null) {
@@ -631,10 +629,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  db       Description of the Parameter
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
    */
   protected void renewConnection(ActionContext context, Connection db) {
     //Connections are usually checked out and expire, this will renew the expiration
@@ -648,12 +646,12 @@ public class CFSModule {
 
 
   /**
-   *  This method adds module specific information to the request.
+   * This method adds module specific information to the request.
    *
-   * @param  context     The feature to be added to the ModuleMenu attribute
-   * @param  actionName  The feature to be added to the ModuleMenu attribute
-   * @param  submenuKey  The feature to be added to the ModuleBean attribute
-   * @since              1.4
+   * @param context    The feature to be added to the ModuleMenu attribute
+   * @param actionName The feature to be added to the ModuleMenu attribute
+   * @param submenuKey The feature to be added to the ModuleBean attribute
+   * @since 1.4
    */
   protected void addModuleBean(ActionContext context, String submenuKey, String actionName) {
     ModuleBean thisModule = new ModuleBean();
@@ -664,11 +662,11 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @param  errors   Description of Parameter
-   * @since           1.7
+   * @param context Description of Parameter
+   * @param errors  Description of Parameter
+   * @since 1.7
    */
   protected void processErrors(ActionContext context, HashMap errors) {
     Iterator i = errors.keySet().iterator();
@@ -704,10 +702,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context   Description of the Parameter
-   * @param  warnings  Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param warnings Description of the Parameter
    */
   protected void processWarnings(ActionContext context, HashMap warnings) {
     Iterator i = warnings.keySet().iterator();
@@ -743,12 +741,12 @@ public class CFSModule {
 
 
   /**
-   *  Call whenever any module modifies anything to do with permissions, for
-   *  example, if a role's permissions are modified.
+   * Call whenever any module modifies anything to do with permissions, for
+   * example, if a role's permissions are modified.
    *
-   * @param  context        Description of Parameter
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param context Description of Parameter
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void updateSystemPermissionCheck(Connection db, ActionContext context) throws SQLException {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -760,14 +758,14 @@ public class CFSModule {
 
 
   /**
-   *  Call whenever any module modifies anything to do with user's data, for
-   *  example, if a user record is updated, or a user's contact info is updated.
-   *  TODO: Add a method for updating just the user's contact info and not the
-   *  whole hierarchy.
+   * Call whenever any module modifies anything to do with user's data, for
+   * example, if a user record is updated, or a user's contact info is updated.
+   * TODO: Add a method for updating just the user's contact info and not the
+   * whole hierarchy.
    *
-   * @param  db             Description of Parameter
-   * @param  context        Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db      Description of Parameter
+   * @param context Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void updateSystemHierarchyCheck(Connection db, ActionContext context) throws SQLException {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -779,10 +777,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  userId   Description of the Parameter
+   * @param context Description of the Parameter
+   * @param userId  Description of the Parameter
    */
   protected void invalidateUserData(ActionContext context, int userId) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -797,10 +795,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  userId   Description of the Parameter
+   * @param context Description of the Parameter
+   * @param userId  Description of the Parameter
    */
   protected void invalidateUserRevenueData(ActionContext context, int userId) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
@@ -813,10 +811,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  userId   Description of Parameter
-   * @param  context  Description of Parameter
+   * @param userId  Description of Parameter
+   * @param context Description of Parameter
    */
   protected void invalidateUserInMemory(int userId, ActionContext context) {
     UserList shortChildList = new UserList();
@@ -846,23 +844,23 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context     Description of the Parameter
-   * @param  iterator  Description of the Parameter
+   * @param context  Description of the Parameter
+   * @param iterator Description of the Parameter
    */
   protected void deleteRecentItems(ActionContext context, Iterator iterator) {
     while (iterator.hasNext()) {
       deleteRecentItem(context, iterator.next());
     }
   }
-  
-  
+
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context     Description of the Parameter
-   * @param  itemObject  Description of the Parameter
+   * @param context    Description of the Parameter
+   * @param itemObject Description of the Parameter
    */
   protected void deleteRecentItem(ActionContext context, Object itemObject) {
     ArrayList recentItems = (ArrayList) context.getSession().getAttribute(
@@ -887,10 +885,10 @@ public class CFSModule {
 
 
   /**
-   *  Builds and adds a RecentItem to the RecentItems list
+   * Builds and adds a RecentItem to the RecentItems list
    *
-   * @param  context     The feature to be added to the RecentItem attribute
-   * @param  itemObject  The feature to be added to the RecentItem attribute
+   * @param context    The feature to be added to the RecentItem attribute
+   * @param itemObject The feature to be added to the RecentItem attribute
    */
   protected void addRecentItem(ActionContext context, Object itemObject) {
     ArrayList recentItems = (ArrayList) context.getSession().getAttribute(
@@ -924,11 +922,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the recentItem attribute of the CFSModule object
+   * Gets the recentItem attribute of the CFSModule object
    *
-   * @param  itemObject  Description of the Parameter
-   * @param  context     Description of the Parameter
-   * @return             The recentItem value
+   * @param itemObject Description of the Parameter
+   * @param context    Description of the Parameter
+   * @return The recentItem value
    */
   public RecentItem getRecentItem(ActionContext context, Object itemObject) {
     //Build the recent item object
@@ -1015,11 +1013,11 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  text                  Description of the Parameter
-   * @param  filename              Description of the Parameter
-   * @throws  java.io.IOException  Description of the Exception
+   * @param text     Description of the Parameter
+   * @param filename Description of the Parameter
+   * @throws java.io.IOException Description of the Exception
    */
   public static void saveTextFile(String text, String filename) throws java.io.IOException {
     File outputFile = new File(filename);
@@ -1030,11 +1028,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the dynamicForm attribute of the CFSModule object
+   * Gets the dynamicForm attribute of the CFSModule object
    *
-   * @param  context   Description of the Parameter
-   * @param  formName  Description of the Parameter
-   * @return           The dynamicForm value
+   * @param context  Description of the Parameter
+   * @param formName Description of the Parameter
+   * @return The dynamicForm value
    */
   public CustomForm getDynamicForm(ActionContext context, String formName) {
     CustomForm thisForm = new CustomForm();
@@ -1048,10 +1046,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  object   Description of the Parameter
+   * @param context Description of the Parameter
+   * @param object  Description of the Parameter
    */
   protected void processInsertHook(ActionContext context, Object object) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
@@ -1064,11 +1062,11 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context         Description of the Parameter
-   * @param  previousObject  Description of the Parameter
-   * @param  object          Description of the Parameter
+   * @param context        Description of the Parameter
+   * @param previousObject Description of the Parameter
+   * @param object         Description of the Parameter
    */
   protected void processUpdateHook(ActionContext context, Object previousObject, Object object) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
@@ -1081,10 +1079,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context         Description of the Parameter
-   * @param  previousObject  Description of the Parameter
+   * @param context        Description of the Parameter
+   * @param previousObject Description of the Parameter
    */
   protected void processDeleteHook(ActionContext context, Object previousObject) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute(
@@ -1097,12 +1095,12 @@ public class CFSModule {
 
 
   /**
-   *  Checks that ownerId is the current user or in the current user's
-   *  hierarchy.
+   * Checks that ownerId is the current user or in the current user's
+   * hierarchy.
    *
-   * @param  context  Description of the Parameter
-   * @param  ownerId  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @param ownerId Description of the Parameter
+   * @return Description of the Return Value
    */
   protected boolean hasAuthority(ActionContext context, int ownerId) {
     int userId = this.getUserId(context);
@@ -1116,13 +1114,13 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  campaignId          Description of the Parameter
-   * @param  userId            Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param campaignId Description of the Parameter
+   * @param userId     Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected boolean hasCampaignUserGroupAccess(Connection db, int campaignId, int userId) throws SQLException {
     if (campaignId <= 0) {
@@ -1140,13 +1138,13 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context           Description of the Parameter
-   * @param  db                Description of the Parameter
-   * @param  campaign          Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param context  Description of the Parameter
+   * @param db       Description of the Parameter
+   * @param campaign Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected boolean hasCampaignUserGroupAccess(ActionContext context, Connection db, Campaign campaign) throws SQLException {
     int userId = this.getUserId(context);
@@ -1156,15 +1154,15 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context        Description of the Parameter
-   * @param  permName       Description of the Parameter
-   * @param  owner          Description of the Parameter
-   * @param  vpUser         Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param context  Description of the Parameter
+   * @param permName Description of the Parameter
+   * @param owner    Description of the Parameter
+   * @param vpUser   Description of the Parameter
+   * @param db       Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean hasViewpointAuthority(Connection db, ActionContext context, String permName, int owner, int vpUser) throws SQLException {
     //check if user has authority
@@ -1196,13 +1194,13 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @param  thisElt        Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @param thisElt Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean hasAuthority(Connection db, ActionContext context, Object thisElt) throws SQLException {
     try {
@@ -1246,13 +1244,13 @@ public class CFSModule {
 
 
   /**
-   *  Adds a feature to the Viewpoints attribute of the CFSModule object
+   * Adds a feature to the Viewpoints attribute of the CFSModule object
    *
-   * @param  context        The feature to be added to the Viewpoints attribute
-   * @param  permName       The feature to be added to the Viewpoints attribute
-   * @param  db             The feature to be added to the Viewpoints attribute
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param context  The feature to be added to the Viewpoints attribute
+   * @param permName The feature to be added to the Viewpoints attribute
+   * @param db       The feature to be added to the Viewpoints attribute
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public UserList addViewpoints(Connection db, ActionContext context, String permName) throws SQLException {
     UserList userList = new UserList();
@@ -1282,9 +1280,9 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public void invalidateViewpoints(ActionContext context) {
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -1295,12 +1293,12 @@ public class CFSModule {
 
 
   /**
-   *  Tells the SystemStatus to reload the specified user's contact information
+   * Tells the SystemStatus to reload the specified user's contact information
    *
-   * @param  db             Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @param  id             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @param id      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void updateUserContact(Connection db, ActionContext context, int id) throws SQLException {
     if (id > -1) {
@@ -1311,11 +1309,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the return attribute of the CFSModule object
+   * Gets the return attribute of the CFSModule object
    *
-   * @param  context       Description of the Parameter
-   * @param  returnString  Description of the Parameter
-   * @return               The return value
+   * @param context      Description of the Parameter
+   * @param returnString Description of the Parameter
+   * @return The return value
    */
   protected static String getReturn(ActionContext context, String returnString) {
     boolean popup = "true".equals(context.getRequest().getParameter("popup"));
@@ -1327,11 +1325,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the specified preference from the loaded applicationPrefs
+   * Gets the specified preference from the loaded applicationPrefs
    *
-   * @param  context  Description of the Parameter
-   * @param  param    Description of the Parameter
-   * @return          The pref value
+   * @param context Description of the Parameter
+   * @param param   Description of the Parameter
+   * @return The pref value
    */
   protected static String getPref(ActionContext context, String param) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -1347,9 +1345,9 @@ public class CFSModule {
   /**
    * Gets the specified icelet from the loaded applicationPrefs
    *
-   * @param  context  The action context
-   * @param  param    The unique class name for the icelet
-   * @return          The icelet
+   * @param context The action context
+   * @param param   The unique class name for the icelet
+   * @return The icelet
    */
   protected Icelet getIclet(ActionContext context, String param) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -1365,8 +1363,8 @@ public class CFSModule {
   /**
    * Gets the specified icelet from the loaded applicationPrefs
    *
-   * @param  context  The action context
-   * @return          The icelets as a HashMap
+   * @param context The action context
+   * @return The icelets as a HashMap
    */
   protected HashMap getAllIclets(ActionContext context) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -1382,9 +1380,9 @@ public class CFSModule {
   /**
    * Gets the specified icelet preferences from the loaded applicationPrefs
    *
-   * @param  context  The action context
-   * @param  param    The unique class name for the icelet
-   * @return          The pref value
+   * @param context The action context
+   * @param param   The unique class name for the icelet
+   * @return The pref value
    */
   protected IceletPropertyMap getIcletPrefs(ActionContext context, String param) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -1398,12 +1396,12 @@ public class CFSModule {
 
 
   /**
-   *  Gets the parameter value for the specified system preference
+   * Gets the parameter value for the specified system preference
    *
-   * @param  context     Description of the Parameter
-   * @param  configName  Description of the Parameter
-   * @param  param       Description of the Parameter
-   * @return             The systemPref value
+   * @param context    Description of the Parameter
+   * @param configName Description of the Parameter
+   * @param param      Description of the Parameter
+   * @return The systemPref value
    */
   protected String getSystemPref(ActionContext context, String configName, String param) {
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -1412,13 +1410,13 @@ public class CFSModule {
 
 
   /**
-   *  Gets the recordAccessPermitted attribute of the CFSModule class
+   * Gets the recordAccessPermitted attribute of the CFSModule class
    *
-   * @param  context           Description of the Parameter
-   * @param  tmpOrgId          Description of the Parameter
-   * @param  db                Description of the Parameter
-   * @return                   The recordAccessPermitted value
-   * @exception  SQLException  Description of the Exception
+   * @param context  Description of the Parameter
+   * @param tmpOrgId Description of the Parameter
+   * @param db       Description of the Parameter
+   * @return The recordAccessPermitted value
+   * @throws SQLException Description of the Exception
    */
   protected static boolean isRecordAccessPermitted(ActionContext context, Connection db, int tmpOrgId) throws SQLException {
     if (isPortalUser(context)) {
@@ -1444,12 +1442,12 @@ public class CFSModule {
 
 
   /**
-   *  Gets the recordAccessPermitted attribute of the CFSModule class
+   * Gets the recordAccessPermitted attribute of the CFSModule class
    *
-   * @param  context        Description of the Parameter
-   * @param  object         Description of the Parameter
-   * @return                The recordAccessPermitted value
-   * @exception  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @param object  Description of the Parameter
+   * @return The recordAccessPermitted value
+   * @throws Exception Description of the Exception
    */
   protected static boolean isRecordAccessPermitted(ActionContext context, Object object) throws Exception {
     int tmpUserSiteId = UserUtils.getUserSiteId(context.getRequest());
@@ -1473,11 +1471,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the recordAccessPermitted attribute of the CFSModule class
+   * Gets the recordAccessPermitted attribute of the CFSModule class
    *
-   * @param  context  Description of the Parameter
-   * @param  siteId   Description of the Parameter
-   * @return          The recordAccessPermitted value
+   * @param context Description of the Parameter
+   * @param siteId  Description of the Parameter
+   * @return The recordAccessPermitted value
    */
   protected static boolean isSiteAccessPermitted(ActionContext context, String siteId) {
     int tmpUserSiteId = UserUtils.getUserSiteId(context.getRequest());
@@ -1491,10 +1489,10 @@ public class CFSModule {
 
 
   /**
-   *  returns true if the logged in user is a portal user, false otherwise
+   * returns true if the logged in user is a portal user, false otherwise
    *
-   * @param  context  Description of the Parameter
-   * @return          The portalUser value
+   * @param context Description of the Parameter
+   * @return The portalUser value
    */
   protected static boolean isPortalUser(ActionContext context) {
     if (UserUtils.getUserRoleType(context.getRequest()) > 0) {
@@ -1505,11 +1503,11 @@ public class CFSModule {
 
 
   /**
-   *  returns the orgId of the portal user, the portal user is allowed only to
-   *  view the information only of this organization
+   * returns the orgId of the portal user, the portal user is allowed only to
+   * view the information only of this organization
    *
-   * @param  context  Description of the Parameter
-   * @return          The portalUserPermittedOrgId value
+   * @param context Description of the Parameter
+   * @return The portalUserPermittedOrgId value
    */
   protected static int getPortalUserPermittedOrgId(ActionContext context) {
     if (UserUtils.getUserRoleType(context.getRequest()) > 0) {
@@ -1520,13 +1518,13 @@ public class CFSModule {
 
 
   /**
-   *  Gets the userLevel attribute of the CFSModule object
+   * Gets the userLevel attribute of the CFSModule object
    *
-   * @param  context        Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  roleLevel      Description of the Parameter
-   * @return                The userLevel value
-   * @throws  SQLException  Description of the Exception
+   * @param context   Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param roleLevel Description of the Parameter
+   * @return The userLevel value
+   * @throws SQLException Description of the Exception
    */
   protected int getUserLevel(ActionContext context, Connection db, int roleLevel) throws SQLException {
     SystemStatus thisSystem = this.getSystemStatus(context);
@@ -1539,13 +1537,13 @@ public class CFSModule {
 
 
   /**
-   *  Gets the documentStoreUserLevel attribute of the CFSModule object
+   * Gets the documentStoreUserLevel attribute of the CFSModule object
    *
-   * @param  context        Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  roleLevel      Description of the Parameter
-   * @return                The documentStoreUserLevel value
-   * @throws  SQLException  Description of the Exception
+   * @param context   Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param roleLevel Description of the Parameter
+   * @return The documentStoreUserLevel value
+   * @throws SQLException Description of the Exception
    */
   protected int getDocumentStoreUserLevel(ActionContext context, Connection db, int roleLevel) throws SQLException {
     SystemStatus thisSystem = this.getSystemStatus(context);
@@ -1559,13 +1557,13 @@ public class CFSModule {
 
 
   /**
-   *  Gets the roleId attribute of the CFSModule object
+   * Gets the roleId attribute of the CFSModule object
    *
-   * @param  context        Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  userlevel      Description of the Parameter
-   * @return                The roleId value
-   * @throws  SQLException  Description of the Exception
+   * @param context   Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param userlevel Description of the Parameter
+   * @return The roleId value
+   * @throws SQLException Description of the Exception
    */
   protected int getRoleId(ActionContext context, Connection db, int userlevel) throws SQLException {
     SystemStatus thisSystem = this.getSystemStatus(context);
@@ -1578,13 +1576,13 @@ public class CFSModule {
 
 
   /**
-   *  Gets the documentStoreRoleId attribute of the CFSModule object
+   * Gets the documentStoreRoleId attribute of the CFSModule object
    *
-   * @param  context        Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  userlevel      Description of the Parameter
-   * @return                The documentStoreRoleId value
-   * @throws  SQLException  Description of the Exception
+   * @param context   Description of the Parameter
+   * @param db        Description of the Parameter
+   * @param userlevel Description of the Parameter
+   * @return The documentStoreRoleId value
+   * @throws SQLException Description of the Exception
    */
   protected int getDocumentStoreRoleId(ActionContext context, Connection db, int userlevel) throws SQLException {
     SystemStatus thisSystem = this.getSystemStatus(context);
@@ -1598,14 +1596,14 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context        Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @param  thisProject    Description of the Parameter
-   * @param  permission     Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param context     Description of the Parameter
+   * @param db          Description of the Parameter
+   * @param thisProject Description of the Parameter
+   * @param permission  Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected boolean hasProjectAccess(ActionContext context, Connection db, Project thisProject, String permission) throws SQLException {
     // See if the team member has access to perform a project action
@@ -1619,7 +1617,7 @@ public class CFSModule {
       } catch (Exception notValid) {
         // portal user cannot access project unless user is part of project team.
         if (isPortalUser(context)) {
-        		return false;
+          return false;
         }
         // Create a guest
         thisMember = new TeamMember();
@@ -1644,17 +1642,17 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context            Description of the Parameter
-   * @param  db                 Description of the Parameter
-   * @param  thisDocumentStore  Description of the Parameter
-   * @param  permission         Description of the Parameter
-   * @return                    Description of the Return Value
-   * @throws  SQLException      Description of the Exception
+   * @param context           Description of the Parameter
+   * @param db                Description of the Parameter
+   * @param thisDocumentStore Description of the Parameter
+   * @param permission        Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected boolean hasDocumentStoreAccess(ActionContext context, Connection db, DocumentStore thisDocumentStore, String permission) throws SQLException {
-		// See if the team member has access to perform a document store action
+    // See if the team member has access to perform a document store action
     DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) context.getRequest().getAttribute(
         "currentMember");
     if (thisMember == null) {
@@ -1670,14 +1668,14 @@ public class CFSModule {
       } catch (Exception notValid) {
         // portal user cannot access document store unless user is part of document store team.
         if (isPortalUser(context)) {
-        		return false;
+          return false;
         }
         // Create a guest
         thisMember = new DocumentStoreTeamMember();
         thisMember.setDocumentStoreId(thisDocumentStore.getId());
         thisMember.setUserLevel(
             getDocumentStoreUserLevel(
-            context, db, DocumentStoreTeamMember.GUEST));
+                context, db, DocumentStoreTeamMember.GUEST));
         thisMember.setRoleId(DocumentStoreTeamMember.GUEST);
         thisMember.setSiteId(tmpUser.getSiteId());
       }
@@ -1698,11 +1696,11 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  id       Description of the Parameter
-   * @param  title    Description of the Parameter
+   * @param context Description of the Parameter
+   * @param id      Description of the Parameter
+   * @param title   Description of the Parameter
    */
   protected void updateProjectCache(ActionContext context, int id, String title) {
     if (title != null) {
@@ -1718,11 +1716,11 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  id       Description of the Parameter
-   * @param  title    Description of the Parameter
+   * @param context Description of the Parameter
+   * @param id      Description of the Parameter
+   * @param title   Description of the Parameter
    */
   protected void updateDocumentStoreCache(ActionContext context, int id, String title) {
     if (title != null) {
@@ -1742,10 +1740,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the popup attribute of the CFSModule object
+   * Gets the popup attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @return          The popup value
+   * @param context Description of the Parameter
+   * @return The popup value
    */
   protected boolean isPopup(ActionContext context) {
     return ("true".equals(context.getRequest().getParameter("popup")));
@@ -1753,11 +1751,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the directory attribute of the CFSModule object
+   * Gets the directory attribute of the CFSModule object
    *
-   * @param  context       Description of the Parameter
-   * @return               The directory value
-   * @throws  IOException  Description of the Exception
+   * @param context Description of the Parameter
+   * @return The directory value
+   * @throws IOException Description of the Exception
    */
   protected synchronized Directory getDirectory(ActionContext context) throws IOException {
     File path = new File(getDbNamePath(context) + "index");
@@ -1767,12 +1765,12 @@ public class CFSModule {
 
 
   /**
-   *  Gets the directory attribute of the CFSModule object
+   * Gets the directory attribute of the CFSModule object
    *
-   * @param  context       Description of the Parameter
-   * @param  create        Description of the Parameter
-   * @return               The directory value
-   * @throws  IOException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param create  Description of the Parameter
+   * @return The directory value
+   * @throws IOException Description of the Exception
    */
   protected synchronized Directory getDirectory(ActionContext context, boolean create) throws IOException {
     File path = new File(getDbNamePath(context) + "index");
@@ -1781,12 +1779,12 @@ public class CFSModule {
 
 
   /**
-   *  Gets the directory attribute of the CFSModule object
+   * Gets the directory attribute of the CFSModule object
    *
-   * @param  create        Description of the Parameter
-   * @param  path          Description of the Parameter
-   * @return               The directory value
-   * @throws  IOException  Description of the Exception
+   * @param create Description of the Parameter
+   * @param path   Description of the Parameter
+   * @return The directory value
+   * @throws IOException Description of the Exception
    */
   protected synchronized Directory getDirectory(File path, boolean create) throws IOException {
     Directory index = FSDirectory.getDirectory(path, create);
@@ -1801,13 +1799,13 @@ public class CFSModule {
 
 
   /**
-   *  Adds an item to the log.
+   * Adds an item to the log.
    *
-   * @param  context       Description of the Parameter
-   * @param  type          Description of the Parameter
-   * @param  item          Description of the Parameter
-   * @return               Description of the Return Value
-   * @throws  IOException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param type    Description of the Parameter
+   * @param item    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   protected synchronized boolean addLogItem(ActionContext context, String type, Object item) throws IOException {
     if (item == null) {
@@ -1815,8 +1813,8 @@ public class CFSModule {
     }
     Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
     try {
-			//e.g., type=webPageAccessLog
-			((Vector) scheduler.getContext().get(type)).add(item);
+      //e.g., type=webPageAccessLog
+      ((Vector) scheduler.getContext().get(type)).add(item);
       scheduler.triggerJob("logger", Scheduler.DEFAULT_GROUP);
     } catch (Exception e) {
       System.out.println("CFSModule-> Scheduler failed: " + e.getMessage());
@@ -1825,12 +1823,12 @@ public class CFSModule {
   }
 
   /**
-   *  Adds an item to the index. Code licensed from teamelements.com
+   * Adds an item to the index. Code licensed from teamelements.com
    *
-   * @param  context       Description of the Parameter
-   * @param  item          Description of the Parameter
-   * @return               Description of the Return Value
-   * @throws  IOException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param item    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   protected synchronized boolean indexAddItem(ActionContext context, Object item) throws IOException {
     if (item == null) {
@@ -1838,7 +1836,7 @@ public class CFSModule {
     }
     Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
     try {
-      IndexEvent indexEvent = new IndexEvent(item, IndexEvent.ADD);
+      IndexEvent indexEvent = new IndexEvent(item, IndexEvent.ADD, getDbName(context) + fs);
       ((Vector) scheduler.getContext().get("IndexArray")).add(indexEvent);
       scheduler.triggerJob("indexer", Scheduler.DEFAULT_GROUP);
     } catch (Exception e) {
@@ -1849,12 +1847,12 @@ public class CFSModule {
 
 
   /**
-   *  Removes an item from the index. Code licensed from teamelements.com
+   * Removes an item from the index. Code licensed from teamelements.com
    *
-   * @param  context       Description of the Parameter
-   * @param  item          Description of the Parameter
-   * @return               Description of the Return Value
-   * @throws  IOException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param item    Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   protected synchronized boolean indexDeleteItem(ActionContext context, Object item) throws IOException {
     if (item == null) {
@@ -1862,7 +1860,7 @@ public class CFSModule {
     }
     Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute("Scheduler");
     try {
-      IndexEvent indexEvent = new IndexEvent(item, IndexEvent.DELETE);
+      IndexEvent indexEvent = new IndexEvent(item, IndexEvent.DELETE, getDbName(context) + fs);
       ((Vector) scheduler.getContext().get("IndexArray")).add(indexEvent);
       scheduler.triggerJob("indexer", Scheduler.DEFAULT_GROUP);
     } catch (Exception e) {
@@ -1873,11 +1871,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the currentDateAsString attribute of the CFSModule class Fetches the
-   *  current date in based on timezone and locale as string
+   * Gets the currentDateAsString attribute of the CFSModule class Fetches the
+   * current date in based on timezone and locale as string
    *
-   * @param  context  Description of the Parameter
-   * @return          The currentDateAsString value
+   * @param context Description of the Parameter
+   * @return The currentDateAsString value
    */
   public static String getCurrentDateAsString(ActionContext context) {
     String currentDateAsString = "";
@@ -1898,13 +1896,13 @@ public class CFSModule {
 
 
   /**
-   *  Checks to see if the specified object is valid for inserting or updating
+   * Checks to see if the specified object is valid for inserting or updating
    *
-   * @param  context     Description of the Parameter
-   * @param  db          Description of the Parameter
-   * @param  object      Description of the Parameter
-   * @return             Description of the Return Value
-   * @throws  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param object  Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   protected boolean validateObject(ActionContext context, Connection db, Object object) throws Exception {
     ObjectValidator.validate(getSystemStatus(context), db, object);
@@ -1930,14 +1928,14 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context     Description of the Parameter
-   * @param  db          Description of the Parameter
-   * @param  object      Description of the Parameter
-   * @param  map         Description of the Parameter
-   * @return             Description of the Return Value
-   * @throws  Exception  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param object  Description of the Parameter
+   * @param map     Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   protected boolean validateObject(ActionContext context, Connection db, Object object, HashMap map) throws Exception {
     ObjectValidator.validate(getSystemStatus(context), db, object, map);
@@ -1963,13 +1961,13 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  projectId      Description of the Parameter
-   * @param  context        Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @param context   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected Project loadProject(Connection db, int projectId, ActionContext context) throws SQLException {
     // TODO: Implement this when a system admin is defined
@@ -1982,10 +1980,10 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @param  jobName  Description of the Parameter
+   * @param context Description of the Parameter
+   * @param jobName Description of the Parameter
    */
   protected void executeJob(ActionContext context, String jobName) {
     Scheduler scheduler = (Scheduler) context.getServletContext().getAttribute(
@@ -1999,10 +1997,10 @@ public class CFSModule {
 
 
   /**
-   *  Gets the userLanguage attribute of the CFSModule object
+   * Gets the userLanguage attribute of the CFSModule object
    *
-   * @param  context  Description of the Parameter
-   * @return          The userLanguage value
+   * @param context Description of the Parameter
+   * @return The userLanguage value
    */
   protected String getUserLanguage(ActionContext context) {
     User thisUser = getUser(context, getUserId(context));
@@ -2011,11 +2009,11 @@ public class CFSModule {
 
 
   /**
-   *  Gets the userLanguage attribute of the CFSModule object
+   * Gets the userLanguage attribute of the CFSModule object
    *
-   * @param  context   Description of the Parameter
-   * @param  thisUser  Description of the Parameter
-   * @return           The userLanguage value
+   * @param context  Description of the Parameter
+   * @param thisUser Description of the Parameter
+   * @return The userLanguage value
    */
   protected String getUserLanguage(ActionContext context, User thisUser) {
     // See if user has locale

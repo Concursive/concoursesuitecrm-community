@@ -28,14 +28,16 @@ public class IndexEvent {
   public static final int DELETE = 2;
   private Object item = null;
   private int action = UNDEFINED;
+  private String dbName = "";
 
   public IndexEvent() {
 
   }
 
-  public IndexEvent(Object item, int action) {
+  public IndexEvent(Object item, int action, String dbName) {
     this.item = item;
     this.action = action;
+    this.dbName = dbName;
   }
 
   public Object getItem() {
@@ -54,5 +56,12 @@ public class IndexEvent {
     this.action = action;
   }
 
+  public String getDbName() {
+    return dbName;
+  }
+
+  public void setDbName(String dbName) {
+    this.dbName = dbName;
+  }
 }
 

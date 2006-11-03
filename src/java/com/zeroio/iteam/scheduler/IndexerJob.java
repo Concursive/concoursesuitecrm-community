@@ -44,6 +44,7 @@ import java.util.Vector;
  */
 
 public class IndexerJob implements StatefulJob {
+
   public void execute(JobExecutionContext context) throws JobExecutionException {
     SchedulerContext schedulerContext = null;
     try {
@@ -55,40 +56,34 @@ public class IndexerJob implements StatefulJob {
           "ServletContext");
       ApplicationPrefs prefs = (ApplicationPrefs) schedulerContext.get(
           "ApplicationPrefs");
-      int count = 0;
       Vector eventList = (Vector) schedulerContext.get("IndexArray");
       while (eventList.size() > 0) {
-        ++count;
         IndexEvent indexEvent = (IndexEvent) eventList.get(0);
         if (indexEvent.getAction() == IndexEvent.ADD) {
-          indexAddItem(prefs, indexEvent.getItem());
+          indexAddItem(prefs, indexEvent);
         } else if (indexEvent.getAction() == IndexEvent.DELETE) {
-          indexDeleteItem(prefs, indexEvent.getItem());
+          indexDeleteItem(prefs, indexEvent);
         }
+        optimizeIndex(servletContext, prefs, indexEvent);
         eventList.remove(0);
-      }
-      if (count > 0) {
-        optimizeIndex(servletContext, prefs);
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
       throw new JobExecutionException(e.getMessage());
-    } finally {
-
     }
   }
 
-  private boolean indexAddItem(ApplicationPrefs prefs, Object item) throws IOException {
+  private boolean indexAddItem(ApplicationPrefs prefs, IndexEvent event) throws IOException {
     // Delete the previous item from the index, by using a reader
     IndexReader reader = null;
     Directory index = null;
     try {
-      index = getDirectory(prefs);
+      index = getDirectory(prefs, event);
       reader = IndexReader.open(index);
-      Class c = Class.forName(item.getClass().getName() + "Indexer");
-      Class[] argTypes = new Class[]{item.getClass()};
+      Class c = Class.forName(event.getItem().getClass().getName() + "Indexer");
+      Class[] argTypes = new Class[]{event.getItem().getClass()};
       Method m = c.getDeclaredMethod("getSearchTerm", argTypes);
-      Object o = m.invoke(null, new Object[]{item});
+      Object o = m.invoke(null, new Object[]{event.getItem()});
       if (o != null) {
         reader.delete((Term) o);
       }
@@ -117,12 +112,12 @@ public class IndexerJob implements StatefulJob {
     // Add the item to the index, optimize, and close
     IndexWriter writer = null;
     try {
-      index = getDirectory(prefs, false);
+      index = getDirectory(prefs, event, false);
       writer = new IndexWriter(index, new StandardAnalyzer(), false);
-      Class c = Class.forName(item.getClass().getName() + "Indexer");
-      Class[] argTypes = new Class[]{writer.getClass(), item.getClass(), boolean.class};
+      Class c = Class.forName(event.getItem().getClass().getName() + "Indexer");
+      Class[] argTypes = new Class[]{writer.getClass(), event.getItem().getClass(), boolean.class};
       Method m = c.getDeclaredMethod("add", argTypes);
-      m.invoke(null, new Object[]{writer, item, new Boolean(true)});
+      m.invoke(null, new Object[]{writer, event.getItem(), new Boolean(true)});
     } catch (Exception io) {
       throw new IOException("Writer: " + io.getMessage());
     } finally {
@@ -144,17 +139,17 @@ public class IndexerJob implements StatefulJob {
     return true;
   }
 
-  private boolean indexDeleteItem(ApplicationPrefs prefs, Object item) throws IOException {
+  private boolean indexDeleteItem(ApplicationPrefs prefs, IndexEvent event) throws IOException {
     // Delete the previous item from the index, by using a reader
     IndexReader reader = null;
     Directory index = null;
     try {
-      index = getDirectory(prefs);
+      index = getDirectory(prefs, event);
       reader = IndexReader.open(index);
-      Class c = Class.forName(item.getClass().getName() + "Indexer");
-      Class[] argTypes = new Class[]{item.getClass()};
+      Class c = Class.forName(event.getItem().getClass().getName() + "Indexer");
+      Class[] argTypes = new Class[]{event.getItem().getClass()};
       Method m = c.getDeclaredMethod("getDeleteTerm", argTypes);
-      Object o = m.invoke(null, new Object[]{item});
+      Object o = m.invoke(null, new Object[]{event.getItem()});
       int deleteCount = 0;
       if (o != null) {
         deleteCount = reader.delete((Term) o);
@@ -184,12 +179,12 @@ public class IndexerJob implements StatefulJob {
     return true;
   }
 
-  private boolean optimizeIndex(ServletContext context, ApplicationPrefs prefs) throws IOException {
+  private boolean optimizeIndex(ServletContext context, ApplicationPrefs prefs, IndexEvent event) throws IOException {
     // Optimize the cache
     Directory index = null;
     IndexWriter writer = null;
     try {
-      index = getDirectory(prefs, false);
+      index = getDirectory(prefs, event, false);
       writer = new IndexWriter(index, new StandardAnalyzer(), false);
       writer.optimize();
       // Update the shared searcher
@@ -216,15 +211,15 @@ public class IndexerJob implements StatefulJob {
     return true;
   }
 
-  protected synchronized Directory getDirectory(ApplicationPrefs prefs) throws IOException {
-    File path = new File(prefs.get("FILELIBRARY") + "index");
+  protected synchronized Directory getDirectory(ApplicationPrefs prefs, IndexEvent event) throws IOException {
+    File path = new File(prefs.get("FILELIBRARY") + event.getDbName() + "index");
     boolean create = !path.exists();
-    return getDirectory(prefs, create);
+    return getDirectory(prefs, event, create);
   }
 
-  protected synchronized Directory getDirectory(ApplicationPrefs prefs, boolean create) throws IOException {
+  protected synchronized Directory getDirectory(ApplicationPrefs prefs, IndexEvent event, boolean create) throws IOException {
     Directory index = FSDirectory.getDirectory(
-        prefs.get("FILELIBRARY") + "index", create);
+        prefs.get("FILELIBRARY") + event.getDbName() + "index", create);
     if (create) {
       IndexWriter writer = new IndexWriter(
           index, new StandardAnalyzer(), true);
