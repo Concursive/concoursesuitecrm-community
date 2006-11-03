@@ -1051,6 +1051,7 @@ public final class TroubleTickets extends CFSModule {
     if (sectionId == null || userGroupTicketInfo.getExpandedSelection() == true) {
       userGroupTicketList.setPagedListInfo(userGroupTicketInfo);
       userGroupTicketList.setInMyUserGroups(user.getId());
+      userGroupTicketList.setOnlyOpen(true);
     }
     //All Tickets
     PagedListInfo allTicketsInfo = this.getPagedListInfo(
