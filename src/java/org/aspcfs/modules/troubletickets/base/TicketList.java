@@ -1892,7 +1892,7 @@ public class TicketList extends ArrayList implements SyncableList {
           "AND (" + DatabaseUtils.toLowerCase(
           db, DatabaseUtils.convertToVarChar(db, "t.problem")) + " LIKE ? OR " +
           DatabaseUtils.toLowerCase(
-          db, DatabaseUtils.convertToVarChar(db, "t.comment")) + " LIKE ? OR " +
+          db, DatabaseUtils.convertToVarChar(db, "t." + DatabaseUtils.addQuotes(db, "comment"))) + " LIKE ? OR " +
           DatabaseUtils.toLowerCase(
           db, DatabaseUtils.convertToVarChar(db, "t.solution")) + " LIKE ?) ");
     }

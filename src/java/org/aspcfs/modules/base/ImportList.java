@@ -328,7 +328,7 @@ public class ImportList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
             "FROM import m " +
-            "WHERE m.import_id > -1 AND status_id != ? ");
+            "WHERE m.import_id > -1 ");
     createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
