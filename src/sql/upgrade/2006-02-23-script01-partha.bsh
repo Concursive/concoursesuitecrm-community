@@ -42,7 +42,7 @@ if (moduleId == -1) {
   thisCategory.setConstant(constant);
   thisCategory.setDescription(null);
   thisCategory.setLevel(level);
-  thisCategory.setEnabled(true);
+  thisCategory.setEnabled(false);
   thisCategory.setActive(true);
   thisCategory.setFolders(hasFolders);
   thisCategory.setLookups(hasLookups);
