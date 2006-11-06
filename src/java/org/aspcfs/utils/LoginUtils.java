@@ -64,7 +64,7 @@ public class LoginUtils {
    */
   public LoginUtils(Connection db, String username, String password) throws Exception {
     this.username = username;
-    this.password = PasswordHash.encrypt(password);
+    this.password = password;
     build(db);
   }
 
