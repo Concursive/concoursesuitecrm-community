@@ -120,13 +120,14 @@ public class HTTPUtils {
         ((HttpsURLConnection) conn).setSSLSocketFactory(factory);
         ((HttpsURLConnection) conn).setHostnameVerifier(
             new HttpsHostnameVerifier());
-      }
-      //Backwards compatible if something sets the old system property
-      if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
-            factory);
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
-            new HttpsHostnameVerifierDeprecated());
+      } else {
+        //Backwards compatible if something sets the old system property
+        if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+          ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+              factory);
+          ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+              new HttpsHostnameVerifierDeprecated());
+        }
       }
       ((HttpURLConnection) conn).setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");

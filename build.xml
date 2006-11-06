@@ -118,6 +118,7 @@
       <equals arg1="${WEBSERVER.TYPE}" arg2="jboss"/>
     </condition>
   </target>
+  <!-- Tomcat 4 -->
   <target name="init.servlet4.exists" depends="init.environment"
           if="TYPE.CATALINA">
     <available file="${CATALINA_HOME}/common/lib/servlet.jar"
@@ -129,6 +130,7 @@
               value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"/>
     <echo message="Web Server: Tomcat 4.x"/>
   </target>
+  <!-- Tomcat 5.x -->
   <target name="init.servlet5.exists" depends="init.environment"
           if="TYPE.CATALINA">
     <available file="${CATALINA_HOME}/common/lib/servlet-api.jar"
@@ -144,22 +146,41 @@
               value="${CATALINA_HOME}${fs}common${fs}lib${fs}naming-resources.jar"/>
     <echo message="Web Server: Tomcat 5.x"/>
   </target>
-  <target name="init.geronimo24.exists" depends="init.environment"
+  <!-- Geronimo 1.0 -->
+  <target name="init.geronimo10.exists" depends="init.environment"
           if="TYPE.GERONIMO">
     <available
         file="${GERONIMO_HOME}/repository/org.apache.geronimo.specs/jars/geronimo-servlet_2.4_spec-1.0.jar"
-        property="build.geronimo24.present"/>
+        property="build.geronimo10.present"/>
   </target>
-  <target name="init.geronimo24.set" depends="init.geronimo24.exists"
-          if="build.geronimo24.present">
+  <target name="init.geronimo10.set" depends="init.geronimo10.exists"
+          if="build.geronimo10.present">
     <property name="servletJar"
               value="${GERONIMO_HOME}/repository/org.apache.geronimo.specs/jars/geronimo-servlet_2.4_spec-1.0.jar"/>
     <property name="jspJar"
               value="${GERONIMO_HOME}/repository/org.apache.geronimo.specs/jars/geronimo-jsp_2.0_spec-1.0.jar"/>
     <property name="namingJar"
               value="${GERONIMO_HOME}/repository/tomcat/jars/naming-resources-5.5.9.jar"/>
-    <echo message="Web Server: Geronimo using Servlet 2.4 API"/>
+    <echo message="Web Server: Geronimo 1.0"/>
   </target>
+  <!-- Geronimo 1.1 -->
+  <target name="init.geronimo11.exists" depends="init.environment"
+          if="TYPE.GERONIMO">
+    <available
+        file="${GERONIMO_HOME}/repository/org/apache/geronimo/specs/geronimo-servlet_2.4_spec/1.0.1/geronimo-servlet_2.4_spec-1.0.1.jar"
+        property="build.geronimo11.present"/>
+  </target>
+  <target name="init.geronimo11.set" depends="init.geronimo11.exists"
+          if="build.geronimo11.present">
+    <property name="servletJar"
+              value="${GERONIMO_HOME}/repository/org/apache/geronimo/specs/geronimo-servlet_2.4_spec/1.0.1/geronimo-servlet_2.4_spec-1.0.1.jar"/>
+    <property name="jspJar"
+              value="${GERONIMO_HOME}/repository/org/apache/geronimo/specs/geronimo-jsp_2.0_spec/1.0.1/geronimo-jsp_2.0_spec-1.0.1.jar"/>
+    <property name="namingJar"
+              value="${GERONIMO_HOME}/repository/tomcat/naming-resources/5.5.15/naming-resources-5.5.15.jar"/>
+    <echo message="Web Server: Geronimo 1.1+"/>
+  </target>
+  <!-- JBoss -->
   <target name="init.jboss24.exists" depends="init.environment" if="TYPE.JBOSS">
     <available file="${JBOSS_HOME}/server/all/lib/javax.servlet.jar"
                property="build.jboss24.present"/>
@@ -477,7 +498,7 @@
 
   <!-- Configure classpath as both object and a property -->
   <target name="init.classpath"
-          depends="init.classpath.uptodate,init.servlet.type,init.servlet4.set,init.servlet5.set,init.geronimo24.set,init.jboss24.set">
+          depends="init.classpath.uptodate,init.servlet.type,init.servlet4.set,init.servlet5.set,init.geronimo10.set,init.geronimo11.set,init.jboss24.set">
     <path id="cfs2.classpath">
       <pathelement location="${servletJar}"/>
       <pathelement location="${jspJar}"/>
