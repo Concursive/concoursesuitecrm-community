@@ -342,8 +342,6 @@ public class Contact extends GenericBean {
    *
    * @param rs Description of Parameter
    * @throws SQLException Description of the Exception
-   * @throws SQLException Description of the Exception
-   * @throws SQLException Description of Exception
    * @since 1.1
    */
   public Contact(ResultSet rs) throws SQLException {
@@ -359,8 +357,6 @@ public class Contact extends GenericBean {
    * @param db        Description of Parameter
    * @param contactId Description of Parameter
    * @throws SQLException Description of the Exception
-   * @throws SQLException Description of the Exception
-   * @throws SQLException Description of Exception
    * @since 1.1
    */
   public Contact(Connection db, String contactId) throws SQLException {
@@ -373,8 +369,6 @@ public class Contact extends GenericBean {
    *
    * @param db        Description of the Parameter
    * @param contactId Description of the Parameter
-   * @throws SQLException Description of the Exception
-   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public Contact(Connection db, int contactId) throws SQLException {
@@ -2197,7 +2191,7 @@ public class Contact extends GenericBean {
    * @return The approved value
    */
   public boolean isApproved() {
-    return (statusId == Import.PROCESSED_UNAPPROVED ? false : true);
+    return (statusId != Import.PROCESSED_UNAPPROVED);
   }
 
 
@@ -4492,7 +4486,7 @@ public class Contact extends GenericBean {
     pst.setTimestamp(++i, this.getBirthDate());
     pst.setString(++i, this.getRole());
 
-    if (employeeId != null) {
+    if (employeeId != null && !"".equals(employeeId.trim())) {
       pst.setString(++i, this.getEmployeeId());
     } else {
       pst.setString(++i, null);

@@ -369,6 +369,9 @@ public class ObjectUtils {
         DataField field = (DataField) fields.next();
         String param = field.getName();
         String value = field.getValue();
+        if (field.hasAlias()) {
+          param = field.getAlias();
+        }
         if (ObjectUtils.setParam(target, param, value)) {
           //The value was set successfully
           if (System.getProperty("DEBUG") != null) {

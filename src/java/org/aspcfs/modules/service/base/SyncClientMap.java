@@ -387,7 +387,9 @@ public class SyncClientMap {
         }
       }
       Iterator i = tableLookup.keySet().iterator();
-      System.out.println("SyncClientMap-> Table count: " + tableLookup.size());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("SyncClientMap-> Table count: " + tableLookup.size());
+      }
       while (i.hasNext()) {
         Integer serverNum = (Integer) i.next();
         if (((Integer) tableLookup.get(serverNum)).intValue() == Integer.parseInt(

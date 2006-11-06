@@ -74,7 +74,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     User baseUser = new User(db, "0");
     UserList userList = new UserList();
     userList.buildList(db);
-    userList.add(baseUser);
+    userList.add(0, baseUser);
     this.saveUserList(db, userList);
     processOK = writer.commit();
     userList = null;
@@ -151,7 +151,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     trashedAccounts.setIncludeOnlyTrashed(true);
     trashedAccounts.buildList(db);
 
-    accounts.add(myCompany);
+    accounts.add(0, myCompany);
     accounts.addAll(trashedAccounts);
 
     processOK = this.saveOrgList(db, accounts);

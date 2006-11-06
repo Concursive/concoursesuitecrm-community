@@ -1178,9 +1178,6 @@ public class FileItem extends GenericBean {
       if (entered != null) {
         sql.append("entered, ");
       }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
       sql.append(
           " link_module_id, link_item_id, " +
           " enteredBy, modifiedBy, default_file, allow_portal_access, modified) " +
@@ -1191,10 +1188,7 @@ public class FileItem extends GenericBean {
       if (entered != null) {
         sql.append("?, ");
       }
-      if (modified != null) {
-        sql.append("?, ");
-      }
-      sql.append("?, ?, ?, ?, ?, ?, " + ((this.getModified()!=null)?"?":DatabaseUtils.getCurrentTimestamp(db)) + ") ");
+      sql.append("?, ?, ?, ?, ?, ?, " + ((this.getModified() != null) ? "?" : DatabaseUtils.getCurrentTimestamp(db)) + ") ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1216,16 +1210,13 @@ public class FileItem extends GenericBean {
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
-      if (modified != null) {
-        pst.setTimestamp(++i, modified);
-      }
       pst.setInt(++i, linkModuleId);
       pst.setInt(++i, linkItemId);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
       pst.setBoolean(++i, defaultFile);
       pst.setBoolean(++i, allowPortalAccess);
-      if(this.getModified()!=null){
+      if (this.getModified() != null) {
         pst.setTimestamp(++i, this.getModified());
       }
       pst.execute();

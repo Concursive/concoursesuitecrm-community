@@ -179,7 +179,7 @@ public class PermissionCategoryLookup extends GenericBean {
   public PermissionCategoryLookup(Connection db, int id) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT lppc.* " +
-            "FROM " + DatabaseUtils.getTableName(db, "lookup_project_permission_category") + " " +
+            "FROM " + DatabaseUtils.getTableName(db, "lookup_project_permission_category") + " lppc " +
             "WHERE lppc.code = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();

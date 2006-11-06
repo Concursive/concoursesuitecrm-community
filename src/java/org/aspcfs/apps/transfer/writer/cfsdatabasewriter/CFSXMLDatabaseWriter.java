@@ -1,27 +1,21 @@
 package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 
-import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.login.base.AuthenticationItem;
-import org.aspcfs.modules.service.base.*;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.aspcfs.modules.service.base.PacketContext;
+import org.aspcfs.modules.service.base.SyncClientManager;
+import org.aspcfs.modules.service.base.SyncTableList;
+import org.aspcfs.modules.service.base.Transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.HashMap;
 
 /**
  *  Description of the Class
  *
  * @author     Ananth
- * @version
  * @created    November 2, 2006
  */
 public class CFSXMLDatabaseWriter implements DataWriter {
@@ -224,16 +218,36 @@ public class CFSXMLDatabaseWriter implements DataWriter {
     transaction.setValidateObject(false);
     transaction.build(record);
     
-    if (action.equals(record.INSERT) || action.equals(record.UPDATE)) {
-      try {
-        statusCode = 
-            transaction.execute(connection, connectionLookup);
-        if (transaction.hasError()) {
-          logger.info(transaction.getErrorMessage());
+    try {
+      if (action.startsWith("insert") || action.equals(DataRecord.INSERT)
+              || action.equals(DataRecord.UPDATE)) {
+        boolean commit = connection.getAutoCommit();
+        try {
+          if (commit) {
+            connection.setAutoCommit(false);
+          }
+          statusCode = 
+              transaction.execute(connection, connectionLookup);
+          
+          if (commit) {
+            connection.commit();
+          }
+          if (transaction.hasError()) {
+            logger.info("ERROR: " + transaction.getErrorMessage());
+          }
+        } catch (SQLException e) {
+          e.printStackTrace(System.out);
+          if (commit) {
+            connection.rollback();
+          }
+        } finally {
+          if (commit) {
+            connection.setAutoCommit(true);
+          }
         }
-      } catch (SQLException e) {
-        e.printStackTrace(System.out);
       }
+    } catch (SQLException sqle) {
+      sqle.printStackTrace(System.out);
     }
     return (statusCode == 0);
   }

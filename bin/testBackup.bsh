@@ -1,0 +1,60 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:/usr/java/tomcat/common/lib/servlet-api.jar:lib/log4j-1.2.9.jar:lib/bsh-2.0b2.jar:build/lib/aspcfs.jar:lib/postgresql-8.1-405.jdbc3.jar:build/lib/darkhorseventures.jar:lib/mail.jar:lib/activation.jar:build/lib/zeroio-iteam.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.modules.service.utils.BackupUtils;
+import org.aspcfs.modules.service.base.SyncClient;
+import org.aspcfs.modules.service.base.SyncClientMap;
+import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.database.ConnectionElement;
+
+import java.sql.*;
+import java.util.*;
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  testBackup [filename]");
+  print("");
+  print("The specified file will be used to restore a database");
+  System.exit(0);
+}
+
+String url = "jdbc:postgresql://127.0.0.1:5432/restore-test-1";
+String user = "postgres";
+String password = "";
+String driver = "org.postgresql.Driver";
+
+// Create a Connection Pool
+ConnectionPool sqlDriver = new ConnectionPool();
+sqlDriver.setDebug(false);
+sqlDriver.setTestConnections(false);
+sqlDriver.setAllowShrinking(true);
+sqlDriver.setMaxConnections(2);
+sqlDriver.setMaxIdleTime(60000);
+sqlDriver.setMaxDeadTime(300000);
+
+ConnectionElement ce = new ConnectionElement(url, user, password);
+ce.setDriver(driver);
+Connection db = sqlDriver.getConnection(ce);
+Connection dbLookup = sqlDriver.getConnection(ce);
+
+String filename = bsh.args[0].trim();
+
+//Add a new Sync client
+SyncClient syncClient = new SyncClient();
+syncClient.setId(0);
+syncClient.setType("-- Restore --");
+syncClient.setCode("---");
+syncClient.setEnteredBy(0);
+syncClient.setModifiedBy(0);
+syncClient.setEnabled(true);
+syncClient.insert(db);
+
+//Perform backup
+BackupUtils.restore(db, dbLookup, filename, syncClient); 
+
+//Remove the sync client
+syncClient.delete(db);
+
+sqlDriver.free(db);
+sqlDriver.free(dbLookup);
+System.exit(0);

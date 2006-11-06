@@ -217,7 +217,7 @@ public class QueueCriteria extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
-    int id = DatabaseUtils.getNextSeq(db, "report_queue_criteria_criteria_id_seq");
+    id = DatabaseUtils.getNextSeq(db, "report_queue_criteria_criteria_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO report_queue_criteria " +
             "(" + (id > -1 ? "criteria_id, " : "") + "queue_id, " + DatabaseUtils.addQuotes(db, "parameter") + ", " + DatabaseUtils.addQuotes(db, "value") + ") " +

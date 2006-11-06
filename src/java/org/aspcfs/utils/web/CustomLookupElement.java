@@ -329,8 +329,8 @@ public class CustomLookupElement extends HashMap {
     }
 
     String seqName = null;
-    if (this.getUniqueField() != null) {
-      seqName = getSequenceName(tableName, getUniqueField());
+    if (this.getUniqueField() != null && !"".equals(this.getUniqueField().trim())) {
+      seqName = getPostgresSeqName(tableName, getUniqueField());
       id = DatabaseUtils.getNextSeq(db, seqName);
     }
     tableName = DatabaseUtils.getTableName(db, tableName);
@@ -405,7 +405,7 @@ public class CustomLookupElement extends HashMap {
     }
     pst.execute();
     pst.close();
-    if (this.getUniqueField() != null) {
+    if (this.getUniqueField() != null && !"".equals(this.getUniqueField().trim())) {
       id = DatabaseUtils.getCurrVal(db, seqName, id);
     }
     return true;
@@ -419,7 +419,7 @@ public class CustomLookupElement extends HashMap {
    * @param uniqueField Description of the Parameter
    * @return The sequenceName value
    */
-  private String getSequenceName(String tableName, String uniqueField) {
+  private String getPostgresSeqName(String tableName, String uniqueField) {
     String seqName = null;
     if ("module_field_categorylink".equals(tableName)) {
       seqName = "module_field_categorylin" + "_" + uniqueField + "_seq";
@@ -432,9 +432,9 @@ public class CustomLookupElement extends HashMap {
     } else if ("document_store_permissions".equals(tableName)) {
       seqName = "document_store_permissions" + "_" + uniqueField + "_seq";
     } else if ("active_survey".equals(tableName)) {
-      seqName = "active_survey_ctive_survey" + "_seq";
+      seqName = "active_survey_active_survey" + "_seq";
     } else if ("active_survey_answer_avg".equals(tableName)) {
-      seqName = "active_survey_nswer_avg_id" + "_seq";
+      seqName = "active_survey_answer_avg_id" + "_seq";
     } else if (tableName.length() > 22) {
       seqName = tableName.substring(0, 22) + "_" + uniqueField + "_seq";
     } else {
