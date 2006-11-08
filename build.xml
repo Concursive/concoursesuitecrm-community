@@ -176,8 +176,14 @@
               value="${GERONIMO_HOME}/repository/org/apache/geronimo/specs/geronimo-servlet_2.4_spec/1.0.1/geronimo-servlet_2.4_spec-1.0.1.jar"/>
     <property name="jspJar"
               value="${GERONIMO_HOME}/repository/org/apache/geronimo/specs/geronimo-jsp_2.0_spec/1.0.1/geronimo-jsp_2.0_spec-1.0.1.jar"/>
-    <property name="namingJar"
-              value="${GERONIMO_HOME}/repository/tomcat/naming-resources/5.5.15/naming-resources-5.5.15.jar"/>
+    <available
+        file="${GERONIMO_HOME}/repository/tomcat/naming-resources/5.5.15/naming-resources-5.5.15.jar"
+        property="namingJar"
+        value="${GERONIMO_HOME}/repository/tomcat/naming-resources/5.5.15/naming-resources-5.5.15.jar"/>
+    <available
+        file="${GERONIMO_HOME}/repository/tomcat/naming-resources/5.5.15-142/naming-resources-5.5.15-142.jar"
+        property="namingJar"
+        value="${GERONIMO_HOME}/repository/tomcat/naming-resources/5.5.15-142/naming-resources-5.5.15-142.jar"/>
     <echo message="Web Server: Geronimo 1.1+"/>
   </target>
   <!-- JBoss -->
