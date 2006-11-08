@@ -38,6 +38,7 @@ This distribution includes the required Centric CRM 3rd party libraries:
   bcprov-jdk14-121.jar
   bsh-2.0b2.jar
   commons-beanutils.jar
+  commons-codec-1.3.jar
   commons-collections-3.1.jar
   commons-digester-1.7.jar
   commons-logging-api.jar
