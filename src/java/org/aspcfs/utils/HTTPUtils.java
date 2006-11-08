@@ -120,15 +120,14 @@ public class HTTPUtils {
         ((HttpsURLConnection) conn).setSSLSocketFactory(factory);
         ((HttpsURLConnection) conn).setHostnameVerifier(
             new HttpsHostnameVerifier());
-      } else {
-        //Backwards compatible if something sets the old system property
-        if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
-          ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
-              factory);
-          ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
-              new HttpsHostnameVerifierDeprecated());
-        }
       }
+      /*//Backwards compatible if something sets the old system property
+      if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+            factory);
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+            new HttpsHostnameVerifierDeprecated());
+      }*/
       ((HttpURLConnection) conn).setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
       if (headers != null && headers.size() > 0) {
@@ -239,6 +238,7 @@ public class HTTPUtils {
    * @return The serverName value
    */
   public static String getServerName(String address) {
+    System.out.println("HTTPUtils-> Checking: " + address);
     try {
       //The default factory requires a trusted certificate
       //Accept any certificate using the custom TrustManager
@@ -256,13 +256,18 @@ public class HTTPUtils {
         ((HttpsURLConnection) conn).setHostnameVerifier(
             new HttpsHostnameVerifier());
       }
-      //Backwards compatible if something sets the old system property
-      if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
-            factory);
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
-            new HttpsHostnameVerifierDeprecated());
-      }
+      /*
+      try {
+        //Backwards compatible if something sets the old system property
+        if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+          ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+              factory);
+          ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+              new HttpsHostnameVerifierDeprecated());
+        }
+      } catch (Exception e) {
+        // Class not found so ignore
+      }*/
       if (conn instanceof HttpURLConnection) {
         HttpURLConnection httpConnection = (HttpURLConnection) conn;
         httpConnection.setRequestMethod("HEAD");
@@ -270,8 +275,8 @@ public class HTTPUtils {
         return httpConnection.getHeaderField("Server");
       }
     } catch (Exception e) {
+      System.out.println("HTTPUtils-> getServerName error: " + e.getMessage());
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("HTTPUtils-> getServerName error: " + e.getMessage());
         e.printStackTrace(System.out);
       }
     }
