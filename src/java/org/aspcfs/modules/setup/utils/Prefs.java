@@ -38,10 +38,16 @@ public class Prefs {
       if (dir == null) {
         dir = ServletContextUtils.loadText(context, "WEB-INF/instance.property");
       }
-      // Apache Geronimo uses a temporary store for a webapp, which
-      // would prevent a redeployed/upgraded Centric from finding itself
+      // Apache Geronimo without a plan file uses a temporary store for a webapp
+      // which would prevent a redeployed/upgraded Centric from finding itself
       if (dir != null && dir.indexOf("config-store") > -1) {
         dir = ServletContextUtils.loadText(context, "WEB-INF/instance.property");
+      }
+      // Apache Geronimo with a plan file and a module artifactId can use the
+      // artifactId to differentiate
+      if (dir != null && dir.indexOf("repository/default") > -1) {
+        int uniqueIdStart = dir.indexOf("repository/default") + 19;
+        dir = dir.substring(uniqueIdStart, dir.indexOf("/", uniqueIdStart));
       }
       System.out.println("Prefs-> Instance name: " + dir);
     } catch (Exception e) {

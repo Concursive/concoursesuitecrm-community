@@ -396,7 +396,7 @@ public class Notifier extends ReportBuilder {
     String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "keys" + fs;
     File f = new File(filePath);
     f.mkdirs();
-    PrivateString thisKey = new PrivateString(filePath + "survey.key");
+    PrivateString thisKey = new PrivateString(filePath + "survey2.key");
 
     //does the server support SSL
     String schema = "http";
@@ -793,7 +793,7 @@ public class Notifier extends ReportBuilder {
     String keyFilePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "keys" + fs;
     File keys = new File(keyFilePath);
     keys.mkdirs();
-    PrivateString thisKey = new PrivateString(keyFilePath + "survey.key");
+    PrivateString thisKey = new PrivateString(keyFilePath + "survey2.key");
 
     Template template = new Template();
     template.setText(thisCampaign.getMessage());

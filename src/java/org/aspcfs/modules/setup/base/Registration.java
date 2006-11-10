@@ -41,6 +41,7 @@ public class Registration extends GenericBean {
   private String webserver = null;
   private String ip = null;
   private String keyFile = null;
+  private String keyHex = null;
   private boolean enabled = true;
   private Timestamp entered = null;
   private String edition = null;
@@ -93,6 +94,10 @@ public class Registration extends GenericBean {
     this.keyFile = tmp;
   }
 
+
+  public void setKeyHex(String keyHex) {
+    this.keyHex = keyHex;
+  }
 
   /**
    * Sets the nameFirst attribute of the Registration object
@@ -274,6 +279,10 @@ public class Registration extends GenericBean {
   }
 
 
+  public String getKeyHex() {
+    return keyHex;
+  }
+
   /**
    * Gets the nameFirst attribute of the Registration object
    *
@@ -438,6 +447,7 @@ public class Registration extends GenericBean {
     keyFile = rs.getString("key_file");
     enabled = rs.getBoolean("enabled");
     entered = rs.getTimestamp("entered");
+    keyHex = rs.getString("key_hex");
   }
 
 
@@ -454,8 +464,8 @@ public class Registration extends GenericBean {
         "(" + (id > -1 ? "registration_id, " : "") + "email, profile, name_first, name_last, " + //TO DO [ table does not exists]
         "company, registration_text, os_version, java_version, webserver, " +
         "ip_address, edition, crc, " +
-        "key_file, enabled) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "key_file, key_hex, enabled) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -473,6 +483,7 @@ public class Registration extends GenericBean {
     pst.setString(++i, edition);
     pst.setString(++i, text2);
     pst.setString(++i, keyFile);
+    pst.setString(++i, keyHex);
     pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
@@ -497,4 +508,3 @@ public class Registration extends GenericBean {
     pst.close();
   }
 }
-

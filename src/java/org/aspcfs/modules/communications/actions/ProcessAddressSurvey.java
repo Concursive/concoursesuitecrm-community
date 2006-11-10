@@ -36,6 +36,7 @@ import org.aspcfs.utils.web.StateSelect;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
+import java.security.Key;
 
 /**
  * Allows respondants to take part in a survey in which they were invited to
@@ -72,8 +73,9 @@ public final class ProcessAddressSurvey extends CFSModule {
       db = auth.getConnection(context, false);
       // Load the survey key which decodes the url
       String dbName = auth.getConnectionElement(context).getDbName();
-      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
-      String uncodedId = PrivateString.decrypt(filename, codedId);
+      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey2.key";
+      Key key = PrivateString.loadEncodedKey(filename);
+      String uncodedId = PrivateString.decrypt(key, codedId);
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());
@@ -171,10 +173,10 @@ public final class ProcessAddressSurvey extends CFSModule {
       db = auth.getConnection(context, false);
       // Load the survey key which decodes the url
       String dbName = auth.getConnectionElement(context).getDbName();
-      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
+      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey2.key";
       String codedId = context.getRequest().getParameter("id");
-      String uncodedId = PrivateString.decrypt(filename, codedId);
-
+      Key key = PrivateString.loadEncodedKey(filename);
+      String uncodedId = PrivateString.decrypt(key, codedId);
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());

@@ -25,6 +25,7 @@ import org.apache.catalina.util.MD5Encoder;
 import org.apache.catalina.util.ServerInfo;
 import org.apache.catalina.util.StringManager;
 import org.apache.catalina.util.URLEncoder;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.naming.resources.Resource;
 import org.apache.naming.resources.ResourceAttributes;
 import org.apache.tomcat.util.http.FastHttpDateFormat;
@@ -454,10 +455,10 @@ public class DefaultServlet
       String username = "";
       try {
         String userpassEncoded = argHeader.substring(6);
-        sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
-        String userpassDecoded = new String(dec.decodeBuffer(userpassEncoded));
+        Base64 dec = new Base64();
+        String userpassDecoded = new String(dec.decode(userpassEncoded.getBytes()));
         username = userpassDecoded.substring(0, userpassDecoded.indexOf(":"));
-      } catch (IOException e) {
+      } catch (Exception e) {
         e.printStackTrace(System.out);
       }
       return username;
@@ -475,7 +476,7 @@ public class DefaultServlet
    * @return The nonce value
    */
   protected String generateNonce() {
-    sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+    Base64 encoder = new Base64();
     String timestamp = new java.sql.Timestamp(new Date().getTime()).toString();
     String random = org.aspcfs.utils.PasswordHash.getRandomString(0, 1);
     return (new String(encoder.encode((timestamp + ":" + random).getBytes())));
@@ -488,7 +489,7 @@ public class DefaultServlet
    * @return The opaque value
    */
   protected String generateOpaque() {
-    sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+    Base64 encoder = new Base64();
     String random = org.aspcfs.utils.PasswordHash.getRandomString(0, 10);
     return (new String(encoder.encode((":" + random + ":").getBytes())));
   }

@@ -358,6 +358,17 @@ public class UpgradeDatabaseTask extends Task {
           "addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "zeroio-iteam.jar\")");
       script.eval(
           "addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "jcrontab.jar\")");
+      // TODO: Add all libs to classpath...
+      //File libDir = new File()
+      //File[] libraries = libDir.listFiles();
+      //for (int i = 0; i < libraries.length; i++) {
+      //  File thisFile = libraries[i];
+      //
+      //}
+      script.eval(
+          "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "bcprov-jdk14-121.jar\")");
+      script.eval(
+          "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "commons-codec-1.3.jar\")");
       script.eval("addClassPath(\"" + servletJar + "\")");
       script.set("db", db);
       script.set("fileLibraryPath", fileLibraryPath + fs);

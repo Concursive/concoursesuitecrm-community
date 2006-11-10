@@ -17,6 +17,7 @@ package org.aspcfs.modules.setup.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.hooks.CustomHook;
+import org.apache.commons.codec.binary.Hex;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
@@ -32,6 +33,7 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.RequestUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.Key;
 import java.sql.*;
 import java.util.HashMap;
@@ -328,17 +330,7 @@ public class Setup extends CFSModule {
         if (dbPref.exists()) {
           String dbInfo = StringUtils.loadText(fileLibrary + "conn.sgml");
           // Use a key file for storing info
-          Key key = null;
-          synchronized (this) {
-            //Get or make the key file
-            String keyFile = fileLibrary + "zlib.jar";
-            File thisFile = new File(keyFile);
-            if (!thisFile.exists()) {
-              key = PrivateString.generateKeyFile(keyFile);
-            } else {
-              key = PrivateString.loadKey(keyFile);
-            }
-          }
+          Key key = getOrMakeKey(fileLibrary);
           bean.setConnection(PrivateString.decrypt(key, dbInfo));
         }
       } catch (Exception e) {
@@ -396,7 +388,7 @@ public class Setup extends CFSModule {
       //Save the conn info as encrypted text so it can be reloaded later
       String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
       String dbInfo = bean.getConnection();
-      Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
+      Key key = getKey(fileLibrary);
       StringUtils.saveText(
           fileLibrary + "conn.sgml", PrivateString.encrypt(key, dbInfo));
       dbDirectory.mkdirs();
@@ -555,18 +547,7 @@ public class Setup extends CFSModule {
         File serverPref = new File(fileLibrary + "srv1.sgml");
         if (serverPref.exists()) {
           String serverInfo = StringUtils.loadText(fileLibrary + "srv1.sgml");
-          // Use a key file for storing info
-          Key key = null;
-          synchronized (this) {
-            //Get or make the key file
-            String keyFile = fileLibrary + "zlib.jar";
-            File thisFile = new File(keyFile);
-            if (!thisFile.exists()) {
-              key = PrivateString.generateKeyFile(keyFile);
-            } else {
-              key = PrivateString.loadKey(keyFile);
-            }
-          }
+          Key key = getOrMakeKey(fileLibrary);
           bean.setServerInfo(PrivateString.decrypt(key, serverInfo));
           bean.setServerInfo(prefs);
         }
@@ -609,17 +590,7 @@ public class Setup extends CFSModule {
       }
       //Save the settings as encrypted text so it can be reloaded later
       String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
-      Key key = null;
-      synchronized (this) {
-        //Get or make the key file
-        String keyFile = fileLibrary + "zlib.jar";
-        File thisFile = new File(keyFile);
-        if (!thisFile.exists()) {
-          key = PrivateString.generateKeyFile(keyFile);
-        } else {
-          key = PrivateString.loadKey(keyFile);
-        }
-      }
+      Key key = getOrMakeKey(fileLibrary);
       String serverInfo = bean.getServerInfo();
       StringUtils.saveText(
           fileLibrary + "srv1.sgml", PrivateString.encrypt(key, serverInfo));
@@ -912,18 +883,50 @@ public class Setup extends CFSModule {
     return (count > 0);
   }
 
+  public static synchronized Key getOrMakeKey(String fileLibrary) throws IOException {
+    // New format
+    String hexKeyFile = fileLibrary + "zlib2.jar";
+    File thisHexKeyFile = new File(hexKeyFile);
+    if (!thisHexKeyFile.exists()) {
+      String keyFile = fileLibrary + "zlib.jar";
+      File thisKeyFile = new File(keyFile);
+      if (thisKeyFile.exists()) {
+        // Convert the old binary to hex
+        Key oldKey = PrivateString.loadSerializedKey(keyFile);
+        String hex = new String(Hex.encodeHex(oldKey.getEncoded()));
+        StringUtils.saveText(hexKeyFile, hex);
+      } else {
+        // Create a new hex encoded key
+        PrivateString.generateEncodedKeyFile(hexKeyFile);
+      }
+    }
+    return PrivateString.loadEncodedKey(hexKeyFile);
+  }
 
   /**
    * Gets the key attribute of the Setup object
    *
-   * @param context Description of the Parameter
+   * @param fileLibrary Description of the Parameter
    * @return The key value
+   * @throws java.io.IOException
    */
-  public static Key getKey(ActionContext context) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
-        "applicationPrefs");
-    String fileLibrary = prefs.get("FILELIBRARY") + "init" + fs;
-    return PrivateString.loadKey(fileLibrary + "zlib.jar");
+  public static Key getKey(String fileLibrary) throws IOException {
+    // New format
+    String hexKeyFile = fileLibrary + "zlib2.jar";
+    File thisHexKeyFile = new File(hexKeyFile);
+    if (!thisHexKeyFile.exists()) {
+      String keyFile = fileLibrary + "zlib.jar";
+      File thisKeyFile = new File(keyFile);
+      if (thisKeyFile.exists()) {
+        // Convert the old binary to hex
+        Key oldKey = PrivateString.loadSerializedKey(keyFile);
+        String hex = new String(Hex.encodeHex(oldKey.getEncoded()));
+        StringUtils.saveText(hexKeyFile, hex);
+      } else {
+        return null;
+      }
+    }
+    return PrivateString.loadEncodedKey(hexKeyFile);
   }
 
 
@@ -936,10 +939,10 @@ public class Setup extends CFSModule {
    */
   private Connection getDbConnection(ActionContext context) throws Exception {
     //Retrieve the connection info from preferences
-    Key key = getKey(context);
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
         "applicationPrefs");
     String fileLibrary = prefs.get("FILELIBRARY") + "init" + fs;
+    Key key = getKey(fileLibrary);
     DatabaseBean dbBean = new DatabaseBean();
     try {
       File dbPref = new File(fileLibrary + "conn.sgml");
@@ -1030,5 +1033,4 @@ public class Setup extends CFSModule {
     template.setParseElements(map);
     return template.getParsedText();
   }
-
 }

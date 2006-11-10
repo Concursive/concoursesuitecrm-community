@@ -37,6 +37,7 @@ import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.util.DOMWriter;
 import org.apache.catalina.util.RequestUtil;
 import org.apache.catalina.util.XMLWriter;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.naming.resources.Resource;
 import org.apache.tomcat.util.http.FastHttpDateFormat;
 import org.aspcfs.controller.SecurityHook;
@@ -338,8 +339,8 @@ public class WebdavServlet
       String userpassEncoded = argHeader.substring(6);
 
       // Decode it, using any base 64 decoder (we use com.oreilly.servlet)
-      sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
-      String userpassDecoded = new String(dec.decodeBuffer(userpassEncoded));
+      Base64 dec = new Base64();
+      String userpassDecoded = new String(dec.decode(userpassEncoded.getBytes()));
       if (System.getProperty("DEBUG") != null) {
         //System.out.println("USER (BASIC): " + userpassDecoded);
       }

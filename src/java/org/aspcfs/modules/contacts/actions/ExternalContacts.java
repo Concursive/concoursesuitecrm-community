@@ -2095,7 +2095,7 @@ public final class ExternalContacts extends CFSModule {
       String filePath = getDbNamePath(context) + "keys" + fs;
       File f = new File(filePath);
       f.mkdirs();
-      PrivateString thisKey = new PrivateString(filePath + "survey.key");
+      PrivateString thisKey = new PrivateString(filePath + "survey2.key");
       template.addParseElement(
           "${addressSurveyId=" + tmpAddressSurveyId + "}", java.net.URLEncoder.encode(
           PrivateString.encrypt(

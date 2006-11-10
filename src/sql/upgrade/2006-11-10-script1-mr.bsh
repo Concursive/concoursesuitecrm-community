@@ -1,0 +1,25 @@
+import java.security.Key;
+import org.aspcfs.utils.*;
+import org.apache.commons.codec.binary.*;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.DESKeySpec;
+
+// This script converts binary keys to hex encoded keys for portability
+String fs = System.getProperty("file.separator");
+String keyPath = dbFileLibraryPath + "keys" + fs;
+print("Checking survey key in: " + keyPath);
+String newSurveyKey = keyPath + "survey2.key";
+File keyFile = new File(newSurveyKey);
+if (!keyFile.exists()) {
+  String oldSurveyKey = keyPath + "survey.key";
+  File oldKeyFile = new File(oldSurveyKey);
+  if (oldKeyFile.exists()) {
+    Key oldKey = PrivateString.loadSerializedKey(oldKeyFile);
+    String hex = new String(Hex.encodeHex(oldKey.getEncoded()));
+    StringUtils.saveText(newSurveyKey, hex);
+    print("The file survey.key was converted to format 2.0");
+  } else {
+    print("No key to convert.");
+  }
+}

@@ -187,6 +187,9 @@ public class ProcessJasperReports {
    * @exception  SQLException  Description of the Exception
    */
   private static void configureHierarchyList(Connection db, Map parameters) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("ProcessJasperReports-> configureHierarchyList: temp table");
+    }
     StringBuffer sql = new StringBuffer();
     int typeId = DatabaseUtils.getType(db);
     if (typeId == DatabaseUtils.POSTGRESQL) {

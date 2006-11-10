@@ -41,6 +41,7 @@ public class RegistrationBean extends GenericBean {
   private String email = null;
   private boolean ssl = true;
   private String zlib = null;
+  private String zlib2 = null;
   private String text = null;
   private String profile = null;
   private String webserver = null;
@@ -138,6 +139,10 @@ public class RegistrationBean extends GenericBean {
     this.zlib = tmp;
   }
 
+
+  public void setZlib2(String zlib2) {
+    this.zlib2 = zlib2;
+  }
 
   /**
    * Sets the text attribute of the RegistrationBean object
@@ -377,6 +382,11 @@ public class RegistrationBean extends GenericBean {
     if (zlib != null) {
       Element zlibElement = document.createElement("zlib");
       zlibElement.appendChild(document.createTextNode(zlib));
+      rootElement.appendChild(zlibElement);
+    }
+    if (zlib2 != null) {
+      Element zlibElement = document.createElement("zlib2");
+      zlibElement.appendChild(document.createTextNode(zlib2));
       rootElement.appendChild(zlibElement);
     }
     if (text != null) {

@@ -15,11 +15,13 @@
  */
 package org.aspcfs.utils;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 import java.io.*;
 import java.security.Key;
 import java.security.SecureRandom;
@@ -50,7 +52,7 @@ public class PrivateString {
    * @param file Description of the Parameter
    */
   public PrivateString(String file) {
-    key = PrivateString.generateKeyFile(file);
+    key = PrivateString.generateEncodedKeyFile(file);
   }
 
 
@@ -63,6 +65,12 @@ public class PrivateString {
     this.key = tmp;
   }
 
+  public void setKeyFromHexEncoding(String hex) throws Exception {
+    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+    DESKeySpec keySpec = new DESKeySpec(Hex.decodeHex(hex.toCharArray()));
+    key = keyFactory.generateSecret(keySpec);
+  }
+
 
   /**
    * Gets the key attribute of the PrivateString object
@@ -73,6 +81,10 @@ public class PrivateString {
     return key;
   }
 
+  public String getKeyAsHexEncoding() {
+    return new String(Hex.encodeHex(key.getEncoded()));
+  }
+
 
   /**
    * Description of the Method
@@ -80,7 +92,7 @@ public class PrivateString {
    * @param filename Description of the Parameter
    * @return Description of the Return Value
    */
-  public static synchronized Key generateKeyFile(String filename) {
+  public static synchronized Key generateEncodedKeyFile(String filename) {
     try {
       File file = new File(filename);
       if (!file.exists()) {
@@ -89,26 +101,28 @@ public class PrivateString {
         generator.init(56, new SecureRandom());
         Key key = generator.generateKey();
         // Save key
-        ObjectOutputStream out = new ObjectOutputStream(
-            new FileOutputStream(filename));
-        out.writeObject(key);
-        out.close();
+        String hex = new String(Hex.encodeHex(key.getEncoded()));
+        StringUtils.saveText(filename, hex);
       }
-      return PrivateString.loadKey(filename);
+      return PrivateString.loadEncodedKey(filename);
     } catch (Exception e) {
       System.out.println(e);
     }
     return null;
   }
 
+  public static Key loadEncodedKey(String keyFilename) throws IOException {
+    String hex = StringUtils.loadText(keyFilename);
+    try {
+      SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+      DESKeySpec keySpec = new DESKeySpec(Hex.decodeHex(hex.toCharArray()));
+      return keyFactory.generateSecret(keySpec);
+    } catch (Exception e) {
+      throw new IOException(e.getMessage());
+    }
+  }
 
-  /**
-   * Description of the Method
-   *
-   * @param keyFilename Description of the Parameter
-   * @return Description of the Return Value
-   */
-  public static Key loadKey(String keyFilename) {
+  public static Key loadSerializedKey(String keyFilename) throws IOException {
     try {
       ObjectInputStream in = new ObjectInputStream(
           new FileInputStream(keyFilename));
@@ -118,10 +132,9 @@ public class PrivateString {
     } catch (Exception e) {
       System.out.println(
           "PrivateString-> Error loading key at: " + keyFilename);
-      return null;
+      throw new IOException(e.getMessage());
     }
   }
-
 
   /**
    * Description of the Method
@@ -129,7 +142,7 @@ public class PrivateString {
    * @param keyFile Description of the Parameter
    * @return Description of the Return Value
    */
-  public static Key loadKey(File keyFile) {
+  public static Key loadSerializedKey(File keyFile) throws IOException {
     try {
       ObjectInputStream in = new ObjectInputStream(
           new FileInputStream(keyFile));
@@ -137,21 +150,8 @@ public class PrivateString {
       in.close();
       return key;
     } catch (Exception e) {
-      return null;
+      throw new IOException(e.getMessage());
     }
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param inString    Description of the Parameter
-   * @param keyFilename Description of the Parameter
-   * @return Description of the Return Value
-   */
-  public static String encrypt(String keyFilename, String inString) {
-    Key key = PrivateString.loadKey(keyFilename);
-    return PrivateString.encrypt(key, inString);
   }
 
 
@@ -168,26 +168,10 @@ public class PrivateString {
       cipher.init(Cipher.ENCRYPT_MODE, key);
       byte[] inputBytes = inString.getBytes("UTF8");
       byte[] outputBytes = cipher.doFinal(inputBytes);
-
-      BASE64Encoder encoder = new BASE64Encoder();
-      String base64 = encoder.encode(outputBytes);
-      return (base64);
+      return new String(Base64.encodeBase64(outputBytes));
     } catch (Exception e) {
       return null;
     }
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param inString    Description of the Parameter
-   * @param keyFilename Description of the Parameter
-   * @return Description of the Return Value
-   */
-  public static String decrypt(String keyFilename, String inString) {
-    Key key = PrivateString.loadKey(keyFilename);
-    return PrivateString.decrypt(key, inString);
   }
 
 
@@ -200,18 +184,15 @@ public class PrivateString {
    */
   public static String decrypt(Key key, String inString) {
     try {
-      Security.addProvider(new com.sun.crypto.provider.SunJCE());
+      //Security.addProvider(new com.sun.crypto.provider.SunJCE());
 
       Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
       cipher.init(Cipher.DECRYPT_MODE, key);
 
-      BASE64Decoder decoder = new BASE64Decoder();
-
-      byte[] inputBytes = decoder.decodeBuffer(inString);
+      byte[] inputBytes = Base64.decodeBase64(inString.getBytes("UTF8"));
       byte[] outputBytes = cipher.doFinal(inputBytes);
 
-      String result = new String(outputBytes, "UTF8");
-      return result;
+      return new String(outputBytes, "UTF8");
     } catch (Exception e) {
       System.out.println(e.toString());
       return null;
@@ -225,9 +206,10 @@ public class PrivateString {
    * @param keyFilename Description of the Parameter
    * @param inString    Description of the Parameter
    * @return Description of the Return Value
+   * @throws java.io.IOException
    */
-  public static String encryptAsymmetric(String keyFilename, String inString) {
-    Key key = PrivateString.loadKey(keyFilename);
+  public static String encryptAsymmetric(String keyFilename, String inString) throws IOException {
+    Key key = PrivateString.loadSerializedKey(keyFilename);
     return PrivateString.encryptAsymmetric(key, inString);
   }
 
@@ -238,9 +220,10 @@ public class PrivateString {
    * @param keyFile  Description of the Parameter
    * @param inString Description of the Parameter
    * @return Description of the Return Value
+   * @throws java.io.IOException
    */
-  public static String encryptAsymmetric(File keyFile, String inString) {
-    Key key = PrivateString.loadKey(keyFile);
+  public static String encryptAsymmetric(File keyFile, String inString) throws IOException {
+    Key key = PrivateString.loadSerializedKey(keyFile);
     return PrivateString.encryptAsymmetric(key, inString);
   }
 
@@ -263,9 +246,7 @@ public class PrivateString {
       byte[] inputBytes = inString.getBytes("UTF8");
       byte[] outputBytes = cipher.doFinal(inputBytes);
 
-      BASE64Encoder encoder = new BASE64Encoder();
-      String base64 = encoder.encode(outputBytes);
-      return (base64);
+      return new String(Base64.encodeBase64(outputBytes));
     } catch (Exception e) {
       return null;
     }
@@ -278,9 +259,10 @@ public class PrivateString {
    * @param keyFilename Description of the Parameter
    * @param inString    Description of the Parameter
    * @return Description of the Return Value
+   * @throws java.io.IOException
    */
-  public static String decryptAsymmetric(String keyFilename, String inString) {
-    Key key = PrivateString.loadKey(keyFilename);
+  public static String decryptAsymmetric(String keyFilename, String inString) throws IOException {
+    Key key = PrivateString.loadSerializedKey(keyFilename);
     return PrivateString.decryptAsymmetric(key, inString);
   }
 
@@ -301,13 +283,10 @@ public class PrivateString {
       Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding", "BC");
       cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-      BASE64Decoder decoder = new BASE64Decoder();
-
-      byte[] inputBytes = decoder.decodeBuffer(inString);
+      byte[] inputBytes = Base64.decodeBase64(inString.getBytes("UTF8"));
       byte[] outputBytes = cipher.doFinal(inputBytes);
 
-      String result = new String(outputBytes, "UTF8");
-      return result;
+      return new String(outputBytes, "UTF8");
     } catch (Exception e) {
       System.out.println(e.toString());
       return null;
@@ -327,14 +306,16 @@ public class PrivateString {
         System.out.println("[encrypt or decrypt] [key] [string]");
       } else {
         String method = args[0];
-        String key = args[1];
+        String keyFile = args[1];
         String text = args[2];
 
-        File thisFile = new File(key);
+        File thisFile = new File(keyFile);
+        Key key = null;
         if (!thisFile.exists()) {
-          PrivateString.generateKeyFile(key);
+          key = generateEncodedKeyFile(keyFile);
+        } else {
+          key = loadEncodedKey(keyFile);
         }
-
         if ("encrypt".equals(method)) {
           System.out.println(PrivateString.encrypt(key, text));
         } else {

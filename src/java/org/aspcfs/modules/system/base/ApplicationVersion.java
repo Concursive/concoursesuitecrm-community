@@ -30,6 +30,7 @@ public class ApplicationVersion {
   public final static String VERSION = "Centric CRM 4.1 Beta 10 (2006-11-02)";
   public final static String APP_VERSION = "2006-11-02";
   public final static String DB_VERSION = "2006-11-02";
+  public final static String RELEASE = "4.1";
 
 
   /**

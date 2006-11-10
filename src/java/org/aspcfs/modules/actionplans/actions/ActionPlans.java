@@ -1172,7 +1172,7 @@ public final class ActionPlans extends CFSModule {
       context.getRequest().setAttribute("actionItemWork", itemWork);
       
       //get campaign URL
-      String surveyKey =  getDbNamePath(context) + "keys" + fs + "survey.key";
+      String surveyKey =  getDbNamePath(context) + "keys" + fs + "survey2.key";
       PrivateString thisKey = new PrivateString(surveyKey);
       itemWork.buildStep(db);
       Campaign thisCampaign = new Campaign(db, itemWork.getStep().getCampaignId());

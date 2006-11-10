@@ -15,7 +15,7 @@
  */
 package org.aspcfs.utils;
 
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -858,8 +858,7 @@ public class StringUtils {
    */
   public static String toBase64(String inString) {
     try {
-      BASE64Encoder encoder = new BASE64Encoder();
-      return (encoder.encode(inString.getBytes("UTF8")));
+      return new String(Base64.encodeBase64(inString.getBytes("UTF8")));
     } catch (Exception e) {
       return "";
     }

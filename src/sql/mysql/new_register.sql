@@ -25,6 +25,7 @@ CREATE TABLE registration (
   key_file TEXT,
   enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified TIMESTAMP NULL
+  modified TIMESTAMP NULL,
+  key_hex TEXT
 );
 

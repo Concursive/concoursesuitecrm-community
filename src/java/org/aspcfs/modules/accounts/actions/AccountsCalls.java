@@ -373,6 +373,7 @@ public final class AccountsCalls extends CFSModule {
     Call parentCall = null;
     Call previousCall = null;
     int tmpStatusId = -1;
+    
     addModuleBean(context, "View Accounts", "Save an Activity");
     //Process the parameters
     String contactId = context.getRequest().getParameter("contactId");

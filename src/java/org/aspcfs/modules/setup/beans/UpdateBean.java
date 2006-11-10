@@ -33,6 +33,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class UpdateBean extends GenericBean {
 
   private String zlib = null;
+  private String zlib2 = null;
   private String email = null;
   private String profile = null;
   private String text = null;
@@ -49,6 +50,10 @@ public class UpdateBean extends GenericBean {
     this.zlib = tmp;
   }
 
+
+  public void setZlib2(String zlib2) {
+    this.zlib2 = zlib2;
+  }
 
   /**
    * Sets the email attribute of the UpdateBean object
@@ -137,6 +142,11 @@ public class UpdateBean extends GenericBean {
     if (zlib != null) {
       Element zlibElement = document.createElement("zlib");
       zlibElement.appendChild(document.createTextNode(zlib));
+      rootElement.appendChild(zlibElement);
+    }
+    if (zlib2 != null) {
+      Element zlibElement = document.createElement("zlib2");
+      zlibElement.appendChild(document.createTextNode(zlib2));
       rootElement.appendChild(zlibElement);
     }
     return XMLUtils.toString(rootElement);

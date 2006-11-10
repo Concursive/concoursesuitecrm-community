@@ -1,7 +1,6 @@
 package org.aspcfs.utils;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -97,8 +96,8 @@ public class SecurityKey {
 
     // Salt
     byte[] salt = {
-      (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
-      (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99
+        (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
+        (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99
     };
 
     // Iteration count
@@ -116,7 +115,7 @@ public class SecurityKey {
     pbeCipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
 
     // Load the key
-    PrivateKey key = (PrivateKey) PrivateString.loadKey(unencodedFilename);
+    PrivateKey key = (PrivateKey) PrivateString.loadSerializedKey(unencodedFilename);
 
     // Convert to byteArray
     byte[] cleartext = ObjectUtils.toByteArray(key);
@@ -125,8 +124,7 @@ public class SecurityKey {
     byte[] ciphertext = pbeCipher.doFinal(cleartext);
 
     // Convert byteArray to base64
-    BASE64Encoder encoder = new BASE64Encoder();
-    String base64 = encoder.encode(ciphertext);
+    String base64 = new String(Base64.encodeBase64(ciphertext));
 
     // Save the encoded text
     StringUtils.saveText(encodedFilename, base64);
@@ -172,8 +170,8 @@ public class SecurityKey {
 
     // Salt
     byte[] salt = {
-      (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
-      (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99
+        (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
+        (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99
     };
 
     // Iteration count
@@ -191,9 +189,8 @@ public class SecurityKey {
     pbeCipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParamSpec);
 
     // Load the base64 text
-    BASE64Decoder decoder = new BASE64Decoder();
-    byte[] ciphertext = decoder.decodeBuffer(
-        StringUtils.loadText(encodedFilename));
+    String base64Text = StringUtils.loadText(encodedFilename);
+    byte[] ciphertext = Base64.decodeBase64(base64Text.getBytes("UTF8"));
 
     // Decrypt the byteArray
     byte[] cleartext = null;
