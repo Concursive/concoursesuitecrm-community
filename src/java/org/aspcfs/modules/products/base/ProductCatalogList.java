@@ -2061,7 +2061,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
    * @param determineCategory the determineCategory to set
    */
   public void setDetermineCategory(String determineCategory) {
-    this.determineCategory =  Boolean.parseBoolean(determineCategory);
+    this.determineCategory =  DatabaseUtils.parseBoolean(determineCategory);
   }
 
 
