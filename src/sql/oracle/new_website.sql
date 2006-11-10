@@ -47,7 +47,7 @@ CREATE TABLE web_site_log (
   user_id INTEGER REFERENCES "access"(user_id),
   username NVARCHAR2(80) NOT NULL,
   ip NVARCHAR2(80),
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   browser NVARCHAR2(255),
   PRIMARY KEY (SITE_LOG_ID)
 );
@@ -60,7 +60,7 @@ CREATE TABLE web_tab (
   site_id INTEGER REFERENCES web_site(site_id),
   tab_position INTEGER NOT NULL,
   enabled CHAR(1) DEFAULT 1 NOT NULL,
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -74,7 +74,7 @@ CREATE TABLE web_page_version (
   internal_description CLOB,
   notes CLOB,
   parent_page_version_id INTEGER REFERENCES web_page_version(page_version_id),
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -88,7 +88,7 @@ CREATE TABLE web_page_group (
   internal_description CLOB,
   group_position INTEGER NOT NULL,
   tab_id INTEGER REFERENCES web_tab(tab_id),
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -100,7 +100,7 @@ CREATE TABLE web_tab_banner(
   tab_banner_id INTEGER NOT NULL,
   tab_id INTEGER REFERENCES web_tab(tab_id),
   image_id INTEGER REFERENCES project_files(item_id),
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -118,7 +118,7 @@ CREATE TABLE web_page (
   tab_banner_id INTEGER REFERENCES web_tab_banner(tab_banner_id),
   notes CLOB,
   enabled CHAR(1) DEFAULT 1 NOT NULL,
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -133,7 +133,7 @@ CREATE TABLE web_page_row (
   row_position INTEGER NOT NULL,
   page_version_id INTEGER REFERENCES web_page_version( page_version_id),
   enabled CHAR(1) DEFAULT 1 NOT NULL,
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -151,7 +151,7 @@ CREATE TABLE web_icelet (
   PRIMARY KEY (ICELET_ID)
 );
 
-CREATE SEQUENCE web_row_column_ow_column_id_seq;
+CREATE SEQUENCE web_row_colum_ow_column_id_seq;
 CREATE TABLE web_row_column (
   row_column_id INTEGER NOT NULL,
   column_position INTEGER NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE web_row_column (
   page_row_id INTEGER REFERENCES web_page_row(page_row_id),
   icelet_id INTEGER REFERENCES web_icelet(icelet_id),
   enabled CHAR(1) DEFAULT 1 NOT NULL,
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -174,7 +174,7 @@ CREATE TABLE web_icelet_property (
   property_type_constant INTEGER,
   property_value CLOB,
   row_column_id INTEGER NOT NULL REFERENCES web_row_column (row_column_id),
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -189,7 +189,7 @@ CREATE TABLE portfolio_category (
   category_position_id INTEGER REFERENCES portfolio_category(category_id ),
   parent_category_id INTEGER REFERENCES portfolio_category(category_id),
   enabled CHAR(1) DEFAULT 1 NOT NULL,
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby NUMBER(10,0) NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
@@ -206,7 +206,7 @@ CREATE TABLE portfolio_item (
   caption NVARCHAR2(300),
   portfolio_category_id INTEGER REFERENCES portfolio_category(category_id),
   enabled CHAR(1) DEFAULT 1 NOT NULL,
-  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INTEGER NOT NULL REFERENCES "access"(user_id),
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER NOT NULL REFERENCES "access"(user_id),
