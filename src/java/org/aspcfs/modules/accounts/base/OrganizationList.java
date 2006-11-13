@@ -1786,17 +1786,17 @@ public class OrganizationList extends Vector implements SyncableList {
 
     if (firstName != null) {
       if (firstName.indexOf("%") >= 0) {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namefirst) LIKE " + DatabaseUtils.toLowerCase(db) + " (?) AND c.org_id = o.org_id) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namefirst) LIKE ? AND c.org_id = o.org_id) ");
       } else {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namefirst) = " + DatabaseUtils.toLowerCase(db) + " (?) AND c.org_id = o.org_id) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namefirst) = ? AND c.org_id = o.org_id) ");
       }
     }
 
     if (lastName != null) {
       if (lastName.indexOf("%") >= 0) {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namelast) LIKE " + DatabaseUtils.toLowerCase(db) + " (?) AND c.org_id = o.org_id) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namelast) LIKE ? AND c.org_id = o.org_id) ");
       } else {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namelast) = " + DatabaseUtils.toLowerCase(db) + " (?) AND c.org_id = o.org_id) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namelast) = ? AND c.org_id = o.org_id) ");
       }
     }
 
@@ -1810,21 +1810,21 @@ public class OrganizationList extends Vector implements SyncableList {
 
     if (contactCity != null && !"-1".equals(contactCity)) {
       if (contactCity.indexOf("%") >= 0) {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.city) LIKE " + DatabaseUtils.toLowerCase(db) + " (?))) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.city) LIKE ?)) ");
       } else {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.city) =  " + DatabaseUtils.toLowerCase(db) + " (?))) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.city) = ?)) ");
       }
     }
 
     if (contactState != null && !"-1".equals(contactState)) {
       if (contactState.indexOf("%") >= 0) {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.state) like " + DatabaseUtils.toLowerCase(db) + " (?))) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.state) LIKE ?)) ");
       } else {
-        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.state) = " + DatabaseUtils.toLowerCase(db) + " (?))) ");
+        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.state) = ?)) ");
       }
     }
     if (contactCountry != null && !"-1".equals(contactCountry)) {
-      sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.country) = " + DatabaseUtils.toLowerCase(db) + " (?))) ");
+      sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.country) = ?)) ");
     }
     if (excludeUnapprovedAccounts) {
       sqlFilter.append("AND (o.status_id IS NULL OR o.status_id = ?) ");
