@@ -403,7 +403,7 @@ public class UserBean extends GenericBean {
    * @since     1.12
    */
   public String getIdRange() {
-    return idRange;
+    return getUserRecord().getIdRange();
   }
 
 

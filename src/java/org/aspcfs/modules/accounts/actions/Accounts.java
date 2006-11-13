@@ -470,18 +470,18 @@ public final class Accounts extends CFSModule {
       orgListInfo.setCurrentOffset(0);
       if (orgListInfo.getSearchOptionValue("searchcodeContactCountry") != null && !"-1".equals(orgListInfo.getSearchOptionValue("searchcodeContactCountry"))) {
         StateSelect stateSelect = new StateSelect(systemStatus,orgListInfo.getSearchOptionValue("searchcodeContactCountry"));
-        if (orgListInfo.getSearchOptionValue("searchcodeContactOtherState") != null) {
+        if (orgListInfo.getSearchOptionValue("searchContactOtherState") != null) {
           HashMap map = new HashMap();
-          map.put((String)orgListInfo.getSearchOptionValue("searchcodeContactCountry"), (String)orgListInfo.getSearchOptionValue("searchcodeContactOtherState"));
+          map.put((String)orgListInfo.getSearchOptionValue("searchcodeContactCountry"), (String)orgListInfo.getSearchOptionValue("searchContactOtherState"));
           stateSelect.setPreviousStates(map);
         }
         context.getRequest().setAttribute("ContactStateSelect", stateSelect);
       }
       if (orgListInfo.getSearchOptionValue("searchcodeAccountCountry") != null && !"-1".equals(orgListInfo.getSearchOptionValue("searchcodeAccountCountry"))) {
         StateSelect stateSelect = new StateSelect(systemStatus,orgListInfo.getSearchOptionValue("searchcodeAccountCountry"));
-        if (orgListInfo.getSearchOptionValue("searchcodeAccountOtherState") != null) {
+        if (orgListInfo.getSearchOptionValue("searchAccountOtherState") != null) {
           HashMap map = new HashMap();
-          map.put((String)orgListInfo.getSearchOptionValue("searchcodeAccountCountry"), (String)orgListInfo.getSearchOptionValue("searchcodeAccountOtherState"));
+          map.put((String)orgListInfo.getSearchOptionValue("searchcodeAccountCountry"), (String)orgListInfo.getSearchOptionValue("searchAccountOtherState"));
           stateSelect.setPreviousStates(map);
         }
         context.getRequest().setAttribute("AccountStateSelect", stateSelect);

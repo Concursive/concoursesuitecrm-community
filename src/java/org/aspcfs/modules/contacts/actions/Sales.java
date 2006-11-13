@@ -441,6 +441,8 @@ public final class Sales extends CFSModule {
     String addAnother = (String) context.getRequest().getAttribute("addAnother");
     if (addAnother == null || "".equals(addAnother.trim())) {
       thisContact = (Contact) context.getFormBean();
+    } else {
+       thisContact = new Contact();
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
     try {
@@ -956,8 +958,9 @@ public final class Sales extends CFSModule {
         actionPlanList.setSiteId(contact.getSiteId());
         actionPlanList.setLinkObjectId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS));
         actionPlanList.buildList(db);
-        HtmlSelect actionPlanSelect = actionPlanList.getHtmlSelectObj();
+        HtmlSelect actionPlanSelect = new HtmlSelect();
         actionPlanSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "-- None --"));
+        actionPlanSelect.addItems(actionPlanList.getHtmlSelectObj());
         context.getRequest().setAttribute("actionPlanSelect", actionPlanSelect);
       }
     } catch (Exception e) {
@@ -1431,6 +1434,11 @@ public final class Sales extends CFSModule {
         // this request is using an additional database connection without
         // closing the first!
         // it could be moved down below to fix this
+        if (from != null && !"list".equals(from)) {
+          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
+        } else {
+          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
+        }
         if (leadAssignment == null || !"true".equals(leadAssignment)) {
           executeCommandWorkAccount(context);
         } else {

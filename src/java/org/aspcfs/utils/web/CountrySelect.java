@@ -43,11 +43,20 @@ public class CountrySelect extends HtmlSelect {
    * @param  thisSystem  Description of the Parameter
    */
   public CountrySelect(SystemStatus thisSystem) {
-    this.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
-    this.setDefaultValue("UNITED STATES");
-    addCountries();
+    this(thisSystem, "UNITED STATES");
   }
 
+  /**
+   * Constructor for the CountrySelect object
+   * 
+   * @param thisSystem  Description of the Parameter
+   * @param defaultCountry  Description of the Parameter
+   */
+  public CountrySelect(SystemStatus thisSystem, String defaultCountry) {
+    this.addItem(-1, thisSystem.getLabel("calendar.none.4dashes"));
+    this.setDefaultValue(defaultCountry);
+    addCountries();
+  }
 
   /**
    *  Constructor for the CountrySelect object

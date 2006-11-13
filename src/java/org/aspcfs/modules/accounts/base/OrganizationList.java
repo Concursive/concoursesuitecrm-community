@@ -49,6 +49,7 @@ import java.util.ArrayList;
  */
 public class OrganizationList extends Vector implements SyncableList {
 
+  private static final long serialVersionUID = 2268314721560915731L;
   public final static int TRUE = 1;
   public final static int FALSE = 0;
   protected int includeEnabled = TRUE;
@@ -1231,7 +1232,7 @@ public class OrganizationList extends Vector implements SyncableList {
    *
    * @param  tmp  The new accountState value
    */
-  public void setAccountState(String tmp) {
+  public void setAccountOtherState(String tmp) {
     this.state = tmp;
   }
 

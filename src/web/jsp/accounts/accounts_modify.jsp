@@ -964,11 +964,11 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\"");%>
-      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <%
-        CountrySelect = new CountrySelect(systemStatus);
-       %>
+        CountrySelect = new CountrySelect(systemStatus, applicationPrefs.get("SYSTEM.COUNTRY"));
+        CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\"");
+      %>
+      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -991,6 +991,8 @@
 <%    
   }
   ++acount;
+  OrganizationAddress thisAddress = new OrganizationAddress();
+  thisAddress.setCountry(applicationPrefs.get("SYSTEM.COUNTRY"));
 %>
   <tr class="containerBody">
     <td class="formLabel">
@@ -1046,11 +1048,11 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
     </td>
@@ -1068,11 +1070,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <%
-        CountrySelect = new CountrySelect(systemStatus);
-       %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -1174,11 +1173,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','"+thisAddress.getState()+"');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <%
-        CountrySelect = new CountrySelect(systemStatus);
-       %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -1201,6 +1197,8 @@
 <%    
   }
   ++acount;
+  ContactAddress thisAddress = new ContactAddress();
+  thisAddress.setCountry(applicationPrefs.get("SYSTEM.COUNTRY"));
 %>
   <tr class="containerBody">
     <td class="formLabel">
@@ -1256,11 +1254,11 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>">
-        <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
+        <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
         <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
     </td>
@@ -1278,11 +1276,8 @@
       <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "','');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <%
-        CountrySelect = new CountrySelect(systemStatus);
-       %>
     </td>
   </tr>
   <tr class="containerBody">

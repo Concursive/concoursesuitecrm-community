@@ -49,6 +49,7 @@ import java.util.*;
  */
 public class ContactList extends Vector implements UserCentric {
 
+  private static final long serialVersionUID = -8573897895619490285L;
   //EXCLUDE_PERSONAL excludes all personal contacts, IGNORE_PERSONAL ignores personal contacts. By default the
   // list excludes personal contacts
   public final static int EXCLUDE_PERSONAL = -1;
@@ -2768,7 +2769,6 @@ public class ContactList extends Vector implements UserCentric {
     if (emptyHtmlSelectRecord != null) {
       contactListSelect.addItem(-1, emptyHtmlSelectRecord);
     }
-    boolean foundDefaultContact = false;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Contact thisContact = (Contact) i.next();
@@ -2802,7 +2802,6 @@ public class ContactList extends Vector implements UserCentric {
     if (emptyHtmlSelectRecord != null) {
       contactListSelect.addItem(-1, emptyHtmlSelectRecord);
     }
-    boolean foundDefaultContact = false;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Contact thisContact = (Contact) i.next();
@@ -3877,10 +3876,12 @@ public class ContactList extends Vector implements UserCentric {
     }
 
     if (searchText != null && !"".equals(searchText)) {
-      sqlFilter.append("AND ( " + DatabaseUtils.toLowerCase(db)
-          + "(c.namelast) LIKE ? OR " + DatabaseUtils.toLowerCase(db)
-          + "(c.namefirst) LIKE ? OR "
-          + DatabaseUtils.toLowerCase(db) + "(c.org_name) LIKE ? ) ");
+      sqlFilter.append(
+          "AND ( " + DatabaseUtils.toLowerCase(db) + "(c.namelast) LIKE ? " +
+            "OR " + DatabaseUtils.toLowerCase(db) + "(c.namefirst) LIKE ? " +
+            "OR " + DatabaseUtils.toLowerCase(db) + "(c.org_name) LIKE ? " +
+          ")"
+      );
     }
 
     if (ignoreTypeIdList.size() > 0) {
@@ -4839,7 +4840,7 @@ public class ContactList extends Vector implements UserCentric {
     if (ignoreTypeIdList.size() > 0) {
       Iterator iterator = ignoreTypeIdList.iterator();
       while (iterator.hasNext()) {
-        String nextValue = (String) iterator.next();
+        iterator.next();
         pst.setBoolean(++i, false);
       }
     }

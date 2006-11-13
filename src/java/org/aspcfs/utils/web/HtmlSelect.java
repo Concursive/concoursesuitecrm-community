@@ -718,6 +718,14 @@ public class HtmlSelect extends ArrayList {
     this.add(new HtmlOption(String.valueOf(tmp1), tmp2));
   }
 
+  public void addItems(HtmlSelect items)
+  {
+	    Iterator i = items.iterator();
+	    while (i.hasNext()) {
+	    	HtmlOption thisItem = (HtmlOption) i.next();
+	      this.add(thisItem);
+	    }
+  }
 
   /**
    *  Adds a feature to the Item attribute of the HtmlSelect object

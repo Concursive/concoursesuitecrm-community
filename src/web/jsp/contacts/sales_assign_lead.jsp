@@ -43,10 +43,6 @@
       message += label("check.actionplan.managerId", "- Plan Manager is a required field\r\n");
       formTest = false;
     }
-    if (form.owner.value == -1) {
-      message += label("check.actionplan.assignedTo", "- Plan Assignee is a required field\r\n");
-      formTest = false;
-    }
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;

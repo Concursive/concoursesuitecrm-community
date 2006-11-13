@@ -106,7 +106,7 @@ public class PrivateString {
       }
       return PrivateString.loadEncodedKey(filename);
     } catch (Exception e) {
-      System.out.println(e);
+      e.printStackTrace(System.out);
     }
     return null;
   }

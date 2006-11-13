@@ -858,7 +858,7 @@ public class DocumentStoreList extends ArrayList {
     }
     if (documentStoresForUser > -1) {
       sqlFilter.append(
-          "AND ((ds.document_store_id IN (SELECT DISTINCT document_store_id FROM document_store_user_member WHERE item_id = ? AND site_id " + (siteId == -1 ? "IS NULL " : " = ? ") + "))");
+          "AND ((ds.document_store_id IN (SELECT DISTINCT document_store_id FROM document_store_user_member WHERE item_id = ? )) ");
       sqlFilter.append(
           "OR (ds.document_store_id IN (SELECT DISTINCT document_store_id FROM document_store_role_member WHERE item_id = ? AND site_id " + (siteId == -1 ? "IS NULL " : " = ? ") + "))");
       sqlFilter.append(
@@ -913,9 +913,6 @@ public class DocumentStoreList extends ArrayList {
     }
     if (documentStoresForUser > -1) {
       pst.setInt(++i, documentStoresForUser);
-      if (siteId != -1) {
-        pst.setInt(++i, siteId);
-      }
       pst.setInt(++i, userRole);
       if (siteId != -1) {
         pst.setInt(++i, siteId);

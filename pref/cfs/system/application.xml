@@ -472,8 +472,8 @@
 					<parameter name="history.contactId" value="${this.followupContactId}"/>
 					<parameter name="history.enabled" value="true"/>
 					<parameter name="history.status" value="Insert"/>
-					<parameter name="history.type" value="Pending: ${this.callType}"/>
-					<parameter name="history.description"><![CDATA[${this.subject}]]></parameter>
+					<parameter name="history.type" value="Pending: ${this.alertCallType}"/>
+					<parameter name="history.description"><![CDATA[${this.alertText}]]></parameter>
 				</parameters>
 			</component>
 		</components>
@@ -516,8 +516,8 @@
 					<parameter name="history.orgId" value="${this.orgId}"/>
 					<parameter name="history.enabled" value="true"/>
 					<parameter name="history.status" value="Insert"/>
-					<parameter name="history.type" value="Pending: ${this.callType}"/>
-					<parameter name="history.description"><![CDATA[${this.subject}]]></parameter>
+					<parameter name="history.type" value="Pending: ${this.alertCallType}"/>
+					<parameter name="history.description"><![CDATA[${this.alertText}]]></parameter>
 				</parameters>
 			</component>
 		</components>
@@ -593,8 +593,8 @@
             <parameter name="history.previousContactId" value="${previous.contactId}"/>
             <parameter name="history.enabled" value="true"/>
             <parameter name="history.status" value="Update"/>
-            <parameter name="history.type" value="Pending: ${this.callType}"/>
-            <parameter name="history.description"><![CDATA[${this.subject}]]>
+            <parameter name="history.type" value="Pending: ${this.alertCallType}"/>
+            <parameter name="history.description"><![CDATA[${this.alertText}]]>
           </parameter>
         </parameters>
         </component>
@@ -611,8 +611,8 @@
             <parameter name="history.previousContactId" value="${previous.contactId}"/>
             <parameter name="history.enabled" value="true"/>
             <parameter name="history.status" value="Update"/>
-            <parameter name="history.type" value="Pending: ${this.callType}"/>
-            <parameter name="history.description"><![CDATA[${this.subject}]]>
+            <parameter name="history.type" value="Pending: ${this.alertCallType}"/>
+            <parameter name="history.description"><![CDATA[${this.alertText}]]>
             </parameter>
           </parameters>
         </component>
@@ -749,8 +749,8 @@
             <parameter name="history.previousOrgId" value="${previous.orgId}"/>
             <parameter name="history.enabled" value="true"/>
             <parameter name="history.status" value="Update"/>
-            <parameter name="history.type" value="Pending: ${this.callType}"/>
-            <parameter name="history.description"><![CDATA[${this.subject}]]>
+            <parameter name="history.type" value="Pending: ${this.alertCallType}"/>
+            <parameter name="history.description"><![CDATA[${this.alertText}]]>
           </parameter>
         </parameters>
         </component>
@@ -767,8 +767,8 @@
             <parameter name="history.previousOrgId" value="${previous.orgId}"/>
             <parameter name="history.enabled" value="true"/>
             <parameter name="history.status" value="Update"/>
-            <parameter name="history.type" value="Pending: ${this.callType}"/>
-            <parameter name="history.description"><![CDATA[${this.subject}]]>
+            <parameter name="history.type" value="Pending: ${this.alertCallType}"/>
+            <parameter name="history.description"><![CDATA[${this.alertText}]]>
             </parameter>
           </parameters>
         </component>

@@ -32,10 +32,9 @@ import java.util.Hashtable;
 
 /**
  * Description of the Class
- *
+ * 
  * @author Peter Kehl
- * @version $Id: LeadUtils.java,v 1.1.4.4 2005/03/17 18:12:57 mrajkowski Exp
- *          $
+ * @version $Id$
  * @created March 2, 2005
  */
 public class LDAPUtils {
@@ -44,7 +43,8 @@ public class LDAPUtils {
   public static int RESULT_INVALID = 0;
   public static int RESULT_VALID = 1;
 
-  public static int authenticateUser(ApplicationPrefs prefs, Connection db, LoginBean bean) {
+  public static int authenticateUser(ApplicationPrefs prefs, Connection db,
+      LoginBean bean) {
     String searchValue = null;
     // Use Centric CRM Login Id
     if ("username".equals(prefs.get("LDAP.CENTRIC_CRM.FIELD"))) {
@@ -63,17 +63,20 @@ public class LDAPUtils {
         }
       }
     } catch (Exception e) {
-      System.out.println("LDAPUtils-> authenticateUser error: " + e.getMessage());
+      System.out.println("LDAPUtils-> authenticateUser error: "
+          + e.getMessage());
       return RESULT_INVALID;
     }
     return authenticateUser(prefs, searchValue, bean.getLdapPassword());
   }
 
-  public static int authenticateUser(ApplicationPrefs prefs, String username, String password) {
+  public static int authenticateUser(ApplicationPrefs prefs, String username,
+      String password) {
     // Proceed with LDAP
     if (username != null && isLdapString(username)) {
       String userDN = null;
-      boolean searchByAttribute = "true".equals(prefs.get("LDAP.SEARCH.BY_ATTRIBUTE"));
+      boolean searchByAttribute = "true".equals(prefs
+          .get("LDAP.SEARCH.BY_ATTRIBUTE"));
       if (searchByAttribute) {
         userDN = searchLDAP(prefs, username);
       } else {
@@ -104,22 +107,27 @@ public class LDAPUtils {
       String searchName = prefs.get("LDAP.SEARCH.ATTRIBUTE");
       String searchContainer = prefs.get("LDAP.SEARCH.CONTAINER");
       boolean doSearchSubtree = "true".equals(prefs.get("LDAP.SEARCH.SUBTREE"));
-      String filter = "(& (objectclass=" + prefs.get("LDAP.SEARCH.ORGPERSON") + ") (" + searchName + "=" + searchValue + " ). )";
+      String filter = "(& (objectclass=" + prefs.get("LDAP.SEARCH.ORGPERSON")
+          + ") (" + searchName + "=" + searchValue + " ). )";
       SearchControls cons = new SearchControls();
-      cons.setSearchScope(doSearchSubtree ? SearchControls.SUBTREE_SCOPE : SearchControls.ONELEVEL_SCOPE);
+      cons.setSearchScope(doSearchSubtree ? SearchControls.SUBTREE_SCOPE
+          : SearchControls.ONELEVEL_SCOPE);
       NamingEnumeration results = ldap.search(searchContainer, filter, cons);
       if (results.hasMore()) {
-        System.out.println("LDAPUtils-> Found user with " + searchName + "= " + searchValue);
+        System.out.println("LDAPUtils-> Found user with " + searchName + "= "
+            + searchValue);
         SearchResult object = (SearchResult) results.next();
         String result = object.getName() + ',' + searchContainer;
         if (results.hasMore()) {
-          System.out.println("LDAPUtils-> Several users with same " + searchName + "= " + searchValue);
+          System.out.println("LDAPUtils-> Several users with same "
+              + searchName + "= " + searchValue);
           return null;
         } else {
           return result;
         }
       } else {
-        System.out.println("LDAPUtils-> Didn't find user with " + searchName + "= " + searchValue);
+        System.out.println("LDAPUtils-> Didn't find user with " + searchName
+            + "= " + searchValue);
       }
     } catch (Throwable t) {
       System.out.println("LDAPUtils-> Search in LDAP failed: " + t);
@@ -136,7 +144,8 @@ public class LDAPUtils {
   }
 
   // @return true if authenticated OK, false otherwise
-  private static boolean authenticateLDAP(ApplicationPrefs prefs, String userDN, String password) {
+  private static boolean authenticateLDAP(ApplicationPrefs prefs,
+      String userDN, String password) {
     boolean result = false;
     DirContext ldap = null;
     try {
@@ -157,14 +166,15 @@ public class LDAPUtils {
       } catch (Throwable t) {
       }
       ldap = null;
-      System.out.println("LDAPUtils-> Authentication to LDAP - result: " + result);
-      return result;
+      System.out.println("LDAPUtils-> Authentication to LDAP - result: "
+          + result);
     }
+    return result;
   }
 
-  //  Check for apostrophes, parenthesis and other special characters which could
-  //   be unsafe to put into LDAP query.
-  //   @return true if value can be passed to LDAP safely, false otherwise
+  // Check for apostrophes, parenthesis and other special characters which could
+  // be unsafe to put into LDAP query.
+  // @return true if value can be passed to LDAP safely, false otherwise
   public static boolean isLdapString(String value) {
     for (int i = 0; i < value.length(); i++) {
       final char c = value.charAt(i);
