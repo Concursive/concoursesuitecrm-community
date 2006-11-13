@@ -461,11 +461,11 @@ public class Registration extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "registration_registration_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO registration " +
-        "(" + (id > -1 ? "registration_id, " : "") + "email, profile, name_first, name_last, " + //TO DO [ table does not exists]
+        "(" + (id > -1 ? "registration_id, " : "") + "email, profile, name_first, name_last, " +
         "company, registration_text, os_version, java_version, webserver, " +
         "ip_address, edition, crc, " +
         "key_file, key_hex, enabled) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
