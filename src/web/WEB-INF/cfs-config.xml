@@ -599,7 +599,7 @@
     <forward name="AddProductsOK" resource="/products/product_options.jsp"
              layout="style"/>
     <forward name="AddOptionsOK" resource="/products/product_set_opener.jsp"
-             layout="nav"/>
+             layout="style"/>
     <forward name="AccountProductCategoriesOK"
              resource="/accounts/account_product_categories.jsp"
              layout="style"/>

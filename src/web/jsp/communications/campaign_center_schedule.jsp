@@ -75,7 +75,6 @@
 <input type="submit" name="Save" value="<dhv:label name="campaign.updateCampaignSchedule">Update Campaign Schedule</dhv:label>">
 </dhv:permission>
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br />
-<br />
 <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>

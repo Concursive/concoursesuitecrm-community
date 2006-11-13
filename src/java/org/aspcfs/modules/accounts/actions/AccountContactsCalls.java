@@ -235,8 +235,9 @@ public final class AccountContactsCalls extends CFSModule {
 
       //Result Lookup
       //Need the result types for display purposes
+      if(thisCall.getResultId()>-1){
       CallResult thisResult = new CallResult(db, thisCall.getResultId());
-      context.getRequest().setAttribute("CallResult", thisResult);
+      context.getRequest().setAttribute("CallResult", thisResult);}
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

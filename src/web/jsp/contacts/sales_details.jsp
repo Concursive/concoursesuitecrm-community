@@ -136,7 +136,7 @@
 
   function continueModifyLead() {
     var rating = '<%= ContactDetails.getRating() %>';
-    var comments = '<%= ContactDetails.getComments() %>';
+    var comments = '<%= toHtml(ContactDetails.getComments()) %>';
     var contactId = '<%= ContactDetails.getId() %>';
     var owner = '<%= ContactDetails.getOwner() %>';
     if (owner == '-1') {
@@ -247,7 +247,7 @@
 
   function continueTrashLead() {
     var rating = '<%= ContactDetails.getRating() %>';
-    var comments = '<%= ContactDetails.getComments() %>';
+    var comments = '<%= toHtml(ContactDetails.getComments()) %>';
     var leadStatus = '<%= Contact.LEAD_TRASHED %>';
     var contactId = '<%= ContactDetails.getId() %>';
     var nextTo = '<%= from %>';

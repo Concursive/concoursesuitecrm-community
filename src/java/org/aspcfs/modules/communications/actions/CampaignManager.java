@@ -713,6 +713,20 @@ public final class CampaignManager extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy()) && !hasCampaignUserGroupAccess(db, campaign.getId(), this.getUserId(context))) {
         return ("PermissionError");
       }
+      //If request redirected due to form error, make sure to set them
+      String activeDate = context.getRequest().getParameter("activeDate");
+      String activeDateTimeZone = context.getRequest().getParameter(
+          "activeDateTimeZone");
+      String sendMethodId = context.getRequest().getParameter("sendMethodId");
+      if (activeDate != null && activeDateTimeZone != null) {
+        campaign.setActiveDateTimeZone(activeDateTimeZone);
+        campaign.setTimeZoneForDateFields(
+            context.getRequest(), activeDate, "activeDate");
+      }
+      if (sendMethodId != null) {
+        campaign.setSendMethodId(
+            Integer.parseInt(sendMethodId));
+      }
       context.getRequest().setAttribute("Campaign", campaign);
       //Prepare the list of available delivery types
       LookupList deliveryList = new LookupList(db, "lookup_delivery_options");

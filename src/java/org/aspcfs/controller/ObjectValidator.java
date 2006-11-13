@@ -69,7 +69,7 @@ public class ObjectValidator {
   private static int INVALID_EMAIL = 2004091002;
   private static int INVALID_NOT_REQUIRED_DATE = 2004091003;
   private static int INVALID_EMAIL_NOT_REQUIRED = 2005060801;
-
+  private static int PAST_DATE = 2006110117;
 
   /**
    * Description of the Method
@@ -642,7 +642,11 @@ public class ObjectValidator {
     //  Campaign
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.communications.base.Campaign")) {
-      //Campaign campaign = (Campaign) object;
+      Campaign campaign = (Campaign) object;
+      if (campaign.getActiveDate() != null 
+              && campaign.getActiveDate().before(new java.util.Date())) {
+        addError(systemStatus, object, "activeDate", PAST_DATE);
+      } 
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }
 
@@ -2270,17 +2274,18 @@ public class ObjectValidator {
    */
   public static void addError(SystemStatus systemStatus, Object object, String field, int errorType) {
     if (errorType == REQUIRED_FIELD) {
-      addError(systemStatus, object, field, "object.validation.required");
-    }
-    if (errorType == INVALID_DATE || errorType == INVALID_NOT_REQUIRED_DATE) {
+      addError(
+          systemStatus, object, field, "object.validation.required");
+    } else if (errorType == PAST_DATE) {
+      addError(
+          systemStatus, object, field, "object.validation.dateInThePast");
+    } else if (errorType == INVALID_DATE || errorType == INVALID_NOT_REQUIRED_DATE) {
       addError(
           systemStatus, object, field, "object.validation.incorrectDateFormat");
-    }
-    if (errorType == INVALID_NUMBER) {
+    } else if (errorType == INVALID_NUMBER) {
       addError(
           systemStatus, object, field, "object.validation.incorrectNumberFormat");
-    }
-    if (errorType == INVALID_EMAIL || errorType == INVALID_EMAIL_NOT_REQUIRED) {
+    } else if (errorType == INVALID_EMAIL || errorType == INVALID_EMAIL_NOT_REQUIRED) {
       addError(
           systemStatus, object, field, "object.validation.invalidEmailAddress");
     }

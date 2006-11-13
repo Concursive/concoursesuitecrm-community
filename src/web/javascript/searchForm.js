@@ -84,8 +84,15 @@ function addValues() {
 	operatorID = operatorList.options[operatorList.selectedIndex].value
 	searchText = document.searchForm.searchValue.value;
   if (document.searchForm.allSites) {
+  if(sites.options){
     siteName = sites.options[sites.selectedIndex].text;
     siteID = sites.options[sites.selectedIndex].value;
+    }
+   else
+    { 
+    siteName = document.searchForm.siteName2.value;
+    siteID = document.searchForm.siteId2.value;
+    }
   } else {
     siteName = document.searchForm.siteName2.value;
     siteID = document.searchForm.siteId2.value;

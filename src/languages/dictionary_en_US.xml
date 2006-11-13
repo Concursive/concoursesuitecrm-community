@@ -9639,6 +9639,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="object.validation.defaultTextLengthNotGTMaxChars">
       <value><![CDATA[default text length cannot be greater than max chars]]></value>
     </param>
+    <param name="object.validation.dateInThePast">
+      <value><![CDATA[Date cannot be in the past]]></value>
+    </param>
     <param name="object.validation.expiredUser">
       <value><![CDATA[The selected user has expired]]></value>
     </param>

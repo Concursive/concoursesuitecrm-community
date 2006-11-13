@@ -389,8 +389,8 @@ public class Call extends GenericBean {
    * @param followupContactId The new FollowupContactId value
    */
   public void setFollowupContactId(String followupContactId) {
-    this.followupContactId = Integer.parseInt(followupContactId);
-  }
+      this.followupContactId = Integer.parseInt(followupContactId);
+    }
 
   /**
    * Sets the parentId attribute of the Call object
