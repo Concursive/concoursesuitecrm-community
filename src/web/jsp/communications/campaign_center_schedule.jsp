@@ -87,11 +87,11 @@
       <dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label>
     </td>
     <td>
-      <dhv:permission name="campaign-campaigns-edit" none="true">
-        <input type="text" size="10" name="activeDate" value="<zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" />" disabled="disabled">
-      </dhv:permission>
       <dhv:permission name="campaign-campaigns-edit">
-        <zeroio:dateSelect form="inputForm" field="activeDate" timestamp="<%= Campaign.getActiveDate() %>"  timeZone="<%= (Campaign.getActiveDateTimeZone() == null) ? User.getTimeZone(): Campaign.getActiveDateTimeZone() %>" showTimeZone="true" />
+        <zeroio:dateSelect form="inputForm" field="activeDate" timestamp="<%= Campaign.getActiveDate() %>"/>
+        <dhv:label name="project.at">at</dhv:label>
+        <zeroio:timeSelect baseName="activeDate" value="<%= Campaign.getActiveDate() %>" timeZone="<%= (Campaign.getActiveDateTimeZone() == null) ? User.getTimeZone(): Campaign.getActiveDateTimeZone() %>" showTimeZone="true"/>
+        <font color="red">*</font>
       </dhv:permission>
       <%=showAttribute(request,"activeDateError")%>
     </td>

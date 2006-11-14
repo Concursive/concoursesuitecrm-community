@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.TimeZone;
+import java.util.Calendar;
 
 /**
  * @author Kevin Duffey
@@ -448,6 +449,41 @@ public class GenericBean implements Serializable {
     }
   }
 
+
+  /**
+   * Sets the timeOfDayForDateFields attribute of the GenericBean object
+   *
+   * @param request The new timeZoneForDateFields value
+   * @param ts   The new timeZoneForDateFields value
+   * @param field   The new timeZoneForDateFields value
+   */
+  public void setTimeOfDayForDateFields(HttpServletRequest request, java.sql.Timestamp ts, String field) {
+    try {
+      if (ts != null && request.getParameter(field + "Hour") != null) {
+        //check for timeofday fields in the request and update the timestamp
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(ts.getTime());
+        int hour = Integer.parseInt((String) request.getParameter(field + "Hour"));
+        int minute = Integer.parseInt((String) request.getParameter(field + "Minute"));
+        int ampm = Integer.parseInt((String) request.getParameter(field + "AMPM"));
+        if (ampm == Calendar.AM) {
+          if (hour == 12) hour = 0;
+        } else {
+          if (hour < 12) hour += 12;
+        }
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);    
+        
+        field = field.substring(0, 1).toUpperCase() + field.substring(1);
+        
+        Class[] argTypes = new Class[]{ts.getClass()};
+        Method method = this.getClass().getMethod("set" + field, argTypes);
+        method.invoke(this, new Object[]{new Timestamp(cal.getTimeInMillis())});
+      }
+    } catch (Exception e) {
+      errors.put(field + "Error", "invalid date");
+    }
+  }
 
   /**
    * Gets the fileLibraryPath attribute of the GenericBean object

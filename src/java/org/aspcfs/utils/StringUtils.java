@@ -482,7 +482,7 @@ public class StringUtils {
    * @return Description of the Returned Value
    */
   public static boolean hasText(String in) {
-    return (in != null && !(("".equals(in) || "null".equals(in))));
+    return (in != null && !(("".equals(in.trim()) || "null".equals(in))));
   }
 
 

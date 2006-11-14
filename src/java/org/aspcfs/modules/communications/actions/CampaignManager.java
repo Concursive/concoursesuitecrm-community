@@ -36,6 +36,7 @@ import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.RequestUtils;
+import org.aspcfs.utils.StringUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -722,6 +723,8 @@ public final class CampaignManager extends CFSModule {
         campaign.setActiveDateTimeZone(activeDateTimeZone);
         campaign.setTimeZoneForDateFields(
             context.getRequest(), activeDate, "activeDate");
+        campaign.setTimeOfDayForDateFields(
+          context.getRequest(), campaign.getActiveDate(), "activeDate");
       }
       if (sendMethodId != null) {
         campaign.setSendMethodId(
@@ -1168,22 +1171,32 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     int resultCount = -1;
     boolean isValid = false;
-    Campaign campaign = null;
-
+    
     String campaignId = context.getRequest().getParameter("id");
     String activeDate = context.getRequest().getParameter("activeDate");
     String activeDateTimeZone = context.getRequest().getParameter(
         "activeDateTimeZone");
-
+    
+    Campaign campaign = new Campaign();
+    if (!StringUtils.hasText(activeDate)) {
+      //active date has not been specified. return form back to user
+      campaign.getErrors().put("activeDateError", 
+          this.getSystemStatus(context).getLabel("object.validation.required"));
+      processErrors(context, campaign.getErrors());
+      return executeCommandViewSchedule(context);
+    }
+    
     try {
       db = this.getConnection(context);
-      campaign = new Campaign(db, campaignId);
+      campaign.queryRecord(db, Integer.parseInt(campaignId));
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
       }
       campaign.setActiveDateTimeZone(activeDateTimeZone);
       campaign.setTimeZoneForDateFields(
           context.getRequest(), activeDate, "activeDate");
+      campaign.setTimeOfDayForDateFields(
+          context.getRequest(), campaign.getActiveDate(), "activeDate");
 
       if (context.getRequest().getParameter("active") != null) {
         campaign.setActive(context.getRequest().getParameter("active"));
