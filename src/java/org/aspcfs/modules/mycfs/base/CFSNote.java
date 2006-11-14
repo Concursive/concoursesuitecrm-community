@@ -170,8 +170,9 @@ public class CFSNote extends GenericBean {
     }
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-            "FROM cfsinbox_messagelink ml,cfsinbox_message m " +
+        "SELECT m.*, ml.id AS ml_id, ml.sent_to, ml.status, ml.viewed, ml.enabled, ml.sent_from, " +
+            "ct_sent.namefirst AS sent_namefirst, ct_sent.namelast AS sent_namelast " +
+            "FROM cfsinbox_messagelink ml, cfsinbox_message m " +
             "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
             "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
             "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +

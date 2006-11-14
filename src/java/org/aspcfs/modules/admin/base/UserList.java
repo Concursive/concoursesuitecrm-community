@@ -1504,18 +1504,18 @@ public class UserList extends Vector implements SyncableList {
             "a.last_ip, a.timezone, a.startofday AS access_startofday, " +
             "a.endofday AS access_endofday, a.expires, a.alias, " +
             "a.contact_id AS contact_id_link, a.user_id AS access_user_id, " +
-            "a.enabled AS access_enabled, a.assistant, " +
+            "a.enabled AS access_enabled, a.assistant AS access_assistant, " +
             "a.entered AS access_entered, a.enteredby AS access_enteredby, " +
             "a.modified AS access_modified, a.modifiedby AS access_modifiedby, " +
             "a.currency, a." + DatabaseUtils.addQuotes(db, "language") + ", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
             "r." + DatabaseUtils.addQuotes(db, "role") + " AS systemrole, r.role_type, " +
             "m_usr.enabled AS mgr_enabled, " +
-            "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
             "b.description AS site_id_name, " +
+            "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, " +
+            "d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
             "lind.description AS industry_name, " +
             "lcs.description AS source_name, " +
-            "lcr.description AS rating_name, " +
-            "o.name AS org_name, o.enabled AS orgenabled " +
+            "lcr.description AS rating_name " +
             "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
             "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
             "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +

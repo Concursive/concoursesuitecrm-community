@@ -591,14 +591,14 @@ public class User extends GenericBean {
       return false;
     }
   }
-  
+
   /**
    * Description of the Method
    */
   public void doLeadsLock() {
     while (leadsLock) {
     }
-    synchronized(this) {
+    synchronized (this) {
       while (leadsLock) {
       }
       this.leadsLock = true;
@@ -2478,15 +2478,15 @@ public class User extends GenericBean {
             "a.last_ip, a.timezone, a.startofday AS access_startofday, " +
             "a.endofday AS access_endofday, a.expires, a.alias, " +
             "a.contact_id AS contact_id_link, a.user_id AS access_user_id, " +
-            "a.enabled AS access_enabled, a.assistant, " +
+            "a.enabled AS access_enabled, a.assistant AS access_assistant, " +
             "a.entered AS access_entered, a.enteredby AS access_enteredby, " +
             "a.modified AS access_modified, a.modifiedby AS access_modifiedby, " +
             "a.currency, a." + DatabaseUtils.addQuotes(db, "language") + ", a.webdav_password, a.hidden, a.allow_webdav_access, a.allow_httpapi_access, " +
             "r." + DatabaseUtils.addQuotes(db, "role") + " AS systemrole, r.role_type, " +
             "m_usr.enabled AS mgr_enabled, " +
-            "c.*, d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
             "b.description AS site_id_name, " +
-            "o.name AS org_name, o.enabled AS orgenabled " +
+            "c.*, o.enabled AS orgenabled, o.trashed_date AS orgtrasheddate, " +
+            "d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode " +
             "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
             "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
             "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
@@ -2810,7 +2810,7 @@ public class User extends GenericBean {
     this.setContactId(rs.getInt("contact_id_link"));
     this.setId(rs.getInt("access_user_id"));
     enabled = rs.getBoolean("access_enabled");
-    this.setAssistant(rs.getInt("assistant"));
+    this.setAssistant(rs.getInt("access_assistant"));
     entered = rs.getTimestamp("access_entered");
     enteredBy = rs.getInt("access_enteredby");
     modified = rs.getTimestamp("access_modified");

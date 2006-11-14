@@ -342,13 +342,13 @@ public class DatabaseUtils {
         break;
       case DatabaseUtils.ORACLE:
         if (units == DAY) {
-          addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL(" + timestampColumnName + " ,'day')) ";
+          addTimestampIntervalString = " (" + timestampColumnName + " + NUMTODSINTERVAL(" + termsColumnName + " ,'day')) ";
         } else if (units == WEEK) {
-          addTimestampIntervalString = " (" + termsColumnName + "NUMTODSINTERVAL(" + timestampColumnName + " * 7 ,'day'))";
+          addTimestampIntervalString = " (" + timestampColumnName + " + NUMTODSINTERVAL(" + termsColumnName + " * 7 ,'day'))";
         } else if (units == MONTH) {
-          addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL(" + timestampColumnName + ", 'month')) ";
+          addTimestampIntervalString = " (" + timestampColumnName + " + NUMTOYMINTERVAL(" + termsColumnName + ", 'month')) ";
         } else if (units == YEAR) {
-          addTimestampIntervalString = " (" + termsColumnName + "NUMTOYMINTERVAL(" + timestampColumnName + ", 'year')) ";
+          addTimestampIntervalString = " (" + timestampColumnName + " + NUMTOYMINTERVAL(" + termsColumnName + ", 'year')) ";
         }
         break;
       case DatabaseUtils.MYSQL:
