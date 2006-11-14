@@ -5172,11 +5172,11 @@ public class ContactList extends Vector implements UserCentric {
   public void processSite(StringBuffer sqlFilter, int type, String site) {
     if (Integer.parseInt(site) != -1) {
       sqlFilter
-          .append(" AND EXISTS (SELECT c.contact_id WHERE c.site_id = "
+          .append(" AND EXISTS (SELECT c.contact_id FROM contact ic WHERE c.site_id = "
               + site + " ) ");
     } else {
       sqlFilter
-          .append(" AND EXISTS (SELECT c.contact_id WHERE (c.site_id IS NULL OR c.site_id IS NOT NULL)) ");
+          .append(" AND EXISTS (SELECT c.contact_id FROM contact ic WHERE (c.site_id IS NULL OR c.site_id IS NOT NULL)) ");
     }
   }
 
