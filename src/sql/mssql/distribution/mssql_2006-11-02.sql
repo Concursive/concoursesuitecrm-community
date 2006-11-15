@@ -13,23 +13,18 @@ CREATE TABLE url_map (
   url TEXT
 );
 
-ALTER TABLE order_address
- ADD addrline4 varchar(300) ;
+ALTER TABLE order_address ADD addrline4 varchar(300) ;
 
 CREATE INDEX order_city_idx
   ON order_address (city);
 
-ALTER TABLE ORDER_ENTRY
-  ADD approx_ship_date DATETIME;
+ALTER TABLE ORDER_ENTRY ADD approx_ship_date DATETIME;
 
-ALTER TABLE ORDER_ENTRY
-  ADD approx_delivery_date DATETIME;
+ALTER TABLE ORDER_ENTRY ADD approx_delivery_date DATETIME;
 
-ALTER TABLE customer_product
- ADD contact_id INTEGER ;
+ALTER TABLE customer_product ADD contact_id INTEGER ;
 
-ALTER TABLE customer_product_history
- ADD contact_id INTEGER ;
+ALTER TABLE customer_product_history ADD contact_id INTEGER ;
 
 CREATE TABLE credit_card (
   creditcard_id INT IDENTITY PRIMARY KEY,
@@ -96,8 +91,9 @@ END
 CLOSE CNSTR DEALLOCATE CNSTR',N'@table nvarchar(261)','[permission_category]'
 GO
 
-alter table permission_category
- drop column products;
+ALTER TABLE permission_category ALTER COLUMN [products] [bit] NULL;
+
+ALTER TABLE permission_category DROP COLUMN products;
 
 
 EXEC sp_executesql N'
@@ -119,8 +115,9 @@ END
 CLOSE CNSTR DEALLOCATE CNSTR',N'@table nvarchar(261)','[permission_category]'
 GO
 
-alter table permission_category
- drop column importer;
+ALTER TABLE permission_category ALTER COLUMN [importer] [bit] NULL;
+
+ALTER TABLE permission_category DROP COLUMN importer;
 
 update role_permission
  set permission_id = (select permission_id from permission where permission = 'product-catalog-product')
@@ -251,7 +248,9 @@ CREATE TABLE lookup_sic_codes(
 ALTER TABLE organization ADD duns_type VARCHAR(300);
 ALTER TABLE organization ADD duns_number VARCHAR(30);
 ALTER TABLE organization ADD business_name_two VARCHAR(300);
-ALTER TABLE organization DROP sic_code;
+
+ALTER TABLE organization DROP COLUMN sic_code;
+
 ALTER TABLE organization ADD sic_code INTEGER REFERENCES lookup_sic_codes(code);
 ALTER TABLE organization ADD year_started INTEGER;
 ALTER TABLE organization ADD sic_description VARCHAR(300);

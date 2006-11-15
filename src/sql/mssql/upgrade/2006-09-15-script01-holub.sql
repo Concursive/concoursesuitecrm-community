@@ -17,7 +17,7 @@ CREATE TABLE lookup_sic_codes(
 ALTER TABLE organization ADD duns_type VARCHAR(300);
 ALTER TABLE organization ADD duns_number VARCHAR(30);
 ALTER TABLE organization ADD business_name_two VARCHAR(300);
-ALTER TABLE organization DROP sic_code;
+ALTER TABLE organization DROP COLUMN sic_code;
 ALTER TABLE organization ADD sic_code INTEGER REFERENCES lookup_sic_codes(code);
 ALTER TABLE organization ADD year_started INTEGER;
 ALTER TABLE organization ADD sic_description VARCHAR(300);
