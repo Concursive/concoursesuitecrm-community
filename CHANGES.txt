@@ -2,7 +2,7 @@
 Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-November 2, 2006
+November 13, 2006
 ----------------------------------------------------------------------------
 
 The following is a running list until release...
@@ -37,6 +37,7 @@ Enhancements:
 - Usability and stability improvements as assigned (details online)
 - Upgraded TinyMCE HTML Editor to 2.0.6.1
 - Email user a password when a user is added, previously only when modified
+- Campaign delivery allows for specifying a date AND time
 
 Developer changes:
 - JUnit added with tests (minimal)
