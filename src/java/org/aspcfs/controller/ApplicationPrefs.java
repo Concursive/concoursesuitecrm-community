@@ -356,6 +356,7 @@ public class ApplicationPrefs {
     if (this.has("WEB-INF")) {
       if (!this.get("WEB-INF").equals(
           context.getRealPath("/") + "WEB-INF" + fs)) {
+        add("WEB-INF", context.getRealPath("/") + "WEB-INF" + fs);
         save();
       }
     }
