@@ -124,7 +124,7 @@ public class SecurityKey {
     byte[] ciphertext = pbeCipher.doFinal(cleartext);
 
     // Convert byteArray to base64
-    String base64 = new String(Base64.encodeBase64(ciphertext));
+    String base64 = new String(Base64.encodeBase64(ciphertext, true));
 
     // Save the encoded text
     StringUtils.saveText(encodedFilename, base64);

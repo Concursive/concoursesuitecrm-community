@@ -476,10 +476,9 @@ public class DefaultServlet
    * @return The nonce value
    */
   protected String generateNonce() {
-    Base64 encoder = new Base64();
     String timestamp = new java.sql.Timestamp(new Date().getTime()).toString();
     String random = org.aspcfs.utils.PasswordHash.getRandomString(0, 1);
-    return (new String(encoder.encode((timestamp + ":" + random).getBytes())));
+    return new String(Base64.encodeBase64((timestamp + ":" + random).getBytes(), true));
   }
 
 
@@ -489,9 +488,9 @@ public class DefaultServlet
    * @return The opaque value
    */
   protected String generateOpaque() {
-    Base64 encoder = new Base64();
     String random = org.aspcfs.utils.PasswordHash.getRandomString(0, 10);
-    return (new String(encoder.encode((":" + random + ":").getBytes())));
+    return new String(Base64.encodeBase64((":" + random + ":").getBytes(), true));
+
   }
 
 
@@ -736,8 +735,7 @@ public class DefaultServlet
   /**
    * Process a HEAD request for the specified resource.
    *
-   * @param request  The servlet request we are processing
-   * @param response The servlet response we are creating
+   * @param context  The servlet request we are processing
    * @throws IOException      if an input/output error occurs
    * @throws ServletException if a servlet-specified error occurs
    */
@@ -1159,10 +1157,9 @@ public class DefaultServlet
   /**
    * Serve the specified resource, optionally including the data content.
    *
-   * @param request  The servlet request we are processing
-   * @param response The servlet response we are creating
+   * @param context  The servlet request we are processing
    * @param content  Should the content be included?
-   * @param context  Description of the Parameter
+   * @param method  Description of the Parameter
    * @throws IOException      if an input/output error occurs
    * @throws ServletException if a servlet-specified error occurs
    */

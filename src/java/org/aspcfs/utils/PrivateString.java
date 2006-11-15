@@ -168,7 +168,7 @@ public class PrivateString {
       cipher.init(Cipher.ENCRYPT_MODE, key);
       byte[] inputBytes = inString.getBytes("UTF8");
       byte[] outputBytes = cipher.doFinal(inputBytes);
-      return new String(Base64.encodeBase64(outputBytes));
+      return new String(Base64.encodeBase64(outputBytes, true));
     } catch (Exception e) {
       return null;
     }
@@ -246,7 +246,7 @@ public class PrivateString {
       byte[] inputBytes = inString.getBytes("UTF8");
       byte[] outputBytes = cipher.doFinal(inputBytes);
 
-      return new String(Base64.encodeBase64(outputBytes));
+      return new String(Base64.encodeBase64(outputBytes, true));
     } catch (Exception e) {
       return null;
     }

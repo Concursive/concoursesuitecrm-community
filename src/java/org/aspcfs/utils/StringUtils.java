@@ -862,7 +862,7 @@ public class StringUtils {
    */
   public static String toBase64(String inString) {
     try {
-      return new String(Base64.encodeBase64(inString.getBytes("UTF8")));
+      return new String(Base64.encodeBase64(inString.getBytes("UTF8"), true));
     } catch (Exception e) {
       return "";
     }
