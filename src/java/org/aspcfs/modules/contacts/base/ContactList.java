@@ -4384,12 +4384,12 @@ public class ContactList extends Vector implements UserCentric {
                 System.out.println("key1: " + key1);
                 System.out.println("key2: " + key2);
                 sqlFilter
-                    .append(" EXISTS (SELECT c.contact_id WHERE c.site_id "
+                    .append(" EXISTS (SELECT c.contact_id FROM contact ic WHERE c.site_id "
                         + key1 + " " + key2 + " ) ");
               } else {
                 System.out.println("none");
                 sqlFilter
-                    .append(" EXISTS (SELECT c.contact_id WHERE (c.site_id IS NULL OR c.site_id IS NOT NULL) ) ");
+                    .append(" EXISTS (SELECT c.contact_id FROM contact ic WHERE (c.site_id IS NULL OR c.site_id IS NOT NULL) ) ");
               }
 
               processElementType(db, sqlFilter, elementType);
