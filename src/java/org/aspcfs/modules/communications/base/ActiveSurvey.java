@@ -26,7 +26,7 @@ import java.util.Iterator;
  * Represents a copied survey that can have questions and answers and belongs
  * to an active Campaign
  *
- * @author
+ * @author mathur
  * @version $Id$
  * @created November 1, 2002
  */
@@ -154,8 +154,8 @@ public class ActiveSurvey extends SurveyBase {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT s.* " +
-            "FROM active_survey s " +
-            "WHERE s.active_survey_id = ? ");
+        "FROM active_survey s " +
+        "WHERE s.active_survey_id = ?");
     pst.setInt(1, surveyId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

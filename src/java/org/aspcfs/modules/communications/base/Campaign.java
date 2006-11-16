@@ -3322,6 +3322,19 @@ public class Campaign extends GenericBean {
 
     ContactHistory.deleteObject(db, OrganizationHistory.CAMPAIGN, this.getId());
 
+	//Delete the surveys
+	ActiveSurvey activeSurvey = new ActiveSurvey();
+	
+	if(this.getHasSurvey()){
+		activeSurvey.setId(this.getActiveSurveyId());
+		activeSurvey.delete(db);
+	}
+	
+	if(this.getHasAddressRequest()){
+		activeSurvey.setId(activeSurvey.getId(db, this.getId(), Constants.SURVEY_ADDRESS_REQUEST));
+		activeSurvey.delete(db);
+	}
+
     return true;
   }
 
