@@ -17,11 +17,11 @@ package org.aspcfs.controller;
 
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.hooks.CustomHook;
+import org.aspcfs.modules.setup.utils.Prefs;
 import org.aspcfs.modules.system.base.ApplicationVersion;
 import org.aspcfs.modules.website.base.Icelet;
 import org.aspcfs.modules.website.base.IceletList;
 import org.aspcfs.modules.website.base.IceletPropertyMap;
-import org.aspcfs.modules.setup.utils.Prefs;
 import org.aspcfs.utils.Dictionary;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.XMLUtils;
@@ -128,10 +128,8 @@ public class ApplicationPrefs {
       }
       context.setAttribute(
           "SiteCode", prefs.get("cfs.gatekeeper.sitecode", "cfs"));
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println(
-            "ApplicationPrefs-> Using file library at: " + fileLibrary);
-      }
+      System.out.println(
+          "ApplicationPrefs-> Using file library at: " + fileLibrary);
       // Now load the default properties
       if (fileLibrary != null) {
         this.load(fileLibrary + "build.properties");
@@ -699,8 +697,7 @@ public class ApplicationPrefs {
       try {
         //Create a dictionary with the default language
         iceletMap = IceletList.load(languagePath + "icelet_en_US.xml");
-        if (language != null && !"en_US".equals(language) && !"".equals(language.trim()))
-        {
+        if (language != null && !"en_US".equals(language) && !"".equals(language.trim())) {
           // Override the text with a selected language
           iceletMap = IceletList.load(languagePath + "icelet_" + language + ".xml");
         }
