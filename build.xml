@@ -525,6 +525,7 @@
     <property name="build.config.filename"
               value="${base.dir}/build.properties"/>
     <property name="build.config.present" value="ERROR: UNDEFINED"/>
+    <property name="SYSTEM.LANGUAGE" value=""/>
     <!-- Gatekeeper database -->
     <property name="GATEKEEPER.APPCODE" value=""/>
     <property name="GATEKEEPER.DBTYPE" value=""/>
@@ -1842,7 +1843,7 @@
         servletJar="${servletJar}"
         fileLibraryPath="${CENTRIC_FILELIBRARY}"
         baseFile="${src.sql.dir}${fs}init${fs}addsite_gk.bsh"
-        params="APPCODE=${SITE.APPCODE}|VIRTUAL_HOST=${SITE.VIRTUAL_HOST}|DATABASE_URL=${SITE.URL}${DATABASE.NAME}${SITE.APPEND}|DATABASE_NAME=${DATABASE.NAME}|DATABASE_USER=${SITE.USER}|DATABASE_PASSWORD=${SITE.PASSWORD}|DATABASE_DRIVER=${SITE.DRIVER}|CRON=${SITE.CRON}">
+        params="APPCODE=${SITE.APPCODE}|VIRTUAL_HOST=${SITE.VIRTUAL_HOST}|DATABASE_URL=${SITE.URL}${DATABASE.NAME}${SITE.APPEND}|DATABASE_NAME=${DATABASE.NAME}|DATABASE_USER=${SITE.USER}|DATABASE_PASSWORD=${SITE.PASSWORD}|DATABASE_DRIVER=${SITE.DRIVER}|CRON=${SITE.CRON}|LANGUAGE=${SYSTEM.LANGUAGE}">
     </upgradeDatabase>
   </target>
 

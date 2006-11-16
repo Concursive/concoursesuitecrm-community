@@ -1442,7 +1442,7 @@ public class DatabaseUtils {
    * @param db Description of the Parameter
    * @return The quote value
    */
-  public static String getQuote(Connection db) {
+  private static String getQuote(Connection db) {
     String quoteSymbol = "";
     switch (DatabaseUtils.getType(db)) {
       case MYSQL:
