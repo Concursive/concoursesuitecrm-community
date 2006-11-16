@@ -15,8 +15,6 @@
  */
 package org.aspcfs.utils;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -850,21 +848,6 @@ public class StringUtils {
       return (jsReady);
     } else {
       return ("");
-    }
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param inString Description of the Parameter
-   * @return Description of the Return Value
-   */
-  public static String toBase64(String inString) {
-    try {
-      return new String(Base64.encodeBase64(inString.getBytes("UTF8"), true));
-    } catch (Exception e) {
-      return "";
     }
   }
 

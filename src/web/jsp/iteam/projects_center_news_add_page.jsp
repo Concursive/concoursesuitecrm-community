@@ -22,6 +22,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*,
                  org.aspcfs.modules.base.Constants" %>
 <%@ page import="org.aspcfs.utils.StringUtils" %>
+<%@ page import="org.apache.commons.codec.binary.Base64" %>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="newsArticle" class="com.zeroio.iteam.base.NewsArticle" scope="request"/>
@@ -150,7 +151,7 @@
 	<PARAM NAME="DEBUG" VALUE="false">
   <dhv:evaluate if="<%= hasText(newsArticle.getMessage()) %>">
 	  <PARAM NAME="BASE64" VALUE="true">
-    <PARAM NAME="DOCUMENT" VALUE="<%= StringUtils.toBase64(newsArticle.getMessage()) %>">
+    <PARAM NAME="DOCUMENT" VALUE="<%= Base64.encodeBase64(newsArticle.getMessage().getBytes("UTF8"), true) %>">
   </dhv:evaluate>
 </APPLET>
 </dhv:evaluate>

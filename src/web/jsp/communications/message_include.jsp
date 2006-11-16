@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
+<%@ page import="org.apache.commons.codec.binary.Base64" %>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <script language="JavaScript">
 	var imageLibraryURL = "/../WebsiteMedia.do?command=View&forEmail=true&popup=true";
@@ -112,7 +113,7 @@
 	<PARAM NAME="DEBUG" VALUE="false">
   <dhv:evaluate if="<%= hasText(Message.getMessageText()) %>">
 	  <PARAM NAME="BASE64" VALUE="true">
-    <PARAM NAME="DOCUMENT" VALUE="<%= StringUtils.toBase64(Message.getMessageText()) %>">
+    <PARAM NAME="DOCUMENT" VALUE="<%= Base64.encodeBase64(Message.getMessageText().getBytes("UTF8"), true) %>">
   </dhv:evaluate>
 </APPLET>
       </dhv:evaluate>

@@ -17,6 +17,8 @@
   - Description: 
   --%>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
+<%@ page import="org.aspcfs.modules.website.base.IceletProperty" %>
+<%@ page import="org.apache.commons.codec.binary.Base64" %>
 <zeroio:debug value="<%= "\n\n\nJSP::the clientType.showApplet() is "+clientType.showApplet() %>"/>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
   <script language="javascript" type="text/javascript">
@@ -64,7 +66,7 @@
 	<PARAM NAME="DEBUG" VALUE="false">
   <dhv:evaluate if="<%= hasText(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()) %>">
 	  <PARAM NAME="BASE64" VALUE="true">
-    <PARAM NAME="DOCUMENT" VALUE="<%= StringUtils.toBase64(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()) %>">
+    <PARAM NAME="DOCUMENT" VALUE="<%= Base64.encodeBase64((rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()).getBytes("UTF8"), true) %>">
   </dhv:evaluate>
 </APPLET>
 </dhv:evaluate>
