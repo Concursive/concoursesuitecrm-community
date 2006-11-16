@@ -353,6 +353,7 @@ public class SyncTable extends GenericBean {
     pst.setBoolean(++i, syncItem);
     pst.setString(++i, key);
     pst.execute();
+    pst.close();
     id = DatabaseUtils.getCurrVal(db, "sync_table_table_id_seq", id);
   }
 
@@ -373,6 +374,7 @@ public class SyncTable extends GenericBean {
     pst.setInt(++i, systemId);
     pst.setString(++i, name);
     pst.executeUpdate();
+    pst.close();
   }
 
 
