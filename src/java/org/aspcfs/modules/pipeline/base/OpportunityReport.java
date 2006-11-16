@@ -330,8 +330,7 @@ public class OpportunityReport extends OpportunityList {
       params = criteriaString;
     }
 
-    criteria = new ArrayList(Arrays.asList(params));
-    this.criteria = criteria;
+    this.criteria = new ArrayList(Arrays.asList(params));
   }
 
 

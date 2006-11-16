@@ -267,9 +267,9 @@ public class Survey extends SurveyBase {
   /**
    * Sets the questions attribute of the Survey object
    *
-   * @param items The new questions value
+   * @param questions The new questions value
    */
-  public void setQuestions(SurveyQuestionList items) {
+  public void setQuestions(SurveyQuestionList questions) {
     this.questions = questions;
   }
 
