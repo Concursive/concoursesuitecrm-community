@@ -82,8 +82,13 @@ v0.1
 The centric_crm_tools.jar can be used with any Java 1.4 or 1.5 application.
 You will need to have the Java Servlet-API in your classpath.
 
-In Centric CRM 4.0, a "client" will need to be configured under the Admin 
-module to provide remote access to Centric CRM.  
+In Centric CRM 4.1 and newer, the API can be accessed by imitating a user
+of the system.  This allows for remote user-based access which enforces that
+user's permissions.
+
+In Centric CRM 4.0 and newer, a "client" will need to be configured under the
+Admin module to provide remote access to Centric CRM.  The client can
+perform any action and is not user-specific.
 
 In versions prior to 4.0, the Centric CRM database needs to be modified
 manually:
@@ -104,7 +109,7 @@ import org.aspcfs.apps.transfer.DataRecord;
 // under Admin -> Configure System -> HTTP-XML API Client Manager
 int clientId = 1;
 
-// Establish connectivity information
+// Establish connectivity as a client
 CRMConnection crm = new CRMConnection();
 crm.setUrl("http://www.yourorg.com/centric");
 crm.setId("www.yourorg.com");
