@@ -1553,6 +1553,7 @@ public class DatabaseUtils {
             break;
           case DatabaseUtils.YEAR:
             dateFormat = "year";
+            break;
           default:
             return null;
         }
@@ -1648,7 +1649,7 @@ public class DatabaseUtils {
       case DatabaseUtils.MYSQL:
         switch (truncTo) {
           case DatabaseUtils.DAY:
-            truncSQL = "DATE(" + dateColumn + ") ";
+            truncSQL = "CAST(" + dateColumn + " AS date) ";
             break;
           default:
             return null;
@@ -1657,7 +1658,7 @@ public class DatabaseUtils {
       case DatabaseUtils.DERBY:
         switch (truncTo) {
           case DatabaseUtils.DAY:
-            truncSQL = "DATE(" + dateColumn + ") ";
+            truncSQL = "CAST(" + dateColumn + " AS date) ";
             break;
           default:
             return null;
