@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
 
 /**
  * Description of the Class
@@ -35,8 +36,11 @@ public class Template extends GenericBean {
     filename = zipFile.getName().substring(zipFile.getName().lastIndexOf(System.getProperty("file.separator")) + 1, zipFile.getName().lastIndexOf(".zip"));
     // Read the details from the zip file
     // NOTE: getEntry retrieves fileseparator based on the system that CREATED the entry, NOT the target system
-    InputStream manifestStream = zipFile.getInputStream(
-      zipFile.getEntry("website/MANIFEST.MF"));
+    ZipEntry zipEntry = zipFile.getEntry("website/MANIFEST.MF");
+    if (zipEntry == null) {
+      zipEntry = zipFile.getEntry("website\\MANIFEST.MF");
+    }
+    InputStream manifestStream = zipFile.getInputStream(zipEntry);
     byte[] manifest = new byte[manifestStream.available()];
     int offset = 0;
     int numRead = 0;

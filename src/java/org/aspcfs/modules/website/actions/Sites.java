@@ -29,7 +29,6 @@ import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -264,7 +263,7 @@ public final class Sites extends CFSModule {
             newSite.update(db);
             context.getRequest().setAttribute("site", newSite);
             recordInserted = (newSite.getId() > 0);
-						site.setId(newSite.getId());
+            site.setId(newSite.getId());
           } else {
             if (System.getProperty("DEBUG") != null) {
               System.out.println("Sites-> None found..." + templateFile);
@@ -335,7 +334,7 @@ public final class Sites extends CFSModule {
    * @param context Description of the Parameter
    * @return Description of the Return Value
    */
-	 public String executeCommandUpdateLogo(ActionContext context) {
+  public String executeCommandUpdateLogo(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
     }
@@ -345,7 +344,7 @@ public final class Sites extends CFSModule {
     try {
       db = this.getConnection(context);
       Site site = new Site(db, Integer.parseInt(siteId));
-			site.updateLogoImageId(db, Integer.parseInt(logoImageId));
+      site.updateLogoImageId(db, Integer.parseInt(logoImageId));
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -353,10 +352,10 @@ public final class Sites extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-		return executeCommandDetails(context);
-	}
-	
-	
+    return executeCommandDetails(context);
+  }
+
+
   /**
    * Description of the Method
    *
@@ -377,7 +376,7 @@ public final class Sites extends CFSModule {
     }
     ArrayList rowColumnList = null;
     Site site = null;
-    SystemStatus systemStatus =  this.getSystemStatus(context);
+    SystemStatus systemStatus = this.getSystemStatus(context);
     if (systemStatus != null) {
       context.getRequest().setAttribute("url", systemStatus.getUrl());
     } else {
@@ -463,7 +462,7 @@ public final class Sites extends CFSModule {
       DependencyList dependencies = site.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
       htmlDialog.addMessage(
-        systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+          systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (!dependencies.canDelete()) {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.deleteRelatedOrdersFirst"));
@@ -472,9 +471,9 @@ public final class Sites extends CFSModule {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title", "Title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies", "Delete this Site"));
         htmlDialog.addButton(
-          systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='Sites.do?command=Delete&siteId=" + site.getId() + "&popup=true'");
+            systemStatus.getLabel("global.button.delete"), "javascript:window.location.href='Sites.do?command=Delete&siteId=" + site.getId() + "&popup=true'");
         htmlDialog.addButton(
-          systemStatus.getLabel("button.cancel"), "javascript:parent.window.close();");
+            systemStatus.getLabel("button.cancel"), "javascript:parent.window.close();");
       }
       context.getSession().setAttribute("Dialog", htmlDialog);
 
@@ -519,6 +518,7 @@ public final class Sites extends CFSModule {
 
   /**
    * This action streams a portal template thumnbnail image from an HTML image tag
+   *
    * @param context
    * @return Action result
    */

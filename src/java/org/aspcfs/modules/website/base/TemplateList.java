@@ -1,11 +1,8 @@
 package org.aspcfs.modules.website.base;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipFile;
 
 /**
@@ -44,11 +41,11 @@ public class TemplateList extends ArrayList {
     // Check template directory for given locale, or default to en_US
     File templateDirectory = new File(path + fs + locale);
     if (!templateDirectory.isDirectory() ||
-      templateDirectory.list().length == 0) {
+        templateDirectory.list().length == 0) {
       templateDirectory = new File(path + fs + "en_US");
     }
     if (templateDirectory.isDirectory() &&
-      templateDirectory.list().length > 0) {
+        templateDirectory.list().length > 0) {
       zipPath = templateDirectory.getPath();
       // Build the template files
       String[] templates = templateDirectory.list();
@@ -56,7 +53,9 @@ public class TemplateList extends ArrayList {
         ZipFile zipFile = new ZipFile(templateDirectory + fs + templates[i]);
         if (zipFile.getName().endsWith(".zip")) {
           // Filters
-          if (template != null && !zipFile.getName().endsWith(fs + template + ".zip")) {
+          if (template != null &&
+              (!zipFile.getName().endsWith("/" + template + ".zip") ||
+                  !zipFile.getName().endsWith("\\" + template + ".zip"))) {
             continue;
           }
           Template thisTemplate = new Template(zipFile);

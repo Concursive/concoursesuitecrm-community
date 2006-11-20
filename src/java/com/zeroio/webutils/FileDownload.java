@@ -16,9 +16,11 @@
 package com.zeroio.webutils;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.ServletOutputStream;
 import java.io.*;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
@@ -324,9 +326,17 @@ public class FileDownload {
   public void sendFileFromZip(ActionContext context, String zipFilename, String filename) throws IOException {
     context.getResponse().setContentType(getContentType(filename));
     ZipFile zipFile = new ZipFile(zipFilename);
+    ZipEntry zipEntry = zipFile.getEntry(filename);
+    // Note: ZipEntry must match the path that was saved in the path
+    if (zipEntry == null) {
+      zipEntry = zipFile.getEntry(StringUtils.replace(filename, "/", "\\"));
+    }
+    if (zipEntry == null) {
+      zipEntry = zipFile.getEntry(StringUtils.replace(filename, "\\", "/"));
+    }
     ServletOutputStream outputStream = context.getResponse().getOutputStream();
     BufferedInputStream inputStream =
-        new BufferedInputStream(zipFile.getInputStream(zipFile.getEntry(filename)));
+        new BufferedInputStream(zipFile.getInputStream(zipEntry));
     byte[] buf = new byte[4 * 1024];
     // 4K buffer
     int len;
@@ -336,6 +346,7 @@ public class FileDownload {
     outputStream.flush();
     outputStream.close();
     inputStream.close();
+    zipFile.close();
   }
 }
 

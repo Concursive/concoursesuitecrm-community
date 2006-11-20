@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
 
 /**
  * Description of the Class
@@ -132,6 +133,7 @@ public class SiteImporter {
       style.setThumbnail(zipfilePath + "|website" + fs + "resources" + fs + "style" + fs + "style.jpg");
       style.setCustom(true);
     }
+    zipFile.close();
   }
 
 
@@ -143,9 +145,12 @@ public class SiteImporter {
   private void readContents() throws Exception {
     String fs = System.getProperty("file.separator");
     ZipFile zipFile = new ZipFile(zipfilePath);
-
-    //Reading from content.xml
-    InputStream xmlStream = zipFile.getInputStream(zipFile.getEntry("website/content.xml"));
+    //Reading from content.xml (archive is OS dependent when created)
+    ZipEntry zipEntry = zipFile.getEntry("website/content.xml");
+    if (zipEntry == null) {
+      zipEntry = zipFile.getEntry("website\\content.xml");
+    }
+    InputStream xmlStream = zipFile.getInputStream(zipEntry);
     byte[] contents = new byte[xmlStream.available()];
     //reading xml into a byte array
     int offset = 0;
@@ -156,6 +161,7 @@ public class SiteImporter {
       offset += numRead;
     }
     xmlStream.close();
+    zipFile.close();
 
     XMLUtils xml = new XMLUtils(new String(contents));
 
@@ -532,11 +538,11 @@ public class SiteImporter {
     String styleThumbnailDestinationPath = webappPath + fs + "images" + fs + "style_" + style.getId() + ".jpg";
     if (layout.getConstant() == -1) {
       //Copying layout.jsp
-      String zipEntry = "website" + fs + "resources" + fs + "layout" + fs + "layout.jsp";
+      String zipEntry = "website/resources/layout/layout.jsp";
       ZipUtils.extract(zipFile, zipEntry, layoutDestinationPath);
 
       //Copying layout.jpg
-      zipEntry = "website" + fs + "resources" + fs + "layout" + fs + "layout.jpg";
+      zipEntry = "website/resources/layout/layout.jpg";
       ZipUtils.extract(zipFile, zipEntry, layoutThumbnailDestinationPath);
     }
     layout.setJsp(layoutDestinationPath);
@@ -545,17 +551,18 @@ public class SiteImporter {
 
     if (style.getConstant() == -1) {
       //Copying style.css
-      String zipEntry = "website" + fs + "resources" + fs + "style" + fs + "style.css";
+      String zipEntry = "website/resources/style/style.css";
       ZipUtils.extract(zipFile, zipEntry, styleDestinationPath);
 
       //Copying style.jpg
-      zipEntry = "website" + fs + "resources" + fs + "style" + fs + "style.jpg";
+      zipEntry = "website/resources/style/style.jpg";
       ZipUtils.extract(zipFile, zipEntry, styleThumbnailDestinationPath);
 
     }
     style.setCss(styleDestinationPath);
     style.setThumbnail(styleThumbnailDestinationPath);
     style.update(db);
+    zipFile.close();
   }
 
 
@@ -632,8 +639,11 @@ public class SiteImporter {
       int imageId = thisItem.getId();
 
       ZipFile zipFile = new ZipFile(zipfilePath);
-
-      InputStream imageStream = zipFile.getInputStream(zipFile.getEntry("website/resources/images/" + imageName));
+      ZipEntry zipEntry = zipFile.getEntry("website/resources/images/" + imageName);
+      if (zipEntry == null) {
+        zipEntry = zipFile.getEntry("website\\resources\\images\\" + imageName);
+      }
+      InputStream imageStream = zipFile.getInputStream(zipEntry);
       byte[] image = new byte[imageStream.available()];
       int offset = 0;
       int numRead = 0;
@@ -643,6 +653,8 @@ public class SiteImporter {
         offset += numRead;
       }
       imageStream.close();
+      zipFile.close();
+
       if (fileLibraryPath != null) {
       } else {
         //Only For testing
