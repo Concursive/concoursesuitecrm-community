@@ -227,6 +227,7 @@ public final class ExternalContactsCalls extends CFSModule {
     addModuleBean(context, "External Contacts", "Save an Activity");
     //Process the parameters
     String contactId = context.getRequest().getParameter("contactId");
+    String followupContactId = context.getRequest().getParameter("followupContactId");
     String parentId = context.getRequest().getParameter("parentId");
     String action = context.getRequest().getParameter("action");
     if("schedule".equals(context.getRequest().getParameter("action")))
@@ -291,6 +292,14 @@ public final class ExternalContactsCalls extends CFSModule {
       addModifyFormElements(db, context, thisCall);
       if (contactId != null && !"-1".equals(contactId)) {
         thisContact = new Contact(db, contactId);
+        if (!hasPermission(context, "contacts-external_contacts-calls-add")
+            || (thisContact.getOrgId() > 0 && !(hasPermission(context,
+                "accounts-accounts-contacts-calls-add")))) {
+          return ("PermissionError");
+        }
+        context.getRequest().setAttribute("ContactDetails", thisContact);
+      } else if (followupContactId != null && !"-1".equals(followupContactId)) {
+        thisContact = new Contact(db, followupContactId);
         if (!hasPermission(context, "contacts-external_contacts-calls-add")
             || (thisContact.getOrgId() > 0 && !(hasPermission(context,
                 "accounts-accounts-contacts-calls-add")))) {

@@ -385,7 +385,9 @@ public final class AccountsCalls extends CFSModule {
     Call previousParentCall = null;
     thisCall.setModifiedBy(getUserId(context));
     thisCall.setContactId(contactId);
+    if (followupContactId!=null && !"".equals(followupContactId)){
     thisCall.setFollowupContactId(followupContactId);
+    }
     if (thisCall.getId() > 0) {
       permission = "accounts-accounts-contacts-calls-edit";
     }

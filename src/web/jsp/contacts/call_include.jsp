@@ -43,8 +43,7 @@
     formTest = true;
     message = "";
     alertMessage = "";
-     
-    if ((form.actionSource) && (form.actionSource.value == "GlobalItem") && (((form.contactId) && (form.contactId.value == "-1")) || ((form.followupContactId) && (form.followupContactId.value == "-1")))) { 
+    if ((form.actionSource) && (form.actionSource.value == "GlobalItem") && (((form.contactId) && (form.contactId.value == "-1")) || ((form.followupContactId) && (form.followupContactId.value == "-1") && (form.action.value=='schedule')))) { 
       message += label("check.ticket.contact.entered","- Check that a Contact is selected\r\n");
       formTest = false;
     }

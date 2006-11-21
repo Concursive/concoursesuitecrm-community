@@ -76,6 +76,7 @@ public class ApplicationPrefs {
       // Check "dir" prefs first, based on the installed directory of this webapp
       String fileLibrary = prefs.get(dir, null);
       if (fileLibrary == null) {
+        System.out.println("ApplicationPrefs-> prefs not found...");
         // Check for a hard-coded location
         String os = System.getProperty("os.name");
         File systemOverrideFile = null;
@@ -309,6 +310,7 @@ public class ApplicationPrefs {
    */
   public boolean save(String filename) {
     try {
+      System.out.println("ApplicationPrefs-> Saving prefs: " + filename);
       BufferedWriter out = new BufferedWriter(new FileWriter(filename));
       out.write(
           GENERATED_MESSAGE + " on " + new java.util.Date() + " ###" + ls);

@@ -19,10 +19,16 @@ import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.utils.DatabaseUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 
@@ -39,6 +45,9 @@ public class CFSXMLWriter implements DataWriter {
   private boolean overwrite = true;
 
   private int recordCount = 0;
+
+  TransformerFactory transformerFactory = null;
+  Transformer transformer = null;
 
 
   /**
@@ -141,11 +150,18 @@ public class CFSXMLWriter implements DataWriter {
     }
 
     try {
+      transformerFactory = TransformerFactory.newInstance();
+
+      transformer = transformerFactory.newTransformer();
+      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+
       out = new PrintWriter(
           new BufferedWriter(
               new FileWriter(filename, !overwrite)));
-    } catch (IOException io) {
-      io.printStackTrace(System.out);
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
       return false;
     }
     out.println("<aspcfs>");
@@ -158,36 +174,41 @@ public class CFSXMLWriter implements DataWriter {
   /**
    * Description of the Method
    *
-   * @param input Description of the Parameter
-   * @return Description of the Return Value
-   */
-  protected String toXML(String input) {
-    return "<![CDATA[" +
-        input.trim() + "]]>";
-  }
-
-
-  /**
-   * Description of the Method
-   *
    * @param record Description of the Parameter
    * @return Description of the Return Value
    */
   public boolean save(DataRecord record) {
     ++recordCount;
     try {
-      out.println("  <dataRecord name=\"" + record.getName() + "\" " +
-          "action=\"" + record.getAction() + "\" " +
-          "shareKey=\"" + record.getShareKey() + "\">");
+      Result result = new StreamResult(out);
+
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = dbf.newDocumentBuilder();
+      Document document = builder.newDocument();
+      Element drecord = document.createElement("dataRecord");
+
+      drecord.setAttribute("name", record.getName());
+      drecord.setAttribute("action", record.getAction());
+      drecord.setAttribute("shareKey", String.valueOf(record.getShareKey()));
+
       Iterator fields = record.iterator();
       while (fields.hasNext()) {
         DataField thisField = (DataField) fields.next();
-        out.println("   <dataField name=\"" + thisField.getName() + "\"" +
-            (thisField.getAlias() != null ? (" alias=\"" + thisField.getAlias() + "\"") : "") +
-            (thisField.getValueLookup() != null ? (" valueLookup=\"" + thisField.getValueLookup() + "\"") : "") + ">" +
-            (thisField.getValue() != null ? toXML(thisField.getValue()) : "") + "</dataField>");
+        Element dfield = document.createElement("dataField");
+        dfield.setAttribute("name", thisField.getName());
+        if (thisField.getAlias() != null) {
+          dfield.setAttribute("alias", thisField.getAlias());
+        }
+        if (thisField.getValueLookup() != null) {
+          dfield.setAttribute("valueLookup", thisField.getValueLookup());
+        }
+        if (thisField.getValue() != null) {
+          dfield.appendChild(document.createTextNode(thisField.getValue()));
+        }
+        drecord.appendChild(dfield);
       }
-      out.println("  </dataRecord>");
+      Source source = new DOMSource(drecord);
+      transformer.transform(source, result);
     } catch (Exception e) {
       logger.info(e.toString());
       e.printStackTrace(System.out);

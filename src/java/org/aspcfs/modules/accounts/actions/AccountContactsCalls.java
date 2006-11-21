@@ -531,8 +531,7 @@ public final class AccountContactsCalls extends CFSModule {
     addModuleBean(context, "View Accounts", "Modify an Activity");
 
     String contactId = context.getRequest().getParameter("contactId");
-    String orgId = context.getRequest().getParameter("orgId");
-
+    
     int callId = Integer.parseInt(context.getRequest().getParameter("id"));
 
     Connection db = null;
@@ -546,7 +545,7 @@ public final class AccountContactsCalls extends CFSModule {
       Contact thisContact = addFormElements(context, db);
 
       ContactList cl = new ContactList();
-      cl.setOrgId(orgId);
+      cl.setOrgId(thisCall.getOrgId());
       cl.buildList(db);
       context.getRequest().setAttribute("contactList",cl);
       addModifyFormElements(db, context, thisCall);
