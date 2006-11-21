@@ -35,13 +35,13 @@ public class QualifiedLeadsCounter {
 
   private String QUERY =
       "select ac.user_id, ac.manager_id, co.count_of_conversion,  co.conversion_date" +
-          " FROM access as ac," +
+          " FROM access ac," +
           " (select  count('x') as count_of_conversion, " +
           "  ## as conversion_date," +
           "  owner  " +
           "  from contact " +
           " where conversion_date > ?" +
-          " group by owner, ##) as co" +
+          " group by owner, ##) co" +
           " where owner = user_id";
 
   private HashMap rawData;
