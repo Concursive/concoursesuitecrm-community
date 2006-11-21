@@ -112,6 +112,11 @@ public class PrivateString {
   }
 
   public static Key loadEncodedKey(String keyFilename) throws IOException {
+    File file = new File(keyFilename);
+    return loadEncodedKey(file);
+  }
+
+  public static Key loadEncodedKey(File keyFilename) throws IOException {
     String hex = StringUtils.loadText(keyFilename);
     try {
       SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
@@ -123,17 +128,8 @@ public class PrivateString {
   }
 
   public static Key loadSerializedKey(String keyFilename) throws IOException {
-    try {
-      ObjectInputStream in = new ObjectInputStream(
-          new FileInputStream(keyFilename));
-      Key key = (Key) in.readObject();
-      in.close();
-      return key;
-    } catch (Exception e) {
-      System.out.println(
-          "PrivateString-> Error loading key at: " + keyFilename);
-      throw new IOException(e.getMessage());
-    }
+    File file = new File(keyFilename);
+    return loadSerializedKey(file);
   }
 
   /**
@@ -141,6 +137,7 @@ public class PrivateString {
    *
    * @param keyFile Description of the Parameter
    * @return Description of the Return Value
+   * @throws java.io.IOException
    */
   public static Key loadSerializedKey(File keyFile) throws IOException {
     try {
@@ -150,6 +147,8 @@ public class PrivateString {
       in.close();
       return key;
     } catch (Exception e) {
+      System.out.println(
+          "PrivateString-> Error loading key at: " + keyFile);
       throw new IOException(e.getMessage());
     }
   }

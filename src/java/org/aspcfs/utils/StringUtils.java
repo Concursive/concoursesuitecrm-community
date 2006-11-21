@@ -531,9 +531,13 @@ public class StringUtils {
     StringBuffer text = new StringBuffer();
     BufferedReader in = new BufferedReader(new FileReader(file));
     String line = null;
+    boolean hasLine = false;
     while ((line = in.readLine()) != null) {
+      if (hasLine) {
+        text.append(ls);
+      }
       text.append(line);
-      text.append(ls);
+      hasLine = true;
     }
     in.close();
     return text.toString();

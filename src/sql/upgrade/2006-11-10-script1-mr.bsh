@@ -18,6 +18,13 @@ if (!keyFile.exists()) {
     Key oldKey = PrivateString.loadSerializedKey(oldKeyFile);
     String hex = new String(Hex.encodeHex(oldKey.getEncoded()));
     StringUtils.saveText(newSurveyKey, hex);
+    // Test the new key
+    Key newKey = PrivateString.loadEncodedKey(newSurveyKey);
+    String value1 = PrivateString.encrypt(oldKey, "TEST");
+    String value2 = PrivateString.encrypt(newKey, "TEST");
+    if (!value1.equals(value2)) {
+      throw new IOException("Key conversion does not match original.");
+    }
     print("The file survey.key was converted to format 2.0");
   } else {
     print("No key to convert.");
