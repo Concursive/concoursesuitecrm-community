@@ -238,34 +238,17 @@ CREATE TABLE call_log(
     PRIMARY KEY(call_id)
 );
 
-CREATE INDEX call_fcontact_id_idx  ON call_log (followup_contact_id);
-
-CREATE INDEX call_log_cidx
-    ON call_log(alertdate,enteredby);
-
-
-CREATE INDEX call_log_entered_1
-    ON call_log(entered);
-
-
-CREATE INDEX call_contact_id_i1
-    ON call_log(contact_id);
-
-
-CREATE INDEX call_org_id_idx
-    ON call_log(org_id);
-
-
-CREATE INDEX call_opp_id_idx
-    ON call_log(opp_id);
-
+CREATE INDEX call_fcontact_id_1 ON call_log (followup_contact_id);
+CREATE INDEX call_log_cidx ON call_log(alertdate,enteredby);
+CREATE INDEX call_log_entered_1 ON call_log(entered);
+CREATE INDEX call_contact_id_i1 ON call_log(contact_id);
+CREATE INDEX call_org_id_idx ON call_log(org_id);
+CREATE INDEX call_opp_id_idx ON call_log(opp_id);
 
 ALTER TABLE lookup_call_result
  ADD  CONSTRAINT FK_LOOKUP_CALL_RE1 FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id);
 
-
 CREATE SEQUENCE opportunity_c_onent_log_id_seq AS DECIMAL(27,0);
-
 
 CREATE TABLE opportunity_component_log(
     id INTEGER NOT NULL  PRIMARY KEY,
