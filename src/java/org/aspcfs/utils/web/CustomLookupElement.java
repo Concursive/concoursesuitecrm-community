@@ -437,6 +437,8 @@ public class CustomLookupElement extends HashMap {
       seqName = "active_survey_active_survey" + "_seq";
     } else if ("active_survey_answer_avg".equals(tableName)) {
       seqName = "active_survey_answer_avg_id" + "_seq";
+    } else if ("product_catalog_category_map".equals(tableName)) {
+      seqName = "product_catalog_category_map_id" + "_seq";
     } else if (tableName.length() > 22) {
       seqName = tableName.substring(0, 22) + "_" + uniqueField + "_seq";
     } else {
