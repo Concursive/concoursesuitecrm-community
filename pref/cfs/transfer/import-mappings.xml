@@ -467,27 +467,27 @@
 
     <map class="org.aspcfs.modules.contacts.base.ContactInstantMessageAddress" id="contactInstantMessageAddress">
       <property alias="guid" field="address_id">id</property>
-      <property field="contact_id">contactId</property>
+      <property field="contact_id" lookup="contact">contactId</property>
       <property field="imaddress_type" lookup="lookupInstantMessengerTypes">addressIMType</property>
       <property field="imaddress_service" lookup="lookupInstantMessengerServices">addressIMService</property>
       <property field="imaddress">addressIm</property>
       <property field="entered">entered</property>
-      <property field="enteredBy">enteredBy</property>
+      <property field="enteredBy" lookup="user">enteredBy</property>
       <property field="modified">modified</property>
-      <property field="modifiedby">modifiedBy</property>
+      <property field="modifiedby" lookup="user">modifiedBy</property>
       <property field="enabled">enabled</property>
       <property field="primary_im">primaryIM</property>
     </map>
 
     <map class="org.aspcfs.modules.contacts.base.ContactTextMessageAddress" id="contactTextMessageAddress">
       <property alias="guid" field="address_id">id</property>
-      <property field="contact_id">contactId</property>
+      <property field="contact_id" lookup="contact">contactId</property>
       <property field="textmessageaddress_type" lookup="lookupTextMessageTypes">type</property>
       <property field="textmessageaddress">textMessageAddress</property>
       <property field="entered">entered</property>
-      <property field="enteredBy">enteredBy</property>
+      <property field="enteredBy" lookup="user">enteredBy</property>
       <property field="modified">modified</property>
-      <property field="modifiedby">modifiedBy</property>
+      <property field="modifiedby" lookup="user">modifiedBy</property>
       <property field="primary_textmessage_address">primaryTextMessageAddress</property>
     </map>
 
