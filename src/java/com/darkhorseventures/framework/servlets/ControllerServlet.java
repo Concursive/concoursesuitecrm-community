@@ -749,6 +749,7 @@ public class ControllerServlet extends HttpServlet
         } catch (Exception e) {
           System.out.println(
               "Exception while trying to handle JSP forwarding. MESSAGE: " + e.getMessage());
+          e.printStackTrace();
         }
       }
     } else {

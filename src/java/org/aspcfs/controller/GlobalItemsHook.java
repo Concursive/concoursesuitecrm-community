@@ -51,9 +51,22 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
   public String generateItems(Servlet servlet, HttpServletRequest request) {
     ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute(
         "ConnectionElement");
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) servlet.getServletConfig().getServletContext().getAttribute(
-        "SystemStatus")).get(ce.getUrl());
+    if (ce == null) {
+      return null;
+    }
+    Hashtable systems = (Hashtable) servlet.getServletConfig().getServletContext().getAttribute(
+        "SystemStatus");
+    if (systems == null) {
+      return null;
+    }
+    SystemStatus systemStatus = (SystemStatus) (systems).get(ce.getUrl());
+    if (systemStatus == null) {
+      return null;
+    }
     UserBean thisUser = (UserBean) request.getSession().getAttribute("User");
+    if (thisUser == null) {
+      return null;
+    }
     TimeZone timeZone = TimeZone.getTimeZone(
         thisUser.getUserRecord().getTimeZone());
     int userId = thisUser.getUserId();
