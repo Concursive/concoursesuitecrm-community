@@ -112,7 +112,9 @@ public class CustomLookupElement extends HashMap {
           columnType = Types.VARCHAR;
         } else {
           Object obj = rs.getObject(i);
-          data = String.valueOf(obj);
+          if (obj != null) {
+            data = String.valueOf(obj);
+          }
           //if (Class.forName("net.sourceforge.jtds.jdbc.ClobImpl").isInstance(obj)) {
           //data = rs.getString(i);
           //columnType = java.sql.Types.VARCHAR;//Treat a clob as a string
