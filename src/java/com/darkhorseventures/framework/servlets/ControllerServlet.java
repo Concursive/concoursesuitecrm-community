@@ -576,6 +576,7 @@ public class ControllerServlet extends HttpServlet
         System.out.println(
             "Illegal Access Exception. MESSAGE = " + ia.getMessage());
       } catch (java.lang.reflect.InvocationTargetException ite) {
+        ite.printStackTrace(System.out);
         result = "GraphicsError";
       } catch (Exception e) {
         e.printStackTrace(System.out);
