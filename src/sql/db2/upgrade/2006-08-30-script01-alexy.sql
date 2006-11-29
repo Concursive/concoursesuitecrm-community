@@ -1,48 +1,31 @@
-create index pcatalog_pid on product_catalog (parent_id);
+create index prod_cat_map_cid_i on product_catalog_category_map (category_id);
 
-create index pcatalog_name on product_catalog (product_name);
+create index pcat_pid_idx on product_catalog (parent_id);
+create index pcat_name_idx on product_catalog (product_name);
+create index pcat_enteredby_idx on product_catalog (enteredby);
+create index pcat_est_sh_ti_idx on product_catalog (estimated_ship_time);
+create index pcat_format_id on product_catalog (format_id);
+create index pcat_import_id on product_catalog (import_id);
+create index pcat_lrg_img_i_idx on product_catalog (large_image_id);
+create index pcat_manuf_id_idx on product_catalog (manufacturer_id);
+create index pcat_mod_by_idx on product_catalog (modifiedby);
+create index pcat_ship_id_idx on product_catalog (shipping_id);
+create index pcat_sm_img_id_idx on product_catalog (small_image_id);
+create index pcat_th_img_id_idx on product_catalog (thumbnail_image_id);
+create index pcat_type_id_idx on product_catalog (type_id);
 
-create index  product_category_map_cid on product_catalog_category_map (category_id);
+create index pctg_enteredby_idx on product_category (enteredby);
+create index pctg_import_id_idx on product_category (import_id);
+create index pctg_l_img_id_idx on product_category (large_image_id);
+create index pctg_mod_by_idx on product_category (modifiedby);
+create index pctg_parent_id_idx on product_category (parent_id);
+create index pctg_sm_img_id_idx on product_category (small_image_id);
+create index pctg_th_img_id_idx on product_category (thumbnail_image_id);
+create index pctg_type_id_idx on product_category (type_id);
 
-create index pcatalog_enteredby on product_catalog (enteredby);
-      
-create index pcatalog_estimated_ship_time on product_catalog (estimated_ship_time);
+create index pcatpr_product_idx on product_catalog_pricing (product_id);
 
-create index pcatalog_format_id on product_catalog (format_id);
 
-create index pcatalog_import_id on product_catalog (import_id);
-
-create index pcatalog_large_image_id on product_catalog (large_image_id);
-
-create index pcatalog_manufacturer_id on product_catalog (manufacturer_id);
-
-create index pcatalog_modifiedby on product_catalog (modifiedby);
-
-create index pcatalog_parent_id on product_catalog (parent_id);
-
-create index pcatalog_shipping_id on product_catalog (shipping_id);
-
-create index pcatalog_small_image_id on product_catalog (small_image_id);
-
-create index pcatalog_thumbnail_image_id on product_catalog (thumbnail_image_id);
-
-create index pcatalog_type_id on product_catalog (type_id);
-
-create index pcategory_enteredby on product_category (enteredby);
-
-create index pcategory_import_id on product_category (import_id);
-
-create index pcategory_large_image_id on product_category (large_image_id);
-
-create index pcategory_modifiedby on product_category (modifiedby);
-
-create index pcategory_parent_id on product_category (parent_id);
-
-create index pcategory_small_image_id on product_category (small_image_id);
-
-create index pcategory_thumbnail_image_id on product_category (thumbnail_image_id);
-
-create index pcategory_type_id on product_category (type_id);
 
 create index contact_access_type on contact  (access_type);
 
@@ -79,5 +62,4 @@ create index contact_entered on contact (entered);
 
 create index laccess_types_rule_id on lookup_access_types (rule_id);
 
-create index product_pricing_product_idx on  product_catalog_pricing (product_id);
 

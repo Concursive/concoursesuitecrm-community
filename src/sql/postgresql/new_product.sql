@@ -366,48 +366,29 @@ CREATE UNIQUE INDEX idx_pr_key_map ON product_keyword_map (product_id, keyword_i
 
 -- Create Indexes
 
-create index pcatalog_pid on product_catalog (parent_id);
-
-create index pcatalog_name on product_catalog (product_name);
-
 create index product_category_map_cid on product_catalog_category_map (category_id);
 
+create index pcatalog_pid on product_catalog (parent_id);
+create index pcatalog_name on product_catalog (product_name);
 create index pcatalog_enteredby on product_catalog (enteredby);
-      
 create index pcatalog_estimated_ship_time on product_catalog (estimated_ship_time);
-
 create index pcatalog_format_id on product_catalog (format_id);
-
 create index pcatalog_import_id on product_catalog (import_id);
-
 create index pcatalog_large_image_id on product_catalog (large_image_id);
-
 create index pcatalog_manufacturer_id on product_catalog (manufacturer_id);
-
 create index pcatalog_modifiedby on product_catalog (modifiedby);
-
 create index pcatalog_shipping_id on product_catalog (shipping_id);
-
 create index pcatalog_small_image_id on product_catalog (small_image_id);
-
 create index pcatalog_thumbnail_image_id on product_catalog (thumbnail_image_id);
-
 create index pcatalog_type_id on product_catalog (type_id);
 
 create index pcategory_enteredby on product_category (enteredby);
-
 create index pcategory_import_id on product_category (import_id);
-
 create index pcategory_large_image_id on product_category (large_image_id);
-
 create index pcategory_modifiedby on product_category (modifiedby);
-
 create index pcategory_parent_id on product_category (parent_id);
-
 create index pcategory_small_image_id on product_category (small_image_id);
-
 create index pcategory_thumbnail_image_id on product_category (thumbnail_image_id);
-
 create index pcategory_type_id on product_category (type_id);
 
 create index product_pricing_product_idx on  product_catalog_pricing (product_id);

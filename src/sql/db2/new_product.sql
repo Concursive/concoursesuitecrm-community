@@ -362,7 +362,6 @@ create index pcat_import_id on product_catalog (import_id);
 create index pcat_lrg_img_i_idx on product_catalog (large_image_id);
 create index pcat_manuf_id_idx on product_catalog (manufacturer_id);
 create index pcat_mod_by_idx on product_catalog (modifiedby);
-create index pcat_parent_id_idx on product_catalog (parent_id);
 create index pcat_ship_id_idx on product_catalog (shipping_id);
 create index pcat_sm_img_id_idx on product_catalog (small_image_id);
 create index pcat_th_img_id_idx on product_catalog (thumbnail_image_id);
