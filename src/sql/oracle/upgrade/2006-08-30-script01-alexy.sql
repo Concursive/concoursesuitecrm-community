@@ -72,8 +72,6 @@ create index contact_employee_id on contact (employee_id);
 
 create index tcontactlevels_level on contact_type_levels ("level");
 
-create index caddress_primary_address on  contact_address (primary_address);
-
 create index contact_entered on contact (entered);
 
 create index laccess_types_rule_id on lookup_access_types (rule_id);

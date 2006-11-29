@@ -18,6 +18,8 @@ create index pcatalog_manufacturer_id on product_catalog (manufacturer_id);
 
 create index pcatalog_modifiedby on product_catalog (modifiedby);
 
+create index pcatalog_parent_id on product_catalog (parent_id);
+
 create index pcatalog_shipping_id on product_catalog (shipping_id);
 
 create index pcatalog_small_image_id on product_catalog (small_image_id);

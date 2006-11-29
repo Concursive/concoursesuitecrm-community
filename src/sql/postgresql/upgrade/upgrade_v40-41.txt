@@ -71,6 +71,9 @@
 # Convert keys to format 2.0
 2006-11-10-script1-mr.bsh
 
+# Remove duplicate indexes
+2006-11-29-script01-mr.sql
+
 # Run each time after upgrading a system (NOTE: this is a temporary measure)
 2005-07-20-script01-mr.bsh
 2006-06-01-script01-mr.bsh
