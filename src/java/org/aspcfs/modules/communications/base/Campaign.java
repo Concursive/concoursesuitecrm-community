@@ -2627,6 +2627,7 @@ public class Campaign extends GenericBean {
           "DELETE FROM active_campaign_groups WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
+      pst.close();
 
       pst = db.prepareStatement("DELETE FROM campaign WHERE campaign_id = ? ");
       //"DELETE FROM campaign WHERE id = ? ");
