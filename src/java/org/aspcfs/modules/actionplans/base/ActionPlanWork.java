@@ -1530,6 +1530,8 @@ public class ActionPlanWork extends GenericBean {
       }
       userId = rs.getInt("assignedTo");
     }
+    
+    pst.close();
     //Handle the last user record
     if (userId != -1) {
       userPhase.put(new Integer(userId), new HashMap(phaseMap));

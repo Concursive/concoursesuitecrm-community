@@ -1019,6 +1019,8 @@ public class DocumentStore extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, tmpUserId);
       pst.setInt(++i, this.id);
       pst.executeUpdate();
+      pst.close();
+      
       if (commit) {
         db.commit();
       }
@@ -1133,7 +1135,8 @@ public class DocumentStore extends GenericBean {
     }
 
     resultCount = pst.executeUpdate();
-
+    pst.close();
+    
     return resultCount;
   }
 

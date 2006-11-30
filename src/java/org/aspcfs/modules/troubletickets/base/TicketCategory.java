@@ -470,6 +470,8 @@ public class TicketCategory extends GenericBean {
     if (rs.next()) {
       result = DatabaseUtils.getInt(rs, "id");
     }
+    pst.close();
+    
     return result;
   }
 

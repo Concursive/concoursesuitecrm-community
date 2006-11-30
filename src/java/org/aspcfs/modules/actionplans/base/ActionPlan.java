@@ -568,6 +568,8 @@ public class ActionPlan extends GenericBean {
     if (rs.next()) {
       mapId = rs.getInt("map_id");
     }
+    pst.close();
+    
     return mapId;
   }
 
@@ -635,6 +637,8 @@ public class ActionPlan extends GenericBean {
     pst.setInt(1, constant);
     pst.setString(2, description);
     pst.execute();
+    pst.close();
+    
     return true;
   }
 
