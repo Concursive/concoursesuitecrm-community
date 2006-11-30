@@ -1037,6 +1037,7 @@ public class ContactHistory extends GenericBean {
     if (rs.next()) {
       resultCount = DatabaseUtils.getInt(rs, "record_count");
     }
+    pst.close();
     return resultCount;
   }
 
