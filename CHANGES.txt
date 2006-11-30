@@ -27,6 +27,7 @@ New features:
   - Added Account Documents to portal role
 - MySQL 5 database support
 - Apache Derby database support
+- InterBase database support
 - Added a lead conversion report and data elements for a converted lead
   - When lead assigned
   - When lead archived
