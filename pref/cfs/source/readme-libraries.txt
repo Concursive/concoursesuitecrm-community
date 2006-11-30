@@ -45,6 +45,7 @@ This distribution includes the required Centric CRM 3rd party libraries:
   commons-logging.jar
   DaffodilDB_410_Common.jar
   DaffodilDB_410_Embedded.jar
+  interclient.jar
   iText-1.3.jar
   jasperreports-1.0.2.jar
   jasperreports-bsh-1.0.2.jar
@@ -90,6 +91,7 @@ FirebirdSQL JDBC (Jaybird)        LGPL
 gnu.regexp                        LGPL
 HTMLArea                          BSD style
 HTTPMultiPartParser               iSavvix Public License
+InterBase JDBC Driver             InterBase Public License
 iText                             LGPL
 JFreeChart                        LGPL
 Jakarta Commons                   Apache Software License

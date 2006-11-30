@@ -1521,6 +1521,10 @@ public class PagedListInfo implements Serializable {
         sqlStatement.append("LIMIT " + this.getItemsPerPage() + " ");
       }
       sqlStatement.append("OFFSET " + this.getCurrentOffset() + " ");
+    } else if (DatabaseUtils.getType(db) == DatabaseUtils.INTERBASE &&
+    		this.getItemsPerPage() > 0 ) {
+    	sqlStatement.append( " ROWS " + this.getCurrentOffset() + " TO " + 
+    			( this.getItemsPerPage() + this.getCurrentOffset() ) );
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE) {
       if (this.getItemsPerPage() > 0) {
         //sqlStatement.append(") " +

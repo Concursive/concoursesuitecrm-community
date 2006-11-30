@@ -50,6 +50,7 @@ public class DatabaseUtils {
   public final static int DB2 = 6;
   public final static int MYSQL = 7;
   public final static int DERBY = 8;
+  public final static int INTERBASE = 9;
   public final static String sqlReservedWords = ",language,password,level,type,position,second," +
       "minute,hour,month,dayofweek,year,length,message," +
       "active,role,number,module,section,value,size," +
@@ -88,6 +89,8 @@ public class DatabaseUtils {
         return "1";
       case DatabaseUtils.DERBY:
         return "'1'";
+      case DatabaseUtils.INTERBASE:
+    	return "true";
       default:
         return "true";
     }
@@ -118,6 +121,8 @@ public class DatabaseUtils {
         return "0";
       case DatabaseUtils.DERBY:
         return "'0'";
+      case DatabaseUtils.INTERBASE:
+      	return "false";
       default:
         return "false";
     }
@@ -148,6 +153,8 @@ public class DatabaseUtils {
         return "CURRENT_TIMESTAMP";
       case DatabaseUtils.DERBY:
         return "CURRENT_TIMESTAMP";
+      case DatabaseUtils.INTERBASE:
+      	return "CURRENT_TIMESTAMP";
       default:
         return "CURRENT_TIMESTAMP";
     }
@@ -190,7 +197,9 @@ public class DatabaseUtils {
     } else if (databaseName.indexOf("mysql") > -1) {
       return MYSQL;
     } else if (databaseName.indexOf("derby") > -1) {
-      return DERBY;
+      return DERBY; 
+    } else if ( "interbase.interclient.Connection".equals( databaseName ) ) {
+      return INTERBASE;
     } else {
       System.out.println("DatabaseUtils-> Unkown Connection Class: " + databaseName);
       return -1;
@@ -222,6 +231,8 @@ public class DatabaseUtils {
         return "mysql";
       case DERBY:
         return "derby";
+      case INTERBASE:
+    	return "interbase";
       default:
         return "unknown";
     }
@@ -257,6 +268,8 @@ public class DatabaseUtils {
         return ("DATE(" + date + ")");
       case DatabaseUtils.DERBY:
         return ("DATE(" + date + ")");
+      case DatabaseUtils.INTERBASE:
+    	return ("CAST(" + date + " AS DATE)");
       default:
         return "";
     }
@@ -306,6 +319,7 @@ public class DatabaseUtils {
         addTimestampIntervalString = " DATEADD(" + customUnits + ",(" + termsColumnName + " + 1)," + timestampColumnName + ")";
         break;
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         if (units == DAY) {
           addTimestampIntervalString = " (" + timestampColumnName + " + " + termsColumnName + ") ";
         } else if (units == WEEK) {
@@ -414,6 +428,7 @@ public class DatabaseUtils {
         addTimestampIntervalString = " DATEADD(" + customUnits + ",(" + termsColumnName + " + " + (defaultTerms + 1) + ")," + timestampColumnName + ")";
         break;
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         addTimestampIntervalString = " (" + timestampColumnName + " + ((" + termsColumnName + " + " + defaultTerms + 1 + ") * 7)) ";
         break;
       case DatabaseUtils.DAFFODILDB:
@@ -467,6 +482,7 @@ public class DatabaseUtils {
     String sequenceName = getSequenceName(db, origSequenceName);
     switch (typeId) {
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         rs = st.executeQuery(
             "SELECT GEN_ID (" + sequenceName + ",1) FROM RDB$DATABASE");
         break;
@@ -494,6 +510,8 @@ public class DatabaseUtils {
     int typeId = DatabaseUtils.getType(db);
     switch (typeId) {
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE: 
+    	  // interbase actually allows 64 character names, but since we are using the same db scripts...
         if (sequenceName.length() > 31) {
           String seqPart1 = sequenceName.substring(0, 13);
           String seqPart2 = sequenceName.substring(14);
@@ -581,6 +599,7 @@ public class DatabaseUtils {
       case DatabaseUtils.MSSQL:
         return "DATEPART(YY, " + fieldname + ")";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return "EXTRACT(YEAR FROM " + fieldname + ")";
       case DatabaseUtils.DAFFODILDB:
         return "YEAR(" + fieldname + ")";
@@ -624,6 +643,9 @@ public class DatabaseUtils {
         return "";
       case DatabaseUtils.DERBY:
         return "";
+      case DatabaseUtils.INTERBASE:
+        // ib does support temporary tables?
+    	  return "";
       default:
         return "";
     }
@@ -644,6 +666,7 @@ public class DatabaseUtils {
       case DatabaseUtils.MSSQL:
         return "DATEPART(MM, " + fieldname + ")";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return "EXTRACT(MONTH FROM " + fieldname + ")";
       case DatabaseUtils.DAFFODILDB:
         return "MONTH(" + fieldname + ")";
@@ -676,6 +699,7 @@ public class DatabaseUtils {
       case DatabaseUtils.MSSQL:
         return "DATEPART(DD, " + fieldname + ")";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return "EXTRACT(DAY FROM " + fieldname + ")";
       case DatabaseUtils.DAFFODILDB:
         return "DAYOFWEEK(" + fieldname + ")";
@@ -709,6 +733,7 @@ public class DatabaseUtils {
       case DatabaseUtils.MSSQL:
         return "DATEPART(HH, " + fieldname + ")";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return "EXTRACT(HOUR FROM " + fieldname + ")";
       case DatabaseUtils.DAFFODILDB:
         //return "DAYOFWEEK(" + fieldname + ")";
@@ -742,6 +767,7 @@ public class DatabaseUtils {
       case DatabaseUtils.MSSQL:
         return "DATEPART(M, " + fieldname + ")";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return "EXTRACT(MINUTE FROM " + fieldname + ")";
       case DatabaseUtils.DAFFODILDB:
         return "DAYOFWEEK(" + fieldname + ")";
@@ -774,6 +800,7 @@ public class DatabaseUtils {
       case DatabaseUtils.ORACLE:
         return "lower";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return "lower";
       case DatabaseUtils.DAFFODILDB:
         return "lcase";
@@ -805,6 +832,7 @@ public class DatabaseUtils {
       case DatabaseUtils.ORACLE:
         return "lower(" + field + ")";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return "lower(" + field + ")";
       case DatabaseUtils.DAFFODILDB:
         return "lcase(" + field + ")";
@@ -847,6 +875,8 @@ public class DatabaseUtils {
         return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
       case DatabaseUtils.DERBY:
         return "substr(" + field + "," + (first + 1) + (size < 0 ? "" : "," + size) + ") ";
+      case DatabaseUtils.INTERBASE:
+    	return "substr(" + field + "," + (first+1) + (size < 0 ? ", 32767" : "," + size ) + " )";
       default:
         return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
     }
@@ -870,6 +900,7 @@ public class DatabaseUtils {
       case DatabaseUtils.ORACLE:
         return "TO_CHAR(" + field + ")";
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         return field;
       case DatabaseUtils.DB2:
         return "CAST(" + field + " AS VARCHAR(32000))";
@@ -1360,7 +1391,8 @@ public class DatabaseUtils {
   public static String getTableName(Connection db, String tableName) {
     if (DatabaseUtils.getType(db) != FIREBIRD &&
         DatabaseUtils.getType(db) != ORACLE &&
-        DatabaseUtils.getType(db) != DB2) {
+        DatabaseUtils.getType(db) != DB2 &&
+        DatabaseUtils.getType(db) != INTERBASE ) {
       return tableName;
     }
     if (tableName.length() < 32) {
@@ -1373,7 +1405,7 @@ public class DatabaseUtils {
       return "business_pro_comp_parameter";
     }
     if ("business_process_component_result_lookup".equals(tableName)) {
-      if (DatabaseUtils.getType(db) == FIREBIRD) {
+      if (DatabaseUtils.getType(db) == FIREBIRD || DatabaseUtils.getType(db) == INTERBASE) {
         return "business_pro_comp_result_lookup";
       } else {
         return "business_pro_com_result_lookup";
@@ -1398,7 +1430,7 @@ public class DatabaseUtils {
       return "lookup_opt_event_compelling";
     }
     if ("ticket_category_draft_assignment".equals(tableName)) {
-      if (DatabaseUtils.getType(db) == FIREBIRD) {
+      if (DatabaseUtils.getType(db) == FIREBIRD || DatabaseUtils.getType(db) == INTERBASE) {
         return "ticket_category_draf_assignment";
       } else {
         return "ticket_category_dra_assignment";
@@ -1418,6 +1450,7 @@ public class DatabaseUtils {
    */
   public static String parseReservedWord(Connection db, String reservedWord) {
     if (DatabaseUtils.getType(db) == FIREBIRD ||
+    	DatabaseUtils.getType(db) == INTERBASE ||
         DatabaseUtils.getType(db) == ORACLE ||
         DatabaseUtils.getType(db) == DB2 ||
         DatabaseUtils.getType(db) == MYSQL ||
@@ -1637,6 +1670,7 @@ public class DatabaseUtils {
         }
         break;
       case DatabaseUtils.FIREBIRD:
+      case DatabaseUtils.INTERBASE:
         switch (truncTo) {
           case DatabaseUtils.DAY:
             truncSQL = "CAST(" + dateColumn + " AS date) ";

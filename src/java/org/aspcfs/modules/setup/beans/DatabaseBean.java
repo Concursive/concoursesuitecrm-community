@@ -180,6 +180,9 @@ public class DatabaseBean extends GenericBean {
       if ("Derby".equals(type)) {
         driver = "org.apache.derby.jdbc.EmbeddedDriver";
       }
+      if ("InterBase".equalsIgnoreCase(type)) {
+    	  driver = "interbase.interclient.Driver";
+      }
     }
     return driver;
   }
@@ -274,6 +277,9 @@ public class DatabaseBean extends GenericBean {
     }
     if ("org.apache.derby.jdbc.EmbeddedDriver".equals(this.getDriver())) {
       return "jdbc:derby:" + path + "derbydb" + ";create=true;upgrade=true";
+    }
+    if ("interbase.interclient.Driver".equalsIgnoreCase(this.getDriver())) {
+    	return "jdbc:interbase://" + this.getIp() + ":" + this.getPort() + "/" + path + this.getName();
     }
     return "";
   }
