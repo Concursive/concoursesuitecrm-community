@@ -342,8 +342,8 @@ public class PermissionList extends HashMap {
         pst.setInt(++i, thisPermission.getId());
         pst.setInt(++i, thisPermission.getDefaultRole());
         pst.execute();
+        pst.close();
       }
-      pst.close();
     }
   }
 }

@@ -2454,6 +2454,7 @@ public class Project extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, tmpUserId);
       pst.setInt(++i, this.id);
       pst.executeUpdate();
+      pst.close();
 
       TicketList ticketList = new TicketList();
       ticketList.setProjectId(this.getId());
@@ -2734,6 +2735,7 @@ public class Project extends GenericBean {
         pst.setBoolean(2, true);
         pst.setInt(3, id);
         pst.execute();
+        pst.close();
       }
       db.commit();
     } catch (Exception e) {

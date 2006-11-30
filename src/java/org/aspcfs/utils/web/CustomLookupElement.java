@@ -89,6 +89,8 @@ public class CustomLookupElement extends HashMap {
     } else {
       throw new java.sql.SQLException("ID not found");
     }
+    rs.close();
+    pst.close();
   }
 
 

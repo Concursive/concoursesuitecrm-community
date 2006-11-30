@@ -538,6 +538,7 @@ public class SurveyAnswer {
       thisAverage = rs.getDouble("av");
     }
     rs.close();
+    pst.close();
 
     pst = db.prepareStatement(
         "UPDATE active_survey_questions " +
