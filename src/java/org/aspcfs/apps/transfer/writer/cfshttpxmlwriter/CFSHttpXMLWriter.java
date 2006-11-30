@@ -575,6 +575,12 @@ public class CFSHttpXMLWriter implements DataWriter {
       authId.appendChild(document.createTextNode(id));
       auth.appendChild(authId);
 
+      if (username != null) {
+        Element authUsername = document.createElement("username");
+        authUsername.appendChild(document.createTextNode(username));
+        auth.appendChild(authUsername);
+      }
+      
       Element authCode = document.createElement("code");
       authCode.appendChild(document.createTextNode(code));
       auth.appendChild(authCode);
@@ -600,7 +606,18 @@ public class CFSHttpXMLWriter implements DataWriter {
       //Add the meta node: fields that will be returned
       Element meta = document.createElement("meta");
       transaction.appendChild(meta);
-
+      
+      //Process explicit meta information if specified
+      if (hasMetaInfo()) {
+        Iterator properties = transactionMeta.iterator();
+        while (properties.hasNext()) {
+          String prop = (String) properties.next();
+          Element property = document.createElement("property");
+          property.appendChild(document.createTextNode(prop));
+          meta.appendChild(property);
+        }
+      }
+      
       //Add the object node
       Element object = document.createElement(record.getName());
       object.setAttribute("action", record.getAction());
@@ -610,27 +627,20 @@ public class CFSHttpXMLWriter implements DataWriter {
       while (fieldItems.hasNext()) {
         DataField thisField = (DataField) fieldItems.next();
 
-        //Add the property to the meta node
-        Element property = document.createElement("property");
-        property.appendChild(document.createTextNode(thisField.getName()));
-        meta.appendChild(property);
-
-        //Ignore the field to add to the object node
-        /*
-         *  Element field = null;
-         *  if (thisField.hasAlias()) {
-         *  field = document.createElement(thisField.getAlias());
-         *  } else {
-         *  field = document.createElement(thisField.getName());
-         *  }
-         *  if (thisField.hasValueLookup()) {
-         *  field.setAttribute("lookup", thisField.getValueLookup());
-         *  }
-         *  if (thisField.hasValue()) {
-         *  field.appendChild(document.createTextNode(thisField.getValue()));
-         *  }
-         *  object.appendChild(field);
-         */
+        if (!hasMetaInfo()) {
+          //Add this field as a property to the meta node
+          Element property = document.createElement("property");
+          property.appendChild(document.createTextNode(thisField.getName()));
+          meta.appendChild(property);
+        } else {
+          //Explicit Meta info was provided. So add this field as a filter
+          if (thisField.hasValue()) {
+            Element field = document.createElement(thisField.getName());
+            field.appendChild(
+                document.createTextNode(thisField.getValue()));
+            object.appendChild(field);
+          }
+        }
       }
       lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
     } catch (Exception e) {

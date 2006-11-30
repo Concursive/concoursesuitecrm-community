@@ -723,8 +723,6 @@ public final class CampaignManager extends CFSModule {
         campaign.setActiveDateTimeZone(activeDateTimeZone);
         campaign.setTimeZoneForDateFields(
             context.getRequest(), activeDate, "activeDate");
-        campaign.setTimeOfDayForDateFields(
-          context.getRequest(), campaign.getActiveDate(), "activeDate");
       }
       if (sendMethodId != null) {
         campaign.setSendMethodId(
@@ -1195,9 +1193,6 @@ public final class CampaignManager extends CFSModule {
       campaign.setActiveDateTimeZone(activeDateTimeZone);
       campaign.setTimeZoneForDateFields(
           context.getRequest(), activeDate, "activeDate");
-      campaign.setTimeOfDayForDateFields(
-          context.getRequest(), campaign.getActiveDate(), "activeDate");
-
       if (context.getRequest().getParameter("active") != null) {
         campaign.setActive(context.getRequest().getParameter("active"));
       }
