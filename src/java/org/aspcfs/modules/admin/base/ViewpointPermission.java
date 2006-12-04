@@ -336,6 +336,7 @@ public class ViewpointPermission extends GenericBean {
     pst.setBoolean(++i, edit);
     pst.setBoolean(++i, delete);
     pst.execute();
+    pst.close();
     id = DatabaseUtils.getCurrVal(db, "viewpoint_per_vp_permission_seq", id);
     return true;
   }

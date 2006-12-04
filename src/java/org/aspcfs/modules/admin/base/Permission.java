@@ -589,6 +589,7 @@ public class Permission extends GenericBean {
     pst.setBoolean(++i, active);
     pst.setBoolean(++i, viewpoints);
     pst.execute();
+    pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_permission_id_seq", id);
     return true;
   }

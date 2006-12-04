@@ -1694,7 +1694,8 @@ public class OpportunityHeader extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, tmpUserId);
       pst.setInt(++i, this.id);
       count = pst.executeUpdate();
-
+      pst.close();
+      
       QuoteList quoteList = new QuoteList();
       quoteList.setHeaderId(this.getId());
       if (!toTrash) {

@@ -349,20 +349,13 @@ public class AccessLog extends GenericBean {
       throw new SQLException("Access Log ID not specified.");
     }
 
-    try {
-      db.setAutoCommit(false);
-      PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM access_log " +
-              "WHERE id = ? ");
-      pst.setInt(1, this.getId());
-      pst.executeUpdate();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-    }
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM access_log " +
+            "WHERE id = ? ");
+    pst.setInt(1, this.getId());
+    pst.executeUpdate();
+    pst.close();
+    
     return true;
   }
 

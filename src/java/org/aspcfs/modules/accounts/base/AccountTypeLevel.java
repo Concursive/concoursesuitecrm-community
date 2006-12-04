@@ -258,6 +258,8 @@ public class AccountTypeLevel {
       buildRecord(rs);
     }
     rs.close();
+    pst.close();
+    
     if (typeId == -1) {
       throw new SQLException("Account Type Level entry not found.");
     }

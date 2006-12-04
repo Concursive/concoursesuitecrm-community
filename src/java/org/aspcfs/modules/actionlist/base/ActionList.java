@@ -702,13 +702,15 @@ public class ActionList extends GenericBean {
               "WHERE item_id IN (SELECT item_id from action_item where action_id = ? ) ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
+      
       pst = db.prepareStatement(
           "DELETE from action_item " +
               "WHERE action_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
+      
       if (commit) {
         db.commit();
       }

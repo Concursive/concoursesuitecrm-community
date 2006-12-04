@@ -2547,7 +2547,7 @@ public class Project extends GenericBean {
 
       //Remove related accounts
       ProjectUtils.removeAccountsFromProject(db, this.id);
-      
+
       //Delete the actual project
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM projects " +

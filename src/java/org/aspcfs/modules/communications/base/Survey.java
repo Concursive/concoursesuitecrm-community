@@ -843,6 +843,8 @@ public class Survey extends SurveyBase {
     while (rs.next()) {
       addressSurveyId = rs.getInt("survey_id");
     }
+    rs.close();
+    pst.close();
     return addressSurveyId;
   }
 }

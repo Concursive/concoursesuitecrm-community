@@ -3435,11 +3435,17 @@ public class Organization extends GenericBean {
     if (this.getOrgId() == -1) {
       throw new SQLException("The Organization could not be found.");
     }
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      
       Statement st = db.createStatement();
       st.executeUpdate("DELETE FROM news WHERE org_id = " + this.getOrgId());
       st.close();
+      
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM organization " +
           "WHERE org_id = ? " +
@@ -3448,11 +3454,17 @@ public class Organization extends GenericBean {
       pst.setBoolean(2, true);
       pst.executeUpdate();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 

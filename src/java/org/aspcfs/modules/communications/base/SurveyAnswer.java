@@ -599,7 +599,8 @@ public class SurveyAnswer {
               "WHERE answer_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
-
+      pst.close();
+      
       //delete the answer
       pst = db.prepareStatement(
           "DELETE FROM active_survey_answers " +

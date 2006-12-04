@@ -2249,7 +2249,8 @@ public class ProductCatalog extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, tmpUserId);
     DatabaseUtils.setInt(pst, ++i, this.getId());
     resultCount = pst.executeUpdate();
-
+    pst.close();
+    
     TicketList ticketList = new TicketList();
     ticketList.setProductId(this.getId());
     // //NEEDS SITE COMPLIANCE

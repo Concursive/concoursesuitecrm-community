@@ -528,6 +528,7 @@ public class RequirementMapItem {
       pst.setInt(2, requirementId);
       pst.setInt(3, position);
       pst.executeUpdate();
+      pst.close();
     }
     //Append the item
     ++position;

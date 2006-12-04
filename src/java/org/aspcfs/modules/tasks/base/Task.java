@@ -1540,6 +1540,9 @@ public class Task extends GenericBean {
         contactId = rs.getInt("contact_id");
         hasLinks = true;
       }
+      rs.close();
+      pst.close();
+      
       if (contactId > 0) {
         contact = new Contact(db, contactId);
         contactName = contact.getNameFull();
