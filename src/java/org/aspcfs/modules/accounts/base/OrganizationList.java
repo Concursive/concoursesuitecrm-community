@@ -1619,17 +1619,28 @@ public class OrganizationList extends Vector implements SyncableList {
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "i.description as industry_name, a.description AS account_size_name  " +
+        "i.description as industry_name, a.description AS account_size_name, " +
+        "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county " +
         "FROM organization o " +
         "LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (o.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code) " +
         "LEFT JOIN lookup_account_size a ON (o.account_size = a.code) " +
-        "WHERE o.org_id >= 0 ");
+        "LEFT JOIN organization_address oa ON (o.org_id = oa.org_id) " +
+        "WHERE o.org_id >= 0 " );
+
+   sqlFilter.append(
+    	" AND (oa.address_id IS NULL OR oa.address_id IN ( "+
+    	"SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) "+
+    	"OR oa.address_id IN (SELECT MIN(ctodd.address_id) FROM organization_address ctodd WHERE ctodd.org_id = o.org_id AND "+
+    	" ctodd.org_id NOT IN (SELECT org_id FROM organization_address WHERE organization_address.primary_address = ?))) ");
+      
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    pst.setBoolean(++items, true);
+    pst.setBoolean(++items, true);
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, pst);
     }
@@ -1653,7 +1664,7 @@ public class OrganizationList extends Vector implements SyncableList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
+    
     if (minerOnly != null) {
       sqlFilter.append("AND miner_only = ? ");
     }
@@ -1984,6 +1995,7 @@ public class OrganizationList extends Vector implements SyncableList {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    
     if (minerOnly != null) {
       pst.setBoolean(++i, minerOnly.booleanValue());
     }

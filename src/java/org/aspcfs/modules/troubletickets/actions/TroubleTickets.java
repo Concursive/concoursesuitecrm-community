@@ -267,7 +267,9 @@ public final class TroubleTickets extends CFSModule {
     } else if (ownerCriteria.equals("allTickets")) {
       ticketReport.setSiteId(siteId);
     }
-
+		if (siteId == -1){
+			ticketReport.setSiteId(context.getRequest().getParameter("searchcodeSiteId"));
+		}
     try {
       db = this.getConnection(context);
       isValid = exportListInfo.getIsValid();
@@ -1024,8 +1026,8 @@ public final class TroubleTickets extends CFSModule {
       createdByMeList.setPagedListInfo(createdByMeInfo);
       createdByMeList.setEnteredBy(user.getId());
       createdByMeList.setSiteId(user.getSiteId());
-      createdByMeList.setExclusiveToSite(true);
       if (user.getSiteId() != -1) {
+				createdByMeList.setExclusiveToSite(true);
         createdByMeList.setIncludeAllSites(false);
       }
       createdByMeList.setOnlyOpen(true);
@@ -1051,6 +1053,7 @@ public final class TroubleTickets extends CFSModule {
     if (sectionId == null || userGroupTicketInfo.getExpandedSelection() == true) {
       userGroupTicketList.setPagedListInfo(userGroupTicketInfo);
       userGroupTicketList.setInMyUserGroups(user.getId());
+			userGroupTicketList.setIncludeAllSites(true);
       userGroupTicketList.setOnlyOpen(true);
     }
     //All Tickets

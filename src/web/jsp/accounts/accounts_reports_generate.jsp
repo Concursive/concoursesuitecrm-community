@@ -147,6 +147,19 @@
         <option value="modified" ><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></option>
         <option value="modifiedBy" ><dhv:label name="accounts.accounts_fields_list.ModifiedBy">Modified By</dhv:label></option>
         <option value="notes" ><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></option>
+        <option value="businessname2"><dhv:label name="accounts.accounts_add.business_name_two">Business Name 2</dhv:label></option>
+        <option value="dunsnumber"><dhv:label name="accounts.accounts_add.duns_number">DUNS Number</dhv:label></option>
+        <option value="SICDesc"><dhv:label name="accounts.accounts_add.sicDescription">SIC Description</dhv:label></option>
+        <option value="revenue"><dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label></option>
+        <option value="yearstarted"><dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label></option>
+        <option value="phone"><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></option>        
+        <option value="street"><dhv:label name="accounts.accounts_add.AddressLine1">Address Line 1</dhv:label></option>
+        <option value="city"><dhv:label name="accounts.accounts_add.City">City</dhv:label></option> 
+        <option value="state"><dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label></option>
+        <option value="zip"><dhv:label name="accounts.accounts_add.ZipPostalCode">Zip/Postal Code</dhv:label></option>
+        <option value="country"><dhv:label name="accounts.accounts_add.Country">Country</dhv:label></option>
+        <option value="latitude"><dhv:label name="accounts.address.latitude">Latitude</dhv:label></option>        
+        <option value="longitude"><dhv:label name="accounts.address.longitude">Longitude</dhv:label></option>
       </select>
     </td>
     <td width="25">

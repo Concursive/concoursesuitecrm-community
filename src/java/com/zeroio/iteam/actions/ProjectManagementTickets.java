@@ -274,6 +274,7 @@ public final class ProjectManagementTickets extends CFSModule {
         } else {
           tickets.setOnlyOpen(true);
         }
+				tickets.setIncludeAllSites(true);
         tickets.buildList(db);
         // Retrieve the ticket
         if (tickets.size() > 0) {

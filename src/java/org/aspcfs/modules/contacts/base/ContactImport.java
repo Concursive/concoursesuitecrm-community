@@ -694,7 +694,7 @@ public class ContactImport extends Import implements Runnable {
                   .getProperty("siteId"));
               if (!"".equals(StringUtils.toString(propertyValue))) {
                 try {
-                  if (siteIdList.hasItem(Integer.parseInt(propertyValue))) {
+                  if (siteIdList.hasCode(Integer.parseInt(propertyValue))) {
                     thisContact.setSiteId(Integer.parseInt(propertyValue));
                   } else {
                     thisContact.setSiteId(-1);

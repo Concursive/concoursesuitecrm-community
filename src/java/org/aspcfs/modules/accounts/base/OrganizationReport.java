@@ -28,7 +28,7 @@ import java.util.Iterator;
 
 /**
  * Description of the Class
- *
+ * 
  * @author chris
  * @version $Id: OrganizationReport.java,v 1.8 2002/12/20 14:07:55 mrajkowski
  *          Exp $
@@ -36,7 +36,7 @@ import java.util.Iterator;
  */
 public class OrganizationReport extends OrganizationList {
   protected Report rep = new Report();
-  //default delimiter is comma
+  // default delimiter is comma
   protected String delimiter = ",";
   protected String header = null;
   protected String tdFormat = "";
@@ -53,248 +53,235 @@ public class OrganizationReport extends OrganizationList {
   protected boolean includeFolders = false;
   protected int folderId = -1;
 
-
   /**
    * Constructor for the OrganizationReport object
    */
   public OrganizationReport() {
   }
 
-
   /**
    * Sets the rep attribute of the OrganizationReport object
-   *
-   * @param tmp The new rep value
+   * 
+   * @param tmp
+   *          The new rep value
    */
   public void setRep(Report tmp) {
     this.rep = tmp;
   }
 
-
   /**
    * Sets the delimiter attribute of the OrganizationReport object
-   *
-   * @param tmp The new delimiter value
+   * 
+   * @param tmp
+   *          The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
   }
 
-
   /**
    * Sets the header attribute of the OrganizationReport object
-   *
-   * @param tmp The new header value
+   * 
+   * @param tmp
+   *          The new header value
    */
   public void setHeader(String tmp) {
     this.header = tmp;
   }
 
-
   /**
    * Sets the tdFormat attribute of the OrganizationReport object
-   *
-   * @param tmp The new tdFormat value
+   * 
+   * @param tmp
+   *          The new tdFormat value
    */
   public void setTdFormat(String tmp) {
     this.tdFormat = tmp;
   }
 
-
   /**
    * Gets the rep attribute of the OrganizationReport object
-   *
+   * 
    * @return The rep value
    */
   public Report getRep() {
     return rep;
   }
 
-
   /**
    * Gets the delimiter attribute of the OrganizationReport object
-   *
+   * 
    * @return The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
   }
 
-
   /**
    * Gets the header attribute of the OrganizationReport object
-   *
+   * 
    * @return The header value
    */
   public String getHeader() {
     return header;
   }
 
-
   /**
    * Gets the tdFormat attribute of the OrganizationReport object
-   *
+   * 
    * @return The tdFormat value
    */
   public String getTdFormat() {
     return tdFormat;
   }
 
-
   /**
    * Gets the filePath attribute of the OrganizationReport object
-   *
+   * 
    * @return The filePath value
    */
   public String getFilePath() {
     return filePath;
   }
 
-
   /**
    * Gets the thisItem attribute of the OrganizationReport object
-   *
+   * 
    * @return The thisItem value
    */
   public FileItem getThisItem() {
     return thisItem;
   }
 
-
   /**
    * Sets the filePath attribute of the OrganizationReport object
-   *
-   * @param tmp The new filePath value
+   * 
+   * @param tmp
+   *          The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
   }
 
-
   /**
    * Sets the thisItem attribute of the OrganizationReport object
-   *
-   * @param tmp The new thisItem value
+   * 
+   * @param tmp
+   *          The new thisItem value
    */
   public void setThisItem(FileItem tmp) {
     this.thisItem = tmp;
   }
 
-
   /**
    * Gets the subject attribute of the OrganizationReport object
-   *
+   * 
    * @return The subject value
    */
   public String getSubject() {
     return subject;
   }
 
-
   /**
    * Gets the enteredBy attribute of the OrganizationReport object
-   *
+   * 
    * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
   }
 
-
   /**
    * Gets the modifiedBy attribute of the OrganizationReport object
-   *
+   * 
    * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
   }
 
-
   /**
    * Sets the subject attribute of the OrganizationReport object
-   *
-   * @param tmp The new subject value
+   * 
+   * @param tmp
+   *          The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
   }
 
-
   /**
    * Sets the enteredBy attribute of the OrganizationReport object
-   *
-   * @param tmp The new enteredBy value
+   * 
+   * @param tmp
+   *          The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
 
-
   /**
    * Sets the modifiedBy attribute of the OrganizationReport object
-   *
-   * @param tmp The new modifiedBy value
+   * 
+   * @param tmp
+   *          The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
 
-
   /**
    * Gets the folderId attribute of the OrganizationReport object
-   *
+   * 
    * @return The folderId value
    */
   public int getFolderId() {
     return folderId;
   }
 
-
   /**
    * Sets the folderId attribute of the OrganizationReport object
-   *
-   * @param folderId The new folderId value
+   * 
+   * @param folderId
+   *          The new folderId value
    */
   public void setFolderId(int folderId) {
     this.folderId = folderId;
   }
 
-
   /**
    * Sets the includeFolders attribute of the OrganizationReport object
-   *
-   * @param includeFolders The new includeFolders value
+   * 
+   * @param includeFolders
+   *          The new includeFolders value
    */
   public void setIncludeFolders(boolean includeFolders) {
     this.includeFolders = includeFolders;
   }
 
-
   /**
    * Gets the includeFolders attribute of the OrganizationReport object
-   *
+   * 
    * @return The includeFolders value
    */
   public boolean getIncludeFolders() {
     return includeFolders;
   }
 
-
   /**
    * Gets the criteria attribute of the OrganizationReport object
-   *
+   * 
    * @return The criteria value
    */
   public ArrayList getCriteria() {
     return criteria;
   }
 
-
   /**
    * Sets the criteria attribute of the OrganizationReport object
-   *
-   * @param criteriaString The new criteria value
+   * 
+   * @param criteriaString
+   *          The new criteria value
    */
   public void setCriteria(String[] criteriaString) {
     if (criteriaString != null) {
@@ -305,46 +292,43 @@ public class OrganizationReport extends OrganizationList {
     }
   }
 
-
   /**
    * Gets the params attribute of the OrganizationReport object
-   *
+   * 
    * @return The params value
    */
   public String[] getParams() {
     return params;
   }
 
-
   /**
    * Sets the params attribute of the OrganizationReport object
-   *
-   * @param params The new params value
+   * 
+   * @param params
+   *          The new params value
    */
   public void setParams(String[] params) {
     this.params = params;
   }
 
-
   /**
    * Gets the filenameToUse attribute of the OrganizationReport object
-   *
+   * 
    * @return The filenameToUse value
    */
   public String getFilenameToUse() {
     return filenameToUse;
   }
 
-
   /**
    * Sets the filenameToUse attribute of the OrganizationReport object
-   *
-   * @param filenameToUse The new filenameToUse value
+   * 
+   * @param filenameToUse
+   *          The new filenameToUse value
    */
   public void setFilenameToUse(String filenameToUse) {
     this.filenameToUse = filenameToUse;
   }
-
 
   /**
    * Description of the Method
@@ -355,7 +339,6 @@ public class OrganizationReport extends OrganizationList {
       rep.setHeader(header + ": " + subject);
     }
   }
-
 
   /**
    * Description of the Method
@@ -404,6 +387,46 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("notes")) {
         rep.addColumn("Notes");
       }
+      if (param.equals("businessname2")) {
+        rep.addColumn("Business Name 2");
+      }
+      if (param.equals("street")) {
+        rep.addColumn("Street");
+      }
+      if (param.equals("city")) {
+        rep.addColumn("City");
+      }
+      if (param.equals("state")) {
+        rep.addColumn("State");
+      }
+      if (param.equals("zip")) {
+        rep.addColumn("Zip");
+      }
+      if (param.equals("country")) {
+        rep.addColumn("Country");
+      }
+      if (param.equals("dunsnumber")) {
+        rep.addColumn("DUNS Number");
+      }
+      if (param.equals("SICDesc")) {
+        rep.addColumn("SIC Description");
+      }
+      if (param.equals("revenue")) {
+        rep.addColumn("Revenue");
+      }
+      if (param.equals("yearstarted")) {
+        rep.addColumn("Year Started");
+      }
+      if (param.equals("phone")) {
+        rep.addColumn("Phone");
+      }
+      if (param.equals("latitude")) {
+        rep.addColumn("Latitude");
+      }
+      if (param.equals("longitude")) {
+        rep.addColumn("Longitude");
+      }
+
     }
 
     if (includeFolders) {
@@ -417,11 +440,11 @@ public class OrganizationReport extends OrganizationList {
     }
   }
 
-
   /**
    * Description of the Method
-   *
-   * @param passedReport Description of the Parameter
+   * 
+   * @param passedReport
+   *          Description of the Parameter
    */
   public void buildReportHeaders(Report passedReport) {
     Iterator y = criteria.iterator();
@@ -466,15 +489,57 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("notes")) {
         passedReport.addColumn("Notes");
       }
+
+      if (param.equals("businessname2")) {
+        passedReport.addColumn("Business Name 2");
+      }
+      if (param.equals("street")) {
+        passedReport.addColumn("Street");
+      }
+      if (param.equals("city")) {
+        passedReport.addColumn("City");
+      }
+      if (param.equals("state")) {
+        passedReport.addColumn("State");
+      }
+      if (param.equals("zip")) {
+        passedReport.addColumn("Zip");
+      }
+      if (param.equals("country")) {
+        passedReport.addColumn("Country");
+      }
+      if (param.equals("dunsnumber")) {
+        passedReport.addColumn("DUNS Number");
+      }
+      if (param.equals("SICDesc")) {
+        passedReport.addColumn("SIC Description");
+      }
+      if (param.equals("revenue")) {
+        passedReport.addColumn("Revenue");
+      }
+      if (param.equals("yearstarted")) {
+        passedReport.addColumn("Year Started");
+      }
+      if (param.equals("phone")) {
+        passedReport.addColumn("Phone");
+      }
+      if (param.equals("latitude")) {
+        passedReport.addColumn("Latitude");
+      }
+      if (param.equals("longitude")) {
+        passedReport.addColumn("Longitude");
+      }
+
     }
   }
 
-
   /**
    * Description of the Method
-   *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * 
+   * @param db
+   *          Description of the Parameter
+   * @throws SQLException
+   *           Description of the Exception
    */
   public void buildReportData(Connection db) throws SQLException {
     this.buildList(db);
@@ -610,15 +675,18 @@ public class OrganizationReport extends OrganizationList {
     }
   }
 
-
   /**
    * Adds a feature to the DataRow attribute of the OrganizationReport object
-   *
-   * @param thisRow The feature to be added to the DataRow attribute
-   * @param thisOrg The feature to be added to the DataRow attribute
-   * @throws SQLException Description of the Exception
+   * 
+   * @param thisRow
+   *          The feature to be added to the DataRow attribute
+   * @param thisOrg
+   *          The feature to be added to the DataRow attribute
+   * @throws SQLException
+   *           Description of the Exception
    */
-  public void addDataRow(ReportRow thisRow, Organization thisOrg) throws SQLException {
+  public void addDataRow(ReportRow thisRow, Organization thisOrg)
+      throws SQLException {
     Iterator y = criteria.iterator();
     while (y.hasNext()) {
       String param = (String) y.next();
@@ -662,15 +730,97 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("notes")) {
         thisRow.addCell(thisOrg.getNotes());
       }
+
+      if (param.equals("businessname2")) {
+        thisRow.addCell(thisOrg.getBusinessNameTwo());
+      }
+      if (param.equals("street")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {
+            thisRow.addCell(String.valueOf(thisOrg.getPrimaryAddress().getStreetAddressLine1()));
+        }
+      }
+      if (param.equals("city")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {
+            thisRow.addCell(thisOrg.getPrimaryAddress().getCity());
+        }
+      }
+      if (param.equals("state")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {
+          thisRow.addCell("-1".equals(thisOrg.getPrimaryAddress().getState())?"":thisOrg.getPrimaryAddress().getState());          
+        } 
+      }
+      if (param.equals("zip")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {
+          thisRow.addCell(thisOrg.getPrimaryAddress().getZip());
+        }
+      }
+      if (param.equals("country")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {        
+          thisRow.addCell("-1".equals(thisOrg.getPrimaryAddress().getCountry())?"":thisOrg.getPrimaryAddress().getCountry());
+        }
+      }
+      if (param.equals("dunsnumber")) {
+        thisRow.addCell(thisOrg.getDunsNumber());
+      }
+      if (param.equals("SICDesc")) {
+        thisRow.addCell(thisOrg.getSicDescription());
+      }
+      if (param.equals("revenue")) {
+        thisRow.addCell(String.valueOf(thisOrg.getRevenue()));
+      }
+      if (param.equals("yearstarted")) {
+        if (thisOrg.getYearStarted()==-1) {
+          thisRow.addCell("");
+        } else {
+            thisRow.addCell(thisOrg.getYearStarted());
+        }
+      }
+      if (param.equals("phone")) {
+        thisRow.addCell(thisOrg.getPrimaryPhoneNumber());
+      }
+      if (param.equals("latitude")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {
+          if (thisOrg.getPrimaryAddress().getLatitude() == 0.0 && thisOrg.getPrimaryAddress().getLongitude() == 0.0) {
+            thisRow.addCell("");
+          } else {
+              thisRow.addCell(String.valueOf(thisOrg.getPrimaryAddress().getLatitude()));
+          }
+        }
+      }
+      if (param.equals("longitude")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {
+          if (thisOrg.getPrimaryAddress().getLatitude() == 0.0 && thisOrg.getPrimaryAddress().getLongitude() == 0.0) {
+            thisRow.addCell("");
+          } else {
+              thisRow.addCell(String.valueOf(thisOrg.getPrimaryAddress().getLongitude()));
+          }
+        }
+      }
+
     }
   }
 
-
   /**
    * Description of the Method
-   *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * 
+   * @param db
+   *          Description of the Parameter
+   * @throws SQLException
+   *           Description of the Exception
    */
   public void buildReportFull(Connection db) throws SQLException {
     buildReportBaseInfo();
@@ -678,13 +828,14 @@ public class OrganizationReport extends OrganizationList {
     buildReportData(db);
   }
 
-
   /**
    * Description of the Method
-   *
-   * @param db Description of the Parameter
+   * 
+   * @param db
+   *          Description of the Parameter
    * @return Description of the Return Value
-   * @throws Exception Description of the Exception
+   * @throws Exception
+   *           Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -710,4 +861,3 @@ public class OrganizationReport extends OrganizationList {
     return true;
   }
 }
-

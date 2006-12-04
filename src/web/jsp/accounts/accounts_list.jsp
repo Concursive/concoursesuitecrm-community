@@ -69,7 +69,8 @@
     </th>
     
     <th nowrap <% ++columnCount; %>>
-      <strong><dhv:label name="organization.owner">Owner Name</dhv:label></strong>     
+      <strong><a href="Accounts.do?command=Search&column=ct_owner.namelast"><dhv:label name="organization.owner">Owner Name</dhv:label></a></strong>
+      <%= SearchOrgListInfo.getSortIcon("ct_owner.namelast") %>     
     </th>
     
 <%--    <dhv:include name="organization.list.siteId" none="true"> --%>
@@ -82,17 +83,20 @@
 <%--    </dhv:include> --%>
       <dhv:include name="organization.addresses" none="true">
         <th nowrap <% ++columnCount; %>>
-           <strong><dhv:label name="accounts.accounts_add.City">City</dhv:label></strong>
+           <strong><a href="Accounts.do?command=Search&column=oa.city"><dhv:label name="accounts.accounts_add.City">City</dhv:label></a></strong>
+	 	   <%= SearchOrgListInfo.getSortIcon("oa.city") %> 
 	 	</th>
       </dhv:include>    
       <dhv:include name="organization.addresses" none="true">
     	<th nowrap <% ++columnCount; %>>
-          <strong><dhv:label name="accounts.accounts_add.State">State</dhv:label></strong>
+          <strong><a href="Accounts.do?command=Search&column=oa.state"><dhv:label name="accounts.accounts_add.State">State</dhv:label></a></strong>
+					<%= SearchOrgListInfo.getSortIcon("oa.state") %> 
 		</th>
 	  </dhv:include>
       <dhv:include name="organization.addresses" none="true">
         <th nowrap <% ++columnCount; %>>
-          <strong><dhv:label name="accounts.accounts_add.Zip">Zip</dhv:label></strong>
+          <strong><a href="Accounts.do?command=Search&column=oa.postalcode"><dhv:label name="accounts.accounts_add.Zip">Zip</dhv:label></a></strong>
+					<%= SearchOrgListInfo.getSortIcon("oa.postalcode") %> 
 		</th>
       </dhv:include>
       <dhv:include name="organization.phoneNumbers" none="true">
@@ -102,8 +106,9 @@
       </dhv:include>
       <dhv:include name="organization.addresses" none="true">
         <th nowrap <% ++columnCount; %>>
-          <strong><dhv:label name="accounts.accounts_add.County">County</dhv:label></strong>
-		</th>
+          <strong><a href="Accounts.do?command=Search&column=oa.county"><dhv:label name="accounts.accounts_add.County">County</dhv:label></a></strong>
+					<%= SearchOrgListInfo.getSortIcon("oa.county") %> 
+				</th>
       </dhv:include>
   </tr>
 <%

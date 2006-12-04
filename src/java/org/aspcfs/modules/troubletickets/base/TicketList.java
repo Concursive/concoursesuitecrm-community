@@ -1642,6 +1642,9 @@ public class TicketList extends ArrayList implements SyncableList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, pst);
     }
+		if (System.getProperty("DEBUG") != null) {
+			System.out.println(pst);
+		}
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
@@ -1845,9 +1848,9 @@ public class TicketList extends ArrayList implements SyncableList {
     if (subCat3 != -1) {
       sqlFilter.append("AND t.subcat_code3 = ? ");
     }
-    if (!includeAllSites && orgId == -1 && contactId == -1 && forProjectUser == -1
+    if ((!includeAllSites) || (orgId == -1 && contactId == -1 && forProjectUser == -1
          && id == -1 && serviceContractId == -1 && assetId == -1 && projectId == -1 && userGroupId == -1
-         && inMyUserGroups == -1) {
+         && inMyUserGroups == -1)) {
       if (siteId != -1) {
         sqlFilter.append("AND (t.site_id = ? ");
         if (!exclusiveToSite) {
@@ -1855,7 +1858,9 @@ public class TicketList extends ArrayList implements SyncableList {
         }
         sqlFilter.append(") ");
       } else {
-        sqlFilter.append("AND t.site_id IS NULL ");
+	      if (exclusiveToSite) {
+					sqlFilter.append("AND t.site_id IS NULL ");
+        }
       }
     }
     if (enteredDateStart != null) {
@@ -1997,10 +2002,12 @@ public class TicketList extends ArrayList implements SyncableList {
     if (subCat3 != -1) {
       pst.setInt(++i, subCat3);
     }
-    if (!includeAllSites && orgId == -1 && contactId == -1 && id == -1 && siteId != -1
-         && serviceContractId == -1 && assetId == -1 && projectId == -1 && forProjectUser == -1 && userGroupId == -1
-         && inMyUserGroups == -1) {
-      pst.setInt(++i, siteId);
+    if ((!includeAllSites) || (orgId == -1 && contactId == -1 && forProjectUser == -1
+         && id == -1 && serviceContractId == -1 && assetId == -1 && projectId == -1 && userGroupId == -1
+         && inMyUserGroups == -1)) {
+      if (siteId != -1) {
+				pst.setInt(++i, siteId);
+			}
     }
     if (enteredDateStart != null) {
       DatabaseUtils.setTimestamp(

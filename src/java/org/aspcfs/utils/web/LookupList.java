@@ -1223,5 +1223,26 @@ public class LookupList extends HtmlSelect implements SyncableList {
     }
     return result;
   }
+  
+  /**
+   *    Checks if the code exists
+   *    
+   * @param  code  Description of the Parameter
+   * @return       Description of the Return Value
+   * @throws SQLException 
+   */
+
+  public boolean hasCode(int code) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getCode() == code) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  
 }
 

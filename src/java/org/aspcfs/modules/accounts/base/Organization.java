@@ -103,6 +103,10 @@ public class Organization extends GenericBean {
   private int rating = -1;
   private double potential = 0;
   private int primaryContactId = -1;
+  private String city = null;
+  private String state = null;
+  private String postalCode = null;
+  private String county = null;
 
   private OrganizationAddressList addressList = new OrganizationAddressList();
   private OrganizationPhoneNumberList phoneNumberList = new OrganizationPhoneNumberList();
@@ -178,21 +182,29 @@ public class Organization extends GenericBean {
   public Organization(Connection db, int org_id) throws SQLException {
     if (org_id == -1) {
       throw new SQLException("Invalid Account");
-    }
+    } 
     PreparedStatement pst = db.prepareStatement(
         "SELECT o.*, " +
         "ct_owner.namelast AS o_namelast, ct_owner.namefirst AS o_namefirst, " +
         "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
         "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
-        "i.description AS industry_name, a.description AS account_size_name " +
+        "i.description AS industry_name, a.description AS account_size_name, " +
+        "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county " +
         "FROM organization o " +
         "LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (o.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code) " +
         "LEFT JOIN lookup_account_size a ON (o.account_size = a.code) " +
-        "WHERE o.org_id = ? ");
+        "LEFT JOIN organization_address oa ON (o.org_id = oa.org_id) " +
+        "WHERE o.org_id = ? " +
+        " AND (oa.address_id IS NULL OR oa.address_id IN ( "
+		+ "SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) "
+		+ "OR oa.address_id IN (SELECT MIN(ctodd.address_id) FROM organization_address ctodd WHERE ctodd.org_id = o.org_id AND "
+		+ " ctodd.org_id NOT IN (SELECT org_id FROM organization_address WHERE organization_address.primary_address = ?)))");
     pst.setInt(1, org_id);
+    pst.setBoolean(2, true);
+    pst.setBoolean(3, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -2064,6 +2076,83 @@ public class Organization extends GenericBean {
     this.primaryContactId = tmp;
   }
 
+  /**
+   * Gets the city attribute of the Organization object
+   *
+   * @return The city value
+   */
+  public String getCity() {
+    return city;
+  }
+
+
+  /**
+   * Sets the city attribute of the Organization object
+   *
+   * @param tmp The new city value
+   */
+  public void setCity(String tmp) {
+    this.city = tmp;
+  }
+ 
+  /**
+   * Sets the state attribute of the Organization object
+   *
+   * @param tmp The new state value
+   */
+	 public void setState(String tmp) {
+	 	this.state = tmp;
+	 }
+
+
+	/**
+   * Sets the postalCode attribute of the Organization object
+   *
+   * @param tmp The new postalCode value
+   */
+	 public void setPostalCode(String tmp) {
+	 	this.postalCode = tmp;
+	 }
+	 
+	 
+  /**
+   * Gets the postalCode attribute of the Organization object
+   *
+   * @return The postalCode value
+   */
+	 public String getPostalCode() {
+	 	return postalCode;
+	 }
+
+
+  /**
+   * Sets the county attribute of the Organization object
+   *
+   * @param tmp The new county value
+   */
+	 public void setCounty(String tmp) {
+	 	this.county = tmp;
+	 }
+
+
+  /**
+   * Gets the state attribute of the Organization object
+   *
+   * @return The state value
+   */
+	 public String getState() {
+	 	return state;
+	 }
+
+
+  /**
+   * Gets the county attribute of the Organization object
+   *
+   * @return The county value
+   */
+	 public String getCounty() {
+	 	return county;
+	 }
 
   /**
    *  Sets the primaryContactId attribute of the Organization object
@@ -3836,6 +3925,13 @@ public class Organization extends GenericBean {
 
     //account size table
     accountSizeName = rs.getString("account_size_name");
+
+		//organization address table
+    city=rs.getString("o_city");
+    state=rs.getString("o_state");
+    postalCode=rs.getString("o_postalcode");
+    county=rs.getString("o_county");
+
   }
 
 
