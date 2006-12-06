@@ -129,8 +129,8 @@ public class TicketDefect extends GenericBean {
     }
     tickets.setDefectId(this.getId());
     tickets.setSiteId(tmpTicketSiteId);
-    tickets.setExclusiveToSite(true);
     if (tmpTicketSiteId > -1) {
+      tickets.setExclusiveToSite(true);
       tickets.setIncludeAllSites(false);
     }
     tickets.buildList(db);

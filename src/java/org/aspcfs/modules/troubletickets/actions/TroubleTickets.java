@@ -1076,8 +1076,8 @@ public final class TroubleTickets extends CFSModule {
     if (sectionId == null || allTicketsInfo.getExpandedSelection()) {
       allTicketsList.setPagedListInfo(allTicketsInfo);
       allTicketsList.setSiteId(user.getSiteId());
-      allTicketsList.setExclusiveToSite(true);
       if (user.getSiteId() > -1) {
+        allTicketsList.setExclusiveToSite(true);
         allTicketsList.setIncludeAllSites(false);
       }
       allTicketsList.setUnassignedToo(true);
