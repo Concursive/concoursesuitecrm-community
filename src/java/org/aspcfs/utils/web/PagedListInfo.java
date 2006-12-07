@@ -82,7 +82,6 @@ public class PagedListInfo implements Serializable {
   private boolean expandedSelection = false;
   private boolean scrollReload = false;
   private boolean isValid = false;
-  private SystemStatus systemStatus = null;
 
   // added for Portlets
   private String namespace = "";
@@ -198,16 +197,6 @@ public class PagedListInfo implements Serializable {
 
 
   /**
-   * Sets the systemStatus attribute of the PagedListInfo object
-   *
-   * @param tmp The new systemStatus value
-   */
-  public void setSystemStatus(SystemStatus tmp) {
-    this.systemStatus = tmp;
-  }
-
-
-  /**
    * Sets the lettersArray attribute of the PagedListInfo object
    *
    * @param tmp The new lettersArray value
@@ -224,16 +213,6 @@ public class PagedListInfo implements Serializable {
    */
   public String[] getLettersArray() {
     return lettersArray;
-  }
-
-
-  /**
-   * Gets the systemStatus attribute of the PagedListInfo object
-   *
-   * @return The systemStatus value
-   */
-  public SystemStatus getSystemStatus() {
-    return systemStatus;
   }
 
 
@@ -684,15 +663,15 @@ public class PagedListInfo implements Serializable {
    * @return Description of the Return Value
    */
   public boolean setSearchCriteria(Object obj, ActionContext context) {
+    SystemStatus systemStatus = null;
     ConnectionElement ce = null;
     if (context != null) {
       ce = (ConnectionElement) context.getSession().getAttribute(
           "ConnectionElement");
     }
     if (ce != null) {
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
+      systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute(
           "SystemStatus")).get(ce.getUrl());
-      this.setSystemStatus(systemStatus);
     }
     return setSearchCriteria(obj, context.getRequest(), systemStatus);
   }
