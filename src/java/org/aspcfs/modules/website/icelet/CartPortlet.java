@@ -319,6 +319,9 @@ public class CartPortlet extends GenericPortlet {
         request.setAttribute("CART_EMPTY_MESSAGE", (String) request
             .getPreferences().getValue(CART_EMPTY_MESSAGE,
                 "Your cart is empty."));
+        request.setAttribute("INCLUDE_ORDER", (String) request
+            .getPreferences().getValue(INCLUDE_ORDER,
+                "false"));
         PortletRequestDispatcher requestDispatcher = getPortletContext()
             .getRequestDispatcher(VIEW_PAGE1);
         requestDispatcher.include(request, response);
@@ -1099,7 +1102,7 @@ public class CartPortlet extends GenericPortlet {
           fileItem.setDirectory(PortletUtils.getDbNamePath(request)
               + "products" + fs);
           String imagePath = fileItem.getFullFilePath();
-          mail.addImage("productImage" + productId, "file://" + imagePath);
+          mail.addImage("productImage" + productId, "file:///" + imagePath);
           body.append("<img src=\"cid:productImage" + productId
               + "\" border=\"0\"><BR>");
         } else {

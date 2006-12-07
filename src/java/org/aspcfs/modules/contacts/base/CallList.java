@@ -1022,7 +1022,7 @@ public class CallList extends ArrayList {
     }
 
     if (onlyCompletedOrCanceled) {
-      sqlFilter.append("AND (c.status_id = ?  OR  c.status_id = ?) AND result_id is not NULL ");
+      sqlFilter.append("AND (c.status_id = ?  OR  c.status_id = ? OR  c.status_id = ?) AND result_id is not NULL ");
     }
 
     if (includeOnlyTrashed) {
@@ -1114,6 +1114,7 @@ public class CallList extends ArrayList {
     if (onlyCompletedOrCanceled) {
       pst.setInt(++i, Call.CANCELED);
       pst.setInt(++i, Call.COMPLETE);
+      pst.setInt(++i, Call.COMPLETE_FOLLOWUP_PENDING);      
     }
 
     if (includeOnlyTrashed) {

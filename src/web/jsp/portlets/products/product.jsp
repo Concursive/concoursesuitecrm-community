@@ -40,7 +40,7 @@
 <jsp:useBean id="previousPage" class="java.lang.String" scope="request"/>
 <jsp:useBean id="offset" class="java.lang.String" scope="request"/>
 <jsp:useBean id="parentOffset" class="java.lang.String" scope="request"/>
-<jsp:useBean id="searchResult" class="java.lang.String" scope="request"/>
+<jsp:useBean id="searchResults" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPopupMenu.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -162,7 +162,7 @@
     <input type="hidden" name="forwardproductId" value="<%= String.valueOf(productCatalog.getId()) %>"/>
     <input type="hidden" name="forwardcategoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
     <input type="hidden" name="forwardoffset" value="<%=offset%>"/>
-    <input type="hidden" name="forwardsearchResult" value="<%= searchResult %>"/>
+    <input type="hidden" name="forwardsearchResults" value="<%= searchResults %>"/>
     <input type="submit" name="Add Quote" value="Add to Cart"/>
    </form>
    <%}%>
@@ -231,6 +231,7 @@
 			<input type="hidden" name="offset" value="<%= offset %>" />
 			<input type="hidden" name="parentOffset" value="<%= parentOffset %>" />
 			<input type="hidden" name="viewType" value="details" />
+			<input type="hidden" name="searchResults" value="<%= searchResults %>" />
 		</table>
 	</form>
   </span>

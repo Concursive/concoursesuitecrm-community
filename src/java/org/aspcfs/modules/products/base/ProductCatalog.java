@@ -87,6 +87,7 @@ public class ProductCatalog extends GenericBean {
   private String shippingTimeName = null;
   private String smallImageName = null;
   private String largeImageName = null;
+  private String thumbnailImageName = null;
 
   // resources
   private int buildActiveOptions = Constants.UNDEFINED;
@@ -107,6 +108,7 @@ public class ProductCatalog extends GenericBean {
   private String comments = null;
   private FileInfo smallImageFile = null;
   private FileInfo largeImageFile = null;
+  private FileInfo thumbnailImageFile = null;
 
   //pricing information
   private double msrpAmount = 0.0;
@@ -121,6 +123,42 @@ public class ProductCatalog extends GenericBean {
     if (System.getProperty("DEBUG") != null) {
       logger.setLevel(Level.DEBUG);
     }
+  }
+
+  /**
+   * Gets the thumbnailImageFile attribute of the ProductCatalog object
+   *
+   * @return thumbnailImageFile The thumbnailImageFile value
+   */
+  public FileInfo getThumbnailImageFile() {
+    return this.thumbnailImageFile;
+  }
+
+  /**
+   * Sets the thumbnailImageFile attribute of the ProductCatalog object
+   *
+   * @param thumbnailImageFile The new thumbnailImageFile value
+   */
+  public void setThumbnailImageFile(FileInfo thumbnailImageFile) {
+    this.thumbnailImageFile = thumbnailImageFile;
+  }
+
+  /**
+   * Gets the thumbnailImageName attribute of the ProductCatalog object
+   *
+   * @return thumbnailImageName The thumbnailImageName value
+   */
+  public String getThumbnailImageName() {
+    return this.thumbnailImageName;
+  }
+
+  /**
+   * Sets the thumbnailImageName attribute of the ProductCatalog object
+   *
+   * @param thumbnailImageName The new thumbnailImageName value
+   */
+  public void setThumbnailImageName(String thumbnailImageName) {
+    this.thumbnailImageName = thumbnailImageName;
   }
 
   /**

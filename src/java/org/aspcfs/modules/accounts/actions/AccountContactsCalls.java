@@ -450,6 +450,7 @@ public final class AccountContactsCalls extends CFSModule {
       cl.setOrgId(thisCall.getOrgId());
       cl.buildList(db);
       context.getRequest().setAttribute("contactList",cl);
+      
       if (!recordInserted && resultCount == -1) {
         thisCall.setStatusId(tmpStatusId);
         if (thisCall.getAlertText() != null && !"".equals(

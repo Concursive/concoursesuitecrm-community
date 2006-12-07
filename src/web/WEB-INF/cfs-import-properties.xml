@@ -212,6 +212,7 @@
         <property aliases="large_image_id,largeimageid" displayName="Large Image" isForPrompting="false">largeImageId</property>
         <property aliases="small_image,smallimage,small image" displayName="Small Image Name" >smallImageName</property>
         <property aliases="large_image,largeimage,large image" displayName="Large Image Name" >largeImageName</property>
+        <property aliases="thumbnail_image,thumbnailimage,thumbnail image" displayName="Thumbnail Image Name" >thumbnailImageName</property>
         <property aliases="list_order,listorder" displayName="List Order">listOrder</property>
         <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
         <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>

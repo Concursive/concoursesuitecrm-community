@@ -138,7 +138,7 @@ public final class ProjectManagementTeamList extends CFSModule {
         users = UserList.sortEnabledUsers(users, new UserList());
         context.getRequest().setAttribute("UserList", users);
         return ("MakeUserListOK");
-      }
+      }  
       if ("acct".equals(source) && "all".equals(status)) {
         // if account is associated with the project build reguluar and portal users,
       	// otherwise build only regular users.
@@ -152,6 +152,7 @@ public final class ProjectManagementTeamList extends CFSModule {
       	}
       	ContactList contactList = new ContactList();
       	contactList.setOrgId(orgId);
+      	contactList.setIncludeUsersOnly(true);
       	contactList.setWithAccountsOnly(true);
       	contactList.setPortalUsersOnly(
       			nonPortalUsersOnly ? Constants.FALSE : Constants.UNDEFINED);

@@ -174,13 +174,13 @@ public class ProductCatalogPortlet extends GenericPortlet {
     request.setAttribute("searchCategoryListIds", productCatalogListInfo.getSearchOptionValue("searchCategoryListIds"));
     request.setAttribute("searchCategoryNames", productCatalogListInfo.getSearchOptionValue("searchCategoryNames"));
     request.setAttribute("searchcodeDateAfter", productCatalogListInfo.getSearchOptionValue("searchcodeDateAfter"));
+    request.setAttribute("searchItems", Integer.toString(productCatalogListInfo.getItemsPerPage()));
     request.setAttribute("timeZone", timeZone);
     request.getPortletSession().removeAttribute("productCatalogListInfo");
   }
 
 
   private void prepare(RenderRequest request, RenderResponse response) throws Exception {
-    // TODO Auto-generated method stub
 
   }
 
@@ -217,6 +217,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
       response.setRenderParameter("categoryId", request.getParameter("categoryId"));
       response.setRenderParameter("page", request.getParameter("page"));
       response.setRenderParameter("offset", request.getParameter("offset"));
+      response.setRenderParameter("searchResults", request.getParameter("searchResults"));
     }
 
     if ("quote".equals(action)) {
@@ -315,6 +316,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     renderParams.put("offset", new String[]{request.getParameter("offset")});
     renderParams.put("page", new String[]{request.getParameter("page")});
     renderParams.put("searchResults", new String[]{request.getParameter("searchResults")});
+    request.setAttribute("searchResults", request.getParameter("searchResults"));
     request.setAttribute("page", request.getParameter("page"));
     request.setAttribute("offset", request.getParameter("offset"));
     request.setAttribute("parentOffset", request.getParameter("parentOffset"));
@@ -478,8 +480,8 @@ public class ProductCatalogPortlet extends GenericPortlet {
     // Get Paged List handler for product catalog list
     PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
     productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
-    productCatalogListInfo.setItemsPerPage(request.getParameter("itemsPerPage"));
-    // Setting URL
+    productCatalogListInfo.setItemsPerPage(request.getParameter("items"));
+        // Setting URL
     HashMap renderParams = new HashMap();
     renderParams.put("viewType", new String[]{"searchResult"});
     productCatalogListInfo.setRenderParameters(renderParams);
@@ -560,11 +562,11 @@ public class ProductCatalogPortlet extends GenericPortlet {
     friendlyURL =
       url.getProtocol()
       + "://"
-      + PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL")
+			+ PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL")
       + friendlyURL;
 
     ProductEmailFormatter productEmailFormatter = new ProductEmailFormatter();
-    productEmailFormatter.setSiteURL(request.getPreferences().getValue(SITE_URL, ""));
+    productEmailFormatter.setSiteURL(PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL"));
     productEmailFormatter.setProductURL(friendlyURL);
     productEmailFormatter.setFromName(request.getParameter("yourName"));
     productEmailFormatter.setShowSku(request.getPreferences().getValue(SHOW_SKU, "false"));
@@ -598,7 +600,7 @@ public class ProductCatalogPortlet extends GenericPortlet {
     if (imageItem != null) {
       imageItem.setDirectory(PortletUtils.getDbNamePath(request) + "products" + fs);
       String imagePath = imageItem.getFullFilePath();
-      mail.addImage("productImage", "file://" + imagePath);
+      mail.addImage("productImage", "file:///" + imagePath);
       if (System.getProperty("DEBUG") != null) {
         System.out.println(imagePath);
         File file = new File(imagePath);

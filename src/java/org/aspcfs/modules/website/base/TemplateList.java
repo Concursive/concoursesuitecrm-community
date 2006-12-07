@@ -54,7 +54,7 @@ public class TemplateList extends ArrayList {
         if (zipFile.getName().endsWith(".zip")) {
           // Filters
           if (template != null &&
-              (!zipFile.getName().endsWith("/" + template + ".zip") ||
+              (!zipFile.getName().endsWith("/" + template + ".zip") &&
                   !zipFile.getName().endsWith("\\" + template + ".zip"))) {
             continue;
           }

@@ -155,6 +155,7 @@ public final class ExternalContactsCalls extends CFSModule {
 
       completedCallList.setPagedListInfo(completedCallListInfo);
       completedCallList.setContactId(contactId);
+      completedCallList.setOnlyCompletedOrCanceled(true);
     }
     try {
       db = this.getConnection(context);

@@ -657,6 +657,25 @@ public class ProductCatalogImport extends Import implements Runnable {
                   }
                 }
               }
+              String thumbnailImageName = this.getValue(thisRecord, propertyMap
+                  .getProperty("thumbnailImageName"));
+              if (!"".equals(StringUtils.toString(thumbnailImageName))) {
+                if (!images.isEmpty()) {
+                  if (imageList.containsKey(thumbnailImageName)) {
+                    images.put(thumbnailImageName, null);
+                    thisProductCatalog.setThumbnailImageName(thumbnailImageName);
+                  } else {
+                    error.append("; Thumbnail Image Name is absent in archive");
+                  }
+                } else {
+                  if (imageList.containsKey(thumbnailImageName)) {
+                    images.put(thumbnailImageName, null);
+                    thisProductCatalog.setThumbnailImageName(thumbnailImageName);
+                  } else {
+                    error.append("; Thumbnail Image Name is absent in archive");
+                  }
+                }
+              }
               String shortDescription = this.getValue(thisRecord, propertyMap
                   .getProperty("shortDescription"));
               if (!"".equals(StringUtils.toString(shortDescription))) {
@@ -755,6 +774,7 @@ public class ProductCatalogImport extends Import implements Runnable {
                     if (!imageList.isEmpty()) {
                       FileItem smallImage = null;
                       FileItem largeImage = null;
+                      FileItem thumbnailImage = null;
                       if (!"".equals(StringUtils.toString(thisProductCatalog.getSmallImageName())))
                       {
                         smallImage = imageList.saveImage(db, thisProductCatalog.getSmallImageName(), thisProductCatalog.getId(), userId);
@@ -764,10 +784,25 @@ public class ProductCatalogImport extends Import implements Runnable {
                       {
                         largeImage = imageList.saveImage(db, thisProductCatalog.getLargeImageName(), thisProductCatalog.getId(), userId);
                       }
-
-                      if (smallImage != null && largeImage != null) {
+                      // saving ThumbnailImage
+                      if (!"".equals(StringUtils.toString(thisProductCatalog
+                          .getThumbnailImageName()))) {
+                        thumbnailImage = imageList.saveImage(db,
+                            thisProductCatalog.getThumbnailImageName(),
+                            thisProductCatalog.getId(), userId);
+                      }
+                      if (smallImage != null) {
                         thisProductCatalog.setSmallImageId(smallImage.getId());
+                      }
+                      if (largeImage != null) {
                         thisProductCatalog.setLargeImageId(largeImage.getId());
+                      }
+                      if (thumbnailImage != null) {
+                        thisProductCatalog.setThumbnailImageId(thumbnailImage
+                            .getId());
+                      }
+                      
+                      if (smallImage != null || largeImage != null || thumbnailImage != null) {
                         int count = thisProductCatalog.updateImages(db);
                         if (count <= 0) {
                           recordInserted = false;

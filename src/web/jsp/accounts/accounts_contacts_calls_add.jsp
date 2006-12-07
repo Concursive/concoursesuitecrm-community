@@ -30,7 +30,7 @@
 <%
   String trailSource = request.getParameter("trailSource");
 %>
-<body onLoad="javascript:document.addCall.callTypeId.focus();">
+<body onLoad="javascript:if(document.addCall.callTypeId){document.addCall.callTypeId.focus();}">
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true<%= addLinkParams(request, "popup|popupType") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>

@@ -24,8 +24,8 @@
 	import="java.io.*,java.util.*,org.aspcfs.modules.products.base.*,org.aspcfs.modules.quotes.base.QuoteProductBean"%>
 <%@ include file="../../initPage.jsp"%>
 <%@ include file="../../initPopupMenu.jsp"%>
-<jsp:useBean id="CART_EMPTY_MESSAGE" class="java.lang.String"
-	scope="request" />
+<jsp:useBean id="CART_EMPTY_MESSAGE" class="java.lang.String" scope="request" />
+<jsp:useBean id="INCLUDE_ORDER" class="java.lang.String" scope="request" />
 <portlet:defineObjects />
 <script language="javascript">
   function formValidate(){
@@ -116,11 +116,13 @@
 				&nbsp;
 				<input type="submit" name="clear" value="Remove All">
 				&nbsp;
+				<dhv:evaluate if="<%="true".equals(INCLUDE_ORDER) %>">
 				<portlet:renderURL var="url">
            			<portlet:param value="customerLogin" name="viewType"/>
         		</portlet:renderURL>
 				<input type="button" name="checkout" value="Checkout" onclick="javascript:window.location.href='<%= pageContext.getAttribute("url") %>'" >
 				&nbsp;
+				</dhv:evaluate>
 				<input type="submit" name="requestQuote" value="Request a quote">
 
 			</td>

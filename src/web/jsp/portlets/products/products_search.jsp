@@ -29,6 +29,7 @@
 <jsp:useBean id="searchCategoryNames" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchCategoryListIds" class="java.lang.String" scope="request" />
 <jsp:useBean id="searchcodeDateAfter" class="java.lang.String" scope="request" />
+<jsp:useBean id="searchItems" class="java.lang.String" scope="request" />
 <jsp:useBean id="timeZone" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPopupMenu.jsp" %>
@@ -160,15 +161,20 @@
 				<dhv:label name="pagedListInfo.itemsPerPage">Items per page</dhv:label>
 			</td>
 			<td>
-				<select size="1" name="forwarditemsPerPage">
-							<option value="6">6</option>
-							<option selected="selected" value="10">10</option>
-							<option value="12">12</option>
-							<option value="20">20</option>
-							<option value="30">30</option>
-							<option value="50">50</option>
-							<option value="100">100</option>
-							<option value="-1"><dhv:label name="quotes.all">All</dhv:label></option>
+			
+				<select size="1" name="forwarditems">
+							<% String[] items = {"6","10","20","30","50","100"};
+							for (int i=0; i<items.length; i++){%>
+							<option value="<%= items[i] %>"
+							<%if(searchItems!=null && items[i].equals(searchItems)){ %> selected
+							<%}%> >
+							<%= items[i] %></option>
+							<% }%>
+							<%if(searchItems!=null && "-1".equals(searchItems)){ %> 
+							<option value="-1" selected ><dhv:label name="quotes.all">All</dhv:label></option>
+							<%} else {%> 
+     						<option value="-1"><dhv:label name="quotes.all">All</dhv:label></option>
+     						<% }%>
 				</select>
 			</td>
 		</tr>

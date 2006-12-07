@@ -21,6 +21,20 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<script type="text/javascript">
+  function hideSendButton() {
+    try {
+      var send1 = document.getElementById('send1');
+      send1.value = label('label.sending','Sending...');
+      send1.disabled=true;
+    } catch (oException) {}
+    try {
+      var send2 = document.getElementById('send2');
+      send2.value = label('label.sending','Sending...');
+      send2.disabled=true;
+    } catch (oException) {}
+  }
+</script>
 <form name="newMessageForm" action="AccountsCalls.do?command=SendCall&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>&orgId=<%= OrgDetails.getId()%>" method="post" onSubmit="return sendMessage();">
 
 <%
