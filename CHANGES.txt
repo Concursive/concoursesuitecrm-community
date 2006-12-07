@@ -2,7 +2,7 @@
 Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-November 13, 2006
+December 7, 2006
 ----------------------------------------------------------------------------
 
 The following is a running list until release...
