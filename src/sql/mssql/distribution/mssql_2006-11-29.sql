@@ -1,1 +1,1 @@
-DROP INDEX caddress_primary_address;
+DROP INDEX contact_address.caddress_primary_address;
