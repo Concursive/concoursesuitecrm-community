@@ -408,7 +408,7 @@ public final class Users extends CFSModule {
           } else {
             //has password been generated?
             String password = null;
-            password = StringUtils.randomString(6, 8) + String.valueOf(StringUtils.rand(1, 9999));
+            password = String.valueOf(StringUtils.rand(100000, 999999));
             thisUser.setPassword1(password);
             thisUser.setPassword2(password);
           }

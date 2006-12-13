@@ -677,7 +677,7 @@ public class User extends GenericBean {
    */
   public String generateRandomPassword(Connection db) throws SQLException {
     int resultCount = -1;
-    String newPassword = StringUtils.randomString(6, 8);
+    String newPassword = String.valueOf(StringUtils.rand(100000, 999999));
     this.setPassword1(newPassword);
     this.setPassword2(newPassword);
     resultCount = this.newPassword(db);
