@@ -960,13 +960,12 @@
         <fileset dir="${CATALINA_HOME}${fs}common${fs}lib">
           <include name="*.jar"/>
         </fileset>
-        <fileset dir="${CATALINA_HOME}${fs}server{fs}lib">
+        <fileset dir="${CATALINA_HOME}${fs}server${fs}lib">
           <include name="*.jar"/>
         </fileset>
       </classpath>
-      <arg line="-v -d ${build.jsp.dir} -p org.apache.jsp
-                -uriroot ${CENTRIC_HOME}
-                -webinc ${build.jsp.dir}/webinc.xml
+      <arg line="-v -d ${build.jsp.dir}
+                -l -s
                 -webapp ${CENTRIC_HOME} "/>
     </java>
     <echo message="" />
@@ -976,6 +975,9 @@
            verbose="off" deprecation="on">
       <classpath>
         <path refid="cfs2.classpath"/>
+        <fileset dir="${CATALINA_HOME}${fs}common${fs}lib">
+          <include name="*.jar"/>
+        </fileset>
         <pathelement
             location="${CENTRIC_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
         <pathelement location="${CENTRIC_HOME}/WEB-INF/lib/aspcfs.jar"/>
