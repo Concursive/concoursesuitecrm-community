@@ -15,9 +15,6 @@
   <!-- The following fields are set to be hidden from the application -->
   <config name="system.fields.ignore" enabled="true">
     <!-- An unlimited number of parameters can exist under each config -->
-    <param name="accounts-employees" obsolete="true" since="2004-01-22"/>
-    <param name="accounts-revenue" obsolete="true" since="2004-01-22"/>
-    <param name="pipeline-custom1Integer"/>
     <!--
     <param name="organization.revenue"/>
     <param name="organization.employees"/>
@@ -71,7 +68,6 @@
     <param name="organization.alert"/>
     <param name="organization.classification"/>
     <param name="organization.contractEndDate"/>
-    <param name="organization.industry"/>
     <param name="organization.url"/>
     <param name="organization.ticker"/>
     <param name="ticket.actionplans"/>
@@ -94,6 +90,15 @@
     <param name="ticketList.allTickets"/>
     <param name="calendar.legend"/>
     <param name="global.quickactions"/>
+    <param name="accounts-employees" obsolete="true" since="2004-01-22"/>
+    <param name="accounts-revenue" obsolete="true" since="2004-01-22"/>
+    <param name="pipeline-custom1Integer"/>
+    <param name="accounts-contact-information-filters"/>
+    <param name="accounts-search-country"/>
+    <param name="accounts-search-asset-serial"/>
+    <param name="accounts-search-segment"/>
+    <param name="accounts-search-type"/>
+    <param name="accounts-search-number"/>
     -->
   </config>
   

@@ -63,6 +63,7 @@
   <tr>
     <td>
       <select size="1" name="listFilter1" onChange="javascript:document.actionPlanListView.submit();">
+        <option value="myhierarchy" <%= accountActionPlanWorkListInfo.getFilterValue("listFilter1").equalsIgnoreCase("myhierarchy")?" selected":"" %>><dhv:label name="actionPlan.myHierarchyPlans">Action Plans In My Hierarchy</dhv:label></option>
         <option value="my" <%= accountActionPlanWorkListInfo.getFilterValue("listFilter1").equalsIgnoreCase("my")?" selected":"" %>><dhv:label name="actionPlan.myActionPlans">My Action Plans</dhv:label></option>
         <option value="mymanaged" <%= accountActionPlanWorkListInfo.getFilterValue("listFilter1").equalsIgnoreCase("mymanaged")?" selected":"" %>><dhv:label name="actionPlan.myManagedActionPlans">Action Plans Managed By Me</dhv:label></option>
         <option value="mywaiting" <%= accountActionPlanWorkListInfo.getFilterValue("listFilter1").equalsIgnoreCase("mywaiting")?" selected":"" %>><dhv:label name="actionPlan.myWaitingActionPlans">Action Plans Waiting on Me</dhv:label></option>

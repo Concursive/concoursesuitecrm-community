@@ -92,12 +92,16 @@
               <%  if (actionPlanWork.getAssignedTo() > 0) { %>
                 <dhv:username id="<%= actionPlanWork.getAssignedTo() %>" lastFirst="true"/>
               <%  } else { %>
-                 <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+                <dhv:username id="<%= User.getUserId() %>" lastFirst="true"/>
               <%  } %>
               </div>
             </td>
             <td>
+              <%  if (actionPlanWork.getAssignedTo() > 0) { %>
               <input type="hidden" name="assignedTo" id="assignedTo" value="<%= actionPlanWork.getAssignedTo() %>">
+              <%  } else { %>
+	              <input type="hidden" name="assignedTo" id="assignedTo" value="<%= User.getUserId() %>">
+              <%  } %>
               &nbsp;[<a href="javascript:popContactsListSingle('assignedTo','changeowner', 'listView=employees&siteId=<%= orgDetails.getSiteId() %>&usersOnly=true&searchcodePermission=accounts-action-plans-view,myhomepage-action-plans-view&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
               &nbsp; [<a href="javascript:changeDivContent('changeowner',label('none.selected','None Selected'));javascript:resetNumericFieldValue('assignedTo');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
               <font color="red">*</font> <%= showAttribute(request, "assignedToError") %>

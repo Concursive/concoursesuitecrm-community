@@ -75,6 +75,17 @@
             <dhv:username id="<%= actionPlanWork.getManagerId() %>"/>
           </td>
         </tr>
+        <dhv:evaluate if="<%= hasText(actionPlanWork.getLinkItemName()) %>">
+        <tr class="containerBody">
+           <td nowrap class="formLabel">
+              <dhv:label name="actionPlan.prospectName">Prospect Name</dhv:label>
+           </td>  
+           <td>    
+                <%= toHtml(actionPlanWork.getLinkItemName()) %>
+             
+           </td>
+        </tr>
+        </dhv:evaluate>
         <dhv:evaluate if="<%= actionPlanWork.getContact() != null %>">
           <dhv:evaluate if="<%= hasText(actionPlanWork.getContact().getAccountNumber()) %>">
             <tr class="containerBody">

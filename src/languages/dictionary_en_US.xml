@@ -2949,6 +2949,9 @@
     <param name="actionPlan.myActionPlans">
       <value><![CDATA[My Action Plans]]></value>
     </param>
+    <param name="actionPlan.myHierarchyPlans">
+      <value><![CDATA[Action Plans In My Hierarchy]]></value>
+    </param>
     <param name="actionPlan.myManagedActionPlans">
       <value><![CDATA[Action Plans Managed By Me]]></value>
     </param>

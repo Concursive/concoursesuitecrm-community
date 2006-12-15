@@ -64,7 +64,7 @@ public final class AccountActionPlans extends CFSModule {
       PagedListInfo planWorkListInfo = this.getPagedListInfo(context, "accountActionPlanWorkListInfo");
       planWorkListInfo.setLink("AccountActionPlans.do?command=View&orgId=" + orgId+(popup?"&popup=true":""));
       if (!planWorkListInfo.hasListFilters()) {
-        planWorkListInfo.addFilter(1, "my");
+        planWorkListInfo.addFilter(1, "myhierarchy");
         planWorkListInfo.addFilter(2, "true");
       }
 
@@ -87,6 +87,8 @@ public final class AccountActionPlans extends CFSModule {
         planWorkList.setManager(this.getUserId(context));
         planWorkList.setCurrentStepOwner(this.getUserId(context));
         planWorkList.setAllMyPlans(true);
+      } else if ("myhierarchy".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
+        planWorkList.setOwnerRange(this.getUserRange(context));
       }
 
       if ("all".equals(planWorkListInfo.getFilterValue("listFilter2"))) {

@@ -555,8 +555,8 @@ public class ActionPlanWorkList extends ArrayList {
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
   }
-
-
+  
+  
   /**
    * Gets the owner attribute of the ActionPlanWorkList object
    *
@@ -888,7 +888,7 @@ public class ActionPlanWorkList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    if (linkModuleId > -1) {
+    if (linkModuleId > -1) { 
       sqlFilter.append("AND apw.link_module_id = ? ");
     }
     if (linkItemId > -1) {

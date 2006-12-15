@@ -54,6 +54,7 @@ public class ActionPlanWork extends GenericBean {
 
   private int linkModuleId = -1;
   private int linkItemId = -1;
+  private String linkItemName = null;
   private boolean enabled = true;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
@@ -556,8 +557,25 @@ public class ActionPlanWork extends GenericBean {
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
   }
+ 
+  /**
+   *  Gets the linkItemName attribute of the ActionPlanWork object
+   *
+   * @return    The linkItemName value
+   */
+  public String getLinkItemName() {
+    return linkItemName;
+  }
 
 
+  /**
+   *  Sets the linkItemName attribute of the ActionPlanWork object
+   *
+   * @param  tmp  The new linkItemName value
+   */
+  public void setLinkItemName(String tmp) {
+    this.linkItemName = tmp;
+  }
   /**
    *  Sets the linkItemId attribute of the ActionPlanWork object
    *
@@ -906,22 +924,27 @@ public class ActionPlanWork extends GenericBean {
     if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS)) {
       if (contact == null || contact.getId() == -1) {
         contact = new Contact(db, linkItemId);
+        linkItemName= contact.getNameFirstLast();
       }
     } else
         if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
       if (organization == null || organization.getOrgId() == -1) {
         organization = new Organization(db, linkItemId);
+        linkItemName= organization.getName();
       }
     } else
         if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
       if (ticket == null || ticket.getId() == -1) {
         ticket = new Ticket(db, linkItemId);
-      }
-      if (organization == null || organization.getOrgId() == -1) {
-        organization = new Organization(db, ticket.getOrgId());
-      }
-      if (contact == null || contact.getId() == -1) {
-        contact = new Contact(db, ticket.getContactId());
+       
+        if (organization == null || organization.getOrgId() == -1) {
+          organization = new Organization(db, ticket.getOrgId());
+          linkItemName= organization.getName();
+        }
+        if (contact == null || contact.getId() == -1) {
+          contact = new Contact(db, ticket.getContactId());
+          linkItemName= contact.getNameFirstLast();
+        }
       }
     }
   }

@@ -162,6 +162,7 @@
           </td>
         </tr>
         </dhv:include>
+        <dhv:include name="accounts-search-type" none="true">
         <tr>
           <td class="formLabel">
             <dhv:label name="accounts.type">Account Type</dhv:label>
@@ -170,6 +171,8 @@
             <%= TypeSelect.getHtmlSelect("listFilter1", SearchOrgListInfo.getFilterKey("listFilter1")) %>
           </td>
         </tr>
+        </dhv:include>
+        <dhv:include name="accounts-search-segment" none="true">
         <tr>
           <td nowrap class="formLabel">
             <dhv:label name="accounts.accounts_search.accountSegment">Account Segment</dhv:label>
@@ -182,6 +185,7 @@
             </dhv:evaluate>
           </td>
         </tr>
+        </dhv:include>
         <dhv:include name="accounts-search-source" none="true">
         <tr>
           <td class="formLabel">
@@ -237,6 +241,7 @@
             </span>
           </td>
         </tr>
+        <dhv:include name="accounts-search-country" none="true">
         <tr>
           <td nowrap class="formLabel">
             <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
@@ -246,6 +251,8 @@
             <%= CountrySelect.getHtml("searchcodeAccountCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")) %>
           </td>
         </tr>
+        </dhv:include>
+        <dhv:include name="accounts-search-asset-serial" none="true">
         <tr>
           <td class="formLabel">
             <dhv:label name="accounts.assetSerial.number.symbol">Asset Serial #</dhv:label>
@@ -254,6 +261,7 @@
             <input type="text" size="20" maxlength="30" name="searchcodeAssetSerialNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeAssetSerialNumber") %>">
           </td>
         </tr>
+        </dhv:include>
       <dhv:evaluate if="<%= SiteList.size() > 2 %>">
         <tr>
           <td nowrap class="formLabel">

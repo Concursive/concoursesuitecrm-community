@@ -154,12 +154,16 @@
             <% if (actionPlanWork.getAssignedTo() > 0) { %>
               <dhv:username id="<%= actionPlanWork.getAssignedTo() %>"/>
             <% }else{ %>
-               <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+              <dhv:username id="<%= User.getUserId() %>"/>
             <%}%>
             </div>
           </td>
           <td>
-            <input type="hidden" name="owner" id="ownerid" value="-1">
+            <% if (actionPlanWork.getAssignedTo() > 0) { %>
+							<input type="hidden" name="owner" id="ownerid" value="<%= actionPlanWork.getAssignedTo() %>">
+            <% }else{ %>
+							<input type="hidden" name="owner" id="ownerid" value="<%= User.getUserId() %>">
+            <%}%>
             &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true<%= User.getUserRecord().getSiteId() > -1?"&mySiteOnly=true":"" %>&siteId=<%=contactDetails.getSiteId()%>&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp; [<a href="javascript:changeDivContent('changeowner',label('none.selected','None Selected'));javascript:resetNumericFieldValue('ownerid');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
           </td>
