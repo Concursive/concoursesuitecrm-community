@@ -403,7 +403,7 @@ create index contact_enteredby on contact  (enteredby);
 create index contact_industry_temp_code on contact  (industry_temp_code);
 create index contact_modifiedby on contact  (modifiedby);
 create index contact_org_id on contact  (org_id);
-create index contact_owner on contact  ("owner");
+create index contact_owner on contact  (owner);
 create index contact_rating on contact  (rating);
 create index contact_site_id on contact  (site_id);
 create index contact_source on contact  (source);
