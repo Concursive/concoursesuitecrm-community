@@ -25,6 +25,7 @@
 <jsp:useBean id="SegmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
@@ -57,8 +58,11 @@
     document.forms['searchAccount'].searchcodeContactState.options.selectedIndex = 0;
     document.forms['searchAccount'].searchContactOtherState.value = '';
     document.forms['searchAccount'].searchcodeContactCountry.options.selectedIndex = 0;
-    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 && SiteList.size() > 1 %>" >
+    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 && SiteList.size() > 2 %>" >
       document.forms['searchAccount'].searchcodeOrgSiteId.options.selectedIndex = 0;
+    </dhv:evaluate>
+    <dhv:evaluate if="<%=StageList.getEnabledElementCount() > 1 %>" >
+      document.forms['searchAccount'].searchcodeStageId.options.selectedIndex = 0;
     </dhv:evaluate>
     <dhv:include name="accounts-search-name" none="true">
       document.forms['searchAccount'].searchAccountName.focus();
@@ -211,6 +215,20 @@
             </select>
           </td>
         </tr>
+        <dhv:evaluate if="<%= StageList.getEnabledElementCount() > 1 %>">
+        <tr>
+          <td nowrap class="formLabel">
+            <dhv:label name="accounts.stage">Stage</dhv:label>
+          </td>
+          <td>
+            <%= StageList.getHtmlSelect("searchcodeStageId", SearchOrgListInfo.getSearchOptionValueAsInt("searchcodeStageId")) %>
+          </td>
+        </tr>
+      </dhv:evaluate>  
+      <dhv:evaluate if="<%= SiteList.getEnabledElementCount() <= 1 %>">
+        <input type="hidden" name="searchcodeStageId" id="searchcodeStageId" value="-1" />
+      </dhv:evaluate>
+        
         <tr>
           <td class="formLabel">
             <dhv:label name="accounts.accounts_add.ZipPostalCode">Postal Code</dhv:label>

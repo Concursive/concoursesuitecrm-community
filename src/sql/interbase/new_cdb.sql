@@ -355,6 +355,17 @@ CREATE TABLE lookup_title (
   enabled BOOLEAN DEFAULT TRUE
 );
 
+CREATE GENERATOR lookup_account_stage_code_seq;
+CREATE TABLE lookup_account_stage (
+  code INT NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 CREATE GENERATOR organization_org_id_seq;
 SET GENERATOR organization_org_id_seq TO -1;
 CREATE TABLE organization (
@@ -411,6 +422,7 @@ CREATE TABLE organization (
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
   sic_description VARCHAR(300),
+  stage_id INTEGER REFERENCES lookup_account_stage(code),
   PRIMARY KEY (ORG_ID)
 );
 

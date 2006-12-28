@@ -805,6 +805,15 @@ public class PagedListInfo implements Serializable {
   }
 
 
+  public int getSearchOptionValueAsInt(String field) {
+    if (this.getSavedCriteria() != null && this.getSavedCriteria().get(field) != null)
+    {
+      return Integer.parseInt((String) savedCriteria.get(field));
+    }
+    return -1;
+  }
+
+
   /**
    * Sets the defaultSort attribute of the PagedListInfo object
    *

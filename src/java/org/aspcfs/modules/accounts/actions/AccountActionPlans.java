@@ -233,6 +233,7 @@ public final class AccountActionPlans extends CFSModule {
         planWork.setEnteredBy(this.getUserId(context));
         planWork.setModifiedBy(this.getUserId(context));
         planWork.insert(db, actionPlan);
+        this.processInsertHook(context, planWork);
         context.getRequest().setAttribute("actionPlanId", String.valueOf(planWork.getId()));
         assigned = this.getUser(context, planWork.getAssignedTo());
         assignedContact = new Contact(db, assigned.getContactId());

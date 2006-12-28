@@ -95,6 +95,8 @@ public class OrganizationList extends Vector implements SyncableList {
   protected int typeId = 0;
   protected String types = null;
   protected String accountSegment = null;
+  
+  protected int stageId = -1;
 
   //import filters
   private int importId = -1;
@@ -340,6 +342,35 @@ public class OrganizationList extends Vector implements SyncableList {
    */
   public String getAccountSegment() {
     return accountSegment;
+  }
+  /**
+   *  Sets the stageId attribute of the OrganizationList object
+   *
+   * @param  tmp  The new stageId  value
+   */
+  public void setStageId(int tmp) {
+    this.stageId = tmp;
+  }
+  
+  /**
+   *  Sets the stageId attribute of the OrganizationList object
+   *
+   * @param  tmp  The new stageId  value
+   */
+  public void setStageId(String tmp) {
+	  if (tmp!=null){
+    this.stageId = Integer.parseInt(tmp);
+	  }else{this.stageId = -1;}
+  }
+
+
+  /**
+   *  Sets the stageId  attribute of the OrganizationList object
+   *
+   * @return    The stageId  value
+   */
+  public int getStageId () {
+    return stageId;
   }
 
 
@@ -1665,6 +1696,10 @@ public class OrganizationList extends Vector implements SyncableList {
       sqlFilter = new StringBuffer();
     }
     
+    if (stageId > -1) {
+      sqlFilter.append("AND o.stage_id = ? ");
+    }
+    
     if (minerOnly != null) {
       sqlFilter.append("AND miner_only = ? ");
     }
@@ -1995,6 +2030,10 @@ public class OrganizationList extends Vector implements SyncableList {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    
+    if (stageId > -1) {
+      pst.setInt(++i, stageId);
+    }
     
     if (minerOnly != null) {
       pst.setBoolean(++i, minerOnly.booleanValue());

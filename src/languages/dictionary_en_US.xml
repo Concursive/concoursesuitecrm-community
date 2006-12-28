@@ -137,6 +137,21 @@
     <param name="accounts.accounts_asset_details.AssetDetails">
       <value><![CDATA[Asset Details]]></value>
     </param>
+    <param name="accounts.accounts_stage.AccountsStage">
+      <value><![CDATA[Account Stage]]></value>
+    </param>
+    <param name="accounts.accounts_stage.New">
+      <value><![CDATA[New]]></value>
+    </param>
+    <param name="accounts.accounts_stage.Working">
+      <value><![CDATA[Working]]></value>
+    </param>
+    <param name="accounts.accounts_stage.Cancelled">
+      <value><![CDATA[Canceled]]></value>
+    </param>
+    <param name="accounts.accounts_stage.Complete">
+      <value><![CDATA[Complete]]></value>
+    </param>
     <param name="employees.employee">
       <value><![CDATA[Employee]]></value>
     </param>
@@ -5683,6 +5698,9 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="account.moveToOldAccount">
       <value><![CDATA[Move to Old Account]]></value>
+    </param>
+    <param name="account.stage">
+      <value><![CDATA[Stage]]></value>
     </param>
     <param name="account.contact.doesNotHavePortalAccess">
       <value><![CDATA[${contactName} does not have portal access]]></value>

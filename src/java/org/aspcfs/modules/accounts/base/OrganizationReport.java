@@ -344,6 +344,7 @@ public class OrganizationReport extends OrganizationList {
    * Description of the Method
    */
   public void buildReportHeaders() {
+    // TODO: This is not internationalized!
     Iterator y = criteria.iterator();
     while (y.hasNext()) {
       String param = (String) y.next();
@@ -426,7 +427,9 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("longitude")) {
         rep.addColumn("Longitude");
       }
-
+      if (param.equals("county")) {
+        rep.addColumn("County");
+      }
     }
 
     if (includeFolders) {
@@ -529,7 +532,9 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("longitude")) {
         passedReport.addColumn("Longitude");
       }
-
+      if (param.equals("county")) {
+        passedReport.addColumn("county");
+      }
     }
   }
 
@@ -810,7 +815,17 @@ public class OrganizationReport extends OrganizationList {
           }
         }
       }
-
+      if (param.equals("county")) {
+        if (thisOrg.getPrimaryAddress() == null) {
+          thisRow.addCell("");
+        } else {
+          if (thisOrg.getPrimaryAddress().getCounty() == null) {
+            thisRow.addCell("");
+          } else {
+						thisRow.addCell(String.valueOf(thisOrg.getPrimaryAddress().getCounty()));
+          }
+        }
+      }
     }
   }
 

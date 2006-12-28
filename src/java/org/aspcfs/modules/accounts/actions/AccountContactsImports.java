@@ -862,6 +862,7 @@ public final class AccountContactsImports extends CFSModule {
 
     Connection db = null;
     String orgId = context.getRequest().getParameter("orgId");
+    SystemStatus systemStatus = this.getSystemStatus(context);
 
     try {
       db = this.getConnection(context);
@@ -873,6 +874,15 @@ public final class AccountContactsImports extends CFSModule {
 
       Import thisImport = new Import(db, thisOrg.getImportId());
       context.getRequest().setAttribute("ImportDetails", thisImport);
+
+			LookupList sourceList = new LookupList(db, "lookup_contact_source");
+			sourceList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+			context.getRequest().setAttribute("SourceList", sourceList);
+
+      LookupList stageList = new LookupList(db, "lookup_account_stage");
+      stageList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("StageList", stageList);
+
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

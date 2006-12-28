@@ -279,6 +279,17 @@ CREATE TABLE lookup_title (
   enabled boolean DEFAULT true
 );
 
+CREATE SEQUENCE lookup_account_stage_code_seq;
+CREATE TABLE lookup_account_stage (
+  code INT PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 CREATE SEQUENCE organization_org_id_seq start with 0 minvalue -1  increment by 1;
 CREATE TABLE organization (
   org_id INT  PRIMARY KEY,
@@ -333,7 +344,8 @@ CREATE TABLE organization (
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
-  sic_description VARCHAR(300)
+  sic_description VARCHAR(300),
+  stage_id INTEGER REFERENCES lookup_account_stage(code)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);

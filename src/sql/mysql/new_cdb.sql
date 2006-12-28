@@ -261,6 +261,16 @@ CREATE TABLE lookup_title (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE TABLE lookup_account_stage (
+  code INT AUTO_INCREMENT PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP NULL
+);
+
 CREATE TABLE organization (
   org_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
@@ -314,7 +324,8 @@ CREATE TABLE organization (
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
-  sic_description VARCHAR(300)
+  sic_description VARCHAR(300),
+  stage_id INTEGER REFERENCES lookup_account_stage(code)
 );
 
 CREATE INDEX `orglist_name` ON `organization` (name);

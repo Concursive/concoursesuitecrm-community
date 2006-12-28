@@ -457,6 +457,23 @@ public class LookupList extends HtmlSelect implements SyncableList {
     }
     return count;
   }
+  /**
+   *  Gets the firstEnabledElement attribute of the LookupList object
+   *
+   * @return    The firstEnabledElement value
+   */
+  public int getFirstEnabledElement() {
+	int code = -1;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getEnabled() && !thisElement.getGroup()) {
+        code = thisElement.getCode();
+        break;
+      }
+    }
+    return code;
+  }
 
 
   /**
@@ -1243,6 +1260,26 @@ public class LookupList extends HtmlSelect implements SyncableList {
     return false;
   }
 
-  
+   /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  tmpCategoryId         Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int retrieveMaxLevel(Connection db, int tmpCategoryId) throws SQLException {
+    int maxLevel = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") AS max_level " +
+        "FROM lookup_lists_lookup " +
+				"WHERE module_id = ? ");
+    pst.setInt(1, tmpCategoryId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      maxLevel = rs.getInt("max_level");
+    }
+    return maxLevel;
+  } 
 }
 

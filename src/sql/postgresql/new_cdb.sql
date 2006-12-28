@@ -269,6 +269,16 @@ CREATE TABLE lookup_title (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE TABLE lookup_account_stage (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 CREATE SEQUENCE organization_org_id_seq MINVALUE 0 START 0;
 CREATE TABLE organization (
   org_id INTEGER DEFAULT nextval('organization_org_id_seq') NOT NULL PRIMARY KEY,
@@ -323,7 +333,8 @@ CREATE TABLE organization (
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
-  sic_description VARCHAR(300)
+  sic_description VARCHAR(300),
+  stage_id INTEGER REFERENCES lookup_account_stage(code)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -553,7 +564,6 @@ CREATE TABLE organization_address (
 );
 
 CREATE INDEX organization_address_postalcode_idx ON organization_address(postalcode);
-
 
 CREATE SEQUENCE organization__emailaddress__seq;
 CREATE TABLE organization_emailaddress (

@@ -312,13 +312,23 @@ CREATE TABLE lookup_sub_segment(
 
 CREATE SEQUENCE lookup_title_code_seq AS DECIMAL(27,0);
 CREATE TABLE lookup_title(
-    code INTEGER NOT NULL  PRIMARY KEY,
+    code INTEGER NOT NULL PRIMARY KEY,
     description VARGRAPHIC(300) NOT NULL,
     default_item CHAR(1) DEFAULT '0',
     "level" INTEGER DEFAULT 0,
     enabled CHAR(1) DEFAULT '1'
 );
 
+CREATE SEQUENCE lookup_account_stage_code_seq AS DECIMAL(27,0);
+CREATE TABLE lookup_account_stage (
+  code INTEGER NOT NULL KEY,
+  description VARGRAPHIC(300) NOT NULL,
+  default_item CHAR(1) DEFAULT '0',
+  "level" INTEGER DEFAULT 0,
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
 
 CREATE SEQUENCE organization_org_id_seq AS DECIMAL(27,0)
     INCREMENT BY 1
@@ -378,6 +388,7 @@ CREATE TABLE organization(
     sic_code INTEGER REFERENCES lookup_sic_codes(code),
     year_started INTEGER,
     sic_description VARGRAPHIC(300),
+    stage_id INTEGER REFERENCES lookup_account_stage(code),
     PRIMARY KEY(org_id)
 );
 

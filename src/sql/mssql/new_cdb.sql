@@ -262,6 +262,16 @@ CREATE TABLE lookup_title (
   enabled BIT DEFAULT 1
 );
 
+CREATE TABLE lookup_account_stage (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 CREATE TABLE organization (
   org_id INT IDENTITY(0,1) PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
@@ -315,7 +325,8 @@ CREATE TABLE organization (
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
-  sic_description VARCHAR(300)
+  sic_description VARCHAR(300),
+  stage_id INTEGER REFERENCES lookup_account_stage(code)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);

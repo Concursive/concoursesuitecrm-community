@@ -160,6 +160,7 @@
         <option value="country"><dhv:label name="accounts.accounts_add.Country">Country</dhv:label></option>
         <option value="latitude"><dhv:label name="accounts.address.latitude">Latitude</dhv:label></option>        
         <option value="longitude"><dhv:label name="accounts.address.longitude">Longitude</dhv:label></option>
+        <option value="county"><dhv:label name="accounts.address.county">County</dhv:label></option>
       </select>
     </td>
     <td width="25">

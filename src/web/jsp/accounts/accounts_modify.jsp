@@ -21,6 +21,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.controller.SystemStatus"%>
 <%@ page import="org.aspcfs.controller.*,org.aspcfs.utils.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -554,6 +555,16 @@
       </tr>
     </dhv:include>
   </dhv:evaluate>
+  <dhv:include name="organization.stage" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="account.stage">Stage</dhv:label>
+      </td>
+      <td>
+        <%= StageList.getHtmlSelect("stageId",OrgDetails.getStageId()) %>
+      </td>
+    </tr>
+  </dhv:include>
   <dhv:include name="organization.source" none="true">
     <tr class="containerBody">
       <td nowrap class="formLabel">

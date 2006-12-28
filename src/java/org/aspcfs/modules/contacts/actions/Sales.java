@@ -1310,6 +1310,7 @@ public final class Sales extends CFSModule {
           actionPlanWork.setEnteredBy(this.getUserId(context));
           actionPlanWork.setModifiedBy(this.getUserId(context));
           actionPlanWork.insert(db, actionPlan);
+          this.processInsertHook(context, actionPlanWork);
 
           assigned = this.getUser(context, actionPlanWork.getAssignedTo());
           assigned.setBuildContact(true);

@@ -14,6 +14,19 @@
         <action type="update" process="dhv.application.account.update" enabled="false"/>
       </actions>
     </hook>
+    
+    <hook class="org.aspcfs.modules.actionplans.base.ActionItemWork" module="1">
+      <actions>
+        <action type="update" process="dhv.application.account.stage.complete" enabled="true"/>
+      </actions>
+    </hook>
+    
+    <hook class="org.aspcfs.modules.actionplans.base.ActionPlanWork" module="1">
+      <actions>
+        <action type="insert" process="dhv.application.account.stage.working" enabled="true"/>
+      </actions>
+    </hook>
+    
     <hook class="org.aspcfs.modules.contacts.base.Contact" module="1">
       <actions>
         <action type="insert" process="dhv.application.account.contact.insert" enabled="false"/>
@@ -104,6 +117,100 @@
   <!-- Each process describes the workflow for the various object and action
     that is being hooked-->
   <processes>
+      <!-- Run Script -->
+    <process name="dhv.application.account.stage.complete" description="Run Script" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.components.RunScript" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="runscript.script">
+            import org.aspcfs.modules.accounts.base.Organization;
+            import org.aspcfs.modules.actionplans.base.ActionItemWork;
+						import org.aspcfs.modules.actionplans.base.ActionPlan;
+            import org.aspcfs.modules.actionplans.base.ActionPlanWork;
+            import org.aspcfs.modules.actionplans.base.ActionPlanWorkList;
+            import org.aspcfs.utils.web.LookupList;
+            
+            ActionItemWork itemWork = (ActionItemWork) context.getPreviousObject();
+           
+            if (itemWork!=null){
+            if (itemWork.getNextItem(db)==null){
+            ActionPlanWork planWork = itemWork.getPlanWork(); 
+            if (planWork!=null){
+            	 
+            		if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)){
+            		if (planWork.getLinkItemId()>0){
+            		 LookupList stageList = new LookupList(db, "lookup_account_stage");
+            		 int stageId = stageList.getIdFromValue("Complete");
+            		 if (stageId>0){
+            			 Organization thisOrg = new Organization(db,planWork.getLinkItemId());
+            			 
+            			 if (stageList.getIdFromValue("Working")>0){
+            			 
+            			 if (thisOrg.getStageId()==stageList.getIdFromValue("Working")){
+            			 
+            			 thisOrg.setStageId(stageId);
+            			 thisOrg.update(db);
+            			 }
+            			 }
+            			 }
+            		}}
+            	}
+            }   }       
+            </parameter>
+        </parameters>
+        </component>
+      </components>
+    </process>
+      <!-- Run Script -->
+    <process name="dhv.application.account.stage.working" description="Run Script" startId="1" type="OBJECT_EVENT" module="1">
+      <parameters>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.components.RunScript" enabled="true">
+          <parameters>
+            <!-- Component parameters override the global process parameters -->
+            <parameter name="runscript.script">
+            import org.aspcfs.modules.accounts.base.Organization;
+            import org.aspcfs.modules.actionplans.base.ActionItemWork;
+						import org.aspcfs.modules.actionplans.base.ActionPlan;
+            import org.aspcfs.modules.actionplans.base.ActionPlanWork;
+            import org.aspcfs.modules.actionplans.base.ActionPlanWorkList;
+            import org.aspcfs.utils.web.LookupList;
+            
+            ActionPlanWork planWork = (ActionPlanWork) context.getThisObject();
+            if (planWork!=null){
+            ActionPlanWorkList planWorkList = new ActionPlanWorkList();
+            planWorkList.setLinkItemId(planWork.getLinkItemId());
+            planWorkList.setLinkModuleId(planWork.getLinkModuleId());
+            planWorkList.buildList(db);
+            	if (planWorkList.size()==1){
+            	 
+            		if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS) ){
+            		 if (planWork.getLinkItemId()>0){
+            		 LookupList stageList = new LookupList(db, "lookup_account_stage");
+            		 int stageId = stageList.getIdFromValue("Working");
+            		 if (stageId>0){
+            			 Organization thisOrg = new Organization(db,planWork.getLinkItemId());
+            			 if (stageList.getIdFromValue("New")>0){
+            			 if (thisOrg.getStageId()==stageList.getIdFromValue("New")){
+            			 thisOrg.setStageId(stageId);
+            			 thisOrg.update(db);
+            			 }
+            			 }}
+            			 }
+            		}
+            	}
+            }
+            </parameter>
+        </parameters>
+        </component>
+      </components>
+    </process>
+  
+  
     <process name="dhv.application.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="8">
       <parameters>
         <!-- Global parameters for the process override the defaults from Centric CRM -->
@@ -303,7 +410,7 @@
         </component>
       </components>
     </process>
-    
+        
     <!-- Capture Account History for Contact Insert -->
     <process name="dhv.application.account.contact.insert" description="History of Creation of the Account Contact" startId="1" type="OBJECT_EVENT" module="1">
       <parameters>

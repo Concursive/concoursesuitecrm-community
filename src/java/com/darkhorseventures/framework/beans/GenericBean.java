@@ -43,16 +43,6 @@ public class GenericBean implements Serializable {
   protected HashMap errors = new HashMap();
   protected HashMap warnings = new HashMap();
   protected boolean onlyWarnings = false;
-  protected SimpleDateFormat shortDateFormat = new SimpleDateFormat(
-      "M/d/yyyy");
-  protected SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h:mm a");
-  protected SimpleDateFormat shortDateTimeFormat = new SimpleDateFormat(
-      "M/d/yyyy h:mm:ss a");
-  protected SimpleDateFormat longDateTimeFormat = new SimpleDateFormat(
-      "MMMMM d, yyyy hh:mm a");
-  protected SimpleDateFormat longDateFormat = new SimpleDateFormat(
-      "MMMMM d, yyyy");
-  protected SimpleDateFormat longTimeFormat = new SimpleDateFormat("hh:mm a");
   protected String permission = null;
 
   private String message = "";

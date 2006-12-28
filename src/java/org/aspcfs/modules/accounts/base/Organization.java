@@ -72,6 +72,7 @@ public class Organization extends GenericBean {
   private int listSalutation = -1;
   private int segmentList = -1;
   private int siteId = -1;
+  private int stageId = -1;
   private String siteClient = null;
   public int segmentId = -1;
   private int subSegmentId = -1;
@@ -1003,8 +1004,7 @@ public class Organization extends GenericBean {
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
   }
-
-
+  
   /**
    *  Gets the siteId attribute of the Organization object
    *
@@ -1013,6 +1013,36 @@ public class Organization extends GenericBean {
   public int getSiteId() {
     return siteId;
   }
+  
+  /**
+   *  Sets the stageId attribute of the Organization object
+   *
+   * @param  stageId  The new siteId value
+   */
+  public void setStageId(int stageId) {
+    this.stageId = stageId;
+  }
+
+
+  /**
+   *  Sets the stageId attribute of the Organization object
+   *
+   * @param  tmp  The new stageId value
+   */
+  public void setStageId(String tmp) {
+    this.stageId = Integer.parseInt(tmp);
+  }
+
+  /**
+   *  Gets the stageId attribute of the Organization object
+   *
+   * @return    The stageId value
+   */
+  
+  public int getStageId() {
+    return stageId;
+  }  
+
 
 
   /**
@@ -2858,6 +2888,17 @@ public class Organization extends GenericBean {
     boolean doCommit = false;
     try {
       modifiedBy = enteredBy;
+      
+      if (stageId==-1){
+    	  LookupList stageList = new LookupList();
+    	  stageList.tableName = "lookup_account_stage";
+    	  stageList.setShowDisabledFlag(false);
+    	  stageList.buildList(db);
+    	  if (stageList.getFirstEnabledElement()>0){
+    	   stageId = stageList.getFirstEnabledElement();
+    	  }
+      }
+      
       if (doCommit = db.getAutoCommit()) {
         db.setAutoCommit(false);
       }
@@ -2878,13 +2919,16 @@ public class Organization extends GenericBean {
       if (statusId > -1) {
         sql.append("status_id, ");
       }
+      if (stageId > -1) {
+          sql.append("stage_id, ");
+        }
       if (importId > -1) {
         sql.append("import_id, ");
       }
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("enteredBy, modifiedBy) ");
       sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,");
       sql.append("?,?,?,?,?,?,");
       if (orgId > -1) {
@@ -2896,6 +2940,9 @@ public class Organization extends GenericBean {
       if (statusId > -1) {
         sql.append("?, ");
       }
+      if (stageId > -1) {
+          sql.append("?, ");
+        }
       if (importId > -1) {
         sql.append("?, ");
       }
@@ -2944,6 +2991,9 @@ public class Organization extends GenericBean {
       if (statusId > -1) {
         pst.setInt(++i, this.getStatusId());
       }
+      if (stageId > -1) {
+          pst.setInt(++i, this.getStageId());
+        }
       if (importId > -1) {
         pst.setInt(++i, this.getImportId());
       }
@@ -3211,7 +3261,8 @@ public class Organization extends GenericBean {
         "namemiddle = ?, namelast = ?, trashed_date = ?, segment_id = ?, " +
         "direct_bill = ?, account_size = ?, site_id = ?, sub_segment_id = ?, " +
         "source = ?, rating = ?, potential = ?, " +
-        "duns_type = ?, duns_number = ?, business_name_two = ?, year_started = ?, sic_code = ?, sic_description = ? ");
+        "duns_type = ?, duns_number = ?, business_name_two = ?, year_started = ?, sic_code = ?, sic_description = ?, ");
+    sql.append("stage_id = ? ");
     sql.append("WHERE org_id = ? ");
     if (!override) {
       sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
@@ -3256,6 +3307,7 @@ public class Organization extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getYearStarted());
     DatabaseUtils.setInt(pst, ++i, this.getSicCode());
     pst.setString(++i, this.getSicDescription());
+    DatabaseUtils.setInt(pst, ++i, stageId);
     pst.setInt(++i, orgId);
     if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
@@ -3879,10 +3931,8 @@ public class Organization extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
     industry = rs.getInt("industry_temp_code");
-    owner = rs.getInt("owner");
-    if (rs.wasNull()) {
-      owner = -1;
-    }
+    owner = DatabaseUtils.getInt(rs, "owner");
+    stageId = DatabaseUtils.getInt(rs, "stage_id");
     duplicateId = rs.getInt("duplicate_id");
     contractEndDate = rs.getTimestamp("contract_end");
     alertDate = rs.getTimestamp("alertdate");

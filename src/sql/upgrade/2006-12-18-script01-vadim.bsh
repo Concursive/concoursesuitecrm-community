@@ -1,0 +1,110 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ModuleFieldCategoryLink;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.utils.web.LookupListElement;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_ACCOUNTS);
+
+if (categoryId != -1) {
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator");
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+  //getting the next level to display the lookup list in the admin module
+  print("Getting level...");
+  int level = LookupList.retrieveMaxLevel(db, PermissionCategory.lookupId(db,PermissionCategory.PERMISSION_CAT_ACCOUNTS)) + 10;
+  print("Inserting at level..." + level);
+	
+  print("Inserting new lookup table entry into lookup_lists_lookup table...");
+  String descriptionName="";
+  
+  descriptionName=dictionary.getTerm("system.fields.label", "accounts.accounts_stage.AccountsStage", "value");
+  if ("".equals(descriptionName)){descriptionName="Account Stage";}
+  
+  LookupListElement element = new LookupListElement(db, categoryId, PermissionCategory.LOOKUP_ACCOUNTS_STAGE);
+  if (element.getId() < 0) {
+    element = new LookupListElement();
+    element.setModuleId(categoryId);
+    element.setCategoryId(PermissionCategory.PERMISSION_CAT_ACCOUNTS);
+    element.setLookupId(PermissionCategory.LOOKUP_ACCOUNTS_STAGE);
+    element.setTableName("lookup_account_stage");
+    element.setClassName("lookupList");
+    element.setLevel(level);
+    element.setDescription(descriptionName);
+    element.insert(db);
+    print("lookup_account_stage entry inserted");
+  } else {
+    print("The lookup_account_stage element already exists");
+  }
+  
+String tableName = "lookup_account_stage";
+
+LookupList lookupList=new LookupList(db,tableName);
+
+descriptionName=dictionary.getTerm("system.fields.label", "accounts.accounts_stage.New", "value");
+if ("".equals(descriptionName)){descriptionName="New";}
+ 
+  if (lookupList.getIdFromValue(descriptionName)<0){
+  LookupElement listItem = new LookupElement();
+  listItem.setTableName(tableName);
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(LookupElement.retrieveMaxLevel(db, tableName)+10);
+  listItem.setEnabled(true);
+  listItem.insert(db);
+  print("Lookup element 'New' inserted");
+  }else {print("Lookup element 'New' already exists"); }
+
+descriptionName=dictionary.getTerm("system.fields.label", "accounts.accounts_stage.Working", "value");
+if ("".equals(descriptionName)){descriptionName="Working";}
+  if (lookupList.getIdFromValue(descriptionName)<0){
+  LookupElement listItem = new LookupElement();
+  listItem.setTableName(tableName);
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(LookupElement.retrieveMaxLevel(db, tableName)+10);
+  listItem.setEnabled(true);
+  listItem.insert(db);
+  print("Lookup element 'Working' inserted");
+  }else {print("Lookup element 'Working' already exists"); }
+  
+descriptionName=dictionary.getTerm("system.fields.label", "accounts.accounts_stage.Cancelled", "value");
+if ("".equals(descriptionName)){descriptionName="Canceled";}
+  if (lookupList.getIdFromValue(descriptionName)<0){
+  LookupElement listItem = new LookupElement();
+  listItem.setTableName(tableName);
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(LookupElement.retrieveMaxLevel(db, tableName)+10);
+  listItem.setEnabled(true);
+  listItem.insert(db);
+  print("Lookup element 'Canceled' inserted");
+  }else {print("Lookup element 'Canceled' already exists"); }
+  
+descriptionName=dictionary.getTerm("system.fields.label", "accounts.accounts_stage.Complete", "value");
+if ("".equals(descriptionName)){descriptionName="Complete";}
+  if (lookupList.getIdFromValue(descriptionName)<0){
+  LookupElement listItem = new LookupElement();
+  listItem.setTableName(tableName);
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(LookupElement.retrieveMaxLevel(db, tableName)+10);
+  listItem.setEnabled(true);
+  listItem.insert(db);
+  print("Lookup element 'Complete' inserted");
+  }else {print("Lookup element 'Complete' already exists"); }
+  
+} else {
+  print("The category Id has not been found");
+}
+

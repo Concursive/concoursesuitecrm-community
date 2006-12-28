@@ -1041,6 +1041,12 @@
       <record><![CDATA[101-1000]]></record>
       <record><![CDATA[>1000]]></record>
     </lookup>
+    <lookup table="lookup_account_stage">
+      <record><![CDATA[New]]></record>
+      <record><![CDATA[Working]]></record>
+      <record><![CDATA[Canceled]]></record>
+      <record><![CDATA[Complete]]></record>
+    </lookup>
     <lookup table="lookup_segments">
     </lookup>
     <lookup table="lookup_sub_segment">

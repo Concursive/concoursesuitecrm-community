@@ -20,6 +20,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -501,6 +502,16 @@
       </td>
       <td>
         <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
+      </td>
+    </tr>
+  </dhv:include>
+  <dhv:include name="organization.stage" none="true">
+    <tr>
+      <td nowrap class="formLabel">
+        <dhv:label name="account.stage">Stage</dhv:label>
+      </td>
+      <td>
+        <%= StageList.getHtmlSelect("stageId",OrgDetails.getStageId()) %>
       </td>
     </tr>
   </dhv:include>

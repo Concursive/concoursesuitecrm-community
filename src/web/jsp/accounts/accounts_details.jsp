@@ -20,6 +20,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="SegmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -111,6 +112,18 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
       </td>
       <td>
         <%= SourceList.getSelectedValue(OrgDetails.getSource()) %> 
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.stage" none="true">
+  <dhv:evaluate if="<%= OrgDetails.getStageId() != -1 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="account.stage">Stage</dhv:label>
+      </td>
+      <td>
+        <%= StageList.getSelectedValue(OrgDetails.getStageId()) %> 
       </td>
     </tr>
   </dhv:evaluate>

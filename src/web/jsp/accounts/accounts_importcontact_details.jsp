@@ -20,6 +20,8 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ImportDetails" class="org.aspcfs.modules.base.Import" scope="request"/>
+<jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*" %>
@@ -58,6 +60,30 @@
       <strong><dhv:label name="contacts.details">Details</dhv:label></strong>
     </th>
   </tr>
+<dhv:include name="organization.source" none="true">
+  <dhv:evaluate if="<%= OrgDetails.getSource() != -1 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="contact.Source">Source</dhv:label>
+      </td>
+      <td>
+        <%= SourceList.getSelectedValue(OrgDetails.getSource()) %> 
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
+<dhv:include name="organization.stage" none="true">
+  <dhv:evaluate if="<%= OrgDetails.getStageId() != -1 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="account.stage">Stage</dhv:label>
+      </td>
+      <td>
+        <%= StageList.getSelectedValue(OrgDetails.getStageId()) %> 
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
  
 <dhv:evaluate if="<%= hasText(OrgDetails.getAccountNumber()) %>">
   <tr class="containerBody">

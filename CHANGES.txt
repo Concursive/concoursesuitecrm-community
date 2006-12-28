@@ -2,7 +2,7 @@
 Centric CRM 4.1 Preview
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-December 7, 2006
+December 28, 2006
 ----------------------------------------------------------------------------
 
 The following is a running list until release...
@@ -45,6 +45,8 @@ Developer changes:
 - "ant deploy" now supports WEBSERVER.TYPE geronimo and jboss
 - "ant ws" installs the appropriate Web Services to Axis
 - Web Service additions
+- Arbitrary BeanShell scripts can be executed during workflow processing using
+  RunScript component
 
 Unreleased features, target version to be determined:
 - Web Content Management module and Portal using Apache Pluto JSR-168 Embedded

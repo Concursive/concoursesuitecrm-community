@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Actions for the Accounts module
+ *  Action for the Account module
  *
  * @author     chris
  * @created    August 15, 2001
@@ -462,6 +462,10 @@ public final class Accounts extends CFSModule {
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
       context.getRequest().setAttribute("SiteList", siteList);
+      
+      LookupList stageList = new LookupList(db, "lookup_account_stage");
+      stageList.addItem(-1, systemStatus.getLabel("accounts.any"));
+      context.getRequest().setAttribute("StageList", stageList);
 
       //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
       PagedListInfo orgListInfo = this.getPagedListInfo(
@@ -515,6 +519,10 @@ public final class Accounts extends CFSModule {
       LookupList siteList = new LookupList(db, "lookup_site_id");
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("SiteList", siteList);
+      
+      LookupList stageList = new LookupList(db, "lookup_account_stage");
+      stageList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("StageList", stageList);
 
       Organization newOrg = (Organization) context.getFormBean();
       ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
@@ -664,6 +672,11 @@ public final class Accounts extends CFSModule {
       LookupList siteList = new LookupList(db, "lookup_site_id");
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("SiteList", siteList);
+      
+      LookupList stageList = new LookupList(db, "lookup_account_stage");
+      stageList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("StageList", stageList);
+      
       buildFormElements(context, db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -782,6 +795,10 @@ public final class Accounts extends CFSModule {
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
       context.getRequest().setAttribute("SiteIdList", siteList);
+      
+      LookupList stageList = new LookupList(db, "lookup_account_stage");
+      stageList.addItem(-1, systemStatus.getLabel("accounts.any"));
+      context.getRequest().setAttribute("StageList", stageList);
 
       //Display list of accounts if user chooses not to list contacts
       if (!"true".equals(searchListInfo.getCriteriaValue("searchContacts"))) {
@@ -794,6 +811,9 @@ public final class Accounts extends CFSModule {
         organizationList.setPagedListInfo(searchListInfo);
         organizationList.setMinerOnly(false);
         organizationList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
+
+        organizationList.setStageId(searchListInfo.getCriteriaValue("searchcodeStageId"));
+        
         searchListInfo.setSearchCriteria(organizationList, context);
         //fetching criterea for account source (my accounts or all accounts)
         if ("my".equals(searchListInfo.getListView())) {
@@ -966,6 +986,11 @@ public final class Accounts extends CFSModule {
       LookupList segmentList = new LookupList(db, "lookup_segments");
       segmentList.addItem(-1, getSystemStatus(context).getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("SegmentList", segmentList);
+      
+      LookupList stageList = new LookupList(db, "lookup_account_stage");
+      stageList.addItem(-1, getSystemStatus(context).getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("StageList", stageList);
+      
       //set the name to namelastfirstmiddle if individual
       if (context.getRequest().getParameter("form_type").equalsIgnoreCase(
           "individual")) {
@@ -1463,6 +1488,11 @@ public final class Accounts extends CFSModule {
       LookupList siteList = new LookupList(db, "lookup_site_id");
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("SiteList", siteList);
+      
+      LookupList stageList = new LookupList(db, "lookup_account_stage");
+      stageList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("StageList", stageList);
+
 
       //SegmentList segmentList = new SegmentList(db);
       LookupList segmentList = new LookupList(db, "lookup_segments");

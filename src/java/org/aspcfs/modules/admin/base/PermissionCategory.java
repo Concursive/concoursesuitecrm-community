@@ -95,6 +95,7 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_CONTACT_SOURCE = 904200316;
   public final static int LOOKUP_SEGMENTS = 722031447;
   public final static int LOOKUP_SUB_SEGMENT = 909200314;
+  public final static int LOOKUP_ACCOUNTS_STAGE = 181206161;
 
   // Service Contracts
   public final static int PERMISSION_CAT_SERVICE_CONTRACTS = 130041100;

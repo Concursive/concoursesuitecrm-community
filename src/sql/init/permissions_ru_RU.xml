@@ -108,6 +108,7 @@
       <lookup constantId="128051431" class="lookupList" table="lookup_sub_segment" description="Sub Segment"/>
       <lookup constantId="128051432" class="lookupList" table="lookup_site_id" description="Site"/>
       <lookup constantId="158051538" class="lookupList" table="lookup_account_size" description="Account Size"/>
+      <lookup constantId="181206161" class="lookupList" table="lookup_account_stage" description="Account Stage"/>
       <webdav class="org.aspcfs.modules.accounts.webdav.AccountsWebdavContext"/>
       <permission name="accounts" attributes="v---" description="Р”РѕСЃС‚СѓРї Рє РјРѕРґСѓР»СЋ РљРѕРЅС‚СЂР°РіРµРЅС‚РѕРІ"/>
       <permission name="accounts-accounts" attributes="vaed" description="Р—Р°РїРёСЃРё Рѕ РљРѕРЅС‚СЂР°РіРµРЅС‚Р°С…"/>
