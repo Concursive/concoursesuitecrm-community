@@ -30,48 +30,54 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function clearForm() {
-    <dhv:include name="accounts-search-name" none="true">
-      document.forms['searchAccount'].searchAccountName.value="";
-    </dhv:include>
+    <%-- Account Filters --%>
+    document.forms['searchAccount'].searchAccountName.value="";
     <dhv:include name="accounts-search-number" none="true">
       document.forms['searchAccount'].searchAccountNumber.value="";
-    </dhv:include>
-      document.forms['searchAccount'].searchAccountPostalCode.value="";
-      document.forms['searchAccount'].searchAccountCity.value="";
-      continueUpdateState('2','true');
-      document.forms['searchAccount'].searchcodeAccountState.options.selectedIndex = 0;
-      document.forms['searchAccount'].searchAccountOtherState.value = '';
-      document.forms['searchAccount'].searchcodeAccountCountry.options.selectedIndex = 0;
-      document.forms['searchAccount'].searchcodeAssetSerialNumber.value="";
-    <dhv:include name="accounts-search-source" none="true">
-      document.forms['searchAccount'].listView.options.selectedIndex = 0;
     </dhv:include>
     <dhv:include name="accounts-search-type" none="true">
       document.forms['searchAccount'].listFilter1.options.selectedIndex = 0;
     </dhv:include>
+    <dhv:include name="accounts-search-segment" none="true">
+      document.forms['searchAccount'].searchAccountSegment.value = "";
+      <dhv:evaluate if="<%= SegmentList.size() > 1 %>">
+        document.forms['searchAccount'].viewOnlySegmentId.options.selectedIndex = 0;
+      </dhv:evaluate>
+    </dhv:include>
+    <dhv:include name="accounts-search-source" none="true">
+      document.forms['searchAccount'].listView.options.selectedIndex = 0;
+    </dhv:include>
     document.forms['searchAccount'].listFilter2.options.selectedIndex = 0;
-    document.forms['searchAccount'].searchContactPhoneNumber.value="";
-    document.forms['searchAccount'].searchLastName.value="";
-    document.forms['searchAccount'].searchFirstName.value="";
-    document.forms['searchAccount'].searchContactCity.value="";
-    continueUpdateState('1','true');
-    document.forms['searchAccount'].searchcodeContactState.options.selectedIndex = 0;
-    document.forms['searchAccount'].searchContactOtherState.value = '';
-    document.forms['searchAccount'].searchcodeContactCountry.options.selectedIndex = 0;
-    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 && SiteList.size() > 2 %>" >
-      document.forms['searchAccount'].searchcodeOrgSiteId.options.selectedIndex = 0;
-    </dhv:evaluate>
     <dhv:evaluate if="<%=StageList.getEnabledElementCount() > 1 %>" >
       document.forms['searchAccount'].searchcodeStageId.options.selectedIndex = 0;
     </dhv:evaluate>
-    <dhv:include name="accounts-search-name" none="true">
-      document.forms['searchAccount'].searchAccountName.focus();
+    <dhv:include name="accounts-search-country" none="true">
+      document.forms['searchAccount'].searchcodeAccountCountry.options.selectedIndex = 0;
     </dhv:include>
-    <dhv:evaluate if="<%= SegmentList.size() > 1 %>">
-      document.forms['searchAccount'].viewOnlySegmentId.options.selectedIndex = 0;
+    document.forms['searchAccount'].searchAccountPostalCode.value="";
+    document.forms['searchAccount'].searchAccountCity.value="";
+    continueUpdateState('2','true');
+    document.forms['searchAccount'].searchcodeAccountState.options.selectedIndex = 0;
+    document.forms['searchAccount'].searchAccountOtherState.value = '';
+    <dhv:include name="accounts-search-asset-serial" none="true">
+      document.forms['searchAccount'].searchcodeAssetSerialNumber.value="";
+    </dhv:include>
+    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 && SiteList.size() > 2 %>" >
+      document.forms['searchAccount'].searchcodeOrgSiteId.options.selectedIndex = 0;
     </dhv:evaluate>
-    document.forms['searchAccount'].searchAccountSegment.value = "";
-    document.forms['searchAccount'].searchContacts.checked = false;
+    document.forms['searchAccount'].searchAccountName.focus();
+
+    <%-- Contact Filters --%>
+    <dhv:include name="accounts-contact-information-filters" none="true">
+      document.forms['searchAccount'].searchFirstName.value="";
+      document.forms['searchAccount'].searchLastName.value="";
+      document.forms['searchAccount'].searchContactPhoneNumber.value="";
+      document.forms['searchAccount'].searchContactCity.value="";
+      continueUpdateState('1','true');
+      document.forms['searchAccount'].searchcodeContactCountry.options.selectedIndex = 0;
+      document.forms['searchAccount'].searchcodeContactState.options.selectedIndex = 0;
+      document.forms['searchAccount'].searchContactOtherState.value = '';
+    </dhv:include>
   }
   function fillAccountSegmentCriteria(){
     var index = document.forms['searchAccount'].viewOnlySegmentId.selectedIndex;
@@ -228,7 +234,18 @@
       <dhv:evaluate if="<%= SiteList.getEnabledElementCount() <= 1 %>">
         <input type="hidden" name="searchcodeStageId" id="searchcodeStageId" value="-1" />
       </dhv:evaluate>
-        
+      <dhv:include name="accounts-search-country" none="true">
+        <tr>
+          <td nowrap class="formLabel">
+            <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
+          </td>
+          <td>
+            <% CountrySelect.setJsEvent("onChange=\"javascript:updateAccounts('searchcodeAccountCountry','2','"+ SearchOrgListInfo.getSearchOptionValue("searchAccountOtherState") +"');\""); %>
+            <%= CountrySelect.getHtml("searchcodeAccountCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")) %>
+          </td>
+        </tr>
+      </dhv:include>
+
         <tr>
           <td class="formLabel">
             <dhv:label name="accounts.accounts_add.ZipPostalCode">Postal Code</dhv:label>
@@ -259,17 +276,6 @@
             </span>
           </td>
         </tr>
-        <dhv:include name="accounts-search-country" none="true">
-        <tr>
-          <td nowrap class="formLabel">
-            <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
-          </td>
-          <td>
-            <% CountrySelect.setJsEvent("onChange=\"javascript:updateAccounts('searchcodeAccountCountry','2','"+ SearchOrgListInfo.getSearchOptionValue("searchAccountOtherState") +"');\""); %>
-            <%= CountrySelect.getHtml("searchcodeAccountCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")) %>
-          </td>
-        </tr>
-        </dhv:include>
         <dhv:include name="accounts-search-asset-serial" none="true">
         <tr>
           <td class="formLabel">
@@ -347,6 +353,15 @@
         </tr>
         <tr>
           <td nowrap class="formLabel">
+            <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
+          </td>
+          <td>
+            <% CountrySelect.setJsEvent("onChange=\"javascript:updateContacts('searchcodeContactCountry','1','"+ SearchOrgListInfo.getSearchOptionValue("searchContactOtherState") +"');\""); %>
+            <%= CountrySelect.getHtml("searchcodeContactCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) %>
+          </td>
+        </tr>
+        <tr>
+          <td nowrap class="formLabel">
             <dhv:label name="accounts.accounts_add.City">City</dhv:label>
           </td>
           <td>
@@ -365,15 +380,6 @@
             <span name="state21" ID="state21" style="<%= !ContactStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) ? "" : " display:none" %>">
               <input type="text" size="23" name="searchContactOtherState"  value="<%= toHtmlValue(SearchOrgListInfo.getSearchOptionValue("searchContactOtherState")) %>">
             </span>
-          </td>
-        </tr>
-        <tr>
-          <td nowrap class="formLabel">
-            <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
-          </td>
-          <td>
-            <% CountrySelect.setJsEvent("onChange=\"javascript:updateContacts('searchcodeContactCountry','1','"+ SearchOrgListInfo.getSearchOptionValue("searchContactOtherState") +"');\""); %>
-            <%= CountrySelect.getHtml("searchcodeContactCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) %>
           </td>
         </tr>
       </table>
