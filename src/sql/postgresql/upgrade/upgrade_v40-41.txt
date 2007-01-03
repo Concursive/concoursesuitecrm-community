@@ -74,9 +74,11 @@
 # Remove duplicate indexes
 2006-11-29-script01-mr.sql
 
+##############################################################################
 # Run each time after upgrading a system (NOTE: this is a temporary measure)
 2005-07-20-script01-mr.bsh
 2006-06-01-script01-mr.bsh
+##############################################################################
 
 # create account stage
 2006-12-18-script01-vadim.sql
