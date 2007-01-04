@@ -8143,7 +8143,7 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="calendar.webdavFolder.text">
       <value><![CDATA[A web folder allows you to access documents and data in Centric CRM as if they
-      were available on a network file share.  Create a shared volume or folder to the following URL:]]></value>
+were available on a network file share.  Create a shared volume or folder to the following URL:]]></value>
     </param>
     <param name="pipeline.viewpoint.colon">
       <value><![CDATA[<b>Viewpoint: </b><b class="highlight">${username}</b>]]></value>
@@ -8552,8 +8552,8 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="setup.ldap.text">
       <value><![CDATA[<ul><li>A properly configured LDAP server is required</li>
-        <li>If searching for users by attribute, the LDAP administrator should create an LDAP user with permissions on the LDAP server to search for users by given attribute; access to other attributes is not necessary</li>
-      </ul>]]></value>
+  <li>If searching for users by attribute, the LDAP administrator should create an LDAP user with permissions on the LDAP server to search for users by given attribute; access to other attributes is not necessary</li>
+</ul>]]></value>
     </param>
     <param name="admin.ldap.enabled">
       <value>LDAP Enabled:</value>
@@ -8629,22 +8629,22 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="setup.configuration.step3to4">
       <value><![CDATA[Centric CRM Configuration (Step 3 of 4)<br />
-      Database Settings &amp; Installation]]></value>
+Database Settings &amp; Installation]]></value>
     </param>
     <param name="setup.centricCRM.usesDatabase.text">
       <value><![CDATA[Centric CRM stores and retrieves data using a database.]]></value>
     </param>
     <param name="setup.databaseServerInstallation.text">
       <value><![CDATA[<ul>
-      <li>Before continuing, the database server must be installed and functional</li>
-      <li>The database administrator should create a user called "centric_crm"</li>
-      <li>The database administrator should create a new database, with
-      UNICODE encoding, called "centric_crm"</li>
-      <li>The centric_crm user must have full permissions on the centric_crm database</li>
-      <li>Once configured, enter the database connection information below, then press continue
-      to verify the settings</li>
-      <li>If you are using the source code version, then you must have used the &quot;ant installdb&quot; command</li>
-      </ul>]]></value>
+  <li>Before continuing, the database server must be installed and functional</li>
+  <li>The database administrator should create a user called "centric_crm"</li>
+  <li>The database administrator should create a new database, with
+  UNICODE encoding, called "centric_crm"</li>
+  <li>The centric_crm user must have full permissions on the centric_crm database</li>
+  <li>Once configured, enter the database connection information below, then press continue
+  to verify the settings</li>
+  <li>If you are using the source code version, then you must have used the &quot;ant installdb&quot; command</li>
+</ul>]]></value>
     </param>
     <param name="setup.databaseConnection">
       <value><![CDATA[Database Connection]]></value>
@@ -8798,10 +8798,10 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="setup.defaultTimezone.text">
       <value><![CDATA[<ul>
-      <li>Users will still be able to change their time zone, but for new users this setting
-      will be used as the default</li>
-      <li>Dates and times will be displayed according to the user's configured time zone</li>
-      </ul>]]></value>
+  <li>Users will still be able to change their time zone, but for new users this setting
+  will be used as the default</li>
+  <li>Dates and times will be displayed according to the user's configured time zone</li>
+</ul>]]></value>
     </param>
     <param name="setup.defaultLanguageLocale">
       <value><![CDATA[Default Language/Locale]]></value>
@@ -8824,12 +8824,12 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="setup.defaultCurrency.question">
       <value><![CDATA[All money in Centric CRM is currently defaulted to a single currency.
-      Which currency should Centric CRM use?]]></value>
+Which currency should Centric CRM use?]]></value>
     </param>
     <param name="setup.emailServer.question">
       <value><![CDATA[Centric CRM sends various notifications to users by email.  Centric CRM can also be used
-      to send email to contacts that have been entered into Centric CRM.<br>
-      Which email server should Centric CRM use?]]></value>
+to send email to contacts that have been entered into Centric CRM.<br />
+Which email server should Centric CRM use?]]></value>
     </param>
     <param name="setup.specifiedServerRelayEmail.text">
       <value><![CDATA[The specified server must allow this server to relay email]]></value>
@@ -8896,8 +8896,8 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="setup.administratorResponsibilities.text">
       <value><![CDATA[An administrative user is required to manage Centric CRM.  The administrator
-      is primarily responsible for adding users, configuring user permissions,
-      and tailoring Centric CRM to your organization.]]></value>
+is primarily responsible for adding users, configuring user permissions,
+and tailoring Centric CRM to your organization.]]></value>
     </param>
     <param name="setup.followingInformationAppearsEmployees.text">
       <value><![CDATA[The following information will appear in Centric CRM under Employees and can be modified later if necessary.]]></value>
@@ -9036,10 +9036,10 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="setup.systemUpgraded.notes">
       <value><![CDATA[<ul>
-        <li>Review the roles, under the Admin module, since the upgrade may have added
-        additional features in which you can now provide access to users by enabling permissions</li>
-        <li>Click on various modules and make sure everything appears to work</li>
-      </ul>]]></value>
+  <li>Review the roles, under the Admin module, since the upgrade may have added
+  additional features in which you can now provide access to users by enabling permissions</li>
+  <li>Click on various modules and make sure everything appears to work</li>
+</ul>]]></value>
     </param>
     <param name="setup.upgradeLog">
       <value><![CDATA[Upgrade Log]]></value>
@@ -9934,26 +9934,26 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="object.validation.actionError.canNotDeleteMessage">
       <value><![CDATA[
-      Message could not be deleted because ${message.inactiveCount} ${message.campaign} being built that ${message.use} this message.
-    ]]></value>
+Message could not be deleted because ${message.inactiveCount} ${message.campaign} being built that ${message.use} this message.
+]]></value>
     </param>
     <param name="object.validation.actionError.canNotDeleteSCL">
       <value><![CDATA[
-      Group could not be deleted because ${thisSCL.inactiveCount ${thisSCL.campaign  being built that ${thisSCL.use} this group.
-    ]]></value>
+Group could not be deleted because ${thisSCL.inactiveCount ${thisSCL.campaign  being built that ${thisSCL.use} this group.
+]]></value>
     </param>
     <param name="object.validation.actionError.canNotDeleteSurvey">
       <value><![CDATA[
-      Survey could not be deleted because  ${thisSurvey.inactiveCount} ${thisSurvey.campaign} being built that ${thisSurvey.use} this survey.
-    ]]></value>
+Survey could not be deleted because  ${thisSurvey.inactiveCount} ${thisSurvey.campaign} being built that ${thisSurvey.use} this survey.
+]]></value>
     </param>
     <param name="object.validation.actionError.importAlreadyRunning">
       <value><![CDATA[
-      The import "${thisImport.name}" is already running]]></value>
+The import "${thisImport.name}" is already running]]></value>
     </param>
     <param name="object.validation.actionError.importCancelFailed">
       <value><![CDATA[
-      Cancel Failed: Import is no longer running]]></value>
+Cancel Failed: Import is no longer running]]></value>
     </param>
     <param name="object.validation.actionError.importNotProcessed">
       <value><![CDATA[Import has not yet been successfully processed]]></value>
@@ -9990,20 +9990,20 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="object.validation.actionError.unspecifiedErrorRejectedRegistration">
       <value><![CDATA[
-      Unspecified Error: Centric CRM Server rejected registration ${thisStatus.message} ]]></value>
+Unspecified Error: Centric CRM Server rejected registration ${thisStatus.message} ]]></value>
     </param>
     <param name="object.validation.actionError.invalidKeyEntered">
       <value><![CDATA[The entered key did not validate, try entering it again.]]></value>
     </param>
     <param name="object.validation.actionError.invalidLicenseCode">
       <value><![CDATA[
-      An error occurred in processing the license. The license code does not match the key on this machine. A new license should be requested
-    ]]></value>
+An error occurred in processing the license. The license code does not match the key on this machine. A new license should be requested
+]]></value>
     </param>
     <param name="object.validation.actionError.licenseProcessingError">
       <value><![CDATA[
-      An error occurred in processing the license. The following error was supplied: ${error.message}
-    ]]></value>
+An error occurred in processing the license. The following error was supplied: ${error.message}
+]]></value>
     </param>
     <param name="object.validation.actionError.incorrectTargetDirectoryName">
       <value><![CDATA[
@@ -10020,33 +10020,33 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="object.validation.actionError.incorrectDirectoryRWPermissions">
       <value><![CDATA[
-      An error occurred while trying to use the directory, please make sure the directory has read/write permissions
-    ]]></value>
+An error occurred while trying to use the directory, please make sure the directory has read/write permissions
+]]></value>
     </param>
     <param name="object.validation.actionError.databaseConnectionError">
       <value><![CDATA[
-      An error occurred while trying to connect to the database, the following error was provided by the database driver: ${error.message}
-    ]]></value>
+An error occurred while trying to connect to the database, the following error was provided by the database driver: ${error.message}
+]]></value>
     </param>
     <param name="object.validation.actionError.databaseCreationError">
       <value><![CDATA[
-      An error occurred while trying to create the database schema, the following error was provided: ${error.message}
-    ]]></value>
+An error occurred while trying to create the database schema, the following error was provided: ${error.message}
+]]></value>
     </param>
     <param name="object.validation.actionError.preferencesSaveError">
       <value><![CDATA[
-      An error occurred while saving the preferences, the following error was provided: ${error.message}
-    ]]></value>
+An error occurred while saving the preferences, the following error was provided: ${error.message}
+]]></value>
     </param>
     <param name="object.validation.actionError.databaseVerificationError">
       <value><![CDATA[
-      An error occurred while trying verify the database schema, the following error was provided: ${error.message}
-    ]]></value>
+An error occurred while trying verify the database schema, the following error was provided: ${error.message}
+]]></value>
     </param>
     <param name="object.validation.actionError.adminAddError">
       <value><![CDATA[
-      An error occurred while adding the administrative user, the following error was provided: ${error.message}
-    ]]></value>
+An error occurred while adding the administrative user, the following error was provided: ${error.message}
+]]></value>
     </param>
     <param name="object.validation.actionError.ticketCategoryDeletion">
       <value><![CDATA[Category could not be deleted because it no longer exists.]]></value>
@@ -10633,10 +10633,10 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="mail.body.emailContactWithBody">
       <value><![CDATA[
-      The following message was sent to your Centric CRM inbox by ${thisRecord.contact.nameFirstLast}.
-      This copy has been sent to your email account at the request of the sender.<br /><br />--- Original Message ---<br /><br />
-      ${thisNote.body}
-    ]]></value>
+The following message was sent to your Centric CRM inbox by ${thisRecord.contact.nameFirstLast}.
+This copy has been sent to your email account at the request of the sender.<br /><br />--- Original Message ---<br /><br />
+${thisNote.body}
+]]></value>
     </param>
     <param name="mail.contactErrorMessage">
       <value><![CDATA[Following error occured while sending to this contact ]]></value>
@@ -10648,7 +10648,10 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Please select at least one Contact to send the message]]></value>
     </param>
     <param name="mail.label.originalMessage">
-      <value><![CDATA[<br /><br />----Original Message----<br />]]></value>
+      <value><![CDATA[
+
+----Original Message----
+]]></value>
     </param>
     <param name="mail.label.from">
       <value><![CDATA[From: ]]></value>
@@ -10666,7 +10669,9 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Subject:]]></value>
     </param>
     <param name="mail.label.taskDetails">
-      <value><![CDATA[------Task Details------]]></value>
+      <value><![CDATA[------ Task Details ------
+
+]]></value>
     </param>
     <param name="mail.label.task">
       <value><![CDATA[Task: ]]></value>
@@ -10681,7 +10686,7 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[Fwd: ]]></value>
     </param>
     <param name="mail.label.reply">
-      <value><![CDATA[Reply: ]]></value>
+      <value><![CDATA[RE: ]]></value>
     </param>
     <param name="mail.label.contactName">
       <value><![CDATA[Contact Name: ]]></value>
@@ -10703,11 +10708,11 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="mail.body.userAccountCreationMessage">
       <value><![CDATA[
-      A self-service account has been created for you.<br /><br />
-      Your account username is: ${user.username}<br />
-      Your password is: ${password}<br /><br />
-      Click ${url}here${endUrl} to visit the site.
-    ]]></value>
+A self-service account has been created for you.<br /><br />
+Your account username is: ${user.username}<br />
+Your password is: ${password}<br /><br />
+Click ${url}here${endUrl} to visit the site.
+]]></value>
     </param>
     <param name="mail.subject.loginInformation">
       <value><![CDATA[Login information]]></value>
@@ -10741,13 +10746,13 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="mail.body.newLoginInformation">
       <value><![CDATA[
-      This message details information about your Centric CRM account.<br /><br />
-      Your Centric CRM user account password has been reset by ${nameLastFirst}.<br /><br />
-      Please login with the following information:<br /><br />
-      User Name: ${username} <br />
-      Password: ${password} <br /><br />
-      It is recomended that you change your password the next time you login to Centric CRM.<br /><br />
-    ]]></value>
+This message details information about your Centric CRM account.<br /><br />
+Your Centric CRM user account password has been reset by ${nameLastFirst}.<br /><br />
+Please login with the following information:<br /><br />
+User Name: ${username} <br />
+Password: ${password} <br /><br />
+It is recomended that you change your password the next time you login to Centric CRM.<br /><br />
+]]></value>
     </param>
     <param name="mail.subject.test">
       <value><![CDATA[Test message from Centric CRM]]></value>
@@ -10763,41 +10768,41 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="mail.body.transactionDataSet1">
       <value><![CDATA[
-      ${recordList.size}  total record(s) processed<br />
-      ${providerRecordsInserted}  Provider Transaction Details record(s) inserted<br />
-      ${errors.size}  record(s) rejected<br /><br />
-    ]]></value>
+${recordList.size}  total record(s) processed<br />
+${providerRecordsInserted}  Provider Transaction Details record(s) inserted<br />
+${errors.size}  record(s) rejected<br /><br />
+]]></value>
     </param>
     <param name="mail.body.transactionDataSet2">
       <value><![CDATA[
-      -------------------------<br /><br />
-      Transaction ID : ${tempRec.transactionId} <br />
-      Provider Tax ID : ${tempRec.taxId} <br />
-      Provider Last Name : ${tempRec.nameLast} <br />
-      Vendor (Payer) ID: ${tempRec.payerId} <br />
-      ${em} <br /><br />
-    ]]></value>
+-------------------------<br /><br />
+Transaction ID : ${tempRec.transactionId} <br />
+Provider Tax ID : ${tempRec.taxId} <br />
+Provider Last Name : ${tempRec.nameLast} <br />
+Vendor (Payer) ID: ${tempRec.payerId} <br />
+${em} <br /><br />
+]]></value>
     </param>
     <param name="mail.subject.crmRegistration">
       <value><![CDATA[Centric CRM Registration]]></value>
     </param>
     <param name="mail.body.crmRegistration">
       <value><![CDATA[
-      Thank you for registering Centric CRM. ${crlf} ${crlf}
-      Paste the complete registation code from the attached file
-      (including the <license> tags) into the Centric CRM license validation field. ${crlf} ${crlf}
-      Some mail programs may have a problem with the attachment, if so please report
-      the client mail application name and the mail server software name to Centric CRM. ${crlf} ${crlf}
-      The Centric CRM Team
-    ]]></value>
+Thank you for registering Centric CRM. ${crlf} ${crlf}
+Paste the complete registation code from the attached file
+(including the <license> tags) into the Centric CRM license validation field. ${crlf} ${crlf}
+Some mail programs may have a problem with the attachment, if so please report
+the client mail application name and the mail server software name to Centric CRM. ${crlf} ${crlf}
+The Centric CRM Team
+]]></value>
     </param>
     <!-- Custom Ticket Problem Messages -->
     <param name="ticket.problem.userDisabled">
       <value><![CDATA[
-      Centric CRM user ${thisUser.username} has been disabled by ${thisRec.username}.
-      Since you are the direct manager of ${thisUser.username}, you have been notified.  It is essential that
-      any data still directly associated with this disabled user gets re-assigned as soon as possible.
-    ]]></value>
+Centric CRM user ${thisUser.username} has been disabled by ${thisRec.username}.
+Since you are the direct manager of ${thisUser.username}, you have been notified.  It is essential that
+any data still directly associated with this disabled user gets re-assigned as soon as possible.
+]]></value>
     </param>
     <!-- Paged List Info -->
     <param name="pagedListInfo.pagedListStatus.Employees">

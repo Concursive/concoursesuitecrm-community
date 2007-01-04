@@ -597,6 +597,7 @@ public class CFSNote extends GenericBean {
    * @return The statusText value
    */
   public String getStatusText() {
+    // TODO: Needs to use language dictionary
     if (status == 0) {
       return ("Unread");
     } else if (status == 1) {

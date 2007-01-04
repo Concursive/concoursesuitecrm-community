@@ -483,7 +483,7 @@ public final class MyCFS extends CFSModule {
     }
     if (context.getRequest().getParameter("mailrecipients") != null) {
       copyrecipients = true;
-      context.getRequest().setAttribute("mailrecipients", new String("true"));
+      context.getRequest().setAttribute("mailrecipients", "true");
     }
     boolean isValid = false;
     Contact thisContact = null;
@@ -501,13 +501,11 @@ public final class MyCFS extends CFSModule {
         thisRecord.buildResources(db);
         if (selectedList.size() != 0) {
           String replyAddr = thisRecord.getContact().getPrimaryEmailAddress();
-          int count = -1;
           int contactId = -1;
           String email = "";
           Set s = selectedList.keySet();
           Iterator i = s.iterator();
           while (i.hasNext() && isValid) {
-            count++;
             Integer hashKey = (Integer) i.next();
             contactId = hashKey.intValue();
             if (selectedList.get(hashKey) != null) {
@@ -659,29 +657,18 @@ public final class MyCFS extends CFSModule {
     if (forward != null && !"".equals(forward.trim())) {
       context.getRequest().setAttribute("return",forward);
     }
-
     context.getSession().removeAttribute("selectedContacts");
     context.getSession().removeAttribute("finalContacts");
-    String originalMessage = "\n\n----Original Message----\n";
-    String from = "From: ";
-    String fwd = "Fwd: ";
-    String sent = "Sent: ";
-    String to = "To: ";
-    String subject = "Subject: ";
-    String taskDetails = "------Task Details------\n\n";
-    String task = "Task: ";
-    String dueDate = "Due Date: ";
-    String relevantNotes = "Relevant Notes: ";
-    try {
+    SystemStatus systemStatus = this.getSystemStatus(context);
+      try {
       String msgId = context.getRequest().getParameter("id");
       int noteType = Integer.parseInt(
           context.getRequest().getParameter("forwardType"));
       context.getRequest().setAttribute("forwardType", "" + noteType);
       db = this.getConnection(context);
-      SystemStatus systemStatus = this.getSystemStatus(context);
       newNote = new CFSNote();
       if (noteType == Constants.CFSNOTE) {
-        //For a sent message myId is a user_id else its a contactId
+        // For a sent message myId is a user_id else its a contactId
         if (inboxInfo.getListView().equals("sent")) {
           myId = getUserId(context);
         } else {
@@ -699,12 +686,12 @@ public final class MyCFS extends CFSModule {
             recipientList.append(",");
           }
         }
-        originalMessage = systemStatus.getLabel("mail.label.originalMessage");
-        from = systemStatus.getLabel("mail.label.from");
-        fwd = systemStatus.getLabel("mail.label.forward");
-        sent = systemStatus.getLabel("mail.label.sent");
-        to = systemStatus.getLabel("mail.label.to");
-        subject = systemStatus.getLabel("mail.label.subject.colon");
+        String originalMessage = systemStatus.getLabel("mail.label.originalMessage");
+        String from = systemStatus.getLabel("mail.label.from");
+        String fwd = systemStatus.getLabel("mail.label.forward");
+        String sent = systemStatus.getLabel("mail.label.sent");
+        String to = systemStatus.getLabel("mail.label.to");
+        String subject = systemStatus.getLabel("mail.label.subject.colon");
         newNote.setSubject(fwd + StringUtils.toString(newNote.getSubject()));
         newNote.setBody(
             originalMessage +
@@ -720,11 +707,11 @@ public final class MyCFS extends CFSModule {
         context.getRequest().setAttribute("TaskId", msgId);
         String userName = ((UserBean) context.getSession().getAttribute(
             "User")).getUserRecord().getContact().getNameLastFirst();
-        taskDetails = systemStatus.getLabel("mail.label.taskDetails");
-        task = systemStatus.getLabel("mail.label.task");
-        from = systemStatus.getLabel("mail.label.from");
-        dueDate = systemStatus.getLabel("mail.label.dueDate");
-        relevantNotes = systemStatus.getLabel("mail.label.relevantNotes");
+        String taskDetails = systemStatus.getLabel("mail.label.taskDetails");
+        String task = systemStatus.getLabel("mail.label.task");
+        String from = systemStatus.getLabel("mail.label.from");
+        String dueDate = systemStatus.getLabel("mail.label.dueDate");
+        String relevantNotes = systemStatus.getLabel("mail.label.relevantNotes");
         newNote.setBody(
             taskDetails + "\n" +
             task + StringUtils.toString(thisTask.getDescription()) + "\n" +
@@ -762,22 +749,23 @@ public final class MyCFS extends CFSModule {
     Connection db = null;
     CFSNote newNote = null;
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
-    String originalMessage = "\n\n----Original Message----\n";
-    String from = "From: ";
-    String sent = "Sent: ";
-    String to = "To: ";
-    String subject = "Subject: ";
-    String reply = "Reply: ";
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    String originalMessage = systemStatus.getLabel("mail.label.originalMessage");
+    String from = systemStatus.getLabel("mail.label.from");
+    String sent = systemStatus.getLabel("mail.label.sent");
+    String to = systemStatus.getLabel("mail.label.to");
+    String subject = systemStatus.getLabel("mail.label.subject.colon");
+    String reply = systemStatus.getLabel("mail.label.reply");
     try {
       int noteType = Integer.parseInt(
           context.getRequest().getParameter("forwardType"));
       context.getRequest().setAttribute("forwardType", "" + Constants.CFSNOTE);
       String msgId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
-      SystemStatus systemStatus = this.getSystemStatus(context);
+
       int myId = -1;
       if (inboxInfo.getListView().equals("sent")) {
         myId = getUserId(context);
@@ -796,14 +784,7 @@ public final class MyCFS extends CFSModule {
           recipientList.append(",");
         }
       }
-      originalMessage = systemStatus.getLabel("mail.label.originalMessage");
-      from = systemStatus.getLabel("mail.label.from");
-      sent = systemStatus.getLabel("mail.label.sent");
-      to = systemStatus.getLabel("mail.label.to");
-      subject = systemStatus.getLabel("mail.label.subject.colon");
-      reply = systemStatus.getLabel("mail.label.reply");
-      newNote.setSubject(
-          "Reply: " + StringUtils.toString(newNote.getSubject()));
+      newNote.setSubject(reply + StringUtils.toString(newNote.getSubject()));
       newNote.setBody(
           originalMessage +
           from + StringUtils.toString(newNote.getSentName()) + "\n" +

@@ -300,37 +300,42 @@ public final class Quotes extends CFSModule {
     QuoteProductList quoteProducts = null;
     ProductCatalogList productList = null;
     ProductOptionList optionList = null;
+    //check if the quote id is null
+    if (quoteIdString == null || "".equals(quoteIdString)) {
+      try {
+        // check for the product id & ticket id.. is it a request to create a new quote?
+        // this can be done through the ticket module which generates a quote
+        int productId = Integer.parseInt(
+            (String) context.getRequest().getParameter("productId"));
+        int ticketId = Integer.parseInt(
+            (String) context.getRequest().getParameter("ticketId"));
+      } catch (Exception e) {
+        //if the product id is null, then the incomplete form was submitted, set error message
+        context.getRequest().setAttribute(
+            "actionError",
+            "Invalid criteria, please review and make necessary changes before submitting");
+        return "SearchCriteriaError";
+      }
+      // as product id is not null, create a new quote
+      // TODO: The following method must not be executed from within another
+      // action method.  If a database connection is obtained and this method
+      // is called, a deadlock will occur.
+      return executeCommandAddQuote(context);
+    } else {
+      try {
+        quoteId = Integer.parseInt(quoteIdString);
+      } catch (Exception e) {
+        //Syntax error in entering the quote id
+        context.getRequest().setAttribute(
+            "actionError",
+            "Invalid criteria, please review and make necessary changes before submitting");
+        return "SearchCriteriaError";
+      }
+    }
+    // Note: Do not move this before the previous logic
     Connection db = null;
     try {
       db = this.getConnection(context);
-      //check if the quote id is null
-      if (quoteIdString == null || "".equals(quoteIdString)) {
-        try {
-          //check for the product id & ticket id.. is it a request to create a new quote?
-          int productId = Integer.parseInt(
-              (String) context.getRequest().getParameter("productId"));
-          int ticketId = Integer.parseInt(
-              (String) context.getRequest().getParameter("ticketId"));
-        } catch (Exception e) {
-          //if the product id is null, then the incomplete form was submitted, set error message
-          context.getRequest().setAttribute(
-              "actionError",
-              "Invalid criteria, please review and make necessary changes before submitting");
-          return "SearchCriteriaError";
-        }
-        // as product id is not null, create a new quote
-        return executeCommandAddQuote(context);
-      } else {
-        try {
-          quoteId = Integer.parseInt(quoteIdString);
-        } catch (Exception e) {
-          //Syntax error in entering the quote id
-          context.getRequest().setAttribute(
-              "actionError",
-              "Invalid criteria, please review and make necessary changes before submitting");
-          return "SearchCriteriaError";
-        }
-      }
       //build the quote
       quote = new Quote();
       quote.setBuildProducts(true);
