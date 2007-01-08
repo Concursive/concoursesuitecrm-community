@@ -97,11 +97,9 @@
         </tr>
         <%-- Display Current User in the dashboard graph --%>
         <tr class="sectionrow2">
-          <td nowrap style="<%= shortChildList.size() != 0 ? "background-image: none;" : "" %>"><%= toHtml(currentUser.getContact().getNameFirstLast()) %>
-            <dhv:evaluate if="<%= currentUser.getContact().getTitle()!= null %>">
-              <dhv:evaluate if='<%= !"".equals(currentUser.getContact().getTitle().trim()) %>'>
-              <%= ", " + toHtml(currentUser.getContact().getTitle()) %>
-              </dhv:evaluate>
+          <td nowrap style="<%= shortChildList.size() != 0 ? "background-image: none;" : "" %>">
+            <%= toHtml(currentUser.getContact().getNameFirstLast()) %><dhv:evaluate if="<%= hasText(currentUser.getContact().getTitle()) %>">,
+              <%= toHtml(currentUser.getContact().getTitle()) %>
             </dhv:evaluate>
           </td>
           <% 
@@ -133,14 +131,10 @@
         %>
         <tr class="sectionrow<%= classCount %>">
           <td nowrap <dhv:evaluate if="<%= p.hasNext() %>">style="background-image: none;"</dhv:evaluate>>
-            <a href="MyActionPlans.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameFirstLast()) %>
-            <dhv:evaluate if="<%= thisRec.getContact().getTitle()!= null %>">
-              <dhv:evaluate if="<%= !"".equals(thisRec.getContact().getTitle().trim()) %>">
-              <%= ", " + toHtml(thisRec.getContact().getTitle()) %>
+            <a href="MyActionPlans.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameFirstLast()) %><dhv:evaluate if="<%= hasText(thisRec.getContact().getTitle()) %>">,
+              <%= toHtml(thisRec.getContact().getTitle()) %>
               </dhv:evaluate>
-            </dhv:evaluate>
             </a>
-
             <dhv:evaluate if="<%=!thisRec.getEnabled() || (thisRec.getExpires() != null && thisRec.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis())))%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <% 
