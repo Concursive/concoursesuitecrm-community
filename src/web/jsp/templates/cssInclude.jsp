@@ -45,7 +45,7 @@
 <%  
   }
 %>
-<link rel="stylesheet" href="css/<%= applicationPrefs.get("LAYOUT.TEMPLATE") %>.css" type="text/css">
+<link rel="stylesheet" href="css/<%= applicationPrefs.get("LAYOUT.TEMPLATE") %>.css?1" type="text/css">
 <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
 <%-- Use the system's language if not specified at user --%>
 <dhv:evaluate if="<%= User.getUserRecord() == null %>">

@@ -1064,6 +1064,9 @@ a:visited:hover{color:#FF3300;}
   text-align: center;
   vertical-align: middle;
 }
+.stageActions {
+  background: #FFFFFF;
+}
 .progressTable {
   /*border-top: 1px solid #9C9A9C;*/
 }

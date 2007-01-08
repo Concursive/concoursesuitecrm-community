@@ -2772,6 +2772,9 @@
     <param name="website.portfolio.currentCategory.parenthesis">
       <value><![CDATA[(current category)]]></value>
     </param>
+    <param name="actionPlan.actions.colon">
+      <value><![CDATA[Actions:]]></value>
+    </param>
     <param name="actionPlan.actionStep.allowDuplicateRecipients">
       <value><![CDATA[Allow duplicate recipients]]></value>
     </param>

@@ -41,10 +41,11 @@
               }
             }
           %>
-          <td nowrap align="right" width="100%">
+          <td nowrap class="stageActions" align="right" width="100%">
             &nbsp;
             <dhv:evaluate if="<%= User.getUserRecord().getId() == actionPlanWork.getManagerId() %>">
-              Actions: <a href="javascript:displayMenu('select1','menuDisplay');"
+              <dhv:label name="actionPlan.actions.colon">Actions:</dhv:label>
+              <a href="javascript:displayMenu('select1','menuDisplay');"
               onMouseOver="over(0, 1)" onmouseout="out(0, 1); hideMenu('menuDisplay');"><img src="images/select.gif" name="select1" id="select1" align="absmiddle" border="0"></a>
             </dhv:evaluate>
             &nbsp;

@@ -108,12 +108,12 @@
   <tr>
     <th colspan="2">
       <strong><dhv:label name="reports.nameCriteria.text">Name the criteria for future reference</dhv:label></strong>
+      <dhv:label name="reports.optional.brackets">(optional)</dhv:label>
     </th>
   </tr>
   <tr>
     <td class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></td>
-    <td><input type="text" name="criteria_subject" size="35" value="<%= toHtmlValue(criteria.getSubject()) %>"/>
-    <dhv:label name="reports.optional.brackets">(optional)</dhv:label></td>
+    <td><input type="text" name="criteria_subject" size="35" value="<%= toHtmlValue(criteria.getSubject()) %>"/></td>
   </tr>
 </table>
 <%-- No previously saved criteria --%>
