@@ -203,8 +203,10 @@ public final class UserGroups extends CFSModule {
       context.getRequest().setAttribute("userGroup", group);
       if (!isValid || (!recordInserted && recordCount == -1)) {
         if (group.getId() > -1) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAdd(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModify(context);
         }
       }

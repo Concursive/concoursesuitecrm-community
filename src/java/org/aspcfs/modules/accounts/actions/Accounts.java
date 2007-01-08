@@ -255,7 +255,6 @@ public final class Accounts extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-reports-add")) {
       return ("PermissionError");
     }
-    Connection db = null;
     //Parameters
     String subject = context.getRequest().getParameter("subject");
     String type = context.getRequest().getParameter("type");
@@ -292,6 +291,7 @@ public final class Accounts extends CFSModule {
     } else if (ownerCriteria.equals("levels")) {
       orgReport.setOwnerIdRange(this.getUserRange(context));
     }
+    Connection db = null;
     try {
       db = this.getConnection(context);
       //Accounts with opportunities report
@@ -1800,11 +1800,14 @@ public final class Accounts extends CFSModule {
           context.getRequest().setAttribute("Records", recordList);
         } else if (thisCategory.getRecordId() != -1 && thisCategory.getAllowMultipleRecords()) {
           context.getRequest().setAttribute("recordDeleted", "true");
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandFields(context);
         } else if (thisCategory.getRecordId() != -1 && !thisCategory.getAllowMultipleRecords()) {
           context.getRequest().setAttribute("recId", recordId);
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModifyFields(context);
         } else if (thisCategory.getRecordId() == -1 && !thisCategory.getAllowMultipleRecords()) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAddFolderRecord(context);
         }
         //The user requested a specific record, or this category only

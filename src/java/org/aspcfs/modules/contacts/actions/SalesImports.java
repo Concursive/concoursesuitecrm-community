@@ -420,6 +420,7 @@ public final class SalesImports extends CFSModule {
         context.getRequest().setAttribute("ImportValidator", validator);
 
         if (validator.getErrors().size() == 0) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandProcess(context);
         }
       } else {

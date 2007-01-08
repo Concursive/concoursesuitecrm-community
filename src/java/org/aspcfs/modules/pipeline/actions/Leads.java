@@ -1466,6 +1466,7 @@ public final class Leads extends CFSModule {
         return ("OppListOK");
       } else {
         processErrors(context, oppList.getErrors());
+        // TODO: Executing a new action within an open db can create a deadlock
         return executeCommandSearchForm(context);
       }
     } catch (Exception errorMessage) {

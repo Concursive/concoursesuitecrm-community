@@ -1166,7 +1166,6 @@ public final class CampaignManager extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-    Connection db = null;
     int resultCount = -1;
     boolean isValid = false;
     
@@ -1184,6 +1183,7 @@ public final class CampaignManager extends CFSModule {
       return executeCommandViewSchedule(context);
     }
     
+    Connection db = null;
     try {
       db = this.getConnection(context);
       campaign.queryRecord(db, Integer.parseInt(campaignId));

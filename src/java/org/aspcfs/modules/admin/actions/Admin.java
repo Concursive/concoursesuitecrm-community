@@ -496,7 +496,6 @@ public final class Admin extends CFSModule {
     if (!hasPermission(context, "admin-sysconfig-lists-edit")) {
       return ("PermissionError");
     }
-    Connection db = null;
     String tblName = context.getRequest().getParameter("tableName");
     if ("lookup_contact_types".equals(tblName)) {
       return executeCommandUpdateContactList(context);
@@ -510,6 +509,7 @@ public final class Admin extends CFSModule {
       names[j] = (String) st.nextToken();
       j++;
     }
+    Connection db = null;
     try {
       db = this.getConnection(context);
       //begin for all lookup lists

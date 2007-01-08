@@ -204,8 +204,10 @@ public final class TroubleTicketDefects extends CFSModule {
       if (!isValid || (!recordInserted && resultCount == -1)) {
         context.getRequest().setAttribute("defect", defect);
         if (defect.getId() != -1) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModify(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAdd(context);
         }
       }

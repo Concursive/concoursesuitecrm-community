@@ -415,9 +415,7 @@ public final class MyActionLists extends CFSModule {
   public String executeCommandGetSiteForUser(ActionContext context) {
     String userId = (String) context.getRequest().getParameter("userId");
     String item = context.getRequest().getParameter("item");
-    Connection db = null;
     try {
-      db = getConnection(context);
       User user = this.getUser(context, Integer.parseInt(userId));
       context.getRequest().setAttribute("siteId", String.valueOf(user.getSiteId()));
       context.getRequest().setAttribute("item", item);
@@ -425,8 +423,6 @@ public final class MyActionLists extends CFSModule {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
       return "SystemError";
-    } finally {
-      this.freeConnection(context, db);
     }
     return "GetSiteForUserOK";
   }

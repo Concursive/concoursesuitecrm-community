@@ -76,8 +76,8 @@ public final class AccountQuotes extends CFSModule {
     PagedListInfo quoteListInfo = this.getPagedListInfo(
         context, "accountQuoteListInfo", "qe.group_id", "desc");
     quoteListInfo.setLink(
-        "AccountQuotes.do?command=View&orgId=" + orgid + 
-        RequestUtils.addLinkParams(context.getRequest(),"version|popup|popupType"));
+        "AccountQuotes.do?command=View&orgId=" + orgid +
+            RequestUtils.addLinkParams(context.getRequest(), "version|popup|popupType"));
     Connection db = null;
     QuoteList quoteList = new QuoteList();
     Organization thisOrganization = null;
@@ -152,7 +152,6 @@ public final class AccountQuotes extends CFSModule {
     if (quoteId == null || "".equals(quoteId)) {
       quoteId = (String) context.getRequest().getParameter("quoteId");
     }
-    Connection db = null;
     Quote quote = null;
     QuoteProductList quoteProducts = null;
     ProductCatalogList productList = null;
@@ -160,26 +159,27 @@ public final class AccountQuotes extends CFSModule {
     ProductOptionValuesList valuesList = null;
     Organization thisOrganization = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
+    if (quoteId == null || "".equals(quoteId)) {
+      try {
+        //check for the product id & ticket id.. is it a request to create a new quote?
+        int productId = Integer.parseInt(
+            (String) context.getRequest().getParameter("productId"));
+        int ticketId = Integer.parseInt(
+            (String) context.getRequest().getParameter("ticketId"));
+      } catch (Exception e) {
+        //if the product id is null, then the incomplete form was submitted, set error message
+        context.getRequest().setAttribute(
+            "actionError",
+            systemStatus.getLabel(
+                "object.validation.actionError.invalidCriteria"));
+        return "SearchCriteriaError";
+      }
+      // as product id is not null, create a new quote
+      return executeCommandAddQuote(context);
+    }
+    Connection db = null;
     try {
       db = this.getConnection(context);
-      if (quoteId == null || "".equals(quoteId)) {
-        try {
-          //check for the product id & ticket id.. is it a request to create a new quote?
-          int productId = Integer.parseInt(
-              (String) context.getRequest().getParameter("productId"));
-          int ticketId = Integer.parseInt(
-              (String) context.getRequest().getParameter("ticketId"));
-        } catch (Exception e) {
-          //if the product id is null, then the incomplete form was submitted, set error message
-          context.getRequest().setAttribute(
-              "actionError",
-              systemStatus.getLabel(
-                  "object.validation.actionError.invalidCriteria"));
-          return "SearchCriteriaError";
-        }
-        // as product id is not null, create a new quote
-        return executeCommandAddQuote(context);
-      }
       //build the quote
       quote = new Quote();
       quote.setBuildProducts(true);
@@ -486,10 +486,10 @@ public final class AccountQuotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    boolean inline = (context.getRequest().getParameter("popupType") != null 
-                      && "inline".equals(context.getRequest().getParameter("popupType")));
+    boolean inline = (context.getRequest().getParameter("popupType") != null
+        && "inline".equals(context.getRequest().getParameter("popupType")));
     context.getRequest().setAttribute(
-        "refreshUrl", "AccountQuotes.do?command=View&orgId=" + orgId + (inline?"&popup=true":""));
+        "refreshUrl", "AccountQuotes.do?command=View&orgId=" + orgId + (inline ? "&popup=true" : ""));
     return "DeleteOK";
   }
 
@@ -546,8 +546,8 @@ public final class AccountQuotes extends CFSModule {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies"));
         htmlDialog.addButton(
-            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountQuotes.do?command=Delete&quoteId=" + quote.getId() + "&orgId=" + quote.getOrgId() 
-               + RequestUtils.addLinkParams(context.getRequest(), "version|popup|popupType")+ "'");
+            systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountQuotes.do?command=Delete&quoteId=" + quote.getId() + "&orgId=" + quote.getOrgId()
+            + RequestUtils.addLinkParams(context.getRequest(), "version|popup|popupType") + "'");
         htmlDialog.addButton(
             systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
@@ -812,7 +812,7 @@ public final class AccountQuotes extends CFSModule {
     if (recordCount == -1 || !isValid) {
       return executeCommandModifyForm(context);
     }
-    boolean isAddVersion = (context.getRequest().getParameter("newVersion") != null && "true".equals(context.getRequest().getParameter("newVersion"))); 
+    boolean isAddVersion = (context.getRequest().getParameter("newVersion") != null && "true".equals(context.getRequest().getParameter("newVersion")));
     if (isAddVersion) {
       return "ModifyAddVersionOK";
     }

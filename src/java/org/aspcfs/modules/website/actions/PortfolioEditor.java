@@ -637,8 +637,10 @@ public final class PortfolioEditor extends CFSModule {
           if (item.getEnabled()) {
             context.getRequest().setAttribute("enabled", "true");
           }
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAddItem(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModifyItem(context);
         }
       }

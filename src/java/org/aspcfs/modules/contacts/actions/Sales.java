@@ -598,8 +598,10 @@ public final class Sales extends CFSModule {
         }
       } else {
         if (thisContact.getId() > -1) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModify(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAdd(context);
         }
       }
@@ -723,6 +725,7 @@ public final class Sales extends CFSModule {
       context.getRequest().setAttribute("systemStatus", systemStatus);
       if (!fetchedList) {
         processErrors(context, contacts.getErrors());
+        // TODO: Executing a new action within an open db can create a deadlock
         return executeCommandSearchForm(context);
       }
     } catch (Exception e) {
@@ -846,6 +849,7 @@ public final class Sales extends CFSModule {
         HashMap errors = new HashMap();
         errors.put("actionError", systemStatus.getLabel("object.validation.leadsSearchActionError"));
         processErrors(context, errors);
+        // TODO: Executing a new action within an open db can create a deadlock
         return executeCommandSearchForm(context);
       }
       // build the import details of the import for this contact

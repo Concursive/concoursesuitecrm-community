@@ -112,12 +112,6 @@ public final class TroubleTicketActionPlans extends CFSModule {
       planWorkList.setBuildCurrentStepOnly(true);
       planWorkList.setBuildLinkedObject(true);
       planWorkList.buildList(db);
-/*
-      if (planWorkList.size() == 1) {
-        context.getRequest().setAttribute("actionPlanId", String.valueOf(((ActionPlanWork) planWorkList.get(0)).getId()));
-        return executeCommandDetails(context);
-      }
-*/
       context.getRequest().setAttribute("actionPlanWorkList", planWorkList);
     } catch (Exception e) {
       e.printStackTrace();

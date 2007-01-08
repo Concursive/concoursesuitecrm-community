@@ -67,8 +67,8 @@ public final class AccountContactsOppQuotes extends CFSModule {
     if (orgid == null) {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
-    boolean popup = (context.getRequest().getParameter("popup") != null 
-                      && "true".equals(context.getRequest().getParameter("popup")));
+    boolean popup = (context.getRequest().getParameter("popup") != null
+        && "true".equals(context.getRequest().getParameter("popup")));
     String contactId = context.getRequest().getParameter("contactId");
     if (contactId == null) {
       contactId = (String) context.getRequest().getAttribute("contactId");
@@ -79,9 +79,9 @@ public final class AccountContactsOppQuotes extends CFSModule {
     }
 
     PagedListInfo quoteListInfo = this.getPagedListInfo(context, "accountQuoteListInfo", "qe.group_id", "desc");
-    quoteListInfo.setLink("AccountContactsOppQuotes.do?command=View&orgId=" + orgid + 
-      (headerId != null ? "&headerId=" + headerId : "") + "&version=" + (version != null ? version : "") +
-      (popup?"&popup=true":""));
+    quoteListInfo.setLink("AccountContactsOppQuotes.do?command=View&orgId=" + orgid +
+        (headerId != null ? "&headerId=" + headerId : "") + "&version=" + (version != null ? version : "") +
+        (popup ? "&popup=true" : ""));
     Connection db = null;
     QuoteList quoteList = new QuoteList();
     Organization thisOrganization = null;
@@ -159,7 +159,6 @@ public final class AccountContactsOppQuotes extends CFSModule {
     if (contactId == null) {
       contactId = (String) context.getRequest().getAttribute("contactId");
     }
-    Connection db = null;
     Quote quote = null;
     QuoteProductList quoteProducts = null;
     ProductCatalogList productList = null;
@@ -169,23 +168,24 @@ public final class AccountContactsOppQuotes extends CFSModule {
     OpportunityHeader header = null;
     Contact thisContact = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
+    if (quoteId == null || "".equals(quoteId)) {
+      try {
+        //check for the product id & ticket id.. is it a request to create a new quote?
+        int productId = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+        int ticketId = Integer.parseInt((String) context.getRequest().getParameter("ticketId"));
+      } catch (Exception e) {
+        //if the product id is null, then the incomplete form was submitted, set error message
+        context.getRequest().setAttribute(
+            "actionError",
+            systemStatus.getLabel("object.validation.actionError.invalidCriteria"));
+        return "SearchCriteriaError";
+      }
+      // as product id is not null, create a new quote
+      return executeCommandAddQuote(context);
+    }
+    Connection db = null;
     try {
       db = this.getConnection(context);
-      if (quoteId == null || "".equals(quoteId)) {
-        try {
-          //check for the product id & ticket id.. is it a request to create a new quote?
-          int productId = Integer.parseInt((String) context.getRequest().getParameter("productId"));
-          int ticketId = Integer.parseInt((String) context.getRequest().getParameter("ticketId"));
-        } catch (Exception e) {
-          //if the product id is null, then the incomplete form was submitted, set error message
-          context.getRequest().setAttribute(
-              "actionError",
-              systemStatus.getLabel("object.validation.actionError.invalidCriteria"));
-          return "SearchCriteriaError";
-        }
-        // as product id is not null, create a new quote
-        return executeCommandAddQuote(context);
-      }
       //build the quote
       quote = new Quote();
       quote.setBuildProducts(true);
@@ -404,7 +404,7 @@ public final class AccountContactsOppQuotes extends CFSModule {
       this.freeConnection(context, db);
     }
     boolean inline = (context.getRequest().getParameter("popupType") != null && "inline".equals(context.getRequest().getParameter("popupType")));
-    context.getRequest().setAttribute("refreshUrl", "AccountContactsOppQuotes.do?command=View&orgId=" + orgId + "&contactId=" + quote.getContactId() + "&headerId=" + quote.getHeaderId()+(inline?"&popup=true":""));
+    context.getRequest().setAttribute("refreshUrl", "AccountContactsOppQuotes.do?command=View&orgId=" + orgId + "&contactId=" + quote.getContactId() + "&headerId=" + quote.getHeaderId() + (inline ? "&popup=true" : ""));
     return "DeleteOK";
   }
 
@@ -457,9 +457,9 @@ public final class AccountContactsOppQuotes extends CFSModule {
       } else {
         htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
         htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsOppQuotes.do?command=Delete&quoteId=" 
-          + quote.getId() + "&orgId=" + quote.getOrgId() + "&contactId=" + quote.getContactId() 
-          + "&headerId=" + quote.getHeaderId() + RequestUtils.addLinkParams(context.getRequest(),"popup|popupType|actionId") + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsOppQuotes.do?command=Delete&quoteId="
+            + quote.getId() + "&orgId=" + quote.getOrgId() + "&contactId=" + quote.getContactId()
+            + "&headerId=" + quote.getHeaderId() + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
@@ -797,8 +797,8 @@ public final class AccountContactsOppQuotes extends CFSModule {
       //Retrieve the ticket
       if (ticketId != -1) {
         ticket = new Ticket(db, ticketId);
-        ProductCatalog product = new ProductCatalog(db, productId);        
-        quote.setProductId(product.getId());    
+        ProductCatalog product = new ProductCatalog(db, productId);
+        quote.setProductId(product.getId());
         product.determineCategory(db);
         quote.setShortDescription(product.getCategoryName() + ", " + product.getName() + ": ");
         //if the ticket is not for a new ad design, retrieve the customer product from the database

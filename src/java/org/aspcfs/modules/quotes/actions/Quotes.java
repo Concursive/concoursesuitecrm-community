@@ -317,7 +317,7 @@ public final class Quotes extends CFSModule {
         return "SearchCriteriaError";
       }
       // as product id is not null, create a new quote
-      // TODO: The following method must not be executed from within another
+      // NOTE: The following method must not be executed from within another
       // action method.  If a database connection is obtained and this method
       // is called, a deadlock will occur.
       return executeCommandAddQuote(context);

@@ -443,8 +443,10 @@ public final class KnowledgeBaseManager extends CFSModule {
           if (kb.getDescription() != null) {
             context.getRequest().setAttribute("description", kb.getDescription());
           }
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAdd(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModify(context);
         }
       }

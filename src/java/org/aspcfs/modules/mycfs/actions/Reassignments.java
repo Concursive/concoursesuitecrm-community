@@ -478,6 +478,7 @@ public final class Reassignments extends CFSModule {
           thisRec.buildResources(db);
         } else {
           processErrors(context, errors);
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandReassign(context);
         }
       }

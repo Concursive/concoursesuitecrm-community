@@ -261,8 +261,8 @@ public final class ProjectManagementRequirements extends CFSModule {
       context.getRequest().setAttribute(
           "Error",
           "<b>This record could not be updated because someone else updated it first.</b><p>" +
-          "You can hit the back button to review the changes that could not be committed, " +
-          "but you must reload the record and make the changes again.");
+              "You can hit the back button to review the changes that could not be committed, " +
+              "but you must reload the record and make the changes again.");
       return ("UserError");
     }
   }
@@ -301,7 +301,7 @@ public final class ProjectManagementRequirements extends CFSModule {
           SystemStatus systemStatus = this.getSystemStatus(context);
           thisRequirement.getErrors().put(
               "actionError", systemStatus.getLabel(
-                  "object.validation.requirementDeletion"));
+              "object.validation.requirementDeletion"));
           processErrors(context, thisRequirement.getErrors());
         } else {
           indexDeleteItem(context, thisRequirement);
@@ -363,6 +363,7 @@ public final class ProjectManagementRequirements extends CFSModule {
    */
   public String executeCommandImport(ActionContext context) {
     Connection db = null;
+    boolean imported = false;
     try {
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       HashMap parts = multiPart.parseData(context.getRequest(), null);
@@ -382,20 +383,9 @@ public final class ProjectManagementRequirements extends CFSModule {
       context.getRequest().setAttribute("Requirement", thisRequirement);
       // Import
       FileInfo fileInfo = (FileInfo) parts.get("file");
-      // Determine file type
-      if (fileInfo == null || !AssignmentImporter.parse(
-          fileInfo, thisRequirement, db)) {
-        HashMap errors = new HashMap();
-        SystemStatus systemStatus = this.getSystemStatus(context);
-        errors.put(
-            "actionError", systemStatus.getLabel(
-                "object.validation.incorrectFileNameSpecified"));
-        processErrors(context, errors);
-        return executeCommandPrepareImport(context);
+      if (fileInfo != null) {
+        imported = AssignmentImporter.parse(fileInfo, thisRequirement, db);
       }
-      context.getRequest().setAttribute(
-          "IncludeSection", ("requirements_import_ok"));
-      return ("ImportOK");
     } catch (Exception e) {
       e.printStackTrace(System.out);
       return "ImportERROR";
@@ -404,6 +394,16 @@ public final class ProjectManagementRequirements extends CFSModule {
         this.freeConnection(context, db);
       }
     }
+    if (!imported) {
+      HashMap errors = new HashMap();
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      errors.put(
+          "actionError", systemStatus.getLabel(
+          "object.validation.incorrectFileNameSpecified"));
+      processErrors(context, errors);
+      return executeCommandPrepareImport(context);
+    }
+    context.getRequest().setAttribute("IncludeSection", ("requirements_import_ok"));
+    return ("ImportOK");
   }
 }
-

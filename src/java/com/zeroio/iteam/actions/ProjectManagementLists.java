@@ -173,13 +173,13 @@ public final class ProjectManagementLists extends CFSModule {
       }
       Task thisTask = new Task(db, Integer.parseInt(taskId));
       context.getRequest().setAttribute("Task", thisTask);
-      return executeCommandAdd(context);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return executeCommandAdd(context);
   }
 
 

@@ -309,8 +309,10 @@ public final class ActionPlanEditor extends CFSModule {
       }
       if (!isValid) {
         if (plan.getId() > -1) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandRenamePlan(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAddPlan(context);
         }
       }
@@ -785,8 +787,10 @@ public final class ActionPlanEditor extends CFSModule {
           context.getRequest().setAttribute("nextPhaseId", nextPhaseId);
         }
         if (phase.getId() > -1) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModifyPhase(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAddPhase(context);
         }
       } else {
@@ -1307,8 +1311,10 @@ public final class ActionPlanEditor extends CFSModule {
         context.getRequest().setAttribute(
             "typeList", step.getAccountTypes());
         if (step.getId() > -1) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModifyStep(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAddStep(context);
         }
       } else {
@@ -1594,6 +1600,7 @@ public final class ActionPlanEditor extends CFSModule {
       LookupList stepActions = ActionStep.getStepActionsLookup(db);
       boolean result = ActionStep.parseRequiredActionMappings(context, db, stepActions, Integer.parseInt(constantId));
       if (!result) {
+        // TODO: Executing a new action within an open db can create a deadlock
         return executeCommandAddMappings(context);
       }
     } catch (Exception e) {

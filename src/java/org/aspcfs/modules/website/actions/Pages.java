@@ -197,8 +197,10 @@ public final class Pages extends CFSModule {
           context.getRequest().setAttribute("previousPageId", previousPageId);
         }
         if (page.getId() > -1) {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandModify(context);
         } else {
+          // TODO: Executing a new action within an open db can create a deadlock
           return executeCommandAdd(context);
         }
       }
