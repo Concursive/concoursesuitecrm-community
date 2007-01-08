@@ -283,8 +283,6 @@ public class ProductCatalogImports extends CFSModule {
           thisImport.setId(-1);
           errors.put("fileError", systemStatus.getLabel("object.validation.badFileFormat"));
           processErrors(context, errors);
-          // TODO: Executing a new action within an open db can create a deadlock
-          //return executeCommandNew(context);
         }
         if (zipFileRecordInserted) {
           try {
@@ -295,8 +293,6 @@ public class ProductCatalogImports extends CFSModule {
             zipFileErrors = true;
             errors.put("imagesError", systemStatus.getLabel("object.validation.badImagesFileFormat"));
             processErrors(context, errors);
-            // TODO: Executing a new action within an open db can create a deadlock
-            //return executeCommandNew(context);
           }
         }
         thisImport.setSystemStatus(systemStatus);
@@ -311,7 +307,6 @@ public class ProductCatalogImports extends CFSModule {
     } finally {
       freeConnection(context, db);
     }
-
     if (fileRecordInserted && productCatalogRecordInserted && !zipFileErrors) {
       return getReturn(context, "Save");
     }
