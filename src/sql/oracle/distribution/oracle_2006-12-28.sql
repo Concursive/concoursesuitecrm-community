@@ -11,3 +11,5 @@ CREATE TABLE lookup_account_stage (
 
 ALTER TABLE organization
   ADD stage_id INTEGER REFERENCES lookup_account_stage(code);
+
+UPDATE permission SET "active" = 1 WHERE permission = 'product-catalog-product';

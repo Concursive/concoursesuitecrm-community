@@ -83,3 +83,6 @@
 # create account stage
 2006-12-18-script01-vadim.sql
 2006-12-18-script01-vadim.bsh
+
+# enable product module
+2007-01-08-script01-mr.sql
