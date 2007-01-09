@@ -321,7 +321,7 @@ CREATE TABLE lookup_title(
 
 CREATE SEQUENCE lookup_account_stage_code_seq AS DECIMAL(27,0);
 CREATE TABLE lookup_account_stage (
-  code INTEGER NOT NULL KEY,
+  code INTEGER NOT NULL PRIMARY KEY,
   description VARGRAPHIC(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
