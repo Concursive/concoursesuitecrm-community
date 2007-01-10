@@ -16,7 +16,6 @@
 package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
-
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
@@ -27,19 +26,20 @@ import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
  * Provides a visual control panel (html form) that allows the user to jump to
  * another page, change the number of entries per page, etc.
- * 
+ *
  * @author matt rajkowski
  * @version $Id: PagedListControlHandler.java,v 1.2 2002/08/06 21:03:07 akhi_m
  *          Exp $
  * @created June 12, 2002
  */
-public class PagedListControlHandler extends TagSupport {
+public class PagedListControlHandler extends TagSupport implements TryCatchFinally {
   private String name = "controlProperties";
   private String object = null;
   private String bgColor = null;
@@ -51,11 +51,29 @@ public class PagedListControlHandler extends TagSupport {
   private boolean enableJScript = false;
   private String form = "0";
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    name = "controlProperties";
+    object = null;
+    bgColor = null;
+    fontColor = "#666666";
+    tdClass = null;
+    showForm = true;
+    resetList = true;
+    abbreviate = false;
+    enableJScript = false;
+    form = "0";
+  }
+
+
   /**
    * Sets the name attribute of the PagedListControlHandler object
-   * 
-   * @param tmp
-   *          The new name value
+   *
+   * @param tmp The new name value
    */
   public final void setName(String tmp) {
     name = tmp;
@@ -63,9 +81,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the object attribute of the PagedListControlHandler object
-   * 
-   * @param tmp
-   *          The new object value
+   *
+   * @param tmp The new object value
    */
   public final void setObject(String tmp) {
     object = tmp;
@@ -73,9 +90,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the bgColor attribute of the PagedListControlHandler object
-   * 
-   * @param tmp
-   *          The new bgColor value
+   *
+   * @param tmp The new bgColor value
    */
   public final void setBgColor(String tmp) {
     bgColor = tmp;
@@ -83,9 +99,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the fontColor attribute of the PagedListControlHandler object
-   * 
-   * @param tmp
-   *          The new fontColor value
+   *
+   * @param tmp The new fontColor value
    */
   public final void setFontColor(String tmp) {
     fontColor = tmp;
@@ -93,9 +108,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the tdClass attribute of the PagedListControlHandler object
-   * 
-   * @param tmp
-   *          The new tdClass value
+   *
+   * @param tmp The new tdClass value
    */
   public final void setTdClass(String tmp) {
     tdClass = tmp;
@@ -103,9 +117,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the showForm attribute of the PagedListControlHandler object
-   * 
-   * @param showForm
-   *          The new showForm value
+   *
+   * @param showForm The new showForm value
    */
 
   public void setShowForm(String showForm) {
@@ -114,9 +127,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the resetList attribute of the PagedListControlHandler object
-   * 
-   * @param resetList
-   *          The new resetList value
+   *
+   * @param resetList The new resetList value
    */
   public void setResetList(String resetList) {
     this.resetList = "true".equalsIgnoreCase(resetList);
@@ -124,7 +136,7 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Gets the abbreviate attribute of the PagedListControlHandler object
-   * 
+   *
    * @return The abbreviate value
    */
   public boolean getAbbreviate() {
@@ -133,9 +145,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the abbreviate attribute of the PagedListControlHandler object
-   * 
-   * @param abbreviate
-   *          The new abbreviate value
+   *
+   * @param abbreviate The new abbreviate value
    */
   public void setAbbreviate(boolean abbreviate) {
     this.abbreviate = abbreviate;
@@ -143,9 +154,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the attribute of the PagedListControlHandler object
-   * 
-   * @param enableJScript
-   *          The new enableJScript value
+   *
+   * @param enableJScript The new enableJScript value
    */
   public void setEnableJScript(boolean enableJScript) {
     this.enableJScript = enableJScript;
@@ -153,9 +163,8 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Sets the enableJScript attribute of the PagedListControlHandler object
-   * 
-   * @param tmp
-   *          The new enableJScript value
+   *
+   * @param tmp The new enableJScript value
    */
   public void setEnableJScript(String tmp) {
     this.enableJScript = DatabaseUtils.parseBoolean(tmp);
@@ -167,7 +176,7 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Description of the Method
-   * 
+   *
    * @return Description of the Returned Value
    */
   public final int doStartTag() {
@@ -176,7 +185,7 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Description of the Method
-   * 
+   *
    * @return Description of the Returned Value
    */
   public int doEndTag() {
@@ -192,7 +201,7 @@ public class PagedListControlHandler extends TagSupport {
 
       // To handle PortletSession
       if (pagedListInfo == null) {
-        PortletRequest renderRequest = (PortletRequest) pageContext.getRequest().getAttribute(org.apache.pluto.tags.Constants.PORTLET_REQUEST);        
+        PortletRequest renderRequest = (PortletRequest) pageContext.getRequest().getAttribute(org.apache.pluto.tags.Constants.PORTLET_REQUEST);
         if (renderRequest != null) {
           pagedListInfo = (PagedListInfo) renderRequest.getPortletSession().getAttribute(object);
         }
@@ -223,10 +232,10 @@ public class PagedListControlHandler extends TagSupport {
           map.put("${pagedListInfo.numberOfPages}", ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())));
           out.write("["
               + pagedListInfo.getPreviousPageLink("<font class='underline'>" + systemStatus.getLabel("label.previous") + "</font>", systemStatus
-                  .getLabel("label.previous"), form,renderResponse)
+              .getLabel("label.previous"), form, renderResponse)
               + "|"
               + pagedListInfo.getNextPageLink("<font class='underline'>" + systemStatus.getLabel("label.next") + "</font>",
-                  systemStatus.getLabel("label.next"), form,renderResponse) + "] ");
+              systemStatus.getLabel("label.next"), form, renderResponse) + "] ");
           out.write("<font color=\"" + fontColor + "\">");
           if (!abbreviate) {
             map.put("${pagedListInfo.itemsPerPageEntry}", pagedListInfo.getItemsPerPageEntry(systemStatus.getLabel("quotes.all", "All")));
@@ -236,7 +245,7 @@ public class PagedListControlHandler extends TagSupport {
             out.write("&nbsp;&nbsp;");
           }
           out.write("<input type=\"submit\" value=\"" + systemStatus.getLabel("button.go") + "\">");
-        } else {          
+        } else {
           out.write("[" + pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous", form, renderResponse) + "|"
               + pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next", form, renderResponse) + "] ");
           out.write("<font color=\"" + fontColor + "\">");
@@ -277,11 +286,9 @@ public class PagedListControlHandler extends TagSupport {
 
   /**
    * Gets the label attribute of the PagedListControlHandler object
-   * 
-   * @param map
-   *          Description of the Parameter
-   * @param input
-   *          Description of the Parameter
+   *
+   * @param map   Description of the Parameter
+   * @param input Description of the Parameter
    * @return The label value
    */
   public String getLabel(HashMap map, String input) {

@@ -22,6 +22,7 @@ import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.Template;
 
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
@@ -35,11 +36,23 @@ import java.util.StringTokenizer;
  *          Exp $
  * @created February 25, 2002
  */
-public class LabelHandler extends TagSupport {
+public class LabelHandler extends TagSupport implements TryCatchFinally {
   private String labelName = null;
   private HashMap params = null;
   private boolean mainMenuItem = false;
   private boolean subMenuItem = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    labelName = null;
+    params = null;
+    mainMenuItem = false;
+    subMenuItem = false;
+  }
 
   /**
    * Sets the Name attribute of the LabelHandler object
