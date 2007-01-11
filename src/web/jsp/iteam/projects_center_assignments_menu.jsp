@@ -296,7 +296,7 @@
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="accounts.accounts_contacts_calls_add.LogAnActivity">Log an Activity</dhv:label>
+          <dhv:label name="projects.center_assignments.AddAnActivity">Add an Activity</dhv:label>
         </td>
       </tr>
       </zeroio:permission>

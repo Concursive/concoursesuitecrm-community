@@ -206,7 +206,7 @@
               <input type="radio" name="contactcategory" value="2" onChange="javascript:updateCategoryInfo('account');" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
             </td>
             <td>
-              <dhv:label name="contact.permanentlyAssociateWithAccount.colon">Permanently associate with Account:</dhv:label> &nbsp;
+              <dhv:label name="contact.associateWithAccount.colon">Associate with Account:</dhv:label> &nbsp;
             </td>
             <td>
               <div id="changeaccount">

@@ -65,7 +65,7 @@
     if (projectList.size() == 0) {
   %>
     <tr class="row2">
-      <td colspan="<%= !isPopup(request)?"3":"4" %>"><dhv:label name="project.noProjectsToDisplay">No projects to display.</dhv:label></td>
+      <td colspan="<%= !isPopup(request)?"4":"3" %>"><dhv:label name="project.noProjectsToDisplay">No projects to display.</dhv:label></td>
     </tr>
   <%
     }

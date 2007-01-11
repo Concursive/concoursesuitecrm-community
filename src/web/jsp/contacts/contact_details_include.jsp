@@ -69,7 +69,7 @@ function reopenContact(id) {
     </dhv:evaluate>
     <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.downloadVcard">Download VCard</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=DownloadVCard&id=<%= ContactDetails.getId() %>'"/></dhv:permission>
     <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
-      <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-add" all="true"><input type="button" value="<dhv:label name="button.workAsAccount">Work as Account</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=WorkAsAccount&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>';"/></dhv:permission>
+      <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-add" all="true"><input type="button" value="<dhv:label name="button.convertToAccount">Convert to Account</dhv:label>" onClick="javascript:window.location.href='ExternalContacts.do?command=WorkAsAccount&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>';"/></dhv:permission>
     </dhv:evaluate>
     <dhv:permission name="contacts-external_contacts-view,contacts-external_contacts-add,contacts-external_contacts-edit,contacts-external_contacts-delete,accounts-accounts-add"><br />&nbsp;</dhv:permission>
   </dhv:evaluate>
