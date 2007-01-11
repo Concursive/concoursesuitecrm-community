@@ -75,7 +75,7 @@ public class ActionStep extends GenericBean {
   protected int estimatedDuration = -1;
   protected int customFieldCategoryId = -1;
   protected int customFieldId = -1;
-  protected int permissionType = -1;
+  protected int permissionType = ASSIGNED_USER;
   protected int roleId = -1;
   protected int departmentId = -1;
   protected boolean enabled = false;
