@@ -20,6 +20,7 @@ import org.aspcfs.utils.web.HtmlSelectDurationMinutesFives;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 
 /**
  * Description of the Class
@@ -29,12 +30,24 @@ import javax.servlet.jsp.tagext.TagSupport;
  *          Exp $
  * @created March 2, 2004
  */
-public class HtmlSelectDuration extends TagSupport {
+public class HtmlSelectDuration extends TagSupport implements TryCatchFinally {
 
   private String baseName = null;
   private String hours = null;
   private String minutes = null;
   private String count = null;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    baseName = null;
+    hours = null;
+    minutes = null;
+    count = null;
+  }
 
 
   /**

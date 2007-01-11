@@ -24,6 +24,7 @@ import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 
 /**
@@ -35,13 +36,26 @@ import java.util.Hashtable;
  *          $
  * @created December 14, 2001
  */
-public class UsernameHandler extends TagSupport {
+public class UsernameHandler extends TagSupport implements TryCatchFinally {
 
   private int userId = -1;
   private boolean lastFirst = false;
   private boolean firstInitialLast = false;
   private String defaultText = null;
   private boolean forJS = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    userId = -1;
+    lastFirst = false;
+    firstInitialLast = false;
+    defaultText = null;
+    forJS = false;
+  }
 
 
   /**
@@ -107,7 +121,7 @@ public class UsernameHandler extends TagSupport {
   /**
    * Sets the forJS attribute of the UsernameHandler object
    *
-   * @param  tmp  The new forJS value
+   * @param tmp The new forJS value
    */
   public void setForJS(boolean tmp) {
     this.forJS = tmp;
@@ -117,7 +131,7 @@ public class UsernameHandler extends TagSupport {
   /**
    * Sets the forJS attribute of the UsernameHandler object
    *
-   * @param  tmp  The new forJS value
+   * @param tmp The new forJS value
    */
   public void setForJS(String tmp) {
     this.forJS = DatabaseUtils.parseBoolean(tmp);
@@ -151,31 +165,31 @@ public class UsernameHandler extends TagSupport {
               if (forJS) {
                 this.pageContext.getOut().write(
                     StringUtils.jsStringEscape(
-                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+                        thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
               } else {
                 this.pageContext.getOut().write(
                     StringUtils.toHtml(
-                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+                        thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
               }
             } else if (firstInitialLast) {
               if (forJS) {
                 this.pageContext.getOut().write(
                     StringUtils.jsStringEscape(
-                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+                        thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
               } else {
                 this.pageContext.getOut().write(
                     StringUtils.toHtml(
-                    thisContact.getNameFirstInitialLast() + (!thisUser.getEnabled() ? " *" : "")));
+                        thisContact.getNameFirstInitialLast() + (!thisUser.getEnabled() ? " *" : "")));
               }
             } else {
               if (forJS) {
                 this.pageContext.getOut().write(
                     StringUtils.jsStringEscape(
-                    thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
+                        thisContact.getNameLastFirst() + (!thisUser.getEnabled() ? " *" : "")));
               } else {
                 this.pageContext.getOut().write(
                     StringUtils.toHtml(
-                    thisContact.getNameFirstLast() + (!thisUser.getEnabled() ? " *" : "")));
+                        thisContact.getNameFirstLast() + (!thisUser.getEnabled() ? " *" : "")));
               }
             }
           }

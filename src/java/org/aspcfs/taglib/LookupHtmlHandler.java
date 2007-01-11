@@ -21,6 +21,7 @@ import org.aspcfs.controller.SystemStatus;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -35,11 +36,21 @@ import java.util.Iterator;
  *          Exp $
  * @created March 17, 2003
  */
-public class LookupHtmlHandler extends TagSupport {
+public class LookupHtmlHandler extends TagSupport implements TryCatchFinally {
   private String listType = null;
   private String listName = null;
   private String lookupName = null;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    listType = null;
+    listName = null;
+    lookupName = null;
+  }
 
   /**
    * Sets the listName attribute of the LookupHtmlHandler object

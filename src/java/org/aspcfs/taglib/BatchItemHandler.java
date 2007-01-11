@@ -28,10 +28,21 @@ import javax.servlet.jsp.tagext.*;
  *@version
  *@created    February 16, 2006
  */
-public class BatchItemHandler extends TagSupport {
+public class BatchItemHandler extends TagSupport implements TryCatchFinally {
   private String display = null;
   private String link = null;
   private String params = null;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    display = null;
+    link = null;
+    params = null;
+  }
 
 
   /**

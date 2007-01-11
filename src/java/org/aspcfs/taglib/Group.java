@@ -24,6 +24,7 @@ import org.aspcfs.utils.web.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.*;
 
 /**
@@ -33,11 +34,21 @@ import java.util.*;
  * @version $Id$
  * @created October 22, 2002
  */
-public class Group extends TagSupport {
+public class Group extends TagSupport implements TryCatchFinally {
   private String object = null;
   private String rowClass = null;
   private int page = -1;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    object = null;
+    rowClass = null;
+    page = -1;
+  }
 
   /**
    * Sets the object attribute of the Group object

@@ -17,6 +17,7 @@ package com.zeroio.taglib;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -27,11 +28,22 @@ import java.util.Locale;
  * @version $Id$
  * @created March 18, 2004
  */
-public class NumberHandler extends TagSupport {
+public class NumberHandler extends TagSupport implements TryCatchFinally {
 
   private double value = -1;
   private String defaultValue = null;
   private Locale locale = null;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    value = -1;
+    defaultValue = null;
+    locale = null;
+  }
 
 
   /**

@@ -6,6 +6,7 @@ import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import javax.servlet.jsp.JspException;
 
 /**
@@ -16,9 +17,17 @@ import javax.servlet.jsp.JspException;
  * @created    May 19, 2006
  * @version    $Id: Exp $
  */
-public class PortalPageGroupURLHandler extends TagSupport {
+public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFinally {
   private boolean showLink = false;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    showLink = false;
+  }
 
   /**
    *  Gets the showLink attribute of the PortalPageGroupURLHandler object

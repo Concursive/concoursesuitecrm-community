@@ -20,6 +20,7 @@ import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.ArrayList;
 
 /**
@@ -32,13 +33,26 @@ import java.util.ArrayList;
  *          $
  * @created April 1, 2004
  */
-public class FileItemHandler extends TagSupport {
+public class FileItemHandler extends TagSupport implements TryCatchFinally {
 
   private String id = null;
   private String path = null;
   private String version = null;
   private String name = null;
   private boolean thumbnail = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    id = null;
+    path = null;
+    version = null;
+    name = null;
+    thumbnail = false;
+  }
 
 
   /**

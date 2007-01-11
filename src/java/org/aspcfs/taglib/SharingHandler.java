@@ -24,6 +24,7 @@ import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
@@ -38,7 +39,7 @@ import java.util.StringTokenizer;
  * @version $id:exp$
  * @created August 20, 2003
  */
-public class SharingHandler extends TagSupport {
+public class SharingHandler extends TagSupport implements TryCatchFinally {
 
   //constants for actions
   public final static int VIEW = 1;
@@ -49,9 +50,22 @@ public class SharingHandler extends TagSupport {
   //attributes
   private String primaryComponent = null;
   private String secondaryComponents = null;
-  private int action = 1;
+  private int action = VIEW;
   private boolean allRequired = false;
   private boolean hasNone = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    primaryComponent = null;
+    secondaryComponents = null;
+    action = VIEW;
+    allRequired = false;
+    hasNone = false;
+  }
 
 
   /**

@@ -340,7 +340,7 @@
       <required>no</required>
     </attribute>
     <attribute>
-    <name>label</name>
+      <name>label</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
@@ -417,7 +417,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-    <name>params</name>
+      <name>params</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>

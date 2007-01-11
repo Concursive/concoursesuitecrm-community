@@ -21,6 +21,7 @@ import org.aspcfs.modules.login.beans.UserBean;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
@@ -34,11 +35,21 @@ import java.util.StringTokenizer;
  *          Exp $
  * @created October 12, 2001
  */
-public class PermissionHandler extends TagSupport {
+public class PermissionHandler extends TagSupport implements TryCatchFinally {
   private String permissionName = null;
   private boolean allRequired = false;
   private boolean hasNone = false;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    permissionName = null;
+    allRequired = false;
+    hasNone = false;
+  }
 
   /**
    * Sets the Name attribute of the PermissionHandler object

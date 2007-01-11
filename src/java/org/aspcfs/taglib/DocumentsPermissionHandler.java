@@ -23,6 +23,7 @@ import org.aspcfs.utils.web.LookupList;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.sql.Connection;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
@@ -30,14 +31,24 @@ import java.util.StringTokenizer;
 /**
  * Description of the Class
  *
- * @author
+ * @author kailash
  * @version $Id$
  * @created
  */
-public class DocumentsPermissionHandler extends TagSupport {
+public class DocumentsPermissionHandler extends TagSupport implements TryCatchFinally {
 
   private String permission = null;
   private String includeIf = "all";
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    permission = null;
+    includeIf = "all";
+  }
 
 
   /**

@@ -17,33 +17,46 @@ package com.zeroio.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.LookupList;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     matt rajkowski
- * @created    June 19, 2003
- * @version    $Id: RoleSelectHandler.java,v 1.1.2.2 2004/04/08 14:55:53
- *      rvasista Exp $
+ * @author matt rajkowski
+ * @version $Id: RoleSelectHandler.java,v 1.1.2.2 2004/04/08 14:55:53
+ *          rvasista Exp $
+ * @created June 19, 2003
  */
-public class RoleSelectHandler extends TagSupport {
+public class RoleSelectHandler extends TagSupport implements TryCatchFinally {
 
   private String name = null;
   private int value = -1;
   private String onChange = null;
   private boolean isPortalUser = false;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    name = null;
+    value = -1;
+    onChange = null;
+    isPortalUser = false;
+  }
+
 
   /**
-   *  Sets the name attribute of the RoleSelectHandler object
+   * Sets the name attribute of the RoleSelectHandler object
    *
-   * @param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -51,9 +64,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the RoleSelectHandler object
+   * Sets the value attribute of the RoleSelectHandler object
    *
-   * @param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(String tmp) {
     this.value = Integer.parseInt(tmp);
@@ -61,9 +74,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the value attribute of the RoleSelectHandler object
+   * Sets the value attribute of the RoleSelectHandler object
    *
-   * @param  tmp  The new value value
+   * @param tmp The new value value
    */
   public void setValue(int tmp) {
     this.value = tmp;
@@ -71,9 +84,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the onChange attribute of the RoleSelectHandler object
+   * Sets the onChange attribute of the RoleSelectHandler object
    *
-   * @param  tmp  The new onChange value
+   * @param tmp The new onChange value
    */
   public void setOnChange(String tmp) {
     this.onChange = tmp;
@@ -81,9 +94,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Gets the isPortalUser attribute of the RoleSelectHandler object
+   * Gets the isPortalUser attribute of the RoleSelectHandler object
    *
-   * @return    The isPortalUser value
+   * @return The isPortalUser value
    */
   public boolean getIsPortalUser() {
     return isPortalUser;
@@ -91,9 +104,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the isPortalUser attribute of the RoleSelectHandler object
+   * Sets the isPortalUser attribute of the RoleSelectHandler object
    *
-   * @param  tmp  The new isPortalUser value
+   * @param tmp The new isPortalUser value
    */
   public void setIsPortalUser(boolean tmp) {
     this.isPortalUser = tmp;
@@ -101,9 +114,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the isPortalUser attribute of the RoleSelectHandler object
+   * Sets the isPortalUser attribute of the RoleSelectHandler object
    *
-   * @param  tmp  The new isPortalUser value
+   * @param tmp The new isPortalUser value
    */
   public void setIsPortalUser(String tmp) {
     this.isPortalUser = DatabaseUtils.parseBoolean(tmp);
@@ -111,10 +124,10 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return                Description of the Return Value
-   * @throws  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -130,7 +143,7 @@ public class RoleSelectHandler extends TagSupport {
         LookupList roleList = (LookupList) systemStatus.getLookupList(
             null, "lookup_project_role");
         if (roleList != null && isPortalUser) {
-        	roleList = (LookupList) roleList.clone();
+          roleList = (LookupList) roleList.clone();
           //Remove the Project Lead that has a level 10.
           roleList.removeElementByLevel(10);
         }
@@ -153,9 +166,9 @@ public class RoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

@@ -26,18 +26,19 @@ import org.w3c.dom.Element;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.io.File;
 import java.util.*;
 
 /**
- *  Generates a submenu from an XML config file.
+ * Generates a submenu from an XML config file.
  *
- * @author     matt rajkowski
- * @created    May 7, 2002
- * @version    $Id: ContainerMenuHandler.java,v 1.6 2002/12/23 16:12:28
- *      mrajkowski Exp $
+ * @author matt rajkowski
+ * @version $Id: ContainerMenuHandler.java,v 1.6 2002/12/23 16:12:28
+ *          mrajkowski Exp $
+ * @created May 7, 2002
  */
-public class ContainerMenuHandler extends TagSupport {
+public class ContainerMenuHandler extends TagSupport implements TryCatchFinally {
   public final static int LINKS = 0;
   public final static int TABS = 1;
   public final static int SIDE_TABS = 2;
@@ -52,11 +53,27 @@ public class ContainerMenuHandler extends TagSupport {
   private boolean hideContainer = false;
   private Object item = null;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    object = null;
+    name = null;
+    selected = null;
+    params = null;
+    appendToUrl = "";
+    style = SIDE_TABS;
+    hideContainer = false;
+    item = null;
+  }
+
 
   /**
-   *  Sets the object attribute of the ContainerMenuHandler object
+   * Sets the object attribute of the ContainerMenuHandler object
    *
-   * @param  objectName  The new object value
+   * @param objectName The new object value
    */
   public void setObject(String objectName) {
     this.object = objectName;
@@ -64,9 +81,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the name attribute of the ContainerMenuHandler object
+   * Sets the name attribute of the ContainerMenuHandler object
    *
-   * @param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -74,9 +91,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the selected attribute of the ContainerMenuHandler object
+   * Sets the selected attribute of the ContainerMenuHandler object
    *
-   * @param  tmp  The new selected value
+   * @param tmp The new selected value
    */
   public void setSelected(String tmp) {
     this.selected = tmp;
@@ -84,9 +101,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the item attribute of the ContainerMenuHandler object
+   * Sets the item attribute of the ContainerMenuHandler object
    *
-   * @param  tmp  The new item value
+   * @param tmp The new item value
    */
   public void setItem(Object tmp) {
     this.item = tmp;
@@ -94,19 +111,17 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the param attribute of the ContainerMenuHandler object.<br>
-   *  If a variable is needed in the html link for the submenu, multiple
-   *  parameters can be specified using a param tag. Then when the submenu is
-   *  generated, all text matching the parameter tag is replaced. Ex. <p>
+   * Sets the param attribute of the ContainerMenuHandler object.<br>
+   * If a variable is needed in the html link for the submenu, multiple
+   * parameters can be specified using a param tag. Then when the submenu is
+   * generated, all text matching the parameter tag is replaced. Ex. <p>
+   * </p>
+   * Link: Accounts.do?command=View&id=$id<br>
+   * In the JSP, do something like:<br>
+   * String param1 = "id=<%= Org.getId() %>";<br>
+   * <dhv:container name="accounts" selected="details" param="<%= param1 %>" />
    *
-   *  <p/>
-   *
-   *  Link: Accounts.do?command=View&id=$id<br>
-   *  In the JSP, do something like:<br>
-   *  String param1 = "id=<%= Org.getId() %>";<br>
-   *  <dhv:container name="accounts" selected="details" param="<%= param1 %>" />
-   *
-   * @param  tmp  The new param value
+   * @param tmp The new param value
    */
   public void setParam(String tmp) {
     params = new HashMap();
@@ -125,9 +140,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the appendToUrl attribute of the ContainerMenuHandler object
+   * Sets the appendToUrl attribute of the ContainerMenuHandler object
    *
-   * @param  tmp  The new appendToUrl value
+   * @param tmp The new appendToUrl value
    */
   public void setAppendToUrl(String tmp) {
     this.appendToUrl = tmp;
@@ -135,9 +150,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the style attribute of the ContainerMenuHandler object
+   * Sets the style attribute of the ContainerMenuHandler object
    *
-   * @param  tmp  The new style value
+   * @param tmp The new style value
    */
   public void setStyle(String tmp) {
     if ("sidetabs".equals(tmp.toLowerCase())) {
@@ -151,9 +166,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Sets the hideContainer attribute of the ContainerMenuHandler object
+   * Sets the hideContainer attribute of the ContainerMenuHandler object
    *
-   * @param  hideContainer  The new hideContainer value
+   * @param hideContainer The new hideContainer value
    */
   public void setHideContainer(boolean hideContainer) {
     this.hideContainer = hideContainer;
@@ -161,9 +176,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public final int doStartTag() {
     try {
@@ -230,41 +245,41 @@ public class ContainerMenuHandler extends TagSupport {
       if (style == SIDE_TABS) {
         this.pageContext.getOut().write(
             "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td width=\"100%\">\n" +
-            "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" height=\"100%\">\n" +
-            "  <tr>\n" +
-            "    <td width=\"100%\">" +
-            "      <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" +
-            "        <tr>\n" +
-            "          <td class=\"tabStart\">&nbsp;</td>\n" +
-            "          <td class=\"tabSelected-l\"><img border=\"0\" src=\"images/blank.gif\" /></td>\n" +
-            "          <td class=\"tabSelected\" nowrap>" +
-            (properties.containsKey("icon") ? "<img src=\"" + (String) properties.get(
-            "icon") + "\" align=\"absMiddle\" border=\"0\" />&nbsp;" : "") +
-            StringUtils.toHtml(label) +
-            "</td>\n" +
-            "          <td class=\"tabSelected-r\"><img border=\"0\" src=\"images/blank.gif\" /></td>\n" +
-            "          <td width=\"100%\" class=\"tabSpace\" nowrap>&nbsp;</td>\n" +
-            "        </tr>\n" +
-            "      </table>" +
-            "    </td>\n" +
-            "    <td class=\"tabSpace2\">" +
-            "      &nbsp;" +
-            "    </td>\n" +
-            "  </tr>\n" +
-            "  <tr>\n" +
-            "    <td class=\"containerBackSide\" height=\"100%\">");
+                "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" height=\"100%\">\n" +
+                "  <tr>\n" +
+                "    <td width=\"100%\">" +
+                "      <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" +
+                "        <tr>\n" +
+                "          <td class=\"tabStart\">&nbsp;</td>\n" +
+                "          <td class=\"tabSelected-l\"><img border=\"0\" src=\"images/blank.gif\" /></td>\n" +
+                "          <td class=\"tabSelected\" nowrap>" +
+                (properties.containsKey("icon") ? "<img src=\"" + (String) properties.get(
+                    "icon") + "\" align=\"absMiddle\" border=\"0\" />&nbsp;" : "") +
+                StringUtils.toHtml(label) +
+                "</td>\n" +
+                "          <td class=\"tabSelected-r\"><img border=\"0\" src=\"images/blank.gif\" /></td>\n" +
+                "          <td width=\"100%\" class=\"tabSpace\" nowrap>&nbsp;</td>\n" +
+                "        </tr>\n" +
+                "      </table>" +
+                "    </td>\n" +
+                "    <td class=\"tabSpace2\">" +
+                "      &nbsp;" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "  <tr>\n" +
+                "    <td class=\"containerBackSide\" height=\"100%\">");
       } else if (style == SUB_TABS) {
         // Draw the label
         this.pageContext.getOut().write(
             "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n" +
-            "  <tr>\n" +
-            "    <td nowrap class=\"containerSubtabLabel\">" +
-            (properties.containsKey("icon") ? "<img src=\"" + (String) properties.get(
-            "icon") + "\" align=\"absMiddle\" border=\"0\" />&nbsp;" : "") +
-            StringUtils.toHtml(label) + "</td>\n" +
-            "    <td width=\"100%\" class=\"containerSubtabSpace\">&nbsp;</td>\n" +
-            "  </tr>\n" +
-            "</table>");
+                "  <tr>\n" +
+                "    <td nowrap class=\"containerSubtabLabel\">" +
+                (properties.containsKey("icon") ? "<img src=\"" + (String) properties.get(
+                    "icon") + "\" align=\"absMiddle\" border=\"0\" />&nbsp;" : "") +
+                StringUtils.toHtml(label) + "</td>\n" +
+                "    <td width=\"100%\" class=\"containerSubtabSpace\">&nbsp;</td>\n" +
+                "  </tr>\n" +
+                "</table>");
         // Draw any tabs
         UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
             "User");
@@ -281,17 +296,17 @@ public class ContainerMenuHandler extends TagSupport {
             if (!hideContainer) {
               this.pageContext.getOut().write(
                   "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"conSubs\">\n" +
-                  "  <tr>\n");
+                      "  <tr>\n");
               // Draw the menu tabs
               Iterator i = submenuItems.iterator();
               while (i.hasNext()) {
                 SubmenuItem thisItem = (SubmenuItem) i.next();
                 if (thisItem.getPermission() == null ||
                     (thisItem.getPermission() != null && thisItem.getPermission().equals(
-                    "")) ||
+                        "")) ||
                     (thisUser != null && systemStatus != null &&
-                    systemStatus.hasPermission(
-                    thisUser.getUserId(), thisItem.getPermission()))) {
+                        systemStatus.hasPermission(
+                            thisUser.getUserId(), thisItem.getPermission()))) {
                   Template linkText = new Template(thisItem.getLink());
                   linkText.setParseElements(params);
                   if (thisItem.getName().equals(selected)) {
@@ -324,10 +339,10 @@ public class ContainerMenuHandler extends TagSupport {
                 SubmenuItem thisItem = (SubmenuItem) i.next();
                 if (thisItem.getPermission() == null ||
                     (thisItem.getPermission() != null && thisItem.getPermission().equals(
-                    "")) ||
+                        "")) ||
                     (thisUser != null && systemStatus != null &&
-                    systemStatus.hasPermission(
-                    thisUser.getUserId(), thisItem.getPermission()))) {
+                        systemStatus.hasPermission(
+                            thisUser.getUserId(), thisItem.getPermission()))) {
                   Template linkText = new Template(thisItem.getLink());
                   linkText.setParseElements(params);
                   if (thisItem.getName().equals(selected)) {
@@ -375,10 +390,10 @@ public class ContainerMenuHandler extends TagSupport {
             SubmenuItem thisItem = (SubmenuItem) i.next();
             if (thisItem.getPermission() == null ||
                 (thisItem.getPermission() != null && thisItem.getPermission().equals(
-                "")) ||
+                    "")) ||
                 (thisUser != null && systemStatus != null &&
-                systemStatus.hasPermission(
-                thisUser.getUserId(), thisItem.getPermission()))) {
+                    systemStatus.hasPermission(
+                        thisUser.getUserId(), thisItem.getPermission()))) {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
               if (thisItem.getName().equals(selected)) {
@@ -406,8 +421,8 @@ public class ContainerMenuHandler extends TagSupport {
         this.pageContext.getOut().write("</tr></table></div>");
         this.pageContext.getOut().write(
             "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n" +
-            "  <tr>\n" +
-            "    <td class=\"containerBack\" align=\"center\">");
+                "  <tr>\n" +
+                "    <td class=\"containerBack\" align=\"center\">");
       }
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
@@ -420,19 +435,19 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public final int doAfterBody() {
     if (style == TABS) {
       return SKIP_BODY;
     }
     if (style == SIDE_TABS && hideContainer) {
-    try {
+      try {
         this.pageContext.getOut().write(
             "</td>\n" +
-            "<td class=\"containerRight\" height=\"100%\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" />");
+                "<td class=\"containerRight\" height=\"100%\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" />");
       } catch (Exception e) {
 
       }
@@ -456,25 +471,25 @@ public class ContainerMenuHandler extends TagSupport {
         if (style == SIDE_TABS) {
           this.pageContext.getOut().write(
               "</td>\n" +
-              "<td valign=\"top\" height=\"100%\">");
+                  "<td valign=\"top\" height=\"100%\">");
           this.pageContext.getOut().write(
               "<table height=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
           this.pageContext.getOut().write(
               "<tr><td class=\"sidetabTop\" nowrap><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td><td><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td><td><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td></tr>");
           this.pageContext.getOut().write(
               "<tr><td class=\"sidetab-left-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td>" +
-              "<td class=\"sidetab-midtop-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td>" +
-              "<td class=\"sidetab-right-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td></tr>");
+                  "<td class=\"sidetab-midtop-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td>" +
+                  "<td class=\"sidetab-right-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td></tr>");
         }
         Iterator i = submenuItems.iterator();
         while (i.hasNext()) {
           SubmenuItem thisItem = (SubmenuItem) i.next();
           if (thisItem.getPermission() == null ||
               (thisItem.getPermission() != null && thisItem.getPermission().equals(
-              "")) ||
+                  "")) ||
               (thisUser != null && systemStatus != null &&
-              systemStatus.hasPermission(
-              thisUser.getUserId(), thisItem.getPermission()))) {
+                  systemStatus.hasPermission(
+                      thisUser.getUserId(), thisItem.getPermission()))) {
             if (style == LINKS && itemOutput) {
               this.pageContext.getOut().write(" | ");
             }
@@ -487,10 +502,10 @@ public class ContainerMenuHandler extends TagSupport {
                   if (!hideContainer) {
                     this.pageContext.getOut().write(
                         "<tr><td class=\"sidetab-left-sel\">&nbsp;</td><td class=\"sidetab-mid-sel\">&nbsp;</td><td class=\"sidetab-right-sel\">" +
-                        "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
-                        thisItem.getLongHtml() +
-                        "</a>" +
-                        "</td></tr>");
+                            "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
+                            thisItem.getLongHtml() +
+                            "</a>" +
+                            "</td></tr>");
                   }
                   break;
                 case LINKS:
@@ -511,12 +526,12 @@ public class ContainerMenuHandler extends TagSupport {
                   if (!hideContainer) {
                     this.pageContext.getOut().write(
                         "<tr><td class=\"sidetab-left\">&nbsp;</td>" +
-                        "<td class=\"sidetab-mid\">&nbsp;</td>" +
-                        "<td class=\"sidetab-right\">" +
-                        "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
-                        thisItem.getLongHtml() +
-                        "</a>" +
-                        "</td></tr>");
+                            "<td class=\"sidetab-mid\">&nbsp;</td>" +
+                            "<td class=\"sidetab-right\">" +
+                            "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
+                            thisItem.getLongHtml() +
+                            "</a>" +
+                            "</td></tr>");
                   }
                   break;
                 case LINKS:
@@ -532,8 +547,8 @@ public class ContainerMenuHandler extends TagSupport {
             if (style == SIDE_TABS) {
               this.pageContext.getOut().write(
                   "<tr><td class=\"sidetab-left-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td>" +
-                  "<td class=\"sidetab-mid-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td>" +
-                  "<td class=\"sidetab-right-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td></tr>");
+                      "<td class=\"sidetab-mid-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td>" +
+                      "<td class=\"sidetab-right-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td></tr>");
             }
             itemOutput = true;
           }
@@ -553,22 +568,22 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Returned Value
+   * @return Description of the Returned Value
    */
   public int doEndTag() {
     try {
       if (style == SIDE_TABS) {
         this.pageContext.getOut().write(
             "</td>\n" +
-            "</tr>\n" +
-            "</table>");
+                "</tr>\n" +
+                "</table>");
       } else if (style == TABS) {
         this.pageContext.getOut().write(
             "    </td>\n" +
-            "  </tr>\n" +
-            "</table>");
+                "  </tr>\n" +
+                "</table>");
       }
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
@@ -581,9 +596,9 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Reads the submenu XML config file specified in web.xml.
+   * Reads the submenu XML config file specified in web.xml.
    *
-   * @param  servletContext
+   * @param servletContext
    */
   private void loadXML(ServletContext servletContext) {
     LinkedHashMap menu = new LinkedHashMap();
@@ -591,9 +606,9 @@ public class ContainerMenuHandler extends TagSupport {
     try {
       XMLUtils xml = new XMLUtils(
           new File(
-          pageContext.getServletContext().getRealPath(
-          "/WEB-INF/" + (String) pageContext.getServletContext().getAttribute(
-          "ContainerMenuConfig"))));
+              pageContext.getServletContext().getRealPath(
+                  "/WEB-INF/" + (String) pageContext.getServletContext().getAttribute(
+                      "ContainerMenuConfig"))));
       LinkedList containerList = new LinkedList();
       XMLUtils.getAllChildren(
           xml.getDocumentElement(), "container", containerList);
@@ -603,7 +618,7 @@ public class ContainerMenuHandler extends TagSupport {
         if (System.getProperty("DEBUG") != null) {
           System.out.println(
               "ContainerMenuHandler-> Container Added: " + container.getAttribute(
-              "name"));
+                  "name"));
         }
         LinkedList menuItems = this.buildMenu(container);
         menu.put(container.getAttribute("name"), menuItems);
@@ -620,10 +635,10 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Parses the XML submenu element.
+   * Parses the XML submenu element.
    *
-   * @param  container  Description of Parameter
-   * @return            Description of the Returned Value
+   * @param container Description of Parameter
+   * @return Description of the Returned Value
    */
   private LinkedList buildMenu(Element container) {
     LinkedList menuItems = new LinkedList();
@@ -652,7 +667,7 @@ public class ContainerMenuHandler extends TagSupport {
 
       thisSubmenu.setLongHtml(
           !"".equals(StringUtils.toString(labelValue)) ? labelValue : (XMLUtils.getFirstChild(
-          submenu, "long_html").getAttribute("value")));
+              submenu, "long_html").getAttribute("value")));
       //thisSubmenu.setShortHtml();
       //thisSubmenu.setAlternateName();
       thisSubmenu.setLink(
@@ -672,10 +687,10 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  container  Description of the Parameter
-   * @return            Description of the Return Value
+   * @param container Description of the Parameter
+   * @return Description of the Return Value
    */
   private HashMap buildProperties(Element container) {
     HashMap propertyList = new HashMap();

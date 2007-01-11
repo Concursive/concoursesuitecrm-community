@@ -128,11 +128,11 @@
     </attribute>
     <attribute>
       <name>display</name>
-      <required>true</required>
+      <required>yes</required>
     </attribute>
     <attribute>
       <name>type</name>
-      <required>true</required>
+      <required>yes</required>
     </attribute>
   </tag>
   

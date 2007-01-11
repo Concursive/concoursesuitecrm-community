@@ -17,6 +17,7 @@ package com.zeroio.taglib;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 
 /**
  * Displays an HTML widget called a Spinner, basically a text field and arrows
@@ -26,12 +27,24 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @version $Id$
  * @created July 23, 2003
  */
-public class HtmlSpinner extends TagSupport {
+public class HtmlSpinner extends TagSupport implements TryCatchFinally {
 
   private String name = null;
   private String value = "0";
   private int min = -1;
   private int max = -1;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    name = null;
+    value = "0";
+    min = -1;
+    max = -1;
+  }
 
 
   /**
@@ -121,12 +134,12 @@ public class HtmlSpinner extends TagSupport {
               max).length() + "\"> ");
       this.pageContext.getOut().write(
           "<a href=\"javascript:spinLeft('" + name + "');\">" +
-          "<img alt=\"Unindent\" src=\"images/icons/stock_left-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/>" +
-          "</a>");
+              "<img alt=\"Unindent\" src=\"images/icons/stock_left-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/>" +
+              "</a>");
       this.pageContext.getOut().write(
           "<a href=\"javascript:spinRight('" + name + "');\">" +
-          "<img alt=\"Indent\" src=\"images/icons/stock_right-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/>" +
-          "</a>\n");
+              "<img alt=\"Indent\" src=\"images/icons/stock_right-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/>" +
+              "</a>\n");
     } catch (Exception e) {
       throw new JspException("HtmlSelectTime Error: " + e.getMessage());
     }

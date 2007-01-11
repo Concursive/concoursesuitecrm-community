@@ -7,6 +7,7 @@ import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 
 /**
  * This Class outs a calendar field based on the user's locale information for
@@ -16,10 +17,20 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @version $Id: Exp $
  * @created May 19, 2006
  */
-public class PortalPageURLHandler extends TagSupport {
+public class PortalPageURLHandler extends TagSupport implements TryCatchFinally {
 
   private String page = null;
   private String pageGroup = null;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    page = null;
+    pageGroup = null;
+  }
 
   public void setPage(String page) {
     this.page = page;

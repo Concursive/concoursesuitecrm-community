@@ -20,6 +20,7 @@ import org.aspcfs.controller.SystemStatus;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
@@ -31,11 +32,21 @@ import java.util.StringTokenizer;
  * @version $Id$
  * @created February 25, 2002
  */
-public class FieldHandler extends TagSupport {
+public class FieldHandler extends TagSupport implements TryCatchFinally {
   private String sectionName = null;
   private boolean allRequired = false;
   private boolean hasNone = false;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    sectionName = null;
+    allRequired = false;
+    hasNone = false;
+  }
 
   /**
    * Sets the Name attribute of the FieldHandler object

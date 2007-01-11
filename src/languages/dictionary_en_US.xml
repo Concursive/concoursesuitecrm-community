@@ -7673,10 +7673,13 @@ reflect those changes.]]></value>
     <param name="contact.permanentlyAssociateWithAccount.colon">
       <value><![CDATA[Permanently associate with Account:]]></value>
     </param>
+    <param name="contact.associateWithAccount.colon">
+      <value><![CDATA[Associate with Account:]]></value>
+    </param>
     <param name="contact.updateContact">
       <value><![CDATA[Update a Contact]]></value>
     </param>
-    <param name="contact.associateWithAccount.colon">
+    <param name="contact.associatedWithAccount.colon">
       <value><![CDATA[Associated with Account:]]></value>
     </param>
     <param name="contact.option">

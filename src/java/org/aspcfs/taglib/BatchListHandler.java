@@ -18,27 +18,22 @@ package org.aspcfs.taglib;
 import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.BatchInfo;
+import org.aspcfs.utils.web.HtmlSelect;
 
+import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     Ananth
- *@version
- *@created    February 16, 2006
+ * @author Ananth
+ * @created February 16, 2006
  */
-public class BatchListHandler extends TagSupport {
+public class BatchListHandler extends TagSupport implements TryCatchFinally {
   public final static int SELECT = 1;
 
   private String label = null;
@@ -49,11 +44,22 @@ public class BatchListHandler extends TagSupport {
   //resources
   private HashMap batchItems = new HashMap();
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    label = null;
+    object = null;
+    type = SELECT;
+    returnURL = null;
+  }
 
   /**
-   *  Sets the object attribute of the BatchListHandler object
+   * Sets the object attribute of the BatchListHandler object
    *
-   *@param  tmp  The new object value
+   * @param tmp The new object value
    */
   public void setObject(String tmp) {
     object = tmp;
@@ -61,9 +67,9 @@ public class BatchListHandler extends TagSupport {
 
 
   /**
-   *  Sets the returnURL attribute of the BatchListHandler object
+   * Sets the returnURL attribute of the BatchListHandler object
    *
-   *@param  tmp  The new returnURL value
+   * @param tmp The new returnURL value
    */
   public void setReturnURL(String tmp) {
     returnURL = tmp;
@@ -71,9 +77,9 @@ public class BatchListHandler extends TagSupport {
 
 
   /**
-   *  Sets the label attribute of the BatchListHandler object
+   * Sets the label attribute of the BatchListHandler object
    *
-   *@param  tmp  The new label value
+   * @param tmp The new label value
    */
   public void setLabel(String tmp) {
     label = tmp;
@@ -81,9 +87,9 @@ public class BatchListHandler extends TagSupport {
 
 
   /**
-   *  Sets the type attribute of the BatchListHandler object
+   * Sets the type attribute of the BatchListHandler object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(String tmp) {
     type = Integer.parseInt(tmp);
@@ -91,9 +97,9 @@ public class BatchListHandler extends TagSupport {
 
 
   /**
-   *  Sets the type attribute of the BatchListHandler object
+   * Sets the type attribute of the BatchListHandler object
    *
-   *@param  tmp  The new type value
+   * @param tmp The new type value
    */
   public void setType(int tmp) {
     type = tmp;
@@ -101,9 +107,9 @@ public class BatchListHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doStartTag() {
     try {
@@ -116,9 +122,9 @@ public class BatchListHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
@@ -131,15 +137,15 @@ public class BatchListHandler extends TagSupport {
     StringBuffer sb = new StringBuffer();
     try {
       UserBean thisUser = (UserBean) pageContext.getSession().
-            getAttribute("User");
-            
+          getAttribute("User");
+
       BatchInfo batchInfo = (BatchInfo) pageContext.getRequest().
-            getAttribute(object);
-            
+          getAttribute(object);
+
       if (batchInfo != null) {
         HtmlSelect batchMenu = new HtmlSelect();
         batchMenu.setIdName("batchActions");
-  
+
         Iterator i = batchItems.keySet().iterator();
         while (i.hasNext()) {
           String batchItem = (String) i.next();
@@ -147,44 +153,44 @@ public class BatchListHandler extends TagSupport {
           batchMenu.addItem(itemAction, batchItem);
         }
 
-        sb.append("[<a href=\"javascript:SetChecked(1,'" + 
+        sb.append("[<a href=\"javascript:SetChecked(1,'" +
             batchInfo.getName() + "','" + batchInfo.getName() + "Form" + "'," +
-                "'" + thisUser.getBrowserId() + "');\">");
-                
+            "'" + thisUser.getBrowserId() + "');\">");
+
         if (systemStatus != null) {
           sb.append(systemStatus.getLabel("quotes.checkAll") + "</a>]&nbsp;");
         } else {
           sb.append("Check All</a>]&nbsp;");
         }
-  
+
         sb.append("[<a href=\"javascript:SetChecked(0,'" + batchInfo.getName() +
             "','" + batchInfo.getName() + "Form" + "'," +
-                "'" + thisUser.getBrowserId() + "');\">");
-                
+            "'" + thisUser.getBrowserId() + "');\">");
+
         if (systemStatus != null) {
           sb.append(systemStatus.getLabel("quotes.clearAll") + "</a>]&nbsp;");
         } else {
           sb.append("Clear All</a>]&nbsp;");
         }
-  
+
         sb.append((label != null ? (label + ": ") : "") +
             batchMenu.getHtml("batchActions", batchInfo.getSelected()));
-  
+
         if (systemStatus != null) {
           sb.append("<input type=\"button\" value=\"" + systemStatus.getLabel("button.processBatch") + "\" " +
-              "onClick=\"javascript:submitBatch('" + batchInfo.getName() + "Form', 'batchActions','" + 
-                  batchInfo.getName() + "');\">");
+              "onClick=\"javascript:submitBatch('" + batchInfo.getName() + "Form', 'batchActions','" +
+              batchInfo.getName() + "');\">");
         } else {
           sb.append("<input type=\"button\" value=\"Process Batch\" " +
-              "onClick=\"javascript:submitBatch('" + batchInfo.getName() + "Form', 'batchActions', '" + 
-                  batchInfo.getName() + "');\">");
+              "onClick=\"javascript:submitBatch('" + batchInfo.getName() + "Form', 'batchActions', '" +
+              batchInfo.getName() + "');\">");
         }
-  
+
         if (returnURL != null && !"".equals(returnURL.trim())) {
-          sb.append("<input type=\"hidden\" name=\"" + batchInfo.getName() + 
+          sb.append("<input type=\"hidden\" name=\"" + batchInfo.getName() +
               "ReturnURL\" value=\"" + returnURL + "\">");
         }
-  
+
         //TODO: write the html instead of requesting the parent tag to write it out
         ((TagSupport) getParent()).setValue(
             "batchHTML", sb.toString().trim());

@@ -22,6 +22,7 @@ import org.aspcfs.utils.web.HtmlSelectTimeZone;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,7 @@ import java.util.Locale;
  * @version    $Id: CalendarHandler.java,v 1.1 2004/07/21 19:00:43 mrajkowski
  *      Exp $
  */
-public class CalendarHandler extends TagSupport {
+public class CalendarHandler extends TagSupport implements TryCatchFinally {
 
   private int dateFormat = DateFormat.SHORT;
   private String form = null;
@@ -46,6 +47,22 @@ public class CalendarHandler extends TagSupport {
   private String timeZone = null;
   private boolean showTimeZone = false;
   private boolean required = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    dateFormat = DateFormat.SHORT;
+    form = null;
+    field = null;
+    timestamp = null;
+    hidden = false;
+    timeZone = null;
+    showTimeZone = false;
+    required = false;
+  }
 
 
   /**

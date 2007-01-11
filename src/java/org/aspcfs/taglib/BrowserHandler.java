@@ -19,6 +19,7 @@ import org.aspcfs.modules.login.beans.UserBean;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 
 /**
  * Description of the Class
@@ -28,13 +29,25 @@ import javax.servlet.jsp.tagext.TagSupport;
  *          $
  * @created January 15, 2003
  */
-public class BrowserHandler extends TagSupport {
+public class BrowserHandler extends TagSupport implements TryCatchFinally {
   private String browserId = null;
   private double minVersion = -1;
   private double maxVersion = -1;
   private String os = null;
   private boolean include = true;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    browserId = null;
+    minVersion = -1;
+    maxVersion = -1;
+    os = null;
+    include = true;
+  }
 
   /**
    * Sets the id attribute of the BrowserHandler object

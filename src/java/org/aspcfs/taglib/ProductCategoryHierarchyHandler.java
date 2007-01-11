@@ -22,6 +22,7 @@ import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 
@@ -31,11 +32,21 @@ import java.util.LinkedHashMap;
  * @author Ananth
  * @created February 24, 2005
  */
-public class ProductCategoryHierarchyHandler extends TagSupport {
+public class ProductCategoryHierarchyHandler extends TagSupport implements TryCatchFinally {
   private boolean showLastLink = false;
   private boolean displayJS = false;
   private String link = null;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    showLastLink = false;
+    displayJS = false;
+    link = null;
+  }
 
   /**
    * Sets the displayJS attribute of the ProductCategoryHierarchyHandler object

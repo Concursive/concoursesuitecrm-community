@@ -17,6 +17,7 @@ package org.aspcfs.taglib;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 
 /**
  * This tag returns an HTML checkbox string based on the given parameters.
@@ -26,11 +27,22 @@ import javax.servlet.jsp.tagext.TagSupport;
  *          Exp $
  * @created August 13, 2003
  */
-public class CheckboxHtmlHandler extends TagSupport {
+public class CheckboxHtmlHandler extends TagSupport implements TryCatchFinally {
 
   private String name = null;
   private String value = null;
   private boolean checked = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    name = null;
+    value = null;
+    checked = false;
+  }
 
 
   /**
@@ -83,8 +95,8 @@ public class CheckboxHtmlHandler extends TagSupport {
     try {
       this.pageContext.getOut().write(
           "<input type=\"checkbox\" name=\"" + name + "\"" +
-          (value != null ? " value=\"" + value + "\"" : "") +
-          (checked ? " checked" : "") + " />");
+              (value != null ? " value=\"" + value + "\"" : "") +
+              (checked ? " checked" : "") + " />");
     } catch (Exception e) {
     }
     return SKIP_BODY;

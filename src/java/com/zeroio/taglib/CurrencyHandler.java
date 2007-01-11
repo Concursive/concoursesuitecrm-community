@@ -19,6 +19,7 @@ import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
@@ -31,7 +32,7 @@ import java.util.Locale;
  *          $
  * @created March 17, 2004
  */
-public class CurrencyHandler extends TagSupport {
+public class CurrencyHandler extends TagSupport implements TryCatchFinally {
 
   private double value = -1;
   private String code = null;
@@ -40,6 +41,21 @@ public class CurrencyHandler extends TagSupport {
   private boolean fractionDigits = true;
   private boolean truncate = true;
   private boolean allowNegative = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    value = -1;
+    code = null;
+    defaultValue = null;
+    locale = null;
+    fractionDigits = true;
+    truncate = true;
+    allowNegative = false;
+  }
 
 
   /**
@@ -132,7 +148,7 @@ public class CurrencyHandler extends TagSupport {
           formatter.setMaximumFractionDigits(0);
         }
         this.pageContext.getOut().write(
-          StringUtils.toHtmlValue(formatter.format(value)));
+            StringUtils.toHtmlValue(formatter.format(value)));
       } else {
         //no date found, output default
         if (defaultValue != null) {

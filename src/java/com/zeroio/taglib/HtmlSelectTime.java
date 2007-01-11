@@ -21,6 +21,7 @@ import org.aspcfs.utils.web.*;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -35,13 +36,26 @@ import java.util.TimeZone;
  *          Exp $
  * @created July 2, 2003
  */
-public class HtmlSelectTime extends TagSupport {
+public class HtmlSelectTime extends TagSupport implements TryCatchFinally {
 
   private String baseName = null;
   private Timestamp value = null;
   private String timeZone = null;
   private boolean hidden = false;
   private boolean showTimeZone = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    baseName = null;
+    value = null;
+    timeZone = null;
+    hidden = false;
+    showTimeZone = false;
+  }
 
 
   /**

@@ -21,6 +21,7 @@ import org.aspcfs.utils.DateUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ import java.util.Locale;
  *          $
  * @created September 3, 2003
  */
-public class DateTimeHandler extends TagSupport {
+public class DateTimeHandler extends TagSupport implements TryCatchFinally {
 
   private Timestamp timestamp = null;
   private boolean dateOnly = false;
@@ -47,6 +48,24 @@ public class DateTimeHandler extends TagSupport {
   private String timeZone = null;
   private boolean showTimeZone = false;
   private boolean userTimeZone = true;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    timestamp = null;
+    dateOnly = false;
+    timeOnly = false;
+    timeFormat = DateFormat.SHORT;
+    dateFormat = DateFormat.SHORT;
+    pattern = null;
+    defaultValue = "";
+    timeZone = null;
+    showTimeZone = false;
+    userTimeZone = true;
+  }
 
 
   /**

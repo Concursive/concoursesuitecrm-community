@@ -22,6 +22,7 @@ import org.aspcfs.utils.web.LookupList;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 
 /**
@@ -31,12 +32,24 @@ import java.util.Hashtable;
  * @version $Id$
  * @created
  */
-public class DocumentsRoleSelectHandler extends TagSupport {
+public class DocumentsRoleSelectHandler extends TagSupport implements TryCatchFinally {
 
   private String name = null;
   private int value = -1;
   private String onChange = null;
   private boolean isPortalUser = false;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    name = null;
+    value = -1;
+    onChange = null;
+    isPortalUser = false;
+  }
 
   /**
    * Sets the name attribute of the DocumentsRoleSelectHandler object
@@ -78,9 +91,9 @@ public class DocumentsRoleSelectHandler extends TagSupport {
   }
 
   /**
-   *  Sets the isPortalUser attribute of the DocumentsRoleSelectHandler object
+   * Sets the isPortalUser attribute of the DocumentsRoleSelectHandler object
    *
-   * @param  tmp  The new isPortalUser value
+   * @param tmp The new isPortalUser value
    */
   public void setIsPortalUser(boolean tmp) {
     this.isPortalUser = tmp;
@@ -88,9 +101,9 @@ public class DocumentsRoleSelectHandler extends TagSupport {
 
 
   /**
-   *  Sets the isPortalUser attribute of the DocumentsRoleSelectHandler object
+   * Sets the isPortalUser attribute of the DocumentsRoleSelectHandler object
    *
-   * @param  tmp  The new isPortalUser value
+   * @param tmp The new isPortalUser value
    */
   public void setIsPortalUser(String tmp) {
     this.isPortalUser = DatabaseUtils.parseBoolean(tmp);
@@ -116,7 +129,7 @@ public class DocumentsRoleSelectHandler extends TagSupport {
         LookupList roleList = (LookupList) systemStatus.getLookupList(
             null, "lookup_document_store_role");
         if (roleList != null && isPortalUser) {
-        	roleList = (LookupList) roleList.clone();
+          roleList = (LookupList) roleList.clone();
           //Remove the Manager that has a level 1.
           roleList.removeElementByLevel(1);
         }

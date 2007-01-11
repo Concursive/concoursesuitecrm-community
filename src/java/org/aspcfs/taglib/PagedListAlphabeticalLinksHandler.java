@@ -7,6 +7,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 
 /**
@@ -16,10 +17,19 @@ import java.util.Hashtable;
  * @version $Id$
  * @created September 16, 2004
  */
-public class PagedListAlphabeticalLinksHandler extends TagSupport {
+public class PagedListAlphabeticalLinksHandler extends TagSupport implements TryCatchFinally {
   private String name = "alphabeticalLinksProperties";
   private String object = null;
 
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    name = "alphabeticalLinksProperties";
+    object = null;
+  }
 
   /**
    * Sets the object attribute of the PagedListAlphabeticalLinksHandler object

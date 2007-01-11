@@ -23,6 +23,7 @@ import org.aspcfs.utils.StringUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 
@@ -34,10 +35,21 @@ import java.util.LinkedHashMap;
  *          Exp $
  * @created April 20, 2003
  */
-public class FolderHierarchyHandler extends TagSupport {
+public class FolderHierarchyHandler extends TagSupport implements TryCatchFinally {
   private boolean showLastLink = false;
   private String module = null;
   private String link = null;
+
+  public void doCatch(Throwable throwable) throws Throwable {
+    // Required but not needed
+  }
+
+  public void doFinally() {
+    // Reset each property or else the value gets reused
+    showLastLink = false;
+    module = null;
+    link = null;
+  }
 
 
   /**
@@ -175,7 +187,7 @@ public class FolderHierarchyHandler extends TagSupport {
                 this.pageContext.getOut().write(
                     "<a href=\"ProjectManagement.do?command=ProjectCenter&section=File_" + ("-1".equals(
                         display) ? "Library" : "Gallery") + "&pid=" + projectId + "&folderId=" + thisId.intValue() + ("2".equals(
-                            display) ? "&details=true" : "") + "\">");
+                        display) ? "&details=true" : "") + "\">");
               } else {
                 this.pageContext.getOut().write(
                     "<a href=\"" + link + "&folderId=" + thisId.intValue() + "\">");
